@@ -1,0 +1,49 @@
+@use 'design-system' as *;
+
+.headerHeading {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.topHeader {
+    p {
+        color: var(--color-text-tertiary);
+    }
+
+    margin: 0 auto;
+    padding-top: $spacing-size-12;
+    display: flex;
+    gap: $spacing-size-12;
+}
+
+.showcaseItemTab {
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-sm);
+}
+
+.tabs {
+    display: flex;
+    height: 100%;
+}
+.headerDescription {
+    max-width: 500px;
+}
+
+.showcaseItemTab {
+    cursor: pointer;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    max-width: 100%;
+    height: 100px;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-sm);
+    margin-right: $spacing-size-3;
+}
+
+.tabActive {
+    border: 2px solid #2196f3;
+    border-radius: var(--radius-sm);
+}

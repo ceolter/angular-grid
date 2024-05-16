@@ -1,6 +1,8 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import Example from '@components/example-grid/Example';
+import Tabs from "../components/tabs/ExampleTabs";
+import HRManagementExample from '@components/showcase/examples/hr-management/index.astro';
+import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 ---
 
 <Layout
@@ -10,5 +12,8 @@ import Example from '@components/example-grid/Example';
     showDocsNav={false}
     hideFooter={true}
 >
-    <Example client:only="react" />
+        <Tabs client:load/>
+        <ShowcaseLayout title="HR Management">
+            <HRManagementExample />
+        </ShowcaseLayout>
 </Layout>
