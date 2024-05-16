@@ -3,11 +3,13 @@ import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import HRManagementExample from '@components/showcase/examples/hr-management/index.astro';
 import styles from "./example.module.scss"
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import CRMIcon from '../../public/example/crm.svg?react';
 ---
 
 <ShowcaseLayout title="HR Management">
     <div className={styles.topHeader}>
         <div>
+            <CRMIcon/>
             <h1 className={styles.headerHeading}>CRM</h1>
             <p className={styles.headerDescription}>An example inventory dashboard that let’s you manage employees</p>
             <button
@@ -33,7 +35,7 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
             <a href="/example-finance">
                 <img
                 className={styles.showcaseItemTab}
-                src="/example/grid-illustration.png"
+                src="/example/finance-illustration.png"
                     alt="Grid illustration"
                 />
             </a>

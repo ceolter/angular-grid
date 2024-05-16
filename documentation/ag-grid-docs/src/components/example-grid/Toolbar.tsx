@@ -147,7 +147,7 @@ export const Toolbar = ({
                         style={{ flex: 1 }}
                     />
 
-                    <a
+                    {/* <a
                         className={styles.videoTour}
                         href="https://youtu.be/bcMvTUVbMvI"
                         target="_blank"
@@ -155,7 +155,7 @@ export const Toolbar = ({
                     >
                         <Icon name="youtube" />
                         Take a video tour
-                    </a>
+                    </a> */}
                 </div>
             </div>
             <div className={styles.scrollIndicator}></div>
