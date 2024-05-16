@@ -3,7 +3,6 @@
 .toolbar {
     width: 100%;
     position: relative;
-    background-color: var(--color-util-brand-100);
 
     #{$selector-darkmode} & {
         background-color: var(--color-bg-primary);
@@ -13,7 +12,7 @@
 
 .controlsContainer {
     padding-top: $spacing-size-2;
-    padding-bottom: $spacing-size-2;
+    padding-bottom: $spacing-size-4;
     padding-left: var(--layout-horizontal-margins);
     margin-left: auto;
     margin-right: auto;

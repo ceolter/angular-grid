@@ -1,0 +1,61 @@
+---
+import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
+import PortfolioExample from '@components/showcase/examples/portfolio-positions/index.astro';
+import styles from "./example.module.scss"
+import { Icon } from '@ag-website-shared/components/icon/Icon';
+---
+
+<ShowcaseLayout title="Portfolio Positions">
+    <div className={styles.topHeader}>
+        <div>
+            <h1 className={styles.headerHeading}>Finance</h1>
+            <p className={styles.headerDescription}>An example of a finance app with integrated charts and live-updating data</p>
+            <button
+            className="button-primary"
+        >   <Icon
+        alt={`GitHub logo`}
+        name="github"
+        svgClasses={styles.githubIcon}
+    />
+            <span>See on Github</span>
+    
+        </button>
+        </div>
+    
+        <div className={styles.tabs}>
+            <a href="/example">
+                <img
+                className={styles.showcaseItemTab}
+                    src="/example/grid-illustration.png"
+                    alt="Grid illustration"
+                />
+            </a>
+            <a href="/example-finance">
+                <img
+                className={`${styles.showcaseItemTab} ${styles.tabActive}`}
+                    src="/example/grid-illustration.png"
+                    alt="Grid illustration"
+                />
+            </a>
+            <a href="/example-crm">
+                <img
+                    className={styles.showcaseItemTab}
+                    src="/example/grid-illustration.png"
+                    alt="Grid illustration"
+                />
+            </a>
+            <a href="/example-complete">
+                <img
+                    className={styles.showcaseItemTab}
+                    src="/example/grid-illustration.png"
+                    alt="Grid illustration"
+                />
+            </a>
+    
+        </div>
+    </div>
+    <div className={styles.layout}>
+        <div className={styles.layoutWrapper}>
+    <PortfolioExample />
+        </div></div>
+</ShowcaseLayout>

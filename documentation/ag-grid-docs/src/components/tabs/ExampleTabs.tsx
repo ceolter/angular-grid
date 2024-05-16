@@ -33,7 +33,7 @@ const Tabs = () => {
         <div className={styles.topHeader}>
             <div>
                 <h1 className={styles.headerHeading}>{tabsData[activeTab].title}</h1>
-                <p className={styles.headerDescription}>{tabsData[activeTab].description}</p>
+                <p className={styles}>{tabsData[activeTab].description}</p>
             </div>
 
             <div className={styles.tabs}>

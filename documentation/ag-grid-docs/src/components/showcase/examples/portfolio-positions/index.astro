@@ -1,9 +1,12 @@
 ---
 import styles from '../../Showcase.module.scss';
+import styles from './index.module.scss';
 ---
 
 <div class={styles.container}>
-    <button id="export-to-excel">Export to Excel</button>
+    <div className={styles.toolbar}>
+    <button id="export-to-excel" class="button-secondary" >Export to Excel</button>
+</div>
     <div id="myGrid" class:list={['ag-theme-quartz', styles.grid]}></div>
 </div>
 
