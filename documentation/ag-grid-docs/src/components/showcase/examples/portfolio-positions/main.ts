@@ -10,6 +10,7 @@ import {
 import { getData } from './data';
 import { renderPdfLink } from './pdfRenderer';
 import { imageCellRenderer } from './imageCellRenderer';
+import './styles.css';
 
 let gridApi;
 
@@ -81,6 +82,7 @@ const columnDefs = [
         headerName: 'Instrument',
         field: 'instrument',
         cellDataType: 'text',
+  
         rowGroup: true,
         hide: true,
         width: 150,
@@ -164,6 +166,7 @@ const gridOptions = {
         filter: true,
         resizable: true,
     },
+ 
     enableRangeSelection: true,
     enableCharts: true,
     rowSelection: 'multiple',
@@ -177,7 +180,7 @@ const gridOptions = {
         ],
     },
     groupDisplayType: 'groupRows',
-    groupDefaultExpanded: 1, // Expand all groups by default
+    groupDefaultExpanded: 1,
 };
 
 function onBtExport() {
