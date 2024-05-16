@@ -9,18 +9,67 @@ import {
 } from './calculations';
 import { getData } from './data';
 import { renderPdfLink } from './pdfRenderer';
+import { imageCellRenderer } from './imageCellRenderer';
 
 let gridApi;
 
 const columnDefs = [
     {
-        headerName: 'Ticker',
+        headerName: 'Symbol',
         field: 'ticker',
         cellDataType: 'text',
         pinned: 'left',
         width: 100,
+        cellRenderer: imageCellRenderer, // Use the custom cell renderer
     },
     { headerName: 'Name', field: 'name', cellDataType: 'text', width: 220 },
+    {
+        headerName: 'Last',
+        cellDataType: 'number',
+        field: 'currentPrice',
+        valueFormatter: currencyFormatter,
+        width: 100,
+        aggFunc: 'avg',
+    },
+
+    {
+        headerName: 'P/L %',
+        valueGetter: pnlPercentCalculator,
+        valueFormatter: percentageFormatter,
+        width: 100,
+        aggFunc: 'avg',
+    },
+    {
+        headerName: 'Change',
+        field: 'change',
+        cellRenderer: 'agSparklineCellRenderer',
+        cellRendererParams: {
+            sparklineOptions: {
+                type: 'area',
+                fill: 'rgba(185,173,77,0.3)',
+                line: {
+                    stroke: 'rgb(185,173,77)',
+                },
+                highlightStyle: {
+                    size: 4,
+                    stroke: 'rgb(185,173,77)',
+                    fill: 'rgb(185,173,77)',
+                },
+                crosshairs: {
+                    xLine: {
+                        enabled: true,
+                        lineDash: 'dash',
+                        stroke: '#999',
+                    },
+                    yLine: {
+                        enabled: true,
+                        lineDash: 'dash',
+                        stroke: '#999',
+                    },
+                },
+            },
+        },
+    },
     {
         headerName: 'CCY',
         field: 'ccy',
@@ -32,7 +81,8 @@ const columnDefs = [
         headerName: 'Instrument',
         field: 'instrument',
         cellDataType: 'text',
-        enableRowGroup: true,
+        rowGroup: true,
+        hide: true,
         width: 150,
     },
     {
@@ -64,22 +114,6 @@ const columnDefs = [
         aggFunc: 'sum',
     },
     {
-        headerName: 'Price',
-        cellDataType: 'number',
-        field: 'currentPrice',
-        valueFormatter: currencyFormatter,
-        width: 100,
-        aggFunc: 'avg',
-    },
-    {
-        headerName: 'Total Value',
-        cellDataType: 'number',
-        valueGetter: valueCalculator,
-        valueFormatter: currencyFormatter,
-        width: 150,
-        aggFunc: 'sum',
-    },
-    {
         headerName: 'P/L',
         valueGetter: pnlCalculator,
         cellDataType: 'number',
@@ -95,20 +129,16 @@ const columnDefs = [
         pivot: true,
         aggFunc: 'sum',
     },
+    
     {
-        headerName: 'P/L %',
-        valueGetter: pnlPercentCalculator,
-        valueFormatter: percentageFormatter,
-        width: 100,
-        cellStyle: (params) => {
-            if (params.value > 0) {
-                return { color: 'green' };
-            } else {
-                return { color: 'red' };
-            }
-        },
-        aggFunc: 'avg',
+        headerName: 'Total Value',
+        cellDataType: 'number',
+        valueGetter: valueCalculator,
+        valueFormatter: currencyFormatter,
+        width: 150,
+        aggFunc: 'sum',
     },
+
     {
         headerName: '52w Change %',
         valueGetter: calculate52wChange,
@@ -123,37 +153,7 @@ const columnDefs = [
         },
         aggFunc: 'avg',
     },
-    {
-        headerName: '52w Sparkline',
-        field: 'change',
-        cellRenderer: 'agSparklineCellRenderer',
-        cellRendererParams: {
-            sparklineOptions: {
-                type: 'area',
-                fill: 'rgba(185,173,77,0.3)',
-                line: {
-                    stroke: 'rgb(185,173,77)',
-                },
-                highlightStyle: {
-                    size: 4,
-                    stroke: 'rgb(185,173,77)',
-                    fill: 'rgb(185,173,77)',
-                },
-                crosshairs: {
-                    xLine: {
-                        enabled: true,
-                        lineDash: 'dash',
-                        stroke: '#999',
-                    },
-                    yLine: {
-                        enabled: true,
-                        lineDash: 'dash',
-                        stroke: '#999',
-                    },
-                },
-            },
-        },
-    },
+
     { headerName: 'Trading Advice', cellRenderer: renderPdfLink, width: 150 },
 ];
 
@@ -164,10 +164,7 @@ const gridOptions = {
         filter: true,
         resizable: true,
     },
-    sideBar: true,
-    rowGroupPanelShow: 'always',
     enableRangeSelection: true,
-    enableAdvancedFilter: true,
     enableCharts: true,
     rowSelection: 'multiple',
     statusBar: {
@@ -179,6 +176,8 @@ const gridOptions = {
             { statusPanel: 'agAggregationComponent' },
         ],
     },
+    groupDisplayType: 'groupRows',
+    groupDefaultExpanded: 1, // Expand all groups by default
 };
 
 function onBtExport() {

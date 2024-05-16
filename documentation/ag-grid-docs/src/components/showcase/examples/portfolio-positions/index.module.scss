@@ -1,3 +1,9 @@
+.grid {
+    --ag-header-background-color: transparent !important;
+    --ag-data-color: rgb(23, 23, 23) !important;
+    --ag-header-foreground-color: rgb(96, 96, 96) !important;
+}
+
 :global {
     .rag-red {
         background-color: #cc222244;
@@ -14,6 +20,10 @@
 
 .toolbar {
     padding-bottom: 16px;
+    font-size: 14px;
+    button {
+        font-weight: 500;
+    }
 }
 
 .grid {
