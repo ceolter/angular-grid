@@ -156,7 +156,7 @@ const columnDefs = [
         aggFunc: 'avg',
     },
 
-    { headerName: 'Trading Advice', cellRenderer: renderPdfLink, width: 150 },
+    { headerName: 'Options', cellRenderer: renderPdfLink, width: 80, pinned: 'right' },
 ];
 
 const gridOptions = {

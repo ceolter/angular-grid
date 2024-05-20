@@ -9,6 +9,7 @@ const whenSoldOut = ['Discontinued', 'Back order', 'Email when available'];
 const quantityCalculator = (params) => {
     return params.data.available + params.data.unavailable;
 };
+import './styles.css';
 
 const gridOptions = {
     rowData: getData(),

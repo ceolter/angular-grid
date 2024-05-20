@@ -1,5 +1,6 @@
 ---
 import styles from './example.module.scss';
+import EcommerceInventoryExample from '@components/showcase/examples/ecommerce-inventory/index.astro';
 import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
@@ -80,6 +81,11 @@ import InventoryIcon from '../../public/example/inventory.svg?react';
                     />
                 </a>
             </div>
+        </div>
+    </div>
+    <div class={styles.layout}>
+        <div class={styles.layoutWrapper}>
+            <EcommerceInventoryExample />
         </div>
     </div>
 </ShowcaseLayout>
