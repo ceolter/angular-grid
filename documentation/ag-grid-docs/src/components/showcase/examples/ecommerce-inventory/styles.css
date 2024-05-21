@@ -93,3 +93,31 @@ margin: 8px;;
         margin-right: 0 !important;
     }
 }
+
+.delete-button {
+    background-color: hsl(0 72.22% 50.59% / 1);
+    border: 1px solid hsl(0, 67%, 40%);
+    height: 40px;
+    width: 40px;
+
+    img {
+        width: 20px;
+        left: 25px;
+        position: absolute;
+        top: 30px;
+    }
+
+    &:hover {
+        background-color: hsl(0, 67%, 40%);
+    }
+}
+
+.button-stop-selling {
+    height: 40px;
+    line-height: 1.8;
+}
+
+.button-cell  {
+    display: flex;
+    gap: 8px;
+}
