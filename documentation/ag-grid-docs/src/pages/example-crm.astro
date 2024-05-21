@@ -4,6 +4,7 @@ import HRManagementExample from '@components/showcase/examples/hr-management/ind
 import styles from "./example.module.scss"
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import CRMIcon from '../../public/example/crm.svg?react';
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 
 <ShowcaseLayout title="HR Management">
@@ -28,7 +29,7 @@ import CRMIcon from '../../public/example/crm.svg?react';
             <a href="/example">
                 <img
                 className={styles.showcaseItemTab}
-                    src="/example/grid-illustration.png"
+                src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>Inventory</div>
@@ -36,7 +37,7 @@ import CRMIcon from '../../public/example/crm.svg?react';
             <a href="/example-finance">
                 <img
                 className={styles.showcaseItemTab}
-                src="/example/finance-illustration.png"
+                src={urlWithBaseUrl(`/example/finance-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>Finance</div>
@@ -44,7 +45,7 @@ import CRMIcon from '../../public/example/crm.svg?react';
             <a href="/example-crm">
                 <img
                 className={`${styles.showcaseItemTab} ${styles.tabActive}`}
-                    src="/example/crm-illustration.png"
+                src={urlWithBaseUrl(`/example/crm-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>CRM</div>
@@ -52,7 +53,7 @@ import CRMIcon from '../../public/example/crm.svg?react';
             <a href="/example-complete">
                 <img
                     className={styles.showcaseItemTab}
-                    src="/example/grid-illustration.png"
+                    src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>Complete</div>
