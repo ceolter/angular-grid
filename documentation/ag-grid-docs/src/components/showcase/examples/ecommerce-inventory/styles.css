@@ -38,7 +38,7 @@ align-items: center;
 .image-container {
 width: 60px;
 height: 60px;
-background-color: rgba(171, 171, 171, 0.2);
+background-color: rgba(201, 201, 201, 0.2);
 border-radius: 8px;
 margin: 8px;;
 }
@@ -74,4 +74,22 @@ margin: 8px;;
     background-color: rgb(242, 242, 242);
     color: rgb(49, 49, 49);
     border: 0px;
+}
+
+.product-cell-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        margin-right: 0 !important;
+    }
 }

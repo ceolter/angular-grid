@@ -84,7 +84,7 @@ const gridOptions = {
             },
             editable: true,
         },
-        { field: 'actions', cellRenderer: ButtonCellRenderer },
+        { field: 'actions', cellRenderer: ButtonCellRenderer, pinned: 'right' },
     ],
     defaultColDef: {
         flex: 1,
