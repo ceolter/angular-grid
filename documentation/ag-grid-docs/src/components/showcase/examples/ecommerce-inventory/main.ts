@@ -1,6 +1,8 @@
 import { ButtonCellRenderer } from './buttonCellRenderer';
 import { getData } from './data';
 import { imageCellRenderer } from './imageCellRenderer';
+import { productCellRenderer } from './productCellRenderer';
+import { statusCellRenderer } from './statusCellRenderer';
 
 let gridApi;
 
@@ -19,13 +21,27 @@ const gridOptions = {
             headerCheckboxSelection: true,
             checkboxSelection: true,
             field: 'imageURL',
-            headerName: 'Product Image',
+            headerName: 'Product',
             cellRenderer: imageCellRenderer,
+            width: '10px',
             autoHeight: true,
         },
-        { field: 'product', wrapText: true, filter: true },
+        {
+            field: 'product',
+            headerName: 'Product',
+            cellRenderer: productCellRenderer, // Use the custom cell renderer
+            wrapText: true,
+            filter: true,
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            cellRenderer: statusCellRenderer, // Use the custom cell renderer
+            wrapText: true,
+            filter: true,
+        },
         { field: 'sku', headerName: 'SKU' },
-        { field: 'status', cellClass: cellClass },
+    
         {
             field: 'whenSoldOut',
             cellEditor: 'agSelectCellEditor',

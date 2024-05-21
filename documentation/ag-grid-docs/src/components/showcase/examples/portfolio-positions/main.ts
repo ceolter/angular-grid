@@ -20,10 +20,9 @@ const columnDefs = [
         field: 'ticker',
         cellDataType: 'text',
         pinned: 'left',
-        width: 100,
+        width: "150px",
         cellRenderer: imageCellRenderer, // Use the custom cell renderer
     },
-    { headerName: 'Name', field: 'name', cellDataType: 'text', width: 220 },
     {
         headerName: 'Last',
         cellDataType: 'number',
