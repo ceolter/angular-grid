@@ -63,3 +63,10 @@
     justify-content: center;
     width: 100vw;
 }
+
+.tabs a div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 12px;
+}
