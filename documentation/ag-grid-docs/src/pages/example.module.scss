@@ -46,6 +46,13 @@
     box-shadow: var(--shadow-sm);
     border-radius: var(--radius-sm);
     margin-right: $spacing-size-3;
+    width: 160px;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        opacity: 0.5;
+        transition: all 0.3s ease-in-out;
+    }
 }
 
 .tabActive {
