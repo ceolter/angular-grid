@@ -22,7 +22,8 @@ ButtonCellRenderer.prototype.init = function (params) {
     imgElement.alt = 'Delete Icon'; // Add alt text for accessibility
    
     this.removeButton.insertBefore(imgElement, this.removeButton.firstChild); // Insert image before text
-    this.removeButton.classList.add('delete-button')
+    this.removeButton.classList.add('button-secondary')
+    this.removeButton.classList.add('remove-button')
    
 
     // Create "Stop selling" button

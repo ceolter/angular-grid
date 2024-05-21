@@ -94,17 +94,16 @@ margin: 8px;;
     }
 }
 
-.delete-button {
-    background-color: hsl(0 72.22% 50.59% / 1);
-    border: 1px solid hsl(0, 67%, 40%);
+.remove-button {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+
     height: 40px;
     width: 40px;
 
     img {
         width: 20px;
-        left: 25px;
-        position: absolute;
-        top: 30px;
     }
 
     &:hover {
@@ -120,4 +119,5 @@ margin: 8px;;
 .button-cell  {
     display: flex;
     gap: 8px;
+    flex-direction: row-reverse;
 }
