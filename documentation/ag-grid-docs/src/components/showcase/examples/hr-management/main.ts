@@ -12,30 +12,26 @@ const gridOptions = {
             headerName: 'Employee',
             field: 'name',
             cellDataType: 'text',
-            pinned: 'left',
-            width: "250px",
+            width: "220px",
             cellRenderer: imageCellRenderer, // Use the custom cell renderer
-        },
-        {
-            headerName: 'Title',
-            field: 'department',
-            cellDataType: 'text',
-            width: "250px",
-            cellRenderer: tagCellRenderer, // Use the custom cell renderer
         },
         {
             headerName: 'Location',
             field: 'location',
             cellDataType: 'text',
-            width: "250px",
+            width: "200px",
             cellRenderer: flagRenderer, // Use the custom cell renderer
         },
-        { field: 'jobTitle' },
+        {
+            headerName: 'Title',
+            field: 'department',
+            cellDataType: 'text',
+            width: "200px",
+            cellRenderer: tagCellRenderer, // Use the custom cell renderer
+        },
         { field: 'employmentType' },
-        { field: 'department' },
-        { field: 'employeeId', cellDataType: 'number' },
-       
         { field: 'basicMonthlySalary', cellDataType: 'number', valueFormatter: currencyFormatter },
+        { field: 'employeeId', cellDataType: 'number' },  
     ],
     rowData: getData(),
     groupDefaultExpanded: -1, // expand all groups by default

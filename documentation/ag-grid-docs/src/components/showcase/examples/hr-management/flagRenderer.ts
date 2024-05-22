@@ -19,7 +19,7 @@ export function flagRenderer(params) {
 
     container.appendChild(employeeData)
     container.appendChild(img);
-    container.classList.add('employee-cell')
+    container.classList.add('flag-cell')
     employeeData.appendChild(span);
     employeeData.classList.add('employee-data')
 
