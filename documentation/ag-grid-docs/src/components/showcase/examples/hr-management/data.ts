@@ -1,7 +1,7 @@
 export function getData() {
     const rowData = [
         {
-            orgHierarchy: ['Renee Baker'],
+            name: 'Renee Baker',
             jobTitle: 'CTO',
             employmentType: 'Permanent',
             department: 'Executive Management',
@@ -11,9 +11,10 @@ export function getData() {
             basicMonthlySalary: 8659.59,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
+            image: '1'
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson'],
+            name: 'Frank Wilson',
             jobTitle: 'Exec. Vice President',
             employmentType: 'Permanent',
             department: 'Executive Management',
@@ -23,9 +24,10 @@ export function getData() {
             basicMonthlySalary: 4825.55,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
+            image: '2'
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson', 'Jonathan Romero'],
+            name: 'Jonathan Romero',
             jobTitle: 'Head of Department',
             employmentType: 'Permanent',
             department: 'Design',
@@ -35,9 +37,10 @@ export function getData() {
             basicMonthlySalary: 7126.1,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
+            image: '3'
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson', 'Jonathan Romero', 'Heather Mathis'],
+            name: 'Heather Mathis',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Design',
@@ -47,9 +50,11 @@ export function getData() {
             basicMonthlySalary: 3364.38,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
+            image: '4'
+
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson', 'Jonathan Romero', 'Dr. Gregory Mills'],
+            name: 'Dr. Gregory Mills',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Design',
@@ -59,9 +64,10 @@ export function getData() {
             basicMonthlySalary: 5088.19,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
+            image: '5'
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson', 'Jonathan Romero', 'Martin Villanueva'],
+            name: 'Martin Villanueva',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Design',
@@ -71,9 +77,10 @@ export function getData() {
             basicMonthlySalary: 7093.81,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
+            image: '6'
         },
         {
-            orgHierarchy: ['Renee Baker', 'Frank Wilson', 'Jonathan Romero', 'Mary Stone'],
+            name: 'Mary Stone',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Design',
@@ -83,9 +90,10 @@ export function getData() {
             basicMonthlySalary: 6618.2,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
+            image: '7'
         },
         {
-            orgHierarchy: ['Dylan Lewis'],
+            name: 'Dylan Lewis',
             jobTitle: 'CEO',
             employmentType: 'Permanent',
             department: 'Executive Management',
@@ -95,9 +103,10 @@ export function getData() {
             basicMonthlySalary: 14762.71,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
+            image: '8'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis'],
+            name: 'Michael Dennis',
             jobTitle: 'Exec. Vice President',
             employmentType: 'Permanent',
             department: 'Executive Management',
@@ -107,9 +116,10 @@ export function getData() {
             basicMonthlySalary: 4423.64,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
+            image: '9'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez'],
+            name: 'John Gonzalez',
             jobTitle: 'Head of Department',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -119,9 +129,10 @@ export function getData() {
             basicMonthlySalary: 3491.98,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
+            image: '10'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Nicole Bass'],
+            name: 'Nicole Bass',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -131,9 +142,10 @@ export function getData() {
             basicMonthlySalary: 2734.11,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
+            image: '11'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Darren Osborn'],
+            name: 'Darren Osborn',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -143,9 +155,10 @@ export function getData() {
             basicMonthlySalary: 7625.11,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
+            image: '12'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Amanda Arnold'],
+            name: 'Amanda Arnold',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -155,9 +168,10 @@ export function getData() {
             basicMonthlySalary: 2787.82,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
+            image: '13'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Richard Willis'],
+            name: 'Richard Willis',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Engineering',
@@ -167,9 +181,10 @@ export function getData() {
             basicMonthlySalary: 3437.53,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
+            image: '14'
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Mary Mckinney'],
+            name: 'Mary Mckinney',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Engineering',
@@ -179,9 +194,10 @@ export function getData() {
             basicMonthlySalary: 5996.5,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
+            image: '15',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Tammy Love'],
+            name: 'Tammy Love',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -191,9 +207,10 @@ export function getData() {
             basicMonthlySalary: 3153.23,
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
+            image: '16',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Donna Parker'],
+            name: 'Donna Parker',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Engineering',
@@ -205,7 +222,7 @@ export function getData() {
             paymentStatus: 'Pending',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Trevor Williams'],
+            name: 'Trevor Williams',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Engineering',
@@ -217,7 +234,7 @@ export function getData() {
             paymentStatus: 'Paid',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'John Gonzalez', 'Daniel Rodgers'],
+            name: 'Daniel Rodgers',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Engineering',
@@ -229,7 +246,7 @@ export function getData() {
             paymentStatus: 'Paid',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips'],
+            name: 'Shawn Phillips',
             jobTitle: 'Head of Department',
             employmentType: 'Permanent',
             department: 'Product',
@@ -241,7 +258,7 @@ export function getData() {
             paymentStatus: 'Pending',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'Jill Hobbs'],
+            name: 'Jill Hobbs',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Product',
@@ -253,7 +270,7 @@ export function getData() {
             paymentStatus: 'Pending',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'John Hall'],
+            name: 'John Hall',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Product',
@@ -265,7 +282,7 @@ export function getData() {
             paymentStatus: 'Pending',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'Alexandria Novak'],
+            name: 'Alexandria Novak',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Product',
@@ -277,7 +294,7 @@ export function getData() {
             paymentStatus: 'Pending',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'Donald Brennan'],
+            name: 'Donald Brennan',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Product',
@@ -289,7 +306,7 @@ export function getData() {
             paymentStatus: 'Paid',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'Andrea Kim'],
+            name: 'Andrea Kim',
             jobTitle: 'Employee',
             employmentType: 'Permanent',
             department: 'Product',
@@ -301,7 +318,7 @@ export function getData() {
             paymentStatus: 'Paid',
         },
         {
-            orgHierarchy: ['Dylan Lewis', 'Michael Dennis', 'Shawn Phillips', 'Rachel Mckenzie'],
+            name: 'Rachel Mckenzie',
             jobTitle: 'Employee',
             employmentType: 'Contract',
             department: 'Product',

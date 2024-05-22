@@ -1,10 +1,19 @@
 import { getData } from './data';
-
+import { imageCellRenderer } from './imageCellRenderer';
+import './styles.css';
 let gridApi;
 
 const gridOptions = {
     columnDefs: [
         // we're using the auto group column by default!
+        {
+            headerName: 'Employee',
+            field: 'name',
+            cellDataType: 'text',
+            pinned: 'left',
+            width: "250px",
+            cellRenderer: imageCellRenderer, // Use the custom cell renderer
+        },
         { field: 'jobTitle' },
         { field: 'employmentType' },
         { field: 'department' },
@@ -19,15 +28,7 @@ const gridOptions = {
         flex: 1,
         editable: true,
     },
-    autoGroupColumnDef: {
-        headerName: 'Organisation Hierarchy',
-        minWidth: 300,
-        cellRendererParams: {
-            suppressCount: true,
-        },
-    },
     rowData: getData(),
-    treeData: true, // enable Tree Data mode
     groupDefaultExpanded: -1, // expand all groups by default
     getDataPath: (data) => {
         return data.orgHierarchy;

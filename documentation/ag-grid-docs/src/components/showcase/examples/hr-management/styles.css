@@ -1,0 +1,29 @@
+.ag-theme-quartz {
+    --ag-row-height: 80px !important;
+}
+    .ag-theme-quartz .ag-cell{
+        display: flex;
+        align-items: center;
+        }
+
+.employee-cell {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+
+    .description { 
+        opacity: 0.6;
+    }
+}
+
+.employee-data {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.employee-data > span {
+    line-height: 20px
+}
