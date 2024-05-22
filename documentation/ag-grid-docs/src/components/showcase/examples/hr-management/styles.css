@@ -1,10 +1,11 @@
 .ag-theme-quartz {
     --ag-row-height: 80px !important;
 }
-    .ag-theme-quartz .ag-cell{
-        display: flex;
-        align-items: center;
-        }
+
+.ag-theme-quartz .ag-cell {
+    display: flex;
+    align-items: center;
+}
 
 .employee-cell {
     display: flex;
@@ -12,10 +13,10 @@
     align-items: center;
     justify-content: left;
     gap: 8px;
+}
 
-    .description { 
-        opacity: 0.6;
-    }
+.employee-cell .description { 
+    opacity: 0.6;
 }
 
 .employee-data {
@@ -23,7 +24,65 @@
     flex-direction: column;
 }
 
-
 .employee-data > span {
-    line-height: 20px
+    line-height: 20px;
+}
+
+.tag {
+    padding: 4px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-weight: 500;
+    color: rgb(102, 102, 102);
+    display: flex;
+    align-items: center;
+    height: 24px;
+    font-size: 13px;
+}
+
+.circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.design-circle {
+    background-color: #7E80E7; 
+}
+
+.engineering-circle {
+    background-color: #F3A23A; 
+}
+
+.executive-management-circle {
+    background-color: #47A8F8; 
+}
+
+.product-circle {
+    background-color: #87CF2B; 
+}
+
+.default-circle {
+    background-color: #cccccc; 
+}
+
+.design-tag {
+    border: 1px solid #7e80e751; 
+}
+
+.engineering-tag {
+    border: 1px solid #f3a33a53;
+}
+
+.executive-management-tag {
+    border: 1px solid #47a8f86c;
+}
+
+.product-tag {
+    border: 1px solid #88cf2b55;
+}
+
+.default-tag {
+    border: 1px solid #cccccc;
 }

@@ -1,5 +1,6 @@
 import { getData } from './data';
 import { imageCellRenderer } from './imageCellRenderer';
+import { tagCellRenderer } from './tagCellRenderer';
 import './styles.css';
 let gridApi;
 
@@ -14,20 +15,20 @@ const gridOptions = {
             width: "250px",
             cellRenderer: imageCellRenderer, // Use the custom cell renderer
         },
+        {
+            headerName: 'Title',
+            field: 'department',
+            cellDataType: 'text',
+            width: "250px",
+            cellRenderer: tagCellRenderer, // Use the custom cell renderer
+        },
         { field: 'jobTitle' },
         { field: 'employmentType' },
         { field: 'department' },
         { field: 'employeeId', cellDataType: 'number' },
         { field: 'location' },
-        { field: 'joinDate', cellDataType: 'dateString' },
         { field: 'basicMonthlySalary', cellDataType: 'number', valueFormatter: currencyFormatter },
-        { field: 'paymentMethod' },
-        { field: 'paymentStatus' },
     ],
-    defaultColDef: {
-        flex: 1,
-        editable: true,
-    },
     rowData: getData(),
     groupDefaultExpanded: -1, // expand all groups by default
     getDataPath: (data) => {
