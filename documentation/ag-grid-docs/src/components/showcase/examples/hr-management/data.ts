@@ -6,12 +6,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Executive Management',
             employeeId: 353706,
-            location: 'North Ericatown',
+            location: 'United Kingdom',
             joinDate: '2019-07-31',
             basicMonthlySalary: 8659.59,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
-            image: '1'
+            image: '1',
+            flag: 'uk'
         },
         {
             name: 'Frank Wilson',
@@ -19,12 +20,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Executive Management',
             employeeId: 316904,
-            location: 'Shawburgh',
+            location: 'United Kingdom',
             joinDate: '2010-05-15',
             basicMonthlySalary: 4825.55,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
-            image: '2'
+            image: '2',
+            flag: 'uk'
         },
         {
             name: 'Jonathan Romero',
@@ -32,12 +34,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Design',
             employeeId: 936854,
-            location: 'Tiffanyfort',
+            location: 'United States',
             joinDate: '2019-03-19',
             basicMonthlySalary: 7126.1,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
-            image: '3'
+            image: '3',
+            flag: 'us'
         },
         {
             name: 'Heather Mathis',
@@ -45,12 +48,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Design',
             employeeId: 105854,
-            location: 'North Emma',
+            location: 'United States',
             joinDate: '2009-05-04',
             basicMonthlySalary: 3364.38,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
-            image: '4'
+            image: '4',
+            flag: 'us'
 
         },
         {
@@ -59,12 +63,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Product',
             employeeId: 196196,
-            location: 'East Maryside',
+            location: 'Spain',
             joinDate: '2018-11-26',
             basicMonthlySalary: 5088.19,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
-            image: '5'
+            image: '5',
+            flag: 'es'
         },
         {
             name: 'Martin Villanueva',
@@ -72,12 +77,13 @@ export function getData() {
             employmentType: 'Contract',
             department: 'Product',
             employeeId: 900809,
-            location: 'North Emilyhaven',
+            location: 'Portugal',
             joinDate: '2006-03-02',
             basicMonthlySalary: 7093.81,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
-            image: '6'
+            image: '6',
+            flag: 'po'
         },
         {
             name: 'Mary Stone',
@@ -85,12 +91,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Engineering',
             employeeId: 634325,
-            location: 'New Bridgetside',
+            location: 'Netherlands ',
             joinDate: '2019-05-01',
             basicMonthlySalary: 6618.2,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
-            image: '7'
+            image: '7',
+            flag: 'ne'
         },
         {
             name: 'Dylan Lewis',
@@ -98,12 +105,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Executive Management',
             employeeId: 971769,
-            location: 'Rebeccahaven',
+            location: 'United Kingdom',
             joinDate: '2005-12-10',
             basicMonthlySalary: 14762.71,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
-            image: '8'
+            image: '8',
+            flag: 'uk'
         },
         {
             name: 'Michael Dennis',
@@ -111,12 +119,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'HR',
             employeeId: 625535,
-            location: 'Garrettfort',
+            location: 'United Kingdom',
             joinDate: '2001-10-21',
             basicMonthlySalary: 4423.64,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
-            image: '9'
+            image: '9',
+            flag: 'uk'
         },
         {
             name: 'John Gonzalez',
@@ -124,12 +133,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Customer Support',
             employeeId: 703257,
-            location: 'Stacystad',
+            location: 'Ireland',
             joinDate: '2006-10-09',
             basicMonthlySalary: 3491.98,
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
-            image: '10'
+            image: '10',
+            flag: 'ie'
         },
         {
             name: 'Nicole Bass',
@@ -137,12 +147,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Customer Support',
             employeeId: 859426,
-            location: 'New Scottfurt',
+            location: 'Ireland',
             joinDate: '2019-01-04',
             basicMonthlySalary: 2734.11,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
-            image: '11'
+            image: '11',
+            flag: 'ie'
         },
         {
             name: 'Darren Osborn',
@@ -150,12 +161,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Engineering',
             employeeId: 568861,
-            location: 'Herreramouth',
+            location: 'Spain',
             joinDate: '2007-07-15',
             basicMonthlySalary: 7625.11,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
-            image: '12'
+            image: '12',
+            flag: 'es'
         },
         {
             name: 'Amanda Arnold',
@@ -163,12 +175,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Engineering',
             employeeId: 605882,
-            location: 'Lisatown',
+            location: 'Ireland',
             joinDate: '2013-12-06',
             basicMonthlySalary: 2787.82,
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
-            image: '13'
+            image: '13',
+            flag: 'ie'
         },
         {
             name: 'Richard Willis',
@@ -176,12 +189,13 @@ export function getData() {
             employmentType: 'Contract',
             department: 'Engineering',
             employeeId: 855633,
-            location: 'Carrmouth',
+            location: 'France',
             joinDate: '2007-08-14',
             basicMonthlySalary: 3437.53,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
-            image: '14'
+            image: '14',
+            flag: 'fr'
         },
         {
             name: 'Mary Mckinney',
@@ -189,12 +203,13 @@ export function getData() {
             employmentType: 'Contract',
             department: 'Engineering',
             employeeId: 832328,
-            location: 'Gomezmouth',
+            location: 'United Kingdom',
             joinDate: '2014-02-13',
             basicMonthlySalary: 5996.5,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '15',
+            flag: 'uk'
         },
         {
             name: 'Tammy Love',
@@ -208,6 +223,7 @@ export function getData() {
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '16',
+            flag: 'fr'
         },
         {
             name: 'Donna Parker',
@@ -221,6 +237,7 @@ export function getData() {
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '17',
+            flag: 'es'
         },
         {
             name: 'Trevor Williams',
@@ -234,6 +251,7 @@ export function getData() {
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
             image: '18',
+            flag: 'fr'
         },
         {
             name: 'Daniel Rodgers',
@@ -247,6 +265,7 @@ export function getData() {
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
             image: '19',
+            flag: 'uk'
         },
         {
             name: 'Shawn Phillips',
@@ -260,6 +279,7 @@ export function getData() {
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
             image: '20',
+            flag: 'us'
         },
         {
             name: 'Jill Hobbs',
@@ -273,6 +293,7 @@ export function getData() {
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '17',
+            flag: 'ne'
         },
         {
             name: 'John Hall',
@@ -286,6 +307,7 @@ export function getData() {
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '12',
+            flag: 'fr'
         },
         {
             name: 'Alexandria Novak',
@@ -293,12 +315,13 @@ export function getData() {
             employmentType: 'Contract',
             department: 'Legal',
             employeeId: 322302,
-            location: 'South Malloryland',
+            location: 'United Kingdom',
             joinDate: '2014-06-29',
             basicMonthlySalary: 2676.37,
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '1',
+            flag: 'uk'
         },
         {
             name: 'Donald Brennan',
@@ -306,12 +329,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Sales',
             employeeId: 71358,
-            location: 'Frankmouth',
+            location: 'Ireland',
             joinDate: '2002-06-14',
             basicMonthlySalary: 7272.37,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '2',
+            flag: 'ie'
         },
         {
             name: 'Andrea Kim',
@@ -319,12 +343,13 @@ export function getData() {
             employmentType: 'Permanent',
             department: 'Sales',
             employeeId: 688798,
-            location: 'Hunthaven',
+            location: 'United Kingdom',
             joinDate: '2011-05-05',
             basicMonthlySalary: 2823.27,
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '3',
+            flag: 'uk'
         },
         {
             name: 'Rachel Mckenzie',
@@ -332,12 +357,13 @@ export function getData() {
             employmentType: 'Contract',
             department: 'Customer Support',
             employeeId: 984668,
-            location: 'Sheilashire',
+            location: 'United States',
             joinDate: '2001-07-15',
             basicMonthlySalary: 2672.37,
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '7',
+            flag: 'us'
         },
     ];
     return rowData;

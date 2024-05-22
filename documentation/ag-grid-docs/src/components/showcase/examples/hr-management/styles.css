@@ -1,5 +1,10 @@
 .ag-theme-quartz {
     --ag-row-height: 80px !important;
+    --ag-header-background-color: transparent !important;
+--ag-data-color: rgb(23, 23, 23);
+--ag-header-foreground-color: rgb(96, 96, 96) !important;
+--ag-row-hover-color: #f4f4f4 !important;
+    
 }
 
 .ag-theme-quartz .ag-cell {
@@ -13,6 +18,8 @@
     align-items: center;
     justify-content: left;
     gap: 8px;
+
+ 
 }
 
 .employee-cell .description { 
@@ -28,12 +35,17 @@
     line-height: 20px;
 }
 
+.employee-name {
+    font-weight: 500;
+    color: rgb(50, 50, 50);
+}
+
 .tag {
     padding: 4px;
     border-radius: 6px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     font-weight: 500;
-    color: rgb(102, 102, 102);
+    color: rgb(50, 50, 50);
     display: flex;
     align-items: center;
     height: 24px;

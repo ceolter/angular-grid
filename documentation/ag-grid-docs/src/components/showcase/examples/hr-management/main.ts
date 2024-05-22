@@ -1,6 +1,7 @@
 import { getData } from './data';
 import { imageCellRenderer } from './imageCellRenderer';
 import { tagCellRenderer } from './tagCellRenderer';
+import { flagRenderer } from './flagRenderer'
 import './styles.css';
 let gridApi;
 
@@ -22,11 +23,18 @@ const gridOptions = {
             width: "250px",
             cellRenderer: tagCellRenderer, // Use the custom cell renderer
         },
+        {
+            headerName: 'Location',
+            field: 'location',
+            cellDataType: 'text',
+            width: "250px",
+            cellRenderer: flagRenderer, // Use the custom cell renderer
+        },
         { field: 'jobTitle' },
         { field: 'employmentType' },
         { field: 'department' },
         { field: 'employeeId', cellDataType: 'number' },
-        { field: 'location' },
+       
         { field: 'basicMonthlySalary', cellDataType: 'number', valueFormatter: currencyFormatter },
     ],
     rowData: getData(),

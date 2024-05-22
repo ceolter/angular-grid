@@ -16,6 +16,7 @@ export function imageCellRenderer(params) {
 
     const span = document.createElement('span');
     span.innerText = tickerNormal;
+    span.classList.add('employee-name')
 
 
     const spanDescription = document.createElement('span');
