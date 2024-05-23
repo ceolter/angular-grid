@@ -24,7 +24,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
         </div>
     
         <div className={styles.tabs}>
-            <a href="/example">
+            <a href={urlWithBaseUrl(`/example`)}>
                 <img
                 className={styles.showcaseItemTab}
                 src={urlWithBaseUrl(`/example/grid-illustration.png`)}
@@ -32,7 +32,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>Inventory</div>
             </a>
-            <a href="/example-finance">
+            <a href={urlWithBaseUrl(`/example-finance`)}>
                 <img
                     className={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/finance-illustration.png`)}
@@ -40,7 +40,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>Finance</div>
             </a>
-            <a href="/example-crm">
+            <a href={urlWithBaseUrl(`/example-crm`)}>
                 <img
                     className={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/crm-illustration.png`)}
@@ -48,7 +48,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>CRM</div>
             </a>
-            <a href="/example-complete">
+            <a href={urlWithBaseUrl(`/example-complete`)}>
                 <img
                 className={`${styles.showcaseItemTab} ${styles.tabActive}`}
                 src={urlWithBaseUrl(`/example/grid-illustration.png`)}
