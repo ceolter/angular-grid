@@ -1,3 +1,5 @@
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+
 export function renderPdfLink() {
     const linkText = '';
 
@@ -6,7 +8,7 @@ export function renderPdfLink() {
     linkElement.classList.add('button-secondary', 'advice'); // Add multiple classes
 
     const imgElement = document.createElement('img');
-    imgElement.src = '/example/finance/icons/documentation.svg';
+    imgElement.src = urlWithBaseUrl(`/example/finance/icons/documentation.svg`);
     imgElement.classList.add('adviceIcon'); // Add class to the image
     imgElement.alt = 'Documentation Icon'; // Add alt text for accessibility
 

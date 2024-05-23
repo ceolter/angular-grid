@@ -1,8 +1,10 @@
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+
 export function flagRenderer(params) {
     console.log(arguments)
     const flag = params.data.flag
     const location = params.data.location
-    const imgSrc = `/example/hr/${flag}.svg`; // Replace with the correct path to your images
+    const imgSrc = urlWithBaseUrl(`/example/hr/${flag}.svg`); 
 
     const img = document.createElement('img');
     img.src = imgSrc;

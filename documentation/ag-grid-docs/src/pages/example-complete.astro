@@ -7,10 +7,10 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 
 <Layout title="Ecommerce Inventory Management">
-    <div className={styles.topHeader}>
+    <div class={styles.topHeader}>
         <div>
-            <h1 className={styles.headerHeading}>Complete</h1>
-            <p className={styles.headerDescription}>See all of the AG Grid features combined into one fully-functional datagrid solution</p>
+            <h1 class={styles.headerHeading}>Complete</h1>
+            <p class={styles.headerDescription}>See all of the AG Grid features combined into one fully-functional datagrid solution</p>
             <button
             class="button-secondary"
         >   <Icon
@@ -23,10 +23,10 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
         </button>
         </div>
     
-        <div className={styles.tabs}>
+        <div class={styles.tabs}>
             <a href={urlWithBaseUrl(`/example`)}>
                 <img
-                className={styles.showcaseItemTab}
+                class={styles.showcaseItemTab}
                 src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -34,7 +34,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-finance`)}>
                 <img
-                    className={styles.showcaseItemTab}
+                    class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/finance-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -42,7 +42,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-crm`)}>
                 <img
-                    className={styles.showcaseItemTab}
+                    class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/crm-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -50,7 +50,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-complete`)}>
                 <img
-                className={`${styles.showcaseItemTab} ${styles.tabActive}`}
+                class={`${styles.showcaseItemTab} ${styles.tabActive}`}
                 src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -59,8 +59,8 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
     
         </div>
     </div>
-    <div className={styles.layout}>
-        <div className={styles.layoutWrapper}>
+    <div class={styles.layout}>
+        <div class={styles.layoutWrapper}>
     <Example client:only="react" />
         </div></div>
 </Layout>

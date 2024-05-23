@@ -1,7 +1,9 @@
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+
 export function imageCellRenderer(params) {
     const ticker = params.value.toLowerCase();
     const tickerNormal = params.value;
-    const imgSrc = `/example/finance/logos/${ticker}.png`; // Replace with the correct path to your images
+    const imgSrc = urlWithBaseUrl(`/example/finance/logos/${ticker}.png`); 
 
     const img = document.createElement('img');
     img.src = imgSrc;

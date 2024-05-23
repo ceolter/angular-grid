@@ -1,3 +1,4 @@
+
 export function imageCellRenderer(params) {
     const imageUrl = params.value;
     const cellElement = document.createElement('div');

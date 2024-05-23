@@ -1,3 +1,5 @@
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+
 // Custom cell renderer component
 export function ButtonCellRenderer() {}
 
@@ -17,7 +19,7 @@ ButtonCellRenderer.prototype.init = function (params) {
 
     //create delete image
     var imgElement = document.createElement('img');
-    imgElement.src = '/example/inventory/delete.svg';
+    imgElement.src = urlWithBaseUrl(`/example/inventory/delete.svg`)
     imgElement.classList.add('deleteIcon'); // Add class to the image
     imgElement.alt = 'Delete Icon'; // Add alt text for accessibility
    

@@ -8,11 +8,11 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 
 <ShowcaseLayout title="Portfolio Positions">
-    <div className={styles.topHeader}>
+    <div class={styles.topHeader}>
         <div>
             <FinanceIcon/>
-            <h1 className={styles.headerHeading}>Finance</h1>
-            <p className={styles.headerDescription}>An example of a finance app with integrated charts and live-updating data</p>
+            <h1 class={styles.headerHeading}>Finance</h1>
+            <p class={styles.headerDescription}>An example of a finance app with integrated charts and live-updating data</p>
             <button
             class="button-secondary"
         >   <Icon
@@ -25,10 +25,10 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
         </button>
         </div>
     
-        <div className={styles.tabs}>
+        <div class={styles.tabs}>
             <a href={urlWithBaseUrl(`/example`)}>
                 <img
-                className={styles.showcaseItemTab}
+                class={styles.showcaseItemTab}
                 src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -36,7 +36,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-finance`)}>
                 <img
-                className={`${styles.showcaseItemTab} ${styles.tabActive}`}
+                class={`${styles.showcaseItemTab} ${styles.tabActive}`}
                 src={urlWithBaseUrl(`/example/finance-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -44,7 +44,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-crm`)}>
                 <img
-                    className={styles.showcaseItemTab}
+                    class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/crm-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -52,7 +52,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
             </a>
             <a href={urlWithBaseUrl(`/example-complete`)}>
                 <img
-                    className={styles.showcaseItemTab}
+                    class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
@@ -61,8 +61,8 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
     
         </div>
     </div>
-    <div className={styles.layout}>
-        <div className={styles.layoutWrapper}>
+    <div class={styles.layout}>
+        <div class={styles.layoutWrapper}>
     <PortfolioExample />
         </div></div>
 </ShowcaseLayout>
