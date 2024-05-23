@@ -1,14 +1,15 @@
 ---
 import styles from '../../Showcase.module.scss';
 import styles from './index.module.scss';
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 <div className={styles.wrapper}>
 <div className={styles.sidebar}>
     <div className={styles.sidebarWrapper}>
     <div className={styles.navitems}>
-        <img className={styles.sidebarIcon} src="/example/finance/icons/home.svg">
-        <img className={styles.activeIcon} src="/example/finance/icons/finance.svg">
-        <img className={styles.sidebarIcon} src="/example/finance/icons/landmark.svg">
+        <img className={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/home.svg`)}>
+        <img className={styles.activeIcon}  src={urlWithBaseUrl(`/example/finance/icons/finance.svg`)}>
+        <img className={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/landmark.svg`)}>
     </div>
     <img className={styles.settingsIcon} src="/example/finance/icons/settings.svg">
     </div>
@@ -20,8 +21,8 @@ import styles from './index.module.scss';
         <div className={styles.activeBreadcrumb}>Portfolio</div>
     </div>
     <div className={styles.toolbar}>
-    <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src="/example/finance/icons/download.svg"></img>Export to Excel</button>
-    <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src="/example/finance/icons/filter.svg"></img>Filter</button>
+    <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/download.svg`)}></img>Export to Excel</button>
+    <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/filter.svg`)}></img>Filter</button>
 </div>
     <div id="myGrid" class:list={['ag-theme-quartz', styles.grid]}></div>
 </div>
