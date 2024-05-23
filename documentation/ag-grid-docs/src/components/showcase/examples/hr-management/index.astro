@@ -4,27 +4,27 @@ import styles from './index.module.scss';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 
-<div className={styles.wrapper}>
-    <div className={styles.sidebar}>
-        <div className={styles.sidebarWrapper}>
-        <div className={styles.navitems}>
-            <img className={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/home.svg`)}>
-            <img className={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/landmark.svg`)}>
+<div class={styles.wrapper}>
+    <div class={styles.sidebar}>
+        <div class={styles.sidebarWrapper}>
+        <div class={styles.navitems}>
+            <img class={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/home.svg`)}>
+            <img class={styles.sidebarIcon} src={urlWithBaseUrl(`/example/finance/icons/landmark.svg`)}>
     
           
         </div>
-        <img className={styles.settingsIcon} src={urlWithBaseUrl(`/example/finance/icons/settings.svg`)}>
+        <img class={styles.settingsIcon} src={urlWithBaseUrl(`/example/finance/icons/settings.svg`)}>
         </div>
     </div>
     <div class={styles.container}>
-        <div className={styles.breadcrumbs}>
-            <div className={styles.inactiveBreadcrumb} >Dashboard</div>
-            <img className={styles.rightIcon} src="/example/finance/icons/right.svg">
-            <div className={styles.activeBreadcrumb}>Employees</div>
+        <div class={styles.breadcrumbs}>
+            <div class={styles.inactiveBreadcrumb} >Dashboard</div>
+            <img class={styles.rightIcon} src="/example/finance/icons/right.svg">
+            <div class={styles.activeBreadcrumb}>Employees</div>
         </div>
-        <div className={styles.toolbar}>
-        <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/download.svg`)}></img>Export to Excel</button>
-        <button id="export-to-excel" class="button-secondary" ><img className={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/filter.svg`)}></img>Filter</button>
+        <div class={styles.toolbar}>
+        <button id="export-to-excel" class="button-secondary" ><img class={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/download.svg`)}></img>Export to Excel</button>
+        <button id="export-to-excel" class="button-secondary" ><img class={styles.buttonIcon} src={urlWithBaseUrl(`/example/finance/icons/filter.svg`)}></img>Filter</button>
     </div>
         <div id="myGrid" class:list={['ag-theme-quartz', styles.grid]}></div>
     </div>
