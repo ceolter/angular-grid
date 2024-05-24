@@ -20,10 +20,10 @@ export const pnlPercentCalculator = (params) => {
 
 export function currencyFormatter(params) {
     if (params.value == null) return '';
-    if (params.value.ccy === 'USD') return '$' + params.value;
-    if (params.value.ccy === 'JPY') return '¥' + params.value;
-    if (params.value.ccy === 'GBP') return '£' + params.value;
-    if (params.value.ccy === 'EUR') return '€' + params.value;
+    if (params.data.ccy === 'USD') return '$' + params.value;
+    if (params.data.ccy === 'JPY') return '¥' + params.value;
+    if (params.data.ccy === 'GBP') return '£' + params.value;
+    if (params.data.ccy === 'EUR') return '€' + params.value;
 }
 
 export function percentageFormatter(params) {
