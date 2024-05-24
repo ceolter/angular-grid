@@ -1,3 +1,5 @@
+import type { ColDef, GetRowIdParams, GridApi, GridOptions } from '@ag-grid-community/core';
+
 import {
     calculate52wChange,
     costCalculator,
@@ -7,20 +9,23 @@ import {
     pnlPercentCalculator,
     valueCalculator,
 } from './calculations';
-import { getData } from './data';
-import { renderPdfLink } from './pdfRenderer';
+import { UPDATE_INTERVAL } from './constants';
+import { generatePortfolio, generatePortfolioItemUpdate } from './data';
+import { createGenerator } from './generator-utils';
 import { imageCellRenderer } from './imageCellRenderer';
+import { renderPdfLink } from './pdfRenderer';
 import './styles.css';
+import type { PortfolioItem } from './types';
 
-let gridApi;
+let gridApi: GridApi<PortfolioItem>;
 
-const columnDefs = [
+const columnDefs: ColDef[] = [
     {
         headerName: 'Symbol',
         field: 'ticker',
         cellDataType: 'text',
         pinned: 'left',
-        width: "150px",
+        width: 150,
         cellRenderer: imageCellRenderer, // Use the custom cell renderer
     },
     {
@@ -41,11 +46,13 @@ const columnDefs = [
     },
     {
         headerName: 'Change',
-        field: 'change',
+        field: 'timeline',
         cellRenderer: 'agSparklineCellRenderer',
         cellRendererParams: {
             sparklineOptions: {
                 type: 'area',
+                xKey: 'time',
+                yKey: 'value',
                 fill: 'rgba(185,173,77,0.3)',
                 line: {
                     stroke: 'rgb(185,173,77)',
@@ -81,7 +88,7 @@ const columnDefs = [
         headerName: 'Instrument',
         field: 'instrument',
         cellDataType: 'text',
-  
+
         rowGroup: true,
         hide: true,
         width: 150,
@@ -130,7 +137,7 @@ const columnDefs = [
         pivot: true,
         aggFunc: 'sum',
     },
-    
+
     {
         headerName: 'Total Value',
         cellDataType: 'number',
@@ -158,14 +165,35 @@ const columnDefs = [
     { headerName: 'Options', cellRenderer: renderPdfLink, width: 80, pinned: 'right' },
 ];
 
-const gridOptions = {
-    rowData: getData(),
+const rowData = generatePortfolio();
+const generator = createGenerator({
+    interval: UPDATE_INTERVAL,
+    callback: () => {
+        if (!gridApi) {
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * rowData.length);
+        const portfolioItemToUpdate = rowData[randomIndex];
+        const newItem = generatePortfolioItemUpdate(portfolioItemToUpdate);
+
+        rowData[randomIndex] = newItem;
+        gridApi.applyTransactionAsync({
+            update: [newItem],
+        });
+    },
+});
+const gridOptions: GridOptions = {
+    rowData,
+    getRowId: (params: GetRowIdParams) => {
+        return params.data.ticker;
+    },
     columnDefs: columnDefs,
     defaultColDef: {
         filter: true,
         resizable: true,
     },
- 
+
     enableRangeSelection: true,
     enableCharts: true,
     rowSelection: 'multiple',
@@ -189,7 +217,10 @@ function onBtExport() {
 // setup the grid after the page has finished loading
 document.addEventListener('DOMContentLoaded', function () {
     const gridDiv = document.querySelector('#myGrid');
-    gridApi = agGrid.createGrid(gridDiv, gridOptions);
+    gridOptions.onGridReady = () => {
+        generator.start();
+    };
+    gridApi = globalThis.agGrid.createGrid(gridDiv, gridOptions);
 
     const button = document.getElementById('export-to-excel');
     button.addEventListener('click', () => {
