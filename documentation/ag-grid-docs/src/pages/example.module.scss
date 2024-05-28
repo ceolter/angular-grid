@@ -13,6 +13,11 @@
         color: var(--color-text-tertiary);
     }
 
+    @media screen and (min-width: (1800px + 48px * 2)) {
+        padding-left: 0;
+        max-width: var(--layout-max-width);
+    }
+
     margin: 0 auto;
     padding-top: $spacing-size-12;
     display: flex;
