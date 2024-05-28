@@ -20,7 +20,7 @@
         color: #4e4e4e;
     }
     display: flex;
-    justify-content: space-between;
+    gap: 16px;
 }
 
 .grid {
@@ -138,4 +138,29 @@
 
 .activeBreadcrumb {
     opacity: 0.4;
+}
+
+:global {
+    #finance-example-slider {
+        .update-speed {
+            font-size: 1.3em;
+        }
+    }
+}
+
+.slider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    label {
+        font-weight: 600;
+        width: 10em;
+    }
+
+    input[type='range'] {
+        min-width: 12em;
+        margin-left: 0;
+    }
 }

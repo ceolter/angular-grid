@@ -9,7 +9,7 @@ import {
     pnlPercentCalculator,
     valueCalculator,
 } from './calculations';
-import { UPDATE_INTERVAL } from './constants';
+import { INITIAL_UPDATE_INTERVAL_MULTIPLIER, UPDATE_INTERVAL } from './constants';
 import { generatePortfolio, generatePortfolioItemUpdate } from './data';
 import { createGenerator } from './generator-utils';
 import { imageCellRenderer } from './imageCellRenderer';
@@ -17,6 +17,8 @@ import { renderPdfLink } from './pdfRenderer';
 import './styles.css';
 import type { PortfolioItem } from './types';
 
+const SLIDER_ID = 'finance-example-slider';
+const SLIDER_VALUE_SELECTOR = `#${SLIDER_ID} .update-speed`;
 let gridApi: GridApi<PortfolioItem>;
 
 const columnDefs: ColDef[] = [
@@ -166,7 +168,7 @@ const columnDefs: ColDef[] = [
 
 const rowData = generatePortfolio();
 const generator = createGenerator({
-    interval: UPDATE_INTERVAL,
+    interval: UPDATE_INTERVAL / INITIAL_UPDATE_INTERVAL_MULTIPLIER,
     callback: () => {
         if (!gridApi) {
             return;
@@ -214,6 +216,21 @@ function onBtExport() {
     gridApi.exportDataAsExcel();
 }
 
+function initSlider() {
+    const slider = document.getElementById(SLIDER_ID);
+    const sliderValue = document.querySelector(SLIDER_VALUE_SELECTOR);
+
+    slider?.addEventListener('change', (event) => {
+        const value = parseFloat(event.target?.value);
+
+        const displayValue = value <= 0 ? '0' : `${value}x`;
+        sliderValue!.innerHTML = displayValue;
+
+        const updateInterval = UPDATE_INTERVAL / value;
+        generator.updateInterval(updateInterval);
+    });
+}
+
 // setup the grid after the page has finished loading
 document.addEventListener('DOMContentLoaded', function () {
     const gridDiv = document.querySelector('#myGrid');
@@ -223,7 +240,9 @@ document.addEventListener('DOMContentLoaded', function () {
     gridApi = globalThis.agGrid.createGrid(gridDiv, gridOptions);
 
     const button = document.getElementById('export-to-excel');
-    button.addEventListener('click', () => {
+    button?.addEventListener('click', () => {
         onBtExport();
     });
+
+    initSlider();
 });

@@ -6,6 +6,11 @@ import type { BasePortfolioItem } from './types';
 export const UPDATE_INTERVAL = 60;
 
 /**
+ * Multiplier for how often to update
+ */
+export const INITIAL_UPDATE_INTERVAL_MULTIPLIER = 1;
+
+/**
  * All base portfolio data for generated data
  */
 export const PORTFOLIO_DATA: BasePortfolioItem[] = [

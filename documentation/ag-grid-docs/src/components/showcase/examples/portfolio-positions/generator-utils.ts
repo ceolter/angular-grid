@@ -39,6 +39,10 @@ export function createGenerator({ interval = 1000, callback }: { interval: numbe
 
     const updateInterval = (newInterval: number) => {
         clearTimeout(timeout);
+        if (newInterval === Infinity) {
+            return;
+        }
+
         currentInterval = newInterval;
 
         if (state !== 'stopped') {

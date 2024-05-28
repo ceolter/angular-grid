@@ -1,6 +1,14 @@
 ---
+import { INITIAL_UPDATE_INTERVAL_MULTIPLIER } from './constants';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import styles from './index.module.scss';
+
+const rangeConfig = {
+    min: 0,
+    max: 4,
+    step: 0.1,
+    value: INITIAL_UPDATE_INTERVAL_MULTIPLIER,
+};
 ---
 
 <div class={styles.wrapper}>
@@ -10,6 +18,21 @@ import styles from './index.module.scss';
                 <img class={styles.buttonIcon} src={urlWithBaseUrl('/example/finance/icons/download.svg')} />Export to
                 Excel
             </button>
+            <div id="finance-example-slider" class={styles.slider}>
+                <label for="update-speed-slider">
+                    <span class="text-secondary">Update speed:</span>
+                    <span class="update-speed">{rangeConfig.value}x</span>
+                </label>
+                <input
+                    type="range"
+                    id="update-speed-slider"
+                    name="update-speed-slider"
+                    min={rangeConfig.min}
+                    max={rangeConfig.max}
+                    step={rangeConfig.step}
+                    value={rangeConfig.value}
+                />
+            </div>
         </div>
         <div id="myGrid" class:list={['ag-theme-quartz', styles.grid]}></div>
     </div>
