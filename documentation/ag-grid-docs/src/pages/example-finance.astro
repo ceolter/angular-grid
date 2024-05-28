@@ -10,7 +10,6 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 <ShowcaseLayout title="Portfolio Positions">
     <div class={styles.topHeader}>
         <div>
-            <FinanceIcon />
             <h1 class={styles.headerHeading}>Finance</h1>
             <p class={styles.headerDescription}>
                 An example of a finance app with integrated charts and live-updating data
@@ -22,7 +21,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
         </div>
 
         <div class={styles.tabs}>
-            <a href={urlWithBaseUrl("/example")}>
+            <a href={urlWithBaseUrl('/example')}>
                 <img
                     class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/grid-illustration.png`)}
@@ -30,7 +29,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>Inventory</div>
             </a>
-            <a href={urlWithBaseUrl("/example-finance")}>
+            <a href={urlWithBaseUrl('/example-finance')}>
                 <img
                     class={`${styles.showcaseItemTab} ${styles.tabActive}`}
                     src={urlWithBaseUrl(`/example/finance-illustration.png`)}
@@ -38,7 +37,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>Finance</div>
             </a>
-            <a href={urlWithBaseUrl("/example-crm")}>
+            <a href={urlWithBaseUrl('/example-crm')}>
                 <img
                     class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/crm-illustration.png`)}
@@ -46,7 +45,7 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>CRM</div>
             </a>
-            <a href={urlWithBaseUrl("/example-complete")}>
+            <a href={urlWithBaseUrl('/example-complete')}>
                 <img
                     class={styles.showcaseItemTab}
                     src={urlWithBaseUrl(`/example/grid-illustration.png`)}

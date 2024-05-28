@@ -4,28 +4,11 @@ import styles from './index.module.scss';
 ---
 
 <div class={styles.wrapper}>
-    <div class={styles.sidebar}>
-        <div class={styles.sidebarWrapper}>
-            <div class={styles.navitems}>
-                <img class={styles.sidebarIcon} src={urlWithBaseUrl("/example/finance/icons/home.svg")} />
-                <img class={styles.activeIcon} src={urlWithBaseUrl("/example/finance/icons/finance.svg")} />
-                <img class={styles.sidebarIcon} src={urlWithBaseUrl("/example/finance/icons/landmark.svg")} />
-            </div>
-            <img class={styles.settingsIcon} src={urlWithBaseUrl("/example/finance/icons/settings.svg")} />
-        </div>
-    </div>
     <div class={styles.container}>
-        <div class={styles.breadcrumbs}>
-            <div class={styles.inactiveBreadcrumb}>Dashboard</div>
-            <img class={styles.rightIcon} src={urlWithBaseUrl("/example/finance/icons/right.svg")} />
-            <div class={styles.activeBreadcrumb}>Portfolio</div>
-        </div>
         <div class={styles.toolbar}>
             <button id="export-to-excel" class="button-secondary">
-                <img class={styles.buttonIcon} src={urlWithBaseUrl("/example/finance/icons/download.svg")} />Export to Excel
-            </button>
-            <button id="export-to-excel" class="button-secondary">
-                <img class={styles.buttonIcon} src={urlWithBaseUrl("/example/finance/icons/filter.svg")} />Filter
+                <img class={styles.buttonIcon} src={urlWithBaseUrl('/example/finance/icons/download.svg')} />Export to
+                Excel
             </button>
         </div>
         <div id="myGrid" class:list={['ag-theme-quartz', styles.grid]}></div>

@@ -1,7 +1,7 @@
 ---
 import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import HRManagementExample from '@components/showcase/examples/hr-management/index.astro';
-import styles from "./example.module.scss"
+import styles from './example.module.scss';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import CRMIcon from '../../public/example/crm.svg?react';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
@@ -10,42 +10,35 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 <ShowcaseLayout title="HR Management">
     <div class={styles.topHeader}>
         <div>
-            <CRMIcon/>
             <h1 class={styles.headerHeading}>CRM</h1>
             <p class={styles.headerDescription}>An example inventory dashboard that let’s you manage employees data</p>
-            <button
-            class="button-secondary"
-        >   <Icon
-        alt={`GitHub logo`}
-        name="github"
-        svgClasses={styles.githubIcon}
-    />
-            <span>See on Github</span>
-    
-        </button>
+            <button class="button-secondary">
+                <Icon alt={`GitHub logo`} name="github" svgClasses={styles.githubIcon} />
+                <span>See on Github</span>
+            </button>
         </div>
-    
+
         <div class={styles.tabs}>
             <a href={urlWithBaseUrl(`/example`)}>
                 <img
-                class={styles.showcaseItemTab}
-                src={urlWithBaseUrl(`/example/grid-illustration.png`)}
+                    class={styles.showcaseItemTab}
+                    src={urlWithBaseUrl(`/example/grid-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>Inventory</div>
             </a>
             <a href={urlWithBaseUrl(`/example-finance`)}>
                 <img
-                class={styles.showcaseItemTab}
-                src={urlWithBaseUrl(`/example/finance-illustration.png`)}
+                    class={styles.showcaseItemTab}
+                    src={urlWithBaseUrl(`/example/finance-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>Finance</div>
             </a>
             <a href={urlWithBaseUrl(`/example-crm`)}>
                 <img
-                class={`${styles.showcaseItemTab} ${styles.tabActive}`}
-                src={urlWithBaseUrl(`/example/crm-illustration.png`)}
+                    class={`${styles.showcaseItemTab} ${styles.tabActive}`}
+                    src={urlWithBaseUrl(`/example/crm-illustration.png`)}
                     alt="Grid illustration"
                 />
                 <div>CRM</div>
@@ -58,12 +51,11 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
                 />
                 <div>Complete</div>
             </a>
-    
         </div>
     </div>
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
-    <HRManagementExample />
+            <HRManagementExample />
         </div>
     </div>
 </ShowcaseLayout>
