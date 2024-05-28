@@ -29,6 +29,22 @@ const columnDefs: ColDef[] = [
         cellRenderer: imageCellRenderer, // Use the custom cell renderer
     },
     {
+        headerName: 'P/L',
+        valueGetter: pnlCalculator,
+        cellDataType: 'number',
+        cellStyle: (params) => {
+            if (params.value > 0) {
+                return { color: 'green' };
+            } else {
+                return { color: 'red' };
+            }
+        },
+        valueFormatter: currencyFormatter,
+        width: 150,
+        pivot: true,
+        aggFunc: 'sum',
+    },
+    {
         headerName: 'Last',
         cellDataType: 'number',
         field: 'currentPrice',
@@ -121,23 +137,6 @@ const columnDefs: ColDef[] = [
         width: 150,
         aggFunc: 'sum',
     },
-    {
-        headerName: 'P/L',
-        valueGetter: pnlCalculator,
-        cellDataType: 'number',
-        cellStyle: (params) => {
-            if (params.value > 0) {
-                return { color: 'green' };
-            } else {
-                return { color: 'red' };
-            }
-        },
-        valueFormatter: currencyFormatter,
-        width: 150,
-        pivot: true,
-        aggFunc: 'sum',
-    },
-
     {
         headerName: 'Total Value',
         cellDataType: 'number',
