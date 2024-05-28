@@ -21,11 +21,16 @@ export const pnlPercentCalculator = (params) => {
 export function currencyFormatter(params) {
     if (params.value == null) return '';
 
+    const locale = 'en-US';
     const value = parseFloat(params.value).toFixed(2);
-    if (params.data.ccy === 'USD') return '$' + value;
-    if (params.data.ccy === 'JPY') return '¥' + value;
-    if (params.data.ccy === 'GBP') return '£' + value;
-    if (params.data.ccy === 'EUR') return '€' + value;
+    const currency = params.data.ccy;
+    const numberFormatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency,
+        maximumFractionDigits: 2,
+    });
+
+    return numberFormatter.format(value);
 }
 
 export function percentageFormatter(params) {
