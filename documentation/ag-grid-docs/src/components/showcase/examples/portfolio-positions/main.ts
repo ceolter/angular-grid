@@ -197,6 +197,7 @@ const gridOptions: GridOptions = {
     enableRangeSelection: true,
     enableCharts: true,
     rowSelection: 'multiple',
+    suppressAggFuncInHeader: true,
     statusBar: {
         statusPanels: [
             { statusPanel: 'agTotalAndFilteredRowCountComponent' },
