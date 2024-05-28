@@ -1,10 +1,11 @@
 ---
-import styles from './example.module.scss';
+import Layout from '@layouts/Layout.astro';
 import EcommerceInventoryExample from '@components/showcase/examples/ecommerce-inventory/index.astro';
+import styles from './example.module.scss';
 import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import InventoryIcon from '../../public/example/inventory.svg?react';
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 ---
 
 <ShowcaseLayout title="Ecommerce Inventory Management">
@@ -15,72 +16,45 @@ import InventoryIcon from '../../public/example/inventory.svg?react';
             <p class={styles.headerDescription}>
                 An example inventory dashboard that let’s you manage product inventory
             </p>
-            <button class="button-primary">
+            <button class="button-secondary">
                 <Icon alt={`GitHub logo`} name="github" svgClasses={styles.githubIcon} />
                 <span>See on Github</span>
-
-                <div class={styles.tabs}>
-                    <a href={urlWithBaseUrl('/example')}>
-                        <img
-                            class={`${styles.showcaseItemTab} ${styles.tabActive}`}
-                            src={urlWithBaseUrl('/example/grid-illustration.png')}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                    <a href={urlWithBaseUrl('/example-finance')}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl('/example/grid-illustration.png')}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                    <a href={urlWithBaseUrl('/example-crm')}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl('/example/grid-illustration.png')}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                    <a href={urlWithBaseUrl('/example-complete')}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl('/example/grid-illustration.png')}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                </div>
             </button>
+        </div>
 
-            <div class={styles.tabs}>
-                <a href={urlWithBaseUrl('/example')}>
-                    <img
-                        class={`${styles.showcaseItemTab} ${styles.tabActive}`}
-                        src={urlWithBaseUrl('/example/grid-illustration.png')}
-                        alt="Grid illustration"
-                    />
-                </a>
-                <a href={urlWithBaseUrl('/example-finance')}>
-                    <img
-                        class={styles.showcaseItemTab}
-                        src={urlWithBaseUrl('/example/finance-illustration.png')}
-                        alt="Grid illustration"
-                    />
-                </a>
-                <a href={urlWithBaseUrl('/example-crm')}>
-                    <img
-                        class={styles.showcaseItemTab}
-                        src={urlWithBaseUrl('/example/grid-illustration.png')}
-                        alt="Grid illustration"
-                    />
-                </a>
-                <a href={urlWithBaseUrl('/example-complete')}>
-                    <img
-                        class={styles.showcaseItemTab}
-                        src={urlWithBaseUrl('/example/grid-illustration.png')}
-                        alt="Grid illustration"
-                    />
-                </a>
-            </div>
+        <div class={styles.tabs}>
+            <a href={urlWithBaseUrl(`/example`)}>
+                <img
+                    class={`${styles.showcaseItemTab} ${styles.tabActive}`}
+                    src={urlWithBaseUrl(`/example/grid-illustration.png`)}
+                    alt="Grid illustration"
+                />
+                <div>Inventory</div>
+            </a>
+            <a href={urlWithBaseUrl(`/example-finance`)}>
+                <img
+                    class={styles.showcaseItemTab}
+                    src={urlWithBaseUrl(`/example/finance-illustration.png`)}
+                    alt="Grid illustration"
+                />
+                <div>Finance</div>
+            </a>
+            <a href={urlWithBaseUrl(`/example-crm`)}>
+                <img
+                    class={styles.showcaseItemTab}
+                    src={urlWithBaseUrl(`/example/crm-illustration.png`)}
+                    alt="Grid illustration"
+                />
+                <div>CRM</div>
+            </a>
+            <a href={urlWithBaseUrl(`/example-complete`)}>
+                <img
+                    class={styles.showcaseItemTab}
+                    src={urlWithBaseUrl(`/example/grid-illustration.png`)}
+                    alt="Grid illustration"
+                />
+                <div>Complete</div>
+            </a>
         </div>
     </div>
     <div class={styles.layout}>
