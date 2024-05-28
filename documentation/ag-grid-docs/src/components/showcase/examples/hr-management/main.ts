@@ -1,8 +1,9 @@
 import { getData } from './data';
+import { flagRenderer } from './flagRenderer';
 import { imageCellRenderer } from './imageCellRenderer';
-import { tagCellRenderer } from './tagCellRenderer';
-import { flagRenderer } from './flagRenderer'
 import './styles.css';
+import { tagCellRenderer } from './tagCellRenderer';
+
 let gridApi;
 
 const gridOptions = {
@@ -12,26 +13,26 @@ const gridOptions = {
             headerName: 'Employee',
             field: 'name',
             cellDataType: 'text',
-            width: "220px",
+            width: '220px',
             cellRenderer: imageCellRenderer, // Use the custom cell renderer
         },
         {
             headerName: 'Location',
             field: 'location',
             cellDataType: 'text',
-            width: "200px",
+            width: '200px',
             cellRenderer: flagRenderer, // Use the custom cell renderer
         },
         {
             headerName: 'Title',
             field: 'department',
             cellDataType: 'text',
-            width: "200px",
+            width: '200px',
             cellRenderer: tagCellRenderer, // Use the custom cell renderer
         },
         { field: 'employmentType' },
         { field: 'basicMonthlySalary', cellDataType: 'number', valueFormatter: currencyFormatter },
-        { field: 'employeeId', cellDataType: 'number' },  
+        { field: 'employeeId', cellDataType: 'number' },
     ],
     rowData: getData(),
     groupDefaultExpanded: -1, // expand all groups by default
@@ -41,7 +42,17 @@ const gridOptions = {
 };
 
 function currencyFormatter(params) {
-    return '$' + formatNumber(params.value);
+    const locale = 'en-US';
+    const value = parseFloat(params.value).toFixed(2);
+    const currency = params.data.currency;
+    const numberFormatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currencyDisplay: 'code',
+        currency,
+        maximumFractionDigits: 2,
+    });
+
+    return numberFormatter.format(value);
 }
 
 function formatNumber(number) {

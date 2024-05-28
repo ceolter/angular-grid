@@ -9,10 +9,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2019-07-31',
             basicMonthlySalary: 8659.59,
+            currency: 'GBP',
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
             image: '1',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Frank Wilson',
@@ -23,10 +24,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2010-05-15',
             basicMonthlySalary: 4825.55,
+            currency: 'GBP',
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '2',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Jonathan Romero',
@@ -37,10 +39,11 @@ export function getData() {
             location: 'United States',
             joinDate: '2019-03-19',
             basicMonthlySalary: 7126.1,
+            currency: 'USD',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
             image: '3',
-            flag: 'us'
+            flag: 'us',
         },
         {
             name: 'Heather Mathis',
@@ -51,11 +54,11 @@ export function getData() {
             location: 'United States',
             joinDate: '2009-05-04',
             basicMonthlySalary: 3364.38,
+            currency: 'USD',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
             image: '4',
-            flag: 'us'
-
+            flag: 'us',
         },
         {
             name: 'Dr. Gregory Mills',
@@ -66,10 +69,11 @@ export function getData() {
             location: 'Spain',
             joinDate: '2018-11-26',
             basicMonthlySalary: 5088.19,
+            currency: 'EUR',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '5',
-            flag: 'es'
+            flag: 'es',
         },
         {
             name: 'Martin Villanueva',
@@ -80,10 +84,11 @@ export function getData() {
             location: 'Portugal',
             joinDate: '2006-03-02',
             basicMonthlySalary: 7093.81,
+            currency: 'EUR',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '6',
-            flag: 'po'
+            flag: 'po',
         },
         {
             name: 'Mary Stone',
@@ -94,10 +99,11 @@ export function getData() {
             location: 'Netherlands ',
             joinDate: '2019-05-01',
             basicMonthlySalary: 6618.2,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
             image: '7',
-            flag: 'ne'
+            flag: 'ne',
         },
         {
             name: 'Dylan Lewis',
@@ -108,10 +114,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2005-12-10',
             basicMonthlySalary: 14762.71,
+            currency: 'GBP',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
             image: '8',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Michael Dennis',
@@ -122,10 +129,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2001-10-21',
             basicMonthlySalary: 4423.64,
+            currency: 'GBP',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
             image: '9',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'John Gonzalez',
@@ -136,10 +144,11 @@ export function getData() {
             location: 'Ireland',
             joinDate: '2006-10-09',
             basicMonthlySalary: 3491.98,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
             image: '10',
-            flag: 'ie'
+            flag: 'ie',
         },
         {
             name: 'Nicole Bass',
@@ -150,10 +159,11 @@ export function getData() {
             location: 'Ireland',
             joinDate: '2019-01-04',
             basicMonthlySalary: 2734.11,
+            currency: 'EUR',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '11',
-            flag: 'ie'
+            flag: 'ie',
         },
         {
             name: 'Darren Osborn',
@@ -164,10 +174,11 @@ export function getData() {
             location: 'Spain',
             joinDate: '2007-07-15',
             basicMonthlySalary: 7625.11,
+            currency: 'EUR',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
             image: '12',
-            flag: 'es'
+            flag: 'es',
         },
         {
             name: 'Amanda Arnold',
@@ -178,10 +189,11 @@ export function getData() {
             location: 'Ireland',
             joinDate: '2013-12-06',
             basicMonthlySalary: 2787.82,
+            currency: 'EUR',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
             image: '13',
-            flag: 'ie'
+            flag: 'ie',
         },
         {
             name: 'Richard Willis',
@@ -192,10 +204,11 @@ export function getData() {
             location: 'France',
             joinDate: '2007-08-14',
             basicMonthlySalary: 3437.53,
+            currency: 'EUR',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '14',
-            flag: 'fr'
+            flag: 'fr',
         },
         {
             name: 'Mary Mckinney',
@@ -206,10 +219,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2014-02-13',
             basicMonthlySalary: 5996.5,
+            currency: 'GBP',
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '15',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Tammy Love',
@@ -220,10 +234,11 @@ export function getData() {
             location: 'Websterberg',
             joinDate: '2019-03-08',
             basicMonthlySalary: 3153.23,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '16',
-            flag: 'fr'
+            flag: 'fr',
         },
         {
             name: 'Donna Parker',
@@ -234,10 +249,11 @@ export function getData() {
             location: 'North Robertchester',
             joinDate: '2008-11-30',
             basicMonthlySalary: 2011.26,
+            currency: 'GBP',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '17',
-            flag: 'es'
+            flag: 'es',
         },
         {
             name: 'Trevor Williams',
@@ -248,10 +264,11 @@ export function getData() {
             location: 'Mossfurt',
             joinDate: '2022-01-09',
             basicMonthlySalary: 5893.18,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Paid',
             image: '18',
-            flag: 'fr'
+            flag: 'fr',
         },
         {
             name: 'Daniel Rodgers',
@@ -262,10 +279,11 @@ export function getData() {
             location: 'Lake Patrick',
             joinDate: '2004-12-25',
             basicMonthlySalary: 6555.64,
+            currency: 'GBP',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Paid',
             image: '19',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Shawn Phillips',
@@ -276,10 +294,11 @@ export function getData() {
             location: 'Kathrynbury',
             joinDate: '2022-10-30',
             basicMonthlySalary: 3402.91,
+            currency: 'USD',
             paymentMethod: 'Bank Transfer',
             paymentStatus: 'Pending',
             image: '20',
-            flag: 'us'
+            flag: 'us',
         },
         {
             name: 'Jill Hobbs',
@@ -290,10 +309,11 @@ export function getData() {
             location: 'Meyersmouth',
             joinDate: '2001-11-29',
             basicMonthlySalary: 5478.9,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '17',
-            flag: 'ne'
+            flag: 'ne',
         },
         {
             name: 'John Hall',
@@ -304,10 +324,11 @@ export function getData() {
             location: 'Mclaughlinbury',
             joinDate: '2011-06-05',
             basicMonthlySalary: 5388.43,
+            currency: 'EUR',
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '12',
-            flag: 'fr'
+            flag: 'fr',
         },
         {
             name: 'Alexandria Novak',
@@ -318,10 +339,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2014-06-29',
             basicMonthlySalary: 2676.37,
+            currency: 'GBP',
             paymentMethod: 'Check',
             paymentStatus: 'Pending',
             image: '1',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Donald Brennan',
@@ -332,10 +354,11 @@ export function getData() {
             location: 'Ireland',
             joinDate: '2002-06-14',
             basicMonthlySalary: 7272.37,
+            currency: 'EUR',
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '2',
-            flag: 'ie'
+            flag: 'ie',
         },
         {
             name: 'Andrea Kim',
@@ -346,10 +369,11 @@ export function getData() {
             location: 'United Kingdom',
             joinDate: '2011-05-05',
             basicMonthlySalary: 2823.27,
+            currency: 'GBP',
             paymentMethod: 'Check',
             paymentStatus: 'Paid',
             image: '3',
-            flag: 'uk'
+            flag: 'uk',
         },
         {
             name: 'Rachel Mckenzie',
@@ -360,10 +384,11 @@ export function getData() {
             location: 'United States',
             joinDate: '2001-07-15',
             basicMonthlySalary: 2672.37,
+            currency: 'USD',
             paymentMethod: 'Cash',
             paymentStatus: 'Pending',
             image: '7',
-            flag: 'us'
+            flag: 'us',
         },
     ];
     return rowData;
