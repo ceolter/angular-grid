@@ -39,8 +39,6 @@
     display: flex;
     height: 100%;
 }
-.headerDescription {
-}
 
 .showcaseItemTab {
     cursor: pointer;
@@ -73,9 +71,10 @@
 }
 .layout {
     padding: $spacing-size-4;
-    display: flex;
-    justify-content: center;
-    width: 100vw;
+    @media screen and (min-width: (1800px + 48px * 2)) {
+        width: var(--layout-max-width);
+        margin: 0 auto;
+    }
 }
 
 .tabs a div {
