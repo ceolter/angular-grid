@@ -33,6 +33,8 @@ const gridOptions = {
         { field: 'employmentType' },
         { field: 'basicMonthlySalary', cellDataType: 'number', valueFormatter: currencyFormatter },
         { field: 'employeeId', cellDataType: 'number' },
+        { field: 'paymentMethod', cellDataType: 'text' },
+        { field: 'paymentStatus', cellDataType: 'text' },
     ],
     rowData: getData(),
     groupDefaultExpanded: -1, // expand all groups by default
