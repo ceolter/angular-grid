@@ -13,7 +13,7 @@ import { RowGroupingModule } from '@ag-grid-enterprise/row-grouping';
 import { SetFilterModule } from '@ag-grid-enterprise/set-filter';
 import { SparklinesModule } from '@ag-grid-enterprise/sparklines';
 import { StatusBarModule } from '@ag-grid-enterprise/status-bar';
-import { useCallback, useRef, useState } from 'react';
+import { type FunctionComponent, useCallback, useRef, useState } from 'react';
 
 import { type ColDef, type GetRowIdParams } from 'ag-grid-community';
 
@@ -34,6 +34,11 @@ import styles from './PortfolioExample.module.css';
 import { INITIAL_UPDATE_INTERVAL_MULTIPLIER, UPDATE_INTERVAL } from './constants';
 import { generatePortfolio } from './data';
 import { useDataGenerator } from './useDataGenerator';
+
+interface Props {
+    gridTheme?: string;
+    isDarkMode?: boolean;
+}
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
@@ -57,7 +62,7 @@ const rangeConfig = {
     step: 0.1,
 };
 
-const PortfolioExample = () => {
+const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quartz', isDarkMode }) => {
     const gridRef = useRef<AgGridReact>(null);
     const [rowData, setRowData] = useState<PortfolioItem[]>(generatePortfolio());
     const [colDefs] = useState<ColDef[]>([
@@ -217,6 +222,8 @@ const PortfolioExample = () => {
     }, []);
     const [updateSpeed, setUpdateSpeed] = useState<number>(INITIAL_UPDATE_INTERVAL_MULTIPLIER);
 
+    const themeClass = isDarkMode ? `${gridTheme}-dark` : gridTheme;
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>
@@ -247,7 +254,7 @@ const PortfolioExample = () => {
                         }}
                     />
                 </div>
-                <div className={`ag-theme-quartz ${styles.grid}`}>
+                <div className={`${themeClass} ${styles.grid}`}>
                     <AgGridReact
                         ref={gridRef}
                         rowData={rowData}
