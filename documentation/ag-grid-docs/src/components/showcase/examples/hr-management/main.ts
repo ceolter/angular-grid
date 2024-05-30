@@ -1,6 +1,7 @@
 import { getData } from './data';
 import { flagRenderer } from './flagRenderer';
 import { imageCellRenderer } from './imageCellRenderer';
+import { masterDetailRenderer } from './masterDetailRenderer';
 import './styles.css';
 import { tagCellRenderer } from './tagCellRenderer';
 
@@ -24,7 +25,7 @@ const gridOptions = {
             field: 'location',
             cellDataType: 'text',
             width: '200px',
-            cellRenderer: flagRenderer, // Use the custom cell renderer
+            cellRenderer: flagRenderer,
         },
         {
             headerName: 'Title',
@@ -48,8 +49,9 @@ const gridOptions = {
     detailCellRendererParams: {
         detailGridOptions: {
             columnDefs: [
-                { field: 'attribute', headerName: 'Attribute', width: 150 },
-                { field: 'value', headerName: 'Value', width: 150 },
+                { field: 'value', headerName: 'Type', width: 150, cellRenderer: masterDetailRenderer },
+                { field: 'value', headerName: 'Description', width: 150 },
+                { field: 'value', headerName: 'Gross Amount', width: 150 },
             ],
             defaultColDef: {
                 flex: 1,
@@ -58,12 +60,7 @@ const gridOptions = {
         },
         getDetailRowData: function (params) {
             // Here you can provide the detail data for each row
-            params.successCallback([
-                { attribute: 'Age', value: params.data.age },
-                { attribute: 'Hire Date', value: params.data.hireDate },
-                { attribute: 'Department', value: params.data.department },
-                // Add more attributes as needed
-            ]);
+            params.successCallback([{ attribute: 'Type' }, { attribute: 'Type' }]);
         },
     },
 };
