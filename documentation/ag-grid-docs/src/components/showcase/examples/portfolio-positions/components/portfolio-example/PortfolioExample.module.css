@@ -11,7 +11,7 @@
 }
 
 .grid {
-    height: 600px;
+    height: calc(100vh - var(--layout-grid-header-height));
 }
 
 .container {

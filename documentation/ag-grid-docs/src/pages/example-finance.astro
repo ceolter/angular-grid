@@ -3,7 +3,7 @@ import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import styles from './example.module.scss';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
-import PortfolioExample from '@components/showcase/examples/portfolio-positions/components/portfolio-example/PortfolioExample';
+import { PortfolioPositions } from '@components/showcase/examples/portfolio-positions';
 ---
 
 <ShowcaseLayout title="Portfolio Positions">
@@ -56,7 +56,7 @@ import PortfolioExample from '@components/showcase/examples/portfolio-positions/
     </div>
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
-            <PortfolioExample client:only="react" />
+            <PortfolioPositions client:only="react" />
         </div>
     </div>
 </ShowcaseLayout>

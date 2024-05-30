@@ -247,7 +247,7 @@ const PortfolioExample = () => {
                         }}
                     />
                 </div>
-                <div className={`ag-theme-quartz ${styles.grid}`} style={{ height: 500 }}>
+                <div className={`ag-theme-quartz ${styles.grid}`}>
                     <AgGridReact
                         ref={gridRef}
                         rowData={rowData}
