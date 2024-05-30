@@ -14,7 +14,10 @@ const gridOptions = {
             field: 'name',
             cellDataType: 'text',
             width: '220px',
-            cellRenderer: imageCellRenderer, // Use the custom cell renderer
+            cellRenderer: 'agGroupCellRenderer',
+            cellRendererParams: {
+                innerRenderer: imageCellRenderer,
+            },
         },
         {
             headerName: 'Location',
@@ -37,9 +40,31 @@ const gridOptions = {
         { field: 'paymentStatus', cellDataType: 'text' },
     ],
     rowData: getData(),
-    groupDefaultExpanded: -1, // expand all groups by default
+    groupDefaultExpanded: 0,
     getDataPath: (data) => {
         return data.orgHierarchy;
+    },
+    masterDetail: true, // enable master detail
+    detailCellRendererParams: {
+        detailGridOptions: {
+            columnDefs: [
+                { field: 'attribute', headerName: 'Attribute', width: 150 },
+                { field: 'value', headerName: 'Value', width: 150 },
+            ],
+            defaultColDef: {
+                flex: 1,
+                minWidth: 100,
+            },
+        },
+        getDetailRowData: function (params) {
+            // Here you can provide the detail data for each row
+            params.successCallback([
+                { attribute: 'Age', value: params.data.age },
+                { attribute: 'Hire Date', value: params.data.hireDate },
+                { attribute: 'Department', value: params.data.department },
+                // Add more attributes as needed
+            ]);
+        },
     },
 };
 

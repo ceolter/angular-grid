@@ -1,18 +1,24 @@
 .ag-theme-quartz {
     --ag-row-height: 80px !important;
     --ag-header-background-color: transparent !important;
---ag-data-color: rgb(23, 23, 23);
---ag-header-foreground-color: rgb(96, 96, 96) !important;
---ag-row-hover-color: #f4f4f4 !important;
-    
+    --ag-data-color: rgb(23, 23, 23);
+    --ag-header-foreground-color: rgb(96, 96, 96) !important;
+    --ag-row-hover-color: #f4f4f4 !important;
 }
 
 .ag-theme-quartz .ag-cell {
     display: flex;
-    align-items: center;
+    align-items: center !important;
 }
 
-.employee-cell,.flag-cell {
+.ag-theme-quartz .ag-row-group {
+    height: 100%;
+    display: flex;
+    align-items: center !important;
+}
+
+.employee-cell,
+.flag-cell {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
@@ -20,14 +26,12 @@
     gap: 8px;
 }
 
-
-
 .employee-cell img {
     border: 1px solid rgba(157, 157, 157, 0.5);
     padding: 2px;
 }
 
-.employee-cell .description { 
+.employee-cell .description {
     opacity: 0.6;
 }
 
@@ -67,27 +71,27 @@
 }
 
 .design-circle {
-    background-color: #7E80E7; 
+    background-color: #7e80e7;
 }
 
 .engineering-circle {
-    background-color: #F3A23A; 
+    background-color: #f3a23a;
 }
 
 .executive-management-circle {
-    background-color: #47A8F8; 
+    background-color: #47a8f8;
 }
 
 .product-circle {
-    background-color: #87CF2B; 
+    background-color: #87cf2b;
 }
 
 .default-circle {
-    background-color: #cccccc; 
+    background-color: #cccccc;
 }
 
 .design-tag {
-    border: 1px solid #7e80e751; 
+    border: 1px solid #7e80e751;
 }
 
 .engineering-tag {
