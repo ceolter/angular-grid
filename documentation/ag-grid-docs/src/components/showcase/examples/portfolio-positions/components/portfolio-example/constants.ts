@@ -1,4 +1,4 @@
-import type { BasePortfolioItem } from './types';
+import type { BasePortfolioItem } from '../../../types';
 
 /**
  * How often the data updates (ms)

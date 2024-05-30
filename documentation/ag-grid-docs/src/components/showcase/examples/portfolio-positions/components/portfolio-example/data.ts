@@ -1,6 +1,6 @@
+import type { BasePortfolioItem, PortfolioItem } from '../../../types';
+import { randomNumber, randomNumberList } from '../../utils/dataGenerator';
 import { MAX_NUMBER, PORTFOLIO_DATA, TIMELINE_SIZE } from './constants';
-import { randomNumber, randomNumberList } from './generator-utils';
-import type { BasePortfolioItem, PortfolioItem } from './types';
 
 function randomValue() {
     return randomNumber(MAX_NUMBER);

@@ -15,7 +15,7 @@ type GeneratorState = 'started' | 'stopped';
 export function createGenerator({ interval = 1000, callback }: { interval: number; callback: () => void }) {
     let currentInterval = interval;
     let state: GeneratorState = 'stopped';
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     const createTimeout = () => {
         return setTimeout(() => {

@@ -1,0 +1,15 @@
+.advice {
+    height: 32px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #686868;
+    margin-top: 4px;
+}
+
+.adviceIcon {
+    height: 16px;
+    width: 16px;
+    opacity: 0.6;
+}

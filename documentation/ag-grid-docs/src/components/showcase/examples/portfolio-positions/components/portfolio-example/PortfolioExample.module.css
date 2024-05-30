@@ -1,25 +1,13 @@
-:global {
-    .rag-red {
-        background-color: #cc222244;
-    }
-
-    .rag-green {
-        background-color: #33cc3344;
-    }
-
-    .rag-amber {
-        background-color: #ffbf00;
-    }
-}
-
 .toolbar {
     padding-bottom: 16px;
     font-size: 14px;
-    button {
-        font-weight: 600;
-    }
     display: flex;
     justify-content: space-between;
+}
+
+.toolbar button {
+    font-weight: 600;
+    color: #4e4e4e;
 }
 
 .grid {
@@ -44,8 +32,8 @@
 
 .wrapper {
     display: flex;
-    background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-secondary);
+    background: #fcfcfc;
+    border: 1px solid rgb(223, 223, 223);
     border-radius: 12px;
     overflow: hidden;
 }
@@ -62,11 +50,12 @@
     width: 20px;
     opacity: 0.5;
     transition: all 0.5s;
-    &:hover {
-        opacity: 1;
-        cursor: pointer;
-        transition: all 0.5s;
-    }
+}
+
+.sidebarIcon:hover {
+    opacity: 1;
+    cursor: pointer;
+    transition: all 0.5s;
 }
 
 .settingsIcon {
@@ -75,11 +64,12 @@
     opacity: 0.5;
     transition: all 0.5s;
     margin-bottom: 16px;
-    &:hover {
-        opacity: 1;
-        cursor: pointer;
-        transition: all 0.5s;
-    }
+}
+
+.settingsIcon:hover {
+    opacity: 1;
+    cursor: pointer;
+    transition: all 0.5s;
 }
 
 .activeIcon {
@@ -88,9 +78,10 @@
     opacity: 0.7;
     background: rgba(0, 0, 0, 0.075);
     border-radius: 4px;
-    &:hover {
-        cursor: pointer;
-    }
+}
+
+.activeIcon:hover {
+    cursor: pointer;
 }
 
 .navitems {
@@ -127,6 +118,7 @@
 .inactiveBreadcrumb {
     opacity: 0.4;
 }
+
 .rightIcon {
     width: 16px;
     height: 16px;
@@ -137,29 +129,4 @@
 
 .activeBreadcrumb {
     opacity: 0.4;
-}
-
-:global {
-    #finance-example-slider {
-        .update-speed {
-            font-size: 1.3em;
-        }
-    }
-}
-
-.slider {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-
-    label {
-        font-weight: 600;
-        width: 10em;
-    }
-
-    input[type='range'] {
-        min-width: 12em;
-        margin-left: 0;
-    }
 }
