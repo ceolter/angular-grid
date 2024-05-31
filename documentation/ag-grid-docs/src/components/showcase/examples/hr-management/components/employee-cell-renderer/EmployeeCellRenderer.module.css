@@ -1,0 +1,37 @@
+.employeeCell {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+}
+
+.employeeCell img {
+    border: 1px solid rgba(157, 157, 157, 0.5);
+    padding: 2px;
+}
+
+.employeeData {
+    display: flex;
+    flex-direction: column;
+}
+
+.description {
+    opacity: 0.6;
+}
+
+.employeeData > span {
+    line-height: 20px;
+}
+
+.employeeName {
+    font-weight: 500;
+    color: rgb(50, 50, 50);
+}
+
+.image {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+    border-radius: 100px;
+}

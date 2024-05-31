@@ -1,0 +1,21 @@
+.employeeCell {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: left;
+    gap: 8px;
+}
+
+.employeeData {
+    display: flex;
+    flex-direction: column;
+}
+
+.employeeData > span {
+    line-height: 20px;
+}
+
+.employeeName {
+    font-weight: 500;
+    color: rgb(50, 50, 50);
+}
