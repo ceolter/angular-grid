@@ -1,0 +1,15 @@
+.statusCell {
+    border-radius: 100px;
+    padding-left: 12px;
+    padding-right: 12px;
+    line-height: 2;
+    font-weight: 500;
+    color: #343434;
+    border: 1.5px solid rgba(91, 91, 91, 0.2);
+}
+
+.activeTag {
+    background-color: rgb(242, 242, 242);
+    color: rgb(49, 49, 49);
+    border: 0px;
+}

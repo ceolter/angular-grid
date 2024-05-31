@@ -1,0 +1,27 @@
+.buttonCell {
+    display: flex;
+    gap: 8px;
+    flex-direction: row-reverse;
+}
+
+.removeButton {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+
+    height: 40px;
+    width: 40px;
+}
+
+.removeButton img {
+    width: 20px;
+}
+
+.removeButton:hover {
+    background-color: hsl(0, 67%, 40%);
+}
+
+.buttonStopSelling {
+    height: 40px;
+    line-height: 1.8;
+}

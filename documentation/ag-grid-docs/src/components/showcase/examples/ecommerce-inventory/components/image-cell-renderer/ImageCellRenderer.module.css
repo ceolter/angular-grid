@@ -1,0 +1,20 @@
+.productCellImage {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imageContainer {
+    max-width: 100%;
+    max-height: 100px;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(201, 201, 201, 0.2);
+    border-radius: 8px;
+    margin: 8px;
+}
+
+.imageContainer img {
+    margin-right: 0 !important;
+}
