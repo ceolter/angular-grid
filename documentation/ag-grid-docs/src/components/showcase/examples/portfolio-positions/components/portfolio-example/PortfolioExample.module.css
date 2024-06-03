@@ -130,3 +130,19 @@
 .activeBreadcrumb {
     opacity: 0.4;
 }
+
+:global(.ag-theme-quartz .cell-green) {
+    color: green;
+}
+
+:global(.ag-theme-quartz .cell-red) {
+    color: red;
+}
+
+:global(.ag-theme-quartz-dark .cell-green) {
+    color: rgb(70, 227, 114);
+}
+
+:global(.ag-theme-quartz-dark .cell-red) {
+    color: rgb(255, 0, 92);
+}

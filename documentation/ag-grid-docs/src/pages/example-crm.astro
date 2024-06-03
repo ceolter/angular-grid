@@ -36,13 +36,23 @@ import LogoMark from '@components/logo/LogoMark';
                         src={urlWithBaseUrl(`/example/finance-grid.png`)}
                         alt="Grid illustration"
                     />
+                    <img
+                        class={`${styles.showcaseItemTab} ${styles.darkTab}`}
+                        src={urlWithBaseUrl(`/example/finance-dark.png`)}
+                        alt="Grid illustration"
+                    />
                 </a>
             </div>
             <div class={`${styles.tabWrapper} ${styles.tabActive}`}>
                 <a href={urlWithBaseUrl(`/example-crm`)}>
                     <img
-                        class={`${styles.showcaseItemTab}`}
+                        class={styles.showcaseItemTab}
                         src={urlWithBaseUrl(`/example/crm-grid.png`)}
+                        alt="Grid illustration"
+                    />
+                    <img
+                        class={`${styles.showcaseItemTab} ${styles.darkTab}`}
+                        src={urlWithBaseUrl(`/example/crm-dark.png`)}
                         alt="Grid illustration"
                     />
                 </a>

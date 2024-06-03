@@ -36,7 +36,13 @@ $nav-height: 340px;
     box-shadow: var(--shadow-sm);
     border-radius: var(--radius-md);
 }
-
+#{$selector-darkmode} .tabWrapper {
+    background-color: var(--color-bg-tertiary);
+    &:hover {
+        background-color: var(--color-bg-secondary);
+        transition: all 0.5s ease-in-out;
+    }
+}
 .tabWrapper {
     background-color: #e5e9ed;
     width: 350px;
@@ -45,6 +51,7 @@ $nav-height: 340px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: all 0.5s ease-in-out;
+
     &:hover {
         background-color: #c8cfd8;
         transition: all 0.5s ease-in-out;
@@ -117,4 +124,12 @@ $nav-height: 340px;
     align-items: center;
     justify-content: center;
     padding-top: 12px;
+}
+
+#{$selector-darkmode} .showcaseItemTab {
+    display: none;
+}
+
+#{$selector-darkmode} .showcaseItemTab.darkTab {
+    display: block;
 }

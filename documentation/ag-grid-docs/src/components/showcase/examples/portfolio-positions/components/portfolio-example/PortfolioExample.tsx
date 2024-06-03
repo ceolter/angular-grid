@@ -1,4 +1,5 @@
 import { AgGridReact } from '@ag-grid-community/react';
+import classNames from 'classnames';
 import { type FunctionComponent, useCallback, useRef, useState } from 'react';
 
 import { type ColDef, type GetRowIdParams } from 'ag-grid-community';
@@ -48,12 +49,11 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
             headerName: 'P/L',
             valueGetter: pnlCalculator,
             cellDataType: 'number',
-            cellStyle: (params) => {
-                if (params.value > 0) {
-                    return { color: 'green' };
-                } else {
-                    return { color: 'red' };
-                }
+            cellClass: (params) => {
+                return classNames({
+                    'cell-green': params.value > 0,
+                    'cell-red': params.value <= 0,
+                });
             },
             valueFormatter: currencyFormatter,
             width: 150,
@@ -93,6 +93,10 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                         size: 4,
                         stroke: 'rgb(185,173,77)',
                         fill: 'rgb(185,173,77)',
+                    },
+                    axis: {
+                        stroke: 'rgba(0,0,0,0.2)', // sets the axis line stroke
+                        strokeWidth: 1, // sets the axis line strokeWidth
                     },
                     crosshairs: {
                         xLine: {
@@ -167,12 +171,11 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
             valueGetter: calculate52wChange,
             valueFormatter: percentageFormatter,
             width: 150,
-            cellStyle: (params) => {
-                if (params.value > 0) {
-                    return { color: 'green' };
-                } else {
-                    return { color: 'red' };
-                }
+            cellClass: (params) => {
+                return classNames({
+                    'cell-green': params.value > 0,
+                    'cell-red': params.value <= 0,
+                });
             },
             aggFunc: 'avg',
         },
