@@ -4,6 +4,7 @@ import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { EcommerceInventoryExample } from '@components/showcase/examples/ecommerce-inventory';
+import LogoMark from '@components/logo/LogoMark';
 ---
 
 <ShowcaseLayout title="Ecommerce Inventory Management">
@@ -60,6 +61,9 @@ import { EcommerceInventoryExample } from '@components/showcase/examples/ecommer
     </div>
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
+            <div class={styles.loadingLogoContainer}>
+                <LogoMark isSpinning />
+            </div>
             <EcommerceInventoryExample client:only="react" />
         </div>
     </div>

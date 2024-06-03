@@ -4,6 +4,7 @@ import Example from '@components/example-grid/Example';
 import styles from './example.module.scss';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import LogoMark from '@components/logo/LogoMark';
 ---
 
 <Layout title="Complete Grid">
@@ -60,6 +61,9 @@ import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
     </div>
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
+            <div class={styles.loadingLogoContainer}>
+                <LogoMark isSpinning />
+            </div>
             <Example client:only="react" />
         </div>
     </div>

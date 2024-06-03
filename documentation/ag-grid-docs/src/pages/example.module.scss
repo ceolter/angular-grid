@@ -1,5 +1,7 @@
 @use 'design-system' as *;
 
+$nav-height: 340px;
+
 .githubIcon {
     padding: 4px;
 }
@@ -81,7 +83,27 @@
 
 .layoutWrapper {
     width: 100%;
+    position: relative;
 }
+
+.loadingLogoContainer {
+    --layout-grid-header-height: calc(var(--layout-site-header-height) + #{$nav-height});
+
+    width: 100%;
+    position: absolute;
+    height: calc(100vh - var(--layout-grid-header-height));
+
+    svg[class*='logo-mark'] {
+        position: absolute;
+        display: block;
+        width: 64px * 2;
+        height: 48px * 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-60px, -48px);
+    }
+}
+
 .layout {
     padding: $spacing-size-4;
     @media screen and (min-width: (1800px + 48px * 2)) {
