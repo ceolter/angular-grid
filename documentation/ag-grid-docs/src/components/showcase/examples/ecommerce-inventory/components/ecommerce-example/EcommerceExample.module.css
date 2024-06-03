@@ -21,7 +21,6 @@
 :global(.ag-theme-quartz-dark) {
     --ag-header-background-color: transparent !important;
     --ag-data-color: rgb(23, 23, 23);
-    --ag-row-hover-color: #f4f4f4 !important;
 }
 
 .toolbar {

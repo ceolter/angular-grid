@@ -69,7 +69,7 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                 },
             },
             getDetailRowData: function (params) {
-                const descriptions = ['Description A', 'Description B'];
+                const descriptions = ['Office chair and standing desk', 'Private healthcare'];
 
                 const selectedDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
 

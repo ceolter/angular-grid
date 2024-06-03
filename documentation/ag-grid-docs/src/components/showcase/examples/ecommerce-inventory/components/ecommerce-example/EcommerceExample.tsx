@@ -29,7 +29,6 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
             field: 'imageURL',
             headerName: 'Image',
             cellRenderer: ImageCellRenderer,
-            width: 230,
             autoHeight: true,
         },
         {
