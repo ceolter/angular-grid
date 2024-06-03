@@ -1,5 +1,7 @@
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ModuleRegistry } from '@ag-grid-community/core';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-quartz.css';
 import { AdvancedFilterModule } from '@ag-grid-enterprise/advanced-filter';
 import { GridChartsModule } from '@ag-grid-enterprise/charts-enterprise';
 import { ColumnsToolPanelModule } from '@ag-grid-enterprise/column-tool-panel';

@@ -1,6 +1,5 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import { enterpriseGridUrl } from '@utils/server/enterpriseGridUrl';
 
 interface Props {
     title: string;
@@ -9,9 +8,6 @@ interface Props {
 
 const { title, description } = Astro.props as Props;
 ---
-
-<!-- Load AG Grid library -->
-<script defer src={enterpriseGridUrl}></script>
 
 <Layout title={title} description={description} showSearchBar={false} showDocsNav={false} hideFooter={true}>
     <slot />
