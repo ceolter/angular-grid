@@ -29,7 +29,7 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
             field: 'imageURL',
             headerName: 'Image',
             cellRenderer: ImageCellRenderer,
-            width: 10,
+            width: 230,
             autoHeight: true,
         },
         {
@@ -43,7 +43,6 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
             field: 'status',
             headerName: 'Status',
             cellRenderer: StatusCellRenderer,
-            wrapText: true,
             filter: true,
         },
         { field: 'sku', headerName: 'SKU' },

@@ -2,8 +2,6 @@
 :global(.ag-theme-quartz-dark) {
     --ag-row-height: 80px !important;
     --ag-header-background-color: transparent !important;
-    --ag-data-color: rgb(23, 23, 23);
-    --ag-header-foreground-color: rgb(96, 96, 96) !important;
     --ag-row-hover-color: #f4f4f4 !important;
 }
 

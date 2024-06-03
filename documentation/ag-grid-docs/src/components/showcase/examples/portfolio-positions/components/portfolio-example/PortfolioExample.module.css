@@ -7,7 +7,6 @@
 
 .toolbar button {
     font-weight: 600;
-    color: #4e4e4e;
 }
 
 .grid {
@@ -32,8 +31,8 @@
 
 .wrapper {
     display: flex;
-    background: #fcfcfc;
-    border: 1px solid rgb(223, 223, 223);
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-secondary);
     border-radius: 12px;
     overflow: hidden;
 }
