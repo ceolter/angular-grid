@@ -50,7 +50,7 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
         { field: 'paymentMethod', cellDataType: 'text' },
         { field: 'paymentStatus', cellDataType: 'text' },
     ]);
-    const rowData = getData();
+    const [rowData] = useState(getData());
     const getDataPath = useCallback<GetDataPath>((data) => {
         return data.orgHierarchy;
     }, []);

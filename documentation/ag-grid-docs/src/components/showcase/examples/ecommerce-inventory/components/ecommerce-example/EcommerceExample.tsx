@@ -89,7 +89,7 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
         },
         { field: 'actions', cellRenderer: ActionsCellRenderer, pinned: 'right' },
     ]);
-    const rowData = getData();
+    const [rowData] = useState(getData());
     const [defaultColDef] = useState({
         flex: 1,
     });
