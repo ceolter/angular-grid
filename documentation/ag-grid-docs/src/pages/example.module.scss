@@ -32,12 +32,26 @@
 
 .showcaseItemTab {
     box-shadow: var(--shadow-sm);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
 }
 
+.tabWrapper {
+    background-color: #e5e9ed;
+    width: 350px;
+    height: 200px;
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    &:hover {
+        background-color: #c8cfd8;
+        transition: all 0.5s ease-in-out;
+    }
+}
 .tabs {
     display: flex;
     height: 100%;
+    gap: 16px;
 }
 
 .showcaseItemTab {
@@ -48,22 +62,21 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     max-width: 100%;
-    height: 100px;
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--radius-sm);
-    margin-right: $spacing-size-3;
-    width: 160px;
+    position: relative;
+    left: 24px;
+    top: 24px;
     transition: all 0.3s ease-in-out;
 
     &:hover {
-        opacity: 0.5;
+        transform: scale(1.05);
+        opacity: 1;
         transition: all 0.3s ease-in-out;
     }
 }
 
 .tabActive {
-    border: 2px solid #2196f3;
-    border-radius: var(--radius-sm);
+    border: 2px solid #044b93;
+    border-radius: var(--radius-lg);
 }
 
 .layoutWrapper {

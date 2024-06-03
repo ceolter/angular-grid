@@ -11,6 +11,7 @@
 
 .grid {
     height: calc(100vh - var(--layout-grid-header-height));
+    --ag-header-background-color: transparent !important;
 }
 
 .container {
