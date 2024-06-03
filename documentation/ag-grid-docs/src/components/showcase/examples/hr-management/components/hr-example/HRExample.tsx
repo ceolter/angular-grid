@@ -1,8 +1,7 @@
+import type { ColDef, GetDataPath } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import { getResourceUrl } from '@components/showcase/examples/portfolio-positions/utils/getResourceUrl';
 import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
-
-import type { ColDef } from 'ag-grid-community';
 
 import { currencyFormatter } from '../../utils/valueFormatters';
 import { EmployeeCellRenderer } from '../employee-cell-renderer/EmployeeCellRenderer';
@@ -52,7 +51,7 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
         { field: 'paymentStatus', cellDataType: 'text' },
     ]);
     const rowData = getData();
-    const getDataPath = useCallback((data) => {
+    const getDataPath = useCallback<GetDataPath>((data) => {
         return data.orgHierarchy;
     }, []);
     const detailCellRendererParams = useMemo(() => {
@@ -68,7 +67,7 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                     minWidth: 100,
                 },
             },
-            getDetailRowData: function (params) {
+            getDetailRowData: function (params: any) {
                 const descriptions = ['Office chair and standing desk', 'Private healthcare'];
 
                 const selectedDescription = descriptions[Math.floor(Math.random() * descriptions.length)];

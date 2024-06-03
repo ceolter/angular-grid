@@ -1,4 +1,4 @@
-import type { ValueGetterFunc } from 'ag-grid-community';
+import type { ValueGetterFunc } from '@ag-grid-community/core';
 
 import type { PortfolioItem } from '../../types';
 

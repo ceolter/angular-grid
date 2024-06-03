@@ -1,8 +1,7 @@
+import { type ColDef, type GetRowIdFunc, type GetRowIdParams } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import classNames from 'classnames';
 import { type FunctionComponent, useCallback, useRef, useState } from 'react';
-
-import { type ColDef, type GetRowIdParams } from 'ag-grid-community';
 
 import { type PortfolioItem } from '../../../types';
 import { getResourceUrl } from '../../utils/getResourceUrl';
@@ -182,7 +181,7 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
 
         { headerName: 'Options', cellRenderer: ActionsCellRenderer, width: 80, pinned: 'right' },
     ]);
-    const getRowId = useCallback((params: GetRowIdParams) => {
+    const getRowId = useCallback<GetRowIdFunc>((params: GetRowIdParams) => {
         return params.data.ticker;
     }, []);
     const generator = useDataGenerator({

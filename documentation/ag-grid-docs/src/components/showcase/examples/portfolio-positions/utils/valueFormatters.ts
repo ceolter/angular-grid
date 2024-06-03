@@ -1,4 +1,4 @@
-import type { ValueFormatterFunc } from 'ag-grid-community';
+import type { ValueFormatterFunc } from '@ag-grid-community/core';
 
 export const currencyFormatter: ValueFormatterFunc = (params) => {
     if (params.value == null) return '';

@@ -1,8 +1,7 @@
+import type { ColDef, SizeColumnsToContentStrategy } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import { getResourceUrl } from '@components/showcase/examples/portfolio-positions/utils/getResourceUrl';
 import { type FunctionComponent, useRef, useState } from 'react';
-
-import type { ColDef } from 'ag-grid-community';
 
 import { quantityCalculator } from '../../utils/valueGetters';
 import { ActionsCellRenderer } from '../actions-cell-renderer/ActionsCellRenderer';
@@ -94,7 +93,7 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
     const [defaultColDef] = useState({
         flex: 1,
     });
-    const [autoSizeStrategy] = useState({
+    const [autoSizeStrategy] = useState<SizeColumnsToContentStrategy>({
         type: 'fitCellContents',
     });
     const pagination = true;

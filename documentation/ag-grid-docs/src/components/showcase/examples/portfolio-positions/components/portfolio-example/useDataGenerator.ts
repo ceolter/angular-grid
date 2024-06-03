@@ -1,6 +1,5 @@
+import { type AgGridReact } from '@ag-grid-community/react';
 import { type RefObject, useMemo } from 'react';
-
-import { type AgGridReact } from 'ag-grid-react';
 
 import { type PortfolioItem } from '../../../types';
 import { createGenerator } from '../../utils/dataGenerator';
