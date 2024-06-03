@@ -60,8 +60,8 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
             detailGridOptions: {
                 columnDefs: [
                     { field: 'value', headerName: 'Type', width: 150, cellRenderer: EmployeeDetailsRenderer },
-                    { field: 'value', headerName: 'Description', width: 150 },
-                    { field: 'value', headerName: 'Gross Amount', width: 150 },
+                    { field: 'description', headerName: 'Description', width: 150 },
+                    { field: 'grossAmount', headerName: 'Gross Amount', width: 150 },
                 ],
                 defaultColDef: {
                     flex: 1,
@@ -69,8 +69,14 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                 },
             },
             getDetailRowData: function (params) {
-                // Here you can provide the detail data for each row
-                params.successCallback([{ attribute: 'Type' }, { attribute: 'Type' }]);
+                const descriptions = ['Description A', 'Description B'];
+
+                const selectedDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+                params.successCallback([
+                    { type: 'Type 1', description: selectedDescription, grossAmount: 1000 },
+                    { type: 'Type 2', description: selectedDescription, grossAmount: 2000 },
+                ]);
             },
         };
     }, []);
