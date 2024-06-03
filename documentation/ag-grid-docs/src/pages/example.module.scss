@@ -51,7 +51,7 @@ $nav-height: 340px;
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: all 0.5s ease-in-out;
-
+    border: 1px solid var(--color-border-primary);
     &:hover {
         background-color: #c8cfd8;
         transition: all 0.5s ease-in-out;
