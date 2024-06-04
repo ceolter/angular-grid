@@ -17,12 +17,6 @@
     align-items: center;
 }
 
-:global(.ag-theme-quartz),
-:global(.ag-theme-quartz-dark) {
-    --ag-header-background-color: transparent !important;
-    --ag-data-color: rgb(23, 23, 23);
-}
-
 .toolbar {
     padding-bottom: 16px;
     font-size: 14px;
