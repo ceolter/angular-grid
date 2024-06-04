@@ -61,6 +61,12 @@ $nav-height: 340px;
     gap: 16px;
 }
 
+.tabs span {
+    font-weight: var(--text-semibold);
+    display: flex;
+    justify-content: center;
+    padding-top: $spacing-size-3;
+}
 .showcaseItemTab {
     cursor: pointer;
     -webkit-user-drag: none;
@@ -75,7 +81,7 @@ $nav-height: 340px;
     transition: all 0.3s ease-in-out;
     transform: scale(1.3);
     &:hover {
-        transform: scale(1.32);
+        transform: scale(1.33);
         opacity: 1;
         transition: all 0.3s ease-in-out;
     }
@@ -84,6 +90,11 @@ $nav-height: 340px;
 .tabActive {
     border: 2px solid #044b93;
     border-radius: var(--radius-lg);
+    background-color: #c8cfd8;
+}
+
+#{$selector-darkmode} .tabActive {
+    background-color: var(--color-bg-secondary);
 }
 
 .layoutWrapper {
