@@ -26,7 +26,6 @@ $nav-height: 340px;
     gap: $spacing-size-12;
     margin-bottom: $spacing-size-4;
     padding-bottom: $spacing-size-12;
-    border-bottom: 1px solid var(--color-border-secondary);
     width: 100%;
     justify-content: space-between;
     padding: $spacing-size-8;
@@ -112,7 +111,6 @@ $nav-height: 340px;
 }
 
 .layout {
-    padding: $spacing-size-4;
     @media screen and (min-width: (1800px + 48px * 2)) {
         width: var(--layout-max-width);
         margin: 0 auto;

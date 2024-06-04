@@ -19,7 +19,6 @@
 }
 
 .container {
-    padding: 16px;
     width: 100%;
 }
 
@@ -37,7 +36,6 @@
 .wrapper {
     display: flex;
     background: var(--color-bg-primary);
-    border: 1px solid var(--color-border-secondary);
     border-radius: 12px;
     overflow: hidden;
 }
