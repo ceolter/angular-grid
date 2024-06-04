@@ -20,6 +20,11 @@ $nav-height: 340px;
     width: 100%;
     justify-content: space-between;
 
+    @media screen and (max-width: 1900px) {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     @media screen and (min-width: (1800px + 48px * 2)) {
         padding-left: 0;
         max-width: var(--layout-max-width);
