@@ -11,15 +11,6 @@ $nav-height: 340px;
 }
 
 .topHeader {
-    p {
-        color: var(--color-text-tertiary);
-    }
-
-    @media screen and (min-width: (1800px + 48px * 2)) {
-        padding-left: 0;
-        max-width: var(--layout-max-width);
-    }
-
     margin: 0 auto;
     padding-top: $spacing-size-8;
     display: flex;
@@ -28,73 +19,15 @@ $nav-height: 340px;
     padding-bottom: $spacing-size-12;
     width: 100%;
     justify-content: space-between;
-}
 
-.showcaseItemTab {
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--radius-md);
-}
-#{$selector-darkmode} .tabWrapper {
-    background-color: var(--color-bg-tertiary);
-    &:hover {
-        background-color: var(--color-bg-secondary);
-        transition: all 0.5s ease-in-out;
+    @media screen and (min-width: (1800px + 48px * 2)) {
+        padding-left: 0;
+        max-width: var(--layout-max-width);
     }
-}
-.tabWrapper {
-    background-color: #e5e9ed;
-    width: 320px;
-    height: 175px;
-    box-shadow: var(--shadow-sm);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    transition: all 0.5s ease-in-out;
-    border: 1px solid var(--color-border-primary);
-    &:hover {
-        background-color: #c8cfd8;
-        transition: all 0.5s ease-in-out;
+
+    p {
+        color: var(--color-text-tertiary);
     }
-}
-.tabs {
-    display: flex;
-    height: 100%;
-    gap: 16px;
-}
-
-.tabs span {
-    font-weight: var(--text-semibold);
-    display: flex;
-    justify-content: center;
-    padding-top: $spacing-size-3;
-}
-.showcaseItemTab {
-    cursor: pointer;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    max-width: 100%;
-    position: relative;
-    left: 64px;
-    top: 44px;
-    transition: all 0.3s ease-in-out;
-    transform: scale(1.3);
-    &:hover {
-        transform: scale(1.33);
-        opacity: 1;
-        transition: all 0.3s ease-in-out;
-    }
-}
-
-.tabActive {
-    border: 2px solid #044b93;
-    border-radius: var(--radius-lg);
-    background-color: #c8cfd8;
-}
-
-#{$selector-darkmode} .tabActive {
-    background-color: var(--color-bg-secondary);
 }
 
 .layoutWrapper {
@@ -126,19 +59,4 @@ $nav-height: 340px;
         width: var(--layout-max-width);
         margin: 0 auto;
     }
-}
-
-.tabs a div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 12px;
-}
-
-#{$selector-darkmode} .showcaseItemTab {
-    display: none;
-}
-
-#{$selector-darkmode} .showcaseItemTab.darkTab {
-    display: block;
 }

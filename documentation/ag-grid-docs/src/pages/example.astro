@@ -1,18 +1,18 @@
 ---
 import styles from './example.module.scss';
 import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
+import ShowcaseTabs from '@components/showcase/ShowcaseTabs.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
-import { EcommerceInventoryExample } from '@components/showcase/examples/ecommerce-inventory';
+import { PortfolioPositions } from '@components/showcase/examples/portfolio-positions';
 import LogoMark from '@components/logo/LogoMark';
 ---
 
 <ShowcaseLayout title="Ecommerce Inventory Management">
     <div class={styles.topHeader}>
         <div>
-            <h1 class={styles.headerHeading}>Inventory</h1>
+            <h1 class={styles.headerHeading}>Finance</h1>
             <p class={styles.headerDescription}>
-                An example inventory dashboard that let’s you manage product inventory
+                An example of a finance app with integrated charts and live-updating data
             </p>
             <button class="button-secondary">
                 <Icon alt={`GitHub logo`} name="github" svgClasses={styles.githubIcon} />
@@ -20,83 +20,16 @@ import LogoMark from '@components/logo/LogoMark';
             </button>
         </div>
 
-        <div class={styles.tabs}>
-            <div>
-                <div class={`${styles.tabWrapper} ${styles.tabActive}`}>
-                    <a href={urlWithBaseUrl(`/example`)}>
-                        <img
-                            class={`${styles.showcaseItemTab}`}
-                            src={urlWithBaseUrl(`/example/grid-inventory.png`)}
-                            alt="Grid illustration"
-                        />
-                        <img
-                            class={`${styles.showcaseItemTab} ${styles.darkTab}`}
-                            src={urlWithBaseUrl(`/example/inventory-dark.png`)}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                </div>
-                <span>Inventory</span>
-            </div>
-            <div>
-                <div class={styles.tabWrapper}>
-                    <a href={urlWithBaseUrl(`/example-finance`)}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl(`/example/finance-grid.png`)}
-                            alt="Grid illustration"
-                        />
-                        <img
-                            class={`${styles.showcaseItemTab} ${styles.darkTab}`}
-                            src={urlWithBaseUrl(`/example/finance-dark.png`)}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                </div>
-                <span>Finance</span>
-            </div>
-            <div>
-                <div class={styles.tabWrapper}>
-                    <a href={urlWithBaseUrl(`/example-crm`)}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl(`/example/crm-grid.png`)}
-                            alt="Grid illustration"
-                        />
-                        <img
-                            class={`${styles.showcaseItemTab} ${styles.darkTab}`}
-                            src={urlWithBaseUrl(`/example/crm-dark.png`)}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                </div>
-                <span>CRM</span>
-            </div>
-            <div>
-                <div class={styles.tabWrapper}>
-                    <a href={urlWithBaseUrl(`/example-complete`)}>
-                        <img
-                            class={styles.showcaseItemTab}
-                            src={urlWithBaseUrl(`/example/grid-full.png`)}
-                            alt="Grid illustration"
-                        />
-                        <img
-                            class={`${styles.showcaseItemTab} ${styles.darkTab}`}
-                            src={urlWithBaseUrl(`/example/complete-dark.png`)}
-                            alt="Grid illustration"
-                        />
-                    </a>
-                </div>
-                <span>Complete</span>
-            </div>
-        </div>
+        <ShowcaseTabs activeTab="finance" />
     </div>
+
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
             <div class={styles.loadingLogoContainer}>
                 <LogoMark isSpinning />
             </div>
-            <EcommerceInventoryExample client:only="react" />
+
+            <PortfolioPositions client:only="react" />
         </div>
     </div>
 </ShowcaseLayout>
