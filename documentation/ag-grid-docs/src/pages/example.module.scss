@@ -97,6 +97,7 @@ $nav-height: 340px;
     width: 100%;
     position: absolute;
     height: calc(100vh - var(--layout-grid-header-height));
+    pointer-events: none;
 
     svg[class*='logo-mark'] {
         position: absolute;

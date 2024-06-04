@@ -9,6 +9,6 @@ interface Props {
 const { title, description } = Astro.props as Props;
 ---
 
-<Layout title={title} description={description} showSearchBar={false} showDocsNav={false} hideFooter={true}>
+<Layout title={title} description={description} showSearchBar={true} showDocsNav={false} hideFooter={true}>
     <slot />
 </Layout>
