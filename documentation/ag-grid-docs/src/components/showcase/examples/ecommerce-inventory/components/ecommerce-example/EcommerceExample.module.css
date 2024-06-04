@@ -17,16 +17,6 @@
     align-items: center;
 }
 
-.toolbar {
-    padding-bottom: 16px;
-    font-size: 14px;
-    button {
-        font-weight: 600;
-    }
-    display: flex;
-    justify-content: space-between;
-}
-
 .icon {
     margin-right: 8px;
 }

@@ -1,11 +1,9 @@
 import { type ColDef, type GetRowIdFunc, type GetRowIdParams } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import classNames from 'classnames';
-import { DownloadIcon } from 'lucide-react';
 import { type FunctionComponent, useCallback, useRef, useState } from 'react';
 
 import { type PortfolioItem } from '../../../types';
-import { getResourceUrl } from '../../utils/getResourceUrl';
 import { currencyFormatter, percentageFormatter } from '../../utils/valueFormatters';
 import {
     calculate52wChange,
@@ -14,9 +12,7 @@ import {
     pnlPercentCalculator,
     valueCalculator,
 } from '../../utils/valueGetters';
-import { ActionsCellRenderer } from '../actions-cell-renderer/ActionsCellRenderer';
 import { TickerCellRenderer } from '../ticker-cell-renderer/TickerCellRenderer';
-import { UpdateSpeedSlider } from '../update-speed-slider/UpdateSpeedSlider';
 import styles from './PortfolioExample.module.css';
 import { INITIAL_UPDATE_INTERVAL_MULTIPLIER, UPDATE_INTERVAL } from './constants';
 import { generatePortfolio } from './data';
@@ -198,30 +194,6 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>
-                <div className={styles.toolbar}>
-                    <button
-                        id="export-to-excel"
-                        className="button-secondary"
-                        onClick={() => {
-                            gridRef.current?.api.exportDataAsExcel();
-                        }}
-                    >
-                        <DownloadIcon className={styles.icon} />
-                        Export to Excel
-                    </button>
-                    <UpdateSpeedSlider
-                        value={updateSpeed}
-                        min={rangeConfig.min}
-                        max={rangeConfig.max}
-                        step={rangeConfig.step}
-                        onChange={(value) => {
-                            setUpdateSpeed(value);
-
-                            const updateInterval = UPDATE_INTERVAL / value;
-                            generator.updateInterval(updateInterval);
-                        }}
-                    />
-                </div>
                 <div className={`${themeClass} ${styles.grid}`}>
                     <AgGridReact
                         ref={gridRef}

@@ -1,14 +1,3 @@
-.toolbar {
-    padding-bottom: 16px;
-    font-size: 14px;
-    display: flex;
-    justify-content: space-between;
-}
-
-.toolbar button {
-    font-weight: 600;
-}
-
 .icon {
     margin-right: 8px;
 }
