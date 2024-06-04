@@ -32,7 +32,6 @@
 .wrapper {
     display: flex;
     background: var(--color-bg-primary);
-    border-radius: 12px;
     overflow: hidden;
 }
 
