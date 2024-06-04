@@ -21,7 +21,7 @@ $nav-height: 340px;
     }
 
     margin: 0 auto;
-    padding-top: $spacing-size-12;
+    padding-top: $spacing-size-8;
     display: flex;
     gap: $spacing-size-12;
     margin-bottom: $spacing-size-4;
@@ -43,8 +43,8 @@ $nav-height: 340px;
 }
 .tabWrapper {
     background-color: #e5e9ed;
-    width: 300px;
-    height: 150px;
+    width: 320px;
+    height: 175px;
     box-shadow: var(--shadow-sm);
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -76,8 +76,8 @@ $nav-height: 340px;
     -ms-user-select: none;
     max-width: 100%;
     position: relative;
-    left: 60px;
-    top: 40px;
+    left: 64px;
+    top: 44px;
     transition: all 0.3s ease-in-out;
     transform: scale(1.3);
     &:hover {
