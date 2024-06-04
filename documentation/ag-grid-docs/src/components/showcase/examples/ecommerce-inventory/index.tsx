@@ -7,12 +7,16 @@ import { useDarkmode } from '@utils/hooks/useDarkmode';
 import { type FunctionComponent } from 'react';
 
 import { EcommerceExample } from './components/ecommerce-example/EcommerceExample';
-import './index.module.css';
+import styles from './index.module.css';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, ExcelExportModule]);
 
 export const EcommerceInventoryExample: FunctionComponent = () => {
     const [isDarkMode] = useDarkmode();
 
-    return <EcommerceExample isDarkMode={isDarkMode} />;
+    return (
+        <div className={styles.exampleContainer}>
+            <EcommerceExample isDarkMode={isDarkMode} />
+        </div>
+    );
 };

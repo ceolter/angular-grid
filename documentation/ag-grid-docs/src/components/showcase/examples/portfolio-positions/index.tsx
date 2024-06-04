@@ -18,7 +18,7 @@ import { useDarkmode } from '@utils/hooks/useDarkmode';
 import { type FunctionComponent } from 'react';
 
 import PortfolioExample from './components/portfolio-example/PortfolioExample';
-import './index.module.css';
+import styles from './index.module.css';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
@@ -39,5 +39,9 @@ ModuleRegistry.registerModules([
 export const PortfolioPositions: FunctionComponent = () => {
     const [isDarkMode] = useDarkmode();
 
-    return <PortfolioExample isDarkMode={isDarkMode} />;
+    return (
+        <div className={styles.exampleContainer}>
+            <PortfolioExample isDarkMode={isDarkMode} />
+        </div>
+    );
 };

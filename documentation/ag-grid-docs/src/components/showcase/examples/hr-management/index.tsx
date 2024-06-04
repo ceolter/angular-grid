@@ -8,12 +8,16 @@ import { useDarkmode } from '@utils/hooks/useDarkmode';
 import { type FunctionComponent } from 'react';
 
 import { HRExample } from './components/hr-example/HRExample';
-import './index.module.css';
+import styles from './index.module.css';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, ExcelExportModule, MasterDetailModule]);
 
 export const HRManagementExample: FunctionComponent = () => {
     const [isDarkMode] = useDarkmode();
 
-    return <HRExample isDarkMode={isDarkMode} />;
+    return (
+        <div className={styles.exampleContainer}>
+            <HRExample isDarkMode={isDarkMode} />
+        </div>
+    );
 };
