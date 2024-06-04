@@ -1,6 +1,7 @@
 import type { ColDef, SizeColumnsToContentStrategy } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import { getResourceUrl } from '@components/showcase/examples/portfolio-positions/utils/getResourceUrl';
+import { DownloadIcon } from 'lucide-react';
 import { type FunctionComponent, useRef, useState } from 'react';
 
 import { quantityCalculator } from '../../utils/valueGetters';
@@ -113,10 +114,7 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
                             gridRef.current?.api.exportDataAsExcel();
                         }}
                     >
-                        <img
-                            className={styles.buttonIcon}
-                            src={getResourceUrl(`/example/finance/icons/download.svg`)}
-                        />
+                        <DownloadIcon className={styles.icon} />
                         Export to Excel
                     </button>
                 </div>

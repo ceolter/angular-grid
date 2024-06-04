@@ -31,6 +31,10 @@
     height: calc(100vh - var(--layout-grid-header-height));
 }
 
+.icon {
+    margin-right: 8px;
+}
+
 .container {
     padding: 16px;
     width: 100%;

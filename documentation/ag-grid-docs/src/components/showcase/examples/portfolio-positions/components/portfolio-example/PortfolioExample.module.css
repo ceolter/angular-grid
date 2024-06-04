@@ -9,6 +9,10 @@
     font-weight: 600;
 }
 
+.icon {
+    margin-right: 8px;
+}
+
 .grid {
     height: calc(100vh - var(--layout-grid-header-height));
     --ag-header-background-color: transparent !important;
@@ -88,13 +92,6 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.icon {
-    background: blue;
-    height: 24px;
-    width: 24px;
-    border-radius: 24px;
 }
 
 .sidebarWrapper {

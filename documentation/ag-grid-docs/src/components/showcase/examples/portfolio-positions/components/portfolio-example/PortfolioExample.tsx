@@ -1,6 +1,7 @@
 import { type ColDef, type GetRowIdFunc, type GetRowIdParams } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import classNames from 'classnames';
+import { DownloadIcon } from 'lucide-react';
 import { type FunctionComponent, useCallback, useRef, useState } from 'react';
 
 import { type PortfolioItem } from '../../../types';
@@ -178,8 +179,6 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
             },
             aggFunc: 'avg',
         },
-
-        { headerName: 'Options', cellRenderer: ActionsCellRenderer, width: 80, pinned: 'right' },
     ]);
     const getRowId = useCallback<GetRowIdFunc>((params: GetRowIdParams) => {
         return params.data.ticker;
@@ -207,10 +206,7 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                             gridRef.current?.api.exportDataAsExcel();
                         }}
                     >
-                        <img
-                            className={styles.buttonIcon}
-                            src={getResourceUrl('/example/finance/icons/download.svg')}
-                        />
+                        <DownloadIcon className={styles.icon} />
                         Export to Excel
                     </button>
                     <UpdateSpeedSlider

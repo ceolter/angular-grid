@@ -27,6 +27,10 @@
     justify-content: space-between;
 }
 
+.icon {
+    margin-right: 8px;
+}
+
 .grid {
     height: calc(100vh - var(--layout-grid-header-height));
 }

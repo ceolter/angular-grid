@@ -1,6 +1,7 @@
 import type { ColDef, GetDataPath } from '@ag-grid-community/core';
 import { AgGridReact } from '@ag-grid-community/react';
 import { getResourceUrl } from '@components/showcase/examples/portfolio-positions/utils/getResourceUrl';
+import { DownloadIcon } from 'lucide-react';
 import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { currencyFormatter } from '../../utils/valueFormatters';
@@ -93,10 +94,7 @@ export const HRExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                             gridRef.current?.api.exportDataAsExcel();
                         }}
                     >
-                        <img
-                            className={styles.buttonIcon}
-                            src={getResourceUrl(`/example/finance/icons/download.svg`)}
-                        />
+                        <DownloadIcon className={styles.icon} />
                         Export to Excel
                     </button>
                 </div>
