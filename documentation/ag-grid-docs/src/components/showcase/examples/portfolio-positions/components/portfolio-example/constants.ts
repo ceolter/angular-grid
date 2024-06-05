@@ -51,6 +51,24 @@ export const PORTFOLIO_DATA: BasePortfolioItem[] = [
         buyDate: '2023-01-10',
         buyPrice: 245.56,
     },
+    {
+        ticker: 'GOOGL',
+        name: 'Google',
+        ccy: 'USD',
+        instrument: 'Stock',
+        quantity: 90,
+        buyDate: '2023-01-10',
+        buyPrice: 102.56,
+    },
+    {
+        ticker: 'NKE',
+        name: 'Nike',
+        ccy: 'USD',
+        instrument: 'Stock',
+        quantity: 90,
+        buyDate: '2023-01-10',
+        buyPrice: 203.56,
+    },
 
     // Futures
     {
@@ -108,6 +126,15 @@ export const PORTFOLIO_DATA: BasePortfolioItem[] = [
         buyPrice: 24.56,
     },
     {
+        ticker: 'GBPCAD',
+        name: 'Sterling to Canadian Dollar',
+        ccy: 'GBP',
+        instrument: 'Forex',
+        quantity: 65,
+        buyDate: '2023-07-10',
+        buyPrice: 24.56,
+    },
+    {
         ticker: 'BTC',
         name: 'Bitcoin',
         ccy: 'USD',
@@ -119,6 +146,24 @@ export const PORTFOLIO_DATA: BasePortfolioItem[] = [
     {
         ticker: 'ETH',
         name: 'Ethereum',
+        ccy: 'USD',
+        instrument: 'Crypto',
+        quantity: 65,
+        buyDate: '2023-07-10',
+        buyPrice: 24.56,
+    },
+    {
+        ticker: 'XRP',
+        name: 'Ripple',
+        ccy: 'USD',
+        instrument: 'Crypto',
+        quantity: 65,
+        buyDate: '2023-07-10',
+        buyPrice: 24.56,
+    },
+    {
+        ticker: 'BNB',
+        name: 'BNB',
         ccy: 'USD',
         instrument: 'Crypto',
         quantity: 65,
