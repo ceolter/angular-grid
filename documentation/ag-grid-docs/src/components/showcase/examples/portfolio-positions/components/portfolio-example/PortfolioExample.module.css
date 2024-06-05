@@ -114,6 +114,16 @@
     opacity: 0.4;
 }
 
+:global(.ag-right-aligned-cell) {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+:global(.ag-theme-quartz .cell-green),
+:global(.ag-theme-quartz .cell-red) {
+    text-align: right;
+}
+
 :global(.ag-theme-quartz .cell-green) {
     color: green;
 }
