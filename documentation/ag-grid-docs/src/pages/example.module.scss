@@ -60,6 +60,11 @@ $nav-height: 340px;
 }
 
 .layout {
+    @media screen and (max-width: 1900px) {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+
     @media screen and (min-width: (1800px + 48px * 2)) {
         width: var(--layout-max-width);
         margin: 0 auto;
