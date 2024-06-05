@@ -1,3 +1,7 @@
+:global(:root) {
+    --layout-grid-header-height: 32px;
+}
+
 :global(.ag-theme-quartz),
 :global(.ag-theme-quartz-dark) {
     --ag-row-height: 80px !important;

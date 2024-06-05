@@ -1,3 +1,7 @@
+:global(:root) {
+    --layout-grid-header-height: 32px;
+}
+
 :global(.ag-theme-quartz .ag-row-group),
 :global(.ag-theme-quartz-dark .ag-row-group) {
     text-transform: uppercase;

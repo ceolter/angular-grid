@@ -5,6 +5,7 @@ $nav-height: 340px;
 .githubIcon {
     padding: 4px;
 }
+
 .headerHeading {
     padding-bottom: 0;
     margin-bottom: 0;
@@ -60,6 +61,8 @@ $nav-height: 340px;
 }
 
 .layout {
+    --layout-grid-header-height: calc(var(--layout-site-header-height) + 300px);
+
     @media screen and (max-width: 1900px) {
         padding-left: 24px;
         padding-right: 24px;

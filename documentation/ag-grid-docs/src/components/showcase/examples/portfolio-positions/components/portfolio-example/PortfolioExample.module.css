@@ -1,10 +1,15 @@
+:global(:root) {
+    --layout-grid-header-height: 32px;
+}
+
 .icon {
     margin-right: 8px;
 }
 
 .grid {
-    height: calc(100vh - var(--layout-grid-header-height));
     --ag-header-background-color: transparent !important;
+
+    height: calc(100vh - var(--layout-grid-header-height));
 }
 
 .container {
@@ -86,6 +91,7 @@
     justify-content: space-between;
     flex-direction: column;
 }
+
 .breadcrumbs {
     display: flex;
     flex-direction: flex-col;
