@@ -53,7 +53,7 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                 });
             },
             valueFormatter: currencyFormatter,
-            width: 150,
+            width: 140,
             pivot: true,
             aggFunc: 'sum',
             suppressHeaderFilterButton: true,

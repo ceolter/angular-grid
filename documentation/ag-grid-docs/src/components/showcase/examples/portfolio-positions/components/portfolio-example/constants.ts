@@ -69,6 +69,15 @@ export const PORTFOLIO_DATA: BasePortfolioItem[] = [
         buyDate: '2023-01-10',
         buyPrice: 203.56,
     },
+    {
+        ticker: 'MSFT',
+        name: 'Microsoft',
+        ccy: 'USD',
+        instrument: 'Stock',
+        quantity: 90,
+        buyDate: '2023-01-10',
+        buyPrice: 203.56,
+    },
 
     // Futures
     {
