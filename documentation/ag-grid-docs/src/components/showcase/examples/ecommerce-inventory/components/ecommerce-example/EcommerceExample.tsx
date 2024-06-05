@@ -95,10 +95,6 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
     const [autoSizeStrategy] = useState<SizeColumnsToContentStrategy>({
         type: 'fitCellContents',
     });
-    const pagination = true;
-    const paginationPageSize = 10;
-    const paginationPageSizeSelector = [10, 20, 50];
-
     const themeClass = isDarkMode ? `${gridTheme}-dark` : gridTheme;
 
     return (
@@ -112,9 +108,6 @@ export const EcommerceExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
                         defaultColDef={defaultColDef}
                         rowSelection="multiple"
                         autoSizeStrategy={autoSizeStrategy}
-                        pagination={pagination}
-                        paginationPageSize={paginationPageSize}
-                        paginationPageSizeSelector={paginationPageSizeSelector}
                         columnMenu="new"
                     />
                 </div>
