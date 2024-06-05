@@ -141,25 +141,21 @@
 :global(.ag-theme-quartz-dark .cell-green) {
     color: rgb(70, 227, 114);
     background-color: rgb(70, 227, 114, 0.1);
-    display: flex;
-    align-items: center;
     border-radius: 100px;
 }
 
 :global(.ag-theme-quartz-dark .cell-green)::before {
     content: '↑';
-    margin-right: 8px; /* Optional: add some spacing between the arrow and the text */
+    margin-right: 8px;
 }
 
 :global(.ag-theme-quartz-dark .cell-red) {
     color: rgb(255, 0, 92);
     background-color: rgb(255, 0, 92, 0.1);
-    display: flex;
-    align-items: center;
     border-radius: 100px;
 }
 
 :global(.ag-theme-quartz-dark .cell-red)::before {
     content: '↓';
-    margin-right: 8px; /* Optional: add some spacing between the arrow and the text */
+    margin-right: 8px;
 }
