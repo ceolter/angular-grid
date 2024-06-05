@@ -1,14 +1,24 @@
-.statusCell {
+.tag {
     border-radius: 100px;
     padding-left: 12px;
     padding-right: 12px;
     line-height: 2;
     font-weight: 500;
-    border: 1.5px solid rgba(91, 91, 91, 0.3);
+    border: 1.5px solid rgba(91, 91, 91, 0.1);
 }
 
 .activeTag {
-    background-color: rgb(242, 242, 242);
-    color: rgb(49, 49, 49);
-    border: 0px;
+    background-color: rgb(70, 227, 114, 0.1);
+    color: rgb(62, 184, 97);
+    border: 1.5px solid rgb(70, 227, 114, 0.2);
+}
+
+.outOfStockTag {
+    background-color: rgb(255, 0, 0, 0.05);
+    color: rgb(234, 83, 83);
+    border: 1.5px solid rgb(255, 0, 0, 0.3);
+}
+
+.pausedTag {
+    background-color: rgb(128, 128, 128, 0.1);
 }
