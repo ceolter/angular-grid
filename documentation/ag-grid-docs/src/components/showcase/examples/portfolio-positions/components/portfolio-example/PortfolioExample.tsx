@@ -202,7 +202,6 @@ const PortfolioExample: FunctionComponent<Props> = ({ gridTheme = 'ag-theme-quar
                         getRowId={getRowId}
                         columnDefs={colDefs}
                         defaultColDef={{
-                            filter: true,
                             resizable: true,
                         }}
                         enableRangeSelection={true}
