@@ -17,10 +17,6 @@
     width: 20px;
 }
 
-.removeButton:hover {
-    background-color: hsl(0, 67%, 40%);
-}
-
 .buttonStopSelling {
     height: 40px;
     line-height: 1.8;

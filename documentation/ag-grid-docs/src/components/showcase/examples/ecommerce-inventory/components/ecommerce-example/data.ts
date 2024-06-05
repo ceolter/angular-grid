@@ -130,6 +130,7 @@ export function getData() {
             committed: 0,
             unavailable: 8,
             incoming: 30,
+            image: 'aesop',
         },
         {
             product: 'PHILIPS 916 Display',
@@ -141,6 +142,7 @@ export function getData() {
             committed: 0,
             unavailable: 43,
             incoming: 11,
+            image: 'timer',
         },
         {
             product: 'MSI 318 Display',
@@ -152,6 +154,7 @@ export function getData() {
             committed: 0,
             unavailable: 0,
             incoming: 0,
+            image: 'kettle',
         },
         {
             product: 'DELL 565 Screen',
@@ -163,6 +166,7 @@ export function getData() {
             committed: 0,
             unavailable: 21,
             incoming: 39,
+            image: 'lamp',
         },
         {
             product: 'DELL 197 Screen',
@@ -174,6 +178,7 @@ export function getData() {
             committed: 0,
             unavailable: 47,
             incoming: 7,
+            image: 'headphones',
         },
         {
             product: 'ACER 522 Screen',
@@ -185,6 +190,7 @@ export function getData() {
             committed: 0,
             unavailable: 9,
             incoming: 45,
+            image: 'kettle',
         },
         {
             product: 'LG 961 Screen',
@@ -196,6 +202,7 @@ export function getData() {
             committed: 0,
             unavailable: 0,
             incoming: 0,
+            image: 'lamp',
         },
         {
             product: 'DELL 373 Screen',
@@ -207,6 +214,7 @@ export function getData() {
             committed: 10,
             unavailable: 0,
             incoming: 0,
+            image: 'headphones',
         },
         {
             product: 'PHILIPS 393 Display',
@@ -218,6 +226,7 @@ export function getData() {
             committed: 11,
             unavailable: 0,
             incoming: 0,
+            image: 'kettle',
         },
         {
             product: 'AOC 138 Screen',
@@ -229,6 +238,7 @@ export function getData() {
             committed: 1,
             unavailable: 0,
             incoming: 0,
+            image: 'aesop',
         },
         {
             product: 'MSI 219 Display',
@@ -240,6 +250,7 @@ export function getData() {
             committed: 0,
             unavailable: 26,
             incoming: 25,
+            image: 'headphones',
         },
         {
             product: 'SAMSUNG 101 Screen',
@@ -251,6 +262,7 @@ export function getData() {
             committed: 0,
             unavailable: 33,
             incoming: 43,
+            image: 'kettle',
         },
         {
             product: 'DELL 464 Screen',
@@ -262,6 +274,7 @@ export function getData() {
             committed: 3,
             unavailable: 0,
             incoming: 0,
+            image: 'aesop',
         },
         {
             product: 'DELL 479 Monitor',
