@@ -1,13 +1,13 @@
 ---
 import styles from '@pages-styles/example.module.scss';
-import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
-import ShowcaseTabs from '@components/showcase/ShowcaseTabs.astro';
+import DemosLayout from '@components/demos/DemosLayout.astro';
+import DemoTabs from '@components/demos/DemosTabs.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { EcommerceInventoryExample } from '@components/showcase/examples/ecommerce-inventory';
+import { EcommerceInventoryExample } from '@components/demos/examples/ecommerce-inventory';
 import LogoMark from '@components/logo/LogoMark';
 ---
 
-<ShowcaseLayout title="Demo - Inventory Management">
+<DemosLayout title="Demo - Inventory Management">
     <div class={styles.topHeader}>
         <div>
             <h1 class={styles.headerHeading}>Inventory</h1>
@@ -20,7 +20,7 @@ import LogoMark from '@components/logo/LogoMark';
             </button>
         </div>
 
-        <ShowcaseTabs activeTab="inventory" />
+        <DemoTabs activeTab="inventory" />
     </div>
     <div class={styles.layout}>
         <div class={styles.layoutWrapper}>
@@ -30,4 +30,4 @@ import LogoMark from '@components/logo/LogoMark';
             <EcommerceInventoryExample client:only="react" />
         </div>
     </div>
-</ShowcaseLayout>
+</DemosLayout>

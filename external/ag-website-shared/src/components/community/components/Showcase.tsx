@@ -1,7 +1,7 @@
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 
-import styles from './Showcase.module.scss';
+import styles from './Demos.module.scss';
 
 const GitHubDetails = ({ favouritesOnly, repo }) => {
     if (repo != '' && repo != undefined && favouritesOnly) {

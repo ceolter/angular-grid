@@ -1,13 +1,13 @@
 ---
-import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
-import ShowcaseTabs from '@components/showcase/ShowcaseTabs.astro';
+import DemosLayout from '@components/demos/DemosLayout.astro';
+import DemoTabs from '@components/demos/DemosTabs.astro';
 import styles from '@pages-styles/example.module.scss';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { HRManagementExample } from '@components/showcase/examples/hr-management';
+import { HRManagementExample } from '@components/demos/examples/hr-management';
 import LogoMark from '@components/logo/LogoMark';
 ---
 
-<ShowcaseLayout title="Demo - HR Management">
+<DemosLayout title="Demo - HR Management">
     <div class={styles.topHeader}>
         <div>
             <h1 class={styles.headerHeading}>CRM</h1>
@@ -18,7 +18,7 @@ import LogoMark from '@components/logo/LogoMark';
             </button>
         </div>
 
-        <ShowcaseTabs activeTab="crm" />
+        <DemoTabs activeTab="crm" />
     </div>
 
     <div class={styles.layout}>
@@ -29,4 +29,4 @@ import LogoMark from '@components/logo/LogoMark';
             <HRManagementExample client:only="react" />
         </div>
     </div>
-</ShowcaseLayout>
+</DemosLayout>

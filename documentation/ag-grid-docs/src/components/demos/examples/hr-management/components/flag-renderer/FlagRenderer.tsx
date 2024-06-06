@@ -1,4 +1,4 @@
-import { getResourceUrl } from '@components/showcase/examples/portfolio-positions/utils/getResourceUrl';
+import { getResourceUrl } from '@components/demos/examples/portfolio-positions/utils/getResourceUrl';
 import { type FunctionComponent } from 'react';
 
 import type { CustomCellRendererProps } from 'ag-grid-react';

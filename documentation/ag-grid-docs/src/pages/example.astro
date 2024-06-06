@@ -1,13 +1,13 @@
 ---
 import styles from '@pages-styles/example.module.scss';
-import ShowcaseLayout from '@components/showcase/ShowcaseLayout.astro';
-import ShowcaseTabs from '@components/showcase/ShowcaseTabs.astro';
+import DemosLayout from '@components/demos/DemosLayout.astro';
+import DemoTabs from '@components/demos/DemosTabs.astro';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { PortfolioPositions } from '@components/showcase/examples/portfolio-positions';
+import { PortfolioPositions } from '@components/demos/examples/portfolio-positions';
 import LogoMark from '@components/logo/LogoMark';
 ---
 
-<ShowcaseLayout title="Demo - Finance">
+<DemosLayout title="Demo - Finance">
     <div class={styles.topHeader}>
         <div>
             <h1 class={styles.headerHeading}>Finance</h1>
@@ -20,7 +20,7 @@ import LogoMark from '@components/logo/LogoMark';
             </button>
         </div>
 
-        <ShowcaseTabs activeTab="finance" />
+        <DemoTabs activeTab="finance" />
     </div>
 
     <div class={styles.layout}>
@@ -32,4 +32,4 @@ import LogoMark from '@components/logo/LogoMark';
             <PortfolioPositions client:only="react" />
         </div>
     </div>
-</ShowcaseLayout>
+</DemosLayout>
