@@ -98,12 +98,12 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         const { nodes, ...otherParams } = params;
 
         if (nodes.length > 1 && this.selectionMode !== 'multiRow') {
-            _warn(191);
+            _warn(130);
             return 0;
         }
 
         if (nodes.length > 1 && params.rangeSelect) {
-            _warn(192);
+            _warn(131);
             return 0;
         }
 
@@ -206,8 +206,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
         validateSelectionParameters(params);
         if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
-            _warn(193);
-            return;
+            return _warn(130);
         }
 
         this.selectionStrategy.selectAllRowNodes(params);
