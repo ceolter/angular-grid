@@ -9,6 +9,7 @@ import { _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
 import type { ColumnGroupService } from './columnGroups/columnGroupService';
 import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
+import type { ColumnStateService } from './columnStateService';
 import {
     _areColIdsEqual,
     _columnsMatch,
@@ -17,6 +18,7 @@ import {
     _updateColsMap,
     isColumnSelectionCol,
 } from './columnUtils';
+import type { VisibleColsService } from './visibleColsService';
 
 export const CONTROLS_COLUMN_ID_PREFIX = 'ag-Grid-SelectionColumn' as const;
 
@@ -27,7 +29,8 @@ export class SelectionColService extends BeanStub implements NamedBean {
     private columnGroupSvc?: ColumnGroupService;
     private autoColSvc?: IAutoColService;
     private colModel: ColumnModel;
-
+    private visibleCols: VisibleColsService;
+    private colState: ColumnStateService;
     // selection checkbox columns
     public selectionCols: ColumnCollections | null;
 
@@ -36,6 +39,8 @@ export class SelectionColService extends BeanStub implements NamedBean {
         this.columnGroupSvc = beans.columnGroupSvc;
         this.autoColSvc = beans.autoColSvc;
         this.colModel = beans.colModel;
+        this.visibleCols = beans.visibleCols;
+        this.colState = beans.colState;
     }
 
     public postConstruct(): void {
@@ -100,45 +105,88 @@ export class SelectionColService extends BeanStub implements NamedBean {
         updateOrders(putSelectionColsFirstInList);
     }
 
-    private generateSelectionCols(): AgColumn[] {
+    public refreshVisibility(): void {
+        if (!this.isSelectionColumnEnabled()) {
+            return;
+        }
+
+        const visibleColumns = this.visibleCols.getAllTrees() ?? [];
+
+        if (visibleColumns.length === 0) {
+            return;
+        }
+
+        // case 1: only one column showing -- selection column
+        if (visibleColumns.length === 1) {
+            const firstColumn = visibleColumns[0];
+
+            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
+                return;
+            }
+
+            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, 'api');
+
+            return;
+        }
+
+        // case 2: multiple columns showing -- none are selection column
+        if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
+            const existingState = this.colState.getColumnState().find((state) => isColumnSelectionCol(state.colId));
+
+            if (existingState) {
+                this.colState.applyColumnState(
+                    {
+                        state: [{ colId: existingState.colId, hide: !existingState.hide }],
+                    },
+                    'api'
+                );
+            }
+        }
+    }
+
+    private isSelectionColumnEnabled(): boolean {
         const { gos } = this;
         const so = gos.get('rowSelection');
         if (!so || typeof so !== 'object') {
+            return false;
+        }
+
+        const checkboxes = !!_getCheckboxes(so);
+        const headerCheckbox = _getHeaderCheckbox(so);
+
+        return checkboxes || headerCheckbox;
+    }
+
+    private generateSelectionCols(): AgColumn[] {
+        if (!this.isSelectionColumnEnabled()) {
             return [];
         }
 
-        const checkboxes = _getCheckboxes(so);
-        const headerCheckbox = _getHeaderCheckbox(so);
-
-        if (checkboxes || headerCheckbox) {
-            const selectionColumnDef = gos.get('selectionColumnDef');
-            const enableRTL = gos.get('enableRtl');
-            const colDef: ColDef = {
-                // overridable properties
-                width: 50,
-                resizable: false,
-                suppressHeaderMenuButton: true,
-                sortable: false,
-                suppressMovable: true,
-                lockPosition: enableRTL ? 'right' : 'left',
-                comparator(valueA, valueB, nodeA, nodeB) {
-                    const aSelected = nodeA.isSelected();
-                    const bSelected = nodeB.isSelected();
-                    return aSelected && bSelected ? 0 : aSelected ? 1 : -1;
-                },
-                editable: false,
-                suppressFillHandle: true,
-                // overrides
-                ...selectionColumnDef,
-                // non-overridable properties
-                colId: CONTROLS_COLUMN_ID_PREFIX,
-            };
-            const col = new AgColumn(colDef, null, colDef.colId!, false);
-            this.createBean(col);
-            return [col];
-        }
-
-        return [];
+        const selectionColumnDef = this.gos.get('selectionColumnDef');
+        const enableRTL = this.gos.get('enableRtl');
+        const colDef: ColDef = {
+            // overridable properties
+            width: 50,
+            resizable: false,
+            suppressHeaderMenuButton: true,
+            sortable: false,
+            suppressMovable: true,
+            lockPosition: enableRTL ? 'right' : 'left',
+            comparator(valueA, valueB, nodeA, nodeB) {
+                const aSelected = nodeA.isSelected();
+                const bSelected = nodeB.isSelected();
+                return aSelected && bSelected ? 0 : aSelected ? 1 : -1;
+            },
+            editable: false,
+            suppressFillHandle: true,
+            // overrides
+            ...selectionColumnDef,
+            // non-overridable properties
+            colId: CONTROLS_COLUMN_ID_PREFIX,
+        };
+        const col = new AgColumn(colDef, null, colDef.colId!, false);
+        this.createBean(col);
+        return [col];
     }
 
     public putSelectionColsFirstInList(list: AgColumn[], cols?: AgColumn[] | null): AgColumn[] | null {
