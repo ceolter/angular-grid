@@ -1,4 +1,4 @@
-import { isColumnSelectionCol } from '../columns/columnUtils';
+import { isColumnGroupAutoCol, isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
@@ -203,8 +203,14 @@ export class SelectAllFeature extends BeanStub {
         const headerCheckboxSelection = this.column.getColDef().headerCheckboxSelection;
 
         let result = false;
-        if (newHeaderCheckbox) {
-            result = true;
+        if (typeof so === 'object') {
+            const headerCheckbox = _getHeaderCheckbox(so);
+            const location = so.checkboxLocation ?? 'selectionColumn';
+            if (location === 'autoGroupColumn' && isColumnGroupAutoCol(this.column)) {
+                result = headerCheckbox;
+            } else if (location === 'selectionColumn' && isColumnSelectionCol(this.column)) {
+                result = headerCheckbox;
+            }
         } else if (typeof headerCheckboxSelection === 'function') {
             result = headerCheckboxSelection(
                 this.gos.addGridCommonParams({
