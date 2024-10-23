@@ -5,6 +5,7 @@ import type { IconName } from '../utils/icon';
 import { _createIcon } from '../utils/icon';
 import { _escapeString } from '../utils/string';
 import { Component, RefPlaceholder } from '../widgets/component';
+import { dragAndDropImageComponentCSS } from './dragAndDropImageComponent.css-GENERATED';
 import type { DragAndDropIcon, DragSource } from './dragAndDropService';
 
 export interface IDragAndDropImageParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
@@ -30,6 +31,11 @@ export class DragAndDropImageComponent extends Component implements IDragAndDrop
     private readonly eLabel: HTMLElement = RefPlaceholder;
 
     private dropIconMap: { [key in DragAndDropIcon]: Element };
+
+    constructor() {
+        super();
+        this.registerCSS(dragAndDropImageComponentCSS);
+    }
 
     public postConstruct(): void {
         const create = (iconName: IconName) => _createIcon(iconName, this.gos, null);

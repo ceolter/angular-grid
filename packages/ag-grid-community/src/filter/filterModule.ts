@@ -5,6 +5,7 @@ import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
 import { SharedMenuModule } from '../misc/menu/sharedMenuModule';
 import { PopupModule } from '../widgets/popupModule';
+import { columnFiltersCSS } from './column-filters.css-GENERATED';
 import {
     destroyFilter,
     getColumnFilterInstance,
@@ -34,6 +35,7 @@ import { QuickFilterService } from './quickFilterService';
 export const FilterCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FilterCoreModule'),
     beans: [FilterManager],
+    css: [columnFiltersCSS],
 };
 
 export const FilterApiModule: _ModuleWithApi<_FilterGridApi> = {

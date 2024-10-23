@@ -3,7 +3,7 @@ import type { UserComponentFactory } from '../components/framework/userComponent
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { CoreBeanCollection } from '../context/context';
+import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
 import type { MouseEventService } from '../gridBodyComp/mouseEventService';
@@ -28,7 +28,7 @@ export class EditService extends BeanStub implements NamedBean {
     private mouseEventService: MouseEventService;
     private popupService?: PopupService;
 
-    public wireBeans(beans: CoreBeanCollection): void {
+    public wireBeans(beans: BeanCollection): void {
         this.navigationService = beans.navigationService;
         this.userComponentFactory = beans.userComponentFactory;
         this.valueService = beans.valueService;

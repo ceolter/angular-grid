@@ -3,6 +3,48 @@
  * visually on the left
  */
 
+.ag-pinned-left-floating-top {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    min-width: 0px;
+}
+
+.ag-pinned-right-floating-top {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    min-width: 0px;
+}
+
+.ag-pinned-left-floating-bottom {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    min-width: 0px;
+}
+
+.ag-pinned-right-floating-bottom {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    min-width: 0px;
+}
+
+.ag-pinned-left-sticky-top,
+.ag-pinned-right-sticky-top {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.ag-sticky-top-full-width-container,
+.ag-sticky-bottom-full-width-container {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
 .ag-pinned-left-header,
 .ag-pinned-right-header {
     display: inline-block;

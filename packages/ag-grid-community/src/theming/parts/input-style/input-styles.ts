@@ -1,7 +1,7 @@
 import { createPart, createPartVariant } from '../../Part';
 import type { BorderValue, ColorValue, LengthValue, ShadowValue } from '../../theme-types';
-import { inputStyleBaseCSS } from './GENERATED-input-style-base';
-import { inputStyleUnderlinedCSS } from './GENERATED-input-style-underlined';
+import { inputStyleBaseCSS } from './input-style-base.css-GENERATED';
+import { inputStyleUnderlinedCSS } from './input-style-underlined.css-GENERATED';
 
 export type InputStyleParams = {
     /**

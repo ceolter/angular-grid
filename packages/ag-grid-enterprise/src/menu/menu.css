@@ -1,0 +1,116 @@
+.ag-menu {
+    max-height: 100%;
+    overflow-y: auto;
+    position: absolute;
+    user-select: none;
+    border: var(--ag-menu-border);
+    border-radius: var(--ag-border-radius);
+    box-shadow: var(--ag-menu-shadow);
+    background-color: var(--ag-menu-background-color);
+    color: var(--ag-menu-text-color);
+    /* Add a minimum width to avoid having zero width when the content tries to
+    size itself to the menu */
+    min-width: 180px;
+}
+
+.ag-menu-list {
+    display: table;
+    width: 100%;
+    cursor: default;
+    padding: var(--ag-spacing) 0;
+}
+
+.ag-menu-option,
+.ag-menu-separator {
+    display: table-row;
+}
+
+.ag-menu-option-part,
+.ag-menu-separator-part {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.ag-menu-option-text {
+    white-space: nowrap;
+}
+
+.ag-menu-option-custom {
+    display: contents;
+}
+
+.ag-compact-menu-option {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.ag-compact-menu-option-text {
+    white-space: nowrap;
+    flex: 1 1 auto;
+}
+
+.ag-menu-separator {
+    height: calc(var(--ag-spacing) * 2 + 1px);
+}
+
+.ag-menu-separator-part::after {
+    content: '';
+    display: block;
+    border-top: solid 1px var(--ag-menu-separator-color);
+}
+
+.ag-menu-option-active,
+.ag-compact-menu-option-active {
+    background-color: var(--ag-row-hover-color);
+}
+
+.ag-menu-option-part,
+.ag-compact-menu-option-part {
+    line-height: var(--ag-icon-size);
+    padding: calc(var(--ag-spacing) + 2px) 0;
+}
+
+.ag-menu-option-disabled,
+.ag-compact-menu-option-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ag-menu-option-icon,
+.ag-compact-menu-option-icon {
+    padding-left: calc(var(--ag-spacing) * 2);
+    width: var(--ag-icon-size);
+}
+
+.ag-menu-option-text,
+.ag-compact-menu-option-text {
+    padding-left: calc(var(--ag-spacing) * 2);
+    padding-right: calc(var(--ag-spacing) * 2);
+}
+
+.ag-menu-option-shortcut,
+.ag-compact-menu-option-shortcut {
+    padding-right: var(--ag-spacing);
+}
+
+.ag-menu-option-popup-pointer,
+.ag-compact-menu-option-popup-pointer {
+    padding-right: var(--ag-spacing);
+}
+
+.ag-menu-column-select-wrapper {
+    height: 265px;
+    overflow: auto;
+
+    .ag-column-select {
+        height: 100%;
+    }
+}
+
+/* Column Filter */
+
+.ag-menu.ag-tabs {
+    /* minimum width for the legacy tabbed column menu */
+    min-width: 290px;
+}

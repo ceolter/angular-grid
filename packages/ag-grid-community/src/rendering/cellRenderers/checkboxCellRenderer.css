@@ -1,0 +1,6 @@
+/* checkbox cell wrapper needs 100% height in its default (non-editing) state
+   otherwise there's a layout shift when you edit a cell and the 100% height of
+   the .ag-cell-edit-wrapper defined above kicks in */
+.ag-checkbox-cell {
+    height: 100%;
+}

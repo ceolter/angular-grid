@@ -8,6 +8,7 @@ import { _setAriaControls } from '../utils/aria';
 import type { ListOption } from './agList';
 import { AgList } from './agList';
 import { AgPickerField } from './agPickerField';
+import { agSelectCSS } from './agSelect.css-GENERATED';
 import type { ComponentSelector } from './component';
 
 export interface AgSelectParams<TValue = string>
@@ -40,6 +41,7 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
             ariaRole: 'combobox',
             ...config,
         });
+        this.registerCSS(agSelectCSS);
     }
 
     public override wireBeans(beans: BeanCollection): void {

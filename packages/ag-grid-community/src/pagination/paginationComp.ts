@@ -15,6 +15,7 @@ import { RefPlaceholder } from '../widgets/component';
 import { TabGuardComp } from '../widgets/tabGuardComp';
 import type { PageSizeSelectorComp } from './pageSizeSelector/pageSizeSelectorComp';
 import { PageSizeSelectorSelector } from './pageSizeSelector/pageSizeSelectorComp';
+import { paginationCompCSS } from './paginationComp.css-GENERATED';
 import type { PaginationService } from './paginationService';
 
 export class PaginationComp extends TabGuardComp implements FocusableContainer {
@@ -54,6 +55,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
     constructor() {
         super();
+        this.registerCSS(paginationCompCSS);
     }
 
     public postConstruct(): void {

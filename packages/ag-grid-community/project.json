@@ -8,7 +8,7 @@
       "executor": "nx:noop",
       "inputs": [],
       "outputs": [],
-      "dependsOn": ["build:types", "theming:codegen", "build:package", "build:copy-styles", "build:umd"]
+      "dependsOn": ["build:types", "build:css", "build:package", "build:copy-styles", "build:umd"]
     },
     "build:umd": {
       "executor": "nx:run-commands",
@@ -59,13 +59,14 @@
         "production": {}
       }
     },
-    "theming:codegen": {
+    "build:css": {
       "executor": "nx:run-script",
       "cache": true,
       "options": {
-        "script": "codegen:prod"
+        "script": "build:css"
       },
-      "outputs": ["{projectRoot}/**/GENERATED-*.ts"]
+      "inputs": ["{projectRoot}/src/**/*.css"],
+      "outputs": ["{projectRoot}/**/*.css-GENERATED.ts"]
     },
     "build:package": {
       "executor": "@nx/esbuild:esbuild",

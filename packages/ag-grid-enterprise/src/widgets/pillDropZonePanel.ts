@@ -26,6 +26,7 @@ import {
 } from 'ag-grid-community';
 
 import type { PillDragComp } from './pillDragComp';
+import { pillDropZonePanelCSS } from './pillDropZonePanel.css-GENERATED';
 
 export interface PillDropZonePanelParams {
     emptyMessage?: string;
@@ -96,6 +97,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         this.ePillDropList = document.createElement('div');
         this.addElementClasses(this.ePillDropList, 'list');
         _setAriaRole(this.ePillDropList, 'listbox');
+        this.registerCSS(pillDropZonePanelCSS);
     }
 
     public isHorizontal(): boolean {

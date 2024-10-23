@@ -10,6 +10,7 @@ import {
 
 import { PillDragComp } from '../../widgets/pillDragComp';
 import { PillDropZonePanel } from '../../widgets/pillDropZonePanel';
+import { agPillSelectCSS } from './agPillSelect.css-GENERATED';
 
 export interface AgPillSelectParams<TValue = string | null> {
     valueList?: TValue[];
@@ -47,6 +48,7 @@ export class AgPillSelect<TValue = string | null> extends Component {
         this.selectedValues = selectedValueList ?? [];
         this.valueList = valueList ?? [];
         this.valueFormatter = valueFormatter ?? ((value) => _escapeString(value as any)!);
+        this.registerCSS(agPillSelectCSS);
     }
 
     public postConstruct(): void {

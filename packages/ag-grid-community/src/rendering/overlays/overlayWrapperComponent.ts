@@ -14,6 +14,7 @@ import type { ComponentSelector } from '../../widgets/component';
 import { Component, RefPlaceholder } from '../../widgets/component';
 import type { IOverlayComp } from './overlayComponent';
 import type { OverlayService } from './overlayService';
+import { overlayWrapperComponentCSS } from './overlayWrapperComponent.css-GENERATED';
 
 export class OverlayWrapperComponent extends Component implements LayoutView {
     private overlayService: OverlayService;
@@ -42,6 +43,7 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
                     <div class="ag-overlay-wrapper" data-ref="eOverlayWrapper" role="presentation"></div>
                 </div>
             </div>`);
+        this.registerCSS(overlayWrapperComponentCSS);
     }
 
     private handleKeyDown(e: KeyboardEvent): void {

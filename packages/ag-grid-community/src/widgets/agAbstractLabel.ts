@@ -1,6 +1,7 @@
 import type { AgLabelParams, LabelAlignment } from '../interfaces/agFieldParams';
 import { _setAriaRole } from '../utils/aria';
 import { _clearElement, _setDisabled, _setDisplayed, _setElementWidth } from '../utils/dom';
+import { agAbstractLabelCSS } from './agAbstractLabel.css-GENERATED';
 import type { ComponentEvent, ComponentSelector } from './component';
 import { Component } from './component';
 
@@ -21,6 +22,7 @@ export abstract class AgAbstractLabel<
         super(template, components);
 
         this.config = config || ({} as any);
+        this.registerCSS(agAbstractLabelCSS);
     }
 
     public postConstruct() {

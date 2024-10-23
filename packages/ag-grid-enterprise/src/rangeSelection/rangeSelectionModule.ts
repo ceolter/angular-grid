@@ -5,6 +5,7 @@ import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { AgFillHandle } from './agFillHandle';
 import { AgRangeHandle } from './agRangeHandle';
+import { rangeSelectionCSS } from './rangeSelection.css-GENERATED';
 import { addCellRange, clearRangeSelection, getCellRanges } from './rangeSelectionApi';
 import { RangeService } from './rangeService';
 
@@ -12,6 +13,7 @@ export const RangeSelectionCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RangeSelectionCoreModule'),
     beans: [RangeService],
     dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule],
+    css: [rangeSelectionCSS],
 };
 
 export const RangeSelectionApiModule: _ModuleWithApi<_RangeSelectionGridApi> = {

@@ -24,7 +24,10 @@ function getProjectBuildTargets(project) {
             buildTargets.push(['ag-grid-docs', ['generate-doc-references']]);
 
             if (project === 'ag-grid-community') {
-                buildTargets.push(['ag-grid-community', ['theming:codegen']]);
+                buildTargets.push(['ag-grid-community', ['build:css']]);
+            }
+            if (project === 'ag-grid-enterprise') {
+                buildTargets.push(['ag-grid-enterprise', ['build:css']]);
             }
 
             buildTargets.push(

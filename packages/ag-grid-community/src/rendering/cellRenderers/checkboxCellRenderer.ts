@@ -6,6 +6,7 @@ import { _stopPropagationForAgGrid } from '../../utils/event';
 import type { AgCheckbox } from '../../widgets/agCheckbox';
 import { AgCheckboxSelector } from '../../widgets/agCheckbox';
 import { Component, RefPlaceholder } from '../../widgets/component';
+import { checkboxCellRendererCSS } from './checkboxCellRenderer.css-GENERATED';
 import type { ICellRenderer, ICellRendererParams } from './iCellRenderer';
 
 export interface ICheckboxCellRendererParams<TData = any, TContext = any>
@@ -26,6 +27,7 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
             </div>`,
             [AgCheckboxSelector]
         );
+        this.registerCSS(checkboxCellRendererCSS);
     }
 
     public init(params: ICheckboxCellRendererParams): void {

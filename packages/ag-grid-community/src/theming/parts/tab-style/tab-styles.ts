@@ -1,7 +1,7 @@
 import { createPart, createPartVariant } from '../../Part';
 import type { BorderValue, ColorValue, DurationValue, LengthValue } from '../../theme-types';
-import { tabStyleBaseCSS } from './GENERATED-tab-style-base';
-import { tabStyleRolodexCSS } from './GENERATED-tab-style-rolodex';
+import { tabStyleBaseCSS } from './tab-style-base.css-GENERATED';
+import { tabStyleRolodexCSS } from './tab-style-rolodex.css-GENERATED';
 
 export type TabStyleParams = {
     /**

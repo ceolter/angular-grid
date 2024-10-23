@@ -328,13 +328,3 @@
     border: solid 1px var(--ag-border-color);
     border-radius: 2px;
 }
-
-.ag-pill-select {
-    .ag-picker-field-display {
-        font-weight: 500;
-        color: var(--ag-chart-menu-label-color);
-    }
-    .ag-picker-field-icon .ag-icon {
-        color: var(--ag-chart-menu-label-color);
-    }
-}
