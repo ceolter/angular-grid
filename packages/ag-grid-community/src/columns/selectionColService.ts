@@ -105,45 +105,6 @@ export class SelectionColService extends BeanStub implements NamedBean {
         updateOrders(putSelectionColsFirstInList);
     }
 
-    public refreshVisibility(): void {
-        if (!this.isSelectionColumnEnabled()) {
-            return;
-        }
-
-        const visibleColumns = this.visibleCols.getAllTrees() ?? [];
-
-        if (visibleColumns.length === 0) {
-            return;
-        }
-
-        // case 1: only one column showing -- selection column
-        if (visibleColumns.length === 1) {
-            const firstColumn = visibleColumns[0];
-
-            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
-                return;
-            }
-
-            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, 'api');
-
-            return;
-        }
-
-        // case 2: multiple columns showing -- none are selection column
-        if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
-            const existingState = this.colState.getColumnState().find((state) => isColumnSelectionCol(state.colId));
-
-            if (existingState) {
-                this.colState.applyColumnState(
-                    {
-                        state: [{ colId: existingState.colId, hide: !existingState.hide }],
-                    },
-                    'api'
-                );
-            }
-        }
-    }
-
     private isSelectionColumnEnabled(): boolean {
         const { gos } = this;
         const so = gos.get('rowSelection');
@@ -227,5 +188,44 @@ export class SelectionColService extends BeanStub implements NamedBean {
     public override destroy(): void {
         _destroyColumnTree(this.context, this.selectionCols?.tree);
         super.destroy();
+    }
+
+    public refreshVisibility(): void {
+        if (!this.isSelectionColumnEnabled()) {
+            return;
+        }
+
+        const visibleColumns = this.visibleCols.getAllTrees() ?? [];
+
+        if (visibleColumns.length === 0) {
+            return;
+        }
+
+        // case 1: only one column showing -- selection column
+        if (visibleColumns.length === 1) {
+            const firstColumn = visibleColumns[0];
+
+            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
+                return;
+            }
+
+            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, 'api');
+
+            return;
+        }
+
+        // case 2: multiple columns showing -- none are selection column
+        if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
+            const existingState = this.colState.getColumnState().find((state) => isColumnSelectionCol(state.colId));
+
+            if (existingState) {
+                this.colState.applyColumnState(
+                    {
+                        state: [{ colId: existingState.colId, hide: !existingState.hide }],
+                    },
+                    'api'
+                );
+            }
+        }
     }
 }
