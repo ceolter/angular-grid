@@ -254,8 +254,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         const nodesToDeselect: RowNode[] = [];
 
         this.rowModel.forEachNode((node) => {
-            const rowSelectable = this.isRowSelectable?.(node) ?? true;
-            this.setRowSelectable(node, rowSelectable, true);
+            const rowSelectable = this.updateRowSelectable(node, true);
 
             if (!rowSelectable && node.isSelected()) {
                 nodesToDeselect.push(node);

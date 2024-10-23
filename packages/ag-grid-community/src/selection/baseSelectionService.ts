@@ -174,9 +174,10 @@ export abstract class BaseSelectionService extends BeanStub {
         return !rowNode.selectable || !!rowNode.rowPinned || !_isRowSelection(this.gos);
     }
 
-    public checkRowSelectable(rowNode: RowNode): void {
-        const isRowSelectableFunc = _getIsRowSelectable(this.gos);
-        this.setRowSelectable(rowNode, isRowSelectableFunc ? isRowSelectableFunc!(rowNode) : true);
+    public updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean {
+        const selectable = this.isRowSelectable?.(rowNode) ?? true;
+        this.setRowSelectable(rowNode, selectable, suppressSelectionUpdate);
+        return selectable;
     }
 
     protected setRowSelectable(rowNode: RowNode, newVal: boolean, suppressSelectionUpdate?: boolean): void {

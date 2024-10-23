@@ -705,8 +705,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
                 return;
             }
 
-            const rowSelectable = this.isRowSelectable?.(node) ?? true;
-            this.setRowSelectable(node, rowSelectable, true);
+            const rowSelectable = this.updateRowSelectable(node, true);
 
             if (!rowSelectable && node.isSelected()) {
                 nodesToDeselect.push(node);

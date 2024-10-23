@@ -55,7 +55,7 @@ export interface ISelectionService {
     announceAriaRowSelection(rowNode: RowNode): void;
     /** Called after grouping / treeData */
     updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void;
-    checkRowSelectable(rowNode: RowNode): void;
+    updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean;
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
     setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;

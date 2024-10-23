@@ -310,7 +310,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         this.data = data;
         this.beans.valueCache?.onDataChanged();
         this.updateDataOnDetailNode();
-        this.beans.selectionSvc?.checkRowSelectable(this);
+        this.beans.selectionSvc?.updateRowSelectable(this);
         this.resetQuickFilterAggregateText();
 
         const event: DataChangedEvent<TData> = this.createDataChangedEvent(data, oldData, update);
@@ -368,7 +368,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         this.updateDataOnDetailNode();
         this.setId(id);
         if (selectionSvc) {
-            selectionSvc.checkRowSelectable(this);
+            selectionSvc.updateRowSelectable(this);
             selectionSvc.syncInRowNode(this, oldNode);
         }
 
@@ -503,7 +503,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         const valueChanged = this.beans.valueSvc.setValue(this, column, newValue, eventSource);
 
         this.dispatchCellChangedEvent(column, newValue, oldValue);
-        this.beans.selectionSvc?.checkRowSelectable(this);
+        this.beans.selectionSvc?.updateRowSelectable(this);
 
         return valueChanged;
     }
