@@ -5,7 +5,7 @@ import { AgColumn } from '../entities/agColumn';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
-import { _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
+import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
 import type { ColumnGroupService } from './columnGroups/columnGroupService';
 import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
@@ -102,13 +102,13 @@ export class SelectionColService extends BeanStub implements NamedBean {
 
     private generateSelectionCols(): AgColumn[] {
         const { gos } = this;
-        const so = gos.get('rowSelection');
-        if (!so || typeof so !== 'object') {
+        const rowSelection = gos.get('rowSelection');
+        if (typeof rowSelection !== 'object' || rowSelection.checkboxLocation === 'autoGroupColumn') {
             return [];
         }
 
-        const checkboxes = _getCheckboxes(so);
-        const headerCheckbox = _getHeaderCheckbox(so);
+        const checkboxes = _getCheckboxes(rowSelection);
+        const headerCheckbox = _getHeaderCheckbox(rowSelection);
 
         if (checkboxes || headerCheckbox) {
             const selectionColumnDef = gos.get('selectionColumnDef');
@@ -171,7 +171,11 @@ export class SelectionColService extends BeanStub implements NamedBean {
         const currHeaderCheckbox = current && typeof current !== 'string' ? _getHeaderCheckbox(current) : undefined;
         const headerCheckboxHasChanged = prevHeaderCheckbox !== currHeaderCheckbox;
 
-        if (checkboxHasChanged || headerCheckboxHasChanged) {
+        const currLocation = _getCheckboxLocation(current);
+        const prevLocation = _getCheckboxLocation(prev);
+        const locationChanged = currLocation !== prevLocation;
+
+        if (checkboxHasChanged || headerCheckboxHasChanged || locationChanged) {
             this.colModel.refreshAll(source);
         }
     }
