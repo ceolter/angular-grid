@@ -129,6 +129,15 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
         },
     },
 
+    cellRendererParams: {
+        validate: (colDef) => {
+            if ('checkbox' in colDef.cellRendererParams) {
+                return 'Since v33.0, `cellRendererParams.checkbox` has been deprecated. Use `rowSelection.checkboxLocation = "autoGroupColumn"` instead.';
+            }
+            return null;
+        },
+    },
+
     children: () => COL_DEF_VALIDATORS,
 };
 
