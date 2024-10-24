@@ -352,7 +352,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test.skip('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
+                test('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -366,7 +366,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([3, 4, 5], api);
                 });
 
-                test.skip('SHIFT-click below range after de-selection resets root and clears previous selection', () => {
+                test('SHIFT-click below range after de-selection resets root and clears previous selection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -380,7 +380,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([3, 4, 5, 6], api);
                 });
 
-                test.skip('SHIFT-click above range after de-selection resets root and clears previous selection', () => {
+                test('SHIFT-click above range after de-selection resets root and clears previous selection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -394,7 +394,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([1, 2, 3], api);
                 });
 
-                test.skip('META+SHIFT-click within range allows batch deselection', () => {
+                test('META+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -408,7 +408,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', () => {
+                test('META+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -422,7 +422,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', () => {
+                test('META+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -436,7 +436,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', () => {
+                test('CTRL+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -450,7 +450,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', () => {
+                test('CTRL+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -464,7 +464,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', () => {
+                test('CTRL+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
 
                     clickRowByIndex(2);
@@ -791,7 +791,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([1, 5], api);
                 });
 
-                test.skip('META+SHIFT-click within range allows batch deselection', () => {
+                test('META+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -809,7 +809,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', () => {
+                test('META+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -827,7 +827,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', () => {
+                test('META+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -845,7 +845,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', () => {
+                test('CTRL+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -863,7 +863,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', () => {
+                test('CTRL+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -881,7 +881,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', () => {
+                test('CTRL+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1362,7 +1362,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([1, 5], api);
                 });
 
-                test.skip('META+SHIFT-click within range allows batch deselection', async () => {
+                test('META+SHIFT-click within range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1379,7 +1379,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', async () => {
+                test('META+SHIFT-click below range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1396,7 +1396,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', async () => {
+                test('META+SHIFT-click above range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1413,7 +1413,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click within range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1430,7 +1430,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click below range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1447,7 +1447,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click above range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
