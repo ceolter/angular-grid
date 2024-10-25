@@ -38,12 +38,15 @@
             /* Need auto height because 100% height elements with overflow hidden
       cause printing issues in Edge */
             height: auto !important;
+
             /* Overflow hidden, because otherwise scroll bars print in IE */
             overflow: hidden !important;
+
             /* flex elements cause printing issues in Firefox
             https://bugzilla.mozilla.org/show_bug.cgi?id=939897 */
             display: block !important;
         }
+
         .ag-row,
         .ag-cell {
             break-inside: avoid;

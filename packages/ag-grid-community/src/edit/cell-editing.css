@@ -4,6 +4,7 @@
     padding: 0;
     border: var(--ag-cell-editing-border) !important;
     box-shadow: var(--ag-cell-editing-shadow);
+
     /* do not add `height` here, it breaks gridOptions.rowHeight for the cellEditor */
 
     .ag-cell-wrapper,

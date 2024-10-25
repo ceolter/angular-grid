@@ -1,8 +1,10 @@
 :where(.ag-input-field-input[type='number']:not(.ag-number-field-input-stepper)) {
     -moz-appearance: textfield;
+    appearance: textfield;
+
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
+        appearance: none;
         margin: 0;
     }
 }

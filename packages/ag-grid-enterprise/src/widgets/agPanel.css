@@ -29,6 +29,7 @@
 .ag-panel-title-bar-button {
     margin-left: calc(var(--ag-spacing) * 2);
     margin-right: var(--ag-spacing);
+    cursor: pointer;
 }
 
 .ag-panel-title-bar-title {
@@ -39,10 +40,6 @@
 
 .ag-panel-title-bar-buttons {
     display: flex;
-}
-
-.ag-panel-title-bar-button {
-    cursor: pointer;
 }
 
 .ag-panel-content-wrapper {
@@ -57,64 +54,76 @@
     pointer-events: none;
     z-index: 1;
     user-select: none;
+
+    /* stylelint-disable-next-line selector-class-pattern */
     &.ag-resizer-topLeft {
         top: 0;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         left: 0;
         height: 5px;
         width: 5px;
         cursor: nwse-resize;
     }
+
     &.ag-resizer-top {
         top: 0;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         left: 5px;
         right: 5px;
         height: 5px;
         cursor: ns-resize;
     }
+
+    /* stylelint-disable-next-line selector-class-pattern */
     &.ag-resizer-topRight {
         top: 0;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         right: 0;
         height: 5px;
         width: 5px;
         cursor: nesw-resize;
     }
+
     &.ag-resizer-right {
         top: 5px;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         right: 0;
         bottom: 5px;
         width: 5px;
         cursor: ew-resize;
     }
+
+    /* stylelint-disable-next-line selector-class-pattern */
     &.ag-resizer-bottomRight {
         bottom: 0;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         right: 0;
         height: 5px;
         width: 5px;
         cursor: nwse-resize;
     }
+
     &.ag-resizer-bottom {
         bottom: 0;
         left: 5px;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         right: 5px;
         height: 5px;
         cursor: ns-resize;
     }
+
+    /* stylelint-disable-next-line selector-class-pattern */
     &.ag-resizer-bottomLeft {
         bottom: 0;
-        /*rtl:ignore*/
+        /* rtl:ignore */
         left: 0;
         height: 5px;
         width: 5px;
         cursor: nesw-resize;
     }
+
     &.ag-resizer-left {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         left: 0;
         top: 5px;
         bottom: 5px;

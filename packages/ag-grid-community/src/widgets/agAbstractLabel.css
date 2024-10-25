@@ -1,7 +1,14 @@
+.ag-label {
+    white-space: nowrap;
+    margin-right: var(--ag-spacing);
+}
+
 .ag-label-align-right {
     .ag-label {
         order: 1;
+        margin-left: var(--ag-spacing);
     }
+
     > * {
         flex: none;
     }
@@ -10,6 +17,7 @@
 .ag-label-align-top {
     flex-direction: column;
     align-items: flex-start;
+
     > * {
         align-self: stretch;
     }
@@ -22,15 +30,6 @@
     flex: 1;
 }
 
-.ag-label {
-    white-space: nowrap;
-    margin-right: var(--ag-spacing);
-}
-
 .ag-label-align-top .ag-label {
     margin-bottom: calc(var(--ag-spacing) * 0.5);
-}
-
-.ag-label-align-right .ag-label {
-    margin-left: var(--ag-spacing);
 }

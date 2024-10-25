@@ -10,8 +10,7 @@
 
 .ag-select-list {
     background-color: var(--ag-background-color);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     border-radius: var(--ag-border-radius);
     border: var(--ag-input-border);
     box-shadow: var(--ag-dropdown-shadow);
@@ -33,6 +32,7 @@
     padding-left: calc(var(--ag-cell-horizontal-padding) / 2);
     user-select: none;
     cursor: default;
+
     & span {
         white-space: nowrap;
         text-overflow: ellipsis;

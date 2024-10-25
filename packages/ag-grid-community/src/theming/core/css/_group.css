@@ -41,8 +41,7 @@
 }
 
 .ag-group-container-horizontal {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
 }
 
 .ag-group-container-vertical {

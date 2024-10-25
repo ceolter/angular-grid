@@ -7,13 +7,16 @@
     display: flex;
     align-items: center;
     height: 100%;
+
     .ag-picker-field-display {
         overflow: hidden;
         text-overflow: ellipsis;
+
         &.ag-display-as-placeholder {
             opacity: 0.5;
         }
     }
+
     background-color: var(--ag-input-background-color);
     padding: var(--ag-spacing);
 }
@@ -57,15 +60,18 @@
 
 .ag-rich-select-field-input {
     flex: 1 1 auto;
+
     .ag-input-field-input {
         padding: 0 !important;
         border: none !important;
         box-shadow: none !important;
         text-overflow: ellipsis;
+
         &::placeholder {
             opacity: 0.8;
         }
     }
+
     left: var(--ag-spacing);
 }
 

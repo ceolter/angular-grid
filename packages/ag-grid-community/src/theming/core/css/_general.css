@@ -1,12 +1,12 @@
 .ag-aria-description-container {
     z-index: 9999;
-    border: 0px;
+    border: 0;
     clip: rect(1px, 1px, 1px, 1px);
     height: 1px;
     width: 1px;
     position: absolute;
     overflow: hidden;
-    padding: 0px;
+    padding: 0;
     white-space: nowrap;
 }
 
@@ -57,7 +57,7 @@
     animation-name: ag-shake-left-to-right;
 }
 
-/*rtl:ignore*/
+/* rtl:ignore */
 @keyframes ag-shake-left-to-right {
     from {
         padding-left: 6px;
@@ -87,7 +87,7 @@
 .ag-sticky-bottom-viewport {
     position: relative;
     height: 100%;
-    min-width: 0px;
+    min-width: 0;
     overflow: hidden;
     flex: 1 1 auto;
 }
@@ -100,9 +100,11 @@
 .ag-sticky-top-viewport,
 .ag-sticky-bottom-viewport {
     overflow-x: auto;
+
     &::-webkit-scrollbar {
         display: none !important;
     }
+
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
@@ -196,8 +198,9 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 .ag-sticky-top-full-width-container,
 .ag-sticky-bottom-full-width-container {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
+
     /* turn off pointer events, because this container overlays the main row containers.
          so when user clicks on space between full width rows, we want the mouse clicks to
          pass onto the underlying container where the real rows are. eg if using full width
@@ -242,13 +245,16 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     min-width: 0;
     display: flex;
     position: relative;
+
     &.ag-scrollbar-invisible {
         position: absolute;
         bottom: 0;
+
         &.ag-apple-scrollbar {
             opacity: 0;
             transition: opacity 400ms;
             visibility: hidden;
+
             &.ag-scrollbar-scrolling,
             &.ag-scrollbar-active {
                 visibility: visible;
@@ -260,6 +266,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-body-horizontal-scroll {
     width: 100%;
+
     &.ag-scrollbar-invisible {
         left: 0;
         right: 0;
@@ -268,6 +275,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-body-vertical-scroll {
     height: 100%;
+
     &.ag-scrollbar-invisible {
         top: 0;
         z-index: 10;
@@ -284,6 +292,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     height: 100%;
     min-width: 0;
     overflow-x: scroll;
+
     &.ag-scroller-corner {
         overflow-x: hidden;
     }
@@ -300,6 +309,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
         top 0.4s,
         opacity 0.2s;
 }
+
 /* for rows older than one second, we also animate the height. we don't include the height
      initially so we are not animating auto-height rows on initial render. */
 .ag-row-animation .ag-row.ag-after-created {
@@ -329,6 +339,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-full-width-row {
     overflow: hidden;
+
     /* turn events back on, as we removed them in the parent */
     pointer-events: all;
 }
@@ -424,7 +435,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     display: flex;
     width: 100%;
     overflow: hidden;
-    height: 0px;
+    height: 0;
     background-color: var(--ag-background-color);
 }
 
@@ -464,6 +475,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-column-group-icons {
     display: block;
+
     > * {
         cursor: pointer;
     }
@@ -471,6 +483,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-ltr {
     direction: ltr;
+
     .ag-body,
     .ag-floating-top,
     .ag-floating-bottom,
@@ -485,6 +498,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-rtl {
     direction: rtl;
+
     .ag-body,
     .ag-floating-top,
     .ag-floating-bottom,

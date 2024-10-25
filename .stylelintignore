@@ -1,0 +1,5 @@
+# Ignore everything by default
+**/*.css
+
+# Enable Stylelint for theming API source code
+!packages/ag-grid-community/src/theming/**/*.css

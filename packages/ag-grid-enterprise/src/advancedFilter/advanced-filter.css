@@ -1,14 +1,11 @@
 .ag-advanced-filter-header {
-    background-color: var(--ag-header-background-color);
-    border-bottom: var(--ag-header-row-border);
-}
-
-.ag-advanced-filter-header {
     position: relative;
     display: flex;
     align-items: center;
     padding-left: var(--ag-cell-horizontal-padding);
     padding-right: var(--ag-cell-horizontal-padding);
+    background-color: var(--ag-header-background-color);
+    border-bottom: var(--ag-header-row-border);
 }
 
 .ag-advanced-filter {
@@ -33,12 +30,12 @@
     font-weight: 600;
     padding: var(--ag-spacing);
 
-    &:hover:not(:disabled) {
-        background-color: var(--ag-row-hover-color);
-    }
-
     &:not(:disabled) {
         cursor: pointer;
+
+        &:hover {
+            background-color: var(--ag-row-hover-color);
+        }
     }
 }
 
@@ -49,6 +46,7 @@
 .ag-advanced-filter-builder {
     user-select: none;
     width: 100%;
+
     /* background-color: var(--ag-chrome-background-color); */
     display: flex;
     flex-direction: column;
@@ -165,7 +163,7 @@
 }
 
 .ag-advanced-filter-builder-pill-wrapper {
-    margin: 0px var(--ag-spacing);
+    margin: 0 var(--ag-spacing);
 }
 
 .ag-advanced-filter-builder-pill {
@@ -186,13 +184,6 @@
 
     .ag-advanced-filter-builder-value-empty {
         color: var(--ag-subtle-text-color);
-    }
-}
-
-.ag-advanced-filter-builder-pill,
-.ag-advanced-filter-builder-item-button {
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
     }
 }
 
@@ -238,6 +229,13 @@
     color: var(--ag-subtle-text-color);
 }
 
+.ag-advanced-filter-builder-pill,
+.ag-advanced-filter-builder-item-button {
+    &:focus-visible {
+        box-shadow: var(--ag-focus-shadow);
+    }
+}
+
 .ag-advanced-filter-builder-item-button-disabled {
     opacity: 0.5;
     cursor: default;
@@ -256,18 +254,18 @@
         background-color: var(--ag-row-hover-color);
 
         .ag-advanced-filter-builder-item-button {
-            opacity: 100%;
+            opacity: 1;
         }
     }
-}
-
-.ag-advanced-filter-builder-virtual-list-item-highlight .ag-advanced-filter-builder-item-button:focus-visible,
-.ag-advanced-filter-builder-validation .ag-advanced-filter-builder-invalid {
-    opacity: 100%;
 }
 
 .ag-advanced-filter-builder-invalid {
     margin: 0 var(--ag-spacing);
     color: var(--ag-invalid-color);
     cursor: default;
+}
+
+.ag-advanced-filter-builder-virtual-list-item-highlight .ag-advanced-filter-builder-item-button:focus-visible,
+.ag-advanced-filter-builder-validation .ag-advanced-filter-builder-invalid {
+    opacity: 1;
 }

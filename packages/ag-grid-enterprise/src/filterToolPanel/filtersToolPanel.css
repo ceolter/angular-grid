@@ -3,14 +3,13 @@
     min-width: 0;
 }
 
-.ag-filter-toolpanel-header {
-    position: relative;
-}
-
 .ag-filter-toolpanel-header,
 .ag-filter-toolpanel-search {
     display: flex;
     align-items: center;
+    padding: 0 var(--ag-spacing);
+    font-weight: 500;
+    color: var(--ag-header-text-color);
 
     > * {
         display: flex;
@@ -19,7 +18,9 @@
 }
 
 .ag-filter-toolpanel-header {
-    height: calc(var(--ag-spacing) * 6);
+    position: relative;
+    padding-top: var(--ag-spacing);
+    padding-bottom: var(--ag-spacing);
 
     &:focus-visible {
         border-radius: var(--ag-border-radius);
@@ -27,9 +28,14 @@
     }
 }
 
-.ag-filter-toolpanel-header,
+.ag-filter-toolpanel-group-instance-header-icon,
+.ag-filter-toolpanel-instance-header-icon {
+    margin-left: var(--ag-spacing);
+}
+
 .ag-filter-toolpanel-search {
-    padding: 0 var(--ag-spacing);
+    margin-top: var(--ag-widget-container-vertical-padding);
+    margin-bottom: var(--ag-spacing);
 }
 
 .ag-filter-toolpanel-group:not(.ag-has-filter) > .ag-group-title-bar .ag-filter-toolpanel-group-instance-header-icon {
@@ -38,16 +44,6 @@
 
 .ag-filter-toolpanel-group-level-0-header {
     height: calc(var(--ag-spacing) * 8);
-}
-
-.ag-filter-toolpanel-group-item {
-    margin-top: calc(var(--ag-spacing) * 0.5);
-    margin-bottom: calc(var(--ag-spacing) * 0.5);
-}
-
-.ag-filter-toolpanel-search {
-    margin-top: var(--ag-widget-container-vertical-padding);
-    margin-bottom: var(--ag-spacing);
 }
 
 .ag-filter-toolpanel-search-input {
@@ -73,31 +69,10 @@
     margin-left: var(--ag-filter-tool-panel-group-indent);
 }
 
-.ag-filter-toolpanel-group-instance-header-icon,
-.ag-filter-toolpanel-instance-header-icon {
-    margin-left: var(--ag-spacing);
-}
-
 .ag-filter-toolpanel-instance-filter {
     background-color: var(--ag-chrome-background-color);
 }
 
 .ag-filter-toolpanel-group-level-0 {
     border-top: none;
-}
-
-.ag-filter-toolpanel-header {
-    height: initial;
-    padding-top: var(--ag-spacing);
-    padding-bottom: var(--ag-spacing);
-}
-
-.ag-filter-toolpanel-group-item {
-    margin: 0;
-}
-
-.ag-filter-toolpanel-header,
-.ag-filter-toolpanel-search {
-    font-weight: 500;
-    color: var(--ag-header-text-color);
 }

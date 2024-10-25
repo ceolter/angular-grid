@@ -22,6 +22,7 @@
 .ag-tooltip.ag-tooltip-animate,
 .ag-tooltip-custom.ag-tooltip-animate {
     transition: opacity 1s;
+
     &.ag-tooltip-hiding {
         opacity: 0;
     }

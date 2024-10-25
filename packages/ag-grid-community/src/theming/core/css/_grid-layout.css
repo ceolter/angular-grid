@@ -57,7 +57,6 @@
     width: 100%;
     height: var(--ag-row-height);
     font-size: var(--ag-data-font-size);
-
     border-bottom: var(--ag-row-border);
 
     /* Work out the correct line height. --ag-row-height is the default row
@@ -88,6 +87,10 @@
     cursor: pointer;
 }
 
+.ag-cell-wrapper.ag-row-group {
+    align-items: flex-start;
+}
+
 .ag-cell,
 .ag-full-width-row .ag-cell-wrapper.ag-row-group {
     /* There is always a 1px border around cells, defaulting to transparent to
@@ -110,11 +113,7 @@
     align-items: center;
     padding-left: calc(var(--ag-indentation-level) * var(--ag-row-group-indent-size));
 
-    &.ag-row-group {
-        align-items: flex-start;
-    }
-
-    > *:not(.ag-cell-value):not(.ag-group-value) {
+    > *:not(.ag-cell-value, .ag-group-value) {
         /* cell widgets like checkboxes don't respond to line-height, so set their
            height to vertically centre them */
         height: var(--ag-internal-content-line-height);
@@ -150,6 +149,7 @@
 .ag-group-contracted {
     margin-right: var(--ag-cell-widget-spacing);
 }
+
 .ag-group-child-count {
     margin-left: 3px;
 }
@@ -169,7 +169,7 @@
 }
 
 .ag-row-highlight-below::after {
-    bottom: 0px;
+    bottom: 0;
 }
 
 .ag-row-odd {
@@ -200,6 +200,7 @@
 
 .ag-row-hover.ag-row-selected::before {
     background-color: var(--ag-row-hover-color);
+
     /* apply hover with a background-image so that it overlays on top of the
     existing background-color */
     background-image: linear-gradient(var(--ag-selected-row-background-color), var(--ag-selected-row-background-color));
@@ -222,11 +223,12 @@
 /* right-align numeric values in cells with wrappers */
 .ag-right-aligned-cell .ag-cell-value,
 .ag-right-aligned-cell .ag-group-value {
-    /*rtl:ignore*/
+    /* rtl:ignore */
     margin-left: auto;
 }
 
 .ag-cell:not(.ag-cell-inline-editing),
+/* stylelint-disable-next-line no-descending-specificity */
 .ag-full-width-row .ag-cell-wrapper.ag-row-group {
     padding-left: calc(
         var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * var(--ag-indentation-level)
@@ -249,8 +251,8 @@
 }
 
 .ag-details-row {
-    padding: calc(var(--ag-spacing) * 3.5);
     background-color: var(--ag-background-color);
+    padding: calc(var(--ag-spacing) * 3.75);
 }
 
 .ag-layout-auto-height,
@@ -287,9 +289,11 @@
     0% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.4;
     }
+
     100% {
         opacity: 1;
     }
@@ -317,11 +321,8 @@
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
-}
-
-.ag-details-row {
-    padding: calc(var(--ag-spacing) * 3.75);
 }

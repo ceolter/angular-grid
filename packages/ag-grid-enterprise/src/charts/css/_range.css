@@ -9,7 +9,7 @@
 
 .ag-range-field-input {
     padding: 0;
-    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 100%;
     background: none;
@@ -35,7 +35,7 @@
     &::-webkit-slider-thumb {
         margin: 0;
         padding: 0;
-        -webkit-appearance: none;
+        appearance: none;
         width: var(--ag-icon-size);
         height: var(--ag-icon-size);
         background-color: var(--ag-background-color);
@@ -73,7 +73,7 @@
     &::-moz-ag-range-thumb {
         margin: 0;
         padding: 0;
-        -webkit-appearance: none;
+        appearance: none;
         width: var(--ag-icon-size);
         height: var(--ag-icon-size);
         background-color: var(--ag-background-color);

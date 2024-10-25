@@ -13,6 +13,7 @@
     align-items: center;
     padding-left: var(--ag-widget-container-horizontal-padding);
     padding-right: var(--ag-widget-container-horizontal-padding);
+
     /* match header height instead of using vertical padding, because this is
      often displayed aligned with headers and it looks neater */
     height: var(--ag-header-height);
@@ -26,10 +27,11 @@
     align-items: center;
     height: 100%;
     gap: var(--ag-widget-horizontal-spacing);
-}
+    padding-left: calc(var(--ag-indentation-level) * var(--ag-column-select-indent-size));
 
-.ag-column-select-virtual-list-item:focus-visible {
-    box-shadow: inset var(--ag-focus-shadow);
+    &:not(:last-child) {
+        margin-bottom: var(--ag-widget-vertical-spacing);
+    }
 }
 
 .ag-column-select-header-icon {
@@ -57,21 +59,9 @@
     overflow: hidden;
 }
 
-.ag-column-select-column,
-.ag-column-select-column-group {
-    padding-left: calc(var(--ag-indentation-level) * var(--ag-column-select-indent-size));
-}
-
 .ag-column-select-add-group-indent {
     /* indent items without icons to the same level as siblings with icons */
     margin-left: calc(var(--ag-icon-size) + var(--ag-spacing) * 1.5);
-}
-
-.ag-column-select-column-group,
-.ag-column-select-column {
-    &:not(:last-child) {
-        margin-bottom: var(--ag-widget-vertical-spacing);
-    }
 }
 
 .ag-column-select-column-readonly,
@@ -81,11 +71,15 @@
 }
 
 .ag-column-select-virtual-list-viewport {
-    padding: calc(var(--ag-widget-container-vertical-padding) * 0.5) 0px;
+    padding: calc(var(--ag-widget-container-vertical-padding) * 0.5) 0;
 }
 
 .ag-column-select-virtual-list-item {
     padding: 0 var(--ag-widget-container-horizontal-padding);
+
+    &:focus-visible {
+        box-shadow: inset var(--ag-focus-shadow);
+    }
 }
 
 .ag-column-select-column-label {

@@ -1,7 +1,6 @@
 .ag-tool-panel-wrapper {
     display: flex;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
     cursor: default;
     user-select: none;
     width: var(--ag-side-bar-panel-width);
@@ -11,13 +10,13 @@
     position: relative;
     align-items: center;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    flex-flow: row nowrap;
     height: 100%;
     flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
     > * {
         flex: none;
     }
@@ -34,6 +33,9 @@
 
 .ag-side-bar {
     position: relative;
+    display: flex;
+    flex-direction: row-reverse;
+    background-color: var(--ag-side-bar-background-color);
 }
 
 .ag-side-bar-left .ag-tool-panel-horizontal-resize {
@@ -42,13 +44,6 @@
 
 .ag-side-bar-right .ag-tool-panel-horizontal-resize {
     left: -3px;
-}
-
-.ag-side-bar {
-    position: relative;
-    display: flex;
-    flex-direction: row-reverse;
-    background-color: var(--ag-side-bar-background-color);
 }
 
 .ag-side-bar-left {
@@ -66,6 +61,7 @@
         &:not(:first-of-type) {
             border-top: solid 1px var(--ag-border-color);
         }
+
         border-bottom: solid 1px var(--ag-border-color);
         background-color: var(--ag-background-color);
     }
@@ -79,7 +75,6 @@
     align-items: center;
     white-space: nowrap;
     cursor: pointer;
-
     padding: calc(var(--ag-spacing) * 3) 0;
     width: 100%;
 
@@ -96,13 +91,14 @@
     writing-mode: vertical-lr;
 }
 
-@media (max-resolution: 1.5x) {
+@media (resolution <= 1.5x) {
     /* On Windows, on low res screens only, most custom fonts look awful in
          vertical-lr mode. Use "Segoe UI" in preference. In practice this is a
          Windows-only fix since most non-Windows computers don't have Segoe UI
          installed. */
     .ag-side-button-label {
         font-family: 'Segoe UI', var(--ag-font-family);
+
         /* ... and additionally apply a rotation to fix rendering in Firefox */
         transform: rotate(0.05deg);
     }
@@ -114,17 +110,18 @@
     border-right: var(--ag-side-panel-border);
 
     .ag-tool-panel-wrapper {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-left: var(--ag-side-panel-border);
     }
 }
+
 /* sidebar visually on right */
 .ag-rtl .ag-side-bar-left,
 .ag-ltr .ag-side-bar-right {
     border-left: var(--ag-side-panel-border);
 
     .ag-tool-panel-wrapper {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-right: var(--ag-side-panel-border);
     }
 }

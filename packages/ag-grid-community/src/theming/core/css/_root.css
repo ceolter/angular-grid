@@ -16,6 +16,7 @@ ag-grid-angular {
     color-scheme: var(--ag-browser-color-scheme);
     color: var(--ag-text-color);
     background-color: var(--ag-background-color);
+
     --ag-indentation-level: 0;
 }
 

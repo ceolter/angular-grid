@@ -18,7 +18,6 @@
 .ag-standard-button {
     font-family: inherit;
     appearance: none;
-    -webkit-appearance: none;
     border-radius: var(--ag-border-radius);
     border: var(--ag-input-border);
     background-color: var(--ag-background-color);

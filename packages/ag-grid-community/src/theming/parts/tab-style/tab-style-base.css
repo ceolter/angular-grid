@@ -52,6 +52,7 @@
         &:not(:first-of-type) {
             border-left-color: var(--ag-tab-selected-border-color);
         }
+
         &:not(:last-of-type) {
             border-right-color: var(--ag-tab-selected-border-color);
         }
