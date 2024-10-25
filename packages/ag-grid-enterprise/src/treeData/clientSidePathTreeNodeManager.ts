@@ -8,7 +8,7 @@ export class ClientSidePathTreeNodeManager<TData>
     extends AbstractClientSideTreeNodeManager<TData>
     implements NamedBean
 {
-    beanName = 'clientSidePathTreeNodeManager' as const;
+    beanName = 'csrmPathTreeNodeSvc' as const;
 
     protected override loadNewRowData(rowData: TData[]): void {
         const rootNode = this.rootNode!;

@@ -11,7 +11,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
     extends AbstractClientSideTreeNodeManager<TData>
     implements IClientSideNodeManager<TData>, NamedBean
 {
-    beanName = 'clientSideChildrenTreeNodeManager' as const;
+    beanName = 'csrmChildrenTreeNodeSvc' as const;
 
     private childrenGetter: DataFieldGetter<TData, TData[] | null | undefined> | null = null;
 

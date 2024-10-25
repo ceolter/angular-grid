@@ -43,14 +43,14 @@ const PRIMARY_COLS_LIST_PANEL_CLASS = 'ag-column-select-list';
 
 export type AgPrimaryColsListEvent = 'groupExpanded' | 'selectionChanged';
 export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
+    private colModel: ColumnModel;
+    private colNames: ColumnNameService;
     private colDefService: ToolPanelColDefService;
     private modelItemUtils: ModelItemUtils;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
+        this.colModel = beans.colModel;
+        this.colNames = beans.colNames;
         this.colDefService = beans.toolPanelColDefService as ToolPanelColDefService;
         this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
     }
@@ -125,7 +125,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
             return this.createComponentFromItem(item, listItemElement);
         });
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.onColumnsChanged();
         }
 
@@ -163,7 +163,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
 
         const expandedStates = this.getExpandedStates();
 
-        const pivotModeActive = this.columnModel.isPivotMode();
+        const pivotModeActive = this.colModel.isPivotMode();
         const shouldSyncColumnLayoutWithGrid = !this.params.suppressSyncLayoutWithGrid && !pivotModeActive;
 
         if (shouldSyncColumnLayoutWithGrid) {
@@ -254,8 +254,8 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
 
     private buildTreeFromProvidedColumnDefs(): void {
         // add column / group comps to tool panel
-        this.buildListModel(this.columnModel.getColDefColTree());
-        this.groupsExist = !!this.columnModel.colDefCols?.treeDepth;
+        this.buildListModel(this.colModel.getColDefColTree());
+        this.groupsExist = !!this.colModel.colDefCols?.treeDepth;
     }
 
     private buildListModel(columnTree: (AgColumn | AgProvidedColumnGroup)[]): void {
@@ -296,7 +296,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
                 return;
             }
 
-            const displayName = this.columnNameService.getDisplayNameForProvidedColumnGroup(
+            const displayName = this.colNames.getDisplayNameForProvidedColumnGroup(
                 null,
                 columnGroup,
                 'columnToolPanel'
@@ -322,7 +322,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
                 return;
             }
 
-            const displayName = this.columnNameService.getDisplayNameForColumn(column, 'columnToolPanel');
+            const displayName = this.colNames.getDisplayNameForColumn(column, 'columnToolPanel');
 
             parentList.push(new ColumnModelItem(displayName, column, dept));
         };
@@ -465,7 +465,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
         let checkedCount = 0;
         let uncheckedCount = 0;
 
-        const pivotMode = this.columnModel.isPivotMode();
+        const pivotMode = this.colModel.isPivotMode();
 
         this.forEachItem((item) => {
             if (item.isGroup()) {

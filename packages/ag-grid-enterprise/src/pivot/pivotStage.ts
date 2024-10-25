@@ -31,18 +31,18 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
     ]);
     public step: ClientSideRowModelStage = 'pivot';
 
-    private valueService: ValueService;
-    private columnModel: ColumnModel;
-    private pivotResultColsService: IPivotResultColsService;
-    private funcColsService: FuncColsService;
-    private pivotColDefService: PivotColDefService;
+    private valueSvc: ValueService;
+    private colModel: ColumnModel;
+    private pivotResultCols: IPivotResultColsService;
+    private funcColsSvc: FuncColsService;
+    private pivotColDefSvc: PivotColDefService;
 
     public wireBeans(beans: BeanCollection) {
-        this.valueService = beans.valueService;
-        this.columnModel = beans.columnModel;
-        this.pivotResultColsService = beans.pivotResultColsService!;
-        this.funcColsService = beans.funcColsService;
-        this.pivotColDefService = beans.pivotColDefService as PivotColDefService;
+        this.valueSvc = beans.valueSvc;
+        this.colModel = beans.colModel;
+        this.pivotResultCols = beans.pivotResultCols!;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.pivotColDefSvc = beans.pivotColDefSvc as PivotColDefService;
     }
 
     private uniqueValues: any = {};
@@ -65,7 +65,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     public execute(params: StageExecuteParams): void {
         const changedPath = params.changedPath;
-        if (this.columnModel.isPivotActive()) {
+        if (this.colModel.isPivotActive()) {
             this.executePivotOn(changedPath!);
         } else {
             this.executePivotOff(changedPath!);
@@ -75,8 +75,8 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
     private executePivotOff(changedPath: ChangedPath): void {
         this.aggregationColumnsHashLastTime = null;
         this.uniqueValues = {};
-        if (this.pivotResultColsService.isPivotResultColsPresent()) {
-            this.pivotResultColsService.setPivotResultCols(null, 'rowModelUpdated');
+        if (this.pivotResultCols.isPivotResultColsPresent()) {
+            this.pivotResultCols.setPivotResultCols(null, 'rowModelUpdated');
             if (changedPath) {
                 changedPath.setInactive();
             }
@@ -84,7 +84,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private executePivotOn(changedPath: ChangedPath): void {
-        const numberOfAggregationColumns = this.funcColsService.valueCols.length ?? 1;
+        const numberOfAggregationColumns = this.funcColsSvc.valueCols.length ?? 1;
 
         // As unique values creates one column per aggregation column, divide max columns by number of aggregation columns
         // to get the max number of unique values.
@@ -97,8 +97,8 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
         } catch (e) {
             // message is checked rather than inheritance as the build seems to break instanceof
             if (e.message === EXCEEDED_MAX_UNIQUE_VALUES) {
-                this.pivotResultColsService.setPivotResultCols([], 'rowModelUpdated');
-                this.eventService.dispatchEvent({
+                this.pivotResultCols.setPivotResultCols([], 'rowModelUpdated');
+                this.eventSvc.dispatchEvent({
                     type: 'pivotMaxColumnsExceeded',
                     message: e.message,
                 });
@@ -110,7 +110,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
 
         const uniqueValuesChanged = this.setUniqueValues(uniqueValues);
 
-        const aggregationColumns = this.funcColsService.valueCols;
+        const aggregationColumns = this.funcColsSvc.valueCols;
         const aggregationColumnsHash = aggregationColumns
             .map((column) => `${column.getId()}-${column.getColDef().headerName}`)
             .join('#');
@@ -121,7 +121,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
         this.aggregationColumnsHashLastTime = aggregationColumnsHash;
         this.aggregationFuncsHashLastTime = aggregationFuncsHash;
 
-        const groupColumnsHash = this.funcColsService.rowGroupCols.map((column) => column.getId()).join('#');
+        const groupColumnsHash = this.funcColsSvc.rowGroupCols.map((column) => column.getId()).join('#');
         const groupColumnsChanged = groupColumnsHash !== this.groupColumnsHashLastTime;
         this.groupColumnsHashLastTime = groupColumnsHash;
 
@@ -149,11 +149,11 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
             aggregationFuncsChanged ||
             anyGridOptionsChanged
         ) {
-            const { pivotColumnGroupDefs, pivotColumnDefs } = this.pivotColDefService.createPivotColumnDefs(
+            const { pivotColumnGroupDefs, pivotColumnDefs } = this.pivotColDefSvc.createPivotColumnDefs(
                 this.uniqueValues
             );
             this.pivotColumnDefs = pivotColumnDefs;
-            this.pivotResultColsService.setPivotResultCols(pivotColumnGroupDefs, 'rowModelUpdated');
+            this.pivotResultCols.setPivotResultCols(pivotColumnGroupDefs, 'rowModelUpdated');
             // because the secondary columns have changed, then the aggregation needs to visit the whole
             // tree again, so we make the changedPath not active, to force aggregation to visit all paths.
             if (changedPath) {
@@ -206,7 +206,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private bucketRowNode(rowNode: RowNode, uniqueValues: any): void {
-        const pivotColumns = this.funcColsService.pivotCols;
+        const pivotColumns = this.funcColsSvc.pivotCols;
 
         if (pivotColumns.length === 0) {
             rowNode.childrenMapped = null;
@@ -230,7 +230,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
 
         // map the children out based on the pivot column
         children.forEach((child: RowNode) => {
-            let key: string = this.valueService.getKeyForNode(pivotColumn, child);
+            let key: string = this.valueSvc.getKeyForNode(pivotColumn, child);
 
             if (_missing(key)) {
                 key = '';

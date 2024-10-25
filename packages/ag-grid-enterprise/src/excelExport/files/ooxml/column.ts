@@ -3,7 +3,7 @@ import type { ExcelColumn, ExcelOOXMLTemplate } from 'ag-grid-community';
 // https://docs.microsoft.com/en-us/office/troubleshoot/excel/determine-column-widths
 const getExcelCellWidth = (width: number): number => Math.ceil((width - 12) / 7 + 1);
 
-const columnFactory: ExcelOOXMLTemplate = {
+const colFactory: ExcelOOXMLTemplate = {
     getTemplate(config: ExcelColumn) {
         const { min, max, outlineLevel, s, width, hidden, bestFit } = config;
         let excelWidth = 1;
@@ -32,4 +32,4 @@ const columnFactory: ExcelOOXMLTemplate = {
     },
 };
 
-export default columnFactory;
+export default colFactory;

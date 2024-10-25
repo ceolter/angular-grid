@@ -31,25 +31,25 @@ const CSS_MENU = 'ag-menu';
 const CSS_CONTEXT_MENU_OPEN = 'ag-context-menu-open';
 
 export class ContextMenuService extends BeanStub implements NamedBean, IContextMenuService {
-    beanName = 'contextMenuService' as const;
+    beanName = 'contextMenuSvc' as const;
 
-    private popupService: PopupService;
-    private ctrlsService: CtrlsService;
-    private columnModel: ColumnModel;
+    private popupSvc: PopupService;
+    private ctrlsSvc: CtrlsService;
+    private colModel: ColumnModel;
     private menuUtils: MenuUtils;
-    private rangeService?: IRangeService;
-    private focusService: FocusService;
-    private valueService: ValueService;
+    private rangeSvc?: IRangeService;
+    private focusSvc: FocusService;
+    private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService!;
-        this.ctrlsService = beans.ctrlsService;
-        this.columnModel = beans.columnModel;
+        this.popupSvc = beans.popupSvc!;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.colModel = beans.colModel;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.rangeService = beans.rangeService;
-        this.focusService = beans.focusService;
-        this.valueService = beans.valueService;
+        this.rangeSvc = beans.rangeSvc;
+        this.focusSvc = beans.focusSvc;
+        this.valueSvc = beans.valueSvc;
         this.rowRenderer = beans.rowRenderer;
     }
 
@@ -77,11 +77,11 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }
 
         if (this.gos.get('enableCharts') && this.gos.isModuleRegistered('GridChartsCoreModule')) {
-            if (this.columnModel.isPivotMode()) {
+            if (this.colModel.isPivotMode()) {
                 defaultMenuOptions.push('pivotChart');
             }
 
-            if (this.rangeService && !this.rangeService.isEmpty()) {
+            if (this.rangeSvc && !this.rangeSvc.isEmpty()) {
                 defaultMenuOptions.push('chartRange');
             }
         }
@@ -150,7 +150,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         let { anchorToElement, value } = params;
 
         if (rowNode && column && value == null) {
-            value = this.valueService.getValueForDisplay(column, rowNode);
+            value = this.valueSvc.getValueForDisplay(column, rowNode);
         }
 
         if (anchorToElement == null) {
@@ -180,11 +180,11 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         if (column) {
             const event = mouseEvent ? mouseEvent : touchEvent;
             cellCtrl.dispatchCellContextMenuEvent(event ?? null);
-            value = this.valueService.getValue(column, rowNode);
+            value = this.valueSvc.getValue(column, rowNode);
         }
 
         // if user clicked on a cell, anchor to that cell, otherwise anchor to the grid panel
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const anchorToElement = cellCtrl ? cellCtrl.getGui() : gridBodyCon.getGridBodyElement();
 
         this.showContextMenu({
@@ -218,7 +218,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         anchorToElement: HTMLElement
     ): boolean {
         const menuItems = this.getMenuItems(node, column, value);
-        const eGridBodyGui = this.ctrlsService.getGridBodyCtrl().getGui();
+        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().getGui();
 
         if (menuItems === undefined || !menuItems?.length) {
             return false;
@@ -232,7 +232,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         if (!column) {
             // the context menu has been opened not on a cell, therefore we don't want to
             // display the previous cell as focused, or return focus there after
-            this.focusService.clearFocusedCell();
+            this.focusSvc.clearFocusedCell();
         }
 
         const positionParams = {
@@ -248,7 +248,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = this.popupService.addPopup({
+        const addPopupRes = this.popupSvc.addPopup({
             modal: true,
             eChild: eMenuGui,
             closeOnEsc: true,
@@ -260,7 +260,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             click: mouseEvent,
             positionCallback: () => {
                 const isRtl = this.gos.get('enableRtl');
-                this.popupService.positionPopupUnderMouseEvent({
+                this.popupSvc.positionPopupUnderMouseEvent({
                     ...positionParams,
                     nudgeX: isRtl ? (eMenuGui.offsetWidth + 1) * -1 : 1,
                 });
@@ -312,7 +312,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, source: 'api' | 'ui' = 'ui'): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'contextMenuVisibleChanged',
             visible,
             source,
@@ -340,7 +340,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     private getContextMenuAnchorElement(rowNode?: RowNode | null, column?: AgColumn | null): HTMLElement {
-        const gridBodyEl = this.ctrlsService.getGridBodyCtrl().getGridBodyElement();
+        const gridBodyEl = this.ctrlsSvc.getGridBodyCtrl().getGridBodyElement();
         const rowCtrl = this.getRowCtrl(rowNode);
 
         if (!rowCtrl) {
@@ -364,11 +364,11 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 export type ContextMenuEvent = 'closeMenu';
 
 class ContextMenu extends Component<ContextMenuEvent> {
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private menuItemMapper: MenuItemMapper;
 
     public wireBeans(beans: BeanCollection): void {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
         this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
     }
 
@@ -412,26 +412,26 @@ class ContextMenu extends Component<ContextMenuEvent> {
             this.addDestroyFunc(params.hidePopup);
         }
 
-        this.focusedCell = this.focusService.getFocusedCell();
+        this.focusedCell = this.focusSvc.getFocusedCell();
 
         if (this.menuList) {
-            this.focusService.focusInto(this.menuList.getGui());
+            this.focusSvc.focusInto(this.menuList.getGui());
         }
     }
 
     private restoreFocusedCell(): void {
-        const currentFocusedCell = this.focusService.getFocusedCell();
+        const currentFocusedCell = this.focusSvc.getFocusedCell();
 
         if (currentFocusedCell && this.focusedCell && _areCellsEqual(currentFocusedCell, this.focusedCell)) {
             const { rowIndex, rowPinned, column } = this.focusedCell;
 
             if (_isNothingFocused(this.gos)) {
-                this.focusService.setFocusedCell({
+                this.focusSvc.setFocusedCell({
                     rowIndex,
                     column,
                     rowPinned,
                     forceBrowserFocus: true,
-                    preventScrollOnBrowserFocus: !this.focusService.isKeyboardMode(),
+                    preventScrollOnBrowserFocus: !this.focusSvc.isKeyboardMode(),
                 });
             }
         }

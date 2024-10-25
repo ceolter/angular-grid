@@ -18,18 +18,18 @@ import type {
 import { BeanStub, _areEqual, _destroyColumnTree, _exists, _getColumnsFromTree } from 'ag-grid-community';
 
 export class PivotResultColsService extends BeanStub implements NamedBean, IPivotResultColsService {
-    beanName = 'pivotResultColsService' as const;
+    beanName = 'pivotResultCols' as const;
 
     private context: Context;
-    private columnModel: ColumnModel;
-    private columnFactory: ColumnFactory;
-    private visibleColsService: VisibleColsService;
+    private colModel: ColumnModel;
+    private colFactory: ColumnFactory;
+    private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.context = beans.context;
-        this.columnModel = beans.columnModel;
-        this.columnFactory = beans.columnFactory;
-        this.visibleColsService = beans.visibleColsService;
+        this.colModel = beans.colModel;
+        this.colFactory = beans.colFactory;
+        this.visibleCols = beans.visibleCols;
     }
 
     // if pivoting, these are the generated columns as a result of the pivot
@@ -52,7 +52,7 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
             return null;
         }
 
-        const valueColumnToFind = this.columnModel.getColDefCol(valueColKey);
+        const valueColumnToFind = this.colModel.getColDefCol(valueColKey);
 
         let foundColumn: AgColumn | null = null;
 
@@ -79,11 +79,11 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
         if (!this.pivotResultCols) {
             return null;
         }
-        return this.columnModel.getColFromCollection(key, this.pivotResultCols);
+        return this.colModel.getColFromCollection(key, this.pivotResultCols);
     }
 
     public setPivotResultCols(colDefs: (ColDef | ColGroupDef)[] | null, source: ColumnEventType): void {
-        if (!this.columnModel.ready) {
+        if (!this.colModel.ready) {
             return;
         }
 
@@ -94,7 +94,7 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
 
         if (colDefs) {
             this.processPivotResultColDef(colDefs);
-            const balancedTreeResult = this.columnFactory.createColumnTree(
+            const balancedTreeResult = this.colFactory.createColumnTree(
                 colDefs,
                 false,
                 this.pivotResultCols?.tree || this.previousPivotResultCols || undefined,
@@ -111,14 +111,14 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
             this.pivotResultCols.list.forEach((col) => (this.pivotResultCols!.map[col.getId()] = col));
             const hasPreviousCols = !!this.previousPivotResultCols;
             this.previousPivotResultCols = null;
-            this.columnModel.refreshCols(!hasPreviousCols);
+            this.colModel.refreshCols(!hasPreviousCols);
         } else {
             this.previousPivotResultCols = this.pivotResultCols ? this.pivotResultCols.tree : null;
             this.pivotResultCols = null;
 
-            this.columnModel.refreshCols(false);
+            this.colModel.refreshCols(false);
         }
-        this.visibleColsService.refresh(source);
+        this.visibleCols.refresh(source);
     }
 
     private processPivotResultColDef(colDefs: (ColDef | ColGroupDef)[] | null) {

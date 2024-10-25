@@ -10,13 +10,13 @@ import { BeanStub, _createGlobalRowEvent, _setAriaExpanded } from 'ag-grid-commu
 
 export abstract class BaseExpansionService extends BeanStub {
     private rowRenderer: RowRenderer;
-    protected columnModel: ColumnModel;
+    protected colModel: ColumnModel;
 
     protected abstract dispatchExpandedEvent(event: RowGroupOpenedEvent, forceSync?: boolean): void;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowRenderer = beans.rowRenderer;
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     public addExpandedCss(classes: string[], rowNode: RowNode): void {
@@ -62,7 +62,7 @@ export abstract class BaseExpansionService extends BeanStub {
             return false;
         }
 
-        if (this.columnModel.isPivotMode()) {
+        if (this.colModel.isPivotMode()) {
             // master detail and leaf groups aren't expandable in pivot mode.
             return rowNode.hasChildren() && !rowNode.leafGroup;
         }

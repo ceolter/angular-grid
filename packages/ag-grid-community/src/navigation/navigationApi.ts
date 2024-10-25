@@ -4,11 +4,11 @@ import type { Column, ColumnGroup } from '../interfaces/iColumn';
 import type { RowPinnedType } from '../interfaces/iRowNode';
 
 export function getFocusedCell(beans: BeanCollection): CellPosition | null {
-    return beans.focusService.getFocusedCell();
+    return beans.focusSvc.getFocusedCell();
 }
 
 export function clearFocusedCell(beans: BeanCollection): void {
-    return beans.focusService.clearFocusedCell();
+    return beans.focusSvc.clearFocusedCell();
 }
 
 export function setFocusedCell(
@@ -17,15 +17,15 @@ export function setFocusedCell(
     colKey: string | Column,
     rowPinned?: RowPinnedType
 ) {
-    beans.focusService.setFocusedCell({ rowIndex, column: colKey, rowPinned, forceBrowserFocus: true });
+    beans.focusSvc.setFocusedCell({ rowIndex, column: colKey, rowPinned, forceBrowserFocus: true });
 }
 
 export function tabToNextCell(beans: BeanCollection, event?: KeyboardEvent): boolean {
-    return beans.navigationService?.tabToNextCell(false, event) ?? false;
+    return beans.navigation?.tabToNextCell(false, event) ?? false;
 }
 
 export function tabToPreviousCell(beans: BeanCollection, event?: KeyboardEvent): boolean {
-    return beans.navigationService?.tabToNextCell(true, event) ?? false;
+    return beans.navigation?.tabToNextCell(true, event) ?? false;
 }
 
 export function setFocusedHeader(
@@ -33,11 +33,11 @@ export function setFocusedHeader(
     colKey: string | Column | ColumnGroup,
     floatingFilter: boolean = false
 ): void {
-    const headerPosition = beans.headerNavigationService?.getHeaderPositionForColumn(colKey, floatingFilter);
+    const headerPosition = beans.headerNavigation?.getHeaderPositionForColumn(colKey, floatingFilter);
 
     if (!headerPosition) {
         return;
     }
 
-    beans.focusService.focusHeaderPosition({ headerPosition });
+    beans.focusSvc.focusHeaderPosition({ headerPosition });
 }

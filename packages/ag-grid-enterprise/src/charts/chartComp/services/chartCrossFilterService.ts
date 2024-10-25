@@ -13,14 +13,14 @@ import { BeanStub, _isClientSideRowModel, _warn } from 'ag-grid-community';
 export class ChartCrossFilterService extends BeanStub implements NamedBean {
     beanName = 'chartCrossFilterService' as const;
 
-    private columnModel: ColumnModel;
-    private valueService: ValueService;
+    private colModel: ColumnModel;
+    private valueSvc: ValueService;
     private filterManager?: FilterManager;
     private clientSideRowModel?: IClientSideRowModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.valueService = beans.valueService;
+        this.colModel = beans.colModel;
+        this.valueSvc = beans.valueSvc;
         this.filterManager = beans.filterManager;
         if (_isClientSideRowModel(this.gos, beans.rowModel)) {
             this.clientSideRowModel = beans.rowModel;
@@ -97,7 +97,7 @@ export class ChartCrossFilterService extends BeanStub implements NamedBean {
         const column = this.getColumnById(colId);
         this.clientSideRowModel?.forEachNodeAfterFilter((rowNode: RowNode) => {
             if (column && !rowNode.group) {
-                const value = this.valueService.getValue(column, rowNode) + '';
+                const value = this.valueSvc.getValue(column, rowNode) + '';
                 if (!filteredValues.includes(value)) {
                     filteredValues.push(value);
                 }
@@ -132,6 +132,6 @@ export class ChartCrossFilterService extends BeanStub implements NamedBean {
     }
 
     private getColumnById(colId: string) {
-        return this.columnModel.getCol(colId) as AgColumn;
+        return this.colModel.getCol(colId) as AgColumn;
     }
 }

@@ -15,17 +15,17 @@ import type { Component, ComponentSelector } from '../widgets/component';
 import { SortIndicatorComp, SortIndicatorSelector } from './sortIndicatorComp';
 
 export const DEFAULT_SORTING_ORDER: SortDirection[] = ['asc', 'desc', null];
-export class SortController extends BeanStub implements NamedBean {
-    beanName = 'sortController' as const;
+export class SortService extends BeanStub implements NamedBean {
+    beanName = 'sortSvc' as const;
 
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
-    private showRowGroupColsService?: IShowRowGroupColsService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
+    private showRowGroupCols?: IShowRowGroupColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
-        this.showRowGroupColsService = beans.showRowGroupColsService;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.showRowGroupCols = beans.showRowGroupCols;
     }
 
     public progressSort(column: AgColumn, multiSort: boolean, source: ColumnEventType): void {
@@ -49,7 +49,7 @@ export class SortController extends BeanStub implements NamedBean {
         let columnsToUpdate = [column];
         if (isColumnsSortingCoupledToGroup) {
             if (column.getColDef().showRowGroup) {
-                const rowGroupColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
+                const rowGroupColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
                 const sortableRowGroupColumns = rowGroupColumns?.filter((col) => col.isSortable());
 
                 if (sortableRowGroupColumns) {
@@ -78,13 +78,13 @@ export class SortController extends BeanStub implements NamedBean {
 
     private updateSortIndex(lastColToChange: AgColumn) {
         const isCoupled = _isColumnsSortingCoupledToGroup(this.gos);
-        const groupParent = this.showRowGroupColsService?.getShowRowGroupCol(lastColToChange.getId());
+        const groupParent = this.showRowGroupCols?.getShowRowGroupCol(lastColToChange.getId());
         const lastSortIndexCol = isCoupled ? groupParent || lastColToChange : lastColToChange;
 
         const allSortedCols = this.getColumnsWithSortingOrdered();
 
         // reset sort index on everything
-        this.columnModel.getAllCols().forEach((col) => col.setSortIndex(null));
+        this.colModel.getAllCols().forEach((col) => col.setSortIndex(null));
         const allSortedColsWithoutChangesOrGroups = allSortedCols.filter((col) => {
             if (isCoupled && col.getColDef().showRowGroup) {
                 return false;
@@ -107,7 +107,7 @@ export class SortController extends BeanStub implements NamedBean {
 
     public isSortActive(): boolean {
         // pull out all the columns that have sorting set
-        const allCols = this.columnModel.getAllCols();
+        const allCols = this.colModel.getAllCols();
         const sortedCols = allCols.filter((column) => !!column.getSort());
         return sortedCols && sortedCols.length > 0;
     }
@@ -121,12 +121,12 @@ export class SortController extends BeanStub implements NamedBean {
         if (columns) {
             event.columns = columns;
         }
-        this.eventService.dispatchEvent(event);
+        this.eventSvc.dispatchEvent(event);
     }
 
     private clearSortBarTheseColumns(columnsToSkip: AgColumn[], source: ColumnEventType): AgColumn[] {
         const clearedColumns: AgColumn[] = [];
-        this.columnModel.getAllCols().forEach((columnToClear) => {
+        this.colModel.getAllCols().forEach((columnToClear) => {
             // Do not clear if either holding shift, or if column in question was clicked
             if (!columnsToSkip.includes(columnToClear)) {
                 // add to list of cleared cols when sort direction is set
@@ -159,21 +159,21 @@ export class SortController extends BeanStub implements NamedBean {
      */
     private getIndexedSortMap(): Map<AgColumn, number> {
         // pull out all the columns that have sorting set
-        let allSortedCols = this.columnModel.getAllCols().filter((col) => !!col.getSort());
+        let allSortedCols = this.colModel.getAllCols().filter((col) => !!col.getSort());
 
-        if (this.columnModel.isPivotMode()) {
+        if (this.colModel.isPivotMode()) {
             const isSortingLinked = _isColumnsSortingCoupledToGroup(this.gos);
             allSortedCols = allSortedCols.filter((col) => {
                 const isAggregated = !!col.getAggFunc();
                 const isSecondary = !col.isPrimary();
                 const isGroup = isSortingLinked
-                    ? this.showRowGroupColsService?.getShowRowGroupCol(col.getId())
+                    ? this.showRowGroupCols?.getShowRowGroupCol(col.getId())
                     : col.getColDef().showRowGroup;
                 return isAggregated || isSecondary || isGroup;
             });
         }
 
-        const sortedRowGroupCols = this.funcColsService.rowGroupCols.filter((col) => !!col.getSort());
+        const sortedRowGroupCols = this.funcColsSvc.rowGroupCols.filter((col) => !!col.getSort());
 
         // when both cols are missing sortIndex, we use the position of the col in all cols list.
         // this means if colDefs only have sort, but no sortIndex, we deterministically pick which
@@ -204,7 +204,7 @@ export class SortController extends BeanStub implements NamedBean {
             allSortedCols = [
                 ...new Set(
                     // if linked sorting, replace all columns with the display group column for index purposes, and ensure uniqueness
-                    allSortedCols.map((col) => this.showRowGroupColsService?.getShowRowGroupCol(col.getId()) ?? col)
+                    allSortedCols.map((col) => this.showRowGroupCols?.getShowRowGroupCol(col.getId()) ?? col)
                 ),
             ];
         }
@@ -216,7 +216,7 @@ export class SortController extends BeanStub implements NamedBean {
         // add the row group cols back
         if (isSortLinked) {
             sortedRowGroupCols.forEach((col) => {
-                const groupDisplayCol = this.showRowGroupColsService!.getShowRowGroupCol(col.getId())!;
+                const groupDisplayCol = this.showRowGroupCols!.getShowRowGroupCol(col.getId())!;
                 indexMap.set(col, indexMap.get(groupDisplayCol)!);
             });
         }
@@ -260,7 +260,7 @@ export class SortController extends BeanStub implements NamedBean {
     }
 
     public getDisplaySortForColumn(column: AgColumn): SortDirection | 'mixed' | undefined {
-        const linkedColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
+        const linkedColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
         if (!this.canColumnDisplayMixedSort(column) || !linkedColumns?.length) {
             return column.getSort();
         }
@@ -319,7 +319,7 @@ export class SortController extends BeanStub implements NamedBean {
             comp.addOrRemoveCssClass('ag-header-cell-sorted-none', !sort);
 
             if (column.getColDef().showRowGroup) {
-                const sourceColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
+                const sourceColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
                 // this == is intentional, as it allows null and undefined to match, which are both unsorted states
                 const sortDirectionsMatch = sourceColumns?.every(
                     (sourceCol) => column.getSort() == sourceCol.getSort()

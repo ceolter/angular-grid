@@ -18,12 +18,12 @@ import type { ChartMenuContext } from './chartMenuContext';
 export class ChartMenuListFactory extends BeanStub implements NamedBean {
     beanName = 'chartMenuListFactory' as const;
 
-    private popupService: PopupService;
+    private popupSvc: PopupService;
     private chartMenuService: ChartMenuService;
     private chartTranslationService: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService!;
+        this.popupSvc = beans.popupSvc!;
         this.chartMenuService = beans.chartMenuService as ChartMenuService;
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
     }
@@ -62,7 +62,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
 
         const eGui = chartMenuList.getGui();
 
-        this.popupService.addPopup({
+        this.popupSvc.addPopup({
             modal: true,
             eChild: eGui,
             closeOnEsc: true,
@@ -76,7 +76,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
             afterGuiAttached: (params) => chartMenuList.afterGuiAttached(params),
             positionCallback: () => {
                 {
-                    this.popupService.positionPopupByComponent({
+                    this.popupSvc.positionPopupByComponent({
                         type: 'chartMenu',
                         eventSource,
                         ePopup: eGui,
@@ -221,10 +221,10 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
 }
 
 class ChartMenuList extends Component {
-    private focusService: FocusService;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
     }
 
     private readonly eChartsMenu: HTMLElement = RefPlaceholder;
@@ -254,6 +254,6 @@ class ChartMenuList extends Component {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusService.focusInto(this.mainMenuList.getGui());
+        this.focusSvc.focusInto(this.mainMenuList.getGui());
     }
 }

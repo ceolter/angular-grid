@@ -19,10 +19,10 @@ export abstract class AgPickerField<
     TEventType extends string = AgPickerFieldEvent,
     TComponent extends Component<TEventType | AgPickerFieldEvent> = Component<TEventType | AgPickerFieldEvent>,
 > extends AgAbstractField<TValue, TConfig, TEventType | AgPickerFieldEvent> {
-    protected popupService: PopupService;
+    protected popupSvc: PopupService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService!;
+        this.popupSvc = beans.popupSvc!;
     }
 
     protected abstract createPickerComponent(): TComponent;
@@ -235,7 +235,7 @@ export abstract class AgPickerField<
 
         // need to set position before adding to the dom
         ePicker.style.position = 'absolute';
-        const addPopupRes = this.popupService.addPopup(popupParams);
+        const addPopupRes = this.popupSvc.addPopup(popupParams);
 
         const { maxPickerHeight, minPickerWidth, maxPickerWidth, variableWidth } = this;
 
@@ -251,7 +251,7 @@ export abstract class AgPickerField<
             _setElementWidth(ePicker, maxPickerWidth ?? _getAbsoluteWidth(this.eWrapper));
         }
 
-        const maxHeight = maxPickerHeight ?? `${_getInnerHeight(this.popupService.getPopupParent())}px`;
+        const maxHeight = maxPickerHeight ?? `${_getInnerHeight(this.popupSvc.getPopupParent())}px`;
 
         ePicker.style.setProperty('max-height', maxHeight);
 
@@ -270,7 +270,7 @@ export abstract class AgPickerField<
 
         const alignSide = this.gos.get('enableRtl') ? 'right' : 'left';
 
-        this.popupService.positionPopupByComponent({
+        this.popupSvc.positionPopupByComponent({
             type: pickerType,
             eventSource: this.eWrapper,
             ePopup: this.pickerComponent.getGui(),

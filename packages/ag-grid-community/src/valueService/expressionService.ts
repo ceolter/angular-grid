@@ -3,7 +3,7 @@ import { BeanStub } from '../context/beanStub';
 import { _error } from '../validation/logging';
 
 export class ExpressionService extends BeanStub implements NamedBean {
-    beanName = 'expressionService' as const;
+    beanName = 'expressionSvc' as const;
 
     private expressionToFunctionCache = {} as any;
 

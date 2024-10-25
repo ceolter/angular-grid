@@ -16,12 +16,12 @@ import type { ToolPanelColumnComp } from './toolPanelColumnComp';
 import { ToolPanelColumnGroupComp } from './toolPanelColumnGroupComp';
 
 export class PrimaryColsListPanelItemDragFeature extends BeanStub {
-    private columnMoveService?: ColumnMoveService;
-    private columnModel: ColumnModel;
+    private colMoves?: ColumnMoveService;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnMoveService = beans.columnMoveService;
-        this.columnModel = beans.columnModel;
+        this.colMoves = beans.colMoves;
+        this.colModel = beans.colModel;
     }
 
     constructor(
@@ -42,7 +42,7 @@ export class PrimaryColsListPanelItemDragFeature extends BeanStub {
                 dragSourceType: DragSourceType.ToolPanel,
                 listItemDragStartEvent: 'columnPanelItemDragStart',
                 listItemDragEndEvent: 'columnPanelItemDragEnd',
-                eventSource: this.eventService,
+                eventSource: this.eventSvc,
                 getCurrentDragValue: (listItemDragStartEvent: ColumnPanelItemDragStartEvent) =>
                     this.getCurrentDragValue(listItemDragStartEvent),
                 isMoveBlocked: (currentDragValue: AgColumn | AgProvidedColumnGroup | null) =>
@@ -116,7 +116,7 @@ export class PrimaryColsListPanelItemDragFeature extends BeanStub {
         });
 
         if (targetIndex != null) {
-            this.columnMoveService?.moveColumns(currentColumns, targetIndex, 'toolPanelUi');
+            this.colMoves?.moveColumns(currentColumns, targetIndex, 'toolPanelUi');
         }
     }
 
@@ -130,7 +130,7 @@ export class PrimaryColsListPanelItemDragFeature extends BeanStub {
             return null;
         }
 
-        const targetColumnIndex = this.columnModel.getCols().indexOf(lastHoveredColumn);
+        const targetColumnIndex = this.colModel.getCols().indexOf(lastHoveredColumn);
         const adjustedTarget = isBefore ? targetColumnIndex : targetColumnIndex + 1;
         const diff = this.getMoveDiff(currentColumns, adjustedTarget);
 
@@ -138,7 +138,7 @@ export class PrimaryColsListPanelItemDragFeature extends BeanStub {
     }
 
     private getMoveDiff(currentColumns: AgColumn[] | null, end: number): number {
-        const allColumns = this.columnModel.getCols();
+        const allColumns = this.colModel.getCols();
 
         if (!currentColumns) {
             return 0;

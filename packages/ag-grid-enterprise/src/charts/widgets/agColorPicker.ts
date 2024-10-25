@@ -47,7 +47,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
 
     protected createPickerComponent() {
         const eGuiRect = this.eWrapper.getBoundingClientRect();
-        const parentRect = this.popupService.getParentRect();
+        const parentRect = this.popupSvc.getParentRect();
 
         const colorDialog = this.createBean(
             new AgDialog({

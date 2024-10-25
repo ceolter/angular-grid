@@ -3,12 +3,12 @@ import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { RowNodeSorter } from './rowNodeSorter';
 import { onSortChanged } from './sortApi';
-import { SortController } from './sortController';
 import { SortIndicatorComp } from './sortIndicatorComp';
+import { SortService } from './sortService';
 
 export const SortCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SortCoreModule'),
-    beans: [SortController, RowNodeSorter],
+    beans: [SortService, RowNodeSorter],
 };
 
 export const SortIndicatorCompModule: _ModuleWithoutApi = {

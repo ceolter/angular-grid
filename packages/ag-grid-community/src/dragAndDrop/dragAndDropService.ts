@@ -144,20 +144,20 @@ export type DragAndDropIcon =
     | 'hide';
 
 export class DragAndDropService extends BeanStub implements NamedBean {
-    beanName = 'dragAndDropService' as const;
+    beanName = 'dragAndDrop' as const;
 
-    private ctrlsService: CtrlsService;
-    private dragService: DragService;
-    private mouseEventService: MouseEventService;
+    private ctrlsSvc: CtrlsService;
+    private dragSvc: DragService;
+    private mouseEventSvc: MouseEventService;
     private environment: Environment;
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
-        this.dragService = beans.dragService!;
-        this.mouseEventService = beans.mouseEventService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.dragSvc = beans.dragSvc!;
+        this.mouseEventSvc = beans.mouseEventSvc;
         this.environment = beans.environment;
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
     }
 
     private dragSourceAndParamsList: { params: DragListenerParams; dragSource: DragSource }[] = [];
@@ -188,7 +188,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         };
 
         this.dragSourceAndParamsList.push({ params: params, dragSource: dragSource });
-        this.dragService.addDragSource(params);
+        this.dragSvc.addDragSource(params);
     }
 
     public getDragAndDropImageComponent(): DragAndDropImageComponent | null {
@@ -204,14 +204,14 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         const sourceAndParams = this.dragSourceAndParamsList.find((item) => item.dragSource === dragSource);
 
         if (sourceAndParams) {
-            this.dragService.removeDragSource(sourceAndParams.params);
+            this.dragSvc.removeDragSource(sourceAndParams.params);
             _removeFromArray(this.dragSourceAndParamsList, sourceAndParams);
         }
     }
 
     public override destroy(): void {
         this.dragSourceAndParamsList.forEach((sourceAndParams) =>
-            this.dragService.removeDragSource(sourceAndParams.params)
+            this.dragSvc.removeDragSource(sourceAndParams.params)
         );
         this.dragSourceAndParamsList.length = 0;
         this.dropTargets.length = 0;
@@ -456,7 +456,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     public isDropZoneWithinThisGrid(draggingEvent: DraggingEvent): boolean {
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const gridGui = gridBodyCon.getGui();
         const { dropZoneTarget } = draggingEvent;
 
@@ -587,7 +587,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             return;
         }
 
-        const userCompDetails = _getDragAndDropImageCompDetails(this.userComponentFactory, {
+        const userCompDetails = _getDragAndDropImageCompDetails(this.userCompFactory, {
             dragSource,
         });
 
@@ -607,7 +607,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     private processDragAndDropImageComponent(dragAndDropImageComponent: DragAndDropImageComponent): void {
-        const { dragSource, mouseEventService, environment } = this;
+        const { dragSource, mouseEventSvc, environment } = this;
 
         if (!dragSource) {
             return;
@@ -617,7 +617,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.setProperty('position', 'absolute');
         eGui.style.setProperty('z-index', '9999');
 
-        mouseEventService.stampTopLevelGridCompWithGridInstance(eGui);
+        mouseEventSvc.stampTopLevelGridCompWithGridInstance(eGui);
         environment.applyThemeClasses(eGui);
         dragAndDropImageComponent.setIcon(null);
 

@@ -28,18 +28,18 @@ interface SelectedState {
 
 export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
     private rowModel: IRowModel;
-    private selectionService?: ISelectionService;
+    private selectionSvc?: ISelectionService;
     private selectionCtx = new ServerSideRowRangeSelectionContext();
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
-        this.selectionService = beans.selectionService;
+        this.selectionSvc = beans.selectionSvc;
     }
 
     private selectedState: SelectedState = { selectAll: false, toggledNodes: new Set() };
 
     private selectAllUsed: boolean = false;
-    // this is to prevent regressions, default selectionService retains reference of clicked nodes.
+    // this is to prevent regressions, default selectionSvc retains reference of clicked nodes.
     private selectedNodes: { [key: string]: RowNode } = {};
 
     public postConstruct(): void {
@@ -248,11 +248,11 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
 
         this.rowModel.forEachNode((node) => {
             if (node !== rowNodeToKeepSelected) {
-                this.selectionService?.selectRowNode(node, false, undefined, source);
+                this.selectionSvc?.selectRowNode(node, false, undefined, source);
             }
         });
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'selectionChanged',
             source,
         });

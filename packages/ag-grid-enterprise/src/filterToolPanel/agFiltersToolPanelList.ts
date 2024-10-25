@@ -28,11 +28,11 @@ import { ToolPanelFilterGroupComp } from './toolPanelFilterGroupComp';
 export type AgFiltersToolPanelListEvent = 'filterExpanded' | 'groupExpanded';
 export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEvent> {
     private toolPanelColDefService: ToolPanelColDefService;
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
         this.toolPanelColDefService = beans.toolPanelColDefService as ToolPanelColDefService;
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     private initialised = false;
@@ -89,7 +89,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
             },
         });
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.onColumnsChanged();
         }
     }
@@ -99,7 +99,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
             this.onColumnsChangedPending = true;
             return;
         }
-        const pivotModeActive = this.columnModel.isPivotMode();
+        const pivotModeActive = this.colModel.isPivotMode();
         const shouldSyncColumnLayoutWithGrid = !this.params.suppressSyncLayoutWithGrid && !pivotModeActive;
         shouldSyncColumnLayoutWithGrid ? this.syncFilterLayout() : this.buildTreeFromProvidedColumnDefs();
         this.refreshAriaLabel();
@@ -111,7 +111,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     }
 
     private buildTreeFromProvidedColumnDefs(): void {
-        const columnTree = this.columnModel.getColDefColTree();
+        const columnTree = this.colModel.getColDefColTree();
         this.recreateFilters(columnTree);
     }
 

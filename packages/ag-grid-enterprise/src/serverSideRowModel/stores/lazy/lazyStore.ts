@@ -35,14 +35,14 @@ import { LazyCache } from './lazyCache';
 export class LazyStore extends BeanStub implements IServerSideStore {
     private blockUtils: BlockUtils;
     private storeUtils: StoreUtils;
-    private selectionService?: ISelectionService;
-    private funcColsService: FuncColsService;
+    private selectionSvc?: ISelectionService;
+    private funcColsSvc: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.blockUtils = beans.ssrmBlockUtils as BlockUtils;
         this.storeUtils = beans.ssrmStoreUtils as StoreUtils;
-        this.selectionService = beans.selectionService;
-        this.funcColsService = beans.funcColsService;
+        this.selectionSvc = beans.selectionSvc;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     // display indexes
@@ -83,7 +83,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
         if (this.level === 0) {
             numberOfRows = this.storeUtils.getServerSideInitialRowCount() ?? 1;
 
-            this.eventService.dispatchEventOnce({
+            this.eventSvc.dispatchEventOnce({
                 type: 'rowCountReady',
             });
         }
@@ -94,7 +94,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
         if (!usingTreeData && this.group) {
             const groupColVo = this.ssrmParams.rowGroupCols[this.level];
             this.groupField = groupColVo.field!;
-            this.rowGroupColumn = this.funcColsService.rowGroupCols[this.level];
+            this.rowGroupColumn = this.funcColsSvc.rowGroupCols[this.level];
         }
     }
 
@@ -190,7 +190,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
     }
 
     private updateSelectionAfterTransaction(updatedNodes?: RowNode[], removedNodes?: RowNode[]) {
-        if (!this.selectionService) {
+        if (!this.selectionSvc) {
             return;
         }
         const nodesToDeselect: RowNode[] = [];
@@ -207,7 +207,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
         });
 
         if (nodesToDeselect.length) {
-            this.selectionService.setNodesSelected({
+            this.selectionSvc.setNodesSelected({
                 newValue: false,
                 clearSelection: false,
                 nodes: nodesToDeselect,
@@ -715,14 +715,14 @@ export class LazyStore extends BeanStub implements IServerSideStore {
     public fireStoreUpdatedEvent(): void {
         // this results in row model firing ModelUpdated.
         // server side row model also updates the row indexes first
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'storeUpdated',
         });
     }
 
     // gets called when row data updated, and no more refreshing needed
     public fireRefreshFinishedEvent(): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'storeRefreshed',
             route: this.parentRowNode.getRoute(),
         });

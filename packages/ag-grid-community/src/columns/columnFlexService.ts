@@ -19,12 +19,12 @@ type FlexItem = {
 };
 
 export class ColumnFlexService extends BeanStub implements NamedBean {
-    beanName = 'columnFlexService' as const;
+    beanName = 'colFlex' as const;
 
-    private visibleColsService: VisibleColsService;
+    private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
+        this.visibleCols = beans.visibleCols;
     }
 
     private flexViewportWidth: number;
@@ -55,7 +55,7 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
         // shrinking, and don't support flex-basis.
         // https://www.w3.org/TR/css-flexbox-1/#resolve-flexible-lengths
         let hasFlexItems = false;
-        const items = this.visibleColsService.centerCols.map((col): FlexItem => {
+        const items = this.visibleCols.centerCols.map((col): FlexItem => {
             const flex = col.getFlex();
             const isFlex = flex != null;
 
@@ -172,11 +172,11 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
         }
 
         if (!params.skipSetLeft) {
-            this.visibleColsService.setLeftValues(source);
+            this.visibleCols.setLeftValues(source);
         }
 
         if (params.updateBodyWidths) {
-            this.visibleColsService.updateBodyWidths();
+            this.visibleCols.updateBodyWidths();
         }
 
         const unconstrainedFlexColumns = items
@@ -187,7 +187,7 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
             const changedColumns = items.filter((item) => item.initialSize !== item.frozenSize).map((item) => item.col);
             const flexingColumns = items.filter((item) => item.flex).map((item) => item.col);
 
-            dispatchColumnResizedEvent(this.eventService, changedColumns, true, source, flexingColumns);
+            dispatchColumnResizedEvent(this.eventSvc, changedColumns, true, source, flexingColumns);
         }
 
         return unconstrainedFlexColumns;

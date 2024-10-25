@@ -13,12 +13,12 @@ import { _areEventsNear } from '../utils/mouse';
 /** Adds drag listening onto an element. In AG Grid this is used twice, first is resizing columns,
  * second is moving the columns and column groups around (ie the 'drag' part of Drag and Drop. */
 export class DragService extends BeanStub implements NamedBean {
-    beanName = 'dragService' as const;
+    beanName = 'dragSvc' as const;
 
-    private mouseEventService: MouseEventService;
+    private mouseEventSvc: MouseEventService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.mouseEventService = beans.mouseEventService;
+        this.mouseEventSvc = beans.mouseEventSvc;
     }
 
     private currentDragParams: DragListenerParams | null;
@@ -247,7 +247,7 @@ export class DragService extends BeanStub implements NamedBean {
             }
 
             this.dragging = true;
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'dragStarted',
                 target: el,
             });
@@ -308,7 +308,7 @@ export class DragService extends BeanStub implements NamedBean {
             isEnableCellTextSelect &&
             isMouseMove &&
             mouseEvent.cancelable &&
-            this.mouseEventService.isEventFromThisGrid(mouseEvent) &&
+            this.mouseEventSvc.isEventFromThisGrid(mouseEvent) &&
             !this.isOverFormFieldElement(mouseEvent)
         );
     }
@@ -354,7 +354,7 @@ export class DragService extends BeanStub implements NamedBean {
         if (this.dragging) {
             this.dragging = false;
             this.currentDragParams!.onDragStop(eventOrTouch);
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'dragStopped',
                 target: el,
             });
@@ -363,7 +363,7 @@ export class DragService extends BeanStub implements NamedBean {
     }
 
     public cancelDrag(el: Element): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'dragCancelled',
             target: el,
         });

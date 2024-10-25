@@ -8,12 +8,12 @@ import { CellCustomStyleFeature } from './cellCustomStyleFeature';
 import { processClassRules } from './stylingUtils';
 
 export class CellStyleService extends BeanStub implements NamedBean {
-    beanName = 'cellStyleService' as const;
+    beanName = 'cellStyles' as const;
 
-    private expressionService?: ExpressionService;
+    private expressionSvc?: ExpressionService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.expressionService = beans.expressionService;
+        this.expressionSvc = beans.expressionSvc;
     }
 
     public processAllCellClasses(
@@ -23,7 +23,7 @@ export class CellStyleService extends BeanStub implements NamedBean {
         onNotApplicableClass?: (className: string) => void
     ) {
         processClassRules(
-            this.expressionService,
+            this.expressionSvc,
             undefined,
             colDef.cellClassRules,
             params,

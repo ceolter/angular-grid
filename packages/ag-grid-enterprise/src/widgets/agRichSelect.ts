@@ -36,6 +36,7 @@ import {
 } from 'ag-grid-community';
 
 import { AgPillContainer } from './AgPillContainer';
+import { agRichSelectCSS } from './agRichSelect.css-GENERATED';
 import type { AgRichSelectListEvent } from './agRichSelectList';
 import { AgRichSelectList } from './agRichSelectList';
 
@@ -46,14 +47,14 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     AgRichSelectEvent,
     AgRichSelectList<TValue, AgRichSelectEvent>
 > {
-    private userComponentFactory: UserComponentFactory;
-    private ariaAnnouncementService: AriaAnnouncementService;
+    private userCompFactory: UserComponentFactory;
+    private ariaAnnounce: AriaAnnouncementService;
     private registry: Registry;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
-        this.userComponentFactory = beans.userComponentFactory;
-        this.ariaAnnouncementService = beans.ariaAnnouncementService;
+        this.userCompFactory = beans.userCompFactory;
+        this.ariaAnnounce = beans.ariaAnnounce;
         this.registry = beans.registry;
     }
 
@@ -113,6 +114,8 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         if (searchStringCreator) {
             this.searchStringCreator = searchStringCreator;
         }
+
+        this.registerCSS(agRichSelectCSS);
     }
 
     public override postConstruct(): void {
@@ -215,7 +218,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
 
         if (cellRenderer) {
             userCompDetails = _getEditorRendererDetails<RichSelectParams, IRichCellEditorRendererParams<TValue>>(
-                this.userComponentFactory,
+                this.userCompFactory,
                 config,
                 {
                     value,
@@ -784,7 +787,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     }
 
     private announceAriaValue(value: string): void {
-        this.ariaAnnouncementService.announceValue(value, 'richSelect');
+        this.ariaAnnounce.announceValue(value, 'richSelect');
     }
 
     public override destroy(): void {

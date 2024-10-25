@@ -9,7 +9,7 @@ import { HoverFeature } from './hoverFeature';
 const CSS_COLUMN_HOVER = 'ag-column-hover';
 
 export class ColumnHoverService extends BeanStub implements NamedBean {
-    beanName = 'columnHoverService' as const;
+    beanName = 'colHover' as const;
 
     private selectedColumns: AgColumn[] | null;
 
@@ -76,7 +76,7 @@ export class ColumnHoverService extends BeanStub implements NamedBean {
 
     private updateState(columns: AgColumn[] | null): void {
         this.selectedColumns = columns;
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'columnHoverChanged',
         });
     }

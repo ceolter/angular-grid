@@ -9,7 +9,7 @@ import type {
     RowNodeSorter,
     RowRenderer,
     ServerSideGroupLevelParams,
-    SortController,
+    SortService,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { BeanStub, _getRowHeightAsNumber, _getRowIdCallback, _warn } from 'ag-grid-community';
@@ -33,24 +33,24 @@ const DEFAULT_BLOCK_SIZE = 100 as const;
 export class LazyCache extends BeanStub {
     private rowRenderer: RowRenderer;
     private blockUtils: BlockUtils;
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private nodeManager: NodeManager;
     private serverSideRowModel: ServerSideRowModel;
     private rowNodeSorter?: RowNodeSorter;
-    private sortController?: SortController;
+    private sortSvc?: SortService;
     private lazyBlockLoadingService: LazyBlockLoadingService;
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
         this.rowRenderer = beans.rowRenderer;
         this.blockUtils = beans.ssrmBlockUtils as BlockUtils;
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
         this.nodeManager = beans.ssrmNodeManager as NodeManager;
         this.serverSideRowModel = beans.rowModel as ServerSideRowModel;
         this.rowNodeSorter = beans.rowNodeSorter;
-        this.sortController = beans.sortController;
+        this.sortSvc = beans.sortSvc;
         this.lazyBlockLoadingService = beans.lazyBlockLoadingService as LazyBlockLoadingService;
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     /**
@@ -254,7 +254,7 @@ export class LazyCache extends BeanStub {
             const parentGroupData = this.store.getParentNode().groupData;
             if (parentGroupData) {
                 for (const key of Object.keys(parentGroupData)) {
-                    setRowNodeGroupValue(newNode, this.columnModel, key, parentGroupData[key]);
+                    setRowNodeGroupValue(newNode, this.colModel, key, parentGroupData[key]);
                 }
             }
         }
@@ -322,12 +322,7 @@ export class LazyCache extends BeanStub {
                 const parentGroupData = this.store.getParentNode().groupData;
                 if (parentGroupData) {
                     for (const key of Object.keys(parentGroupData)) {
-                        setRowNodeGroupValue(
-                            node,
-                            this.columnModel,
-                            key,
-                            isFirstChild ? parentGroupData[key] : undefined
-                        );
+                        setRowNodeGroupValue(node, this.colModel, key, isFirstChild ? parentGroupData[key] : undefined);
                     }
                 }
             }
@@ -795,7 +790,7 @@ export class LazyCache extends BeanStub {
     }
 
     private isNodeFocused(node: RowNode): boolean {
-        const focusedCell = this.focusService.getFocusCellToUseAfterRefresh();
+        const focusedCell = this.focusSvc.getFocusCellToUseAfterRefresh();
         if (!focusedCell) {
             return false;
         }
@@ -1048,7 +1043,7 @@ export class LazyCache extends BeanStub {
      * Client side sorting
      */
     public clientSideSortRows() {
-        const sortOptions = this.sortController?.getSortOptions() ?? [];
+        const sortOptions = this.sortSvc?.getSortOptions() ?? [];
         const isAnySort = sortOptions.some((opt) => opt.sort != null);
         if (!isAnySort || !this.rowNodeSorter) {
             return;

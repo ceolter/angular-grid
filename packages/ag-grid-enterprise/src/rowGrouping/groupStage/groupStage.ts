@@ -69,18 +69,18 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     ]);
     public step: ClientSideRowModelStage = 'group';
 
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
-    private valueService: ValueService;
-    private selectionService?: ISelectionService;
-    private showRowGroupColsService: IShowRowGroupColsService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
+    private valueSvc: ValueService;
+    private selectionSvc?: ISelectionService;
+    private showRowGroupCols: IShowRowGroupColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
-        this.valueService = beans.valueService;
-        this.selectionService = beans.selectionService;
-        this.showRowGroupColsService = beans.showRowGroupColsService!;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.valueSvc = beans.valueSvc;
+        this.selectionSvc = beans.selectionSvc;
+        this.showRowGroupCols = beans.showRowGroupCols!;
     }
 
     // when grouping, these items are of note:
@@ -107,7 +107,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         this.positionLeafsAndGroups(changedPath);
         this.orderGroups(details);
 
-        this.selectionService?.updateSelectableAfterGrouping(changedPath);
+        this.selectionSvc?.updateSelectableAfterGrouping(changedPath);
     }
 
     private positionLeafsAndGroups(changedPath: ChangedPath) {
@@ -141,13 +141,13 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private createGroupingDetails(params: StageExecuteParams): GroupingDetails {
         const { rowNode, changedPath, rowNodeTransactions, rowNodesOrderChanged } = params;
 
-        const groupedCols = this.funcColsService.rowGroupCols;
+        const groupedCols = this.funcColsSvc.rowGroupCols;
 
         const details: GroupingDetails = {
             expandByDefault: this.gos.get('groupDefaultExpanded'),
             groupedCols: groupedCols!,
             rootNode: rowNode,
-            pivotMode: this.columnModel.isPivotMode(),
+            pivotMode: this.colModel.isPivotMode(),
             groupedColCount: groupedCols?.length ?? 0,
             transactions: rowNodeTransactions!,
             rowNodesOrderChanged: !!rowNodesOrderChanged,
@@ -361,7 +361,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
                         this.removeFromParent(rowNode, batchRemover);
                         // we remove selection on filler nodes here, as the selection would not be removed
                         // from the RowNodeManager, as filler nodes don't exist on the RowNodeManager
-                        this.selectionService?.setSelectedParams({
+                        this.selectionSvc?.setSelectedParams({
                             rowNode,
                             newValue: false,
                             source: 'rowGroupChanged',
@@ -449,7 +449,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         }
 
         // groups are about to get disposed, so need to deselect any that are selected
-        this.selectionService?.filterFromSelection?.((node: RowNode) => node && !node.group);
+        this.selectionSvc?.filterFromSelection?.((node: RowNode) => node && !node.group);
 
         const { groupedCols } = details;
         const rootNode: GroupRow = details.rootNode;
@@ -474,7 +474,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private noChangeInGroupingColumns(details: GroupingDetails, afterColumnsChanged: boolean): boolean {
         let noFurtherProcessingNeeded = false;
 
-        const groupDisplayColumns = this.showRowGroupColsService.getShowRowGroupCols();
+        const groupDisplayColumns = this.showRowGroupCols.getShowRowGroupCols();
         const newGroupDisplayColIds = groupDisplayColumns ? groupDisplayColumns.map((c) => c.getId()).join('-') : '';
 
         if (afterColumnsChanged) {
@@ -613,7 +613,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private setGroupData(groupNode: RowNode, groupInfo: GroupInfo): void {
         groupNode.groupData = {};
-        const groupDisplayCols = this.showRowGroupColsService.getShowRowGroupCols();
+        const groupDisplayCols = this.showRowGroupCols.getShowRowGroupCols();
         groupDisplayCols.forEach((col) => {
             // newGroup.rowGroupColumn=null when working off GroupInfo, and we always display the group in the group column
             // if rowGroupColumn is present, then it's grid row grouping and we only include if configuration says so
@@ -622,7 +622,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
             const isRowGroupDisplayed = groupColumn !== null && col.isRowGroupDisplayed(groupColumn.getId());
             if (isRowGroupDisplayed) {
                 // if maintain group value type, get the value from any leaf node.
-                groupNode.groupData![col.getColId()] = this.valueService.getValue(groupColumn, groupInfo.leafNode);
+                groupNode.groupData![col.getColId()] = this.valueSvc.getValue(groupColumn, groupInfo.leafNode);
             }
         });
     }
@@ -666,7 +666,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private getGroupInfo(rowNode: RowNode, details: GroupingDetails): GroupInfo[] {
         const res: GroupInfo[] = [];
         details.groupedCols.forEach((groupCol) => {
-            let key: string = this.valueService.getKeyForNode(groupCol, rowNode);
+            let key: string = this.valueSvc.getKeyForNode(groupCol, rowNode);
             let keyExists = key !== null && key !== undefined && key !== '';
 
             // unbalanced tree and pivot mode don't work together - not because of the grid, it doesn't make

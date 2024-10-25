@@ -82,7 +82,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
 
     private gridOptions: GridOptions;
     public eGridDiv: HTMLElement;
-    private validationService?: ValidationService;
+    private validation?: ValidationService;
     public environment: Environment;
     private api: GridApi;
     private gridId: string;
@@ -90,7 +90,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
     public wireBeans(beans: BeanCollection): void {
         this.gridOptions = beans.gridOptions;
         this.eGridDiv = beans.eGridDiv;
-        this.validationService = beans.validationService;
+        this.validation = beans.validation;
         this.environment = beans.environment;
         this.api = beans.gridApi;
         this.gridId = beans.context.getGridId();
@@ -105,8 +105,8 @@ export class GridOptionsService extends BeanStub implements NamedBean {
     private propertyEventService: LocalEventService<keyof GridOptions> = new LocalEventService();
 
     public postConstruct(): void {
-        this.eventService.addGlobalListener(this.globalEventHandlerFactory().bind(this), true);
-        this.eventService.addGlobalListener(this.globalEventHandlerFactory(true).bind(this), false);
+        this.eventSvc.addGlobalListener(this.globalEventHandlerFactory().bind(this), true);
+        this.eventSvc.addGlobalListener(this.globalEventHandlerFactory(true).bind(this), false);
 
         // Ensure the propertyEventService has framework overrides set so that it can fire events outside of angular
         this.propertyEventService.setFrameworkOverrides(this.beans.frameworkOverrides);
@@ -179,7 +179,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         // all events are fired after grid options has finished updating.
         const events: PropertyValueChangedEvent<keyof GridOptions>[] = [];
         Object.entries(options).forEach(([key, value]) => {
-            this.validationService?.warnOnInitialPropertyUpdate(source, key);
+            this.validation?.warnOnInitialPropertyUpdate(source, key);
 
             const shouldForce = force || (typeof value === 'object' && source === 'api'); // force objects as they could have been mutated.
 
@@ -197,7 +197,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
             }
         });
 
-        this.validationService?.processGridOptions(this.gridOptions);
+        this.validation?.processGridOptions(this.gridOptions);
 
         // changeSet should just include the properties that have changed.
         changeSet.properties = events.map((event) => event.type);
@@ -268,7 +268,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
     >(moduleName: ModuleName, reasonOrId: string | TId): boolean {
         const registered = this.isModuleRegistered(moduleName);
         if (!registered) {
-            this.validationService?.missingModule(moduleName, reasonOrId, this.gridId);
+            this.validation?.missingModule(moduleName, reasonOrId, this.gridId);
         }
         return registered;
     }

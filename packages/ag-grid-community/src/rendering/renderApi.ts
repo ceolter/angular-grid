@@ -11,7 +11,7 @@ export function setGridAriaProperty(beans: BeanCollection, property: string, val
     if (!property) {
         return;
     }
-    const eGrid = beans.ctrlsService.getGridBodyCtrl().getGui();
+    const eGrid = beans.ctrlsSvc.getGridBodyCtrl().getGui();
     const ariaProperty = `aria-${property}`;
 
     if (value === null) {
@@ -26,29 +26,29 @@ export function refreshCells<TData = any>(beans: BeanCollection, params: Refresh
 }
 
 export function flashCells<TData = any>(beans: BeanCollection, params: FlashCellsParams<TData> = {}): void {
-    const { cellFlashService } = beans;
-    if (!cellFlashService) {
+    const { cellFlashSvc } = beans;
+    if (!cellFlashSvc) {
         return;
     }
     beans.frameworkOverrides.wrapIncoming(() => {
         beans.rowRenderer
             .getCellCtrls(params.rowNodes, params.columns as AgColumn[])
-            .forEach((cellCtrl) => cellFlashService.flashCell(cellCtrl, params));
+            .forEach((cellCtrl) => cellFlashSvc.flashCell(cellCtrl, params));
     });
 }
 
 export function refreshHeader(beans: BeanCollection) {
     beans.frameworkOverrides.wrapIncoming(() =>
-        beans.ctrlsService.getHeaderRowContainerCtrls().forEach((c) => c.refresh())
+        beans.ctrlsSvc.getHeaderRowContainerCtrls().forEach((c) => c.refresh())
     );
 }
 
 export function isAnimationFrameQueueEmpty(beans: BeanCollection): boolean {
-    return beans.animationFrameService?.isQueueEmpty() ?? true;
+    return beans.animationFrameSvc?.isQueueEmpty() ?? true;
 }
 
 export function flushAllAnimationFrames(beans: BeanCollection): void {
-    beans.animationFrameService?.flushAllFrames();
+    beans.animationFrameSvc?.flushAllFrames();
 }
 
 export function getSizesForCurrentTheme(beans: BeanCollection) {

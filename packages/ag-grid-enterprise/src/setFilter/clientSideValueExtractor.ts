@@ -19,8 +19,8 @@ export class ClientSideValuesExtractor<V> {
         private readonly filterParams: SetFilterParams<any, V>,
         private readonly createKey: (value: V | null | undefined, node?: RowNode) => string | null,
         private readonly caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat,
-        private readonly funcColsService: FuncColsService,
-        private readonly valueService: ValueService,
+        private readonly funcColsSvc: FuncColsService,
+        private readonly valueSvc: ValueService,
         private readonly treeDataOrGrouping: boolean,
         private readonly treeData: boolean,
         private readonly getDataPath: GetDataPath | undefined,
@@ -56,7 +56,7 @@ export class ClientSideValuesExtractor<V> {
         const existingFormattedKeys = this.extractExistingFormattedKeys(existingValues);
         const formattedKeys: Set<string | null> = new Set();
         const treeData = this.treeData && !!this.getDataPath;
-        const groupedCols = this.funcColsService.rowGroupCols;
+        const groupedCols = this.funcColsSvc.rowGroupCols;
 
         const addValue = (unformattedKey: string | null, value: V | null | undefined) => {
             const formattedKey = this.caseFormat(unformattedKey);
@@ -115,7 +115,7 @@ export class ClientSideValuesExtractor<V> {
             }
             dataPath = this.getDataPath!(node.data);
         } else {
-            dataPath = groupedCols.map((groupCol) => this.valueService.getKeyForNode(groupCol, node));
+            dataPath = groupedCols.map((groupCol) => this.valueSvc.getKeyForNode(groupCol, node));
             dataPath.push(this.getValue(node) as any);
         }
         const processedDataPath = processDataPath(dataPath, treeData, this.groupAllowUnbalanced);

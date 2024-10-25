@@ -8,7 +8,7 @@ export function getColumnDef<TValue = any, TData = any>(
     beans: BeanCollection,
     key: string | Column<TValue>
 ): ColDef<TData, TValue> | null {
-    const column = beans.columnModel.getColDefCol(key);
+    const column = beans.colModel.getColDefCol(key);
     if (column) {
         return column.getColDef();
     }
@@ -16,58 +16,58 @@ export function getColumnDef<TValue = any, TData = any>(
 }
 
 export function getColumnDefs<TData = any>(beans: BeanCollection): (ColDef<TData> | ColGroupDef<TData>)[] | undefined {
-    return beans.columnModel.getColumnDefs();
+    return beans.colModel.getColumnDefs();
 }
 
 export function getDisplayNameForColumn(beans: BeanCollection, column: Column, location: HeaderLocation): string {
-    return beans.columnNameService.getDisplayNameForColumn(column as AgColumn, location) || '';
+    return beans.colNames.getDisplayNameForColumn(column as AgColumn, location) || '';
 }
 
 export function getColumn<TValue = any, TData = any>(
     beans: BeanCollection,
     key: string | ColDef<TData, TValue> | Column<TValue>
 ): Column<TValue> | null {
-    return beans.columnModel.getColDefCol(key);
+    return beans.colModel.getColDefCol(key);
 }
 
 export function getColumns(beans: BeanCollection): Column[] | null {
-    return beans.columnModel.getColDefCols();
+    return beans.colModel.getColDefCols();
 }
 
 export function applyColumnState(beans: BeanCollection, params: ApplyColumnStateParams): boolean {
-    return beans.columnStateService.applyColumnState(params, 'api');
+    return beans.colState.applyColumnState(params, 'api');
 }
 
 export function getColumnState(beans: BeanCollection): ColumnState[] {
-    return beans.columnStateService.getColumnState();
+    return beans.colState.getColumnState();
 }
 
 export function resetColumnState(beans: BeanCollection): void {
-    beans.columnStateService.resetColumnState('api');
+    beans.colState.resetColumnState('api');
 }
 
 export function isPinning(beans: BeanCollection): boolean {
-    return beans.visibleColsService.isPinningLeft() || beans.visibleColsService.isPinningRight();
+    return beans.visibleCols.isPinningLeft() || beans.visibleCols.isPinningRight();
 }
 
 export function isPinningLeft(beans: BeanCollection): boolean {
-    return beans.visibleColsService.isPinningLeft();
+    return beans.visibleCols.isPinningLeft();
 }
 
 export function isPinningRight(beans: BeanCollection): boolean {
-    return beans.visibleColsService.isPinningRight();
+    return beans.visibleCols.isPinningRight();
 }
 
 export function getDisplayedColAfter(beans: BeanCollection, col: Column): Column | null {
-    return beans.visibleColsService.getColAfter(col as AgColumn);
+    return beans.visibleCols.getColAfter(col as AgColumn);
 }
 
 export function getDisplayedColBefore(beans: BeanCollection, col: Column): Column | null {
-    return beans.visibleColsService.getColBefore(col as AgColumn);
+    return beans.visibleCols.getColBefore(col as AgColumn);
 }
 
 export function setColumnsVisible(beans: BeanCollection, keys: (string | Column)[], visible: boolean): void {
-    beans.columnModel.setColsVisible(keys as (string | AgColumn)[], visible, 'api');
+    beans.colModel.setColsVisible(keys as (string | AgColumn)[], visible, 'api');
 }
 
 export function setColumnsPinned(
@@ -75,29 +75,29 @@ export function setColumnsPinned(
     keys: (string | ColDef | Column)[],
     pinned: ColumnPinnedType
 ): void {
-    beans.pinnedColumnService?.setColsPinned(keys, pinned, 'api');
+    beans.pinnedCols?.setColsPinned(keys, pinned, 'api');
 }
 
 export function getAllGridColumns(beans: BeanCollection): Column[] {
-    return beans.columnModel.getCols();
+    return beans.colModel.getCols();
 }
 
 export function getDisplayedLeftColumns(beans: BeanCollection): Column[] {
-    return beans.visibleColsService.leftCols;
+    return beans.visibleCols.leftCols;
 }
 
 export function getDisplayedCenterColumns(beans: BeanCollection): Column[] {
-    return beans.visibleColsService.centerCols;
+    return beans.visibleCols.centerCols;
 }
 
 export function getDisplayedRightColumns(beans: BeanCollection): Column[] {
-    return beans.visibleColsService.rightCols;
+    return beans.visibleCols.rightCols;
 }
 
 export function getAllDisplayedColumns(beans: BeanCollection): Column[] {
-    return beans.visibleColsService.allCols;
+    return beans.visibleCols.allCols;
 }
 
 export function getAllDisplayedVirtualColumns(beans: BeanCollection): Column[] {
-    return beans.columnViewportService.getViewportColumns();
+    return beans.colViewport.getViewportColumns();
 }

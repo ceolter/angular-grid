@@ -21,18 +21,18 @@ interface ColumnSizeAndRatios {
     groupAfterRatios?: number[];
 }
 export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature {
-    private horizontalResizeService: HorizontalResizeService;
+    private horizontalResizeSvc: HorizontalResizeService;
     private autoWidthCalculator: AutoWidthCalculator;
-    private columnGroupService?: ColumnGroupService;
-    private columnResizeService?: ColumnResizeService;
-    private columnAutosizeService?: ColumnAutosizeService;
+    private columnGroupSvc?: ColumnGroupService;
+    private colResize?: ColumnResizeService;
+    private colAutosize?: ColumnAutosizeService;
 
     public wireBeans(beans: BeanCollection) {
-        this.horizontalResizeService = beans.horizontalResizeService!;
+        this.horizontalResizeSvc = beans.horizontalResizeSvc!;
         this.autoWidthCalculator = beans.autoWidthCalculator!;
-        this.columnGroupService = beans.columnGroupService;
-        this.columnResizeService = beans.columnResizeService;
-        this.columnAutosizeService = beans.columnAutosizeService;
+        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colResize = beans.colResize;
+        this.colAutosize = beans.colAutosize;
     }
 
     private eResize: HTMLElement;
@@ -68,7 +68,7 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
             return;
         }
 
-        const finishedWithResizeFunc = this.horizontalResizeService.addResizeBar({
+        const finishedWithResizeFunc = this.horizontalResizeSvc.addResizeBar({
             eResizeBar: this.eResize,
             onResizeStart: this.onResizeStart.bind(this),
             onResizing: this.onResizing.bind(this, false),
@@ -77,9 +77,9 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
 
         this.addDestroyFunc(finishedWithResizeFunc);
 
-        if (!this.gos.get('suppressAutoSize') && this.columnAutosizeService) {
+        if (!this.gos.get('suppressAutoSize') && this.colAutosize) {
             this.addDestroyFunc(
-                this.columnAutosizeService.addColumnGroupResize(this.eResize, this.columnGroup, () =>
+                this.colAutosize.addColumnGroupResize(this.eResize, this.columnGroup, () =>
                     this.resizeLeafColumnsToFit('uiColumnResized')
                 )
             );
@@ -113,7 +113,7 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
         let groupAfter: AgColumnGroup | null = null;
 
         if (shiftKey) {
-            groupAfter = this.columnGroupService?.getGroupAtDirection(this.columnGroup, 'After') ?? null;
+            groupAfter = this.columnGroupSvc?.getGroupAtDirection(this.columnGroup, 'After') ?? null;
         }
 
         if (groupAfter) {
@@ -210,7 +210,7 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
             });
         }
 
-        this.columnResizeService?.resizeColumnSets({
+        this.colResize?.resizeColumnSets({
             resizeSets,
             finished,
             source: source,

@@ -12,7 +12,7 @@ import { BaseExpansionService } from '../../expansion/baseExpansionService';
 import type { ServerSideRowModel } from '../serverSideRowModel';
 
 export class ServerSideExpansionService extends BaseExpansionService implements NamedBean, IExpansionService {
-    beanName = 'expansionService' as const;
+    beanName = 'expansionSvc' as const;
 
     private serverSideRowModel: ServerSideRowModel;
 
@@ -79,6 +79,6 @@ export class ServerSideExpansionService extends BaseExpansionService implements 
     }
 
     protected override dispatchExpandedEvent(event: RowGroupOpenedEvent): void {
-        this.eventService.dispatchEvent(event);
+        this.eventSvc.dispatchEvent(event);
     }
 }

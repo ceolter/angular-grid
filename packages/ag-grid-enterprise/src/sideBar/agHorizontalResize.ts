@@ -2,10 +2,10 @@ import type { BeanCollection, HorizontalResizeService } from 'ag-grid-community'
 import { Component } from 'ag-grid-community';
 
 export class AgHorizontalResize extends Component {
-    private horizontalResizeService: HorizontalResizeService;
+    private horizontalResizeSvc: HorizontalResizeService;
 
     public wireBeans(beans: BeanCollection) {
-        this.horizontalResizeService = beans.horizontalResizeService!;
+        this.horizontalResizeSvc = beans.horizontalResizeSvc!;
     }
 
     private startingWidth: number;
@@ -23,7 +23,7 @@ export class AgHorizontalResize extends Component {
     }
 
     public postConstruct(): void {
-        const finishedWithResizeFunc = this.horizontalResizeService.addResizeBar({
+        const finishedWithResizeFunc = this.horizontalResizeSvc.addResizeBar({
             eResizeBar: this.getGui(),
             dragStartPixels: 1,
             onResizeStart: this.onResizeStart.bind(this),
@@ -36,7 +36,7 @@ export class AgHorizontalResize extends Component {
     }
 
     private dispatchResizeEvent(start: boolean, end: boolean, width: number) {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'toolPanelSizeChanged',
             width: width,
             started: start,

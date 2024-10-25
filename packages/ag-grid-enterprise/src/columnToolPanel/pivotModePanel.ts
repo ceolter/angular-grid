@@ -2,12 +2,12 @@ import type { AgCheckbox, BeanCollection, ColumnModel, CtrlsService } from 'ag-g
 import { AgToggleButtonSelector, Component, RefPlaceholder } from 'ag-grid-community';
 
 export class PivotModePanel extends Component {
-    private columnModel: ColumnModel;
-    private ctrlsService: CtrlsService;
+    private colModel: ColumnModel;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.ctrlsService = beans.ctrlsService;
+        this.colModel = beans.colModel;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private readonly cbPivotMode: AgCheckbox = RefPlaceholder;
@@ -21,7 +21,7 @@ export class PivotModePanel extends Component {
     public postConstruct(): void {
         this.setTemplate(this.createTemplate(), [AgToggleButtonSelector]);
 
-        this.cbPivotMode.setValue(this.columnModel.isPivotMode());
+        this.cbPivotMode.setValue(this.colModel.isPivotMode());
         const localeTextFunc = this.getLocaleTextFunc();
         this.cbPivotMode.setLabel(localeTextFunc('pivotMode', 'Pivot Mode'));
 
@@ -35,14 +35,14 @@ export class PivotModePanel extends Component {
 
     private onBtPivotMode(): void {
         const newValue = !!this.cbPivotMode.getValue();
-        if (newValue !== this.columnModel.isPivotMode()) {
+        if (newValue !== this.colModel.isPivotMode()) {
             this.gos.updateGridOptions({ options: { pivotMode: newValue }, source: 'toolPanelUi' as any });
-            this.ctrlsService.getHeaderRowContainerCtrls().forEach((c) => c.refresh());
+            this.ctrlsSvc.getHeaderRowContainerCtrls().forEach((c) => c.refresh());
         }
     }
 
     private onPivotModeChanged(): void {
-        const pivotModeActive = this.columnModel.isPivotMode();
+        const pivotModeActive = this.colModel.isPivotMode();
         this.cbPivotMode.setValue(pivotModeActive);
     }
 }

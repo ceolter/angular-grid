@@ -26,6 +26,7 @@ import {
 } from 'ag-grid-community';
 
 import type { PillDragComp } from './pillDragComp';
+import { pillDropZonePanelCSS } from './pillDropZonePanel.css-GENERATED';
 
 export interface PillDropZonePanelParams {
     emptyMessage?: string;
@@ -44,12 +45,12 @@ function _insertArrayIntoArray<T>(dest: T[], src: T[], toIndex: number) {
 }
 
 export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem> extends Component {
-    private focusService: FocusService;
-    private dragAndDropService?: DragAndDropService;
+    private focusSvc: FocusService;
+    private dragAndDrop?: DragAndDropService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusService = beans.focusService;
-        this.dragAndDropService = beans.dragAndDropService;
+        this.focusSvc = beans.focusSvc;
+        this.dragAndDrop = beans.dragAndDrop;
     }
 
     private state: PillState = 'notDragging';
@@ -96,6 +97,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         this.ePillDropList = document.createElement('div');
         this.addElementClasses(this.ePillDropList, 'list');
         _setAriaRole(this.ePillDropList, 'listbox');
+        this.registerCSS(pillDropZonePanelCSS);
     }
 
     public isHorizontal(): boolean {
@@ -145,7 +147,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
     }
 
     private onTabKeyDown(e: KeyboardEvent): void {
-        const focusableElements = this.focusService.findFocusableElements(this.getFocusableElement(), null, true);
+        const focusableElements = this.focusSvc.findFocusableElements(this.getFocusableElement(), null, true);
         const len = focusableElements.length;
 
         if (len === 0) {
@@ -181,7 +183,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
             return;
         }
 
-        const el = this.focusService.findNextFocusableElement(this.getFocusableElement(), false, isPrevious);
+        const el = this.focusSvc.findNextFocusableElement(this.getFocusableElement(), false, isPrevious);
 
         if (el) {
             e.preventDefault();
@@ -207,7 +209,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
             isInterestedIn: this.isInterestedIn.bind(this),
         };
 
-        this.dragAndDropService?.addDropTarget(this.dropTarget);
+        this.dragAndDrop?.addDropTarget(this.dropTarget);
     }
 
     protected minimumAllowedNewInsertIndex(): number {
@@ -424,10 +426,10 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         const resizeEnabled = this.resizeEnabled;
         const focusedIndex = this.getFocusedItem();
 
-        let alternateElement = this.focusService.findNextFocusableElement();
+        let alternateElement = this.focusSvc.findNextFocusableElement();
 
         if (!alternateElement) {
-            alternateElement = this.focusService.findNextFocusableElement(undefined, false, true);
+            alternateElement = this.focusSvc.findNextFocusableElement(undefined, false, true);
         }
 
         this.toggleResizable(false);
@@ -448,7 +450,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         // focus should only be restored when keyboard mode
         // otherwise mouse clicks will cause containers to scroll
         // without no apparent reason.
-        if (this.focusService.isKeyboardMode()) {
+        if (this.focusSvc.isKeyboardMode()) {
             this.restoreFocus(focusedIndex, alternateElement!);
         }
     }

@@ -20,13 +20,13 @@ const enum OverlayServiceState {
 }
 
 export class OverlayService extends BeanStub implements NamedBean {
-    beanName = 'overlayService' as const;
+    beanName = 'overlays' as const;
 
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
     private rowModel: IRowModel;
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
     private isClientSide: boolean;
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     private state: OverlayServiceState = OverlayServiceState.Hidden;
     private showInitialOverlay: boolean = true;
@@ -34,10 +34,10 @@ export class OverlayService extends BeanStub implements NamedBean {
     private wrapperPadding: number = 0;
 
     public wireBeans(beans: BeanCollection): void {
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
         this.rowModel = beans.rowModel;
-        this.columnModel = beans.columnModel;
-        this.ctrlsService = beans.ctrlsService;
+        this.colModel = beans.colModel;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private overlayWrapperComp: OverlayWrapperComponent | undefined;
@@ -135,9 +135,7 @@ export class OverlayService extends BeanStub implements NamedBean {
 
         if (this.showInitialOverlay && loading === undefined && !this.gos.get('suppressLoadingOverlay')) {
             loading =
-                !this.gos.get('columnDefs') ||
-                !this.columnModel.ready ||
-                (!this.gos.get('rowData') && this.isClientSide);
+                !this.gos.get('columnDefs') || !this.colModel.ready || (!this.gos.get('rowData') && this.isClientSide);
         }
 
         if (loading) {
@@ -163,7 +161,7 @@ export class OverlayService extends BeanStub implements NamedBean {
 
         this.state = OverlayServiceState.Loading;
         this.showOverlay(
-            _getLoadingOverlayCompDetails(this.userComponentFactory, {}),
+            _getLoadingOverlayCompDetails(this.userCompFactory, {}),
             'ag-overlay-loading-wrapper',
             'loadingOverlayComponentParams'
         );
@@ -177,7 +175,7 @@ export class OverlayService extends BeanStub implements NamedBean {
 
         this.state = OverlayServiceState.NoRows;
         this.showOverlay(
-            _getNoRowsOverlayCompDetails(this.userComponentFactory, {}),
+            _getNoRowsOverlayCompDetails(this.userCompFactory, {}),
             'ag-overlay-no-rows-wrapper',
             'noRowsOverlayComponentParams'
         );
@@ -204,7 +202,7 @@ export class OverlayService extends BeanStub implements NamedBean {
         const wasExclusive = this.exclusive;
         this.exclusive = this.isExclusive();
         if (this.exclusive !== wasExclusive) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'overlayExclusiveChanged',
             });
         }
@@ -222,7 +220,7 @@ export class OverlayService extends BeanStub implements NamedBean {
         let newPadding: number = 0;
 
         if (this.state === OverlayServiceState.NoRows) {
-            const headerCtrl = this.ctrlsService.get('gridHeaderCtrl');
+            const headerCtrl = this.ctrlsSvc.get('gridHeaderCtrl');
             const headerHeight = headerCtrl?.getHeaderHeight() || 0;
 
             newPadding = headerHeight;

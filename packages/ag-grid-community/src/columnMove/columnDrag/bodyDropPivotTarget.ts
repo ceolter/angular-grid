@@ -7,10 +7,10 @@ import type { ColumnPinnedType } from '../../interfaces/iColumn';
 import type { DropListener } from './bodyDropTarget';
 
 export class BodyDropPivotTarget extends BeanStub implements DropListener {
-    private funcColsService: FuncColsService;
+    private funcColsSvc: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.funcColsService = beans.funcColsService;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     private columnsToAggregate: AgColumn[] = [];
@@ -89,13 +89,13 @@ export class BodyDropPivotTarget extends BeanStub implements DropListener {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onDragStop(draggingEvent: DraggingEvent): void {
         if (this.columnsToAggregate.length > 0) {
-            this.funcColsService.addValueColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
+            this.funcColsSvc.addValueColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
         }
         if (this.columnsToGroup.length > 0) {
-            this.funcColsService.addRowGroupColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
+            this.funcColsSvc.addRowGroupColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
         }
         if (this.columnsToPivot.length > 0) {
-            this.funcColsService.addPivotColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
+            this.funcColsSvc.addPivotColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
         }
     }
 

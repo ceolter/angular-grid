@@ -31,12 +31,12 @@ export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
     ]);
     public step: ClientSideRowModelStage = 'map';
 
-    private columnModel: ColumnModel;
-    private masterDetailService: IMasterDetailService | undefined;
+    private colModel: ColumnModel;
+    private masterDetailSvc: IMasterDetailService | undefined;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.masterDetailService = beans.masterDetailService;
+        this.colModel = beans.colModel;
+        this.masterDetailSvc = beans.masterDetailSvc;
     }
 
     public execute(params: StageExecuteParams): RowNode[] {
@@ -45,7 +45,7 @@ export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
         // even if not doing grouping, we do the mapping, as the client might
         // of passed in data that already has a grouping in it somewhere
         const result: RowNode[] = [];
-        const skipLeafNodes = this.columnModel.isPivotMode();
+        const skipLeafNodes = this.colModel.isPivotMode();
         // if we are reducing, and not grouping, then we want to show the root node, as that
         // is where the pivot values are
         const showRootNode = skipLeafNodes && rootNode.leafGroup;
@@ -173,7 +173,7 @@ export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
                     }
                 }
             } else {
-                const detailNode = this.masterDetailService?.getDetail(rowNode);
+                const detailNode = this.masterDetailSvc?.getDetail(rowNode);
                 if (detailNode) {
                     this.addRowNodeToRowsToDisplay(details, detailNode, result, uiLevel);
                 }

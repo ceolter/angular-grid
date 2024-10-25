@@ -263,7 +263,7 @@ export class CellComp extends Component {
         const cellEditorPromise = compDetails.newAgStackInstance();
         if (cellEditorPromise == null) {
             return;
-        } // if empty, userComponentFactory already did a console message
+        } // if empty, userCompFactory already did a console message
 
         const { params } = compDetails;
         cellEditorPromise.then((c) => this.afterCellEditorCreated(versionCopy, c!, params, popup, position));
@@ -343,7 +343,7 @@ export class CellComp extends Component {
         // and lastly we never use it if doing auto-height, as the auto-height service checks the
         // row height directly after the cell is created, it doesn't wait around for the tasks to complete
         const suppressAnimationFrame = this.beans.gos.get('suppressAnimationFrame');
-        const useTaskService = !suppressAnimationFrame && this.beans.animationFrameService;
+        const useTaskService = !suppressAnimationFrame && this.beans.animationFrameSvc;
 
         const displayComponentVersionCopy = this.rendererVersion;
 
@@ -368,11 +368,7 @@ export class CellComp extends Component {
         // if we changed this (always use task service) would make sense, however it would break tests, possibly
         // test of users.
         if (useTaskService && this.firstRender) {
-            this.beans.animationFrameService!.createTask(
-                createCellRendererFunc,
-                this.rowNode.rowIndex!,
-                'createTasksP2'
-            );
+            this.beans.animationFrameSvc!.createTask(createCellRendererFunc, this.rowNode.rowIndex!, 'createTasksP2');
         } else {
             createCellRendererFunc();
         }
@@ -502,14 +498,14 @@ export class CellComp extends Component {
 
         // if a popup, then we wrap in a popup editor and return the popup
         this.cellEditorPopupWrapper = this.beans.context.createBean(
-            this.beans.editService!.createPopupEditorWrapper(params)
+            this.beans.editSvc!.createPopupEditorWrapper(params)
         );
         const ePopupGui = this.cellEditorPopupWrapper.getGui();
         if (this.cellEditorGui) {
             ePopupGui.appendChild(this.cellEditorGui);
         }
 
-        const popupService = this.beans.popupService!;
+        const popupSvc = this.beans.popupSvc!;
 
         const useModelPopup = this.beans.gos.get('stopEditingWhenCellsLoseFocus');
 
@@ -529,11 +525,11 @@ export class CellComp extends Component {
             keepWithinBounds: true,
         };
 
-        const positionCallback = popupService.positionPopupByComponent.bind(popupService, positionParams);
+        const positionCallback = popupSvc.positionPopupByComponent.bind(popupSvc, positionParams);
 
-        const translate = _getLocaleTextFunc(this.beans.localeService);
+        const translate = _getLocaleTextFunc(this.beans.localeSvc);
 
-        const addPopupRes = popupService.addPopup({
+        const addPopupRes = popupSvc.addPopup({
             modal: useModelPopup,
             eChild: ePopupGui,
             closeOnEsc: true,

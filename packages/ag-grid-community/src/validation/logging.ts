@@ -4,7 +4,7 @@ import { VERSION } from '../version';
 import type { ErrorId, ErrorMap, GetErrorParams } from './errorMessages/errorText';
 import type { ValidationService } from './validationService';
 
-let validationService: ValidationService | null = null;
+let validation: ValidationService | null = null;
 let suppressAllLogging = false;
 let baseDocLink = `${BASE_URL}/javascript-data-grid`;
 /**
@@ -12,7 +12,7 @@ let baseDocLink = `${BASE_URL}/javascript-data-grid`;
  * @param logger
  */
 export function provideValidationServiceLogger(logger: ValidationService) {
-    validationService = logger;
+    validation = logger;
 }
 export function suppressAllLogs() {
     suppressAllLogging = true;
@@ -31,10 +31,7 @@ function getMsgOrDefault<TId extends ErrorId>(
     defaultMessage?: string
 ) {
     if (suppressAllLogging) return;
-    logger(
-        `error #${id}`,
-        ...(validationService?.getConsoleMessage(id, args) ?? [minifiedLog(id, args, defaultMessage)])
-    );
+    logger(`error #${id}`, ...(validation?.getConsoleMessage(id, args) ?? [minifiedLog(id, args, defaultMessage)]));
 }
 
 /**

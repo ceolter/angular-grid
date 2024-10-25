@@ -29,12 +29,12 @@ let lastTooltipHideTime: number;
 let isLocked = false;
 
 export class TooltipStateManager extends BeanStub {
-    private popupService?: PopupService;
-    private userComponentFactory: UserComponentFactory;
+    private popupSvc?: PopupService;
+    private userCompFactory: UserComponentFactory;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService;
-        this.userComponentFactory = beans.userComponentFactory;
+        this.popupSvc = beans.popupSvc;
+        this.userCompFactory = beans.userCompFactory;
     }
 
     private showTooltipTimeoutId: number | undefined;
@@ -305,7 +305,7 @@ export class TooltipStateManager extends BeanStub {
         // we disregard it
         const callback = this.newTooltipComponentCallback.bind(this, this.tooltipInstanceCount);
 
-        const userDetails = _getTooltipCompDetails(this.userComponentFactory, params);
+        const userDetails = _getTooltipCompDetails(this.userCompFactory, params);
         userDetails.newAgStackInstance()!.then(callback);
     }
 
@@ -320,7 +320,7 @@ export class TooltipStateManager extends BeanStub {
             lastTooltipHideTime = new Date().getTime();
         }
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'tooltipHide',
             parentGui: this.tooltipCtrl.getGui(),
         });
@@ -359,7 +359,7 @@ export class TooltipStateManager extends BeanStub {
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = this.popupService?.addPopup({
+        const addPopupRes = this.popupSvc?.addPopup({
             eChild: eGui,
             ariaLabel: translate('ariaLabelTooltip', 'Tooltip'),
         });
@@ -399,7 +399,7 @@ export class TooltipStateManager extends BeanStub {
             }
         }
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'tooltipShow',
             tooltipGui: eGui,
             parentGui: this.tooltipCtrl.getGui(),
@@ -463,12 +463,12 @@ export class TooltipStateManager extends BeanStub {
         };
 
         if (this.lastMouseEvent) {
-            this.popupService?.positionPopupUnderMouseEvent({
+            this.popupSvc?.positionPopupUnderMouseEvent({
                 ...params,
                 mouseEvent: this.lastMouseEvent,
             });
         } else {
-            this.popupService?.positionPopupByComponent({
+            this.popupSvc?.positionPopupByComponent({
                 ...params,
                 eventSource: this.tooltipCtrl.getGui(),
                 position: 'under',

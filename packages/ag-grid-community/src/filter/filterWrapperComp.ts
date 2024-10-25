@@ -15,11 +15,11 @@ import type { FilterRequestSource } from './iColumnFilter';
 
 export class FilterWrapperComp extends Component {
     private filterManager?: FilterManager;
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     private filterWrapper: FilterWrapper | null = null;
@@ -76,7 +76,7 @@ export class FilterWrapperComp extends Component {
 
             this.appendChild(guiFromFilter);
             if (init) {
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'filterOpened',
                     column,
                     source,
@@ -90,7 +90,7 @@ export class FilterWrapperComp extends Component {
         if (
             (event.source === 'api' || event.source === 'paramsUpdated') &&
             event.column.getId() === this.column.getId() &&
-            this.columnModel.getColDefCol(this.column)
+            this.colModel.getColDefCol(this.column)
         ) {
             // filter has been destroyed by the API or params changing. If the column still exists, need to recreate UI component
             _clearElement(this.getGui());

@@ -39,13 +39,13 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     public __v_skip = true;
 
     protected beans: BeanCollection;
-    protected eventService: EventService;
+    protected eventSvc: EventService;
     protected gos: GridOptionsService;
 
     public preWireBeans(beans: BeanCollection): void {
         this.beans = beans;
         this.stubContext = beans.context;
-        this.eventService = beans.eventService;
+        this.eventSvc = beans.eventSvc;
         this.gos = beans.gos;
     }
 
@@ -77,7 +77,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     }
 
     // The typing of AgEventListener<any, any, any> is not ideal, but it's the best we can do at the moment to enable
-    // eventService to have the best typing at the expense of BeanStub local events
+    // eventSvc to have the best typing at the expense of BeanStub local events
     /** Add a local event listener against this BeanStub */
     public addEventListener<T extends TEventType>(
         eventType: T,
@@ -114,7 +114,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
         return this._setupListeners<keyof HTMLElementEventMap>(object, handlers);
     }
     public addManagedEventListeners(handlers: AgEventHandlers) {
-        return this._setupListeners<AgEventType>(this.eventService, handlers);
+        return this._setupListeners<AgEventType>(this.eventSvc, handlers);
     }
     public addManagedListeners<TEvent extends string>(object: IEventEmitter<TEvent>, handlers: EventHandlers<TEvent>) {
         return this._setupListeners<TEvent>(object, handlers);
@@ -250,7 +250,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     public isAlive = (): boolean => !this.destroyed;
 
     public getLocaleTextFunc(): LocaleTextFunc {
-        return _getLocaleTextFunc(this.beans.localeService);
+        return _getLocaleTextFunc(this.beans.localeSvc);
     }
 
     public addDestroyFunc(func: () => void): void {

@@ -23,20 +23,20 @@ import type { WithoutGridCommon } from '../interfaces/iCommon';
 import { _error, _warn } from '../validation/logging';
 
 export class AlignedGridsService extends BeanStub implements NamedBean {
-    beanName = 'alignedGridsService' as const;
+    beanName = 'alignedGridsSvc' as const;
 
-    private columnModel: ColumnModel;
-    private columnResizeService?: ColumnResizeService;
-    private ctrlsService: CtrlsService;
-    private columnStateService: ColumnStateService;
-    private columnGroupService?: ColumnGroupService;
+    private colModel: ColumnModel;
+    private colResize?: ColumnResizeService;
+    private ctrlsSvc: CtrlsService;
+    private colState: ColumnStateService;
+    private columnGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.columnResizeService = beans.columnResizeService;
-        this.ctrlsService = beans.ctrlsService;
-        this.columnStateService = beans.columnStateService;
-        this.columnGroupService = beans.columnGroupService;
+        this.colModel = beans.colModel;
+        this.colResize = beans.colResize;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.colState = beans.colState;
+        this.columnGroupSvc = beans.columnGroupSvc;
     }
 
     // flag to mark if we are consuming. to avoid cyclic events (ie other grid firing back to master
@@ -139,7 +139,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
 
     private onScrollEvent(event: BodyScrollEvent): void {
         this.onEvent(() => {
-            const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+            const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
             gridBodyCon.getScrollFeature().setHorizontalScrollPosition(event.left, true);
         });
     }
@@ -188,8 +188,8 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     }
 
     private processGroupOpenedEvent(groupOpenedEvent: ColumnGroupOpenedEvent): void {
-        const { columnGroupService } = this;
-        if (!columnGroupService) {
+        const { columnGroupSvc } = this;
+        if (!columnGroupSvc) {
             return;
         }
         groupOpenedEvent.columnGroups.forEach((masterGroup) => {
@@ -197,14 +197,14 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
             let otherColumnGroup: AgProvidedColumnGroup | null = null;
 
             if (masterGroup) {
-                otherColumnGroup = columnGroupService.getProvidedColGroup(masterGroup.getGroupId());
+                otherColumnGroup = columnGroupSvc.getProvidedColGroup(masterGroup.getGroupId());
             }
 
             if (masterGroup && !otherColumnGroup) {
                 return;
             }
 
-            columnGroupService.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
+            columnGroupSvc.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
         });
     }
 
@@ -215,7 +215,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
         let otherColumn: AgColumn | null = null;
 
         if (masterColumn) {
-            otherColumn = this.columnModel.getColDefCol(masterColumn.getColId());
+            otherColumn = this.colModel.getColDefCol(masterColumn.getColId());
         }
         // if event was with respect to a master column, that is not present in this
         // grid, then we ignore the event
@@ -226,7 +226,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
         // in time, all the methods below should use the column ids, it's a more generic way
         // of handling columns, and also allows for single or multi column events
         const masterColumns = this.getMasterColumns(colEvent);
-        const { columnStateService, columnResizeService, ctrlsService } = this;
+        const { colState, colResize, ctrlsSvc } = this;
         switch (colEvent.type) {
             case 'columnMoved':
                 // when the user moves columns via applyColumnState, we can't depend on moving specific columns
@@ -235,10 +235,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId }));
-                    columnStateService.applyColumnState(
-                        { state: destColState, applyOrder: true },
-                        'alignedGridChanged'
-                    );
+                    colState.applyColumnState({ state: destColState, applyOrder: true }, 'alignedGridChanged');
                 }
                 break;
             case 'columnVisible':
@@ -248,14 +245,14 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId, hide: s.hide }));
-                    columnStateService.applyColumnState({ state: destColState }, 'alignedGridChanged');
+                    colState.applyColumnState({ state: destColState }, 'alignedGridChanged');
                 }
                 break;
             case 'columnPinned':
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId, pinned: s.pinned }));
-                    columnStateService.applyColumnState({ state: destColState }, 'alignedGridChanged');
+                    colState.applyColumnState({ state: destColState }, 'alignedGridChanged');
                 }
                 break;
             case 'columnResized': {
@@ -276,7 +273,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                         delete columnWidths[col.getId()];
                     }
                 });
-                columnResizeService?.setColumnWidths(
+                colResize?.setColumnWidths(
                     Object.values(columnWidths),
                     false,
                     resizedEvent.finished,
@@ -285,7 +282,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                 break;
             }
         }
-        const gridBodyCon = ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = ctrlsSvc.getGridBodyCtrl();
         const isVerticalScrollShowing = gridBodyCon.isVerticalScrollShowing();
         this.getAlignedGridApis().forEach((api) => {
             api.setGridOption('alwaysShowVerticalScroll', isVerticalScrollShowing);

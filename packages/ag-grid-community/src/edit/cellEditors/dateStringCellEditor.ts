@@ -49,28 +49,28 @@ class DateStringCellEditorInput implements CellEditorInput<string, IDateStringCe
     }
 
     private parseDate(value: string | undefined): Date | undefined {
-        const dataTypeService = this.getDataTypeService();
-        return dataTypeService
-            ? dataTypeService.getDateParserFunction(this.params.column as AgColumn)(value)
+        const dataTypeSvc = this.getDataTypeService();
+        return dataTypeSvc
+            ? dataTypeSvc.getDateParserFunction(this.params.column as AgColumn)(value)
             : _parseDateTimeFromString(value) ?? undefined;
     }
 
     private formatDate(value: Date | undefined): string | undefined {
-        const dataTypeService = this.getDataTypeService();
-        return dataTypeService
-            ? dataTypeService.getDateFormatterFunction(this.params.column as AgColumn)(value)
+        const dataTypeSvc = this.getDataTypeService();
+        return dataTypeSvc
+            ? dataTypeSvc.getDateFormatterFunction(this.params.column as AgColumn)(value)
             : _serialiseDate(value ?? null, false) ?? undefined;
     }
 }
 
 export class DateStringCellEditor extends SimpleCellEditor<string, IDateStringCellEditorParams, AgInputDateField> {
-    private dataTypeService?: DataTypeService;
+    private dataTypeSvc?: DataTypeService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.dataTypeService = beans.dataTypeService;
+        this.dataTypeSvc = beans.dataTypeSvc;
     }
 
     constructor() {
-        super(new DateStringCellEditorInput(() => this.dataTypeService));
+        super(new DateStringCellEditorInput(() => this.dataTypeSvc));
     }
 }

@@ -4,6 +4,7 @@ import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
 import type { GridTheme } from './entities/gridOptions';
+import { _injectCoreAndModuleCSS, _injectGlobalCSS } from './theming/inject';
 import { _observeResize } from './utils/dom';
 import { _error, _warn } from './validation/logging';
 
@@ -39,6 +40,7 @@ export class Environment extends BeanStub implements NamedBean {
 
     private gridTheme: GridTheme | undefined;
     private themeClass: string | undefined;
+    private globalCSS: string[] = [];
 
     public postConstruct(): void {
         this.addManagedPropertyListener('theme', () => this.handleThemeGridOptionChange());
@@ -130,6 +132,14 @@ export class Environment extends BeanStub implements NamedBean {
         return oldRowHeight != '' ? parseFloat(oldRowHeight) : -1;
     }
 
+    public addGlobalCSS(css: string): void {
+        if (this.gridTheme) {
+            _injectGlobalCSS(css, this.eGridDiv);
+        } else {
+            this.globalCSS.push(css);
+        }
+    }
+
     private getCSSVariablePixelValue(variable: Variable): number {
         const cached = this.lastKnownValues.get(variable);
         if (cached != null) {
@@ -195,14 +205,14 @@ export class Environment extends BeanStub implements NamedBean {
     }
 
     private fireGridStylesChangedEvent(change: ChangeKey): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'gridStylesChanged',
             [change]: true,
         });
     }
 
     private handleThemeGridOptionChange(): void {
-        const { gos, gridTheme: oldGridTheme, themeClass: oldThemeClass } = this;
+        const { gos, eGridDiv, globalCSS, gridTheme: oldGridTheme, themeClass: oldThemeClass } = this;
         const themeGridOption = gos.get('theme');
         let newGridTheme: GridTheme | undefined;
         let newThemeClass: string | undefined;
@@ -216,17 +226,24 @@ export class Environment extends BeanStub implements NamedBean {
             newThemeClass = newGridTheme.getCssClass();
         }
         if (newGridTheme !== oldGridTheme) {
+            if (newGridTheme) {
+                _injectCoreAndModuleCSS(eGridDiv);
+                for (const css of globalCSS) {
+                    _injectGlobalCSS(css, eGridDiv);
+                }
+                globalCSS.length = 0;
+            }
             oldGridTheme?.stopUse();
             this.gridTheme = newGridTheme;
             newGridTheme?.startUse({
                 loadThemeGoogleFonts: gos.get('loadThemeGoogleFonts'),
-                container: this.eGridDiv,
+                container: eGridDiv,
             });
             this.fireGridStylesChangedEvent('themeChanged');
         }
         if (newThemeClass !== oldThemeClass) {
             this.themeClass = newThemeClass;
-            this.applyThemeClasses(this.eGridDiv);
+            this.applyThemeClasses(eGridDiv);
         }
         // --ag-legacy-styles-loaded is defined by the Sass themes which
         // shouldn't be used at the same time as Theming API

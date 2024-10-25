@@ -3,6 +3,7 @@ import { DragAndDropModule, FilterCoreModule, FilterValueModule, PopupModule } f
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
+import { advancedFilterCSS } from './advanced-filter.css-GENERATED';
 import {
     getAdvancedFilterModel,
     hideAdvancedFilterBuilder,
@@ -34,6 +35,7 @@ export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
         advancedFilterBuilderSelectOpen: 'small-down',
     },
     dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
+    css: [advancedFilterCSS],
 };
 
 export const AdvancedFilterApiModule: _ModuleWithApi<_AdvancedFilterGridApi> = {

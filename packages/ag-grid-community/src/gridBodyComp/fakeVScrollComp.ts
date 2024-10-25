@@ -7,12 +7,12 @@ import { SetHeightFeature } from './rowContainer/setHeightFeature';
 import type { ScrollVisibleService } from './scrollVisibleService';
 
 export class FakeVScrollComp extends AbstractFakeScrollComp {
-    private ctrlsService: CtrlsService;
-    private scrollVisibleService: ScrollVisibleService;
+    private ctrlsSvc: CtrlsService;
+    private scrollVisibleSvc: ScrollVisibleService;
 
     public wireBeans(beans: BeanCollection) {
-        this.ctrlsService = beans.ctrlsService;
-        this.scrollVisibleService = beans.scrollVisibleService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.scrollVisibleSvc = beans.scrollVisibleSvc;
     }
 
     constructor() {
@@ -30,16 +30,16 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
         super.postConstruct();
 
         this.createManagedBean(new SetHeightFeature(this.eContainer));
-        this.ctrlsService.register('fakeVScrollComp', this);
+        this.ctrlsSvc.register('fakeVScrollComp', this);
 
         this.addManagedEventListeners({ rowContainerHeightChanged: this.onRowContainerHeightChanged.bind(this) });
     }
 
     protected setScrollVisible(): void {
-        const vScrollShowing = this.scrollVisibleService.isVerticalScrollShowing();
+        const vScrollShowing = this.scrollVisibleSvc.isVerticalScrollShowing();
         const invisibleScrollbar = this.invisibleScrollbar;
 
-        const scrollbarWidth = vScrollShowing ? this.scrollVisibleService.getScrollbarWidth() || 0 : 0;
+        const scrollbarWidth = vScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
         const adjustedScrollbarWidth = scrollbarWidth === 0 && invisibleScrollbar ? 16 : scrollbarWidth;
 
         this.addOrRemoveCssClass('ag-scrollbar-invisible', invisibleScrollbar);
@@ -50,8 +50,8 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
     }
 
     private onRowContainerHeightChanged(): void {
-        const { ctrlsService } = this;
-        const gridBodyCtrl = ctrlsService.getGridBodyCtrl();
+        const { ctrlsSvc } = this;
+        const gridBodyCtrl = ctrlsSvc.getGridBodyCtrl();
         const gridBodyViewportEl = gridBodyCtrl.getBodyViewportElement();
 
         const eViewportScrollTop = this.getScrollPosition();

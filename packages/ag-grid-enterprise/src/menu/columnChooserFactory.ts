@@ -21,14 +21,14 @@ interface ShowColumnChooserParams {
 export class ColumnChooserFactory extends BeanStub implements NamedBean {
     beanName = 'columnChooserFactory' as const;
 
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private menuUtils: MenuUtils;
-    private visibleColsService: VisibleColsService;
+    private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.visibleColsService = beans.visibleColsService;
+        this.visibleCols = beans.visibleCols;
     }
 
     private activeColumnChooser: AgPrimaryCols | undefined;
@@ -83,8 +83,8 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
 
         const columnSelectPanel = this.createColumnSelectPanel(this, column, true, chooserParams);
         const translate = this.getLocaleTextFunc();
-        const columnIndex = this.visibleColsService.allCols.indexOf(column as AgColumn);
-        const headerPosition = column ? this.focusService.getFocusedHeader() : null;
+        const columnIndex = this.visibleCols.allCols.indexOf(column as AgColumn);
+        const headerPosition = column ? this.focusSvc.getFocusedHeader() : null;
 
         this.activeColumnChooserDialog = this.createBean(
             new AgDialog({
@@ -97,7 +97,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
                 centered: true,
                 closable: true,
                 afterGuiAttached: () => {
-                    this.focusService.findNextFocusableElement(columnSelectPanel.getGui())?.focus({
+                    this.focusSvc.findNextFocusableElement(columnSelectPanel.getGui())?.focus({
                         preventScroll: true,
                     });
                     this.dispatchVisibleChangedEvent(true, column);
@@ -135,7 +135,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, column?: AgColumn | null): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'columnMenuVisibleChanged',
             visible,
             switchingTab: false,

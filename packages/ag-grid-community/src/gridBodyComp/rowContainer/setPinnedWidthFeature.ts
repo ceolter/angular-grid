@@ -4,12 +4,12 @@ import type { PinnedColumnService } from '../../pinnedColumns/pinnedColumnServic
 import { _setDisplayed, _setFixedWidth } from '../../utils/dom';
 
 export class SetPinnedWidthFeature extends BeanStub {
-    private pinnedColumnService: PinnedColumnService;
+    private pinnedCols: PinnedColumnService;
 
     public readonly getWidth: () => number;
 
     public wireBeans(beans: BeanCollection): void {
-        this.pinnedColumnService = beans.pinnedColumnService!;
+        this.pinnedCols = beans.pinnedCols!;
     }
 
     constructor(
@@ -18,8 +18,8 @@ export class SetPinnedWidthFeature extends BeanStub {
     ) {
         super();
         this.getWidth = isLeft
-            ? () => this.pinnedColumnService.getPinnedLeftWidth()
-            : () => this.pinnedColumnService.getPinnedRightWidth();
+            ? () => this.pinnedCols.getPinnedLeftWidth()
+            : () => this.pinnedCols.getPinnedRightWidth();
     }
 
     public postConstruct(): void {

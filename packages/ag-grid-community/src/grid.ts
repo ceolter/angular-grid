@@ -198,7 +198,7 @@ export class GridCoreCreator {
 
         createUi(context);
 
-        context.getBean('syncService').start();
+        context.getBean('syncSvc').start();
 
         if (acceptChanges) {
             acceptChanges(context);
@@ -220,7 +220,7 @@ export class GridCoreCreator {
         registeredModules: (_ModuleWithApi<any> | _ModuleWithoutApi)[]
     ): void {
         const registry = context.getBean('registry');
-        const apiFunctionService = context.getBean('apiFunctionService');
+        const apiFunctionSvc = context.getBean('apiFunctionSvc');
 
         registeredModules.forEach((module) => {
             registry.registerModule(module);
@@ -229,7 +229,7 @@ export class GridCoreCreator {
             if (apiFunctions) {
                 const names = Object.keys(apiFunctions) as ApiFunctionName[];
                 names.forEach((name) => {
-                    apiFunctionService?.addFunction(name, apiFunctions[name]!);
+                    apiFunctionSvc?.addFunction(name, apiFunctions[name]!);
                 });
             }
         });

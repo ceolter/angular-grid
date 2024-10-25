@@ -1,7 +1,7 @@
 import type { AbstractColDef, ColDef, ColGroupDef, ColumnMenuTab } from '../../entities/colDef';
 import type { GridOptions } from '../../entities/gridOptions';
 import type { ModuleName } from '../../interfaces/iModule';
-import { DEFAULT_SORTING_ORDER } from '../../sort/sortController';
+import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
 

@@ -22,11 +22,11 @@ const DefaultDataPanelDef: ChartDataPanelType = {
 
 export class ChartDataPanel extends Component {
     protected chartTranslationService: ChartTranslationService;
-    private chartService: IChartService;
+    private chartSvc: IChartService;
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
-        this.chartService = beans.chartService!;
+        this.chartSvc = beans.chartSvc!;
     }
 
     private readonly chartController: ChartController;
@@ -88,7 +88,7 @@ export class ChartDataPanel extends Component {
         // Ensure the category/series toggle UI control is up-to-date
         const isSwitchCategorySeriesDisplayed =
             supportsInvertedCategorySeries(this.chartType) &&
-            this.chartService.isEnterprise() &&
+            this.chartSvc.isEnterprise() &&
             !this.chartController.isGrouping();
         _setDisplayed(this.switchCategorySeriesToggle.getGui(), isSwitchCategorySeriesDisplayed);
         if (hasChangedSwitchCategorySeries) {

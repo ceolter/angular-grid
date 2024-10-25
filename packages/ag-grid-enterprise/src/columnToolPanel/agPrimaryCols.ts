@@ -1,6 +1,7 @@
 import type { ColDef, ColGroupDef, ColumnEventType, ComponentSelector } from 'ag-grid-community';
 import { Component, PositionableFeature, RefPlaceholder } from 'ag-grid-community';
 
+import { agPrimaryColsCSS } from './agPrimaryCols.css-GENERATED';
 import type { AgPrimaryColsHeader } from './agPrimaryColsHeader';
 import { AgPrimaryColsHeaderSelector } from './agPrimaryColsHeader';
 import type { AgPrimaryColsList } from './agPrimaryColsList';
@@ -24,6 +25,7 @@ export class AgPrimaryCols extends Component {
         </div>`,
             [AgPrimaryColsHeaderSelector, AgPrimaryColsListSelector]
         );
+        this.registerCSS(agPrimaryColsCSS);
     }
 
     // we allow dragging in the toolPanel, but not when this component appears in the column menu

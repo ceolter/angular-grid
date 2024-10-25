@@ -14,12 +14,12 @@ const GRID_DOM_KEY = '__ag_grid_instance';
 let gridInstanceSequence = 0;
 
 export class MouseEventService extends BeanStub implements NamedBean {
-    beanName = 'mouseEventService' as const;
+    beanName = 'mouseEventSvc' as const;
 
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private gridInstanceId = gridInstanceSequence++;
@@ -76,7 +76,7 @@ export class MouseEventService extends BeanStub implements NamedBean {
         }
 
         if (gridPanelHasScrolls) {
-            const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+            const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
             const vRange = gridBodyCon.getScrollFeature().getVScrollPosition();
             const hRange = gridBodyCon.getScrollFeature().getHScrollPosition();
             x += hRange.left;

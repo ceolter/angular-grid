@@ -5,37 +5,37 @@ export function paginationIsLastPageFound(beans: BeanCollection): boolean {
 }
 
 export function paginationGetPageSize(beans: BeanCollection): number {
-    return beans.paginationService?.getPageSize() ?? 100;
+    return beans.pagination?.getPageSize() ?? 100;
 }
 
 export function paginationGetCurrentPage(beans: BeanCollection): number {
-    return beans.paginationService?.getCurrentPage() ?? 0;
+    return beans.pagination?.getCurrentPage() ?? 0;
 }
 
 export function paginationGetTotalPages(beans: BeanCollection): number {
-    return beans.paginationService?.getTotalPages() ?? 1;
+    return beans.pagination?.getTotalPages() ?? 1;
 }
 
 export function paginationGetRowCount(beans: BeanCollection): number {
-    return beans.paginationService ? beans.paginationService.getMasterRowCount() : beans.rowModel.getRowCount();
+    return beans.pagination ? beans.pagination.getMasterRowCount() : beans.rowModel.getRowCount();
 }
 
 export function paginationGoToNextPage(beans: BeanCollection): void {
-    beans.paginationService?.goToNextPage();
+    beans.pagination?.goToNextPage();
 }
 
 export function paginationGoToPreviousPage(beans: BeanCollection): void {
-    beans.paginationService?.goToPreviousPage();
+    beans.pagination?.goToPreviousPage();
 }
 
 export function paginationGoToFirstPage(beans: BeanCollection): void {
-    beans.paginationService?.goToFirstPage();
+    beans.pagination?.goToFirstPage();
 }
 
 export function paginationGoToLastPage(beans: BeanCollection): void {
-    beans.paginationService?.goToLastPage();
+    beans.pagination?.goToLastPage();
 }
 
 export function paginationGoToPage(beans: BeanCollection, page: number): void {
-    beans.paginationService?.goToPage(page);
+    beans.pagination?.goToPage(page);
 }

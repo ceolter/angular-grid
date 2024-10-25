@@ -2,7 +2,7 @@ import type { InternalFramework, Library } from '@ag-grid-types';
 import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import fs from 'fs/promises';
-import glob from 'glob';
+import * as glob from 'glob';
 import { readFileSync } from 'node:fs';
 
 import { SITE_BASE_URL, USE_PUBLISHED_PACKAGES } from '../constants';

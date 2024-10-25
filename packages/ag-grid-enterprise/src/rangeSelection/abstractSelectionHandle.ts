@@ -18,16 +18,16 @@ export enum SelectionHandleType {
 }
 
 export abstract class AbstractSelectionHandle extends Component {
-    protected dragService: DragService;
-    protected rangeService: RangeService;
-    protected mouseEventService: MouseEventService;
-    protected ctrlsService: CtrlsService;
+    protected dragSvc: DragService;
+    protected rangeSvc: RangeService;
+    protected mouseEventSvc: MouseEventService;
+    protected ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.dragService = beans.dragService!;
-        this.rangeService = beans.rangeService as RangeService;
-        this.mouseEventService = beans.mouseEventService;
-        this.ctrlsService = beans.ctrlsService;
+        this.dragSvc = beans.dragSvc!;
+        this.rangeSvc = beans.rangeSvc as RangeService;
+        this.mouseEventSvc = beans.mouseEventSvc;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private cellCtrl: CellCtrl;
@@ -45,13 +45,13 @@ export abstract class AbstractSelectionHandle extends Component {
     protected shouldDestroyOnEndDragging: boolean = false;
 
     public postConstruct() {
-        this.dragService.addDragSource({
+        this.dragSvc.addDragSource({
             dragStartPixels: 0,
             eElement: this.getGui(),
             onDragStart: this.onDragStart.bind(this),
             onDragging: (e: MouseEvent | Touch) => {
                 this.dragging = true;
-                this.rangeService.autoScrollService.check(e as MouseEvent);
+                this.rangeSvc.autoScrollService.check(e as MouseEvent);
 
                 if (this.changedCalculatedValues) {
                     this.onDrag(e);
@@ -126,7 +126,7 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     protected onDragStart(_: MouseEvent) {
-        [this.cellHoverListener] = this.addManagedElementListeners(this.ctrlsService.get('gridCtrl').getGui(), {
+        [this.cellHoverListener] = this.addManagedElementListeners(this.ctrlsSvc.get('gridCtrl').getGui(), {
             mousemove: this.updateValuesOnMove.bind(this),
         });
 
@@ -138,7 +138,7 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     protected updateValuesOnMove(e: MouseEvent) {
-        const cell = this.mouseEventService.getCellPositionForEvent(e);
+        const cell = this.mouseEventSvc.getCellPositionForEvent(e);
 
         if (!cell || (this.lastCellHovered && _areCellsEqual(cell, this.lastCellHovered))) {
             return;
@@ -150,7 +150,7 @@ export abstract class AbstractSelectionHandle extends Component {
 
     private clearDragProperties(): void {
         this.clearValues();
-        this.rangeService.autoScrollService.ensureCleared();
+        this.rangeSvc.autoScrollService.ensureCleared();
 
         // TODO: this causes a bug where if there are multiple grids in the same page, all of them will
         // be affected by a drag on any. Move it to the root element.
@@ -165,7 +165,7 @@ export abstract class AbstractSelectionHandle extends Component {
         const oldCellComp = this.getCellCtrl();
         const eGui = this.getGui();
 
-        const cellRange = _last(this.rangeService.getCellRanges());
+        const cellRange = _last(this.rangeSvc.getCellRanges());
 
         const start = cellRange.startRow;
         const end = cellRange.endRow;

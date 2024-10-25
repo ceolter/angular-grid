@@ -29,13 +29,13 @@ interface FilterColumnPair {
 export type GroupFilterEvent = 'columnRowGroupChanged' | 'selectedColumnChanged';
 export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilterComp {
     private filterManager?: FilterManager;
-    private columnNameService: ColumnNameService;
-    private funcColsService: FuncColsService;
+    private colNames: ColumnNameService;
+    private funcColsSvc: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
-        this.columnNameService = beans.columnNameService;
-        this.funcColsService = beans.funcColsService;
+        this.colNames = beans.colNames;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     private readonly eGroupField: HTMLElement = RefPlaceholder;
@@ -107,7 +107,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
             _warn(237);
             return [];
         }
-        const sourceColumns = this.funcColsService.getSourceColumnsForGroupColumn(this.groupColumn);
+        const sourceColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(this.groupColumn);
         if (!sourceColumns) {
             _warn(183);
             return [];
@@ -158,7 +158,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
         this.eGroupFieldSelect.addOptions(
             sourceColumns.map((sourceColumn) => ({
                 value: sourceColumn.getId(),
-                text: this.columnNameService.getDisplayNameForColumn(sourceColumn, 'groupFilter', false) ?? undefined,
+                text: this.colNames.getDisplayNameForColumn(sourceColumn, 'groupFilter', false) ?? undefined,
             }))
         );
         this.eGroupFieldSelect.setValue(this.selectedColumn!.getId());

@@ -1,4 +1,4 @@
-import { iconSetQuartzCSS } from './GENERATED-icon-set-quartz';
+import { iconSetQuartzCSS } from './icon-set-quartz.css-GENERATED';
 
 const iconNameToSvgFragment: Record<string, string | undefined> = {
     aggregation: '<path d="M18 7V4H6l6 8-6 8h12v-3"/>',

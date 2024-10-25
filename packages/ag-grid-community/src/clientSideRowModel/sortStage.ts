@@ -15,7 +15,7 @@ import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeSt
 import type { SortOption } from '../interfaces/iSortOption';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
-import type { SortController } from '../sort/sortController';
+import type { SortService } from '../sort/sortService';
 import type { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
 
@@ -55,22 +55,22 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
     public refreshProps: Set<keyof GridOptions<any>> = new Set(['postSortRows', 'groupDisplayType', 'accentedSort']);
     public step: ClientSideRowModelStage = 'sort';
 
-    private sortController: SortController;
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
+    private sortSvc: SortService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
     private rowNodeSorter: RowNodeSorter;
-    private groupHideOpenParentsService?: IGroupHideOpenParentsService;
+    private groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.sortController = beans.sortController!;
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
+        this.sortSvc = beans.sortSvc!;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
         this.rowNodeSorter = beans.rowNodeSorter!;
-        this.groupHideOpenParentsService = beans.groupHideOpenParentsService;
+        this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
     }
 
     public execute(params: StageExecuteParams): void {
-        const sortOptions: SortOption[] = this.sortController.getSortOptions();
+        const sortOptions: SortOption[] = this.sortSvc.getSortOptions();
 
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
         const deltaSort =
@@ -108,19 +108,19 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         sortContainsGroupColumns: boolean
     ): void {
         const groupMaintainOrder = this.gos.get('groupMaintainOrder');
-        const groupColumnsPresent = this.columnModel.getCols().some((c) => c.isRowGroupActive());
+        const groupColumnsPresent = this.colModel.getCols().some((c) => c.isRowGroupActive());
 
         let allDirtyNodes: { [key: string]: true } = {};
         if (useDeltaSort && rowNodeTransactions) {
             allDirtyNodes = this.calculateDirtyNodes(rowNodeTransactions);
         }
 
-        const isPivotMode = this.columnModel.isPivotMode();
+        const isPivotMode = this.colModel.isPivotMode();
         const postSortFunc = this.gos.getCallback('postSortRows');
 
         const callback = (rowNode: RowNode) => {
             // we clear out the 'pull down open parents' first, as the values mix up the sorting
-            this.groupHideOpenParentsService?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
+            this.groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
 
             // It's pointless to sort rows which aren't being displayed. in pivot mode we don't need to sort the leaf group children.
             const skipSortingPivotLeafs = isPivotMode && rowNode.leafGroup;
@@ -131,7 +131,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             const skipSortingGroups =
                 groupMaintainOrder && groupColumnsPresent && !rowNode.leafGroup && !sortContainsGroupColumns;
             if (skipSortingGroups) {
-                const nextGroup = this.funcColsService.rowGroupCols?.[rowNode.level + 1];
+                const nextGroup = this.funcColsSvc.rowGroupCols?.[rowNode.level + 1];
                 // if the sort is null, then sort was explicitly removed, so remove sort from this group.
                 const wasSortExplicitlyRemoved = nextGroup?.getSort() === null;
 

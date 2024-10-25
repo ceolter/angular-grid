@@ -17,10 +17,10 @@ import type { SimpleFilterModelFormatter } from '../../provided/simpleFilterMode
 import type { IFloatingFilterComp, IFloatingFilterParams } from '../floatingFilter';
 
 export abstract class SimpleFloatingFilter extends Component implements IFloatingFilterComp<ISimpleFilter> {
-    private columnNameService: ColumnNameService;
+    private colNames: ColumnNameService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnNameService = beans.columnNameService;
+        this.colNames = beans.colNames;
     }
 
     // this method is on IFloatingFilterComp. because it's not implemented at this level, we have to
@@ -150,7 +150,7 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     }
 
     protected getAriaLabel(params: IFloatingFilterParams): string {
-        const displayName = this.columnNameService.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
+        const displayName = this.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
         const translate = this.getLocaleTextFunc();
         return `${displayName} ${translate('ariaFilterInput', 'Filter Input')}`;
     }

@@ -19,11 +19,11 @@ import {
 } from 'ag-grid-community';
 
 export class MasterDetailService extends BeanStub implements NamedBean, IMasterDetailService {
-    beanName: BeanName = 'masterDetailService' as const;
+    beanName: BeanName = 'masterDetailSvc' as const;
 
     private enabled: boolean;
     private rowModel: IRowModel;
-    private funcColsService: FuncColsService;
+    private funcColsSvc: FuncColsService;
 
     private isEnabled(): boolean {
         const gos = this.gos;
@@ -35,7 +35,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     }
 
     public wireBeans(beans: BeanCollection): void {
-        this.funcColsService = beans.funcColsService;
+        this.funcColsSvc = beans.funcColsSvc;
         this.rowModel = beans.rowModel;
     }
 
@@ -92,7 +92,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                     row.expanded = true;
                 } else {
                     // need to take row group into account when determining level
-                    const masterRowLevel = this.funcColsService.rowGroupCols?.length ?? 0;
+                    const masterRowLevel = this.funcColsSvc.rowGroupCols?.length ?? 0;
                     row.expanded = masterRowLevel < groupDefaultExpanded;
                 }
             } else if (!newMaster && oldMaster) {

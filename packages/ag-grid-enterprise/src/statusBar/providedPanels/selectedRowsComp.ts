@@ -4,10 +4,10 @@ import { _formatNumberCommas, _isClientSideRowModel, _isServerSideRowModel, _war
 import { AgNameValue } from './agNameValue';
 
 export class SelectedRowsComp extends AgNameValue implements IStatusPanelComp {
-    private selectionService?: ISelectionService;
+    private selectionSvc?: ISelectionService;
 
     public wireBeans(beans: BeanCollection) {
-        this.selectionService = beans.selectionService;
+        this.selectionSvc = beans.selectionSvc;
     }
 
     public postConstruct(): void {
@@ -28,7 +28,7 @@ export class SelectedRowsComp extends AgNameValue implements IStatusPanelComp {
     }
 
     private onRowSelectionChanged() {
-        const selectedRowCount = this.selectionService?.getSelectionCount() ?? 0;
+        const selectedRowCount = this.selectionSvc?.getSelectionCount() ?? 0;
         if (selectedRowCount < 0) {
             this.setValue('?');
             this.setDisplayed(true);

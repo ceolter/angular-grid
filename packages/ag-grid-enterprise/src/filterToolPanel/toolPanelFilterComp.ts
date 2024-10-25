@@ -22,11 +22,11 @@ import {
 export type ToolPanelFilterCompEvent = 'filterChanged';
 export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
     private filterManager?: FilterManager;
-    private columnNameService: ColumnNameService;
+    private colNames: ColumnNameService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
-        this.columnNameService = beans.columnNameService;
+        this.colNames = beans.colNames;
     }
 
     private readonly eFilterToolPanelHeader: HTMLElement = RefPlaceholder;
@@ -68,8 +68,7 @@ export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
 
     public setColumn(column: AgColumn): void {
         this.column = column;
-        this.eFilterName.innerText =
-            this.columnNameService.getDisplayNameForColumn(this.column, 'filterToolPanel', false) || '';
+        this.eFilterName.innerText = this.colNames.getDisplayNameForColumn(this.column, 'filterToolPanel', false) || '';
         this.addManagedListeners(this.eFilterToolPanelHeader, {
             click: this.toggleExpanded.bind(this),
             keydown: this.onKeyDown.bind(this),
@@ -114,7 +113,7 @@ export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
     }
 
     public getColumnFilterName(): string | null {
-        return this.columnNameService.getDisplayNameForColumn(this.column, 'filterToolPanel', false);
+        return this.colNames.getDisplayNameForColumn(this.column, 'filterToolPanel', false);
     }
 
     public addCssClassToTitleBar(cssClass: string) {

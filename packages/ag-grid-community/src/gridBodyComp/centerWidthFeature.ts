@@ -5,12 +5,12 @@ import { _isDomLayout } from '../gridOptionsUtils';
 import type { ScrollVisibleService } from './scrollVisibleService';
 
 export class CenterWidthFeature extends BeanStub {
-    private visibleColsService: VisibleColsService;
-    private scrollVisibleService: ScrollVisibleService;
+    private visibleCols: VisibleColsService;
+    private scrollVisibleSvc: ScrollVisibleService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
-        this.scrollVisibleService = beans.scrollVisibleService;
+        this.visibleCols = beans.visibleCols;
+        this.scrollVisibleSvc = beans.scrollVisibleSvc;
     }
 
     constructor(
@@ -44,9 +44,9 @@ export class CenterWidthFeature extends BeanStub {
     private setWidth(): void {
         const printLayout = _isDomLayout(this.gos, 'print');
 
-        const centerWidth = this.visibleColsService.getBodyContainerWidth();
-        const leftWidth = this.visibleColsService.getColsLeftWidth();
-        const rightWidth = this.visibleColsService.getDisplayedColumnsRightWidth();
+        const centerWidth = this.visibleCols.getBodyContainerWidth();
+        const leftWidth = this.visibleCols.getColsLeftWidth();
+        const rightWidth = this.visibleCols.getDisplayedColumnsRightWidth();
 
         let totalWidth: number;
 
@@ -57,8 +57,8 @@ export class CenterWidthFeature extends BeanStub {
 
             if (this.addSpacer) {
                 const relevantWidth = this.gos.get('enableRtl') ? leftWidth : rightWidth;
-                if (relevantWidth === 0 && this.scrollVisibleService.isVerticalScrollShowing()) {
-                    totalWidth += this.scrollVisibleService.getScrollbarWidth();
+                if (relevantWidth === 0 && this.scrollVisibleSvc.isVerticalScrollShowing()) {
+                    totalWidth += this.scrollVisibleSvc.getScrollbarWidth();
                 }
             }
         }

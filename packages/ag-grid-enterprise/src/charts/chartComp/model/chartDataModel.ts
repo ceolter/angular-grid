@@ -46,11 +46,11 @@ export interface ChartModelParams {
 export const DEFAULT_CHART_CATEGORY = 'AG-GRID-DEFAULT-CATEGORY';
 
 export class ChartDataModel extends BeanStub {
-    private rangeService: IRangeService;
+    private rangeSvc: IRangeService;
     private chartTranslationService: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.rangeService = beans.rangeService!;
+        this.rangeSvc = beans.rangeSvc!;
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
     }
 
@@ -72,7 +72,7 @@ export class ChartDataModel extends BeanStub {
     public groupChartData: any[] | undefined;
     public valueColState: ColState[] = [];
     public dimensionColState: ColState[] = [];
-    public columnNames: { [p: string]: string[] } = {};
+    public colNames: { [p: string]: string[] } = {};
 
     public valueCellRange?: CellRange;
     public dimensionCellRange?: CellRange;
@@ -206,11 +206,11 @@ export class ChartDataModel extends BeanStub {
             isScatter: ['scatter', 'bubble'].includes(this.chartType),
         };
 
-        const { chartData, columnNames, groupChartData } = this.datasource.getData(params);
+        const { chartData, colNames, groupChartData } = this.datasource.getData(params);
 
         this.chartData = chartData;
         this.groupChartData = groupChartData;
-        this.columnNames = columnNames;
+        this.colNames = colNames;
         this.categoryAxisType = undefined;
     }
 
@@ -288,18 +288,18 @@ export class ChartDataModel extends BeanStub {
     private getRowIndexes(): { startRow: number; endRow: number } {
         let startRow = 0,
             endRow = 0;
-        const { rangeService, valueCellRange, dimensionCellRange } = this;
+        const { rangeSvc, valueCellRange, dimensionCellRange } = this;
 
         // Not all chart types require a value series (e.g. hierarchical charts),
         // so fall back to using the dimension cell range for inferring row indices
         const cellRange = valueCellRange || dimensionCellRange;
 
-        if (rangeService && cellRange) {
-            startRow = rangeService.getRangeStartRow(cellRange).rowIndex;
+        if (rangeSvc && cellRange) {
+            startRow = rangeSvc.getRangeStartRow(cellRange).rowIndex;
 
             // when the last row the cell range is a pinned 'bottom' row, the `endRow` index is set to -1 which results
             // in the ChartDatasource processing all non pinned rows from the `startRow` index.
-            const endRowPosition = rangeService.getRangeEndRow(cellRange);
+            const endRowPosition = rangeSvc.getRangeEndRow(cellRange);
             endRow = endRowPosition.rowPinned === 'bottom' ? -1 : endRowPosition.rowIndex;
         }
 

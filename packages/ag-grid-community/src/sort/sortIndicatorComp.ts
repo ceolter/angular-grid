@@ -6,7 +6,7 @@ import type { IconName } from '../utils/icon';
 import { _createIconNoSpan } from '../utils/icon';
 import type { ComponentSelector } from '../widgets/component';
 import { Component, RefPlaceholder } from '../widgets/component';
-import type { SortController } from './sortController';
+import type { SortService } from './sortService';
 
 function makeSpan(dataRefSuffix: string, classSuffix: string) {
     return /* html */ `<span data-ref="eSort${dataRefSuffix}" class="ag-sort-indicator-icon ag-sort-${classSuffix} ag-hidden" aria-hidden="true"></span>`;
@@ -20,10 +20,10 @@ const SortIndicatorTemplate = /* html */ `<span class="ag-sort-indicator-contain
         ${makeSpan('None', 'none-icon')}
     </span>`;
 export class SortIndicatorComp extends Component {
-    private sortController: SortController;
+    private sortSvc: SortService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.sortController = beans.sortController!;
+        this.sortSvc = beans.sortSvc!;
     }
 
     private eSortOrder: HTMLElement = RefPlaceholder;
@@ -104,7 +104,7 @@ export class SortIndicatorComp extends Component {
     }
 
     private updateIcons(): void {
-        const sortDirection = this.sortController.getDisplaySortForColumn(this.column);
+        const sortDirection = this.sortSvc.getDisplaySortForColumn(this.column);
 
         if (this.eSortAsc) {
             const isAscending = sortDirection === 'asc';
@@ -141,7 +141,7 @@ export class SortIndicatorComp extends Component {
 
     private updateMultiSortIndicator() {
         if (this.eSortMixed) {
-            const isMixedSort = this.sortController.getDisplaySortForColumn(this.column) === 'mixed';
+            const isMixedSort = this.sortSvc.getDisplaySortForColumn(this.column) === 'mixed';
             _setDisplayed(this.eSortMixed, isMixedSort, { skipAriaHidden: true });
         }
     }
@@ -154,11 +154,11 @@ export class SortIndicatorComp extends Component {
             return;
         }
 
-        const allColumnsWithSorting = this.sortController.getColumnsWithSortingOrdered();
+        const allColumnsWithSorting = this.sortSvc.getColumnsWithSortingOrdered();
 
-        const indexThisCol = this.sortController.getDisplaySortIndexForColumn(this.column) ?? -1;
+        const indexThisCol = this.sortSvc.getDisplaySortIndexForColumn(this.column) ?? -1;
         const moreThanOneColSorting = allColumnsWithSorting.some(
-            (col) => this.sortController.getDisplaySortIndexForColumn(col) ?? -1 >= 1
+            (col) => this.sortSvc.getDisplaySortIndexForColumn(col) ?? -1 >= 1
         );
         const showIndex = indexThisCol >= 0 && moreThanOneColSorting;
         _setDisplayed(this.eSortOrder, showIndex, { skipAriaHidden: true });

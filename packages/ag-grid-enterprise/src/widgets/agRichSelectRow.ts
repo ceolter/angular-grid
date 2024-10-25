@@ -23,11 +23,11 @@ import {
 import type { AgRichSelect } from './agRichSelect';
 
 export class RichSelectRow<TValue> extends Component {
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
         this.registry = beans.registry;
     }
 
@@ -141,7 +141,7 @@ export class RichSelectRow<TValue> extends Component {
         if (this.params.cellRenderer) {
             const richSelect = this.getParentComponent()?.getParentComponent() as AgRichSelect;
             userCompDetails = _getEditorRendererDetails<RichSelectParams, IRichCellEditorRendererParams<TValue>>(
-                this.userComponentFactory,
+                this.userCompFactory,
                 this.params,
                 {
                     value,

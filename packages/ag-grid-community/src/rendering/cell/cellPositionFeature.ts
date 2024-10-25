@@ -36,7 +36,7 @@ export class CellPositionFeature extends BeanStub {
     private setupRowSpan(): void {
         this.rowSpan = this.column.getRowSpan(this.rowNode);
 
-        this.addManagedListeners(this.beans.eventService, { newColumnsLoaded: () => this.onNewColumnsLoaded() });
+        this.addManagedListeners(this.beans.eventSvc, { newColumnsLoaded: () => this.onNewColumnsLoaded() });
     }
 
     public setComp(eGui: HTMLElement): void {
@@ -80,7 +80,7 @@ export class CellPositionFeature extends BeanStub {
 
         this.colsSpanning = this.getColSpanningList();
 
-        this.addManagedListeners(this.beans.eventService, {
+        this.addManagedListeners(this.beans.eventSvc, {
             // because we are col spanning, a reorder of the cols can change what cols we are spanning over
             displayedColumnsChanged: this.onDisplayColumnsChanged.bind(this),
             // because we are spanning over multiple cols, we check for width any time any cols width changes.
@@ -119,7 +119,7 @@ export class CellPositionFeature extends BeanStub {
             const pinned = this.column.getPinned();
             for (let i = 0; pointer && i < colSpan; i++) {
                 colsSpanning.push(pointer);
-                pointer = this.beans.visibleColsService.getColAfter(pointer);
+                pointer = this.beans.visibleCols.getColAfter(pointer);
                 if (!pointer || _missing(pointer)) {
                     break;
                 }
@@ -158,10 +158,10 @@ export class CellPositionFeature extends BeanStub {
             return leftPosition;
         }
 
-        const leftWidth = this.beans.visibleColsService.getColsLeftWidth();
+        const leftWidth = this.beans.visibleCols.getColsLeftWidth();
 
         if (this.column.getPinned() === 'right') {
-            const bodyWidth = this.beans.visibleColsService.getBodyContainerWidth();
+            const bodyWidth = this.beans.visibleCols.getBodyContainerWidth();
             return leftWidth + bodyWidth + (leftPosition || 0);
         }
 

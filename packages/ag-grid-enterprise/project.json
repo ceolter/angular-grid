@@ -8,7 +8,7 @@
       "executor": "nx:noop",
       "inputs": [],
       "outputs": [],
-      "dependsOn": ["build:types", "build:package", "build:copy-styles", "build:umd"]
+      "dependsOn": ["build:types", "build:css", "build:package", "build:copy-styles", "build:umd"]
     },
     "build:umd": {
       "executor": "nx:run-commands",
@@ -66,6 +66,15 @@
         },
         "production": {}
       }
+    },
+    "build:css": {
+      "executor": "nx:run-script",
+      "cache": true,
+      "options": {
+        "script": "build:css"
+      },
+      "inputs": ["{projectRoot}/src/**/*.css"],
+      "outputs": ["{projectRoot}/**/*.css-GENERATED.ts"]
     },
     "build:package": {
       "executor": "@nx/esbuild:esbuild",

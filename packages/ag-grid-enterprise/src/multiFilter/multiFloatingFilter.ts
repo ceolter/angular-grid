@@ -25,11 +25,11 @@ import {
 import { MultiFilter, getMultiFilterDefs } from './multiFilter';
 
 export class MultiFloatingFilterComp extends Component implements IFloatingFilterComp<MultiFilter> {
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
     private filterManager?: FilterManager;
 
     public wireBeans(beans: BeanCollection) {
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
         this.filterManager = beans.filterManager;
     }
 
@@ -180,7 +180,7 @@ export class MultiFloatingFilterComp extends Component implements IFloatingFilte
                 this.filterManager!.getDefaultFloatingFilter(this.params.column as AgColumn)
             ) ?? 'agReadOnlyFloatingFilter';
 
-        return _getFloatingFilterCompDetails(this.userComponentFactory, filterDef, params, defaultComponentName);
+        return _getFloatingFilterCompDetails(this.userCompFactory, filterDef, params, defaultComponentName);
     }
 
     private parentMultiFilterInstance(cb: (instance: MultiFilter) => void): void {

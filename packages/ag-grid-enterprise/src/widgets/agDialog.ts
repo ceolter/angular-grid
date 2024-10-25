@@ -42,12 +42,12 @@ export interface DialogOptions extends PanelOptions {
 }
 
 export class AgDialog extends AgPanel<DialogOptions> implements FocusableContainer {
-    private popupService?: PopupService;
-    private focusService: FocusService;
+    private popupSvc?: PopupService;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
-        this.popupService = beans.popupService;
-        this.focusService = beans.focusService;
+        this.popupSvc = beans.popupSvc;
+        this.focusSvc = beans.focusSvc;
     }
 
     private tabGuardFeature: TabGuardFeature;
@@ -80,23 +80,23 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
 
         if (postProcessPopupParams) {
             const { type, eventSource, column, mouseEvent, rowNode } = postProcessPopupParams;
-            this.popupService?.callPostProcessPopup(type, eGui, eventSource, mouseEvent, column, rowNode);
+            this.popupSvc?.callPostProcessPopup(type, eGui, eventSource, mouseEvent, column, rowNode);
         }
 
         this.tabGuardFeature = this.createManagedBean(new TabGuardFeature(this));
         this.tabGuardFeature.initialiseTabGuard({
             isFocusableContainer: true,
             onFocusIn: () => {
-                this.popupService?.bringPopupToFront(eGui);
+                this.popupSvc?.bringPopupToFront(eGui);
             },
             onTabKeyDown: (e) => {
                 if (modal) {
                     return;
                 }
                 const backwards = e.shiftKey;
-                const nextFocusableElement = this.focusService.findNextFocusableElement(eGui, false, backwards);
+                const nextFocusableElement = this.focusSvc.findNextFocusableElement(eGui, false, backwards);
                 if (!nextFocusableElement || this.tabGuardFeature.getTabGuardCtrl().isTabGuard(nextFocusableElement)) {
-                    if (this.focusService.focusNextGridCoreContainer(backwards)) {
+                    if (this.focusSvc.focusNextGridCoreContainer(backwards)) {
                         e.preventDefault();
                     }
                 }
@@ -114,9 +114,9 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
         }
 
         if (!this.config.modal) {
-            const { focusService } = this;
-            focusService.addFocusableContainer(this);
-            this.addDestroyFunc(() => focusService.removeFocusableContainer(this));
+            const { focusSvc } = this;
+            focusSvc.addFocusableContainer(this);
+            this.addDestroyFunc(() => focusSvc.removeFocusableContainer(this));
         }
     }
 
@@ -129,7 +129,7 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
         const { alwaysOnTop, modal, title, afterGuiAttached } = this.config;
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = this.popupService?.addPopup({
+        const addPopupRes = this.popupSvc?.addPopup({
             modal,
             eChild: eGui,
             closeOnEsc: true,

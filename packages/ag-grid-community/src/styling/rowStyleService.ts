@@ -17,12 +17,12 @@ export function calculateRowLevel(rowNode: RowNode): number {
 }
 
 export class RowStyleService extends BeanStub implements NamedBean {
-    beanName = 'rowStyleService' as const;
+    beanName = 'rowStyleSvc' as const;
 
-    private expressionService?: ExpressionService;
+    private expressionSvc?: ExpressionService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.expressionService = beans.expressionService;
+        this.expressionSvc = beans.expressionSvc;
     }
 
     public processClassesFromGridOptions(classes: string[], rowNode: RowNode): void {
@@ -79,7 +79,7 @@ export class RowStyleService extends BeanStub implements NamedBean {
         });
 
         processClassRules(
-            this.expressionService,
+            this.expressionSvc,
             undefined,
             this.gos.get('rowClassRules'),
             rowClassParams,

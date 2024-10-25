@@ -16,7 +16,7 @@ export function getColumnFilterInstance<TFilter extends IFilter>(
 }
 
 export function destroyFilter(beans: BeanCollection, key: string | Column) {
-    const column = beans.columnModel.getColDefCol(key);
+    const column = beans.colModel.getColDefCol(key);
     if (column) {
         return beans.filterManager?.destroyFilter(column, 'api');
     }
@@ -43,13 +43,13 @@ export function setColumnFilterModel<TModel>(
 }
 
 export function showColumnFilter(beans: BeanCollection, colKey: string | Column): void {
-    const column = beans.columnModel.getCol(colKey);
+    const column = beans.colModel.getCol(colKey);
     if (!column) {
         // Column not found, can't show filter
         _error(12, { colKey });
         return;
     }
-    beans.menuService?.showFilterMenu({
+    beans.menuSvc?.showFilterMenu({
         column,
         containerType: 'columnFilter',
         positionBy: 'auto',

@@ -10,11 +10,11 @@ import type { CellPosition } from '../interfaces/iCellPosition';
 import { _warn } from '../validation/logging';
 
 export function undoCellEditing(beans: BeanCollection): void {
-    beans.undoRedoService?.undo('api');
+    beans.undoRedo?.undo('api');
 }
 
 export function redoCellEditing(beans: BeanCollection): void {
-    beans.undoRedoService?.redo('api');
+    beans.undoRedo?.redo('api');
 }
 
 export function getCellEditorInstances<TData = any>(
@@ -48,11 +48,11 @@ export function getEditingCells(beans: BeanCollection): CellPosition[] {
 }
 
 export function stopEditing(beans: BeanCollection, cancel: boolean = false): void {
-    beans.editService?.stopAllEditing(cancel);
+    beans.editSvc?.stopAllEditing(cancel);
 }
 
 export function startEditingCell(beans: BeanCollection, params: StartEditingCellParams): void {
-    const column = beans.columnModel.getCol(params.colKey);
+    const column = beans.colModel.getCol(params.colKey);
     if (!column) {
         _warn(12, { colKey: params.colKey });
         return;
@@ -73,15 +73,15 @@ export function startEditingCell(beans: BeanCollection, params: StartEditingCell
     if (!cell) {
         return;
     }
-    const { focusService, gos } = beans;
+    const { focusSvc, gos } = beans;
     const isFocusWithinCell = () => {
         const activeElement = _getActiveDomElement(gos);
         const eCell = cell.getGui();
         return activeElement !== eCell && !!eCell?.contains(activeElement);
     };
     const forceBrowserFocus = gos.get('stopEditingWhenCellsLoseFocus') && isFocusWithinCell();
-    if (forceBrowserFocus || !focusService.isCellFocused(cellPosition)) {
-        focusService.setFocusedCell({
+    if (forceBrowserFocus || !focusSvc.isCellFocused(cellPosition)) {
+        focusSvc.setFocusedCell({
             ...cellPosition,
             forceBrowserFocus,
             preventScrollOnBrowserFocus: true,
@@ -91,9 +91,9 @@ export function startEditingCell(beans: BeanCollection, params: StartEditingCell
 }
 
 export function getCurrentUndoSize(beans: BeanCollection): number {
-    return beans.undoRedoService?.getCurrentUndoStackSize() ?? 0;
+    return beans.undoRedo?.getCurrentUndoStackSize() ?? 0;
 }
 
 export function getCurrentRedoSize(beans: BeanCollection): number {
-    return beans.undoRedoService?.getCurrentRedoStackSize() ?? 0;
+    return beans.undoRedo?.getCurrentRedoStackSize() ?? 0;
 }

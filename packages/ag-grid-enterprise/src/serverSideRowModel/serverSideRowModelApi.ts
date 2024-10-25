@@ -13,7 +13,7 @@ import { _getServerSideRowModel, _warn } from 'ag-grid-community';
 export function getServerSideSelectionState(
     beans: BeanCollection
 ): IServerSideSelectionState | IServerSideGroupSelectionState | null {
-    return (beans.selectionService?.getSelectionState() ?? null) as
+    return (beans.selectionSvc?.getSelectionState() ?? null) as
         | IServerSideSelectionState
         | IServerSideGroupSelectionState
         | null;
@@ -23,7 +23,7 @@ export function setServerSideSelectionState(
     beans: BeanCollection,
     state: IServerSideSelectionState | IServerSideGroupSelectionState
 ) {
-    beans.selectionService?.setSelectionState(state, 'api');
+    beans.selectionSvc?.setSelectionState(state, 'api');
 }
 
 export function applyServerSideTransaction<TData = any>(

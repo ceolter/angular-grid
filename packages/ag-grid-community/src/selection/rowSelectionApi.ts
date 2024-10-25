@@ -28,7 +28,7 @@ export function setNodesSelected(
 
     const { nodes, source, newValue } = params;
     const nodesAsRowNode = nodes as RowNode[];
-    beans.selectionService?.setNodesSelected({ nodes: nodesAsRowNode, source: source ?? 'api', newValue });
+    beans.selectionSvc?.setNodesSelected({ nodes: nodesAsRowNode, source: source ?? 'api', newValue });
 }
 
 export function selectAll(
@@ -36,7 +36,7 @@ export function selectAll(
     selectAll?: SelectAllMode,
     source: SelectionEventSourceType = 'apiSelectAll'
 ) {
-    beans.selectionService?.selectAllRowNodes({ source, selectAll });
+    beans.selectionSvc?.selectAllRowNodes({ source, selectAll });
 }
 
 export function deselectAll(
@@ -44,17 +44,17 @@ export function deselectAll(
     selectAll?: SelectAllMode,
     source: SelectionEventSourceType = 'apiSelectAll'
 ) {
-    beans.selectionService?.deselectAllRowNodes({ source, selectAll });
+    beans.selectionSvc?.deselectAllRowNodes({ source, selectAll });
 }
 
 /** @deprecated v33 */
 export function selectAllFiltered(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAllFiltered') {
-    beans.selectionService?.selectAllRowNodes({ source, selectAll: 'filtered' });
+    beans.selectionSvc?.selectAllRowNodes({ source, selectAll: 'filtered' });
 }
 
 /** @deprecated v33 */
 export function deselectAllFiltered(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAllFiltered') {
-    beans.selectionService?.deselectAllRowNodes({ source, selectAll: 'filtered' });
+    beans.selectionSvc?.deselectAllRowNodes({ source, selectAll: 'filtered' });
 }
 
 /** @deprecated v33 */
@@ -62,7 +62,7 @@ export function selectAllOnCurrentPage(
     beans: BeanCollection,
     source: SelectionEventSourceType = 'apiSelectAllCurrentPage'
 ) {
-    beans.selectionService?.selectAllRowNodes({ source, selectAll: 'currentPage' });
+    beans.selectionSvc?.selectAllRowNodes({ source, selectAll: 'currentPage' });
 }
 
 /** @deprecated v33 */
@@ -70,13 +70,13 @@ export function deselectAllOnCurrentPage(
     beans: BeanCollection,
     source: SelectionEventSourceType = 'apiSelectAllCurrentPage'
 ) {
-    beans.selectionService?.deselectAllRowNodes({ source, selectAll: 'currentPage' });
+    beans.selectionSvc?.deselectAllRowNodes({ source, selectAll: 'currentPage' });
 }
 
 export function getSelectedNodes<TData = any>(beans: BeanCollection): IRowNode<TData>[] {
-    return beans.selectionService?.getSelectedNodes() ?? [];
+    return beans.selectionSvc?.getSelectedNodes() ?? [];
 }
 
 export function getSelectedRows<TData = any>(beans: BeanCollection): TData[] {
-    return beans.selectionService?.getSelectedRows() ?? [];
+    return beans.selectionSvc?.getSelectedRows() ?? [];
 }

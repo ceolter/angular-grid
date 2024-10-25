@@ -23,18 +23,18 @@ export interface ColumnResizeSet {
 }
 
 export class ColumnResizeService extends BeanStub implements NamedBean {
-    beanName = 'columnResizeService' as const;
+    beanName = 'colResize' as const;
 
-    private columnModel: ColumnModel;
-    private columnViewportService: ColumnViewportService;
-    private visibleColsService: VisibleColsService;
-    private columnFlexService?: ColumnFlexService;
+    private colModel: ColumnModel;
+    private colViewport: ColumnViewportService;
+    private visibleCols: VisibleColsService;
+    private colFlex?: ColumnFlexService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.columnViewportService = beans.columnViewportService;
-        this.visibleColsService = beans.visibleColsService;
-        this.columnFlexService = beans.columnFlexService;
+        this.colModel = beans.colModel;
+        this.colViewport = beans.colViewport;
+        this.visibleCols = beans.visibleCols;
+        this.colFlex = beans.colFlex;
     }
 
     public setColumnWidths(
@@ -49,7 +49,7 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
         const sets: ColumnResizeSet[] = [];
 
         columnWidths.forEach((columnWidth) => {
-            const col = this.columnModel.getColDefCol(columnWidth.key) || this.columnModel.getCol(columnWidth.key);
+            const col = this.colModel.getColDefCol(columnWidth.key) || this.colModel.getCol(columnWidth.key);
 
             if (!col) {
                 return;
@@ -69,7 +69,7 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
             }
 
             if (shiftKey) {
-                const otherCol = this.visibleColsService.getColAfter(col);
+                const otherCol = this.visibleCols.getColAfter(col);
                 if (!otherCol) {
                     return;
                 }
@@ -113,7 +113,7 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
             // even though we are not going to resize beyond min/max size, we still need to dispatch event when finished
             if (finished) {
                 const columns = resizeSets && resizeSets.length > 0 ? resizeSets[0].columns : null;
-                dispatchColumnResizedEvent(this.eventService, columns, finished, source);
+                dispatchColumnResizedEvent(this.eventSvc, columns, finished, source);
             }
 
             return; // don't resize!
@@ -222,12 +222,12 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
 
         if (atLeastOneColChanged) {
             flexedCols =
-                this.columnFlexService?.refreshFlexedColumns({
+                this.colFlex?.refreshFlexedColumns({
                     skipSetLeft: true,
                 }) ?? [];
-            this.visibleColsService.setLeftValues(source);
-            this.visibleColsService.updateBodyWidths();
-            this.columnViewportService.checkViewportColumns();
+            this.visibleCols.setLeftValues(source);
+            this.visibleCols.updateBodyWidths();
+            this.colViewport.checkViewportColumns();
         }
 
         // check for change first, to avoid unnecessary firing of events
@@ -238,7 +238,7 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
         const colsForEvent = allResizedCols.concat(flexedCols);
 
         if (atLeastOneColChanged || finished) {
-            dispatchColumnResizedEvent(this.eventService, colsForEvent, finished, source, flexedCols);
+            dispatchColumnResizedEvent(this.eventSvc, colsForEvent, finished, source, flexedCols);
         }
     }
 

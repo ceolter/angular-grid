@@ -112,7 +112,7 @@ export class AgCheckbox<TConfig extends AgCheckboxParams = AgCheckboxParams> ext
 
         const input = this.getInputElement();
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'checkboxChanged',
             id: input.id,
             name: input.name,

@@ -125,10 +125,10 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             return;
         }
 
-        const nextFocusableEl = this.focusService.findNextFocusableElement(this.eGui, null, e.shiftKey);
+        const nextFocusableEl = this.focusSvc.findNextFocusableElement(this.eGui, null, e.shiftKey);
 
         if (nextFocusableEl) {
-            this.beans.headerNavigationService?.scrollToColumn(this.column);
+            this.beans.headerNavigation?.scrollToColumn(this.column);
             e.preventDefault();
             nextFocusableEl.focus();
             return;
@@ -141,7 +141,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
         }
 
         if (
-            this.focusService.focusHeaderPosition({
+            this.focusSvc.focusHeaderPosition({
                 headerPosition: {
                     headerRowIndex: this.getParentRowCtrl().getRowIndex(),
                     column: nextFocusableColumn,
@@ -154,7 +154,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     }
 
     private findNextColumnWithFloatingFilter(backwards: boolean): AgColumn | null {
-        const presentedColsService = this.beans.visibleColsService;
+        const presentedColsService = this.beans.visibleCols;
         let nextCol: AgColumn | null = this.column;
 
         do {
@@ -191,7 +191,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             // eslint-disable-next-line no-fallthrough
             case KeyCode.ENTER:
                 if (wrapperHasFocus) {
-                    if (this.focusService.focusInto(this.eGui)) {
+                    if (this.focusSvc.focusInto(this.eGui)) {
                         e.preventDefault();
                     }
                 }
@@ -224,16 +224,16 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             if (lastFocusEvent && fromTab) {
                 const shouldFocusLast = lastFocusEvent.shiftKey;
 
-                this.focusService.focusInto(this.eGui, shouldFocusLast);
+                this.focusSvc.focusInto(this.eGui, shouldFocusLast);
             }
         }
 
         const rowIndex = this.getRowIndex();
-        this.beans.focusService.setFocusedHeader(rowIndex, this.column);
+        this.beans.focusSvc.setFocusedHeader(rowIndex, this.column);
     }
 
     private setupHover(compBean: BeanStub): void {
-        this.beans.columnHoverService?.addHeaderFilterColumnHoverListener(compBean, this.comp, this.column, this.eGui);
+        this.beans.colHover?.addHeaderFilterColumnHoverListener(compBean, this.comp, this.column, this.eGui);
     }
 
     private setupLeft(compBean: BeanStub): void {
@@ -242,7 +242,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     }
 
     private setupFilterButton(): void {
-        this.suppressFilterButton = !this.menuService?.isFloatingFilterButtonEnabled(this.column);
+        this.suppressFilterButton = !this.menuSvc?.isFloatingFilterButtonEnabled(this.column);
         this.highlightFilterButtonWhenActive = !_isLegacyMenuEnabled(this.gos);
     }
 
@@ -267,7 +267,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
 
     private showParentFilter() {
         const eventSource = this.suppressFilterButton ? this.eFloatingFilterBody : this.eButtonShowMainFilter;
-        this.menuService?.showFilterMenu({
+        this.menuSvc?.showFilterMenu({
             column: this.column,
             buttonElement: eventSource,
             containerType: 'floatingFilter',

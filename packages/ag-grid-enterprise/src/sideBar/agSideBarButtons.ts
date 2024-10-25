@@ -16,12 +16,12 @@ export interface SideBarButtonClickedEvent extends AgEvent<'sideBarButtonClicked
 
 export type AgSideBarButtonsEvent = 'sideBarButtonClicked';
 export class AgSideBarButtons extends Component<AgSideBarButtonsEvent> {
-    private focusService: FocusService;
-    private visibleColsService: VisibleColsService;
+    private focusSvc: FocusService;
+    private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusService = beans.focusService;
-        this.visibleColsService = beans.visibleColsService;
+        this.focusSvc = beans.focusSvc;
+        this.visibleCols = beans.visibleCols;
     }
 
     private buttonComps: SideBarButtonComp[] = [];
@@ -39,7 +39,7 @@ export class AgSideBarButtons extends Component<AgSideBarButtonsEvent> {
             return;
         }
 
-        if (this.focusService.focusNextGridCoreContainer(true)) {
+        if (this.focusSvc.focusNextGridCoreContainer(true)) {
             e.preventDefault();
             return;
         }

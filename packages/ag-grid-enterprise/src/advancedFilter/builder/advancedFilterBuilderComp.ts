@@ -27,13 +27,13 @@ import type {
 
 export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEvents> {
     private filterManager?: FilterManager;
-    private advancedFilterService: AdvancedFilterService;
+    private advancedFilter: AdvancedFilterService;
     private advancedFilterExpressionService: AdvancedFilterExpressionService;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.advancedFilterService = beans.advancedFilterService as AdvancedFilterService;
+        this.advancedFilter = beans.advancedFilter as AdvancedFilterService;
         this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
         this.registry = beans.registry;
     }
@@ -138,7 +138,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
         this.activateTabIndex([this.eApplyFilterButton]);
         this.addManagedElementListeners(this.eApplyFilterButton, {
             click: () => {
-                this.advancedFilterService.setModel(this.filterModel);
+                this.advancedFilter.setModel(this.filterModel);
                 this.filterManager?.onFilterChanged({ source: 'advancedFilter' });
                 this.close();
             },
@@ -221,7 +221,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     }
 
     private setupFilterModel(): AdvancedFilterModel {
-        const filterModel = this.formatFilterModel(this.advancedFilterService.getModel());
+        const filterModel = this.formatFilterModel(this.advancedFilter.getModel());
         this.stringifiedModel = JSON.stringify(filterModel);
         return filterModel;
     }
@@ -468,7 +468,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     }
 
     private close(): void {
-        this.advancedFilterService.getCtrl().toggleFilterBuilder({ source: 'ui' });
+        this.advancedFilter.getCtrl().toggleFilterBuilder({ source: 'ui' });
     }
 
     private validate(): void {

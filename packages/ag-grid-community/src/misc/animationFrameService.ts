@@ -31,14 +31,14 @@ export function _requestAnimationFrame(gos: GridOptionsService, callback: any) {
 }
 
 export class AnimationFrameService extends BeanStub implements NamedBean {
-    beanName = 'animationFrameService' as const;
+    beanName = 'animationFrameSvc' as const;
 
-    private ctrlsService: CtrlsService;
-    private paginationService?: PaginationService;
+    private ctrlsSvc: CtrlsService;
+    private pagination?: PaginationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
-        this.paginationService = beans.paginationService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.pagination = beans.pagination;
     }
 
     // p1 and p2 are create tasks are to do with row and cell creation.
@@ -68,7 +68,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         this.scrollGoingDown = scrollTop >= this.lastScrollTop;
 
         if (isPaginationActive && scrollTop === 0) {
-            const currentPage = this.paginationService?.getCurrentPage() ?? 0;
+            const currentPage = this.pagination?.getCurrentPage() ?? 0;
             if (currentPage !== this.lastPage) {
                 this.lastPage = currentPage;
                 this.scrollGoingDown = true;
@@ -150,7 +150,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         // 16ms is 60 fps
         const noMaxMillis = millis <= 0;
 
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
 
         while (noMaxMillis || duration < millis) {
             const gridBodyDidSomething = gridBodyCon.getScrollFeature().scrollGridIfNeeded();

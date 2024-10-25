@@ -20,11 +20,11 @@ import { AgCheckbox } from '../widgets/agCheckbox';
 
 export class SelectAllFeature extends BeanStub {
     private rowModel: IRowModel;
-    private selectionService: ISelectionService;
+    private selectionSvc: ISelectionService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
-        this.selectionService = beans.selectionService!;
+        this.selectionSvc = beans.selectionSvc!;
     }
 
     private cbSelectAllVisible = false;
@@ -120,10 +120,10 @@ export class SelectAllFeature extends BeanStub {
 
         const selectAllMode = this.getSelectAllMode();
 
-        const allSelected = this.selectionService.getSelectAllState(selectAllMode);
+        const allSelected = this.selectionSvc.getSelectAllState(selectAllMode);
         this.cbSelectAll.setValue(allSelected!);
 
-        const hasNodesToSelect = this.selectionService.hasNodesToSelect(selectAllMode);
+        const hasNodesToSelect = this.selectionSvc.hasNodesToSelect(selectAllMode);
         this.cbSelectAll.setDisabled(!hasNodesToSelect);
 
         this.refreshSelectAllLabel();
@@ -187,9 +187,9 @@ export class SelectAllFeature extends BeanStub {
 
         const params = { source, selectAll };
         if (value) {
-            this.selectionService.selectAllRowNodes(params);
+            this.selectionSvc.selectAllRowNodes(params);
         } else {
-            this.selectionService.deselectAllRowNodes(params);
+            this.selectionSvc.deselectAllRowNodes(params);
         }
     }
 

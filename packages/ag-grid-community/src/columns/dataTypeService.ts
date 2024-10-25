@@ -37,26 +37,26 @@ interface GroupSafeValueFormatter {
 }
 
 export class DataTypeService extends BeanStub implements NamedBean {
-    beanName = 'dataTypeService' as const;
+    beanName = 'dataTypeSvc' as const;
 
     private rowModel: IRowModel;
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
-    private valueService: ValueService;
-    private columnStateService: ColumnStateService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
+    private valueSvc: ValueService;
+    private colState: ColumnStateService;
     private filterManager?: FilterManager;
-    private columnAutosizeService?: ColumnAutosizeService;
-    private columnFactory: ColumnFactory;
+    private colAutosize?: ColumnAutosizeService;
+    private colFactory: ColumnFactory;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
-        this.valueService = beans.valueService;
-        this.columnStateService = beans.columnStateService;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.valueSvc = beans.valueSvc;
+        this.colState = beans.colState;
         this.filterManager = beans.filterManager;
-        this.columnAutosizeService = beans.columnAutosizeService;
-        this.columnFactory = beans.columnFactory;
+        this.colAutosize = beans.colAutosize;
+        this.colFactory = beans.colFactory;
     }
 
     private dataTypeDefinitions: {
@@ -83,7 +83,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
         this.addManagedPropertyListener('dataTypeDefinitions', (event) => {
             this.processDataTypeDefinitions();
-            this.columnModel.recreateColumnDefs(_convertColumnEventSourceType(event.source));
+            this.colModel.recreateColumnDefs(_convertColumnEventSourceType(event.source));
         });
     }
 
@@ -100,7 +100,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 if (valueFormatter === dataTypeDefinition.groupSafeValueFormatter) {
                     valueFormatter = dataTypeDefinition.valueFormatter;
                 }
-                return this.valueService.formatValue(column as AgColumn, node, value, valueFormatter as any)!;
+                return this.valueSvc.formatValue(column as AgColumn, node, value, valueFormatter as any)!;
             };
         };
         Object.entries(defaultDataTypes).forEach(([cellDataType, dataTypeDefinition]) => {
@@ -447,8 +447,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
         }
         this.isWaitingForRowData = true;
         const columnTypeOverridesExist = this.isColumnTypeOverrideInDataTypeDefinitions;
-        if (columnTypeOverridesExist && this.columnAutosizeService) {
-            this.columnAutosizeService.shouldQueueResizeOperations = true;
+        if (columnTypeOverridesExist && this.colAutosize) {
+            this.colAutosize.shouldQueueResizeOperations = true;
         }
         const [destroyFunc] = this.addManagedEventListeners({
             rowDataUpdateStarted: (event) => {
@@ -461,9 +461,9 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 this.processColumnsPendingInference(firstRowData, columnTypeOverridesExist);
                 this.columnStateUpdatesPendingInference = {};
                 if (columnTypeOverridesExist) {
-                    this.columnAutosizeService?.processResizeOperations();
+                    this.colAutosize?.processResizeOperations();
                 }
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'dataTypesInferred',
                 });
             },
@@ -481,7 +481,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
         const newRowGroupColumnStateWithoutIndex: { [colId: string]: ColumnState } = {};
         const newPivotColumnStateWithoutIndex: { [colId: string]: ColumnState } = {};
         Object.entries(this.columnStateUpdatesPendingInference).forEach(([colId, columnStateUpdates]) => {
-            const column = this.columnModel.getCol(colId);
+            const column = this.colModel.getCol(colId);
             if (!column) {
                 return;
             }
@@ -503,14 +503,14 @@ export class DataTypeService extends BeanStub implements NamedBean {
         });
         if (columnTypeOverridesExist) {
             state.push(
-                ...this.funcColsService.generateColumnStateForRowGroupAndPivotIndexes(
+                ...this.funcColsSvc.generateColumnStateForRowGroupAndPivotIndexes(
                     newRowGroupColumnStateWithoutIndex,
                     newPivotColumnStateWithoutIndex
                 )
             );
         }
         if (state.length) {
-            this.columnStateService.applyColumnState({ state }, 'cellDataTypeInferred');
+            this.colState.applyColumnState({ state }, 'cellDataTypeInferred');
         }
         this.initialData = null;
     }
@@ -520,13 +520,13 @@ export class DataTypeService extends BeanStub implements NamedBean {
         if (!userColDef) {
             return false;
         }
-        const newColDef = this.columnFactory.addColumnDefaultAndTypes(userColDef, column.getColId());
+        const newColDef = this.colFactory.addColumnDefaultAndTypes(userColDef, column.getColId());
         column.setColDef(newColDef, userColDef, source);
         return true;
     }
 
     private getUpdatedColumnState(column: AgColumn, columnStateUpdates: Set<keyof ColumnStateParams>): ColumnState {
-        const columnState = this.columnStateService.getColumnStateFromColDef(column);
+        const columnState = this.colState.getColumnStateFromColDef(column);
         columnStateUpdates.forEach((key) => {
             // if the column state has been updated, don't update again
             delete columnState[key];
@@ -644,7 +644,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
                     useFormatter: true,
                 };
                 colDef.comparator = (a: any, b: any) => {
-                    const column = this.columnModel.getColDefCol(colId);
+                    const column = this.colModel.getColDefCol(colId);
                     const colDef = column?.getColDef();
                     if (!column || !colDef) {
                         return 0;

@@ -54,13 +54,13 @@ function _forEachReverse<T>(list: T[] | null | undefined, action: (value: T, ind
 
 export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilter {
     private filterManager?: FilterManager;
-    private userComponentFactory: UserComponentFactory;
-    private focusService: FocusService;
+    private userCompFactory: UserComponentFactory;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
-        this.userComponentFactory = beans.userComponentFactory;
-        this.focusService = beans.focusService;
+        this.userCompFactory = beans.userCompFactory;
+        this.focusSvc = beans.focusSvc;
     }
 
     private params: MultiFilterParams;
@@ -415,7 +415,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                         // focus the first filter container instead (accordion/sub menu)
                         const filterGui = this.filterGuis[index];
                         if (filterGui) {
-                            if (!this.focusService.focusInto(filterGui)) {
+                            if (!this.focusSvc.focusInto(filterGui)) {
                                 // menu item contains no focusable elements but is focusable itself
                                 filterGui.focus();
                             }
@@ -492,7 +492,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                 doesRowPassOtherFilter(node) && this.doesFilterPass({ node, data: node.data }, filterInstance),
         };
 
-        const compDetails = _getFilterDetails(this.userComponentFactory, filterDef, filterParams, 'agTextColumnFilter');
+        const compDetails = _getFilterDetails(this.userCompFactory, filterDef, filterParams, 'agTextColumnFilter');
         if (!compDetails) {
             return null;
         }

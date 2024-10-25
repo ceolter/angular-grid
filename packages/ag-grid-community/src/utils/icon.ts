@@ -243,7 +243,7 @@ export function _createIconNoSpan(
         const span = document.createElement('span');
         const iconValue = beans.registry.getIcon(iconName as IconName);
         if (!iconValue) {
-            beans.validationService?.validateIcon(iconName);
+            beans.validation?.validateIcon(iconName);
         }
         const cssClass = iconValue ?? iconName;
 

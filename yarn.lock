@@ -28999,7 +28999,7 @@ tsx@4.8.2:
   optionalDependencies:
     fsevents "~2.3.3"
 
-tsx@^4.17.0, tsx@^4.7.0:
+tsx@^4.7.0:
   version "4.19.1"
   resolved "http://52.50.158.57:4873/tsx/-/tsx-4.19.1.tgz#b7bffdf4b565813e4dea14b90872af279cd0090b"
   integrity sha512-0flMz1lh74BR4wOvBjuh9olbnwqCPc35OOlfyzHba0Dc+QNUeWX/Gq2YTbnwcWPO3BMd8fkzRVrHcsR+a7z7rA==

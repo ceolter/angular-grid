@@ -16,14 +16,14 @@ const defaultFns = {
     wireBeans() {},
 };
 
-const dispatchEvent = (beans: BeanCollection, event: AllEvents): void => beans.eventService.dispatchEvent(event);
+const dispatchEvent = (beans: BeanCollection, event: AllEvents): void => beans.eventSvc.dispatchEvent(event);
 
 // We use a class for AGGridApi so in stack traces calling grid.api.xxx() if an error is thrown it will print "GridApi.xxx"
 class GridApiClass {}
 Reflect.defineProperty(GridApiClass, 'name', { value: 'GridApi' });
 
 export class ApiFunctionService extends BeanStub implements NamedBean {
-    beanName = 'apiFunctionService' as const;
+    beanName = 'apiFunctionSvc' as const;
 
     public readonly api: GridApi = new GridApiClass() as GridApi;
 
@@ -57,7 +57,7 @@ export class ApiFunctionService extends BeanStub implements NamedBean {
     ): void {
         const { fns, beans } = this;
         if (fns !== defaultFns) {
-            fns[functionName] = beans?.validationService?.validateApiFunction(functionName, func) ?? func;
+            fns[functionName] = beans?.validation?.validateApiFunction(functionName, func) ?? func;
         }
     }
 

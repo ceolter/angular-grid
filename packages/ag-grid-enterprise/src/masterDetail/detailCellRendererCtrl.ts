@@ -13,11 +13,11 @@ import type {
 import { BeanStub, _isSameRow, _missing, _warn } from 'ag-grid-community';
 
 export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRendererCtrl {
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
         this.environment = beans.environment;
     }
 
@@ -57,7 +57,7 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
             return;
         }
 
-        this.focusService.focusInto(this.comp.getGui(), e.fromBelow);
+        this.focusSvc.focusInto(this.comp.getGui(), e.fromBelow);
     }
 
     private setAutoHeightClasses(): void {

@@ -13,11 +13,11 @@ import { SetFilter } from './setFilter';
 import { SetFilterModelFormatter } from './setFilterModelFormatter';
 
 export class SetFloatingFilterComp<V = string> extends Component implements IFloatingFilter {
-    private columnNameService: ColumnNameService;
+    private colNames: ColumnNameService;
     private readonly eFloatingFilterText: AgInputTextField = RefPlaceholder;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnNameService = beans.columnNameService;
+        this.colNames = beans.colNames;
     }
 
     private params: IFloatingFilterParams;
@@ -49,7 +49,7 @@ export class SetFloatingFilterComp<V = string> extends Component implements IFlo
     }
 
     private setParams(params: IFloatingFilterParams): void {
-        const displayName = this.columnNameService.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
+        const displayName = this.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
         const translate = this.getLocaleTextFunc();
 
         this.eFloatingFilterText.setInputAriaLabel(`${displayName} ${translate('ariaFilterInput', 'Filter Input')}`);

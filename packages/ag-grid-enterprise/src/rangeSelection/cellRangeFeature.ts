@@ -46,7 +46,7 @@ function _isFillHandleEnabled(gos: GridOptionsService): boolean {
 
 export class CellRangeFeature implements ICellRangeFeature {
     private beans: BeanCollection;
-    private rangeService: IRangeService;
+    private rangeSvc: IRangeService;
     private cellComp: ICellComp;
     private cellCtrl: CellCtrl;
     private eGui: HTMLElement;
@@ -59,7 +59,7 @@ export class CellRangeFeature implements ICellRangeFeature {
     constructor(beans: BeanCollection, ctrl: CellCtrl) {
         this.beans = beans;
         // We know these are defined otherwise the feature wouldn't be registered
-        this.rangeService = beans.rangeService!;
+        this.rangeSvc = beans.rangeSvc!;
         this.cellCtrl = ctrl;
     }
 
@@ -75,7 +75,7 @@ export class CellRangeFeature implements ICellRangeFeature {
             return;
         }
 
-        this.rangeCount = this.rangeService.getCellRangeCount(this.cellCtrl.getCellPosition());
+        this.rangeCount = this.rangeSvc.getCellRangeCount(this.cellCtrl.getCellPosition());
         this.hasChartRange = this.getHasChartRange();
 
         this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SELECTED, this.rangeCount !== 0);
@@ -108,18 +108,18 @@ export class CellRangeFeature implements ICellRangeFeature {
     }
 
     private isSingleCell(): boolean {
-        const { rangeService } = this.beans;
-        return this.rangeCount === 1 && !!rangeService && !rangeService.isMoreThanOneCell();
+        const { rangeSvc } = this.beans;
+        return this.rangeCount === 1 && !!rangeSvc && !rangeSvc.isMoreThanOneCell();
     }
 
     private getHasChartRange(): boolean {
-        const { rangeService } = this.beans;
+        const { rangeSvc } = this.beans;
 
-        if (!this.rangeCount || !rangeService) {
+        if (!this.rangeCount || !rangeSvc) {
             return false;
         }
 
-        const cellRanges = rangeService.getCellRanges();
+        const cellRanges = rangeSvc.getCellRanges();
 
         return (
             cellRanges.length > 0 &&
@@ -149,7 +149,7 @@ export class CellRangeFeature implements ICellRangeFeature {
         let left = false;
 
         const thisCol = this.cellCtrl.getCellPosition().column as AgColumn;
-        const presentedColsService = this.beans.visibleColsService;
+        const presentedColsService = this.beans.visibleCols;
 
         let leftCol: AgColumn | null;
         let rightCol: AgColumn | null;
@@ -162,9 +162,9 @@ export class CellRangeFeature implements ICellRangeFeature {
             rightCol = presentedColsService.getColAfter(thisCol);
         }
 
-        const ranges = this.rangeService
+        const ranges = this.rangeSvc
             .getCellRanges()
-            .filter((range) => this.rangeService.isCellInSpecificRange(this.cellCtrl.getCellPosition(), range));
+            .filter((range) => this.rangeSvc.isCellInSpecificRange(this.cellCtrl.getCellPosition(), range));
 
         // this means we are the first column in the grid
         if (!leftCol) {
@@ -182,8 +182,8 @@ export class CellRangeFeature implements ICellRangeFeature {
             }
 
             const range = ranges[i];
-            const startRow = this.rangeService.getRangeStartRow(range);
-            const endRow = this.rangeService.getRangeEndRow(range);
+            const startRow = this.rangeSvc.getRangeStartRow(range);
+            const endRow = this.rangeSvc.getRangeEndRow(range);
 
             if (!top && _isSameRow(startRow, this.cellCtrl.getCellPosition())) {
                 top = true;
@@ -225,7 +225,7 @@ export class CellRangeFeature implements ICellRangeFeature {
 
     private shouldHaveSelectionHandle(): boolean {
         const gos = this.beans.gos;
-        const cellRanges = this.rangeService.getCellRanges();
+        const cellRanges = this.rangeSvc.getCellRanges();
         const rangesLen = cellRanges.length;
 
         if (this.rangeCount < 1 || rangesLen < 1) {
@@ -242,8 +242,7 @@ export class CellRangeFeature implements ICellRangeFeature {
 
         if (this.hasChartRange) {
             const hasCategoryRange = cellRanges[0].type === CellRangeType.DIMENSION;
-            const isCategoryCell =
-                hasCategoryRange && this.rangeService.isCellInSpecificRange(cellPosition, cellRanges[0]);
+            const isCategoryCell = hasCategoryRange && this.rangeSvc.isCellInSpecificRange(cellPosition, cellRanges[0]);
 
             this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_CHART_CATEGORY, isCategoryCell);
             handleIsAvailable = cellRange.type === CellRangeType.VALUE;
@@ -252,13 +251,13 @@ export class CellRangeFeature implements ICellRangeFeature {
         return (
             handleIsAvailable &&
             cellRange.endRow != null &&
-            this.rangeService.isContiguousRange(cellRange) &&
-            this.rangeService.isBottomRightCell(cellRange, cellPosition)
+            this.rangeSvc.isContiguousRange(cellRange) &&
+            this.rangeSvc.isBottomRightCell(cellRange, cellPosition)
         );
     }
 
     private addSelectionHandle() {
-        const cellRangeType = _last(this.rangeService.getCellRanges()).type;
+        const cellRangeType = _last(this.rangeSvc.getCellRanges()).type;
         const selectionHandleFill = _isFillHandleEnabled(this.beans.gos) && _missing(cellRangeType);
         const type = selectionHandleFill ? SelectionHandleType.FILL : SelectionHandleType.RANGE;
 

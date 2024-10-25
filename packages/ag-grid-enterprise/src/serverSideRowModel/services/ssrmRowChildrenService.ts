@@ -3,7 +3,7 @@ import { BeanStub } from 'ag-grid-community';
 
 /** handles row grouping and tree data logic */
 export class SsrmRowChildrenService extends BeanStub implements NamedBean, IRowChildrenService {
-    beanName = 'rowChildrenService' as const;
+    beanName = 'rowChildrenSvc' as const;
 
     public getHasChildrenValue(rowNode: RowNode): boolean | null {
         const isTreeData = this.gos.get('treeData');

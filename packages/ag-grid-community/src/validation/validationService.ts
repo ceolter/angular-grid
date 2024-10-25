@@ -23,7 +23,7 @@ import { USER_COMP_MODULES } from './rules/userCompValidations';
 import type { DependentValues, OptionsValidation, OptionsValidator, RequiredOptions } from './validationTypes';
 
 export class ValidationService extends BeanStub implements NamedBean {
-    beanName = 'validationService' as const;
+    beanName = 'validation' as const;
 
     private gridOptions: GridOptions;
 

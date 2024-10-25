@@ -7,26 +7,26 @@ export function addEventListener<TEventType extends AgPublicEventType>(
     eventType: TEventType,
     listener: AgEventListener<any, any, TEventType>
 ): void {
-    beans.apiEventService?.addEventListener(eventType, listener);
+    beans.apiEventSvc?.addEventListener(eventType, listener);
 }
 export function removeEventListener<TEventType extends AgPublicEventType>(
     beans: BeanCollection,
     eventType: TEventType,
     listener: AgEventListener<any, any, TEventType>
 ): void {
-    beans.apiEventService?.removeEventListener(eventType, listener as AgEventListener);
+    beans.apiEventSvc?.removeEventListener(eventType, listener as AgEventListener);
 }
 
 export function addGlobalListener<TEventType extends AgPublicEventType>(
     beans: BeanCollection,
     listener: AgGlobalEventListener<any, any, TEventType>
 ): void {
-    beans.apiEventService?.addGlobalListener(listener);
+    beans.apiEventSvc?.addGlobalListener(listener);
 }
 
 export function removeGlobalListener<TEventType extends AgPublicEventType>(
     beans: BeanCollection,
     listener: AgGlobalEventListener<any, any, TEventType>
 ): void {
-    beans.apiEventService?.removeGlobalListener(listener);
+    beans.apiEventSvc?.removeGlobalListener(listener);
 }

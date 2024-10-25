@@ -11,17 +11,17 @@ export class AutoWidthCalculator extends BeanStub implements NamedBean {
     beanName = 'autoWidthCalculator' as const;
 
     private rowRenderer: RowRenderer;
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowRenderer = beans.rowRenderer;
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private centerRowContainerCtrl: RowContainerCtrl;
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.centerRowContainerCtrl = p.center;
         });
     }
@@ -97,7 +97,7 @@ export class AutoWidthCalculator extends BeanStub implements NamedBean {
     private getHeaderCellForColumn(column: AgColumnGroup | AgColumn): HTMLElement | null {
         let element: HTMLElement | null = null;
 
-        this.ctrlsService.getHeaderRowContainerCtrls().forEach((container) => {
+        this.ctrlsSvc.getHeaderRowContainerCtrls().forEach((container) => {
             const res = container.getHtmlElementForColumnHeader(column);
             if (res != null) {
                 element = res;

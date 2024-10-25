@@ -23,14 +23,14 @@ export interface DropListener {
 }
 
 export class BodyDropTarget extends BeanStub implements DropTarget {
-    private dragAndDropService: DragAndDropService;
-    private columnModel: ColumnModel;
-    private ctrlsService: CtrlsService;
+    private dragAndDrop: DragAndDropService;
+    private colModel: ColumnModel;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.dragAndDropService = beans.dragAndDropService!;
-        this.columnModel = beans.columnModel;
-        this.ctrlsService = beans.ctrlsService;
+        this.dragAndDrop = beans.dragAndDrop!;
+        this.colModel = beans.colModel;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private pinned: ColumnPinnedType;
@@ -50,7 +50,7 @@ export class BodyDropTarget extends BeanStub implements DropTarget {
     }
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             switch (this.pinned) {
                 case 'left':
                     this.eSecondaryContainers = [
@@ -79,8 +79,8 @@ export class BodyDropTarget extends BeanStub implements DropTarget {
         this.moveColumnFeature = this.createManagedBean(new MoveColumnFeature(this.pinned));
         this.bodyDropPivotTarget = this.createManagedBean(new BodyDropPivotTarget(this.pinned));
 
-        this.dragAndDropService.addDropTarget(this);
-        this.addDestroyFunc(() => this.dragAndDropService.removeDropTarget(this));
+        this.dragAndDrop.addDropTarget(this);
+        this.addDestroyFunc(() => this.dragAndDrop.removeDropTarget(this));
     }
 
     public isInterestedIn(type: DragSourceType): boolean {
@@ -109,7 +109,7 @@ export class BodyDropTarget extends BeanStub implements DropTarget {
         // in pivot mode, then if moving a column (ie didn't come from toolpanel) then it's
         // a standard column move, however if it came from the toolpanel, then we are introducing
         // dimensions or values to the grid
-        return this.columnModel.isPivotMode() && draggingEvent.dragSource.type === DragSourceType.ToolPanel;
+        return this.colModel.isPivotMode() && draggingEvent.dragSource.type === DragSourceType.ToolPanel;
     }
 
     public onDragEnter(draggingEvent: DraggingEvent): void {

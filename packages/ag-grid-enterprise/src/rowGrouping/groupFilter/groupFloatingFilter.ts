@@ -13,11 +13,11 @@ import { AgInputTextField, AgPromise, Component, RefPlaceholder, _clearElement }
 import type { GroupFilter } from './groupFilter';
 
 export class GroupFloatingFilterComp extends Component implements IFloatingFilterComp<GroupFilter> {
-    private columnNameService: ColumnNameService;
+    private colNames: ColumnNameService;
     private filterManager?: FilterManager;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnNameService = beans.columnNameService;
+        this.colNames = beans.colNames;
         this.filterManager = beans.filterManager;
     }
 
@@ -67,11 +67,7 @@ export class GroupFloatingFilterComp extends Component implements IFloatingFilte
     }
 
     private setParams(): void {
-        const displayName = this.columnNameService.getDisplayNameForColumn(
-            this.params.column as AgColumn,
-            'header',
-            true
-        );
+        const displayName = this.colNames.getDisplayNameForColumn(this.params.column as AgColumn, 'header', true);
         const translate = this.getLocaleTextFunc();
         this.eFloatingFilterText?.setInputAriaLabel(`${displayName} ${translate('ariaFilterInput', 'Filter Input')}`);
     }

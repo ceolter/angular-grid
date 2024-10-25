@@ -3,7 +3,7 @@ import type { RowClassParams } from '../entities/gridOptions';
 import type { ExpressionService } from '../valueService/expressionService';
 
 export function processClassRules(
-    expressionService: ExpressionService | undefined,
+    expressionSvc: ExpressionService | undefined,
     previousClassRules: { [cssClassName: string]: ((...args: any[]) => any) | string } | undefined,
     classRules: { [cssClassName: string]: ((...args: any[]) => any) | string } | undefined,
     params: RowClassParams | CellClassParams,
@@ -34,7 +34,7 @@ export function processClassRules(
             let resultOfRule: any;
 
             if (typeof rule === 'string') {
-                resultOfRule = expressionService ? expressionService.evaluate(rule, params) : true;
+                resultOfRule = expressionSvc ? expressionSvc.evaluate(rule, params) : true;
             } else if (typeof rule === 'function') {
                 resultOfRule = rule(params);
             }

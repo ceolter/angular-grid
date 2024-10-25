@@ -55,18 +55,18 @@ export interface CommonCreateChartParams extends BaseCreateChartParams {
 }
 
 export class ChartService extends BeanStub implements NamedBean, IChartService {
-    beanName = 'chartService' as const;
+    beanName = 'chartSvc' as const;
 
-    private visibleColsService: VisibleColsService;
-    private rangeService?: IRangeService;
+    private visibleCols: VisibleColsService;
+    private rangeSvc?: IRangeService;
     private environment: Environment;
-    private focusService: FocusService;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
-        this.rangeService = beans.rangeService;
+        this.visibleCols = beans.visibleCols;
+        this.rangeSvc = beans.rangeSvc;
         this.environment = beans.environment;
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
     }
 
     // we destroy all charts bound to this grid when grid is destroyed. activeCharts contains all charts, including
@@ -310,7 +310,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
                 }
             },
             focusChart: () => {
-                this.focusService.focusInto(chartComp.getGui());
+                this.focusSvc.focusInto(chartComp.getGui());
             },
             chartElement: chartComp.getGui(),
             chart: chartComp.getUnderlyingChart(),
@@ -324,7 +324,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     }
 
     private getSelectedRange(): PartialCellRange {
-        const ranges = this.rangeService?.getCellRanges() ?? [];
+        const ranges = this.rangeSvc?.getCellRanges() ?? [];
         return ranges.length > 0 ? ranges[0] : { columns: [] };
     }
 
@@ -339,12 +339,11 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
                   rowStartPinned: undefined,
                   rowEndIndex: null,
                   rowEndPinned: undefined,
-                  columns: this.visibleColsService.allCols.map((col) => col.getColId()),
+                  columns: this.visibleCols.allCols.map((col) => col.getColId()),
               }
             : cellRangeParams;
         const cellRange =
-            rangeParams &&
-            this.rangeService?.createPartialCellRangeFromRangeParams(rangeParams as CellRangeParams, true);
+            rangeParams && this.rangeSvc?.createPartialCellRangeFromRangeParams(rangeParams as CellRangeParams, true);
         if (!cellRange) {
             _warn(127, { allRange });
         }

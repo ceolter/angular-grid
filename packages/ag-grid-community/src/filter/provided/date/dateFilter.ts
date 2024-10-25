@@ -17,13 +17,13 @@ const DEFAULT_MIN_YEAR = 1000;
 const DEFAULT_MAX_YEAR = Infinity;
 
 export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrapper> {
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
     private context: Context;
 
     public override wireBeans(beans: BeanCollection): void {
         super.wireBeans(beans);
         this.context = beans.context;
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
     }
 
     private readonly eConditionPanelsFrom: HTMLElement[] = [];
@@ -139,7 +139,7 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     createDateCompWrapper(element: HTMLElement): DateCompWrapper {
         const dateCompWrapper = new DateCompWrapper(
             this.context,
-            this.userComponentFactory,
+            this.userCompFactory,
             {
                 onDateChanged: () => this.onUiChanged(),
                 filterParams: this.dateFilterParams,

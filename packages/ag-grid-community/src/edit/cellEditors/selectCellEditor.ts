@@ -19,10 +19,10 @@ interface SelectCellEditorParams<TData = any, TValue = any, TContext = any>
 export class SelectCellEditor extends PopupComponent implements ICellEditorComp {
     private focusAfterAttached: boolean;
 
-    private valueService: ValueService;
+    private valueSvc: ValueService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.valueService = beans.valueService;
+        this.valueSvc = beans.valueSvc;
     }
 
     private readonly eSelect: AgSelect = RefPlaceholder;
@@ -42,7 +42,7 @@ export class SelectCellEditor extends PopupComponent implements ICellEditorComp 
     public init(params: SelectCellEditorParams): void {
         this.focusAfterAttached = params.cellStartedEdit;
 
-        const { eSelect, valueService, gos } = this;
+        const { eSelect, valueSvc, gos } = this;
         const { values, value, eventKey } = params;
 
         if (_missing(values)) {
@@ -55,7 +55,7 @@ export class SelectCellEditor extends PopupComponent implements ICellEditorComp 
         let hasValue = false;
         values.forEach((currentValue: any) => {
             const option: ListOption = { value: currentValue };
-            const valueFormatted = valueService.formatValue(params.column as AgColumn, null, currentValue);
+            const valueFormatted = valueSvc.formatValue(params.column as AgColumn, null, currentValue);
             const valueFormattedExits = valueFormatted !== null && valueFormatted !== undefined;
             option.text = valueFormattedExits ? valueFormatted : currentValue;
 

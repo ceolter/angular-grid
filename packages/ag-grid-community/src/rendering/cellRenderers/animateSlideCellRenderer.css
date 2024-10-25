@@ -1,0 +1,13 @@
+.ag-value-slide-out {
+    margin-right: 5px;
+    opacity: 1;
+    transition:
+        opacity 3s,
+        margin-right 3s;
+    transition-timing-function: linear;
+}
+
+.ag-value-slide-out-end {
+    margin-right: 10px;
+    opacity: 0;
+}

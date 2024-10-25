@@ -7,7 +7,7 @@ import type { IEventEmitter } from './interfaces/iEventEmitter';
 import { LocalEventService } from './localEventService';
 
 export class EventService extends BeanStub<AgEventType> implements NamedBean, IEventEmitter<AgEventType> {
-    beanName = 'eventService' as const;
+    beanName = 'eventSvc' as const;
 
     private globalEventListener?: AgGlobalEventListener;
     private globalSyncEventListener?: AgGlobalEventListener;

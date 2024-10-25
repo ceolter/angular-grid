@@ -8,7 +8,7 @@ import type { IDatasource } from '../interfaces/iDatasource';
 import type { IRowModel, RowBounds, RowModelType } from '../interfaces/iRowModel';
 import type { ISelectionService } from '../interfaces/iSelectionService';
 import type { RowRenderer } from '../rendering/rowRenderer';
-import type { SortController } from '../sort/sortController';
+import type { SortService } from '../sort/sortService';
 import { _jsonEquals } from '../utils/generic';
 import type { InfiniteCacheParams } from './infiniteCache';
 import { InfiniteCache } from './infiniteCache';
@@ -18,15 +18,15 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     beanName = 'rowModel' as const;
 
     private filterManager?: FilterManager;
-    private sortController?: SortController;
-    private selectionService?: ISelectionService;
+    private sortSvc?: SortService;
+    private selectionSvc?: ISelectionService;
     private rowRenderer: RowRenderer;
     private rowNodeBlockLoader: RowNodeBlockLoader;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.sortController = beans.sortController;
-        this.selectionService = beans.selectionService;
+        this.sortSvc = beans.sortSvc;
+        this.selectionSvc = beans.selectionSvc;
         this.rowRenderer = beans.rowRenderer;
         this.rowNodeBlockLoader = beans.rowNodeBlockLoader!;
     }
@@ -119,7 +119,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     private isSortModelDifferent(): boolean {
-        return !_jsonEquals(this.cacheParams.sortModel, this.sortController?.getSortModel() ?? []);
+        return !_jsonEquals(this.cacheParams.sortModel, this.sortSvc?.getSortModel() ?? []);
     }
 
     public getType(): RowModelType {
@@ -162,14 +162,14 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         const userGeneratingIds = getRowIdFunc != null;
 
         if (!userGeneratingIds) {
-            this.selectionService?.reset('rowDataChanged');
+            this.selectionSvc?.reset('rowDataChanged');
         }
 
         this.resetCache();
     }
 
     private dispatchModelUpdatedEvent() {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'modelUpdated',
             // not sure if these should all be false - noticed if after implementing,
             // maybe they should be true?
@@ -191,7 +191,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
 
             // sort and filter model
             filterModel: this.filterManager?.getFilterModel() ?? {},
-            sortModel: this.sortController?.getSortModel() ?? [],
+            sortModel: this.sortSvc?.getSortModel() ?? [],
 
             rowNodeBlockLoader: this.rowNodeBlockLoader,
 
@@ -217,7 +217,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
 
         this.infiniteCache = this.createBean(new InfiniteCache(this.cacheParams));
 
-        this.eventService.dispatchEventOnce({
+        this.eventSvc.dispatchEventOnce({
             type: 'rowCountReady',
         });
 

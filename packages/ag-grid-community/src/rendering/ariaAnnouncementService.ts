@@ -7,7 +7,7 @@ import { _clearElement } from '../utils/dom';
 import { _debounce } from '../utils/function';
 
 export class AriaAnnouncementService extends BeanStub implements NamedBean {
-    beanName = 'ariaAnnouncementService' as const;
+    beanName = 'ariaAnnounce' as const;
 
     private eGridDiv: HTMLElement;
 

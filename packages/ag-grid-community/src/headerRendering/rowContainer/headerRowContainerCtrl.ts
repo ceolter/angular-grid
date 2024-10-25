@@ -28,22 +28,22 @@ export interface IHeaderRowContainerComp {
 }
 
 export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
-    private ctrlsService: CtrlsService;
-    private scrollVisibleService: ScrollVisibleService;
-    private pinnedColumnService?: PinnedColumnService;
-    private columnModel: ColumnModel;
-    private focusService: FocusService;
+    private ctrlsSvc: CtrlsService;
+    private scrollVisibleSvc: ScrollVisibleService;
+    private pinnedCols?: PinnedColumnService;
+    private colModel: ColumnModel;
+    private focusSvc: FocusService;
     private filterManager?: FilterManager;
-    private columnMoveService?: ColumnMoveService;
+    private colMoves?: ColumnMoveService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
-        this.scrollVisibleService = beans.scrollVisibleService;
-        this.pinnedColumnService = beans.pinnedColumnService;
-        this.columnModel = beans.columnModel;
-        this.focusService = beans.focusService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.scrollVisibleSvc = beans.scrollVisibleSvc;
+        this.pinnedCols = beans.pinnedCols;
+        this.colModel = beans.colModel;
+        this.focusSvc = beans.focusSvc;
         this.filterManager = beans.filterManager;
-        this.columnMoveService = beans.columnMoveService;
+        this.colMoves = beans.colMoves;
     }
 
     private pinned: ColumnPinnedType;
@@ -78,9 +78,9 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
         });
 
         const headerType = `${typeof this.pinned === 'string' ? this.pinned : 'center'}Header` as const;
-        this.ctrlsService.register(headerType, this);
+        this.ctrlsSvc.register(headerType, this);
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.refresh();
         }
     }
@@ -101,10 +101,10 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
 
     public refresh(keepColumns = false): void {
         let sequence = 0;
-        const focusedHeaderPosition = this.focusService.getFocusHeaderToUseAfterRefresh();
+        const focusedHeaderPosition = this.focusSvc.getFocusHeaderToUseAfterRefresh();
 
         const refreshColumnGroups = () => {
-            const groupRowCount = getHeaderRowCount(this.columnModel) - 1;
+            const groupRowCount = getHeaderRowCount(this.colModel) - 1;
 
             this.groupsRowCtrls = this.destroyBeans(this.groupsRowCtrls);
 
@@ -252,7 +252,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     private setupDragAndDrop(dropContainer: HTMLElement): void {
-        const bodyDropTarget = this.columnMoveService?.createBodyDropTarget(this.pinned, dropContainer);
+        const bodyDropTarget = this.colMoves?.createBodyDropTarget(this.pinned, dropContainer);
         if (bodyDropTarget) {
             this.createManagedBean(bodyDropTarget);
         }
@@ -269,7 +269,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
             return;
         }
 
-        this.focusService.focusHeaderPosition({ headerPosition: position });
+        this.focusSvc.focusHeaderPosition({ headerPosition: position });
     }
 
     // grid cols have changed - this also means the number of rows in the header can have
@@ -294,7 +294,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     private setupPinnedWidth(): void {
-        if (this.pinned == null || !this.pinnedColumnService) {
+        if (this.pinned == null || !this.pinnedCols) {
             return;
         }
 
@@ -304,9 +304,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
         this.hidden = true;
 
         const listener = () => {
-            const width = pinningLeft
-                ? this.pinnedColumnService!.getPinnedLeftWidth()
-                : this.pinnedColumnService!.getPinnedRightWidth();
+            const width = pinningLeft ? this.pinnedCols!.getPinnedLeftWidth() : this.pinnedCols!.getPinnedRightWidth();
             if (width == null) {
                 return;
             } // can happen at initialisation, width not yet set
@@ -314,14 +312,13 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
             const hidden = width == 0;
             const hiddenChanged = this.hidden !== hidden;
             const isRtl = this.gos.get('enableRtl');
-            const scrollbarWidth = this.scrollVisibleService.getScrollbarWidth();
+            const scrollbarWidth = this.scrollVisibleSvc.getScrollbarWidth();
 
             // if there is a scroll showing (and taking up space, so Windows, and not iOS)
             // in the body, then we add extra space to keep header aligned with the body,
             // as body width fits the cols and the scrollbar
             const addPaddingForScrollbar =
-                this.scrollVisibleService.isVerticalScrollShowing() &&
-                ((isRtl && pinningLeft) || (!isRtl && pinningRight));
+                this.scrollVisibleSvc.isVerticalScrollShowing() && ((isRtl && pinningLeft) || (!isRtl && pinningRight));
             const widthWithPadding = addPaddingForScrollbar ? width + scrollbarWidth : width;
 
             this.comp.setPinnedContainerWidth(`${widthWithPadding}px`);

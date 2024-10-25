@@ -81,13 +81,13 @@ interface Position {
 }
 
 export class PopupService extends BeanStub implements NamedBean {
-    beanName = 'popupService' as const;
+    beanName = 'popupSvc' as const;
 
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
         this.environment = beans.environment;
     }
 
@@ -96,7 +96,7 @@ export class PopupService extends BeanStub implements NamedBean {
     private popupList: AgPopup[] = [];
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.gridCtrl = p.gridCtrl;
         });
         this.addManagedEventListeners({ gridStylesChanged: this.handleThemeChange.bind(this) });
@@ -572,7 +572,7 @@ export class PopupService extends BeanStub implements NamedBean {
             eDocument.removeEventListener('touchstart', hidePopupOnTouchEvent);
             eDocument.removeEventListener('contextmenu', hidePopupOnMouseEvent);
 
-            this.eventService.removeEventListener('dragStarted', hidePopupOnMouseEvent as any);
+            this.eventSvc.removeEventListener('dragStarted', hidePopupOnMouseEvent as any);
 
             if (closedCallback) {
                 closedCallback(mouseEvent || touchEvent || keyboardEvent);
@@ -594,7 +594,7 @@ export class PopupService extends BeanStub implements NamedBean {
 
             if (modal) {
                 eDocument.addEventListener('mousedown', hidePopupOnMouseEvent);
-                this.eventService.addEventListener('dragStarted', hidePopupOnMouseEvent as any);
+                this.eventSvc.addEventListener('dragStarted', hidePopupOnMouseEvent as any);
                 eDocument.addEventListener('touchstart', hidePopupOnTouchEvent);
                 eDocument.addEventListener('contextmenu', hidePopupOnMouseEvent);
             }

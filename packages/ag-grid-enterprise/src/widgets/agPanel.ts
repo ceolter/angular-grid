@@ -11,6 +11,8 @@ import {
     _setDisplayed,
 } from 'ag-grid-community';
 
+import { agPanelCSS } from './agPanel.css-GENERATED';
+
 export interface PanelOptions extends PositionableOptions {
     component?: Component<any>;
     hideTitleBar?: boolean | null;
@@ -46,6 +48,7 @@ export class AgPanel<TConfig extends PanelOptions = PanelOptions> extends Compon
 
     constructor(protected readonly config: TConfig) {
         super(getTemplate(config));
+        this.registerCSS(agPanelCSS);
     }
 
     public postConstruct() {

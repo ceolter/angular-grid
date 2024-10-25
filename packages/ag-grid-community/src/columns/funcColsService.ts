@@ -15,16 +15,16 @@ import type { ColumnState, ModifyColumnsNoEventsCallbacks } from './columnStateS
 import type { VisibleColsService } from './visibleColsService';
 
 export class FuncColsService extends BeanStub implements NamedBean {
-    beanName = 'funcColsService' as const;
+    beanName = 'funcColsSvc' as const;
 
-    private columnModel: ColumnModel;
-    private aggFuncService?: IAggFuncService;
-    private visibleColsService: VisibleColsService;
+    private colModel: ColumnModel;
+    private aggFuncSvc?: IAggFuncService;
+    private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.aggFuncService = beans.aggFuncService;
-        this.visibleColsService = beans.visibleColsService;
+        this.colModel = beans.colModel;
+        this.aggFuncSvc = beans.aggFuncSvc;
+        this.visibleCols = beans.visibleCols;
     }
 
     public rowGroupCols: AgColumn[] = [];
@@ -52,7 +52,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
             return this.rowGroupCols.slice(0);
         }
 
-        const column = this.columnModel.getColDefCol(sourceColumnId);
+        const column = this.colModel.getColDefCol(sourceColumnId);
         return column ? [column] : null;
     }
 
@@ -77,14 +77,14 @@ export class FuncColsService extends BeanStub implements NamedBean {
             return;
         }
 
-        const column = this.columnModel.getColDefCol(key);
+        const column = this.colModel.getColDefCol(key);
         if (!column) {
             return;
         }
 
         column.setAggFunc(aggFunc);
 
-        dispatchColumnChangedEvent(this.eventService, 'columnValueChanged', [column], source);
+        dispatchColumnChangedEvent(this.eventSvc, 'columnValueChanged', [column], source);
     }
 
     public setRowGroupColumns(colKeys: ColKey[], source: ColumnEventType): void {
@@ -107,7 +107,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
         column.setRowGroupActive(active, source);
 
         if (_shouldUpdateColVisibilityAfterGroup(this.gos, active)) {
-            this.columnModel.setColsVisible([column], !active, source);
+            this.colModel.setColsVisible([column], !active, source);
         }
     }
 
@@ -192,8 +192,8 @@ export class FuncColsService extends BeanStub implements NamedBean {
 
         column.setValueActive(active, source);
 
-        if (active && !column.getAggFunc() && this.aggFuncService) {
-            const initialAggFunc = this.aggFuncService.getDefaultAggFunc(column);
+        if (active && !column.getAggFunc() && this.aggFuncSvc) {
+            const initialAggFunc = this.aggFuncSvc.getDefaultAggFunc(column);
             column.setAggFunc(initialAggFunc);
         }
     }
@@ -233,7 +233,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
         this.rowGroupCols.splice(fromIndex, 1);
         this.rowGroupCols.splice(toIndex, 0, column);
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'columnRowGroupChanged',
             columns: impactedColumns,
             column: impactedColumns.length === 1 ? impactedColumns[0] : null,
@@ -251,7 +251,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
         source: ColumnEventType
     ): void {
         // defer grid init until cols are present. array size does not matter, only presence.
-        if (!this.columnModel.getCols()) {
+        if (!this.colModel.getCols()) {
             return;
         }
 
@@ -263,7 +263,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
 
         if (_exists(colKeys)) {
             colKeys.forEach((key) => {
-                const column = this.columnModel.getColDefCol(key);
+                const column = this.colModel.getColDefCol(key);
                 if (column) {
                     masterList.push(column);
                 }
@@ -288,17 +288,17 @@ export class FuncColsService extends BeanStub implements NamedBean {
             changes.delete(col);
         });
 
-        const primaryCols = this.columnModel.getColDefCols();
+        const primaryCols = this.colModel.getColDefCols();
         (primaryCols || []).forEach((column) => {
             const added = masterList.indexOf(column) >= 0;
             columnCallback(added, column);
         });
 
-        autoGroupsNeedBuilding && this.columnModel.refreshCols(false);
+        autoGroupsNeedBuilding && this.colModel.refreshCols(false);
 
-        this.visibleColsService.refresh(source);
+        this.visibleCols.refresh(source);
 
-        dispatchColumnChangedEvent(this.eventService, eventName, [...changes.keys()], source);
+        dispatchColumnChangedEvent(this.eventSvc, eventName, [...changes.keys()], source);
     }
 
     private updateColList(
@@ -321,7 +321,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
             if (!key) {
                 return;
             }
-            const columnToAdd = this.columnModel.getColDefCol(key);
+            const columnToAdd = this.colModel.getColDefCol(key);
             if (!columnToAdd) {
                 return;
             }
@@ -353,13 +353,13 @@ export class FuncColsService extends BeanStub implements NamedBean {
         }
 
         if (autoGroupsNeedBuilding) {
-            this.columnModel.refreshCols(false);
+            this.colModel.refreshCols(false);
         }
 
-        this.visibleColsService.refresh(source);
+        this.visibleCols.refresh(source);
 
         const eventColumns = Array.from(updatedCols);
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: eventType,
             columns: eventColumns,
             column: eventColumns.length === 1 ? eventColumns[0] : null,
@@ -451,7 +451,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
         const colsWithIndex: AgColumn[] = [];
         const colsWithValue: AgColumn[] = [];
 
-        const primaryCols = this.columnModel.getColDefCols() || [];
+        const primaryCols = this.colModel.getColDefCols() || [];
 
         // go though all cols.
         // if value, change
@@ -580,7 +580,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
             indexProp: 'rowGroupIndex' | 'pivotIndex',
             initialIndexProp: 'initialRowGroupIndex' | 'initialPivotIndex'
         ) => {
-            const primaryCols = this.columnModel.getColDefCols();
+            const primaryCols = this.colModel.getColDefCols();
             if (!colList.length || !primaryCols) {
                 return [];
             }

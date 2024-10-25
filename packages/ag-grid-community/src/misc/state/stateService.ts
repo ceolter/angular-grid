@@ -48,41 +48,41 @@ import { VERSION } from '../../version';
 import { migrateGridStateModel } from './stateModelMigration';
 
 export class StateService extends BeanStub implements NamedBean {
-    beanName = 'stateService' as const;
+    beanName = 'stateSvc' as const;
 
     private filterManager?: FilterManager;
-    private ctrlsService: CtrlsService;
-    private pivotResultColsService?: IPivotResultColsService;
-    private focusService: FocusService;
-    private columnModel: ColumnModel;
-    private visibleColsService: VisibleColsService;
-    private paginationService?: PaginationService;
-    private selectionService?: ISelectionService;
-    private expansionService?: IExpansionService;
-    private columnAnimationService?: ColumnAnimationService;
-    private columnStateService: ColumnStateService;
-    private sideBarService?: ISideBarService;
-    private rangeService?: IRangeService;
+    private ctrlsSvc: CtrlsService;
+    private pivotResultCols?: IPivotResultColsService;
+    private focusSvc: FocusService;
+    private colModel: ColumnModel;
+    private visibleCols: VisibleColsService;
+    private pagination?: PaginationService;
+    private selectionSvc?: ISelectionService;
+    private expansionSvc?: IExpansionService;
+    private colAnimation?: ColumnAnimationService;
+    private colState: ColumnStateService;
+    private sideBar?: ISideBarService;
+    private rangeSvc?: IRangeService;
     private rowModel: IRowModel;
-    private columnGroupService?: ColumnGroupService;
+    private columnGroupSvc?: ColumnGroupService;
     private updateRowGroupExpansionStateTimer: ReturnType<typeof setTimeout> | number = 0;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.ctrlsService = beans.ctrlsService;
-        this.pivotResultColsService = beans.pivotResultColsService;
-        this.focusService = beans.focusService;
-        this.columnModel = beans.columnModel;
-        this.visibleColsService = beans.visibleColsService;
-        this.paginationService = beans.paginationService;
-        this.selectionService = beans.selectionService;
-        this.expansionService = beans.expansionService;
-        this.columnAnimationService = beans.columnAnimationService;
-        this.columnStateService = beans.columnStateService;
-        this.sideBarService = beans.sideBarService;
-        this.rangeService = beans.rangeService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.pivotResultCols = beans.pivotResultCols;
+        this.focusSvc = beans.focusSvc;
+        this.colModel = beans.colModel;
+        this.visibleCols = beans.visibleCols;
+        this.pagination = beans.pagination;
+        this.selectionSvc = beans.selectionSvc;
+        this.expansionSvc = beans.expansionSvc;
+        this.colAnimation = beans.colAnimation;
+        this.colState = beans.colState;
+        this.sideBar = beans.sideBar;
+        this.rangeSvc = beans.rangeSvc;
         this.rowModel = beans.rowModel;
-        this.columnGroupService = beans.columnGroupService;
+        this.columnGroupSvc = beans.columnGroupSvc;
     }
 
     private isClientSideRowModel: boolean;
@@ -118,7 +118,7 @@ export class StateService extends BeanStub implements NamedBean {
         this.cachedState = this.getInitialState();
         this.setCachedStateValue('version', VERSION);
 
-        this.ctrlsService.whenReady(this, () =>
+        this.ctrlsSvc.whenReady(this, () =>
             this.suppressEventsAndDispatchInitEvent(() => this.setupStateOnGridReady())
         );
 
@@ -318,7 +318,7 @@ export class StateService extends BeanStub implements NamedBean {
         columnSizing?: ColumnSizingState;
         columnOrder?: ColumnOrderState;
     } {
-        const pivotMode = this.columnModel.isPivotMode();
+        const pivotMode = this.colModel.isPivotMode();
         const sortColumns: SortModelItem[] = [];
         const groupColIds: string[] = [];
         const aggregationColumns: AggregationColumnState[] = [];
@@ -330,7 +330,7 @@ export class StateService extends BeanStub implements NamedBean {
         const columns: string[] = [];
 
         let defaultSortIndex = 0;
-        const columnState = this.columnStateService.getColumnState();
+        const columnState = this.colState.getColumnState();
         for (let i = 0; i < columnState.length; i++) {
             const {
                 colId,
@@ -485,7 +485,7 @@ export class StateService extends BeanStub implements NamedBean {
 
         if (columnStates.length) {
             this.columnStates = columnStates;
-            this.columnStateService.applyColumnState(
+            this.colState.applyColumnState(
                 {
                     state: columnStates,
                     applyOrder,
@@ -502,19 +502,19 @@ export class StateService extends BeanStub implements NamedBean {
         const columnGroupStates = this.columnGroupStates;
         this.columnGroupStates = undefined;
 
-        if (!this.pivotResultColsService?.isPivotResultColsPresent()) {
+        if (!this.pivotResultCols?.isPivotResultColsPresent()) {
             return;
         }
 
         if (columnStates) {
             const secondaryColumnStates: ColumnState[] = [];
             for (const columnState of columnStates) {
-                if (this.pivotResultColsService.getPivotResultCol(columnState.colId)) {
+                if (this.pivotResultCols.getPivotResultCol(columnState.colId)) {
                     secondaryColumnStates.push(columnState);
                 }
             }
 
-            this.columnStateService.applyColumnState(
+            this.colState.applyColumnState(
                 {
                     state: secondaryColumnStates,
                     applyOrder,
@@ -525,15 +525,15 @@ export class StateService extends BeanStub implements NamedBean {
 
         if (columnGroupStates) {
             // no easy/performant way of knowing which column groups are pivot column groups
-            this.columnGroupService?.setColumnGroupState(columnGroupStates, 'gridInitializing');
+            this.columnGroupSvc?.setColumnGroupState(columnGroupStates, 'gridInitializing');
         }
     }
 
     private getColumnGroupState(): ColumnGroupState | undefined {
-        if (!this.columnGroupService) {
+        if (!this.columnGroupSvc) {
             return undefined;
         }
-        const columnGroupState = this.columnGroupService.getColumnGroupState();
+        const columnGroupState = this.columnGroupSvc.getColumnGroupState();
         const openColumnGroups: string[] = [];
         columnGroupState.forEach(({ groupId, open }) => {
             if (open) {
@@ -544,12 +544,12 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setColumnGroupState(initialState: GridState): void {
-        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.columnGroupService) {
+        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.columnGroupSvc) {
             return;
         }
 
         const openColumnGroups = new Set(initialState.columnGroup?.openColumnGroupIds);
-        const existingColumnGroupState = this.columnGroupService.getColumnGroupState();
+        const existingColumnGroupState = this.columnGroupSvc.getColumnGroupState();
         const stateItems = existingColumnGroupState.map(({ groupId }) => {
             const open = openColumnGroups.has(groupId);
             if (open) {
@@ -570,7 +570,7 @@ export class StateService extends BeanStub implements NamedBean {
         if (stateItems.length) {
             this.columnGroupStates = stateItems;
         }
-        this.columnGroupService.setColumnGroupState(stateItems, 'gridInitializing');
+        this.columnGroupSvc.setColumnGroupState(stateItems, 'gridInitializing');
     }
 
     private getFilterState(): FilterState | undefined {
@@ -593,7 +593,7 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private getRangeSelectionState(): CellSelectionState | undefined {
-        const cellRanges = this.rangeService?.getCellRanges().map((cellRange) => {
+        const cellRanges = this.rangeSvc?.getCellRanges().map((cellRange) => {
             const { id, type, startRow, endRow, columns, startColumn } = cellRange;
             return {
                 id,
@@ -608,9 +608,9 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setCellSelectionState(cellSelectionState: CellSelectionState): void {
-        const { gos, rangeService, columnModel, visibleColsService } = this;
+        const { gos, rangeSvc, colModel, visibleCols } = this;
 
-        if (!_isCellSelectionEnabled(gos) || !rangeService) {
+        if (!_isCellSelectionEnabled(gos) || !rangeSvc) {
             return;
         }
 
@@ -618,7 +618,7 @@ export class StateService extends BeanStub implements NamedBean {
         cellSelectionState.cellRanges.forEach((cellRange) => {
             const columns: AgColumn[] = [];
             cellRange.colIds.forEach((colId) => {
-                const column = columnModel.getCol(colId);
+                const column = colModel.getCol(colId);
                 if (column) {
                     columns.push(column);
                 }
@@ -626,10 +626,10 @@ export class StateService extends BeanStub implements NamedBean {
             if (!columns.length) {
                 return;
             }
-            let startColumn = columnModel.getCol(cellRange.startColId);
+            let startColumn = colModel.getCol(cellRange.startColId);
             if (!startColumn) {
                 // find the first remaining column
-                const allColumns = visibleColsService.allCols;
+                const allColumns = visibleCols.allCols;
                 const columnSet = new Set(columns);
                 startColumn = allColumns.find((column) => columnSet.has(column))!;
             }
@@ -640,7 +640,7 @@ export class StateService extends BeanStub implements NamedBean {
             });
         });
 
-        rangeService.setCellRanges(cellRanges);
+        rangeSvc.setCellRanges(cellRanges);
     }
 
     private getScrollState(): ScrollState | undefined {
@@ -648,7 +648,7 @@ export class StateService extends BeanStub implements NamedBean {
             // can't restore, so don't provide
             return undefined;
         }
-        const scrollFeature = this.ctrlsService.getGridBodyCtrl()?.getScrollFeature();
+        const scrollFeature = this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature();
         const { left } = scrollFeature?.getHScrollPosition() ?? { left: 0 };
         const { top } = scrollFeature?.getVScrollPosition() ?? { top: 0 };
         return top || left
@@ -664,11 +664,11 @@ export class StateService extends BeanStub implements NamedBean {
             return;
         }
         const { top, left } = scrollState;
-        this.ctrlsService.getGridBodyCtrl()?.getScrollFeature().setScrollPosition(top, left);
+        this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature().setScrollPosition(top, left);
     }
 
     private getSideBarState(): SideBarState | undefined {
-        return this.sideBarService?.getSideBarComp()?.getState();
+        return this.sideBar?.getSideBarComp()?.getState();
     }
 
     private getFocusedCellState(): FocusedCellState | undefined {
@@ -676,7 +676,7 @@ export class StateService extends BeanStub implements NamedBean {
             // can't restore, so don't provide
             return undefined;
         }
-        const focusedCell = this.focusService.getFocusedCell();
+        const focusedCell = this.focusSvc.getFocusedCell();
         if (focusedCell) {
             const { column, rowIndex, rowPinned } = focusedCell;
             return {
@@ -693,8 +693,8 @@ export class StateService extends BeanStub implements NamedBean {
             return;
         }
         const { colId, rowIndex, rowPinned } = focusedCellState;
-        this.focusService.setFocusedCell({
-            column: this.columnModel.getCol(colId),
+        this.focusSvc.setFocusedCell({
+            column: this.colModel.getCol(colId),
             rowIndex,
             rowPinned,
             forceBrowserFocus: true,
@@ -703,11 +703,11 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private getPaginationState(): PaginationState | undefined {
-        if (!this.paginationService) {
+        if (!this.pagination) {
             return undefined;
         }
-        const page = this.paginationService.getCurrentPage();
-        const pageSize = !this.gos.get('paginationAutoPageSize') ? this.paginationService.getPageSize() : undefined;
+        const page = this.pagination.getCurrentPage();
+        const pageSize = !this.gos.get('paginationAutoPageSize') ? this.pagination.getPageSize() : undefined;
 
         if (!page && !pageSize) {
             return;
@@ -716,15 +716,15 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setPaginationState(paginationState: PaginationState): void {
-        if (!this.paginationService) {
+        if (!this.pagination) {
             return;
         }
         if (paginationState.pageSize && !this.gos.get('paginationAutoPageSize')) {
-            this.paginationService.setPageSize(paginationState.pageSize, 'initialState');
+            this.pagination.setPageSize(paginationState.pageSize, 'initialState');
         }
 
         if (typeof paginationState.page === 'number') {
-            this.paginationService.setPage(paginationState.page);
+            this.pagination.setPage(paginationState.page);
         }
     }
 
@@ -733,10 +733,10 @@ export class StateService extends BeanStub implements NamedBean {
         | ServerSideRowSelectionState
         | ServerSideRowGroupSelectionState
         | undefined {
-        if (!this.selectionService) {
+        if (!this.selectionSvc) {
             return undefined;
         }
-        const selectionState = this.selectionService.getSelectionState();
+        const selectionState = this.selectionSvc.getSelectionState();
         const noSelections =
             !selectionState ||
             (!Array.isArray(selectionState) &&
@@ -749,11 +749,11 @@ export class StateService extends BeanStub implements NamedBean {
     private setRowSelectionState(
         rowSelectionState: string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState
     ): void {
-        this.selectionService?.setSelectionState(rowSelectionState, 'gridInitializing');
+        this.selectionSvc?.setSelectionState(rowSelectionState, 'gridInitializing');
     }
 
     private getRowGroupExpansionState(): RowGroupExpansionState | undefined {
-        if (!this.expansionService) {
+        if (!this.expansionSvc) {
             return undefined;
         }
 
@@ -771,7 +771,7 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setRowGroupExpansionState(rowGroupExpansionState: RowGroupExpansionState): void {
-        this.expansionService?.expandRows(rowGroupExpansionState.expandedRowGroupIds);
+        this.expansionSvc?.expandRows(rowGroupExpansionState.expandedRowGroupIds);
     }
 
     private updateColumnState(features: (keyof GridState)[]): void {
@@ -829,7 +829,7 @@ export class StateService extends BeanStub implements NamedBean {
     private dispatchQueuedStateUpdateEvents(): void {
         const sources = Array.from(this.queuedUpdateSources);
         this.queuedUpdateSources.clear();
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'stateUpdated',
             sources,
             state: this.cachedState,
@@ -838,7 +838,7 @@ export class StateService extends BeanStub implements NamedBean {
 
     private suppressEventsAndDispatchInitEvent(updateFunc: () => void): void {
         this.suppressEvents = true;
-        this.columnAnimationService?.setSuppressAnimation(true);
+        this.colAnimation?.setSuppressAnimation(true);
         updateFunc();
         // We want to suppress any grid events, but not user events.
         // Using a timeout here captures things like column resizing and emits a single grid initializing event.
@@ -850,7 +850,7 @@ export class StateService extends BeanStub implements NamedBean {
                 // Ensure the grid is still alive before dispatching the event.
                 return;
             }
-            this.columnAnimationService?.setSuppressAnimation(false);
+            this.colAnimation?.setSuppressAnimation(false);
             this.dispatchStateUpdateEvent(['gridInitializing']);
         });
     }

@@ -6,6 +6,6 @@ function defaultLocaleTextFunc(_key: string, defaultValue: string): string {
     return defaultValue;
 }
 
-export function _getLocaleTextFunc(localeService?: LocaleService): LocaleTextFunc {
-    return localeService?.getLocaleTextFunc() ?? defaultLocaleTextFunc;
+export function _getLocaleTextFunc(localeSvc?: LocaleService): LocaleTextFunc {
+    return localeSvc?.getLocaleTextFunc() ?? defaultLocaleTextFunc;
 }

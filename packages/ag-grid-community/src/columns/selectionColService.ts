@@ -21,21 +21,21 @@ import {
 export const CONTROLS_COLUMN_ID_PREFIX = 'ag-Grid-SelectionColumn' as const;
 
 export class SelectionColService extends BeanStub implements NamedBean {
-    beanName = 'selectionColService' as const;
+    beanName = 'selectionColSvc' as const;
 
     private context: Context;
-    private columnGroupService?: ColumnGroupService;
-    private autoColService?: IAutoColService;
-    private columnModel: ColumnModel;
+    private columnGroupSvc?: ColumnGroupService;
+    private autoColSvc?: IAutoColService;
+    private colModel: ColumnModel;
 
     // selection checkbox columns
     public selectionCols: ColumnCollections | null;
 
     public wireBeans(beans: BeanCollection): void {
         this.context = beans.context;
-        this.columnGroupService = beans.columnGroupService;
-        this.autoColService = beans.autoColService;
-        this.columnModel = beans.columnModel;
+        this.columnGroupSvc = beans.columnGroupSvc;
+        this.autoColSvc = beans.autoColSvc;
+        this.colModel = beans.colModel;
     }
 
     public postConstruct(): void {
@@ -79,8 +79,8 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
 
         destroyCollection();
-        const treeDepth = this.columnGroupService?.findDepth(cols.tree) ?? 0;
-        const tree = this.autoColService?.balanceTreeForAutoCols(list, treeDepth) ?? [];
+        const treeDepth = this.columnGroupSvc?.findDepth(cols.tree) ?? 0;
+        const tree = this.autoColSvc?.balanceTreeForAutoCols(list, treeDepth) ?? [];
         this.selectionCols = {
             list,
             tree,
@@ -172,7 +172,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         const headerCheckboxHasChanged = prevHeaderCheckbox !== currHeaderCheckbox;
 
         if (checkboxHasChanged || headerCheckboxHasChanged) {
-            this.columnModel.refreshAll(source);
+            this.colModel.refreshAll(source);
         }
     }
 

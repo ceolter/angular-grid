@@ -35,14 +35,14 @@ import type { ModelItemUtils } from './modelItemUtils';
 import { ToolPanelContextMenu } from './toolPanelContextMenu';
 
 export class ToolPanelColumnGroupComp extends Component {
-    private columnModel: ColumnModel;
-    private dragAndDropService: DragAndDropService;
+    private colModel: ColumnModel;
+    private dragAndDrop: DragAndDropService;
     private modelItemUtils: ModelItemUtils;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.dragAndDropService = beans.dragAndDropService!;
+        this.colModel = beans.colModel;
+        this.dragAndDrop = beans.dragAndDrop!;
         this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
         this.registry = beans.registry;
     }
@@ -220,13 +220,13 @@ export class ToolPanelColumnGroupComp extends Component {
             getDragItem: () => this.createDragItem(),
             onDragStarted: () => {
                 hideColumnOnExit = !this.gos.get('suppressDragLeaveHidesColumns');
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragStart',
                     column: this.columnGroup,
                 });
             },
             onDragStopped: () => {
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragEnd',
                 });
             },
@@ -250,8 +250,8 @@ export class ToolPanelColumnGroupComp extends Component {
             },
         };
 
-        this.dragAndDropService.addDragSource(dragSource, true);
-        this.addDestroyFunc(() => this.dragAndDropService.removeDragSource(dragSource));
+        this.dragAndDrop.addDragSource(dragSource, true);
+        this.addDestroyFunc(() => this.dragAndDrop.removeDragSource(dragSource));
     }
 
     private createDragItem() {
@@ -358,7 +358,7 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private workOutSelectedValue(): boolean | undefined {
-        const pivotMode = this.columnModel.isPivotMode();
+        const pivotMode = this.colModel.isPivotMode();
 
         const visibleLeafColumns = this.getVisibleLeafColumns();
 
@@ -385,7 +385,7 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private workOutReadOnlyValue(): boolean {
-        const pivotMode = this.columnModel.isPivotMode();
+        const pivotMode = this.colModel.isPivotMode();
 
         let colsThatCanAction = 0;
 

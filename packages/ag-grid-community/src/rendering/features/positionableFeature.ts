@@ -66,12 +66,12 @@ interface MappedResizer {
 
 export type PositionableFeatureEvent = 'resize';
 export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
-    protected popupService?: PopupService;
-    private dragService?: DragService;
+    protected popupSvc?: PopupService;
+    private dragSvc?: DragService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService;
-        this.dragService = beans.dragService;
+        this.popupSvc = beans.popupSvc;
+        this.dragSvc = beans.dragSvc;
     }
 
     private dragStartPosition = {
@@ -228,10 +228,10 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
         };
 
         if (movable) {
-            this.dragService?.addDragSource(params);
+            this.dragSvc?.addDragSource(params);
             this.moveElementDragListener = params;
         } else {
-            this.dragService?.removeDragSource(params);
+            this.dragSvc?.removeDragSource(params);
             this.moveElementDragListener = undefined;
         }
     }
@@ -277,7 +277,7 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
 
             if (isSideResizable || (!this.isAlive() && !isSideResizable)) {
                 if (isSideResizable) {
-                    this.dragService?.addDragSource(params);
+                    this.dragSvc?.addDragSource(params);
                     this.resizeListeners.push(params);
                     resizerEl!.style.pointerEvents = 'all';
                 } else {
@@ -436,7 +436,7 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
             return;
         }
 
-        this.popupService?.positionPopup({
+        this.popupSvc?.positionPopup({
             ePopup,
             keepWithinBounds: true,
             skipObserver: this.movable || this.isResizable(),
@@ -456,10 +456,10 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
             this.element.style.setProperty('max-height', `${availableHeight}px`);
         };
 
-        if (constrain && this.popupService) {
+        if (constrain && this.popupSvc) {
             this.resizeObserverSubscriber = _observeResize(
                 this.gos,
-                this.popupService?.getPopupParent(),
+                this.popupSvc?.getPopupParent(),
                 applyMaxHeightToElement
             );
         } else {
@@ -882,8 +882,8 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
     }
 
     private setOffsetParent() {
-        if (this.config.forcePopupParentAsOffsetParent && this.popupService) {
-            this.offsetParent = this.popupService.getPopupParent();
+        if (this.config.forcePopupParentAsOffsetParent && this.popupSvc) {
+            this.offsetParent = this.popupSvc.getPopupParent();
         } else {
             this.offsetParent = this.element.offsetParent as HTMLElement;
         }
@@ -904,7 +904,7 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
     private clearResizeListeners(): void {
         while (this.resizeListeners.length) {
             const params = this.resizeListeners.pop()!;
-            this.dragService?.removeDragSource(params);
+            this.dragSvc?.removeDragSource(params);
         }
     }
 
@@ -912,7 +912,7 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
         super.destroy();
 
         if (this.moveElementDragListener) {
-            this.dragService?.removeDragSource(this.moveElementDragListener);
+            this.dragSvc?.removeDragSource(this.moveElementDragListener);
         }
 
         this.constrainSizeToAvailableHeight(false);

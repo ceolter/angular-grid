@@ -31,14 +31,14 @@ import type { ModelItemUtils } from './modelItemUtils';
 import { ToolPanelContextMenu } from './toolPanelContextMenu';
 
 export class ToolPanelColumnComp extends Component {
-    private columnModel: ColumnModel;
-    private dragAndDropService: DragAndDropService;
+    private colModel: ColumnModel;
+    private dragAndDrop: DragAndDropService;
     private modelItemUtils: ModelItemUtils;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.dragAndDropService = beans.dragAndDropService!;
+        this.colModel = beans.colModel;
+        this.dragAndDrop = beans.dragAndDrop!;
         this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
         this.registry = beans.registry;
     }
@@ -226,13 +226,13 @@ export class ToolPanelColumnComp extends Component {
             getDragItem: () => this.createDragItem(),
             onDragStarted: () => {
                 hideColumnOnExit = !this.gos.get('suppressDragLeaveHidesColumns');
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragStart',
                     column: this.column,
                 });
             },
             onDragStopped: () => {
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragEnd',
                 });
             },
@@ -256,8 +256,8 @@ export class ToolPanelColumnComp extends Component {
             },
         };
 
-        this.dragAndDropService.addDragSource(dragSource, true);
-        this.addDestroyFunc(() => this.dragAndDropService.removeDragSource(dragSource));
+        this.dragAndDrop.addDragSource(dragSource, true);
+        this.addDestroyFunc(() => this.dragAndDrop.removeDragSource(dragSource));
     }
 
     private createDragItem() {
@@ -273,7 +273,7 @@ export class ToolPanelColumnComp extends Component {
 
     private onColumnStateChanged(): void {
         this.processingColumnStateChange = true;
-        const isPivotMode = this.columnModel.isPivotMode();
+        const isPivotMode = this.colModel.isPivotMode();
         if (isPivotMode) {
             // if reducing, checkbox means column is one of pivot, value or group
             const anyFunctionActive = this.column.isAnyFunctionActive();

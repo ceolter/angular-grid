@@ -13,11 +13,11 @@ import { Component, _warn } from 'ag-grid-community';
 import { AgHorizontalResize } from './agHorizontalResize';
 
 function getToolPanelCompDetails(
-    userComponentFactory: UserComponentFactory,
+    userCompFactory: UserComponentFactory,
     toolPanelDef: ToolPanelDef,
     params: WithoutGridCommon<IToolPanelParams>
 ): UserCompDetails {
-    return userComponentFactory.getCompDetails(toolPanelDef, ToolPanelComponent, null, params, true)!;
+    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, null, params, true)!;
 }
 
 const ToolPanelComponent: ComponentType = {
@@ -26,10 +26,10 @@ const ToolPanelComponent: ComponentType = {
 };
 
 export class ToolPanelWrapper extends Component {
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
 
     public wireBeans(beans: BeanCollection) {
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
     }
 
     private toolPanelCompInstance: IToolPanelComp | undefined;
@@ -62,7 +62,7 @@ export class ToolPanelWrapper extends Component {
         this.toolPanelId = id;
         this.width = width;
 
-        const compDetails = getToolPanelCompDetails(this.userComponentFactory, toolPanelDef, params);
+        const compDetails = getToolPanelCompDetails(this.userCompFactory, toolPanelDef, params);
         const componentPromise = compDetails.newAgStackInstance();
 
         this.params = compDetails.params;

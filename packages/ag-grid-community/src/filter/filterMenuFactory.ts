@@ -16,14 +16,14 @@ import { FilterWrapperComp } from './filterWrapperComp';
 export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFactory {
     beanName = 'filterMenuFactory' as const;
 
-    private popupService?: PopupService;
-    private focusService: FocusService;
-    private ctrlsService: CtrlsService;
+    private popupSvc?: PopupService;
+    private focusSvc: FocusService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.popupService = beans.popupService;
-        this.focusService = beans.focusService;
-        this.ctrlsService = beans.ctrlsService;
+        this.popupSvc = beans.popupSvc;
+        this.focusSvc = beans.focusSvc;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private hidePopup: () => void;
@@ -44,7 +44,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         this.showPopup(
             column,
             (eMenu) => {
-                this.popupService?.positionPopupUnderMouseEvent({
+                this.popupSvc?.positionPopupUnderMouseEvent({
                     column,
                     type: containerType,
                     mouseEvent,
@@ -76,7 +76,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         this.showPopup(
             column,
             (eMenu) => {
-                this.popupService?.positionPopupByComponent({
+                this.popupSvc?.positionPopupByComponent({
                     type: containerType,
                     eventSource,
                     ePopup: eMenu,
@@ -127,7 +127,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         const afterGuiDetached = () => comp?.afterGuiDetached();
 
         const anchorToElement = _isColumnMenuAnchoringEnabled(this.gos)
-            ? eventSource ?? this.ctrlsService.getGridBodyCtrl().getGui()
+            ? eventSource ?? this.ctrlsSvc.getGridBodyCtrl().getGui()
             : undefined;
         const closedCallback = (e: MouseEvent | TouchEvent | KeyboardEvent) => {
             column.setMenuVisible(false, 'contextMenu');
@@ -138,7 +138,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             }
 
             if (isKeyboardEvent && eventSource && _isVisible(eventSource)) {
-                const focusableEl = this.focusService.findTabbableParent(eventSource);
+                const focusableEl = this.focusSvc.findTabbableParent(eventSource);
 
                 if (focusableEl) {
                     focusableEl.focus();
@@ -156,7 +156,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
                 ? translate('ariaLabelColumnMenu', 'Column Menu')
                 : translate('ariaLabelColumnFilter', 'Column Filter');
 
-        const addPopupRes = this.popupService?.addPopup({
+        const addPopupRes = this.popupSvc?.addPopup({
             modal: true,
             eChild: eMenu,
             closeOnEsc: true,
@@ -187,18 +187,18 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         if (
             e.key !== KeyCode.TAB ||
             e.defaultPrevented ||
-            this.focusService.findNextFocusableElement(menu, false, e.shiftKey)
+            this.focusSvc.findNextFocusableElement(menu, false, e.shiftKey)
         ) {
             return;
         }
 
         e.preventDefault();
 
-        this.focusService.focusInto(menu, e.shiftKey);
+        this.focusSvc.focusInto(menu, e.shiftKey);
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, containerType: ContainerType, column?: AgColumn): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'columnMenuVisibleChanged',
             visible,
             switchingTab: false,

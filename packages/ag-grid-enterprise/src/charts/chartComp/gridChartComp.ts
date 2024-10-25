@@ -72,16 +72,16 @@ export class GridChartComp extends Component {
     private crossFilterService: ChartCrossFilterService;
     private chartTranslationService: ChartTranslationService;
     private chartMenuService: ChartMenuService;
-    private focusService: FocusService;
-    private popupService: PopupService;
+    private focusSvc: FocusService;
+    private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterService as ChartCrossFilterService;
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
         this.chartMenuService = beans.chartMenuService as ChartMenuService;
-        this.focusService = beans.focusService;
-        this.popupService = beans.popupService!;
+        this.focusSvc = beans.focusSvc;
+        this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
     }
 
@@ -285,7 +285,7 @@ export class GridChartComp extends Component {
         const { width, height } = this.getBestDialogSize();
 
         const afterGuiAttached = this.params.focusDialogOnOpen
-            ? () => setTimeout(() => this.focusService.focusInto(this.getGui()))
+            ? () => setTimeout(() => this.focusSvc.focusInto(this.getGui()))
             : undefined;
 
         this.chartDialog = new AgDialog({
@@ -309,14 +309,14 @@ export class GridChartComp extends Component {
         this.chartDialog.addEventListener('destroyed', () => {
             this.destroy();
             this.chartMenuService.hideAdvancedSettings();
-            const lastFocusedCell = this.focusService.getFocusedCell();
+            const lastFocusedCell = this.focusSvc.getFocusedCell();
             setTimeout(() => {
-                if (this.focusService.isAlive()) {
+                if (this.focusSvc.isAlive()) {
                     // focus Service may have been destroyed if both grid and chart destroyed together
                     if (lastFocusedCell) {
-                        this.focusService.setFocusedCell({ ...lastFocusedCell, forceBrowserFocus: true });
+                        this.focusSvc.setFocusedCell({ ...lastFocusedCell, forceBrowserFocus: true });
                     } else {
-                        this.focusService.focusGridInnerElement();
+                        this.focusSvc.focusGridInnerElement();
                     }
                 }
             });
@@ -324,7 +324,7 @@ export class GridChartComp extends Component {
     }
 
     private getBestDialogSize(): { width: number; height: number } {
-        const popupParent = this.popupService.getPopupParent();
+        const popupParent = this.popupSvc.getPopupParent();
         const maxWidth = _getAbsoluteWidth(popupParent) * 0.75;
         const maxHeight = _getAbsoluteHeight(popupParent) * 0.75;
         const ratio = 0.553;
@@ -515,7 +515,7 @@ export class GridChartComp extends Component {
         }
 
         this.chartController.setChartRange(true);
-        this.focusService.clearFocusedCell();
+        this.focusSvc.clearFocusedCell();
     }
 
     private getThemeName(): string {
@@ -575,7 +575,7 @@ export class GridChartComp extends Component {
             .getChart()
             .waitForUpdate()
             .then(() => {
-                this.eventService.dispatchEvent({
+                this.eventSvc.dispatchEvent({
                     type: 'chartCreated',
                     chartId: this.chartController.getChartId(),
                 });
@@ -583,7 +583,7 @@ export class GridChartComp extends Component {
     }
 
     private raiseChartDestroyedEvent(): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'chartDestroyed',
             chartId: this.chartController.getChartId(),
         });

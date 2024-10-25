@@ -45,8 +45,7 @@
     "./styles": "./styles/_index.scss"
   },
   "scripts": {
-    "codegen:prod": "tsx scripts/build-css.ts",
-    "codegen:debug": "tsx scripts/build-css.ts --dev"
+    "build:css": "tsx ../../scripts/build-css.ts  --package ag-grid-community"
   },
   "sideEffects": false,
   "repository": {
@@ -95,15 +94,6 @@
     "ag-charts-types": "10.2.0-beta.20241020"
   },
   "devDependencies": {
-    "@types/postcss-import": "^14.0.3",
-    "@types/postcss-url": "^10.0.4",
-    "autoprefixer": "^10.4.20",
-    "cssnano": "^7.0.5",
-    "glob": "^11.0.0",
-    "tsx": "^4.17.0",
-    "postcss-import": "^16.1.0",
-    "postcss-rtlcss": "^5.3.1",
-    "postcss-url": "^10.1.3",
     "source-map-loader": "^5.0.0",
     "gulp": "^4.0.0",
     "gulp-replace": "^1.0.0",

@@ -15,22 +15,22 @@ import { _debounce } from '../../utils/function';
 import type { CellCtrl } from '../cell/cellCtrl';
 
 export class RowAutoHeightService extends BeanStub implements NamedBean {
-    beanName = 'rowAutoHeightService' as const;
+    beanName = 'rowAutoHeight' as const;
 
-    private visibleColsService: VisibleColsService;
-    private columnViewportService: ColumnViewportService;
+    private visibleCols: VisibleColsService;
+    private colViewport: ColumnViewportService;
     private rowModel: IRowModel;
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     /** grid columns have colDef.autoHeight set */
     public active: boolean;
     private wasEverActive = false;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
-        this.columnViewportService = beans.columnViewportService;
+        this.visibleCols = beans.visibleCols;
+        this.colViewport = beans.colViewport;
         this.rowModel = beans.rowModel;
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     public setRowAutoHeight(rowNode: RowNode, cellHeight: number | undefined, column: AgColumn): void {
@@ -63,24 +63,24 @@ export class RowAutoHeightService extends BeanStub implements NamedBean {
         let nonePresent = true;
         let newRowHeight = 0;
 
-        const displayedAutoHeightCols = this.visibleColsService.autoHeightCols;
+        const displayedAutoHeightCols = this.visibleCols.autoHeightCols;
         displayedAutoHeightCols.forEach((col) => {
             let cellHeight = autoHeights[col.getId()];
 
             if (cellHeight == null) {
                 // If column spanning is active a column may not provide auto height for a row if that
                 // cell is not present for the given row due to a previous cell spanning over the auto height column.
-                if (this.columnModel.colSpanActive) {
+                if (this.colModel.colSpanActive) {
                     let activeColsForRow: AgColumn[] = [];
                     switch (col.getPinned()) {
                         case 'left':
-                            activeColsForRow = this.visibleColsService.getLeftColsForRow(rowNode);
+                            activeColsForRow = this.visibleCols.getLeftColsForRow(rowNode);
                             break;
                         case 'right':
-                            activeColsForRow = this.visibleColsService.getRightColsForRow(rowNode);
+                            activeColsForRow = this.visibleCols.getRightColsForRow(rowNode);
                             break;
                         case null:
-                            activeColsForRow = this.columnViewportService.getColsWithinViewport(rowNode);
+                            activeColsForRow = this.colViewport.getColsWithinViewport(rowNode);
                             break;
                     }
                     if (activeColsForRow.includes(col)) {

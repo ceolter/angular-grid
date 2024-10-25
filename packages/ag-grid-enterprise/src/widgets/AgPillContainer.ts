@@ -20,12 +20,12 @@ export interface PillRendererParams<TValue> {
 }
 
 export class AgPillContainer<TValue> extends Component {
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private params: PillRendererParams<TValue>;
     private pills: AgPill[] = [];
 
     public wireBeans(beans: BeanCollection): void {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
     }
 
     constructor() {
@@ -92,10 +92,10 @@ export class AgPillContainer<TValue> extends Component {
 
         const activeEl = _getActiveDomElement(this.gos);
         const eGui = this.getGui();
-        const { params, focusService } = this;
+        const { params, focusSvc } = this;
 
         if (eGui.contains(activeEl)) {
-            const nextFocusableEl = focusService.findNextFocusableElement(eGui, false, key === KeyCode.LEFT);
+            const nextFocusableEl = focusSvc.findNextFocusableElement(eGui, false, key === KeyCode.LEFT);
 
             if (nextFocusableEl) {
                 nextFocusableEl.focus();
@@ -103,7 +103,7 @@ export class AgPillContainer<TValue> extends Component {
                 params.eWrapper.focus();
             }
         } else {
-            const focusableElements = focusService.findFocusableElements(eGui);
+            const focusableElements = focusSvc.findFocusableElements(eGui);
             if (focusableElements.length > 0) {
                 focusableElements[key === KeyCode.RIGHT ? 0 : focusableElements.length - 1].focus();
             }

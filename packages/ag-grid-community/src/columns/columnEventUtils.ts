@@ -21,7 +21,7 @@ function getCommonValue<T>(cols: AgColumn[], valueGetter: (col: AgColumn) => T):
 }
 
 export function dispatchColumnPinnedEvent(
-    eventService: EventService,
+    eventSvc: EventService,
     changedColumns: AgColumn[],
     source: ColumnEventType
 ): void {
@@ -35,7 +35,7 @@ export function dispatchColumnPinnedEvent(
     // only include pinned if it's common in all columns
     const pinned = getCommonValue(changedColumns, (col) => col.getPinned());
 
-    eventService.dispatchEvent({
+    eventSvc.dispatchEvent({
         type: 'columnPinned',
         // mistake in typing, 'undefined' should be allowed, as 'null' means 'not pinned'
         pinned: pinned != null ? pinned : null,
@@ -46,7 +46,7 @@ export function dispatchColumnPinnedEvent(
 }
 
 export function dispatchColumnVisibleEvent(
-    eventService: EventService,
+    eventSvc: EventService,
     changedColumns: AgColumn[],
     source: ColumnEventType
 ): void {
@@ -60,7 +60,7 @@ export function dispatchColumnVisibleEvent(
     // only include visible if it's common in all columns
     const visible = getCommonValue(changedColumns, (col) => col.isVisible());
 
-    eventService.dispatchEvent({
+    eventSvc.dispatchEvent({
         type: 'columnVisible',
         visible,
         columns: changedColumns,
@@ -71,8 +71,8 @@ export function dispatchColumnVisibleEvent(
 
 export function dispatchColumnChangedEvent<
     T extends 'columnValueChanged' | 'columnPivotChanged' | 'columnRowGroupChanged',
->(eventService: EventService, type: T, columns: AgColumn[], source: ColumnEventType): void {
-    eventService.dispatchEvent({
+>(eventSvc: EventService, type: T, columns: AgColumn[], source: ColumnEventType): void {
+    eventSvc.dispatchEvent({
         type,
         columns,
         column: columns && columns.length == 1 ? columns[0] : null,
@@ -81,14 +81,14 @@ export function dispatchColumnChangedEvent<
 }
 
 export function dispatchColumnResizedEvent(
-    eventService: EventService,
+    eventSvc: EventService,
     columns: AgColumn[] | null,
     finished: boolean,
     source: ColumnEventType,
     flexColumns: AgColumn[] | null = null
 ): void {
     if (columns?.length) {
-        eventService.dispatchEvent({
+        eventSvc.dispatchEvent({
             type: 'columnResized',
             columns,
             column: columns.length === 1 ? columns[0] : null,

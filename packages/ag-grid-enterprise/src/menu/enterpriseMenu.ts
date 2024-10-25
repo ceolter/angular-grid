@@ -59,23 +59,23 @@ const TABS_DEFAULT: ColumnMenuTab[] = [TAB_GENERAL, TAB_FILTER, TAB_COLUMNS];
 export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuFactory {
     beanName = 'enterpriseMenuFactory' as const;
 
-    private popupService: PopupService;
-    private focusService: FocusService;
-    private ctrlsService: CtrlsService;
-    private visibleColsService: VisibleColsService;
+    private popupSvc: PopupService;
+    private focusSvc: FocusService;
+    private ctrlsSvc: CtrlsService;
+    private visibleCols: VisibleColsService;
     private filterManager?: FilterManager;
     private menuUtils: MenuUtils;
-    private menuService: MenuService;
+    private menuSvc: MenuService;
     private columnMenuFactory: ColumnMenuFactory;
 
     public wireBeans(beans: BeanCollection) {
-        this.popupService = beans.popupService!;
-        this.focusService = beans.focusService;
-        this.ctrlsService = beans.ctrlsService;
-        this.visibleColsService = beans.visibleColsService;
+        this.popupSvc = beans.popupSvc!;
+        this.focusSvc = beans.focusSvc;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.visibleCols = beans.visibleCols;
         this.filterManager = beans.filterManager;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.menuService = beans.menuService!;
+        this.menuSvc = beans.menuSvc!;
         this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
     }
 
@@ -100,7 +100,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             (menu: EnterpriseColumnMenu) => {
                 const ePopup = menu.getGui();
 
-                this.popupService.positionPopupUnderMouseEvent({
+                this.popupSvc.positionPopupUnderMouseEvent({
                     type: containerType,
                     column,
                     mouseEvent,
@@ -158,7 +158,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             (menu: EnterpriseColumnMenu) => {
                 const ePopup = menu.getGui();
 
-                this.popupService.positionPopupByComponent({
+                this.popupSvc.positionPopupByComponent({
                     type: containerType,
                     column,
                     eventSource,
@@ -213,7 +213,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
 
         // need to show filter before positioning, as only after filter
         // is visible can we find out what the width of it is
-        this.popupService.addPopup({
+        this.popupSvc.addPopup({
             modal: true,
             eChild: eMenuGui,
             closeOnEsc: true,
@@ -241,7 +241,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             // if user starts showing / hiding columns, or otherwise move the underlying column
             // for this menu, we want to stop tracking the menu with the column position. otherwise
             // the menu would move as the user is using the columns tab inside the menu.
-            const stopAnchoringPromise = this.popupService.setPopupPositionRelatedToElement(eMenuGui, anchorToElement);
+            const stopAnchoringPromise = this.popupSvc.setPopupPositionRelatedToElement(eMenuGui, anchorToElement);
 
             if (stopAnchoringPromise && column) {
                 this.addStopAnchoring(stopAnchoringPromise, column, closedFuncs);
@@ -289,8 +289,8 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
     ) {
         const restoreFocusParams = {
             column,
-            headerPosition: this.focusService.getFocusedHeader(),
-            columnIndex: this.visibleColsService.allCols.indexOf(column as AgColumn),
+            headerPosition: this.focusSvc.getFocusedHeader(),
+            columnIndex: this.visibleCols.allCols.indexOf(column as AgColumn),
             eventSource,
         };
         const menu = this.createMenu(column, columnGroup, restoreFocusParams, restrictToTabs, eventSource);
@@ -298,7 +298,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             ? {
                   menu,
                   eMenuGui: menu.getGui(),
-                  anchorToElement: eventSource || this.ctrlsService.getGridBodyCtrl().getGui(),
+                  anchorToElement: eventSource || this.ctrlsSvc.getGridBodyCtrl().getGui(),
                   restoreFocusParams,
               }
             : undefined;
@@ -330,7 +330,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         columnGroup?: AgProvidedColumnGroup,
         defaultTab?: string
     ): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'columnMenuVisibleChanged',
             visible,
             switchingTab,
@@ -600,12 +600,12 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
 class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
     private columnMenuFactory: ColumnMenuFactory;
     private menuUtils: MenuUtils;
-    private focusService: FocusService;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
     }
 
     private readonly eColumnMenu: HTMLElement = RefPlaceholder;
@@ -644,6 +644,6 @@ class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusService.focusInto(this.mainMenuList.getGui());
+        this.focusSvc.focusInto(this.mainMenuList.getGui());
     }
 }

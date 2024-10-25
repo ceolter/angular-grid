@@ -35,10 +35,6 @@ export class Component<TLocalEvent extends string = ComponentEvent>
     extends BeanStub<TLocalEvent | ComponentEvent>
     implements ComponentBean, BaseBean<BeanCollection>
 {
-    public override preWireBeans(beans: BeanCollection): void {
-        super.preWireBeans(beans);
-    }
-
     private eGui: HTMLElement;
     private componentSelectors: Map<AgComponentSelector, ComponentSelector>;
     private suppressDataRefValidation: boolean = false;
@@ -48,6 +44,8 @@ export class Component<TLocalEvent extends string = ComponentEvent>
 
     // if false, then CSS class "ag-invisible" is applied, which sets "visibility: hidden"
     private visible = true;
+
+    private css: string[] | undefined;
 
     protected parentComponent: Component | undefined;
 
@@ -71,6 +69,7 @@ export class Component<TLocalEvent extends string = ComponentEvent>
 
     public preConstruct(): void {
         this.wireTemplate(this.getGui());
+        this.css?.forEach((css) => this.beans.environment.addGlobalCSS(css));
     }
 
     private wireTemplate(element: HTMLElement | undefined, paramsMap?: { [key: string]: any }): void {
@@ -375,6 +374,11 @@ export class Component<TLocalEvent extends string = ComponentEvent>
 
     public addOrRemoveCssClass(className: string, addOrRemove: boolean): void {
         this.cssClassManager.addOrRemoveCssClass(className, addOrRemove);
+    }
+
+    protected registerCSS(css: string): void {
+        this.css ||= [];
+        this.css.push(css);
     }
 }
 

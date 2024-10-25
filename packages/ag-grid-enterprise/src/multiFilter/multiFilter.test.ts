@@ -27,8 +27,8 @@ import { MultiFilter } from './multiFilter';
 let eGui: jest.Mocked<HTMLElement>;
 let filterManager: jest.Mocked<FilterManager>;
 let tabGuardCtrl: jest.Mocked<TabGuardCtrl>;
-let userComponentFactory: jest.Mocked<UserComponentFactory>;
-let focusService: jest.Mocked<FocusService>;
+let userCompFactory: jest.Mocked<UserComponentFactory>;
+let focusSvc: jest.Mocked<FocusService>;
 
 let colDef: jest.Mocked<ColDef>;
 let column: jest.Mocked<Column>;
@@ -62,7 +62,7 @@ function createFilter(filterParams: any = {}): MultiFilter {
     };
 
     filterManager.createFilterParams.mockImplementation((_1, _2, _3) => ({ ...baseFilterParams }));
-    userComponentFactory.newFilterComponent
+    userCompFactory.newFilterComponent
         .mockReturnValueOnce(AgPromise.resolve(filter1))
         .mockReturnValueOnce(AgPromise.resolve(filter2));
 
@@ -76,8 +76,8 @@ function createFilter(filterParams: any = {}): MultiFilter {
     (multiFilter as any).eGui = eGui;
     (multiFilter as any).eFocusableElement = eGui;
     (multiFilter as any).filterManager = filterManager;
-    (multiFilter as any).userComponentFactory = userComponentFactory;
-    (multiFilter as any).focusService = focusService;
+    (multiFilter as any).userCompFactory = userCompFactory;
+    (multiFilter as any).focusSvc = focusSvc;
     (multiFilter as any).context = context;
     (multiFilter as any).tabGuardCtrl = tabGuardCtrl;
 
@@ -90,8 +90,8 @@ beforeEach(() => {
     eGui = mock<HTMLElement>('appendChild', 'insertAdjacentElement', 'contains');
     filterManager = mock<FilterManager>('createFilterParams');
     tabGuardCtrl = mock<TabGuardCtrl>('forceFocusOutOfContainer');
-    userComponentFactory = mock<UserComponentFactory>('newFilterComponent');
-    focusService = mock<FocusService>('findFocusableElements');
+    userCompFactory = mock<UserComponentFactory>('newFilterComponent');
+    focusSvc = mock<FocusService>('findFocusableElements');
     context = mock<Context>('createBean', 'destroyBean');
 
     colDef = mock<ColDef>();
@@ -112,9 +112,9 @@ describe('init', () => {
     it('will default to text filter and set filter', () => {
         createFilter();
 
-        expect(userComponentFactory.newFilterComponent).toHaveBeenCalledTimes(2);
+        expect(userCompFactory.newFilterComponent).toHaveBeenCalledTimes(2);
 
-        const { calls } = userComponentFactory.newFilterComponent.mock;
+        const { calls } = userCompFactory.newFilterComponent.mock;
 
         expect(calls[0][0]).toMatchObject({ filter: 'agTextColumnFilter' });
         expect(calls[1][0]).toMatchObject({ filter: 'agSetColumnFilter' });
@@ -388,7 +388,7 @@ describe('afterGuiAttached', () => {
         filter2.getGui.mockReturnValue(filter2Gui);
 
         context.createBean.mockImplementation(bean => bean);
-        focusService.findFocusableElements.mockReturnValue([]);
+        focusSvc.findFocusableElements.mockReturnValue([]);
     });
 
     it('passes through to filter if it has afterGuiAttached function', () => {
@@ -664,7 +664,7 @@ describe('onFilterChanged', () => {
 
         createFilter({ filterChangedCallback: multiFilterChangedCallback });
 
-        const { filterChangedCallback } = userComponentFactory.newFilterComponent.mock.calls[index][1];
+        const { filterChangedCallback } = userCompFactory.newFilterComponent.mock.calls[index][1];
 
         // @ts-ignore
         filterChangedCallback();
@@ -681,7 +681,7 @@ describe('onFilterChanged', () => {
 
         createFilter();
 
-        const params = userComponentFactory.newFilterComponent.mock.calls[0][1];
+        const params = userCompFactory.newFilterComponent.mock.calls[0][1];
         const { filterChangedCallback } = params;
 
         // @ts-ignore
@@ -710,8 +710,8 @@ describe('getLastActiveFilterIndex', () => {
     it('returns the index of the filter that was most recently made active', () => {
         const filter = createFilter();
 
-        const { filterChangedCallback: filter1ChangedCallback } = userComponentFactory.newFilterComponent.mock.calls[0][1];
-        const { filterChangedCallback: filter2ChangedCallback } = userComponentFactory.newFilterComponent.mock.calls[1][1];
+        const { filterChangedCallback: filter1ChangedCallback } = userCompFactory.newFilterComponent.mock.calls[0][1];
+        const { filterChangedCallback: filter2ChangedCallback } = userCompFactory.newFilterComponent.mock.calls[1][1];
 
         filter1.isFilterActive.mockReturnValue(true);
         filter2.isFilterActive.mockReturnValue(true);
@@ -729,8 +729,8 @@ describe('getLastActiveFilterIndex', () => {
     it('returns the previously active index if the most recently active filter becomes inactive', () => {
         const filter = createFilter();
 
-        const { filterChangedCallback: filter1ChangedCallback } = userComponentFactory.newFilterComponent.mock.calls[0][1];
-        const { filterChangedCallback: filter2ChangedCallback } = userComponentFactory.newFilterComponent.mock.calls[1][1];
+        const { filterChangedCallback: filter1ChangedCallback } = userCompFactory.newFilterComponent.mock.calls[0][1];
+        const { filterChangedCallback: filter2ChangedCallback } = userCompFactory.newFilterComponent.mock.calls[1][1];
 
         filter1.isFilterActive.mockReturnValue(true);
         filter2.isFilterActive.mockReturnValue(true);

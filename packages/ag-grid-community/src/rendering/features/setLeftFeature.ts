@@ -60,8 +60,7 @@ export class SetLeftFeature extends BeanStub {
     private setLeftFirstTime(): void {
         const suppressMoveAnimation = this.beans.gos.get('suppressColumnMoveAnimation');
         const oldLeftExists = _exists(this.columnOrGroup.getOldLeft());
-        const animateColumnMove =
-            this.beans.columnAnimationService?.isActive() && oldLeftExists && !suppressMoveAnimation;
+        const animateColumnMove = this.beans.colAnimation?.isActive() && oldLeftExists && !suppressMoveAnimation;
         if (animateColumnMove) {
             this.animateInLeft();
         } else {
@@ -84,7 +83,7 @@ export class SetLeftFeature extends BeanStub {
         // VM turn, but only one (the correct one) should get applied.
         this.actualLeft = actualLeft;
 
-        this.beans.columnAnimationService!.executeNextVMTurn(() => {
+        this.beans.colAnimation!.executeNextVMTurn(() => {
             // test this left value is the latest one to be applied, and if not, do nothing
             if (this.actualLeft === actualLeft) {
                 this.setLeft(actualLeft);
@@ -110,10 +109,10 @@ export class SetLeftFeature extends BeanStub {
             return leftPosition;
         }
 
-        const leftWidth = this.beans.visibleColsService.getColsLeftWidth();
+        const leftWidth = this.beans.visibleCols.getColsLeftWidth();
 
         if (colOrGroup.getPinned() === 'right') {
-            const bodyWidth = this.beans.visibleColsService.getBodyContainerWidth();
+            const bodyWidth = this.beans.visibleCols.getBodyContainerWidth();
             return leftWidth + bodyWidth + leftPosition;
         }
 

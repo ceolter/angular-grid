@@ -17,13 +17,13 @@ import { DropZoneColumnComp } from './dropZoneColumnComp';
 export type TDropZone = 'rowGroup' | 'pivot' | 'aggregation';
 
 export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumnComp, AgColumn> {
-    protected columnModel: ColumnModel;
-    protected funcColsService: FuncColsService;
+    protected colModel: ColumnModel;
+    protected funcColsSvc: FuncColsService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     constructor(
@@ -55,7 +55,7 @@ export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumn
 
     protected override minimumAllowedNewInsertIndex(): number {
         const numberOfLockedCols = this.gos.get('groupLockGroupColumns');
-        const numberOfGroupCols = this.funcColsService.rowGroupCols.length;
+        const numberOfGroupCols = this.funcColsSvc.rowGroupCols.length;
         if (numberOfLockedCols === -1) {
             return numberOfGroupCols;
         }
@@ -91,7 +91,7 @@ export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumn
     public setColumnsVisible(columns: AgColumn[] | null | undefined, visible: boolean, source: ColumnEventType) {
         if (columns) {
             const allowedCols = columns.filter((c) => !c.getColDef().lockVisible);
-            this.columnModel.setColsVisible(allowedCols, visible, source);
+            this.colModel.setColsVisible(allowedCols, visible, source);
         }
     }
 

@@ -21,10 +21,10 @@ export enum ExpandState {
 const DEBOUNCE_DELAY = 300;
 export type AgPrimaryColsHeaderEvent = 'unselectAll' | 'selectAll' | 'collapseAll' | 'expandAll' | 'filterChanged';
 export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     private readonly eExpand: Element = RefPlaceholder;
@@ -98,7 +98,7 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
         this.eSelect.setReadOnly(readOnly);
         this.eSelect.addOrRemoveCssClass('ag-column-select-column-readonly', readOnly);
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.showOrHideOptions();
         }
     }
@@ -120,7 +120,7 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
         const showFilter = !this.params.suppressColumnFilter;
         const showSelect = !this.params.suppressColumnSelectAll;
         const showExpand = !this.params.suppressColumnExpandAll;
-        const groupsPresent = !!this.columnModel.colDefCols?.treeDepth;
+        const groupsPresent = !!this.colModel.colDefCols?.treeDepth;
         const translate = this.getLocaleTextFunc();
 
         this.eFilterTextField.setInputPlaceholder(translate('searchOoo', 'Search...'));

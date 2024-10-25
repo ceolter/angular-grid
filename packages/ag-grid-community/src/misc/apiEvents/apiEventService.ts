@@ -6,7 +6,7 @@ import { ALWAYS_SYNC_GLOBAL_EVENTS } from '../../events';
 import type { IFrameworkEventListenerService } from '../../interfaces/iFrameworkEventListenerService';
 
 export class ApiEventService extends BeanStub<AgEventType> implements NamedBean {
-    beanName = 'apiEventService' as const;
+    beanName = 'apiEventSvc' as const;
 
     private syncEventListeners: Map<AgEventType, Set<AgEventListener>> = new Map();
     private asyncEventListeners: Map<AgEventType, Set<AgEventListener>> = new Map();
@@ -30,7 +30,7 @@ export class ApiEventService extends BeanStub<AgEventType> implements NamedBean 
             listeners.set(eventType, new Set());
         }
         listeners.get(eventType)!.add(listener);
-        this.eventService.addEventListener(eventType, listener, async);
+        this.eventSvc.addEventListener(eventType, listener, async);
     }
     public override removeEventListener<T extends AgEventType>(eventType: T, userListener: AgEventListener): void {
         const listener = this.frameworkEventWrappingService?.unwrap(userListener) ?? userListener;
@@ -39,7 +39,7 @@ export class ApiEventService extends BeanStub<AgEventType> implements NamedBean 
         if (!hasAsync) {
             this.syncEventListeners.get(eventType)?.delete(listener);
         }
-        this.eventService.removeEventListener(eventType, listener, hasAsync);
+        this.eventSvc.removeEventListener(eventType, listener, hasAsync);
     }
 
     public addGlobalListener(userListener: AgGlobalEventListener): void {
@@ -57,8 +57,8 @@ export class ApiEventService extends BeanStub<AgEventType> implements NamedBean 
             }
         };
         this.globalEventListenerPairs.set(userListener, { syncListener, asyncListener });
-        this.eventService.addGlobalListener(syncListener, false);
-        this.eventService.addGlobalListener(asyncListener, true);
+        this.eventSvc.addGlobalListener(syncListener, false);
+        this.eventSvc.addGlobalListener(asyncListener, true);
     }
 
     public removeGlobalListener(userListener: AgGlobalEventListener): void {
@@ -68,25 +68,25 @@ export class ApiEventService extends BeanStub<AgEventType> implements NamedBean 
         if (hasAsync) {
             // If it was async also remove the always sync listener we added
             const { syncListener, asyncListener } = this.globalEventListenerPairs.get(listener)!;
-            this.eventService.removeGlobalListener(syncListener, false);
-            this.eventService.removeGlobalListener(asyncListener, true);
+            this.eventSvc.removeGlobalListener(syncListener, false);
+            this.eventSvc.removeGlobalListener(asyncListener, true);
             this.globalEventListenerPairs.delete(userListener);
         } else {
             this.syncGlobalEventListeners.delete(listener);
-            this.eventService.removeGlobalListener(listener, false);
+            this.eventSvc.removeGlobalListener(listener, false);
         }
     }
 
     private destroyEventListeners(map: Map<AgEventType, Set<AgEventListener>>, async: boolean): void {
         map.forEach((listeners, eventType) => {
-            listeners.forEach((listener) => this.eventService.removeEventListener(eventType, listener, async));
+            listeners.forEach((listener) => this.eventSvc.removeEventListener(eventType, listener, async));
             listeners.clear();
         });
         map.clear();
     }
 
     private destroyGlobalListeners(set: Set<AgGlobalEventListener>, async: boolean): void {
-        set.forEach((listener) => this.eventService.removeGlobalListener(listener, async));
+        set.forEach((listener) => this.eventSvc.removeGlobalListener(listener, async));
         set.clear();
     }
 
@@ -97,8 +97,8 @@ export class ApiEventService extends BeanStub<AgEventType> implements NamedBean 
         this.destroyEventListeners(this.asyncEventListeners, true);
         this.destroyGlobalListeners(this.syncGlobalEventListeners, false);
         this.globalEventListenerPairs.forEach(({ syncListener, asyncListener }) => {
-            this.eventService.removeGlobalListener(syncListener, false);
-            this.eventService.removeGlobalListener(asyncListener, true);
+            this.eventSvc.removeGlobalListener(syncListener, false);
+            this.eventSvc.removeGlobalListener(asyncListener, true);
         });
         this.globalEventListenerPairs.clear();
     }

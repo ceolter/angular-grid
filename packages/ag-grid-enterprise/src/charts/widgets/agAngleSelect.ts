@@ -21,10 +21,10 @@ export interface AgAngleSelectParams extends AgLabelParams {
 
 export type AgAngleSelectEvent = 'fieldValueChanged';
 export class AgAngleSelect extends AgAbstractLabel<AgAngleSelectParams, AgAngleSelectEvent> {
-    protected dragService?: DragService;
+    protected dragSvc?: DragService;
 
     public wireBeans(beans: BeanCollection) {
-        this.dragService = beans.dragService;
+        this.dragSvc = beans.dragSvc;
     }
 
     protected readonly eLabel: HTMLElement = RefPlaceholder;
@@ -79,7 +79,7 @@ export class AgAngleSelect extends AgAbstractLabel<AgAngleSelectParams, AgAngleS
             onDragStop: () => {},
         };
 
-        this.dragService?.addDragSource(this.dragListener);
+        this.dragSvc?.addDragSource(this.dragListener);
 
         this.eAngleValue
             .setLabel('')
@@ -270,7 +270,7 @@ export class AgAngleSelect extends AgAbstractLabel<AgAngleSelectParams, AgAngleS
     }
 
     public override destroy(): void {
-        this.dragService?.removeDragSource(this.dragListener);
+        this.dragSvc?.removeDragSource(this.dragListener);
         super.destroy();
     }
 }

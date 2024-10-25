@@ -18,7 +18,7 @@ export class DateCompWrapper {
 
     constructor(
         context: Context,
-        userComponentFactory: UserComponentFactory,
+        userCompFactory: UserComponentFactory,
         dateComponentParams: WithoutGridCommon<IDateParams>,
         eParent: HTMLElement,
         onReady?: (comp: DateCompWrapper) => void
@@ -26,7 +26,7 @@ export class DateCompWrapper {
         this.context = context;
         this.eParent = eParent;
 
-        const compDetails = _getDateCompDetails(userComponentFactory, dateComponentParams);
+        const compDetails = _getDateCompDetails(userCompFactory, dateComponentParams);
         const promise = compDetails.newAgStackInstance();
 
         promise!.then((dateComp) => {

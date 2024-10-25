@@ -19,22 +19,22 @@ import { _missing } from '../utils/generic';
 import { _warn } from '../validation/logging';
 
 export class CellNavigationService extends BeanStub implements NamedBean {
-    beanName = 'cellNavigationService' as const;
+    beanName = 'cellNavigation' as const;
 
-    private visibleColsService: VisibleColsService;
+    private visibleCols: VisibleColsService;
     private rowModel: IRowModel;
     private rowRenderer: RowRenderer;
     private pinnedRowModel?: PinnedRowModel;
-    private paginationService?: PaginationService;
-    private pageBoundsService: PageBoundsService;
+    private pagination?: PaginationService;
+    private pageBounds: PageBoundsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
+        this.visibleCols = beans.visibleCols;
         this.rowModel = beans.rowModel;
         this.rowRenderer = beans.rowRenderer;
         this.pinnedRowModel = beans.pinnedRowModel;
-        this.paginationService = beans.paginationService;
-        this.pageBoundsService = beans.pageBoundsService;
+        this.pagination = beans.pagination;
+        this.pageBounds = beans.pageBounds;
     }
 
     // returns null if no cell to focus on, ie at the end of the grid
@@ -59,10 +59,10 @@ export class CellNavigationService extends BeanStub implements NamedBean {
         let rowIndex: number;
 
         if (upKey || downKey) {
-            rowIndex = upKey ? this.pageBoundsService.getFirstRow() : this.pageBoundsService.getLastRow();
+            rowIndex = upKey ? this.pageBounds.getFirstRow() : this.pageBounds.getLastRow();
             column = focusedCell.column as AgColumn;
         } else {
-            const allColumns = this.visibleColsService.allCols;
+            const allColumns = this.visibleCols.allCols;
             const isRtl = this.gos.get('enableRtl');
             rowIndex = focusedCell.rowIndex;
             column = leftKey !== isRtl ? allColumns[0] : _last(allColumns);
@@ -144,7 +144,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
             return null;
         }
 
-        const colToLeft = this.visibleColsService.getColBefore(lastCell.column as AgColumn);
+        const colToLeft = this.visibleCols.getColBefore(lastCell.column as AgColumn);
         if (!colToLeft) {
             return null;
         }
@@ -161,7 +161,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
             return null;
         }
 
-        const colToRight = this.visibleColsService.getColAfter(lastCell.column as AgColumn);
+        const colToRight = this.visibleCols.getColAfter(lastCell.column as AgColumn);
         // if already on right, do nothing
         if (!colToRight) {
             return null;
@@ -188,7 +188,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
                     // if on last row of pinned top, then next row is main body (if rows exist),
                     // otherwise it's the pinned bottom
                     if (this.rowModel.isRowsToRender()) {
-                        return { rowIndex: this.pageBoundsService.getFirstRow(), rowPinned: null } as RowPosition;
+                        return { rowIndex: this.pageBounds.getFirstRow(), rowPinned: null } as RowPosition;
                     }
 
                     if (this.pinnedRowModel?.isRowsToRender('bottom')) {
@@ -278,7 +278,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
             return lastBottomIndex <= index;
         }
 
-        const lastBodyIndex = this.pageBoundsService.getLastRow();
+        const lastBodyIndex = this.pageBounds.getLastRow();
         return lastBodyIndex <= index;
     }
 
@@ -286,7 +286,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
         // if already on top row, do nothing
         const index = rowPosition.rowIndex;
         const pinned = rowPosition.rowPinned;
-        const isFirstRow = pinned ? index === 0 : index === this.pageBoundsService.getFirstRow();
+        const isFirstRow = pinned ? index === 0 : index === this.pageBounds.getFirstRow();
         let ignoreSticky = false;
 
         // if already on top row, do nothing
@@ -346,7 +346,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
     }
 
     private getLastBodyCell(): RowPosition {
-        const lastBodyRow = this.pageBoundsService.getLastRow();
+        const lastBodyRow = this.pageBounds.getLastRow();
 
         return { rowIndex: lastBodyRow, rowPinned: null } as RowPosition;
     }
@@ -366,13 +366,13 @@ export class CellNavigationService extends BeanStub implements NamedBean {
     }
 
     public getNextTabbedCellForwards(gridCell: CellPosition): CellPosition | null {
-        const displayedColumns = this.visibleColsService.allCols;
+        const displayedColumns = this.visibleCols.allCols;
 
         let newRowIndex: number | null = gridCell.rowIndex;
         let newFloating: string | null | undefined = gridCell.rowPinned;
 
         // move along to the next cell
-        let newColumn = this.visibleColsService.getColAfter(gridCell.column as AgColumn);
+        let newColumn = this.visibleCols.getColAfter(gridCell.column as AgColumn);
 
         // check if end of the row, and if so, go forward a row
         if (!newColumn) {
@@ -385,7 +385,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
 
             // If we are tabbing and there is a paging panel present, tabbing should go
             // to the paging panel instead of loading the next page.
-            if (!rowBelow.rowPinned && !(this.paginationService?.isRowInPage(rowBelow) ?? true)) {
+            if (!rowBelow.rowPinned && !(this.pagination?.isRowInPage(rowBelow) ?? true)) {
                 return null;
             }
 
@@ -397,13 +397,13 @@ export class CellNavigationService extends BeanStub implements NamedBean {
     }
 
     public getNextTabbedCellBackwards(gridCell: CellPosition): CellPosition | null {
-        const displayedColumns = this.visibleColsService.allCols;
+        const displayedColumns = this.visibleCols.allCols;
 
         let newRowIndex: number | null = gridCell.rowIndex;
         let newFloating: string | null | undefined = gridCell.rowPinned;
 
         // move along to the next cell
-        let newColumn = this.visibleColsService.getColBefore(gridCell.column as AgColumn);
+        let newColumn = this.visibleCols.getColBefore(gridCell.column as AgColumn);
 
         // check if end of the row, and if so, go forward a row
         if (!newColumn) {
@@ -417,7 +417,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
 
             // If we are tabbing and there is a paging panel present, tabbing should go
             // to the paging panel instead of loading the next page.
-            if (!rowAbove.rowPinned && !(this.paginationService?.isRowInPage(rowAbove) ?? true)) {
+            if (!rowAbove.rowPinned && !(this.pagination?.isRowInPage(rowAbove) ?? true)) {
                 return null;
             }
 

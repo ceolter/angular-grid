@@ -3,7 +3,7 @@ import type { UserComponentFactory } from '../components/framework/userComponent
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { CoreBeanCollection } from '../context/context';
+import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
 import type { MouseEventService } from '../gridBodyComp/mouseEventService';
@@ -19,21 +19,21 @@ import type { PopupService } from '../widgets/popupService';
 import { PopupEditorWrapper } from './cellEditors/popupEditorWrapper';
 
 export class EditService extends BeanStub implements NamedBean {
-    beanName = 'editService' as const;
+    beanName = 'editSvc' as const;
 
-    private navigationService?: NavigationService;
-    private userComponentFactory: UserComponentFactory;
-    private valueService: ValueService;
+    private navigation?: NavigationService;
+    private userCompFactory: UserComponentFactory;
+    private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
-    private mouseEventService: MouseEventService;
-    private popupService?: PopupService;
+    private mouseEventSvc: MouseEventService;
+    private popupSvc?: PopupService;
 
-    public wireBeans(beans: CoreBeanCollection): void {
-        this.navigationService = beans.navigationService;
-        this.userComponentFactory = beans.userComponentFactory;
-        this.valueService = beans.valueService;
+    public wireBeans(beans: BeanCollection): void {
+        this.navigation = beans.navigation;
+        this.userCompFactory = beans.userCompFactory;
+        this.valueSvc = beans.valueSvc;
         this.rowRenderer = beans.rowRenderer;
-        this.popupService = beans.popupService;
+        this.popupSvc = beans.popupSvc;
     }
 
     public startEditing(
@@ -44,7 +44,7 @@ export class EditService extends BeanStub implements NamedBean {
     ): boolean {
         const editorParams = this.createCellEditorParams(cellCtrl, key, cellStartedEdit);
         const colDef = cellCtrl.getColumn().getColDef();
-        const compDetails = _getCellEditorDetails(this.userComponentFactory, colDef, editorParams);
+        const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
 
         // if cellEditorSelector was used, we give preference to popup and popupPosition from the selector
         const popup = compDetails?.popupFromSelector != null ? compDetails.popupFromSelector : !!colDef.cellEditorPopup;
@@ -56,7 +56,7 @@ export class EditService extends BeanStub implements NamedBean {
         cellCtrl.setEditing(true, compDetails);
         cellCtrl.getComp().setEditDetails(compDetails, popup, position, this.gos.get('reactiveCustomComponents'));
 
-        this.eventService.dispatchEvent(cellCtrl.createEvent(event, 'cellEditingStarted'));
+        this.eventSvc.dispatchEvent(cellCtrl.createEvent(event, 'cellEditingStarted'));
 
         return !(compDetails?.params as DefaultProvidedCellEditorParams)?.suppressPreventDefault;
     }
@@ -66,7 +66,7 @@ export class EditService extends BeanStub implements NamedBean {
         const { newValue, newValueExists } = this.takeValueFromCellEditor(cancel, cellComp);
         const rowNode = cellCtrl.getRowNode();
         const column = cellCtrl.getColumn();
-        const oldValue = this.valueService.getValueForDisplay(column, rowNode);
+        const oldValue = this.valueSvc.getValueForDisplay(column, rowNode);
         let valueChanged = false;
 
         if (newValueExists) {
@@ -79,7 +79,7 @@ export class EditService extends BeanStub implements NamedBean {
         cellCtrl.updateAndFormatValue(false);
         cellCtrl.refreshCell({ forceRefresh: true, suppressFlash: true });
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             ...cellCtrl.createEvent(null, 'cellEditingStopped'),
             oldValue,
             newValue,
@@ -95,7 +95,7 @@ export class EditService extends BeanStub implements NamedBean {
             const { eventKey, cellStartedEdit } = cellCtrl.getEditCompDetails()!.params;
             const editorParams = this.createCellEditorParams(cellCtrl, eventKey, cellStartedEdit);
             const colDef = cellCtrl.getColumn().getColDef();
-            const compDetails = _getCellEditorDetails(this.userComponentFactory, colDef, editorParams);
+            const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
             cellEditor.refresh(compDetails!.params);
         }
     }
@@ -159,15 +159,15 @@ export class EditService extends BeanStub implements NamedBean {
                 // see if click came from inside the viewports
                 viewports.some((viewport) => viewport.contains(elementWithFocus)) &&
                 // and also that it's not from a detail grid
-                this.mouseEventService.isElementInThisGrid(elementWithFocus);
+                this.mouseEventSvc.isElementInThisGrid(elementWithFocus);
 
             if (!clickInsideGrid) {
-                const popupService = this.popupService;
+                const popupSvc = this.popupSvc;
 
                 clickInsideGrid =
-                    !!popupService &&
-                    (popupService.getActivePopups().some((popup) => popup.contains(elementWithFocus)) ||
-                        popupService.isElementWithinCustomPopup(elementWithFocus));
+                    !!popupSvc &&
+                    (popupSvc.getActivePopups().some((popup) => popup.contains(elementWithFocus)) ||
+                        popupSvc.isElementWithinCustomPopup(elementWithFocus));
             }
 
             if (!clickInsideGrid) {
@@ -246,7 +246,7 @@ export class EditService extends BeanStub implements NamedBean {
         const column = cellCtrl.getColumn();
         const rowNode = cellCtrl.getRowNode();
         return this.gos.addGridCommonParams({
-            value: this.valueService.getValueForDisplay(column, rowNode),
+            value: this.valueSvc.getValueForDisplay(column, rowNode),
             eventKey: key,
             column: column,
             colDef: column.getColDef(),
@@ -257,7 +257,7 @@ export class EditService extends BeanStub implements NamedBean {
             onKeyDown: cellCtrl.onKeyDown.bind(cellCtrl),
             stopEditing: cellCtrl.stopEditingAndFocus.bind(cellCtrl),
             eGridCell: cellCtrl.getGui(),
-            parseValue: (newValue: any) => this.valueService.parseValue(column, rowNode, newValue, cellCtrl.getValue()),
+            parseValue: (newValue: any) => this.valueSvc.parseValue(column, rowNode, newValue, cellCtrl.getValue()),
             formatValue: cellCtrl.formatValue.bind(cellCtrl),
         });
     }
@@ -267,7 +267,7 @@ export class EditService extends BeanStub implements NamedBean {
 
         if (enterNavigatesVerticallyAfterEdit) {
             const key = shiftKey ? KeyCode.UP : KeyCode.DOWN;
-            this.navigationService?.navigateToNextCell(null, key, cellPosition, false);
+            this.navigation?.navigateToNextCell(null, key, cellPosition, false);
         }
     }
 }

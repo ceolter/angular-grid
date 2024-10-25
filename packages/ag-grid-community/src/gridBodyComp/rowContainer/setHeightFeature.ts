@@ -6,7 +6,7 @@ export class SetHeightFeature extends BeanStub {
     private maxDivHeightScaler: RowContainerHeightService;
 
     public wireBeans(beans: BeanCollection) {
-        this.maxDivHeightScaler = beans.rowContainerHeightService;
+        this.maxDivHeightScaler = beans.rowContainerHeight;
     }
 
     private eContainer: HTMLElement;

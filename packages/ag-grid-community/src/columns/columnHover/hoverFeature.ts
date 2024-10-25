@@ -4,10 +4,10 @@ import type { AgColumn } from '../../entities/agColumn';
 import type { ColumnHoverService } from './columnHoverService';
 
 export class HoverFeature extends BeanStub {
-    private columnHoverService: ColumnHoverService;
+    private colHover: ColumnHoverService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnHoverService = beans.columnHoverService!;
+        this.colHover = beans.colHover!;
     }
 
     private readonly columns: AgColumn[];
@@ -34,10 +34,10 @@ export class HoverFeature extends BeanStub {
     }
 
     private onMouseOut(): void {
-        this.columnHoverService.clearMouseOver();
+        this.colHover.clearMouseOver();
     }
 
     private onMouseOver(): void {
-        this.columnHoverService.setMouseOver(this.columns);
+        this.colHover.setMouseOver(this.columns);
     }
 }

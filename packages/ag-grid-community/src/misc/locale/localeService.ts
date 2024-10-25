@@ -5,7 +5,7 @@ import type { WithoutGridCommon } from '../../interfaces/iCommon';
 import type { LocaleTextFunc } from './localeUtils';
 
 export class LocaleService extends BeanStub implements NamedBean {
-    beanName = 'localeService' as const;
+    beanName = 'localeSvc' as const;
 
     public override getLocaleTextFunc(): LocaleTextFunc {
         const getLocaleText = this.gos.getCallback('getLocaleText');

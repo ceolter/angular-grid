@@ -25,7 +25,7 @@ import { GroupSelectsChildrenStrategy } from './selection/strategies/groupSelect
 import type { ISelectionStrategy } from './selection/strategies/iSelectionStrategy';
 
 export class ServerSideSelectionService extends BaseSelectionService implements NamedBean, ISelectionService {
-    beanName = 'selectionService' as const;
+    beanName = 'selectionSvc' as const;
 
     private selectionStrategy: ISelectionStrategy;
     private selectionMode?: RowSelectionMode;

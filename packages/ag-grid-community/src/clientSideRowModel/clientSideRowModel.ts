@@ -63,11 +63,11 @@ export interface RowNodeMap {
 export class ClientSideRowModel extends BeanStub implements IClientSideRowModel, NamedBean {
     beanName = 'rowModel' as const;
 
-    private columnModel: ColumnModel;
-    private selectionService?: ISelectionService;
+    private colModel: ColumnModel;
+    private selectionSvc?: ISelectionService;
     private valueCache?: ValueCache;
     private environment: Environment;
-    private groupHideOpenParentsService?: IGroupHideOpenParentsService;
+    private groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
 
     // standard stages
     private filterStage?: IRowNodeStage;
@@ -81,11 +81,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private filterAggregatesStage?: IRowNodeStage;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.selectionService = beans.selectionService;
+        this.colModel = beans.colModel;
+        this.selectionSvc = beans.selectionSvc;
         this.valueCache = beans.valueCache;
         this.environment = beans.environment;
-        this.groupHideOpenParentsService = beans.groupHideOpenParentsService;
+        this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
 
         this.filterStage = beans.filterStage!;
         this.sortStage = beans.sortStage!;
@@ -175,11 +175,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         let nodeManager: IClientSideNodeManager<any> | undefined;
         if (isTree) {
-            nodeManager = childrenField ? beans.clientSideChildrenTreeNodeManager : beans.clientSidePathTreeNodeManager;
+            nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
         }
 
         if (!nodeManager) {
-            nodeManager = beans.clientSideNodeManager!;
+            nodeManager = beans.csrmNodeSvc!;
         }
 
         if (oldNodeManager !== nodeManager) {
@@ -672,7 +672,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private onValueChanged(): void {
-        if (this.columnModel.isPivotActive()) {
+        if (this.colModel.isPivotActive()) {
             this.refreshModel({ step: 'pivot' });
         } else {
             this.refreshModel({ step: 'aggregate' });
@@ -682,7 +682,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private createChangePath(rowNodeTransactions: (RowNodeTransaction | null)[] | undefined): ChangedPath {
         // for updates, if the row is updated at all, then we re-calc all the values
         // in that row. we could compare each value to each old value, however if we
-        // did this, we would be calling the valueService twice, once on the old value
+        // did this, we would be calling the valueSvc twice, once on the old value
         // and once on the new value. so it's less valueGetter calls if we just assume
         // each column is different. that way the changedPath is used so that only
         // the impacted parent rows are recalculated, parents who's children have
@@ -731,7 +731,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         paramsOrStep: RefreshModelParams | ClientSideRowModelStage | undefined,
         changedPath?: ChangedPath | undefined
     ): void {
-        if (!this.hasStarted || this.isRefreshingModel || this.columnModel.changeEventsDispatching || !this.rootNode) {
+        if (!this.hasStarted || this.isRefreshingModel || this.colModel.changeEventsDispatching || !this.rootNode) {
             return;
         }
 
@@ -804,7 +804,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         this.isRefreshingModel = false;
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'modelUpdated',
             animate: params.animate,
             keepRenderedRows: params.keepRenderedRows,
@@ -815,7 +815,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public isEmpty(): boolean {
-        return !this.rootNode?.allLeafChildren?.length || !this.columnModel?.ready;
+        return !this.rootNode?.allLeafChildren?.length || !this.colModel?.ready;
     }
 
     public isRowsToRender(): boolean {
@@ -1102,10 +1102,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         } else {
             changedPath.forEachChangedNodeDepthFirst((rowNode) => {
                 // this needs to run before sorting
-                this.groupHideOpenParentsService?.pullDownGroupDataForHideOpenParents(
-                    rowNode.childrenAfterAggFilter,
-                    true
-                );
+                this.groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
 
                 rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
 
@@ -1114,7 +1111,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         // this needs to run after sorting
-        this.groupHideOpenParentsService?.updateGroupDataForHideOpenParents(changedPath);
+        this.groupHideOpenParentsSvc?.updateGroupDataForHideOpenParents(changedPath);
     }
 
     private doRowGrouping(
@@ -1155,7 +1152,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (this.rowNodesCountReady) {
             // only if row data has been set
             this.rowCountReady = true;
-            this.eventService.dispatchEventOnce({ type: 'rowCountReady' });
+            this.eventSvc.dispatchEventOnce({ type: 'rowCountReady' });
         }
     }
 
@@ -1201,8 +1198,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // no need to invalidate cache, as the cache is stored on the rowNode,
         // so new rowNodes means the cache is wiped anyway.
 
-        // - clears selection, done before we set row data to ensure it isn't readded via `selectionService.syncInOldRowNode`
-        this.selectionService?.reset('rowDataChanged');
+        // - clears selection, done before we set row data to ensure it isn't readded via `selectionSvc.syncInOldRowNode`
+        this.selectionSvc?.reset('rowDataChanged');
 
         if (!Array.isArray(rowData)) {
             _warn(1);
@@ -1227,7 +1224,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private dispatchUpdateEventsAndRefresh(): void {
         // this event kicks off:
         // - shows 'no rows' overlay if needed
-        this.eventService.dispatchEvent({ type: 'rowDataUpdated' });
+        this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
 
         this.refreshModel({
             step: 'group',
@@ -1288,7 +1285,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (rowNodeTrans.length > 0) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'asyncTransactionsFlushed',
                 results: rowNodeTrans,
             });
@@ -1333,7 +1330,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         const animate = !this.gos.get('suppressAnimationFrame');
 
-        this.eventService.dispatchEvent({ type: 'rowDataUpdated', transactions });
+        this.eventSvc.dispatchEvent({ type: 'rowDataUpdated', transactions });
 
         this.refreshModel(
             {
@@ -1414,7 +1411,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private onGridStylesChanges(e: CssVariablesChanged) {
         if (e.rowHeightChanged) {
-            if (this.beans.rowAutoHeightService?.active) {
+            if (this.beans.rowAutoHeight?.active) {
                 return;
             }
 

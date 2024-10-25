@@ -7,11 +7,11 @@ export function getGridId(beans: BeanCollection): string {
 }
 
 export function destroy(beans: BeanCollection): void {
-    beans.gridDestroyService.destroy();
+    beans.gridDestroySvc.destroy();
 }
 
 export function isDestroyed(beans: BeanCollection): boolean {
-    return beans.gridDestroyService.isDestroyCalled();
+    return beans.gridDestroySvc.isDestroyCalled();
 }
 
 export function getGridOption<Key extends keyof GridOptions<TData>, TData = any>(

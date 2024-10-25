@@ -6,10 +6,10 @@ import { isColGroupDef, mergeLeafPathTrees } from './sideBarUtils';
 export class ToolPanelColDefService extends BeanStub implements NamedBean {
     beanName = 'toolPanelColDefService' as const;
 
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     public createColumnTree(colDefs: AbstractColDef[]): (AgColumn | AgProvidedColumnGroup)[] {
@@ -38,7 +38,7 @@ export class ToolPanelColDefService extends BeanStub implements NamedBean {
             } else {
                 const colDef = abstractColDef as ColDef;
                 const key = colDef.colId ? colDef.colId : colDef.field;
-                const column = this.columnModel.getColDefCol(key!)!;
+                const column = this.colModel.getColDefCol(key!)!;
 
                 if (!column) {
                     invalidColIds.push(colDef);
@@ -111,7 +111,7 @@ export class ToolPanelColDefService extends BeanStub implements NamedBean {
         };
 
         // obtain a sorted list of all grid columns
-        const allGridColumns = this.columnModel.getCols();
+        const allGridColumns = this.colModel.getCols();
 
         // only primary columns and non row group columns should appear in the tool panel
         const allPrimaryGridColumns = allGridColumns.filter((column) => {

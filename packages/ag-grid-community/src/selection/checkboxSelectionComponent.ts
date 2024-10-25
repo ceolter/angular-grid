@@ -69,7 +69,7 @@ export class CheckboxSelectionComponent extends Component {
 
     private onClicked(newValue: boolean, groupSelectsFiltered: boolean | undefined, event: MouseEvent): number {
         return (
-            this.beans.selectionService?.setSelectedParams({
+            this.beans.selectionSvc?.setSelectedParams({
                 rowNode: this.rowNode,
                 newValue,
                 rangeSelect: event.shiftKey,

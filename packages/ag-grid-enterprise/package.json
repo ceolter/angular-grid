@@ -44,6 +44,9 @@
     "./styles/agGridQuartzFont.min.css": "./styles/agGridQuartzFont.min.css",
     "./styles": "./styles/_index.scss"
   },
+  "scripts": {
+    "build:css": "tsx ../../scripts/build-css.ts --package ag-grid-enterprise"
+  },
   "sideEffects": false,
   "repository": {
     "type": "git",

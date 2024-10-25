@@ -2,7 +2,7 @@ import type { DetailGridInfo, IDetailGridApiService, NamedBean } from 'ag-grid-c
 import { BeanStub, _exists } from 'ag-grid-community';
 
 export class DetailGridApiService extends BeanStub implements NamedBean, IDetailGridApiService {
-    beanName = 'detailGridApiService' as const;
+    beanName = 'detailGridApiSvc' as const;
 
     private detailGridInfoMap: { [id: string]: DetailGridInfo | undefined } = {};
 

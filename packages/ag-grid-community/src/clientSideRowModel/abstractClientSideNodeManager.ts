@@ -396,17 +396,17 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected dispatchRowDataUpdateStartedEvent(rowData?: TData[] | null): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'rowDataUpdateStarted',
             firstRowData: rowData?.length ? rowData[0] : null,
         });
     }
 
     protected updateSelection(nodesToUnselect: RowNode<TData>[], source: SelectionEventSourceType): void {
-        const selectionService = this.beans.selectionService;
+        const selectionSvc = this.beans.selectionSvc;
         const selectionChanged = nodesToUnselect.length > 0;
         if (selectionChanged) {
-            selectionService?.setNodesSelected({
+            selectionSvc?.setNodesSelected({
                 newValue: false,
                 nodes: nodesToUnselect,
                 suppressFinishActions: true,
@@ -418,10 +418,10 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         // a new node was inserted, so a parent that was previously selected (as all
         // children were selected) should not be tri-state (as new one unselected against
         // all other selected children).
-        selectionService?.updateGroupsFromChildrenSelections?.(source);
+        selectionSvc?.updateGroupsFromChildrenSelections?.(source);
 
         if (selectionChanged) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'selectionChanged',
                 source: source,
             });

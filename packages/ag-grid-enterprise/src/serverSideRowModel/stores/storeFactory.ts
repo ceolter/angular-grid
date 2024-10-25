@@ -17,14 +17,14 @@ import { LazyStore } from './lazy/lazyStore';
 export class StoreFactory extends BeanStub implements NamedBean {
     beanName = 'ssrmStoreFactory' as const;
 
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
-    private rowAutoHeightService?: RowAutoHeightService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
+    private rowAutoHeight?: RowAutoHeightService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
-        this.rowAutoHeightService = beans.rowAutoHeightService;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.rowAutoHeight = beans.rowAutoHeight;
     }
 
     public createStore(ssrmParams: SSRMParams, parentNode: RowNode): LazyStore {
@@ -68,7 +68,7 @@ export class StoreFactory extends BeanStub implements NamedBean {
             return;
         }
 
-        if (this.rowAutoHeightService?.active) {
+        if (this.rowAutoHeight?.active) {
             _warn(204);
             return undefined;
         }
@@ -98,9 +98,9 @@ export class StoreFactory extends BeanStub implements NamedBean {
         const params: WithoutGridCommon<GetServerSideGroupLevelParamsParams> = {
             level: parentNode.level + 1,
             parentRowNode: parentNode.level >= 0 ? parentNode : undefined,
-            rowGroupColumns: this.funcColsService.rowGroupCols,
-            pivotColumns: this.funcColsService.pivotCols,
-            pivotMode: this.columnModel.isPivotMode(),
+            rowGroupColumns: this.funcColsSvc.rowGroupCols,
+            pivotColumns: this.funcColsSvc.pivotCols,
+            pivotMode: this.colModel.isPivotMode(),
         };
 
         const res = callback(params);

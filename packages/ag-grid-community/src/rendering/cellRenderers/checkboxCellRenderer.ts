@@ -6,6 +6,7 @@ import { _stopPropagationForAgGrid } from '../../utils/event';
 import type { AgCheckbox } from '../../widgets/agCheckbox';
 import { AgCheckboxSelector } from '../../widgets/agCheckbox';
 import { Component, RefPlaceholder } from '../../widgets/component';
+import { checkboxCellRendererCSS } from './checkboxCellRenderer.css-GENERATED';
 import type { ICellRenderer, ICellRendererParams } from './iCellRenderer';
 
 export interface ICheckboxCellRendererParams<TData = any, TContext = any>
@@ -26,6 +27,7 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
             </div>`,
             [AgCheckboxSelector]
         );
+        this.registerCSS(checkboxCellRendererCSS);
     }
 
     public init(params: ICheckboxCellRendererParams): void {
@@ -112,7 +114,7 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
 
     private onCheckboxChanged(isSelected?: boolean): void {
         const { column, node, value } = this.params;
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'cellEditingStarted',
             column: column!,
             colDef: column!.getColDef(),
@@ -125,7 +127,7 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
 
         const valueChanged = this.params.node.setDataValue(this.params.column!, isSelected, 'edit');
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'cellEditingStopped',
             column: column!,
             colDef: column!.getColDef(),

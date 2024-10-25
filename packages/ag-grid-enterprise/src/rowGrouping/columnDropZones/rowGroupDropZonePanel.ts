@@ -39,7 +39,7 @@ export class RowGroupDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]) {
-        this.funcColsService.setRowGroupColumns(columns, 'toolPanelUi');
+        this.funcColsSvc.setRowGroupColumns(columns, 'toolPanelUi');
     }
 
     protected getIconName(): DragAndDropIcon {
@@ -47,6 +47,6 @@ export class RowGroupDropZonePanel extends BaseDropZonePanel {
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.funcColsService.rowGroupCols;
+        return this.funcColsSvc.rowGroupCols;
     }
 }

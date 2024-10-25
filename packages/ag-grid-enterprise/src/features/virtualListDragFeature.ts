@@ -20,10 +20,10 @@ export class VirtualListDragFeature<
     V,
     E extends AgEvent,
 > extends BeanStub {
-    private dragAndDropService?: DragAndDropService;
+    private dragAndDrop?: DragAndDropService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.dragAndDropService = beans.dragAndDropService;
+        this.dragAndDrop = beans.dragAndDrop;
     }
 
     private currentDragValue: V | null = null;
@@ -72,7 +72,7 @@ export class VirtualListDragFeature<
             onDragCancel: () => this.onDragCancel(),
         };
 
-        this.dragAndDropService?.addDropTarget(dropTarget);
+        this.dragAndDrop?.addDropTarget(dropTarget);
     }
 
     private createAutoScrollService(): void {

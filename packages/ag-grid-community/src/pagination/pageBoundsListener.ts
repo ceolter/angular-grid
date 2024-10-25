@@ -11,13 +11,13 @@ export class PageBoundsListener extends BeanStub implements NamedBean {
     beanName = 'pageBoundsListener' as const;
 
     private rowModel: IRowModel;
-    private paginationService?: PaginationService;
-    private pageBoundsService: PageBoundsService;
+    private pagination?: PaginationService;
+    private pageBounds: PageBoundsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
-        this.paginationService = beans.paginationService;
-        this.pageBoundsService = beans.pageBoundsService;
+        this.pagination = beans.pagination;
+        this.pageBounds = beans.pageBounds;
     }
 
     public postConstruct(): void {
@@ -32,7 +32,7 @@ export class PageBoundsListener extends BeanStub implements NamedBean {
     private onModelUpdated(modelUpdatedEvent?: WithoutGridCommon<ModelUpdatedEvent>): void {
         this.calculatePages();
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'paginationChanged',
             animate: modelUpdatedEvent?.animate ?? false,
             newData: modelUpdatedEvent?.newData ?? false,
@@ -43,10 +43,10 @@ export class PageBoundsListener extends BeanStub implements NamedBean {
     }
 
     private calculatePages(): void {
-        if (this.paginationService) {
-            this.paginationService.calculatePages();
+        if (this.pagination) {
+            this.pagination.calculatePages();
         } else {
-            this.pageBoundsService.calculateBounds(0, this.rowModel.getRowCount() - 1);
+            this.pageBounds.calculateBounds(0, this.rowModel.getRowCount() - 1);
         }
     }
 }

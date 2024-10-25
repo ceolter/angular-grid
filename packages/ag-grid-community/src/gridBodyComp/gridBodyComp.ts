@@ -57,12 +57,12 @@ function getGridBodyTemplate(includeOverlay?: boolean): {
 }
 
 export class GridBodyComp extends Component {
-    private rangeService?: IRangeService;
-    private overlayService?: OverlayService;
+    private rangeSvc?: IRangeService;
+    private overlays?: OverlayService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.rangeService = beans.rangeService;
-        this.overlayService = beans.overlayService;
+        this.rangeSvc = beans.rangeSvc;
+        this.overlays = beans.overlays;
     }
 
     private readonly eBodyViewport: HTMLElement = RefPlaceholder;
@@ -75,7 +75,7 @@ export class GridBodyComp extends Component {
     private ctrl: GridBodyCtrl;
 
     public postConstruct() {
-        const overlaySelector = this.overlayService?.getOverlayWrapperSelector();
+        const overlaySelector = this.overlays?.getOverlayWrapperSelector();
 
         const { paramsMap, template } = getGridBodyTemplate(!!overlaySelector);
 
@@ -156,7 +156,7 @@ export class GridBodyComp extends Component {
             this.eStickyBottom
         );
 
-        if ((this.rangeService && _isCellSelectionEnabled(this.gos)) || _isMultiRowSelection(this.gos)) {
+        if ((this.rangeSvc && _isCellSelectionEnabled(this.gos)) || _isMultiRowSelection(this.gos)) {
             _setAriaMultiSelectable(this.getGui(), true);
         }
     }

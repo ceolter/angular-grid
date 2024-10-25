@@ -9,15 +9,15 @@ export function setColumnGroupOpened(
     group: ProvidedColumnGroup | string,
     newValue: boolean
 ): void {
-    beans.columnGroupService?.setColumnGroupOpened(group as AgProvidedColumnGroup | string, newValue, 'api');
+    beans.columnGroupSvc?.setColumnGroupOpened(group as AgProvidedColumnGroup | string, newValue, 'api');
 }
 
 export function getColumnGroup(beans: BeanCollection, name: string, instanceId?: number): ColumnGroup | null {
-    return beans.columnGroupService?.getColumnGroup(name, instanceId) ?? null;
+    return beans.columnGroupSvc?.getColumnGroup(name, instanceId) ?? null;
 }
 
 export function getProvidedColumnGroup(beans: BeanCollection, name: string): ProvidedColumnGroup | null {
-    return beans.columnGroupService?.getProvidedColGroup(name) ?? null;
+    return beans.columnGroupSvc?.getProvidedColGroup(name) ?? null;
 }
 
 export function getDisplayNameForColumnGroup(
@@ -25,33 +25,33 @@ export function getDisplayNameForColumnGroup(
     columnGroup: ColumnGroup,
     location: HeaderLocation
 ): string {
-    return beans.columnNameService.getDisplayNameForColumnGroup(columnGroup as AgColumnGroup, location) || '';
+    return beans.colNames.getDisplayNameForColumnGroup(columnGroup as AgColumnGroup, location) || '';
 }
 
 export function getColumnGroupState(beans: BeanCollection): { groupId: string; open: boolean }[] {
-    return beans.columnGroupService?.getColumnGroupState() ?? [];
+    return beans.columnGroupSvc?.getColumnGroupState() ?? [];
 }
 
 export function setColumnGroupState(beans: BeanCollection, stateItems: { groupId: string; open: boolean }[]): void {
-    beans.columnGroupService?.setColumnGroupState(stateItems, 'api');
+    beans.columnGroupSvc?.setColumnGroupState(stateItems, 'api');
 }
 
 export function resetColumnGroupState(beans: BeanCollection): void {
-    beans.columnGroupService?.resetColumnGroupState('api');
+    beans.columnGroupSvc?.resetColumnGroupState('api');
 }
 
 export function getLeftDisplayedColumnGroups(beans: BeanCollection): (Column | ColumnGroup)[] {
-    return beans.visibleColsService.treeLeft;
+    return beans.visibleCols.treeLeft;
 }
 
 export function getCenterDisplayedColumnGroups(beans: BeanCollection): (Column | ColumnGroup)[] {
-    return beans.visibleColsService.treeCenter;
+    return beans.visibleCols.treeCenter;
 }
 
 export function getRightDisplayedColumnGroups(beans: BeanCollection): (Column | ColumnGroup)[] {
-    return beans.visibleColsService.treeRight;
+    return beans.visibleCols.treeRight;
 }
 
 export function getAllDisplayedColumnGroups(beans: BeanCollection): (Column | ColumnGroup)[] | null {
-    return beans.visibleColsService.getAllTrees();
+    return beans.visibleCols.getAllTrees();
 }

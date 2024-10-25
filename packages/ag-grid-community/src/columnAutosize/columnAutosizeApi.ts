@@ -5,16 +5,16 @@ import type { Column } from '../interfaces/iColumn';
 
 export function sizeColumnsToFit(beans: BeanCollection, paramsOrGridWidth?: ISizeColumnsToFitParams | number) {
     if (typeof paramsOrGridWidth === 'number') {
-        beans.columnAutosizeService?.sizeColumnsToFit(paramsOrGridWidth, 'api');
+        beans.colAutosize?.sizeColumnsToFit(paramsOrGridWidth, 'api');
     } else {
-        beans.columnAutosizeService?.sizeColumnsToFitGridBody(paramsOrGridWidth);
+        beans.colAutosize?.sizeColumnsToFitGridBody(paramsOrGridWidth);
     }
 }
 
 export function autoSizeColumns(beans: BeanCollection, keys: (string | ColDef | Column)[], skipHeader?: boolean): void {
-    beans.columnAutosizeService?.autoSizeCols({ colKeys: keys, skipHeader: skipHeader, source: 'api' });
+    beans.colAutosize?.autoSizeCols({ colKeys: keys, skipHeader: skipHeader, source: 'api' });
 }
 
 export function autoSizeAllColumns(beans: BeanCollection, skipHeader?: boolean): void {
-    beans.columnAutosizeService?.autoSizeAllColumns('api', skipHeader);
+    beans.colAutosize?.autoSizeAllColumns('api', skipHeader);
 }

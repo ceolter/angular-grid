@@ -310,7 +310,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         this.data = data;
         this.beans.valueCache?.onDataChanged();
         this.updateDataOnDetailNode();
-        this.beans.selectionService?.checkRowSelectable(this);
+        this.beans.selectionSvc?.checkRowSelectable(this);
         this.resetQuickFilterAggregateText();
 
         const event: DataChangedEvent<TData> = this.createDataChangedEvent(data, oldData, update);
@@ -360,16 +360,16 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     }
 
     public setDataAndId(data: TData, id: string | undefined): void {
-        const { selectionService } = this.beans;
-        const oldNode = selectionService?.createDaemonNode?.(this);
+        const { selectionSvc } = this.beans;
+        const oldNode = selectionSvc?.createDaemonNode?.(this);
         const oldData = this.data;
 
         this.data = data;
         this.updateDataOnDetailNode();
         this.setId(id);
-        if (selectionService) {
-            selectionService.checkRowSelectable(this);
-            selectionService.syncInRowNode(this, oldNode);
+        if (selectionSvc) {
+            selectionSvc.checkRowSelectable(this);
+            selectionSvc.syncInRowNode(this, oldNode);
         }
 
         const event: DataChangedEvent<TData> = this.createDataChangedEvent(data, oldData, false);
@@ -454,7 +454,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     }
 
     public setExpanded(expanded: boolean, e?: MouseEvent | KeyboardEvent, forceSync?: boolean): void {
-        this.beans.expansionService?.setExpanded(this, expanded, e, forceSync);
+        this.beans.expansionSvc?.setExpanded(this, expanded, e, forceSync);
     }
 
     /**
@@ -473,17 +473,17 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
                 return colKey;
             }
             // if in pivot mode, grid columns wont include primary columns
-            return this.beans.columnModel.getCol(colKey) ?? this.beans.columnModel.getColDefCol(colKey);
+            return this.beans.colModel.getCol(colKey) ?? this.beans.colModel.getColDefCol(colKey);
         };
         // When it is done via the editors, no 'cell changed' event gets fired, as it's assumed that
         // the cell knows about the change given it's in charge of the editing.
         // this method is for the client to call, so the cell listens for the change
         // event, and also flashes the cell when the change occurs.
         const column = getColumnFromKey()!;
-        const oldValue = this.beans.valueService.getValueForDisplay(column, this);
+        const oldValue = this.beans.valueSvc.getValueForDisplay(column, this);
 
         if (this.beans.gos.get('readOnlyEdit')) {
-            this.beans.eventService.dispatchEvent({
+            this.beans.eventSvc.dispatchEvent({
                 type: 'cellEditRequest',
                 event: null,
                 rowIndex: this.rowIndex!,
@@ -500,10 +500,10 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
             return false;
         }
 
-        const valueChanged = this.beans.valueService.setValue(this, column, newValue, eventSource);
+        const valueChanged = this.beans.valueSvc.setValue(this, column, newValue, eventSource);
 
         this.dispatchCellChangedEvent(column, newValue, oldValue);
-        this.beans.selectionService?.checkRowSelectable(this);
+        this.beans.selectionSvc?.checkRowSelectable(this);
 
         return valueChanged;
     }
@@ -513,9 +513,9 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         let newValue: boolean | null =
             (this.group && !this.footer) || (this.childrenAfterGroup && this.childrenAfterGroup.length > 0);
 
-        const { rowChildrenService } = this.beans;
-        if (rowChildrenService) {
-            newValue = rowChildrenService.getHasChildrenValue(this);
+        const { rowChildrenSvc } = this.beans;
+        if (rowChildrenSvc) {
+            newValue = rowChildrenSvc.getHasChildrenValue(this);
         }
 
         if (newValue !== this.__hasChildren) {
@@ -557,7 +557,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
      * - `false` if the node cannot be expanded
      */
     public isExpandable(): boolean {
-        return this.beans.expansionService?.isExpandable(this) ?? false;
+        return this.beans.expansionSvc?.isExpandable(this) ?? false;
     }
 
     /** Returns:
@@ -599,7 +599,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         clearSelection: boolean = false,
         source: SelectionEventSourceType = 'api'
     ): void {
-        this.beans.selectionService?.setSelectedParams({
+        this.beans.selectionSvc?.setSelectedParams({
             rowNode: this,
             newValue,
             clearSelection,
@@ -619,7 +619,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
 
     /** Add an event listener. */
     public addEventListener<T extends RowNodeEventType>(eventType: T, userListener: AgRowNodeEventListener<T>): void {
-        this.beans.validationService?.checkRowEvents(eventType);
+        this.beans.validation?.checkRowEvents(eventType);
         if (!this.__localEventService) {
             this.__localEventService = new LocalEventService();
         }

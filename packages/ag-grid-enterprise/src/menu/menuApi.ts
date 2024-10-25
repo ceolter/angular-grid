@@ -3,12 +3,12 @@ import type { AgColumn, BeanCollection, ColumnChooserParams, IContextMenuParams,
 import type { ColumnChooserFactory } from './columnChooserFactory';
 
 export function showContextMenu(beans: BeanCollection, params?: IContextMenuParams) {
-    const { contextMenuService } = beans;
-    if (!contextMenuService) {
+    const { contextMenuSvc } = beans;
+    if (!contextMenuSvc) {
         return;
     }
     const { rowNode, column, value, x, y } = params || {};
-    let { x: clientX, y: clientY } = contextMenuService.getContextMenuPosition(rowNode as RowNode, column as AgColumn);
+    let { x: clientX, y: clientY } = contextMenuSvc.getContextMenuPosition(rowNode as RowNode, column as AgColumn);
 
     if (x != null) {
         clientX = x;
@@ -18,7 +18,7 @@ export function showContextMenu(beans: BeanCollection, params?: IContextMenuPara
         clientY = y;
     }
 
-    contextMenuService.showContextMenu({
+    contextMenuSvc.showContextMenu({
         mouseEvent: new MouseEvent('mousedown', { clientX, clientY }),
         rowNode,
         column,

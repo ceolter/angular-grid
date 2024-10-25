@@ -251,18 +251,18 @@ export class ExcelCreator
 {
     beanName = 'excelCreator' as const;
 
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
-    private funcColsService: FuncColsService;
-    private valueService: ValueService;
-    private cellStyleService?: CellStyleService;
+    private colModel: ColumnModel;
+    private colNames: ColumnNameService;
+    private funcColsSvc: FuncColsService;
+    private valueSvc: ValueService;
+    private cellStyles?: CellStyleService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
-        this.funcColsService = beans.funcColsService;
-        this.valueService = beans.valueService;
-        this.cellStyleService = beans.cellStyleService;
+        this.colModel = beans.colModel;
+        this.colNames = beans.colNames;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.valueSvc = beans.valueSvc;
+        this.cellStyles = beans.cellStyles;
     }
 
     protected getMergedParams(params?: ExcelExportParams): ExcelExportParams {
@@ -341,14 +341,14 @@ export class ExcelCreator
     }
 
     public createSerializingSession(params: ExcelExportParams): ExcelSerializingSession {
-        const { columnModel, columnNameService, funcColsService, valueService, gos } = this;
+        const { colModel, colNames, funcColsSvc, valueSvc, gos } = this;
 
         const config: ExcelGridSerializingParams = {
             ...params,
-            columnModel,
-            columnNameService,
-            funcColsService,
-            valueService,
+            colModel,
+            colNames,
+            funcColsSvc,
+            valueSvc,
             gos,
             suppressRowOutline: params.suppressRowOutline || params.skipRowGroups,
             headerRowHeight: params.headerRowHeight || params.rowHeight,
@@ -400,7 +400,7 @@ export class ExcelCreator
         });
 
         const colDef = (column as AgColumn).getDefinition();
-        this.cellStyleService?.processAllCellClasses(
+        this.cellStyles?.processAllCellClasses(
             colDef,
             this.gos.addGridCommonParams({
                 value,

@@ -2,12 +2,12 @@ import type { BeanCollection, DragListenerParams, DragService, IRangeService } f
 import { BeanStub, _isCellSelectionEnabled } from 'ag-grid-community';
 
 export class DragListenerFeature extends BeanStub {
-    private dragService: DragService;
-    private rangeService: IRangeService;
+    private dragSvc: DragService;
+    private rangeSvc: IRangeService;
 
     public wireBeans(beans: BeanCollection) {
-        this.dragService = beans.dragService!;
-        this.rangeService = beans.rangeService!;
+        this.dragSvc = beans.dragSvc!;
+        this.rangeSvc = beans.rangeSvc!;
     }
 
     private eContainer: HTMLElement;
@@ -22,9 +22,9 @@ export class DragListenerFeature extends BeanStub {
     public postConstruct(): void {
         this.params = {
             eElement: this.eContainer,
-            onDragStart: this.rangeService.onDragStart.bind(this.rangeService),
-            onDragStop: this.rangeService.onDragStop.bind(this.rangeService),
-            onDragging: this.rangeService.onDragging.bind(this.rangeService),
+            onDragStart: this.rangeSvc.onDragStart.bind(this.rangeSvc),
+            onDragStop: this.rangeSvc.onDragStop.bind(this.rangeSvc),
+            onDragging: this.rangeSvc.onDragging.bind(this.rangeSvc),
         };
 
         this.addManagedPropertyListeners(['enableRangeSelection', 'cellSelection'], () => {
@@ -45,10 +45,10 @@ export class DragListenerFeature extends BeanStub {
     }
 
     private enableFeature() {
-        this.dragService.addDragSource(this.params);
+        this.dragSvc.addDragSource(this.params);
     }
 
     private disableFeature() {
-        this.dragService.removeDragSource(this.params);
+        this.dragSvc.removeDragSource(this.params);
     }
 }

@@ -12,7 +12,7 @@ import type {
     PartialCellRange,
     RowNode,
     RowNodeSorter,
-    SortController,
+    SortService,
     ValueService,
 } from 'ag-grid-community';
 import { BeanStub, _isClientSideRowModel, _isServerSideRowModel, _last, _warn } from 'ag-grid-community';
@@ -35,25 +35,25 @@ export interface ChartDatasourceParams {
 
 interface IData {
     chartData: any[];
-    columnNames: { [key: string]: string[] };
+    colNames: { [key: string]: string[] };
     groupChartData?: any[];
 }
 
 export class ChartDatasource extends BeanStub {
     private gridRowModel: IRowModel;
-    private pivotResultColsService?: IPivotResultColsService;
-    private valueService: ValueService;
-    private columnModel: ColumnModel;
+    private pivotResultCols?: IPivotResultColsService;
+    private valueSvc: ValueService;
+    private colModel: ColumnModel;
     private rowNodeSorter?: RowNodeSorter;
-    private sortController?: SortController;
+    private sortSvc?: SortService;
     private aggregationStage?: IRowNodeStage & IAggregationStage;
 
     public wireBeans(beans: BeanCollection): void {
-        this.sortController = beans.sortController;
+        this.sortSvc = beans.sortSvc;
         this.gridRowModel = beans.rowModel;
-        this.columnModel = beans.columnModel;
-        this.valueService = beans.valueService;
-        this.pivotResultColsService = beans.pivotResultColsService;
+        this.colModel = beans.colModel;
+        this.valueSvc = beans.valueSvc;
+        this.pivotResultCols = beans.pivotResultCols;
         this.rowNodeSorter = beans.rowNodeSorter;
         this.aggregationStage = beans.aggregationStage as (IRowNodeStage & IAggregationStage) | undefined;
     }
@@ -62,12 +62,12 @@ export class ChartDatasource extends BeanStub {
         if (params.crossFiltering) {
             if (params.grouping) {
                 _warn(141);
-                return { chartData: [], columnNames: {} };
+                return { chartData: [], colNames: {} };
             }
 
             if (!_isClientSideRowModel(this.gos)) {
                 _warn(142);
-                return { chartData: [], columnNames: {} };
+                return { chartData: [], colNames: {} };
             }
         }
 
@@ -84,7 +84,7 @@ export class ChartDatasource extends BeanStub {
     private extractRowsFromGridRowModel(params: ChartDatasourceParams): IData {
         const { crossFiltering, startRow, endRow, valueCols, dimensionCols, grouping } = params;
         let extractedRowData: any[] = [];
-        const columnNames: { [key: string]: string[] } = {};
+        const colNames: { [key: string]: string[] } = {};
 
         // maps used to keep track of expanded groups that need to be removed
         const groupNodeIndexes: { [key: string]: number } = {};
@@ -116,23 +116,23 @@ export class ChartDatasource extends BeanStub {
 
         if (numRows > 0) {
             valueCols.forEach((col) => {
-                let columnNamesArr: string[] = [];
+                let colNamesArr: string[] = [];
 
                 // pivot keys should be added first
                 const pivotKeys = col.getColDef().pivotKeys;
                 if (pivotKeys) {
-                    columnNamesArr = pivotKeys.slice();
+                    colNamesArr = pivotKeys.slice();
                 }
 
                 // then add column header name to results
                 const headerName = col.getColDef().headerName;
                 if (headerName) {
-                    columnNamesArr.push(headerName);
+                    colNamesArr.push(headerName);
                 }
 
                 // add array of column names to results
-                if (columnNamesArr.length > 0) {
-                    columnNames[col.getId()] = columnNamesArr;
+                if (colNamesArr.length > 0) {
+                    colNames[col.getId()] = colNamesArr;
                 }
             });
         }
@@ -153,10 +153,10 @@ export class ChartDatasource extends BeanStub {
             // first get data for dimensions columns
             dimensionCols.forEach((col) => {
                 const colId = col.colId;
-                const column = this.columnModel.getCol(colId);
+                const column = this.colModel.getCol(colId);
 
                 if (column) {
-                    const valueObject = this.valueService.getValue(column, rowNode);
+                    const valueObject = this.valueSvc.getValue(column, rowNode);
 
                     // when grouping we also need to build up multi category labels for charts
                     if (grouping) {
@@ -205,7 +205,7 @@ export class ChartDatasource extends BeanStub {
                     const filteredOutColId = colId + '-filtered-out';
 
                     // add data value to value column
-                    const value = this.valueService.getValue(col, rowNode);
+                    const value = this.valueSvc.getValue(col, rowNode);
                     const actualValue =
                         value != null && typeof value.toNumber === 'function' ? value.toNumber() : value;
 
@@ -218,7 +218,7 @@ export class ChartDatasource extends BeanStub {
                     }
                 } else {
                     // add data value to value column
-                    let value = this.valueService.getValue(col, rowNode);
+                    let value = this.valueSvc.getValue(col, rowNode);
 
                     // aggregated value
                     if (value && Object.prototype.hasOwnProperty.call(value, 'toString')) {
@@ -244,7 +244,7 @@ export class ChartDatasource extends BeanStub {
             }
         }
 
-        return { chartData: extractedRowData, columnNames, groupChartData };
+        return { chartData: extractedRowData, colNames, groupChartData };
     }
 
     private aggregateRowsByDimension(params: ChartDatasourceParams, dataFromGrid: any[]): any[] {
@@ -337,7 +337,7 @@ export class ChartDatasource extends BeanStub {
     }
 
     private updatePivotKeysForSSRM() {
-        const secondaryColumns = this.pivotResultColsService?.getPivotResultCols()?.list;
+        const secondaryColumns = this.pivotResultCols?.getPivotResultCols()?.list;
 
         if (!secondaryColumns) {
             return;
@@ -408,7 +408,7 @@ export class ChartDatasource extends BeanStub {
     }
 
     private sortRowNodes(rowNodes: RowNode[]): RowNode[] {
-        const sortOptions = this.sortController?.getSortOptions();
+        const sortOptions = this.sortSvc?.getSortOptions();
         if (!sortOptions || sortOptions.length == 0 || !this.rowNodeSorter) {
             return rowNodes;
         }

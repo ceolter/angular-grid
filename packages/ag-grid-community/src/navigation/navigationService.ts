@@ -39,28 +39,28 @@ interface NavigateParams {
 }
 
 export class NavigationService extends BeanStub implements NamedBean {
-    beanName = 'navigationService' as const;
+    beanName = 'navigation' as const;
 
-    private pageBoundsService: PageBoundsService;
-    private focusService: FocusService;
-    private visibleColsService: VisibleColsService;
+    private pageBounds: PageBoundsService;
+    private focusSvc: FocusService;
+    private visibleCols: VisibleColsService;
     private rowModel: IRowModel;
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
     private rowRenderer: RowRenderer;
-    private cellNavigationService: CellNavigationService;
+    private cellNavigation: CellNavigationService;
     private pinnedRowModel?: PinnedRowModel;
-    private rangeService?: IRangeService;
+    private rangeSvc?: IRangeService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.pageBoundsService = beans.pageBoundsService;
-        this.focusService = beans.focusService;
-        this.visibleColsService = beans.visibleColsService;
+        this.pageBounds = beans.pageBounds;
+        this.focusSvc = beans.focusSvc;
+        this.visibleCols = beans.visibleCols;
         this.rowModel = beans.rowModel;
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
         this.rowRenderer = beans.rowRenderer;
-        this.cellNavigationService = beans.cellNavigationService!;
+        this.cellNavigation = beans.cellNavigation!;
         this.pinnedRowModel = beans.pinnedRowModel;
-        this.rangeService = beans.rangeService;
+        this.rangeSvc = beans.rangeSvc;
     }
 
     private gridBodyCon: GridBodyCtrl;
@@ -72,7 +72,7 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.gridBodyCon = p.gridBodyCtrl;
         });
     }
@@ -81,10 +81,10 @@ export class NavigationService extends BeanStub implements NamedBean {
         const key = event.key;
         const alt = event.altKey;
         const ctrl = event.ctrlKey || event.metaKey;
-        const rangeServiceShouldHandleShift = !!this.rangeService && event.shiftKey;
+        const rangeServiceShouldHandleShift = !!this.rangeSvc && event.shiftKey;
 
         // home and end can be processed without knowing the currently selected cell, this can occur for full width rows.
-        const currentCell: CellPosition | null = this.beans.mouseEventService.getCellPositionForEvent(event);
+        const currentCell: CellPosition | null = this.beans.mouseEventSvc.getCellPositionForEvent(event);
 
         let processed = false;
 
@@ -129,7 +129,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     private handlePageUpDown(key: string, currentCell: CellPosition | null, fromFullWidth: boolean): boolean {
         if (fromFullWidth) {
-            currentCell = this.focusService.getFocusedCell();
+            currentCell = this.focusSvc.getFocusedCell();
         }
 
         if (!currentCell) {
@@ -166,28 +166,28 @@ export class NavigationService extends BeanStub implements NamedBean {
 
         // if we don't do this, the range will be left on the last cell, which will leave the last focused cell
         // highlighted.
-        this.focusService.setFocusedCell({
+        this.focusSvc.setFocusedCell({
             rowIndex: focusIndex,
             column: focusColumn,
             rowPinned: null,
             forceBrowserFocus: true,
         });
 
-        this.rangeService?.setRangeToCell({ rowIndex: focusIndex, rowPinned: null, column: focusColumn });
+        this.rangeSvc?.setRangeToCell({ rowIndex: focusIndex, rowPinned: null, column: focusColumn });
     }
 
     // this method is throttled, see the `constructor`
     private onPageDown(gridCell: CellPosition): void {
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const scrollPosition = gridBodyCon.getScrollFeature().getVScrollPosition();
         const pixelsInOnePage = this.getViewportHeight();
 
-        const pagingPixelOffset = this.pageBoundsService.getPixelOffset();
+        const pagingPixelOffset = this.pageBounds.getPixelOffset();
 
         const currentPageBottomPixel = scrollPosition.top + pixelsInOnePage;
         const currentPageBottomRow = this.rowModel.getRowIndexAtPixel(currentPageBottomPixel + pagingPixelOffset);
 
-        if (this.beans.rowAutoHeightService?.active) {
+        if (this.beans.rowAutoHeight?.active) {
             this.navigateToNextPageWithAutoHeight(gridCell, currentPageBottomRow);
         } else {
             this.navigateToNextPage(gridCell, currentPageBottomRow);
@@ -196,15 +196,15 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     // this method is throttled, see the `constructor`
     private onPageUp(gridCell: CellPosition): void {
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const scrollPosition = gridBodyCon.getScrollFeature().getVScrollPosition();
 
-        const pagingPixelOffset = this.pageBoundsService.getPixelOffset();
+        const pagingPixelOffset = this.pageBounds.getPixelOffset();
 
         const currentPageTopPixel = scrollPosition.top;
         const currentPageTopRow = this.rowModel.getRowIndexAtPixel(currentPageTopPixel + pagingPixelOffset);
 
-        if (this.beans.rowAutoHeightService?.active) {
+        if (this.beans.rowAutoHeight?.active) {
             this.navigateToNextPageWithAutoHeight(gridCell, currentPageTopRow, true);
         } else {
             this.navigateToNextPage(gridCell, currentPageTopRow, true);
@@ -213,9 +213,9 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     private navigateToNextPage(gridCell: CellPosition, scrollIndex: number, up: boolean = false): void {
         const pixelsInOnePage = this.getViewportHeight();
-        const firstRow = this.pageBoundsService.getFirstRow();
-        const lastRow = this.pageBoundsService.getLastRow();
-        const pagingPixelOffset = this.pageBoundsService.getPixelOffset();
+        const firstRow = this.pageBounds.getFirstRow();
+        const lastRow = this.pageBounds.getLastRow();
+        const pagingPixelOffset = this.pageBounds.getPixelOffset();
         const currentRowNode = this.rowModel.getRow(gridCell.rowIndex);
 
         const rowPixelDiff = up
@@ -299,7 +299,7 @@ export class NavigationService extends BeanStub implements NamedBean {
     private getNextFocusIndexForAutoHeight(gridCell: CellPosition, up: boolean = false): number {
         const step = up ? -1 : 1;
         const pixelsInOnePage = this.getViewportHeight();
-        const lastRowIndex = this.pageBoundsService.getLastRow();
+        const lastRowIndex = this.pageBounds.getLastRow();
 
         let pixelSum = 0;
         let currentIndex = gridCell.rowIndex;
@@ -323,11 +323,11 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     private getViewportHeight(): number {
-        const scrollPosition = this.ctrlsService.getGridBodyCtrl().getScrollFeature().getVScrollPosition();
-        const scrollbarWidth = this.beans.scrollVisibleService.getScrollbarWidth();
+        const scrollPosition = this.ctrlsSvc.getGridBodyCtrl().getScrollFeature().getVScrollPosition();
+        const scrollbarWidth = this.beans.scrollVisibleSvc.getScrollbarWidth();
         let pixelsInOnePage = scrollPosition.bottom - scrollPosition.top;
 
-        if (this.ctrlsService.get('center').isHorizontalScrollShowing()) {
+        if (this.ctrlsSvc.get('center').isHorizontalScrollShowing()) {
             pixelsInOnePage -= scrollbarWidth;
         }
 
@@ -350,7 +350,7 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     private onCtrlUpDownLeftRight(key: string, gridCell: CellPosition): void {
-        const cellToFocus = this.cellNavigationService.getNextCellToFocus(key, gridCell, true)!;
+        const cellToFocus = this.cellNavigation.getNextCellToFocus(key, gridCell, true)!;
         const { rowIndex } = cellToFocus;
         const column = cellToFocus.column as AgColumn;
 
@@ -367,9 +367,9 @@ export class NavigationService extends BeanStub implements NamedBean {
     // same cell into view (which means either scroll all the way up, or all the way down).
     private onHomeOrEndKey(key: string): void {
         const homeKey = key === KeyCode.PAGE_HOME;
-        const allColumns: AgColumn[] = this.visibleColsService.allCols;
+        const allColumns: AgColumn[] = this.visibleCols.allCols;
         const columnToSelect = homeKey ? allColumns[0] : _last(allColumns);
-        const scrollIndex = homeKey ? this.pageBoundsService.getFirstRow() : this.pageBoundsService.getLastRow();
+        const scrollIndex = homeKey ? this.pageBounds.getFirstRow() : this.pageBounds.getLastRow();
 
         this.navigateTo({
             scrollIndex: scrollIndex,
@@ -392,7 +392,7 @@ export class NavigationService extends BeanStub implements NamedBean {
                 keyboardEvent.preventDefault();
             } else if (movedToNextCell === null) {
                 // want to let browser handle, however some of the containers prevent browser focus
-                this.focusService.allowFocusForNextGridCoreContainer(backwards);
+                this.focusSvc.allowFocusForNextGridCoreContainer(backwards);
             }
             return;
         }
@@ -401,13 +401,13 @@ export class NavigationService extends BeanStub implements NamedBean {
         // backwards)
         if (backwards) {
             const { rowIndex, rowPinned } = previous.getRowPosition();
-            const firstRow = rowPinned ? rowIndex === 0 : rowIndex === this.pageBoundsService.getFirstRow();
+            const firstRow = rowPinned ? rowIndex === 0 : rowIndex === this.pageBounds.getFirstRow();
             if (firstRow) {
-                if (this.gos.get('headerHeight') === 0 || this.focusService.isHeaderFocusSuppressed()) {
-                    this.focusService.focusNextGridCoreContainer(true, true);
+                if (this.gos.get('headerHeight') === 0 || this.focusSvc.isHeaderFocusSuppressed()) {
+                    this.focusSvc.focusNextGridCoreContainer(true, true);
                 } else {
                     keyboardEvent.preventDefault();
-                    this.focusService.focusPreviousFromFirstCell(keyboardEvent);
+                    this.focusSvc.focusPreviousFromFirstCell(keyboardEvent);
                 }
             }
         } else {
@@ -419,8 +419,8 @@ export class NavigationService extends BeanStub implements NamedBean {
             }
 
             if (
-                (!backwards && this.focusService.focusOverlay(false)) ||
-                this.focusService.focusNextGridCoreContainer(backwards)
+                (!backwards && this.focusSvc.focusOverlay(false)) ||
+                this.focusSvc.focusNextGridCoreContainer(backwards)
             ) {
                 keyboardEvent.preventDefault();
             }
@@ -429,7 +429,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     // comes from API
     public tabToNextCell(backwards: boolean, event?: KeyboardEvent): boolean {
-        const focusedCell = this.focusService.getFocusedCell();
+        const focusedCell = this.focusSvc.getFocusedCell();
         // if no focus, then cannot navigate
         if (!focusedCell) {
             return false;
@@ -483,7 +483,7 @@ export class NavigationService extends BeanStub implements NamedBean {
         }
 
         // if a cell wasn't found, it's possible that focus was moved to the header
-        return res || !!this.focusService.getFocusedHeader();
+        return res || !!this.focusSvc.getFocusedHeader();
     }
 
     // returns null if no navigation should be performed
@@ -569,7 +569,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     // returns null if no navigation should be performed
     private moveToNextCellNotEditing(previousCell: CellCtrl | RowCtrl, backwards: boolean): boolean | null {
-        const displayedColumns = this.visibleColsService.allCols;
+        const displayedColumns = this.visibleCols.allCols;
         let cellPos: CellPosition;
 
         if (previousCell instanceof RowCtrl) {
@@ -616,7 +616,7 @@ export class NavigationService extends BeanStub implements NamedBean {
             if (!backwards) {
                 nextPosition = this.getLastCellOfColSpan(nextPosition);
             }
-            nextPosition = this.cellNavigationService.getNextTabbedCell(nextPosition, backwards);
+            nextPosition = this.cellNavigation.getNextTabbedCell(nextPosition, backwards);
 
             // allow user to override what cell to go to next
             const userFunc = this.gos.getCallback('tabToNextCell');
@@ -649,9 +649,9 @@ export class NavigationService extends BeanStub implements NamedBean {
             }
 
             if (nextPosition.rowIndex < 0) {
-                const headerLen = this.focusService.getHeaderRowCount();
+                const headerLen = this.focusSvc.getHeaderRowCount();
 
-                this.focusService.focusHeaderPosition({
+                this.focusSvc.focusHeaderPosition({
                     headerPosition: {
                         headerRowIndex: headerLen + nextPosition.rowIndex,
                         column: nextPosition.column,
@@ -697,7 +697,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
             // by default, when we click a cell, it gets selected into a range, so to keep keyboard navigation
             // consistent, we set into range here also.
-            this.rangeService?.setRangeToCell(nextPosition);
+            this.rangeSvc?.setRangeToCell(nextPosition);
 
             // we successfully tabbed onto a grid cell, so return true
             return nextCell;
@@ -750,7 +750,7 @@ export class NavigationService extends BeanStub implements NamedBean {
                 nextCell = this.getLastCellOfColSpan(nextCell);
             }
 
-            nextCell = this.cellNavigationService.getNextCellToFocus(key, nextCell);
+            nextCell = this.cellNavigation.getNextCellToFocus(key, nextCell);
 
             // eg if going down, and nextCell=undefined, means we are gone past the last row
             hitEdgeOfGrid = _missing(nextCell);
@@ -794,9 +794,9 @@ export class NavigationService extends BeanStub implements NamedBean {
         }
 
         if (nextCell.rowIndex < 0) {
-            const headerLen = this.focusService.getHeaderRowCount();
+            const headerLen = this.focusSvc.getHeaderRowCount();
 
-            this.focusService.focusHeaderPosition({
+            this.focusSvc.focusHeaderPosition({
                 headerPosition: { headerRowIndex: headerLen + nextCell.rowIndex, column: currentCell.column },
                 event: event || undefined,
                 fromCell: true,
@@ -838,13 +838,13 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     public tryToFocusFullWidthRow(position: CellPosition | RowPosition, backwards?: boolean): boolean {
-        const displayedColumns = this.visibleColsService.allCols;
+        const displayedColumns = this.visibleCols.allCols;
         const rowComp = this.rowRenderer.getRowByPosition(position);
         if (!rowComp || !rowComp.isFullWidth()) {
             return false;
         }
 
-        const currentCellFocused = this.focusService.getFocusedCell();
+        const currentCellFocused = this.focusSvc.getFocusedCell();
 
         const cellPosition: CellPosition = {
             rowIndex: position.rowIndex,
@@ -859,7 +859,7 @@ export class NavigationService extends BeanStub implements NamedBean {
                 ? currentCellFocused != null && _isRowBefore(cellPosition, currentCellFocused)
                 : backwards;
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'fullWidthRowFocused',
             rowIndex: cellPosition.rowIndex,
             rowPinned: cellPosition.rowPinned,
@@ -872,14 +872,14 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     private focusPosition(cellPosition: CellPosition) {
-        this.focusService.setFocusedCell({
+        this.focusSvc.setFocusedCell({
             rowIndex: cellPosition.rowIndex,
             column: cellPosition.column,
             rowPinned: cellPosition.rowPinned,
             forceBrowserFocus: true,
         });
 
-        this.rangeService?.setRangeToCell(cellPosition);
+        this.rangeSvc?.setRangeToCell(cellPosition);
     }
 
     private isValidNavigateCell(cell: CellPosition): boolean {

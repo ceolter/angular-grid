@@ -11,14 +11,14 @@ import type { ColumnModel } from './columnModel';
 import type { VisibleColsService } from './visibleColsService';
 
 export class ColumnViewportService extends BeanStub implements NamedBean {
-    beanName = 'columnViewportService' as const;
+    beanName = 'colViewport' as const;
 
-    private visibleColsService: VisibleColsService;
-    private columnModel: ColumnModel;
+    private visibleCols: VisibleColsService;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
-        this.columnModel = beans.columnModel;
+        this.visibleCols = beans.visibleCols;
+        this.colModel = beans.colModel;
     }
 
     // cols in center that are in the viewport
@@ -48,7 +48,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     }
 
     public setScrollPosition(scrollWidth: number, scrollPosition: number, afterScroll: boolean = false): void {
-        const bodyWidthDirty = this.visibleColsService.isBodyWidthDirty;
+        const bodyWidthDirty = this.visibleCols.isBodyWidthDirty;
 
         const noChange = scrollWidth === this.scrollWidth && scrollPosition === this.scrollPosition && !bodyWidthDirty;
         if (noChange) {
@@ -60,10 +60,10 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         // we need to call setVirtualViewportLeftAndRight() at least once after the body width changes,
         // as the viewport can stay the same, but in RTL, if body width changes, we need to work out the
         // virtual columns again
-        this.visibleColsService.isBodyWidthDirty = true;
+        this.visibleCols.isBodyWidthDirty = true;
 
         if (this.gos.get('enableRtl')) {
-            const bodyWidth = this.visibleColsService.getBodyContainerWidth();
+            const bodyWidth = this.visibleCols.getBodyContainerWidth();
             this.viewportLeft = bodyWidth - this.scrollPosition - this.scrollWidth;
             this.viewportRight = bodyWidth - this.scrollPosition;
         } else {
@@ -71,7 +71,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
             this.viewportRight = this.scrollWidth + this.scrollPosition;
         }
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.checkViewportColumns(afterScroll);
         }
     }
@@ -95,7 +95,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     }
 
     private extractViewportColumns(): void {
-        const displayedColumnsCenter = this.visibleColsService.centerCols;
+        const displayedColumnsCenter = this.visibleCols.centerCols;
         if (this.isColumnVirtualisationSuppressed()) {
             // no virtualisation, so don't filter
             this.colsWithinViewport = displayedColumnsCenter;
@@ -164,8 +164,8 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
 
     // used by Grid API only
     public getViewportColumns(): AgColumn[] {
-        const leftCols = this.visibleColsService.leftCols;
-        const rightCols = this.visibleColsService.rightCols;
+        const leftCols = this.visibleCols.leftCols;
+        const rightCols = this.visibleCols.rightCols;
         const res = this.colsWithinViewport.concat(leftCols).concat(rightCols);
         return res;
     }
@@ -175,7 +175,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     // however if we are column spanning, then different rows can have different virtual
     // columns, so we have to work out the list for each individual row.
     public getColsWithinViewport(rowNode: RowNode): AgColumn[] {
-        if (!this.columnModel.colSpanActive) {
+        if (!this.colModel.colSpanActive) {
             return this.colsWithinViewport;
         }
 
@@ -189,9 +189,9 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         const inViewportCallback = this.isColumnVirtualisationSuppressed()
             ? undefined
             : this.isColumnInRowViewport.bind(this);
-        const displayedColumnsCenter = this.visibleColsService.centerCols;
+        const displayedColumnsCenter = this.visibleCols.centerCols;
 
-        return this.visibleColsService.getColsForRow(
+        return this.visibleCols.getColsForRow(
             rowNode,
             displayedColumnsCenter,
             inViewportCallback,
@@ -205,7 +205,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     public checkViewportColumns(afterScroll: boolean = false): void {
         const viewportColumnsChanged = this.extractViewport();
         if (viewportColumnsChanged) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'virtualColumnsChanged',
                 afterScroll,
             });
@@ -222,8 +222,8 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         // for easy lookup when building the groups.
         const renderedColIds: { [key: string]: boolean } = {};
 
-        const renderedColsLeft = this.visibleColsService.leftCols;
-        const renderedColsRight = this.visibleColsService.rightCols;
+        const renderedColsLeft = this.visibleCols.leftCols;
+        const renderedColsRight = this.visibleCols.rightCols;
         const allRenderedCols = this.headerColsWithinViewport.concat(renderedColsLeft).concat(renderedColsRight);
 
         allRenderedCols.forEach((col) => (renderedColIds[col.getId()] = true));
@@ -264,9 +264,9 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
             return returnValue;
         };
 
-        testGroup(this.visibleColsService.treeLeft, this.rowsOfHeadersToRenderLeft, 0);
-        testGroup(this.visibleColsService.treeRight, this.rowsOfHeadersToRenderRight, 0);
-        testGroup(this.visibleColsService.treeCenter, this.rowsOfHeadersToRenderCenter, 0);
+        testGroup(this.visibleCols.treeLeft, this.rowsOfHeadersToRenderLeft, 0);
+        testGroup(this.visibleCols.treeRight, this.rowsOfHeadersToRenderRight, 0);
+        testGroup(this.visibleCols.treeCenter, this.rowsOfHeadersToRenderCenter, 0);
     }
 
     private extractViewport(): boolean {

@@ -55,7 +55,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         compBean = setupCompBean(this, this.beans.context, compBean);
         this.setGui(eGui, compBean);
 
-        this.displayName = this.beans.columnNameService.getDisplayNameForColumnGroup(this.column, 'header');
+        this.displayName = this.beans.colNames.getDisplayNameForColumnGroup(this.column, 'header');
 
         this.addClasses();
         this.setupMovingCss(compBean);
@@ -76,12 +76,12 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         const pinned = this.getParentRowCtrl().getPinned();
         const leafCols = this.column.getProvidedColumnGroup().getLeafColumns();
 
-        this.beans.columnHoverService?.createHoverFeature(compBean, leafCols, eGui);
+        this.beans.colHover?.createHoverFeature(compBean, leafCols, eGui);
         compBean.createManagedBean(new SetLeftFeature(this.column, eGui, this.beans));
         compBean.createManagedBean(new GroupWidthFeature(comp, this.column));
-        if (this.beans.columnResizeService) {
+        if (this.beans.colResize) {
             this.resizeFeature = compBean.createManagedBean(
-                this.beans.columnResizeService.createGroupResizeFeature(comp, eResize, pinned, this.column)
+                this.beans.colResize.createGroupResizeFeature(comp, eResize, pinned, this.column)
             );
         } else {
             comp.setResizableDisplayed(false);
@@ -210,7 +210,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             displayName: this.displayName!,
             columnGroup: this.column,
             setExpanded: (expanded: boolean) => {
-                this.beans.columnGroupService!.setColumnGroupOpened(
+                this.beans.columnGroupSvc!.setColumnGroupOpened(
                     this.column.getProvidedColumnGroup(),
                     expanded,
                     'gridInitializing'
@@ -221,7 +221,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             },
         });
 
-        const compDetails = _getHeaderGroupCompDetails(this.userComponentFactory, params)!;
+        const compDetails = _getHeaderGroupCompDetails(this.userCompFactory, params)!;
         this.comp.setUserCompDetails(compDetails);
     }
 
@@ -241,14 +241,14 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     }
 
     private handleMouseOverChange(isMouseOver: boolean): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: isMouseOver ? 'columnHeaderMouseOver' : 'columnHeaderMouseLeave',
             column: this.column.getProvidedColumnGroup(),
         });
     }
 
     private setupTooltip(value?: string, shouldDisplayTooltip?: () => boolean): void {
-        this.tooltipFeature = this.beans.tooltipService?.setupHeaderGroupTooltip(
+        this.tooltipFeature = this.beans.tooltipSvc?.setupHeaderGroupTooltip(
             this.tooltipFeature,
             this,
             value,
@@ -336,7 +336,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     private onFocusIn(e: FocusEvent) {
         if (!this.eGui.contains(e.relatedTarget as HTMLElement)) {
             const rowIndex = this.getRowIndex();
-            this.beans.focusService.setFocusedHeader(rowIndex, this.column);
+            this.beans.focusSvc.setFocusedHeader(rowIndex, this.column);
         }
     }
 
@@ -353,7 +353,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             const column = this.column;
             const newExpandedValue = !column.isExpanded();
 
-            this.beans.columnGroupService!.setColumnGroupOpened(
+            this.beans.columnGroupSvc!.setColumnGroupOpened(
                 column.getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'
@@ -375,7 +375,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         }
 
         this.dragSource =
-            this.beans.columnMoveService?.setDragSourceForHeader(eHeaderGroup, this.column, this.displayName) ?? null;
+            this.beans.colMoves?.setDragSourceForHeader(eHeaderGroup, this.column, this.displayName) ?? null;
     }
 
     private isSuppressMoving(): boolean {

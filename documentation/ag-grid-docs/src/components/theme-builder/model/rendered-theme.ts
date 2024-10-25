@@ -39,7 +39,7 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
     // which requires that the CSS variable values are available
     setCurrentThemeCssClass(theme.getCssClass());
     const stylesheet = new CSSStyleSheet();
-    stylesheet.replaceSync(_asThemeImpl(theme).getCSS());
+    stylesheet.replaceSync(_asThemeImpl(theme).getParamsCSS());
     document.adoptedStyleSheets = [stylesheet];
 
     return {

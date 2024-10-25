@@ -8,14 +8,14 @@ import { _debounce } from '../utils/function';
 import type { PaginationService } from './paginationService';
 
 export class PaginationAutoPageSizeService extends BeanStub implements NamedBean {
-    beanName = 'paginationAutoPageSizeService' as const;
+    beanName = 'paginationAutoPageSizeSvc' as const;
 
-    private ctrlsService: CtrlsService;
-    private paginationService: PaginationService;
+    private ctrlsSvc: CtrlsService;
+    private pagination: PaginationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
-        this.paginationService = beans.paginationService!;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.pagination = beans.pagination!;
     }
 
     private centerRowsCtrl: RowContainerCtrl;
@@ -25,7 +25,7 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
     private isBodyRendered: boolean;
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.centerRowsCtrl = p.center;
 
             const listener = this.checkPageSize.bind(this);
@@ -45,7 +45,7 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
 
     private onPaginationAutoSizeChanged(): void {
         if (this.notActive()) {
-            this.paginationService.unsetAutoCalculatedPageSize();
+            this.pagination.unsetAutoCalculatedPageSize();
         } else {
             this.checkPageSize();
         }
@@ -62,7 +62,7 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
             const update = () => {
                 const rowHeight = Math.max(_getRowHeightAsNumber(this.gos), 1); // prevent divide by zero error if row height is 0
                 const newPageSize = Math.floor(bodyHeight / rowHeight);
-                this.paginationService.setPageSize(newPageSize, 'autoCalculated');
+                this.pagination.setPageSize(newPageSize, 'autoCalculated');
             };
 
             if (!this.isBodyRendered) {

@@ -75,28 +75,28 @@ function setFilterNumberComparator(a: string, b: string): number {
 }
 
 export class ColumnFilterService extends BeanStub implements NamedBean {
-    beanName: BeanName = 'columnFilterService';
+    beanName: BeanName = 'colFilter';
 
-    private valueService: ValueService;
-    private columnModel: ColumnModel;
+    private valueSvc: ValueService;
+    private colModel: ColumnModel;
     private rowModel: IRowModel;
-    private userComponentFactory: UserComponentFactory;
+    private userCompFactory: UserComponentFactory;
     private rowRenderer: RowRenderer;
-    private dataTypeService?: DataTypeService;
+    private dataTypeSvc?: DataTypeService;
     private filterManager?: FilterManager;
-    private filterValueService: FilterValueService;
-    private autoColService?: IAutoColService;
+    private filterValueSvc: FilterValueService;
+    private autoColSvc?: IAutoColService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.valueService = beans.valueService;
-        this.columnModel = beans.columnModel;
+        this.valueSvc = beans.valueSvc;
+        this.colModel = beans.colModel;
         this.rowModel = beans.rowModel;
-        this.userComponentFactory = beans.userComponentFactory;
+        this.userCompFactory = beans.userCompFactory;
         this.rowRenderer = beans.rowRenderer;
-        this.dataTypeService = beans.dataTypeService;
+        this.dataTypeSvc = beans.dataTypeSvc;
         this.filterManager = beans.filterManager;
-        this.filterValueService = beans.filterValueService!;
-        this.autoColService = beans.autoColService;
+        this.filterValueSvc = beans.filterValueSvc!;
+        this.autoColSvc = beans.autoColSvc;
     }
 
     private allColumnFilters = new Map<string, FilterWrapper>();
@@ -130,7 +130,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public setFilterModel(model: FilterModel | null, source: FilterChangedEventSourceType = 'api'): void {
-        if (this.dataTypeService?.isPendingInference()) {
+        if (this.dataTypeSvc?.isPendingInference()) {
             this.filterModelUpdateQueue.push({ model, source });
             return;
         }
@@ -151,7 +151,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
             // at this point, processedFields contains data for which we don't have a filter working yet
             modelKeys.forEach((colId) => {
-                const column = this.columnModel.getColDefCol(colId) || this.columnModel.getCol(colId);
+                const column = this.colModel.getColDefCol(colId) || this.colModel.getCol(colId);
 
                 if (!column) {
                     _warn(62, { colId });
@@ -223,11 +223,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
         if (!excludeInitialState) {
             Object.entries(initialFilterModel).forEach(([colId, model]) => {
-                if (
-                    _exists(model) &&
-                    !allColumnFilters.has(colId) &&
-                    this.columnModel.getCol(colId)?.isFilterAllowed()
-                ) {
+                if (_exists(model) && !allColumnFilters.has(colId) && this.colModel.getCol(colId)?.isFilterAllowed()) {
                     result[colId] = model;
                 }
             });
@@ -298,7 +294,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 return true;
             }
 
-            const isShowingPrimaryColumns = !this.columnModel.isPivotActive();
+            const isShowingPrimaryColumns = !this.colModel.isPivotActive();
             const isValueActive = column.isValueActive();
 
             // primary columns are only ever groupAgg filters if a) value is active and b) showing primary columns
@@ -307,7 +303,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             }
 
             // from here on we know: isPrimary=true, isValueActive=true, isShowingPrimaryColumns=true
-            if (this.columnModel.isPivotMode()) {
+            if (this.colModel.isPivotMode()) {
                 // primary column is pretending to be a pivot column, ie pivotMode=true, but we are
                 // still showing primary columns
                 return true;
@@ -454,8 +450,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private createGetValue(filterColumn: AgColumn): IFilterParams['getValue'] {
         return (rowNode, column) => {
-            const columnToUse = column ? this.columnModel.getCol(column) : filterColumn;
-            return columnToUse ? this.filterValueService.getValue(columnToUse, rowNode) : undefined;
+            const columnToUse = column ? this.colModel.getCol(column) : filterColumn;
+            return columnToUse ? this.filterValueSvc.getValue(columnToUse, rowNode) : undefined;
         };
     }
 
@@ -492,7 +488,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         if (_isSetFilterByDefault(this.gos)) {
             defaultFilter = 'agSetColumnFilter';
         } else {
-            const cellDataType = this.dataTypeService?.getBaseDataType(column);
+            const cellDataType = this.dataTypeSvc?.getBaseDataType(column);
             if (cellDataType === 'number') {
                 defaultFilter = 'agNumberColumnFilter';
             } else if (cellDataType === 'date' || cellDataType === 'dateString') {
@@ -509,7 +505,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         if (_isSetFilterByDefault(this.gos)) {
             defaultFloatingFilterType = 'agSetColumnFloatingFilter';
         } else {
-            const cellDataType = this.dataTypeService?.getBaseDataType(column);
+            const cellDataType = this.dataTypeSvc?.getBaseDataType(column);
             if (cellDataType === 'number') {
                 defaultFloatingFilterType = 'agNumberColumnFloatingFilter';
             } else if (cellDataType === 'date' || cellDataType === 'dateString') {
@@ -543,7 +539,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 this.filterManager ? this.filterManager.doesRowPassOtherFilters(filterInstance, node) : true,
         };
 
-        const compDetails = _getFilterDetails(this.userComponentFactory, colDef, params, defaultFilter);
+        const compDetails = _getFilterDetails(this.userCompFactory, colDef, params, defaultFilter);
         if (!compDetails) {
             return { filterPromise: null, compDetails: null };
         }
@@ -599,9 +595,9 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         this.allColumnFilters.forEach((wrapper, colId) => {
             let currentColumn: AgColumn | null;
             if (wrapper.column.isPrimary()) {
-                currentColumn = this.columnModel.getColDefCol(colId);
+                currentColumn = this.colModel.getColDefCol(colId);
             } else {
-                currentColumn = this.columnModel.getCol(colId);
+                currentColumn = this.colModel.getCol(colId);
             }
             // group columns can be recreated with the same colId
             if (currentColumn && currentColumn === wrapper.column) {
@@ -630,7 +626,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     private updateDependentFilters(): void {
         // Group column filters can be dependant on underlying column filters, but don't normally get created until they're used for the first time.
         // Instead, create them by default when any filter changes.
-        this.autoColService?.getAutoCols()?.forEach((groupColumn) => {
+        this.autoColSvc?.getAutoCols()?.forEach((groupColumn) => {
             if (groupColumn.getColDef().filter === 'agGroupColumnFilter') {
                 this.getOrCreateFilterWrapper(groupColumn);
             }
@@ -673,7 +669,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 ),
         };
         const finalFilterParams = _mergeFilterParamsWithApplicationProvidedParams(
-            this.userComponentFactory,
+            this.userCompFactory,
             colDef,
             filterParams
         );
@@ -694,7 +690,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             showParentFilter,
         };
 
-        return _getFloatingFilterCompDetails(this.userComponentFactory, colDef, params, defaultFloatingFilterType);
+        return _getFloatingFilterCompDetails(this.userCompFactory, colDef, params, defaultFloatingFilterType);
     }
 
     public getCurrentFloatingFilterParentModel(column: AgColumn): any {
@@ -739,7 +735,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
             this.allColumnFilters.delete(filterWrapper.column.getColId());
 
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'filterDestroyed',
                 source,
                 column: filterWrapper.column,
@@ -749,7 +745,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private filterModifiedCallbackFactory(filter: IFilterComp<any>, column: AgColumn<any>) {
         return () => {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'filterModified',
                 column,
                 filterInstance: filter,
@@ -842,7 +838,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public hasFloatingFilters(): boolean {
-        const gridColumns = this.columnModel.getCols();
+        const gridColumns = this.colModel.getCols();
         return gridColumns.some((col) => col.getColDef().floatingFilter);
     }
 
@@ -857,7 +853,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     private getFilterInstanceImpl(key: string | AgColumn): AgPromise<IFilter | null | undefined> {
-        const column = this.columnModel.getColDefCol(key);
+        const column = this.colModel.getColDefCol(key);
 
         if (!column) {
             return AgPromise.resolve(undefined);
@@ -882,7 +878,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public setColumnFilterModel(key: string | AgColumn, model: any): Promise<void> {
-        if (this.dataTypeService?.isPendingInference()) {
+        if (this.dataTypeSvc?.isPendingInference()) {
             let resolve: () => void = () => {};
             const promise = new Promise<void>((res) => {
                 resolve = res;
@@ -891,7 +887,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             return promise;
         }
 
-        const column = this.columnModel.getColDefCol(key);
+        const column = this.colModel.getColDefCol(key);
         const filterWrapper = column ? this.getOrCreateFilterWrapper(column) : null;
         const convertPromise = <T>(promise: AgPromise<T>): Promise<T> => {
             return new Promise((resolve) => {
@@ -904,7 +900,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     private getFilterWrapper(key: string | AgColumn): FilterWrapper | null {
-        const column = this.columnModel.getColDefCol(key);
+        const column = this.colModel.getColDefCol(key);
         return column ? this.cachedFilter(column) ?? null : null;
     }
 
@@ -1038,7 +1034,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                         formatValue({
                             column: params.column,
                             node: params.node,
-                            value: this.valueService.getValue(params.column as AgColumn, params.node),
+                            value: this.valueSvc.getValue(params.column as AgColumn, params.node),
                         });
                 }
                 break;

@@ -52,11 +52,11 @@ interface AgMenuItemComponentParams {
 export type AgMenuItemComponentEvent = 'closeMenu' | 'menuItemActivated';
 
 function getMenuItemCompDetails(
-    userComponentFactory: UserComponentFactory,
+    userCompFactory: UserComponentFactory,
     def: MenuItemDef,
     params: WithoutGridCommon<IMenuItemParams>
 ): UserCompDetails {
-    return userComponentFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true)!;
+    return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true)!;
 }
 
 const MenuItemComponent: ComponentType = {
@@ -65,13 +65,13 @@ const MenuItemComponent: ComponentType = {
 };
 
 export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
-    private popupService?: PopupService;
-    private userComponentFactory: UserComponentFactory;
+    private popupSvc?: PopupService;
+    private userCompFactory: UserComponentFactory;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
-        this.popupService = beans.popupService;
-        this.userComponentFactory = beans.userComponentFactory;
+        this.popupSvc = beans.popupSvc;
+        this.userCompFactory = beans.userCompFactory;
         this.registry = beans.registry;
     }
 
@@ -107,7 +107,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.childComponent = childComponent;
         this.contextParams = contextParams;
         this.cssClassPrefix = this.params.menuItemParams?.cssClassPrefix ?? 'ag-menu-option';
-        const compDetails = getMenuItemCompDetails(this.userComponentFactory, this.params, {
+        const compDetails = getMenuItemCompDetails(this.userCompFactory, this.params, {
             ...menuItemDef,
             level,
             isAnotherSubMenuOpen,
@@ -220,15 +220,15 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             }
         }
 
-        const { popupService } = this;
+        const { popupSvc } = this;
         const positionCallback = () => {
             const eventSource = this.eGui!;
-            popupService?.positionPopupForMenu({
+            popupSvc?.positionPopupForMenu({
                 eventSource,
                 ePopup,
             });
             const { column, node } = this.contextParams;
-            popupService?.callPostProcessPopup(
+            popupSvc?.callPostProcessPopup(
                 'subMenu',
                 ePopup,
                 eventSource,
@@ -240,7 +240,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = popupService?.addPopup({
+        const addPopupRes = popupSvc?.addPopup({
             modal: true,
             eChild: ePopup,
             positionCallback,

@@ -9,14 +9,14 @@ import type {
 } from 'ag-grid-community';
 
 export class ShowRowGroupColsService extends BeanStub implements NamedBean, IShowRowGroupColsService {
-    beanName = 'showRowGroupColsService' as const;
+    beanName = 'showRowGroupCols' as const;
 
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
+    private colModel: ColumnModel;
+    private funcColsSvc: FuncColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
+        this.colModel = beans.colModel;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     private showRowGroupCols: AgColumn[];
@@ -26,7 +26,7 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
         this.showRowGroupCols = [];
         this.showRowGroupColsMap = {};
 
-        this.columnModel.getCols().forEach((col) => {
+        this.colModel.getCols().forEach((col) => {
             const colDef = col.getColDef();
             const showRowGroup = colDef.showRowGroup;
 
@@ -42,7 +42,7 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
             if (isString) {
                 this.showRowGroupColsMap[showRowGroup] = col;
             } else {
-                const rowGroupCols = this.funcColsService.rowGroupCols;
+                const rowGroupCols = this.funcColsSvc.rowGroupCols;
                 rowGroupCols.forEach((rowGroupCol) => {
                     this.showRowGroupColsMap[rowGroupCol.getId()] = col;
                 });

@@ -12,10 +12,10 @@ import { _exists } from 'ag-grid-community';
 import { BaseExpansionService } from './baseExpansionService';
 
 export class ClientSideExpansionService extends BaseExpansionService implements NamedBean, IExpansionService {
-    beanName = 'expansionService' as const;
+    beanName = 'expansionSvc' as const;
 
     private rowModel: IClientSideRowModel;
-    private animationFrameService?: AnimationFrameService;
+    private animationFrameSvc?: AnimationFrameService;
 
     private events: RowGroupOpenedEvent[] = [];
     private dispatchExpandedDebounced: () => void;
@@ -23,7 +23,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     public override wireBeans(beans: BeanCollection): void {
         super.wireBeans(beans);
         this.rowModel = beans.rowModel as IClientSideRowModel;
-        this.animationFrameService = beans.animationFrameService;
+        this.animationFrameSvc = beans.animationFrameSvc;
     }
 
     public expandRows(rowIds: string[]): void {
@@ -38,7 +38,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
 
     public expandAll(expand: boolean): void {
         const usingTreeData = this.gos.get('treeData');
-        const usingPivotMode = this.columnModel.isPivotActive();
+        const usingPivotMode = this.colModel.isPivotActive();
 
         const recursiveExpandOrCollapse = (rowNodes: RowNode[] | null): void => {
             if (!rowNodes) {
@@ -80,7 +80,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
 
         this.rowModel.refreshModel({ step: 'map' });
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'expandOrCollapseAll',
             source: expand ? 'expandAll' : 'collapseAll',
         });
@@ -95,7 +95,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     }
 
     // because the user can call rowNode.setExpanded() many times in one VM turn,
-    // we throttle the calls to ClientSideRowModel using animationFrameService. this means for 100
+    // we throttle the calls to ClientSideRowModel using animationFrameSvc. this means for 100
     // row nodes getting expanded, we only update the CSRM once, and then we fire all events after
     // CSRM has updated.
     //
@@ -110,7 +110,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
 
         const func = () => {
             this.rowModel.onRowGroupOpened();
-            this.events.forEach((e) => this.eventService.dispatchEvent(e));
+            this.events.forEach((e) => this.eventSvc.dispatchEvent(e));
             this.events = [];
         };
 
@@ -128,12 +128,12 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     // to make sure all rendering is complete. we don't wait any milliseconds,
     // as this is intended to batch calls in one VM turn.
     private debounce(func: () => void) {
-        if (!this.animationFrameService) {
+        if (!this.animationFrameSvc) {
             return () => window.setTimeout(func, 0);
         }
         let pending = false;
         return () => {
-            if (!this.animationFrameService!.isOn()) {
+            if (!this.animationFrameSvc!.isOn()) {
                 window.setTimeout(func, 0);
                 return;
             }
@@ -141,7 +141,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
                 return;
             }
             pending = true;
-            this.animationFrameService!.addDestroyTask(() => {
+            this.animationFrameSvc!.addDestroyTask(() => {
                 pending = false;
                 func();
             });

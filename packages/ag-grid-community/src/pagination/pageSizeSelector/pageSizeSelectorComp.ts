@@ -13,10 +13,10 @@ import type { PaginationService } from '../paginationService';
 const paginationPageSizeSelector = 'paginationPageSizeSelector';
 
 export class PageSizeSelectorComp extends Component {
-    private paginationService: PaginationService;
+    private pagination: PaginationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.paginationService = beans.paginationService!;
+        this.pagination = beans.pagination!;
     }
 
     private selectPageSizeComp: AgSelect | undefined;
@@ -51,12 +51,12 @@ export class PageSizeSelectorComp extends Component {
         if (
             isNaN(paginationPageSize) ||
             paginationPageSize < 1 ||
-            paginationPageSize === this.paginationService.getPageSize()
+            paginationPageSize === this.pagination.getPageSize()
         ) {
             return;
         }
 
-        this.paginationService.setPageSize(paginationPageSize, 'pageSizeSelector');
+        this.pagination.setPageSize(paginationPageSize, 'pageSizeSelector');
 
         if (this.hasEmptyOption) {
             // Toggle the selector to force a refresh of the options and hide the empty option,
@@ -72,7 +72,7 @@ export class PageSizeSelectorComp extends Component {
             return;
         }
 
-        const paginationPageSize = this.paginationService.getPageSize();
+        const paginationPageSize = this.pagination.getPageSize();
         if (this.getPageSizeSelectorValues().includes(paginationPageSize)) {
             this.selectPageSizeComp.setValue(paginationPageSize.toString());
         } else {
@@ -131,7 +131,7 @@ export class PageSizeSelectorComp extends Component {
 
     private reloadPageSizesSelector(): void {
         const pageSizeOptions: (number | string)[] = this.getPageSizeSelectorValues();
-        const paginationPageSizeOption: number = this.paginationService.getPageSize();
+        const paginationPageSizeOption: number = this.pagination.getPageSize();
         const shouldAddAndSelectEmptyOption =
             !paginationPageSizeOption || !pageSizeOptions.includes(paginationPageSizeOption);
         if (shouldAddAndSelectEmptyOption) {

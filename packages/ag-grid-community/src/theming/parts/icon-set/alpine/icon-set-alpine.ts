@@ -1,5 +1,5 @@
 import { createPart } from '../../../Part';
-import { iconSetAlpineCSS } from './GENERATED-icon-set-alpine';
+import { iconSetAlpineCSS } from './icon-set-alpine.css-GENERATED';
 
 // prettier-ignore
 export const iconSetAlpine =

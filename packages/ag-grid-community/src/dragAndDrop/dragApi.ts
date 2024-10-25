@@ -2,17 +2,17 @@ import type { BeanCollection } from '../context/context';
 import type { RowDropZoneEvents, RowDropZoneParams } from './rowDragFeature';
 
 export function addRowDropZone(beans: BeanCollection, params: RowDropZoneParams): void {
-    beans.rowDragService?.getRowDragFeature()?.addRowDropZone(params);
+    beans.rowDragSvc?.getRowDragFeature()?.addRowDropZone(params);
 }
 
 export function removeRowDropZone(beans: BeanCollection, params: RowDropZoneParams): void {
-    const activeDropTarget = beans.dragAndDropService?.findExternalZone(params);
+    const activeDropTarget = beans.dragAndDrop?.findExternalZone(params);
 
     if (activeDropTarget) {
-        beans.dragAndDropService?.removeDropTarget(activeDropTarget);
+        beans.dragAndDrop?.removeDropTarget(activeDropTarget);
     }
 }
 
 export function getRowDropZoneParams(beans: BeanCollection, events?: RowDropZoneEvents): RowDropZoneParams | undefined {
-    return beans.rowDragService?.getRowDragFeature()?.getRowDropZone(events);
+    return beans.rowDragSvc?.getRowDragFeature()?.getRowDropZone(events);
 }

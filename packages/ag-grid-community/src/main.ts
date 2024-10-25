@@ -650,7 +650,7 @@ export { SortedRowNode } from './sort/rowNodeSorter';
 export { SortOption } from './interfaces/iSortOption';
 export type { CtrlsService } from './ctrlsService';
 export { GridCtrl, IGridComp } from './gridComp/gridCtrl';
-export type { SortController } from './sort/sortController';
+export type { SortService } from './sort/sortService';
 export { SortModelItem } from './interfaces/iSortModelItem';
 export { LocaleService } from './misc/locale/localeService';
 export { _getLocaleTextFunc, LocaleTextFunc } from './misc/locale/localeUtils';

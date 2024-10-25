@@ -33,25 +33,25 @@ import {
 } from 'ag-grid-community';
 
 export class AutoColService extends BeanStub implements NamedBean, IAutoColService {
-    beanName = 'autoColService' as const;
+    beanName = 'autoColSvc' as const;
 
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
-    private columnFactory: ColumnFactory;
-    private funcColsService: FuncColsService;
+    private colModel: ColumnModel;
+    private colNames: ColumnNameService;
+    private colFactory: ColumnFactory;
+    private funcColsSvc: FuncColsService;
     private context: Context;
-    private columnGroupService?: ColumnGroupService;
+    private columnGroupSvc?: ColumnGroupService;
 
     // group auto columns
     public autoCols: _ColumnCollections | null;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
-        this.columnFactory = beans.columnFactory;
-        this.funcColsService = beans.funcColsService;
+        this.colModel = beans.colModel;
+        this.colNames = beans.colNames;
+        this.colFactory = beans.colFactory;
+        this.funcColsSvc = beans.funcColsSvc;
         this.context = beans.context;
-        this.columnGroupService = beans.columnGroupService;
+        this.columnGroupSvc = beans.columnGroupSvc;
     }
 
     public postConstruct(): void {
@@ -73,7 +73,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         cols: _ColumnCollections,
         updateOrders: (callback: (cols: AgColumn[] | null) => AgColumn[] | null) => void
     ): void {
-        const isPivotMode = this.columnModel.isPivotMode();
+        const isPivotMode = this.colModel.isPivotMode();
         const groupFullWidthRow = _isGroupUseEntireRow(this.gos, isPivotMode);
         // we need to allow suppressing auto-column separately for group and pivot as the normal situation
         // is CSRM and user provides group column themselves for normal view, but when they go into pivot the
@@ -83,7 +83,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         // of the group column in this instance.
         const suppressAutoColumn = isPivotMode ? this.gos.get('pivotSuppressAutoColumn') : this.isSuppressAutoCol();
 
-        const rowGroupCols = this.funcColsService.rowGroupCols;
+        const rowGroupCols = this.funcColsSvc.rowGroupCols;
 
         const groupingActive = rowGroupCols.length > 0 || this.gos.get('treeData');
 
@@ -115,7 +115,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         }
 
         destroyPrevious();
-        const treeDepth = this.columnGroupService?.findDepth(cols.tree) ?? 0;
+        const treeDepth = this.columnGroupSvc?.findDepth(cols.tree) ?? 0;
         const tree = this.balanceTreeForAutoCols(list, treeDepth);
         this.autoCols = {
             list,
@@ -240,11 +240,11 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     private updateOneAutoCol(colToUpdate: AgColumn, index: number, source: ColumnEventType) {
         const oldColDef = colToUpdate.getColDef();
         const underlyingColId = typeof oldColDef.showRowGroup == 'string' ? oldColDef.showRowGroup : undefined;
-        const underlyingColumn = underlyingColId != null ? this.columnModel.getColDefCol(underlyingColId) : undefined;
+        const underlyingColumn = underlyingColId != null ? this.colModel.getColDefCol(underlyingColId) : undefined;
         const colDef = this.createAutoColDef(colToUpdate.getId(), underlyingColumn ?? undefined, index);
 
         colToUpdate.setColDef(colDef, null, source);
-        this.columnFactory.applyColumnState(colToUpdate, colDef, source);
+        this.colFactory.applyColumnState(colToUpdate, colDef, source);
     }
 
     private createAutoColDef(colId: string, underlyingColumn?: AgColumn, index?: number): ColDef {
@@ -254,7 +254,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const autoGroupColumnDef = this.gos.get('autoGroupColumnDef');
         _mergeDeep(res, autoGroupColumnDef);
 
-        res = this.columnFactory.addColumnDefaultAndTypes(res, colId);
+        res = this.colFactory.addColumnDefaultAndTypes(res, colId);
 
         // For tree data the filter is always allowed
         if (!this.gos.get('treeData')) {
@@ -305,7 +305,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         if (rowGroupCol) {
             const colDef = rowGroupCol.getColDef();
             Object.assign(res, {
-                headerName: this.columnNameService.getDisplayNameForColumn(rowGroupCol, 'header'),
+                headerName: this.colNames.getDisplayNameForColumn(rowGroupCol, 'header'),
                 headerValueGetter: colDef.headerValueGetter,
             });
 

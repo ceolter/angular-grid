@@ -10,11 +10,11 @@ import { ChartMenuParamsFactory } from '../chartMenuParamsFactory';
 
 export class ChartSpecificDataPanel extends Component {
     private chartTranslationService: ChartTranslationService;
-    private chartService: IChartService;
+    private chartSvc: IChartService;
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
-        this.chartService = beans.chartService!;
+        this.chartSvc = beans.chartSvc!;
     }
 
     private readonly chartSpecificGroup: AgGroupComponent = RefPlaceholder;
@@ -68,7 +68,7 @@ export class ChartSpecificDataPanel extends Component {
     }
 
     private createDirectionSelect(): AgSelect[] {
-        if (!this.chartService.isEnterprise()) {
+        if (!this.chartSvc.isEnterprise()) {
             return [];
         }
         const { chartOptionsService, chartController } = this.chartMenuContext;

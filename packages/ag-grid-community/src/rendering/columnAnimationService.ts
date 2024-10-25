@@ -5,12 +5,12 @@ import type { CtrlsService } from '../ctrlsService';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 
 export class ColumnAnimationService extends BeanStub implements NamedBean {
-    beanName = 'columnAnimationService' as const;
+    beanName = 'colAnimation' as const;
 
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private gridBodyCtrl: GridBodyCtrl;
@@ -27,7 +27,7 @@ export class ColumnAnimationService extends BeanStub implements NamedBean {
     private animationThreadCount = 0;
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => (this.gridBodyCtrl = p.gridBodyCtrl));
+        this.ctrlsSvc.whenReady(this, (p) => (this.gridBodyCtrl = p.gridBodyCtrl));
     }
 
     public isActive(): boolean {

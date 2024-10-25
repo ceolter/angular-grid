@@ -10,14 +10,14 @@ import type { PageBoundsService } from './pageBoundsService';
 import { PaginationSelector } from './paginationComp';
 
 export class PaginationService extends BeanStub implements NamedBean {
-    beanName = 'paginationService' as const;
+    beanName = 'pagination' as const;
 
     private rowModel: IRowModel;
-    private pageBoundsService: PageBoundsService;
+    private pageBounds: PageBoundsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
-        this.pageBoundsService = beans.pageBoundsService;
+        this.pageBounds = beans.pageBounds;
     }
 
     private active: boolean;
@@ -182,7 +182,7 @@ export class PaginationService extends BeanStub implements NamedBean {
             this.calculatedPagesNotActive();
         }
 
-        this.pageBoundsService.calculateBounds(this.topDisplayedRowIndex, this.bottomDisplayedRowIndex);
+        this.pageBounds.calculateBounds(this.topDisplayedRowIndex, this.bottomDisplayedRowIndex);
     }
 
     public unsetAutoCalculatedPageSize(): void {
@@ -336,7 +336,7 @@ export class PaginationService extends BeanStub implements NamedBean {
         keepRenderedRows?: boolean;
     }): void {
         const { keepRenderedRows = false, newPage = false, newPageSize = false } = params;
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'paginationChanged',
             animate: false,
             newData: false,

@@ -4,16 +4,16 @@ import { BeanStub } from 'ag-grid-community';
 export class ListenerUtils extends BeanStub implements NamedBean {
     beanName = 'ssrmListenerUtils' as const;
 
-    private pivotResultColsService?: IPivotResultColsService;
-    private funcColsService: FuncColsService;
+    private pivotResultCols?: IPivotResultColsService;
+    private funcColsSvc: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.pivotResultColsService = beans.pivotResultColsService;
-        this.funcColsService = beans.funcColsService;
+        this.pivotResultCols = beans.pivotResultCols;
+        this.funcColsSvc = beans.funcColsSvc;
     }
 
     public isSortingWithValueColumn(changedColumnsInSort: string[]): boolean {
-        const valueColIds = this.funcColsService.valueCols.map((col) => col.getColId());
+        const valueColIds = this.funcColsSvc.valueCols.map((col) => col.getColId());
 
         for (let i = 0; i < changedColumnsInSort.length; i++) {
             if (valueColIds.indexOf(changedColumnsInSort[i]) > -1) {
@@ -25,7 +25,7 @@ export class ListenerUtils extends BeanStub implements NamedBean {
     }
 
     public isSortingWithSecondaryColumn(changedColumnsInSort: string[]): boolean {
-        const pivotResultCols = this.pivotResultColsService?.getPivotResultCols();
+        const pivotResultCols = this.pivotResultCols?.getPivotResultCols();
         if (!pivotResultCols) {
             return false;
         }

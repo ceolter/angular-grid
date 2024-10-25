@@ -9,14 +9,14 @@ import { AdvancedFilterBuilderComp } from './builder/advancedFilterBuilderComp';
 
 export type AdvancedFilterCtrlEvent = 'advancedFilterBuilderClosed';
 export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implements IAdvancedFilterCtrl {
-    private ctrlsService: CtrlsService;
-    private popupService: PopupService;
+    private ctrlsSvc: CtrlsService;
+    private popupSvc: PopupService;
     private advancedFilterExpressionService: AdvancedFilterExpressionService;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
-        this.popupService = beans.popupService!;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.popupSvc = beans.popupSvc!;
         this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
         this.environment = beans.environment;
     }
@@ -35,7 +35,7 @@ export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implem
     public postConstruct(): void {
         this.hasAdvancedFilterParent = !!this.gos.get('advancedFilterParent');
 
-        this.ctrlsService.whenReady(this, () => this.setAdvancedFilterComp());
+        this.ctrlsSvc.whenReady(this, () => this.setAdvancedFilterComp());
 
         this.addManagedEventListeners({
             advancedFilterEnabledChanged: ({ enabled }) => this.onEnabledChanged(enabled),
@@ -143,7 +143,7 @@ export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implem
     }
 
     private dispatchFilterBuilderVisibleChangedEvent(source: 'api' | 'ui', visible: boolean): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'advancedFilterBuilderVisibleChanged',
             source,
             visible,
@@ -152,7 +152,7 @@ export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implem
 
     private getBuilderDialogSize(): { width: number; height: number; minWidth: number } {
         const minWidth = this.gos.get('advancedFilterBuilderParams')?.minWidth ?? 500;
-        const popupParent = this.popupService.getPopupParent();
+        const popupParent = this.popupSvc.getPopupParent();
         const maxWidth = Math.round(_getAbsoluteWidth(popupParent)) - 2; // assume 1 pixel border
         const maxHeight = Math.round(_getAbsoluteHeight(popupParent) * 0.75) - 2;
 
@@ -170,7 +170,7 @@ export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implem
     private updateComps(): void {
         this.setAdvancedFilterComp();
         this.setHeaderCompEnabled();
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'headerHeightChanged',
         });
     }

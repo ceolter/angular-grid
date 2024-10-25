@@ -17,16 +17,16 @@ export class CsvCreator
 {
     beanName = 'csvCreator' as const;
 
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
-    private funcColsService: FuncColsService;
-    private valueService: ValueService;
+    private colModel: ColumnModel;
+    private colNames: ColumnNameService;
+    private funcColsSvc: FuncColsService;
+    private valueSvc: ValueService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
-        this.funcColsService = beans.funcColsService;
-        this.valueService = beans.valueService;
+        this.colModel = beans.colModel;
+        this.colNames = beans.colNames;
+        this.funcColsSvc = beans.funcColsSvc;
+        this.valueSvc = beans.valueSvc;
     }
 
     protected getMergedParams(params?: CsvExportParams): CsvExportParams {
@@ -69,7 +69,7 @@ export class CsvCreator
     }
 
     public createSerializingSession(params?: CsvExportParams): CsvSerializingSession {
-        const { columnModel, columnNameService, funcColsService, valueService, gos } = this;
+        const { colModel, colNames, funcColsSvc, valueSvc, gos } = this;
         const {
             processCellCallback,
             processHeaderCallback,
@@ -80,10 +80,10 @@ export class CsvCreator
         } = params!;
 
         return new CsvSerializingSession({
-            columnModel,
-            columnNameService,
-            funcColsService,
-            valueService,
+            colModel,
+            colNames,
+            funcColsSvc,
+            valueSvc,
             gos,
             processCellCallback: processCellCallback || undefined,
             processHeaderCallback: processHeaderCallback || undefined,

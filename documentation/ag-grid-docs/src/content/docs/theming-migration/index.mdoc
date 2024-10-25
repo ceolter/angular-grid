@@ -14,7 +14,7 @@ The grid is styled using CSS. A running grid instance contains thousands of DOM 
 
 None of this is changing - the grid is still styled with CSS and CSS custom properties, and you can still extend it with your own CSS rules. What the Theming API changes is the following:
 
-1. Instead of importing CSS files yourself, the grid code is now responsible for inserting the correct CSS files into the document head in the correct order. This eliminates a class of bugs around incorrectly loading CSS files.
+1. Instead of importing CSS files yourself, the grid is now responsible for inserting the correct CSS into the document head in the correct order. This eliminates a class of bugs around incorrectly loading CSS files. The Theming API is integrated with the grid's module system so you only load CSS for features you're using, leading to a significant reduction in your app's size.
 2. There is a TypeScript API for setting CSS custom properties (`theme.withParams(...)`). This provides autocompletion and inline documentation making it easier to find the property you're looking for. You can still set custom properties in CSS if you prefer.
 3. It is now possible to mix and match elements of different themes. Previously, if you wanted the text inputs from Material and the buttons from Quartz, you would have to write your own styles. Now you can compose your own themes using parts from different built in themes (`theme.withPart(...)`).
 4. It is a significant rewrite of the CSS we provide to style the grid, containing many improvements and resolving long-standing issues. It contains all the learnings from 10 years of maintaining the old CSS themes. Some examples of changes we've made:
@@ -30,7 +30,11 @@ If your application is split between multiple pages, it can be migrated one page
 
 ## Updating your app for v33
 
-If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of themes by passing the string `"legacy"` to the theme grid option. You can then continue to use v32 themes. To adopt the v33 themes, follow these steps:
+In v33, the `theme` grid option has a default value, and if no value is provided the quartz theme will be used.
+
+If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of themes by passing the string `"legacy"` to the theme grid option. You can then continue to use v32 themes.
+
+To adopt the v33 themes, follow these steps:
 
 ### 1. Remove CSS imports
 

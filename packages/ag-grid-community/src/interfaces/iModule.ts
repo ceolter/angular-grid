@@ -44,6 +44,7 @@ export interface Module {
     icons?: Partial<Record<IconName, IconValue>>;
     rowModels?: RowModelType[];
     dependsOn?: Module[];
+    css?: string[];
 }
 
 /** Used to define a module that contains api functions. */

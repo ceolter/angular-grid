@@ -24,7 +24,7 @@ interface SectionProperties {
 }
 
 const GridBodyComp = () => {
-    const { context, gos, overlayService } = useContext(BeansContext);
+    const { context, gos, overlays } = useContext(BeansContext);
 
     const [rowAnimationClass, setRowAnimationClass] = useState<string>('');
     const [topHeight, setTopHeight] = useState<number>(0);
@@ -100,7 +100,7 @@ const GridBodyComp = () => {
         };
 
         addComp(eRef, FakeHScrollComp, ' AG Fake Horizontal Scroll ');
-        const overlayComp = overlayService?.getOverlayWrapperCompClass();
+        const overlayComp = overlays?.getOverlayWrapperCompClass();
         if (overlayComp) {
             addComp(eRef, overlayComp, ' AG Overlay Wrapper ');
         }

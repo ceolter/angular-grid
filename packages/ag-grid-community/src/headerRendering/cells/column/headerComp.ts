@@ -6,8 +6,8 @@ import type { Column } from '../../../interfaces/iColumn';
 import type { AgGridCommon } from '../../../interfaces/iCommon';
 import type { IComponent } from '../../../interfaces/iComponent';
 import type { MenuService } from '../../../misc/menu/menuService';
-import type { SortController } from '../../../sort/sortController';
 import type { SortIndicatorComp } from '../../../sort/sortIndicatorComp';
+import type { SortService } from '../../../sort/sortService';
 import { _removeFromParent, _setDisplayed } from '../../../utils/dom';
 import { _exists } from '../../../utils/generic';
 import type { IconName } from '../../../utils/icon';
@@ -112,12 +112,12 @@ function getHeaderCompTemplate(includeSortIndicator: boolean): string {
 }
 
 export class HeaderComp extends Component implements IHeaderComp {
-    private sortController?: SortController;
-    private menuService?: MenuService;
+    private sortSvc?: SortService;
+    private menuSvc?: MenuService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.sortController = beans.sortController;
-        this.menuService = beans.menuService;
+        this.sortSvc = beans.sortSvc;
+        this.menuSvc = beans.menuSvc;
     }
 
     private eFilter: HTMLElement = RefPlaceholder;
@@ -174,7 +174,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private workOutTemplate(): string | null | undefined {
-        let template: string | null | undefined = this.params.template ?? getHeaderCompTemplate(!!this.sortController);
+        let template: string | null | undefined = this.params.template ?? getHeaderCompTemplate(!!this.sortSvc);
 
         // take account of any newlines & whitespace before/after the actual template
         template = template && template.trim ? template.trim() : template;
@@ -185,10 +185,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         this.params = params;
 
         this.currentTemplate = this.workOutTemplate();
-        this.setTemplate(
-            this.currentTemplate,
-            this.sortController ? [this.sortController.getSortIndicatorSelector()] : undefined
-        );
+        this.setTemplate(this.currentTemplate, this.sortSvc ? [this.sortSvc.getSortIndicatorSelector()] : undefined);
         this.setupTap();
         this.setMenu();
         this.setupSort();
@@ -246,7 +243,7 @@ export class HeaderComp extends Component implements IHeaderComp {
                     return;
                 }
 
-                this.sortController?.progressSort(this.params.column as AgColumn, false, 'uiColumnSorted');
+                this.sortSvc?.progressSort(this.params.column as AgColumn, false, 'uiColumnSorted');
             };
 
             this.addManagedListeners(touchListener, { tap: tapListener });
@@ -270,11 +267,11 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private workOutShowMenu(): boolean {
-        return this.params.enableMenu && !!this.menuService?.isHeaderMenuButtonEnabled();
+        return this.params.enableMenu && !!this.menuSvc?.isHeaderMenuButtonEnabled();
     }
 
     private shouldSuppressMenuHide(): boolean {
-        return !!this.menuService?.isHeaderMenuButtonAlwaysShowEnabled();
+        return !!this.menuSvc?.isHeaderMenuButtonAlwaysShowEnabled();
     }
 
     private setMenu(): void {
@@ -303,7 +300,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         const column = this.params.column as AgColumn;
         const isLegacyMenuEnabled = _isLegacyMenuEnabled(this.gos);
         if (isFilterShortcut && !isLegacyMenuEnabled) {
-            if (this.menuService?.isFilterMenuInHeaderEnabled(column)) {
+            if (this.menuSvc?.isFilterMenuInHeaderEnabled(column)) {
                 this.params.showFilter(this.eFilterButton ?? this.eMenu ?? this.getGui());
                 return true;
             }
@@ -319,7 +316,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private setupSort(): void {
-        if (!this.sortController) {
+        if (!this.sortSvc) {
             return;
         }
         this.currentSort = this.params.enableSorting;
@@ -328,7 +325,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         // templates, in that case, we need to look for provided sort elements and
         // manually create eSortIndicator.
         if (!this.eSortIndicator) {
-            this.eSortIndicator = this.createBean(this.sortController.createSortIndicator(true));
+            this.eSortIndicator = this.createBean(this.sortSvc.createSortIndicator(true));
             this.eSortIndicator.attachCustomElements(
                 this.eSortOrder,
                 this.eSortAsc,
@@ -346,7 +343,7 @@ export class HeaderComp extends Component implements IHeaderComp {
             return;
         }
 
-        this.sortController.setupHeader(this, this.params.column as AgColumn, this.eLabel);
+        this.sortSvc.setupHeader(this, this.params.column as AgColumn, this.eLabel);
     }
 
     private setupFilterIcon(): void {

@@ -49,27 +49,27 @@ export function getHeaderIndexToFocus(column: AgColumn | AgColumnGroup, currentI
 }
 
 export class HeaderNavigationService extends BeanStub implements NamedBean {
-    beanName = 'headerNavigationService' as const;
+    beanName = 'headerNavigation' as const;
 
-    private focusService: FocusService;
-    private ctrlsService: CtrlsService;
-    private columnModel: ColumnModel;
-    private visibleColsService: VisibleColsService;
-    private columnGroupService?: ColumnGroupService;
+    private focusSvc: FocusService;
+    private ctrlsSvc: CtrlsService;
+    private colModel: ColumnModel;
+    private visibleCols: VisibleColsService;
+    private columnGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.focusService = beans.focusService;
-        this.ctrlsService = beans.ctrlsService;
-        this.columnModel = beans.columnModel;
-        this.visibleColsService = beans.visibleColsService;
-        this.columnGroupService = beans.columnGroupService;
+        this.focusSvc = beans.focusSvc;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.colModel = beans.colModel;
+        this.visibleCols = beans.visibleCols;
+        this.columnGroupSvc = beans.columnGroupSvc;
     }
 
     private gridBodyCon: GridBodyCtrl;
     private currentHeaderRowWithoutSpan: number = -1;
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.gridBodyCon = p.gridBodyCtrl;
         });
 
@@ -84,9 +84,9 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         let column: AgColumn | AgColumnGroup | null;
 
         if (typeof colKey === 'string') {
-            column = this.columnModel.getCol(colKey);
+            column = this.colModel.getCol(colKey);
             if (!column) {
-                column = this.columnGroupService?.getColumnGroup(colKey) ?? null;
+                column = this.columnGroupSvc?.getColumnGroup(colKey) ?? null;
             }
         } else {
             column = colKey as AgColumn | AgColumnGroup;
@@ -96,10 +96,10 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             return null;
         }
 
-        const centerHeaderContainer = this.ctrlsService.getHeaderRowContainerCtrl();
+        const centerHeaderContainer = this.ctrlsSvc.getHeaderRowContainerCtrl();
         const allCtrls = centerHeaderContainer?.getAllCtrls();
         const isFloatingFilterVisible = _last(allCtrls || []).getType() === 'filter';
-        const headerRowCount = this.focusService.getHeaderRowCount() - 1;
+        const headerRowCount = this.focusSvc.getHeaderRowCount() - 1;
 
         let row = -1;
         let col: AgColumn | AgColumnGroup | null = column;
@@ -133,7 +133,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         event: KeyboardEvent
     ): boolean {
         if (!fromHeader) {
-            fromHeader = this.focusService.getFocusedHeader();
+            fromHeader = this.focusSvc.getFocusedHeader();
         }
 
         if (!fromHeader) {
@@ -142,7 +142,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
 
         const { headerRowIndex } = fromHeader;
         const column = fromHeader.column as AgColumn;
-        const rowLen = this.focusService.getHeaderRowCount();
+        const rowLen = this.focusSvc.getHeaderRowCount();
         const isUp = direction === 'UP';
 
         let {
@@ -173,7 +173,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             return false;
         }
 
-        return this.focusService.focusHeaderPosition({
+        return this.focusSvc.focusHeaderPosition({
             headerPosition: { headerRowIndex: nextRow, column: nextFocusColumn! },
             allowUserOverride: true,
             event,
@@ -193,7 +193,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         fromTab: boolean = false,
         event: KeyboardEvent
     ): boolean {
-        const focusedHeader = this.focusService.getFocusedHeader()!;
+        const focusedHeader = this.focusSvc.getFocusedHeader()!;
         const isLeft = direction === 'LEFT';
         const isRtl = this.gos.get('enableRtl');
         let nextHeader: HeaderPosition;
@@ -215,7 +215,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         }
 
         if (nextHeader || !fromTab) {
-            return this.focusService.focusHeaderPosition({
+            return this.focusSvc.focusHeaderPosition({
                 headerPosition: nextHeader,
                 direction: normalisedDirection,
                 fromTab,
@@ -225,7 +225,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         } else if (fromTab) {
             const userFunc = this.gos.getCallback('tabToNextHeader');
             if (userFunc) {
-                return this.focusService.focusHeaderPositionFromUserFunc({
+                return this.focusSvc.focusHeaderPositionFromUserFunc({
                     userFunc,
                     headerPosition: nextHeader,
                     direction: normalisedDirection,
@@ -253,7 +253,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             }
         } else {
             nextRowIndex = currentIndex + 1;
-            if (this.currentHeaderRowWithoutSpan < this.focusService.getHeaderRowCount()) {
+            if (this.currentHeaderRowWithoutSpan < this.focusSvc.getHeaderRowCount()) {
                 this.currentHeaderRowWithoutSpan += 1;
             } else {
                 this.setCurrentHeaderRowWithoutSpan(-1);
@@ -270,7 +270,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             nextPosition?.headerRowIndex
         );
 
-        return this.focusService.focusHeaderPosition({
+        return this.focusSvc.focusHeaderPosition({
             headerPosition: { column, headerRowIndex },
             direction,
             fromTab: true,
@@ -301,10 +301,10 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         let getColMethod: 'getColBefore' | 'getColAfter';
 
         if (isColumnGroup(focusedHeader.column)) {
-            nextColumn = this.columnGroupService?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
+            nextColumn = this.columnGroupSvc?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
         } else {
             getColMethod = `getCol${direction}` as any;
-            nextColumn = this.visibleColsService[getColMethod](focusedHeader.column as AgColumn)!;
+            nextColumn = this.visibleCols[getColMethod](focusedHeader.column as AgColumn)!;
         }
 
         if (!nextColumn) {
@@ -333,7 +333,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
     }
 
     private getHeaderRowType(rowIndex: number): HeaderRowType | undefined {
-        const centerHeaderContainer = this.ctrlsService.getHeaderRowContainerCtrl();
+        const centerHeaderContainer = this.ctrlsSvc.getHeaderRowContainerCtrl();
         if (centerHeaderContainer) {
             return centerHeaderContainer.getRowType(rowIndex);
         }
@@ -413,18 +413,18 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
     }
 
     private findColAtEdgeForHeaderRow(level: number, position: 'start' | 'end'): HeaderPosition | undefined {
-        const displayedColumns = this.visibleColsService.allCols;
+        const displayedColumns = this.visibleCols.allCols;
         const column = displayedColumns[position === 'start' ? 0 : displayedColumns.length - 1];
 
         if (!column) {
             return;
         }
 
-        const childContainer = this.ctrlsService.getHeaderRowContainerCtrl(column.getPinned());
+        const childContainer = this.ctrlsSvc.getHeaderRowContainerCtrl(column.getPinned());
         const type = childContainer?.getRowType(level);
 
         if (type == 'group') {
-            const columnGroup = this.columnGroupService?.getColGroupAtLevel(column, level);
+            const columnGroup = this.columnGroupSvc?.getColGroupAtLevel(column, level);
             return {
                 headerRowIndex: level,
                 column: columnGroup!,

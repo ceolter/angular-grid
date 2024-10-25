@@ -7,7 +7,7 @@ import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _warn } from '../validation/logging';
 
 export function onGroupExpandedOrCollapsed(beans: BeanCollection): void {
-    beans.expansionService?.onGroupExpandedOrCollapsed();
+    beans.expansionSvc?.onGroupExpandedOrCollapsed();
 }
 
 export function refreshClientSideRowModel(beans: BeanCollection, step?: ClientSideRowModelStep): void {
@@ -40,7 +40,7 @@ export function forEachNodeAfterFilterAndSort<TData = any>(
 }
 
 export function resetRowHeights(beans: BeanCollection): void {
-    if (beans.rowAutoHeightService?.active) {
+    if (beans.rowAutoHeight?.active) {
         _warn(3);
         return;
     }
@@ -71,5 +71,5 @@ export function flushAsyncTransactions(beans: BeanCollection): void {
 }
 
 export function getBestCostNodeSelection<TData = any>(beans: BeanCollection): IRowNode<TData>[] | undefined {
-    return beans.selectionService?.getBestCostNodeSelection();
+    return beans.selectionSvc?.getBestCostNodeSelection();
 }

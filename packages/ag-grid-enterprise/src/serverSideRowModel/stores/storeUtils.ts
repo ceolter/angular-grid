@@ -15,12 +15,12 @@ import type { StoreFactory } from './storeFactory';
 export class StoreUtils extends BeanStub implements NamedBean {
     beanName = 'ssrmStoreUtils' as const;
 
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
     private serverSideRowModel: ServerSideRowModel;
     private storeFactory: StoreFactory;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
         this.serverSideRowModel = beans.rowModel as ServerSideRowModel;
         this.storeFactory = beans.ssrmStoreFactory as StoreFactory;
     }
@@ -77,7 +77,7 @@ export class StoreUtils extends BeanStub implements NamedBean {
             return true;
         }
 
-        const allCols = this.columnModel.getCols();
+        const allCols = this.colModel.getCols();
         const affectedGroupCols = allCols
             // find all impacted cols which also a group display column
             .filter((col) => col.getColDef().showRowGroup && params.changedColumns.includes(col.getId()))

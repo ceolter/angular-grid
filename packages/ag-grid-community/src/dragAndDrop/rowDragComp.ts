@@ -58,7 +58,7 @@ export class RowDragComp extends Component {
             return [this.rowNode];
         }
 
-        const selection = this.beans.selectionService?.getSelectedNodes() ?? [];
+        const selection = this.beans.selectionSvc?.getSelectedNodes() ?? [];
 
         return selection.indexOf(this.rowNode) !== -1 ? selection : [this.rowNode];
     }
@@ -123,7 +123,7 @@ export class RowDragComp extends Component {
             dragSourceDomDataKey: this.gos.getDomDataKey(),
         };
 
-        this.beans.dragAndDropService!.addDragSource(this.dragSource, true);
+        this.beans.dragAndDrop!.addDragSource(this.dragSource, true);
     }
 
     public override destroy(): void {
@@ -137,7 +137,7 @@ export class RowDragComp extends Component {
             return;
         }
 
-        this.beans.dragAndDropService!.removeDragSource(this.dragSource);
+        this.beans.dragAndDrop!.removeDragSource(this.dragSource);
         this.dragSource = null;
     }
 
@@ -206,7 +206,7 @@ class NonManagedVisibilityStrategy extends VisibilityStrategy {
             cellChanged: listener,
         });
 
-        this.addManagedListeners(this.beans.eventService, { newColumnsLoaded: listener });
+        this.addManagedListeners(this.beans.eventSvc, { newColumnsLoaded: listener });
 
         this.workOutVisibility();
     }
@@ -231,7 +231,7 @@ class ManagedVisibilityStrategy extends VisibilityStrategy {
     public postConstruct(): void {
         const listener = this.workOutVisibility.bind(this);
         // we do not show the component if sort, filter or grouping is active
-        this.addManagedListeners<AgEventType>(this.beans.eventService, {
+        this.addManagedListeners<AgEventType>(this.beans.eventSvc, {
             sortChanged: listener,
             filterChanged: listener,
             columnRowGroupChanged: listener,
@@ -255,10 +255,10 @@ class ManagedVisibilityStrategy extends VisibilityStrategy {
 
     private workOutVisibility(): void {
         // only show the drag if both sort and filter are not present
-        const rowDragFeature = this.beans.rowDragService!.getRowDragFeature();
+        const rowDragFeature = this.beans.rowDragSvc!.getRowDragFeature();
         const shouldPreventRowMove = rowDragFeature && rowDragFeature.shouldPreventRowMove();
         const suppressRowDrag = this.gos.get('suppressRowDrag');
-        const hasExternalDropZones = this.beans.dragAndDropService!.hasExternalDropZones();
+        const hasExternalDropZones = this.beans.dragAndDrop!.hasExternalDropZones();
         const neverDisplayed = (shouldPreventRowMove && !hasExternalDropZones) || suppressRowDrag;
 
         this.setDisplayedOrVisible(neverDisplayed);

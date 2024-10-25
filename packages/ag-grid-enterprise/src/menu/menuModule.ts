@@ -10,6 +10,7 @@ import { ColumnChooserFactory } from './columnChooserFactory';
 import { ColumnMenuFactory } from './columnMenuFactory';
 import { ContextMenuService } from './contextMenu';
 import { EnterpriseMenuFactory } from './enterpriseMenu';
+import { menuCSS } from './menu.css-GENERATED';
 import { hideColumnChooser, showColumnChooser, showContextMenu } from './menuApi';
 import { MenuItemMapper } from './menuItemMapper';
 import { MenuUtils } from './menuUtils';
@@ -50,6 +51,7 @@ export const MenuCoreModule: _ModuleWithoutApi = {
         sortUnSort: 'none',
     },
     dependsOn: [EnterpriseCoreModule, PopupModule, SharedMenuModule, MenuItemModule],
+    css: [menuCSS],
 };
 
 const COLUMN_SELECT_ICONS = {

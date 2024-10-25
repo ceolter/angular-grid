@@ -15,14 +15,14 @@ import {
 import { AdvancedFilterComp } from './advancedFilterComp';
 
 export class AdvancedFilterHeaderComp extends Component {
-    private columnModel: ColumnModel;
-    private focusService: FocusService;
-    private ctrlsService: CtrlsService;
+    private colModel: ColumnModel;
+    private focusSvc: FocusService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.focusService = beans.focusService;
-        this.ctrlsService = beans.ctrlsService;
+        this.colModel = beans.colModel;
+        this.focusSvc = beans.focusSvc;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private eAdvancedFilter: AdvancedFilterComp | undefined;
@@ -58,7 +58,7 @@ export class AdvancedFilterHeaderComp extends Component {
 
         this.addGuiEventListener('focusout', (event: FocusEvent) => {
             if (!this.getFocusableElement().contains(event.relatedTarget as HTMLElement)) {
-                this.focusService.clearAdvancedFilterColumn();
+                this.focusSvc.clearAdvancedFilterColumn();
             }
         });
     }
@@ -120,11 +120,11 @@ export class AdvancedFilterHeaderComp extends Component {
     }
 
     private setAriaColumnCount(eAdvancedFilterGui: HTMLElement): void {
-        _setAriaColSpan(eAdvancedFilterGui, this.columnModel.getCols().length);
+        _setAriaColSpan(eAdvancedFilterGui, this.colModel.getCols().length);
     }
 
     private setAriaRowIndex(): void {
-        _setAriaRowIndex(this.getGui(), this.ctrlsService.getHeaderRowContainerCtrl()?.getRowCount() ?? 0);
+        _setAriaRowIndex(this.getGui(), this.ctrlsSvc.getHeaderRowContainerCtrl()?.getRowCount() ?? 0);
     }
 
     private onGridColumnsChanged(): void {
@@ -139,7 +139,7 @@ export class AdvancedFilterHeaderComp extends Component {
         switch (event.key) {
             case KeyCode.ENTER: {
                 if (this.hasFocus()) {
-                    if (this.focusService.focusInto(this.getFocusableElement())) {
+                    if (this.focusSvc.focusInto(this.getFocusableElement())) {
                         event.preventDefault();
                     }
                 }
@@ -160,7 +160,7 @@ export class AdvancedFilterHeaderComp extends Component {
                 if (this.hasFocus()) {
                     this.navigateLeftRight(event);
                 } else {
-                    const nextFocusableEl = this.focusService.findNextFocusableElement(
+                    const nextFocusableEl = this.focusSvc.findNextFocusableElement(
                         this.getFocusableElement(),
                         null,
                         event.shiftKey
@@ -178,18 +178,14 @@ export class AdvancedFilterHeaderComp extends Component {
 
     private navigateUpDown(backwards: boolean, event: KeyboardEvent): void {
         if (this.hasFocus()) {
-            if (this.focusService.focusNextFromAdvancedFilter(backwards)) {
+            if (this.focusSvc.focusNextFromAdvancedFilter(backwards)) {
                 event.preventDefault();
             }
         }
     }
 
     private navigateLeftRight(event: KeyboardEvent): void {
-        if (
-            event.shiftKey
-                ? this.focusService.focusLastHeader()
-                : this.focusService.focusNextFromAdvancedFilter(false, true)
-        ) {
+        if (event.shiftKey ? this.focusSvc.focusLastHeader() : this.focusSvc.focusNextFromAdvancedFilter(false, true)) {
             event.preventDefault();
         }
     }

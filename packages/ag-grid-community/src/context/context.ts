@@ -94,7 +94,7 @@ import type { RowAutoHeightService } from '../rendering/row/rowAutoHeightService
 import type { RowContainerHeightService } from '../rendering/rowContainerHeightService';
 import type { RowRenderer } from '../rendering/rowRenderer';
 import type { RowNodeSorter } from '../sort/rowNodeSorter';
-import type { SortController } from '../sort/sortController';
+import type { SortService } from '../sort/sortService';
 import type { CellStyleService } from '../styling/cellStyleService';
 import type { RowStyleService } from '../styling/rowStyleService';
 import type { SyncService } from '../syncService';
@@ -189,94 +189,94 @@ export interface CoreBeanCollection {
     gos: GridOptionsService;
     environment: Environment;
     rowRenderer: RowRenderer;
-    valueService: ValueService;
-    eventService: EventService;
-    columnModel: ColumnModel;
-    columnViewportService: ColumnViewportService;
-    columnNameService: ColumnNameService;
-    visibleColsService: VisibleColsService;
-    columnMoveService?: ColumnMoveService;
-    columnFlexService?: ColumnFlexService;
-    columnResizeService?: ColumnResizeService;
-    headerNavigationService?: HeaderNavigationService;
-    navigationService?: NavigationService;
-    columnAnimationService?: ColumnAnimationService;
-    focusService: FocusService;
-    popupService?: PopupService;
-    cellStyleService?: CellStyleService;
-    columnHoverService?: ColumnHoverService;
-    userComponentFactory: UserComponentFactory;
+    valueSvc: ValueService;
+    eventSvc: EventService;
+    colModel: ColumnModel;
+    colViewport: ColumnViewportService;
+    colNames: ColumnNameService;
+    visibleCols: VisibleColsService;
+    colMoves?: ColumnMoveService;
+    colFlex?: ColumnFlexService;
+    colResize?: ColumnResizeService;
+    headerNavigation?: HeaderNavigationService;
+    navigation?: NavigationService;
+    colAnimation?: ColumnAnimationService;
+    focusSvc: FocusService;
+    popupSvc?: PopupService;
+    cellStyles?: CellStyleService;
+    colHover?: ColumnHoverService;
+    userCompFactory: UserComponentFactory;
     registry: Registry;
-    animationFrameService?: AnimationFrameService;
-    dragService?: DragService;
-    dragAndDropService?: DragAndDropService;
-    sortController?: SortController;
-    columnFilterService?: ColumnFilterService;
+    animationFrameSvc?: AnimationFrameService;
+    dragSvc?: DragService;
+    dragAndDrop?: DragAndDropService;
+    sortSvc?: SortService;
+    colFilter?: ColumnFilterService;
     filterManager?: FilterManager;
-    rowContainerHeightService: RowContainerHeightService;
+    rowContainerHeight: RowContainerHeightService;
     frameworkOverrides: IFrameworkOverrides;
-    selectionService?: ISelectionService;
-    rowStyleService?: RowStyleService;
+    selectionSvc?: ISelectionService;
+    rowStyleSvc?: RowStyleService;
     rowModel: IRowModel;
-    ctrlsService: CtrlsService;
+    ctrlsSvc: CtrlsService;
     valueCache?: ValueCache;
-    localeService?: LocaleService;
-    syncService: SyncService;
-    ariaAnnouncementService: AriaAnnouncementService;
-    rangeService?: IRangeService;
-    validationService?: ValidationService;
+    localeSvc?: LocaleService;
+    syncSvc: SyncService;
+    ariaAnnounce: AriaAnnouncementService;
+    rangeSvc?: IRangeService;
+    validation?: ValidationService;
     gridApi: GridApi;
     gridOptions: GridOptions;
     eGridDiv: HTMLElement;
-    columnStateService: ColumnStateService;
-    columnFactory: ColumnFactory;
-    pivotResultColsService?: IPivotResultColsService;
-    autoColService?: IAutoColService;
-    selectionColService?: SelectionColService;
-    columnDefFactory?: ColumnDefFactory;
-    columnAutosizeService?: ColumnAutosizeService;
-    funcColsService: FuncColsService;
-    quickFilterService?: QuickFilterService;
-    showRowGroupColsService?: IShowRowGroupColsService;
-    dataTypeService?: DataTypeService;
+    colState: ColumnStateService;
+    colFactory: ColumnFactory;
+    pivotResultCols?: IPivotResultColsService;
+    autoColSvc?: IAutoColService;
+    selectionColSvc?: SelectionColService;
+    colDefFactory?: ColumnDefFactory;
+    colAutosize?: ColumnAutosizeService;
+    funcColsSvc: FuncColsService;
+    quickFilter?: QuickFilterService;
+    showRowGroupCols?: IShowRowGroupColsService;
+    dataTypeSvc?: DataTypeService;
     globalEventListener: AgGlobalEventListener;
     globalSyncEventListener: AgGlobalEventListener;
-    stateService?: StateService;
-    overlayService?: OverlayService;
+    stateSvc?: StateService;
+    overlays?: OverlayService;
     pinnedRowModel?: PinnedRowModel;
-    menuService?: MenuService;
-    apiEventService?: ApiEventService;
-    undoRedoService?: UndoRedoService;
+    menuSvc?: MenuService;
+    apiEventSvc?: ApiEventService;
+    undoRedo?: UndoRedoService;
     rowNodeBlockLoader?: RowNodeBlockLoader;
     csvCreator?: ICsvCreator;
     excelCreator?: IExcelCreator;
-    clipboardService?: IClipboardService;
-    mouseEventService: MouseEventService;
-    cellNavigationService?: CellNavigationService;
-    scrollVisibleService: ScrollVisibleService;
-    pinnedColumnService?: PinnedColumnService;
-    expressionService?: ExpressionService;
+    clipboardSvc?: IClipboardService;
+    mouseEventSvc: MouseEventService;
+    cellNavigation?: CellNavigationService;
+    scrollVisibleSvc: ScrollVisibleService;
+    pinnedCols?: PinnedColumnService;
+    expressionSvc?: ExpressionService;
     autoWidthCalculator?: AutoWidthCalculator;
     agComponentUtils?: AgComponentUtils;
     frameworkComponentWrapper: FrameworkComponentWrapper;
-    horizontalResizeService?: HorizontalResizeService;
+    horizontalResizeSvc?: HorizontalResizeService;
     filterMenuFactory?: IMenuFactory;
     enterpriseMenuFactory?: IMenuFactory;
-    contextMenuService?: IContextMenuService;
-    editService?: EditService;
-    rowEditService?: RowEditService;
-    alignedGridsService?: AlignedGridsService;
-    paginationAutoPageSizeService?: PaginationAutoPageSizeService;
-    paginationService?: PaginationService;
-    pageBoundsService: PageBoundsService;
-    apiFunctionService: ApiFunctionService;
-    detailGridApiService?: IDetailGridApiService;
-    gridDestroyService: GridDestroyService;
-    expansionService?: IExpansionService;
-    sideBarService?: ISideBarService;
+    contextMenuSvc?: IContextMenuService;
+    editSvc?: EditService;
+    rowEditSvc?: RowEditService;
+    alignedGridsSvc?: AlignedGridsService;
+    paginationAutoPageSizeSvc?: PaginationAutoPageSizeService;
+    pagination?: PaginationService;
+    pageBounds: PageBoundsService;
+    apiFunctionSvc: ApiFunctionService;
+    detailGridApiSvc?: IDetailGridApiService;
+    gridDestroySvc: GridDestroyService;
+    expansionSvc?: IExpansionService;
+    sideBar?: ISideBarService;
     ssrmTransactionManager?: IServerSideTransactionManager;
-    aggFuncService?: IAggFuncService;
-    advancedFilterService: IAdvancedFilterService;
+    aggFuncSvc?: IAggFuncService;
+    advancedFilter: IAdvancedFilterService;
     filterStage?: IRowNodeStage;
     sortStage?: IRowNodeStage;
     flattenStage?: IRowNodeStage;
@@ -285,23 +285,23 @@ export interface CoreBeanCollection {
     pivotStage?: IRowNodeStage;
     filterAggregatesStage?: IRowNodeStage;
     rowNodeSorter?: RowNodeSorter;
-    pivotColDefService?: IPivotColDefService;
-    chartService?: IChartService;
-    aggColumnNameService?: IAggColumnNameService;
-    renderStatusService?: IRenderStatusService;
-    rowDragService?: RowDragService;
-    stickyRowService?: StickyRowService;
-    groupHideOpenParentsService?: IGroupHideOpenParentsService;
-    filterValueService?: FilterValueService;
-    clientSideNodeManager?: IClientSideNodeManager;
-    clientSidePathTreeNodeManager?: IClientSideNodeManager;
-    clientSideChildrenTreeNodeManager?: IClientSideNodeManager;
-    cellFlashService?: CellFlashService;
-    masterDetailService?: IMasterDetailService;
-    tooltipService?: TooltipService;
-    columnGroupService?: ColumnGroupService;
-    rowAutoHeightService?: RowAutoHeightService;
-    rowChildrenService?: IRowChildrenService;
+    pivotColDefSvc?: IPivotColDefService;
+    chartSvc?: IChartService;
+    aggColumnNameSvc?: IAggColumnNameService;
+    renderStatus?: IRenderStatusService;
+    rowDragSvc?: RowDragService;
+    stickyRowSvc?: StickyRowService;
+    groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
+    filterValueSvc?: FilterValueService;
+    csrmNodeSvc?: IClientSideNodeManager;
+    csrmPathTreeNodeSvc?: IClientSideNodeManager;
+    csrmChildrenTreeNodeSvc?: IClientSideNodeManager;
+    cellFlashSvc?: CellFlashService;
+    masterDetailSvc?: IMasterDetailService;
+    tooltipSvc?: TooltipService;
+    columnGroupSvc?: ColumnGroupService;
+    rowAutoHeight?: RowAutoHeightService;
+    rowChildrenSvc?: IRowChildrenService;
 }
 
 export type BeanCollection = CoreBeanCollection & {
@@ -332,26 +332,26 @@ export class Context extends GenericContext<BeanName, BeanCollection> {
 
 export type BeanName =
     | 'advancedFilterExpressionService'
-    | 'advancedFilterService'
+    | 'advancedFilter'
     | 'advancedSettingsMenuFactory'
-    | 'aggFuncService'
+    | 'aggFuncSvc'
     | 'agComponentUtils'
-    | 'aggColumnNameService'
+    | 'aggColumnNameSvc'
     | 'aggregationStage'
-    | 'alignedGridsService'
-    | 'animationFrameService'
-    | 'apiFunctionService'
-    | 'ariaAnnouncementService'
-    | 'apiEventService'
-    | 'autoColService'
+    | 'alignedGridsSvc'
+    | 'animationFrameSvc'
+    | 'apiFunctionSvc'
+    | 'ariaAnnounce'
+    | 'apiEventSvc'
+    | 'autoColSvc'
     | 'autoWidthCalculator'
     | 'beans'
     | 'cellEditorFactory'
-    | 'cellFlashService'
-    | 'cellNavigationService'
+    | 'cellFlashSvc'
+    | 'cellNavigation'
     | 'cellRendererFactory'
     | 'cellRendererService'
-    | 'cellStyleService'
+    | 'cellStyles'
     | 'changeDetectionService'
     | 'chartColumnService'
     | 'chartCrossFilterService'
@@ -359,113 +359,113 @@ export type BeanName =
     | 'chartMenuListFactory'
     | 'chartMenuService'
     | 'chartTranslationService'
-    | 'chartService'
-    | 'clipboardService'
-    | 'columnAnimationService'
-    | 'columnAutosizeService'
+    | 'chartSvc'
+    | 'clipboardSvc'
+    | 'colAnimation'
+    | 'colAutosize'
     | 'columnChooserFactory'
     | 'columnController'
-    | 'columnDefFactory'
+    | 'colDefFactory'
     | 'columnEditorFactory'
-    | 'columnFactory'
-    | 'columnFilterService'
-    | 'columnFlexService'
-    | 'columnGroupService'
-    | 'columnHoverService'
+    | 'colFactory'
+    | 'colFilter'
+    | 'colFlex'
+    | 'columnGroupSvc'
+    | 'colHover'
     | 'columnMenuFactory'
-    | 'columnModel'
-    | 'columnMoveService'
-    | 'columnNameService'
+    | 'colModel'
+    | 'colMoves'
+    | 'colNames'
     | 'columnPositionService'
-    | 'columnResizeService'
-    | 'columnStateService'
+    | 'colResize'
+    | 'colState'
     | 'columnToolPanelFactory'
     | 'columnUtils'
-    | 'columnViewportService'
-    | 'pivotResultColsService'
+    | 'colViewport'
+    | 'pivotResultCols'
     | 'context'
-    | 'contextMenuService'
-    | 'selectionColService'
-    | 'ctrlsService'
+    | 'contextMenuSvc'
+    | 'selectionColSvc'
+    | 'ctrlsSvc'
     | 'csvCreator'
-    | 'dataTypeService'
-    | 'visibleColsService'
-    | 'detailGridApiService'
-    | 'dragAndDropService'
-    | 'dragService'
-    | 'editService'
+    | 'dataTypeSvc'
+    | 'visibleCols'
+    | 'detailGridApiSvc'
+    | 'dragAndDrop'
+    | 'dragSvc'
+    | 'editSvc'
     | 'excelCreator'
     | 'enterpriseMenuFactory'
     | 'environment'
-    | 'eventService'
+    | 'eventSvc'
     | 'eGridDiv'
     | 'enterpriseChartProxyFactory'
-    | 'expansionService'
-    | 'expressionService'
+    | 'expansionSvc'
+    | 'expressionSvc'
     | 'filterAggregatesStage'
     | 'filterManager'
     | 'filterMenuFactory'
     | 'filterStage'
-    | 'filterValueService'
+    | 'filterValueSvc'
     | 'flashCellService'
     | 'flattenStage'
-    | 'focusService'
-    | 'funcColsService'
+    | 'focusSvc'
+    | 'funcColsSvc'
     | 'frameworkComponentWrapper'
     | 'frameworkOverrides'
     | 'globalEventListener'
     | 'globalSyncEventListener'
     | 'gridApi'
-    | 'gridDestroyService'
+    | 'gridDestroySvc'
     | 'gridOptions'
     | 'gos'
     | 'gridOptionsWrapper'
     | 'gridSerializer'
-    | 'groupHideOpenParentsService'
+    | 'groupHideOpenParentsSvc'
     | 'groupStage'
-    | 'headerNavigationService'
-    | 'horizontalResizeService'
+    | 'headerNavigation'
+    | 'horizontalResizeSvc'
     | 'lazyBlockLoadingService'
     | 'licenseManager'
-    | 'localeService'
+    | 'localeSvc'
     | 'loggerFactory'
-    | 'masterDetailService'
+    | 'masterDetailSvc'
     | 'menuItemMapper'
-    | 'menuService'
+    | 'menuSvc'
     | 'menuUtils'
     | 'modelItemUtils'
-    | 'mouseEventService'
-    | 'navigationService'
-    | 'overlayService'
-    | 'paginationAutoPageSizeService'
-    | 'paginationService'
+    | 'mouseEventSvc'
+    | 'navigation'
+    | 'overlays'
+    | 'paginationAutoPageSizeSvc'
+    | 'pagination'
     | 'pinnedRowModel'
-    | 'pinnedColumnService'
-    | 'pivotColDefService'
+    | 'pinnedCols'
+    | 'pivotColDefSvc'
     | 'pivotStage'
-    | 'popupService'
-    | 'quickFilterService'
-    | 'rangeService'
+    | 'popupSvc'
+    | 'quickFilter'
+    | 'rangeSvc'
     | 'pageBoundsListener'
-    | 'pageBoundsService'
+    | 'pageBounds'
     | 'registry'
-    | 'renderStatusService'
-    | 'rowAutoHeightService'
-    | 'rowChildrenService'
-    | 'rowContainerHeightService'
-    | 'rowDragService'
-    | 'rowEditService'
+    | 'renderStatus'
+    | 'rowAutoHeight'
+    | 'rowChildrenSvc'
+    | 'rowContainerHeight'
+    | 'rowDragSvc'
+    | 'rowEditSvc'
     | 'rowModel'
     | 'rowNodeBlockLoader'
     | 'rowNodeSorter'
     | 'rowRenderer'
-    | 'rowStyleService'
-    | 'scrollVisibleService'
+    | 'rowStyleSvc'
+    | 'scrollVisibleSvc'
     | 'selectionController'
-    | 'selectionService'
-    | 'showRowGroupColsService'
-    | 'sideBarService'
-    | 'sortController'
+    | 'selectionSvc'
+    | 'showRowGroupCols'
+    | 'sideBar'
+    | 'sortSvc'
     | 'sortStage'
     | 'sparklineTooltipSingleton'
     | 'ssrmBlockUtils'
@@ -477,19 +477,19 @@ export type BeanName =
     | 'ssrmStoreFactory'
     | 'ssrmStoreUtils'
     | 'ssrmTransactionManager'
-    | 'stateService'
+    | 'stateSvc'
     | 'statusBarService'
-    | 'stickyRowService'
-    | 'syncService'
+    | 'stickyRowSvc'
+    | 'syncSvc'
     | 'templateService'
     | 'toolPanelColDefService'
-    | 'tooltipService'
-    | 'undoRedoService'
-    | 'userComponentFactory'
+    | 'tooltipSvc'
+    | 'undoRedo'
+    | 'userCompFactory'
     | 'valueCache'
-    | 'valueService'
+    | 'valueSvc'
     | 'validationLogger'
-    | 'validationService'
-    | 'clientSideNodeManager'
-    | 'clientSidePathTreeNodeManager'
-    | 'clientSideChildrenTreeNodeManager';
+    | 'validation'
+    | 'csrmNodeSvc'
+    | 'csrmPathTreeNodeSvc'
+    | 'csrmChildrenTreeNodeSvc';

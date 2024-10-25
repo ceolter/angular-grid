@@ -13,14 +13,14 @@ import { BeanStub, _getRowNode, _warn } from 'ag-grid-community';
 export class ChartColumnService extends BeanStub implements NamedBean {
     beanName = 'chartColumnService' as const;
 
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
-    private valueService: ValueService;
+    private colModel: ColumnModel;
+    private colNames: ColumnNameService;
+    private valueSvc: ValueService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
-        this.valueService = beans.valueService;
+        this.colModel = beans.colModel;
+        this.colNames = beans.colNames;
+        this.valueSvc = beans.valueSvc;
     }
 
     private valueColsWithoutSeriesType: Set<string> = new Set();
@@ -34,23 +34,23 @@ export class ChartColumnService extends BeanStub implements NamedBean {
     }
 
     public getColumn(colId: string): AgColumn | null {
-        return this.columnModel.getColDefCol(colId);
+        return this.colModel.getColDefCol(colId);
     }
 
     public getAllDisplayedColumns(): AgColumn[] {
-        return this.beans.visibleColsService.allCols;
+        return this.beans.visibleCols.allCols;
     }
 
     public getColDisplayName(col: AgColumn, includePath?: boolean): string | null {
         const headerLocation = 'chart';
-        const columnDisplayName = this.columnNameService.getDisplayNameForColumn(col, headerLocation);
+        const columnDisplayName = this.colNames.getDisplayNameForColumn(col, headerLocation);
         if (includePath) {
             const displayNames = [columnDisplayName];
             const getDisplayName = (colGroup: AgColumnGroup | null) => {
                 if (!colGroup) {
                     return;
                 }
-                const colGroupName = this.columnNameService.getDisplayNameForColumnGroup(colGroup, headerLocation);
+                const colGroupName = this.colNames.getDisplayNameForColumnGroup(colGroup, headerLocation);
                 if (colGroupName?.length) {
                     displayNames.unshift(colGroupName);
                     getDisplayName(colGroup.getParent());
@@ -63,23 +63,23 @@ export class ChartColumnService extends BeanStub implements NamedBean {
     }
 
     public getRowGroupColumns(): AgColumn[] {
-        return this.beans.funcColsService.rowGroupCols;
+        return this.beans.funcColsSvc.rowGroupCols;
     }
 
     public getGroupDisplayColumns(): AgColumn[] {
-        return this.beans.showRowGroupColsService?.getShowRowGroupCols() ?? [];
+        return this.beans.showRowGroupCols?.getShowRowGroupCols() ?? [];
     }
 
     public isPivotMode(): boolean {
-        return this.columnModel.isPivotMode();
+        return this.colModel.isPivotMode();
     }
 
     public isPivotActive(): boolean {
-        return this.columnModel.isPivotActive();
+        return this.colModel.isPivotActive();
     }
 
     public getChartColumns(): { dimensionCols: Set<AgColumn>; valueCols: Set<AgColumn> } {
-        const gridCols = this.columnModel.getCols();
+        const gridCols = this.colModel.getCols();
 
         const dimensionCols = new Set<AgColumn>();
         const valueCols = new Set<AgColumn>();
@@ -135,7 +135,7 @@ export class ChartColumnService extends BeanStub implements NamedBean {
             return this.valueColsWithoutSeriesType.has(colId);
         }
 
-        let cellValue = this.valueService.getValue(col, row);
+        let cellValue = this.valueSvc.getValue(col, row);
 
         if (cellValue == null) {
             cellValue = this.extractLeafData(row, col);
@@ -161,7 +161,7 @@ export class ChartColumnService extends BeanStub implements NamedBean {
 
         for (let i = 0; i < row.allLeafChildren.length; i++) {
             const childRow = row.allLeafChildren[i];
-            const value = this.valueService.getValue(col, childRow);
+            const value = this.valueSvc.getValue(col, childRow);
 
             if (value != null) {
                 return value;

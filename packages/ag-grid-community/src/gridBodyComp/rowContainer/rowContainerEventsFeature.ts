@@ -64,30 +64,30 @@ function _normaliseQwertyAzerty(keyboardEvent: KeyboardEvent): string {
 }
 
 export class RowContainerEventsFeature extends BeanStub {
-    private mouseEventService: MouseEventService;
-    private contextMenuService?: IContextMenuService;
-    private navigationService?: NavigationService;
-    private focusService: FocusService;
-    private undoRedoService?: UndoRedoService;
-    private visibleColsService: VisibleColsService;
+    private mouseEventSvc: MouseEventService;
+    private contextMenuSvc?: IContextMenuService;
+    private navigation?: NavigationService;
+    private focusSvc: FocusService;
+    private undoRedo?: UndoRedoService;
+    private visibleCols: VisibleColsService;
     private rowModel: IRowModel;
     private pinnedRowModel?: PinnedRowModel;
-    private rangeService?: IRangeService;
-    private clipboardService?: IClipboardService;
-    private selectionService?: ISelectionService;
+    private rangeSvc?: IRangeService;
+    private clipboardSvc?: IClipboardService;
+    private selectionSvc?: ISelectionService;
 
     public wireBeans(beans: BeanCollection) {
-        this.mouseEventService = beans.mouseEventService;
-        this.contextMenuService = beans.contextMenuService;
-        this.navigationService = beans.navigationService;
-        this.focusService = beans.focusService;
-        this.undoRedoService = beans.undoRedoService;
-        this.visibleColsService = beans.visibleColsService;
+        this.mouseEventSvc = beans.mouseEventSvc;
+        this.contextMenuSvc = beans.contextMenuSvc;
+        this.navigation = beans.navigation;
+        this.focusSvc = beans.focusSvc;
+        this.undoRedo = beans.undoRedo;
+        this.visibleCols = beans.visibleCols;
         this.rowModel = beans.rowModel;
         this.pinnedRowModel = beans.pinnedRowModel;
-        this.rangeService = beans.rangeService;
-        this.clipboardService = beans.clipboardService;
-        this.selectionService = beans.selectionService;
+        this.rangeSvc = beans.rangeSvc;
+        this.clipboardSvc = beans.clipboardSvc;
+        this.selectionSvc = beans.selectionSvc;
     }
 
     private element: HTMLElement;
@@ -120,15 +120,15 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private processMouseEvent(eventName: string, mouseEvent: MouseEvent): void {
-        if (!this.mouseEventService.isEventFromThisGrid(mouseEvent) || _isStopPropagationForAgGrid(mouseEvent)) {
+        if (!this.mouseEventSvc.isEventFromThisGrid(mouseEvent) || _isStopPropagationForAgGrid(mouseEvent)) {
             return;
         }
 
         const rowComp = this.getRowForEvent(mouseEvent.target);
-        const cellCtrl = this.mouseEventService.getRenderedCellForEvent(mouseEvent)!;
+        const cellCtrl = this.mouseEventSvc.getRenderedCellForEvent(mouseEvent)!;
 
         if (eventName === 'contextmenu') {
-            this.contextMenuService?.handleContextMenuMouseEvent(mouseEvent, undefined, rowComp, cellCtrl);
+            this.contextMenuSvc?.handleContextMenuMouseEvent(mouseEvent, undefined, rowComp, cellCtrl);
         } else {
             if (cellCtrl) {
                 cellCtrl.onMouseEvent(eventName, mouseEvent);
@@ -148,9 +148,9 @@ export class RowContainerEventsFeature extends BeanStub {
         const touchListener = new TouchListener(this.element);
         const longTapListener = (event: LongTapEvent) => {
             const rowComp = this.getRowForEvent(event.touchEvent.target);
-            const cellComp = this.mouseEventService.getRenderedCellForEvent(event.touchEvent)!;
+            const cellComp = this.mouseEventSvc.getRenderedCellForEvent(event.touchEvent)!;
 
-            this.contextMenuService?.handleContextMenuMouseEvent(undefined, event.touchEvent, rowComp, cellComp);
+            this.contextMenuSvc?.handleContextMenuMouseEvent(undefined, event.touchEvent, rowComp, cellComp);
         };
 
         this.addManagedListeners(touchListener, { longTap: longTapListener });
@@ -200,7 +200,7 @@ export class RowContainerEventsFeature extends BeanStub {
         if (gridProcessingAllowed) {
             if (eventName === 'keydown') {
                 // first see if it's a scroll key, page up / down, home / end etc
-                const wasScrollKey = !editing && this.navigationService?.handlePageScrollingKey(keyboardEvent);
+                const wasScrollKey = !editing && this.navigation?.handlePageScrollingKey(keyboardEvent);
 
                 // if not a scroll key, then we pass onto cell
                 if (!wasScrollKey) {
@@ -217,13 +217,13 @@ export class RowContainerEventsFeature extends BeanStub {
         }
 
         if (eventName === 'keydown') {
-            this.eventService.dispatchEvent(cellCtrl.createEvent(keyboardEvent, 'cellKeyDown'));
+            this.eventSvc.dispatchEvent(cellCtrl.createEvent(keyboardEvent, 'cellKeyDown'));
         }
     }
 
     private processFullWidthRowKeyboardEvent(rowComp: RowCtrl, eventName: string, keyboardEvent: KeyboardEvent) {
         const rowNode = rowComp.getRowNode();
-        const focusedCell = this.focusService.getFocusedCell();
+        const focusedCell = this.focusSvc.getFocusedCell();
         const column = (focusedCell && focusedCell.column) as AgColumn;
         const gridProcessingAllowed = !_isUserSuppressingKeyboardEvent(this.gos, keyboardEvent, rowNode, column, false);
 
@@ -235,7 +235,7 @@ export class RowContainerEventsFeature extends BeanStub {
                     case KeyCode.PAGE_END:
                     case KeyCode.PAGE_UP:
                     case KeyCode.PAGE_DOWN:
-                        this.navigationService?.handlePageScrollingKey(keyboardEvent, true);
+                        this.navigation?.handlePageScrollingKey(keyboardEvent, true);
                         break;
 
                     case KeyCode.UP:
@@ -251,7 +251,7 @@ export class RowContainerEventsFeature extends BeanStub {
         }
 
         if (eventName === 'keydown') {
-            this.eventService.dispatchEvent(rowComp.createRowEvent('cellKeyDown', keyboardEvent));
+            this.eventSvc.dispatchEvent(rowComp.createRowEvent('cellKeyDown', keyboardEvent));
         }
     }
 
@@ -270,7 +270,7 @@ export class RowContainerEventsFeature extends BeanStub {
 
         // for copy / paste, we don't want to execute when the event
         // was from a child grid (happens in master detail)
-        if (!this.mouseEventService.isEventFromThisGrid(keyboardEvent)) {
+        if (!this.mouseEventSvc.isEventFromThisGrid(keyboardEvent)) {
             return;
         }
 
@@ -300,9 +300,9 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private onCtrlAndA(event: KeyboardEvent): void {
-        const { pinnedRowModel, rowModel, rangeService, selectionService, gos } = this;
+        const { pinnedRowModel, rowModel, rangeSvc, selectionSvc, gos } = this;
 
-        if (rangeService && _isCellSelectionEnabled(gos) && rowModel.isRowsToRender()) {
+        if (rangeSvc && _isCellSelectionEnabled(gos) && rowModel.isRowsToRender()) {
             const [isEmptyPinnedTop, isEmptyPinnedBottom] = [
                 pinnedRowModel?.isEmpty('top') ?? true,
                 pinnedRowModel?.isEmpty('bottom') ?? true,
@@ -320,12 +320,12 @@ export class RowContainerEventsFeature extends BeanStub {
                 rowEnd = pinnedRowModel?.getPinnedBottomRowCount() ?? 0 - 1;
             }
 
-            const allDisplayedColumns = this.visibleColsService.allCols;
+            const allDisplayedColumns = this.visibleCols.allCols;
             if (!allDisplayedColumns?.length) {
                 return;
             }
 
-            rangeService.setCellRange({
+            rangeSvc.setCellRange({
                 rowStartIndex: 0,
                 rowStartPinned: floatingStart,
                 rowEndIndex: rowEnd,
@@ -333,15 +333,15 @@ export class RowContainerEventsFeature extends BeanStub {
                 columnStart: allDisplayedColumns[0],
                 columnEnd: _last(allDisplayedColumns),
             });
-        } else if (selectionService) {
-            selectionService?.selectAllRowNodes({ source: 'keyboardSelectAll', selectAll: _getSelectAll(gos) });
+        } else if (selectionSvc) {
+            selectionSvc?.selectAllRowNodes({ source: 'keyboardSelectAll', selectAll: _getSelectAll(gos) });
         }
 
         event.preventDefault();
     }
 
     private onCtrlAndC(event: KeyboardEvent): void {
-        if (!this.clipboardService || this.gos.get('enableCellTextSelection')) {
+        if (!this.clipboardSvc || this.gos.get('enableCellTextSelection')) {
             return;
         }
 
@@ -352,15 +352,11 @@ export class RowContainerEventsFeature extends BeanStub {
         }
 
         event.preventDefault();
-        this.clipboardService.copyToClipboard();
+        this.clipboardSvc.copyToClipboard();
     }
 
     private onCtrlAndX(event: KeyboardEvent): void {
-        if (
-            !this.clipboardService ||
-            this.gos.get('enableCellTextSelection') ||
-            this.gos.get('suppressCutToClipboard')
-        ) {
+        if (!this.clipboardSvc || this.gos.get('enableCellTextSelection') || this.gos.get('suppressCutToClipboard')) {
             return;
         }
 
@@ -371,7 +367,7 @@ export class RowContainerEventsFeature extends BeanStub {
         }
 
         event.preventDefault();
-        this.clipboardService.cutToClipboard(undefined, 'ui');
+        this.clipboardSvc.cutToClipboard(undefined, 'ui');
     }
 
     private onCtrlAndV(event: KeyboardEvent): void {
@@ -380,32 +376,32 @@ export class RowContainerEventsFeature extends BeanStub {
         if (cellCtrl?.isEditing() || rowCtrl?.isEditing()) {
             return;
         }
-        if (this.clipboardService && !this.gos.get('suppressClipboardPaste')) {
-            this.clipboardService.pasteFromClipboard();
+        if (this.clipboardSvc && !this.gos.get('suppressClipboardPaste')) {
+            this.clipboardSvc.pasteFromClipboard();
         }
     }
 
     private onCtrlAndD(event: KeyboardEvent): void {
-        if (this.clipboardService && !this.gos.get('suppressClipboardPaste')) {
-            this.clipboardService.copyRangeDown();
+        if (this.clipboardSvc && !this.gos.get('suppressClipboardPaste')) {
+            this.clipboardSvc.copyRangeDown();
         }
         event.preventDefault();
     }
 
     private onCtrlAndZ(event: KeyboardEvent): void {
-        if (!this.gos.get('undoRedoCellEditing') || !this.undoRedoService) {
+        if (!this.gos.get('undoRedoCellEditing') || !this.undoRedo) {
             return;
         }
         event.preventDefault();
 
         if (event.shiftKey) {
-            this.undoRedoService.redo('ui');
+            this.undoRedo.redo('ui');
         } else {
-            this.undoRedoService.undo('ui');
+            this.undoRedo.undo('ui');
         }
     }
 
     private onCtrlAndY(): void {
-        this.undoRedoService?.redo('ui');
+        this.undoRedo?.redo('ui');
     }
 }

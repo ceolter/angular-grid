@@ -8,7 +8,7 @@ export class FlatSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
     private displayedKeys: (string | null)[] = [];
 
     constructor(
-        private readonly valueService: ValueService,
+        private readonly valueSvc: ValueService,
         private readonly valueFormatter: ((params: ValueFormatterParams) => string) | undefined,
         private readonly formatter: TextFormatter,
         private readonly column: AgColumn
@@ -38,7 +38,7 @@ export class FlatSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
                 }
             } else {
                 const value = getValue(key);
-                const valueFormatterValue = this.valueService.formatValue(
+                const valueFormatterValue = this.valueSvc.formatValue(
                     this.column,
                     null,
                     value,

@@ -24,10 +24,10 @@ export enum EXPAND_STATE {
 }
 export type AgFiltersToolPanelHeaderEvent = 'collapseAll' | 'expandAll' | 'searchChanged';
 export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeaderEvent> {
-    private columnModel: ColumnModel;
+    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
+        this.colModel = beans.colModel;
     }
 
     private readonly eExpand: Element = RefPlaceholder;
@@ -69,7 +69,7 @@ export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeader
     public init(params: ToolPanelFiltersCompParams): void {
         this.params = params;
 
-        if (this.columnModel.ready) {
+        if (this.colModel.ready) {
             this.showOrHideOptions();
         }
     }
@@ -91,7 +91,7 @@ export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeader
         this.eFilterTextField.setInputPlaceholder(translate('searchOoo', 'Search...'));
 
         const isFilterGroupPresent = (col: AgColumn) => col.getOriginalParent() && col.isFilterAllowed();
-        const filterGroupsPresent = this.columnModel.getCols().some(isFilterGroupPresent);
+        const filterGroupsPresent = this.colModel.getCols().some(isFilterGroupPresent);
 
         _setDisplayed(this.eFilterTextField.getGui(), showFilterSearch);
         _setDisplayed(this.eExpand, showExpand && filterGroupsPresent);

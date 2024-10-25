@@ -81,7 +81,7 @@ export function createXlsxExcel(
 
     // Table export is not compatible with pivot mode nor master/detail features
     if (config.exportAsExcelTable) {
-        if (config.columnModel.isPivotActive()) {
+        if (config.colModel.isPivotActive()) {
             showExcelTableNonCompatibleFeaturesWarning('pivot mode');
             newConfig.exportAsExcelTable = false;
         }
@@ -142,7 +142,7 @@ function processTableConfig(worksheet: ExcelWorksheet, config: ExcelGridSerializ
     const sheetIndex = XLSX_SHEET_NAMES.length - 1;
     const { table } = worksheet;
     const { rows, columns } = table;
-    const headerRowCount = _getHeaderRowCount(config.columnModel);
+    const headerRowCount = _getHeaderRowCount(config.colModel);
     const tableHeaderRowIndex: number = headerRowCount - 1; // Assuming that header starts at row 0
     const tableRowCount = rows.length;
     const tableColCount = columns.length;

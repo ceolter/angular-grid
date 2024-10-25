@@ -4,7 +4,8 @@ import { Params } from './Params';
 import type { Part } from './Part';
 import { asPartImpl } from './Part';
 import type { CoreParams } from './core/core-css';
-import { coreCSS, coreDefaults } from './core/core-css';
+import { coreDefaults } from './core/core-css';
+import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './inject';
 import type { CssFragment } from './theme-types';
 import { paramValueToCss } from './theme-types';
 import { paramToVariableName } from './theme-utils';
@@ -38,7 +39,6 @@ let customThemeCounter = 0;
 export const createTheme = (id: string = `customTheme${++customThemeCounter}`): Theme<CoreParams> =>
     /*#__PURE__*/ new ThemeImpl(id);
 
-const IS_SSR = typeof window !== 'object' || !window?.document?.fonts?.forEach;
 let themeClassCounter = 0;
 let uninstalledLegacyCSS = false;
 
@@ -60,8 +60,8 @@ class ThemeImpl<TParams = unknown> implements Theme {
         return new ThemeImpl(this.id, this.dependencies, this.params.withParams(params, mode));
     }
 
-    getCSS(): string {
-        return [coreCSS, ...this._getCSSChunks().map((chunk) => chunk.css)].join('\n\n');
+    getParamsCSS(): string {
+        return makeParamsChunk(this).css;
     }
 
     private useCount = 0;
@@ -79,12 +79,13 @@ class ThemeImpl<TParams = unknown> implements Theme {
         --this.useCount;
         if (this.useCount === 0) {
             // delay slightly to give the new theme time to load before removing the old styles
-            setTimeout(() => {
-                // theme might have been used again while we were waiting
-                if (this.useCount === 0) {
-                    uninstallThemeCSS(this.getCssClass(), this._installRoot);
-                }
-            }, 1000);
+            // TODO restore removal of unused theme CSS after refactoring parts to use global CSS
+            // setTimeout(() => {
+            //     // theme might have been used again while we were waiting
+            //     if (this.useCount === 0) {
+            //         uninstallThemeCSS(this.getCssClass(), this._installRoot);
+            //     }
+            // }, 1000);
         }
     }
 
@@ -108,25 +109,13 @@ class ThemeImpl<TParams = unknown> implements Theme {
         return (this._getParamsCache = mergedParams);
     }
 
-    private _installRoot: HTMLElement;
     private async _install({ container, loadThemeGoogleFonts }: GridThemeUseArgs) {
         if (!uninstalledLegacyCSS) {
             uninstalledLegacyCSS = true;
-            // Remove the CSS from @ag-grid-community/styles that is
-            // automatically injected by the UMD bundle
-            uninstallThemeCSS('legacy', document.head);
+            uninstallLegacyCSS();
         }
 
-        let root = container.getRootNode() as HTMLElement;
-        if (!(root instanceof ShadowRoot)) {
-            root = document.head;
-        }
-        this._installRoot = root;
-
-        const loadPromises: Promise<void>[] = [];
-
-        // Core CSS is loaded once per shadow root and shared between themes
-        loadPromises.push(installCSS({ css: coreCSS, part: 'core', root }));
+        _injectCoreAndModuleCSS(container);
 
         const googleFontsUsed = getGoogleFontsUsed(this);
         if (googleFontsUsed.length > 0) {
@@ -142,10 +131,8 @@ class ThemeImpl<TParams = unknown> implements Theme {
         }
 
         for (const chunk of this._getCSSChunks()) {
-            installCSS({ css: chunk.css, part: chunk.id, scope: this.getCssClass(), root });
+            _injectGlobalCSS(chunk.css, container, chunk.id);
         }
-
-        return Promise.all(loadPromises);
     }
 
     private _getFlatUnitsCache?: PartOrTheme[];
@@ -175,7 +162,7 @@ class ThemeImpl<TParams = unknown> implements Theme {
 
         const chunks: ThemeCssChunk[] = [];
 
-        chunks.push(makeVariablesChunk(this));
+        chunks.push(makeParamsChunk(this));
 
         for (const part of this._getFlatUnits()) {
             if (part.css && part.css.length > 0) {
@@ -206,7 +193,7 @@ type PartOrTheme = {
     readonly css?: ReadonlyArray<CssFragment>;
 };
 
-const makeVariablesChunk = (themeArg: Theme): ThemeCssChunk => {
+const makeParamsChunk = (themeArg: Theme): ThemeCssChunk => {
     // Ensure that every variable has a value set on root elements ("root"
     // elements are those containing grid UI, e.g. ag-root-wrapper and
     // ag-popup)
@@ -258,7 +245,7 @@ const makeVariablesChunk = (themeArg: Theme): ThemeCssChunk => {
     css += `:has(> ${rootSelector}):not(${rootSelector}) {\n${inheritanceCss}}\n`;
     return {
         css,
-        id: 'variables',
+        id: 'variables:' + theme.getCssClass(),
     };
 };
 
@@ -275,46 +262,10 @@ const getGoogleFontsUsed = (theme: ThemeImpl): string[] =>
         )
     ).sort();
 
-type InstallCSSArgs = {
-    root: HTMLElement;
-    css: string;
-    part: string;
-    scope?: string;
-};
-
-const installCSS = async ({ root, part, scope, css }: InstallCSSArgs) => {
-    let selector = `:scope > style[data-ag-part="${part}"]`;
-    if (scope) {
-        selector += `[data-ag-scope="${scope}"]`;
-    }
-    let style: AnnotatedStyleElement | null = root.querySelector(selector);
-    if (!style) {
-        style = document.createElement('style');
-        style.dataset.agPart = part;
-        if (scope) {
-            style.dataset.agScope = scope;
-        }
-        // insert <style> elements at the start of the head so that
-        // application stylesheets take precedence
-        const existingStyles = root.querySelectorAll(':scope > style[data-ag-part]');
-        const lastExistingStyle = existingStyles[existingStyles.length - 1];
-        if (lastExistingStyle) {
-            lastExistingStyle.insertAdjacentElement('afterend', style);
-        } else if (root.firstElementChild) {
-            root.firstElementChild.insertAdjacentElement('beforebegin', style);
-        } else {
-            root.appendChild(style);
-        }
-    }
-    if (style._agTextContent !== css) {
-        style.textContent = css;
-        style._agTextContent = css;
-        return resolveOnLoad(style);
-    }
-};
-
-const uninstallThemeCSS = (scope: string, root: HTMLElement) => {
-    for (const style of Array.from(root.querySelectorAll(`:scope > style[data-ag-scope="${scope}"]`))) {
+// Remove the CSS from @ag-grid-community/styles that is automatically injected
+// by the UMD bundle
+const uninstallLegacyCSS = () => {
+    for (const style of Array.from(document.head.querySelectorAll('style[data-ag-scope="legacy"]'))) {
         style.remove();
     }
 };
@@ -327,27 +278,14 @@ const loadGoogleFont = async (font: string) => {
     const css = `@import url('https://${googleFontsDomain}/css2?family=${encodeURIComponent(font)}:wght@100;200;300;400;500;600;700;800;900&display=swap');\n`;
     // fonts are always installed in the document head, they are inherited in
     // shadow DOM without the need for separate installation
-    return installCSS({ css, part: `googleFont:${font}`, root: document.head });
+    _injectGlobalCSS(css, document.head, `googleFont:${font}`);
 };
 
 const googleFontsDomain = 'fonts.googleapis.com';
 
-const resolveOnLoad = (element: HTMLStyleElement) =>
-    new Promise<void>((resolve) => {
-        const handler = () => {
-            element.removeEventListener('load', handler);
-            resolve();
-        };
-        element.addEventListener('load', handler);
-    });
-
 type ThemeCssChunk = {
     css: string;
     id: string;
-};
-
-type AnnotatedStyleElement = HTMLStyleElement & {
-    _agTextContent?: string;
 };
 
 const describeValue = (value: any): string => {

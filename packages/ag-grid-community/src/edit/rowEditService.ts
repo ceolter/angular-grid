@@ -5,7 +5,7 @@ import type { CellCtrl } from '../rendering/cell/cellCtrl';
 import type { RowCtrl } from '../rendering/row/rowCtrl';
 
 export class RowEditService extends BeanStub implements NamedBean {
-    beanName = 'rowEditService' as const;
+    beanName = 'rowEditSvc' as const;
 
     public startEditing(
         rowCtrl: RowCtrl,
@@ -46,7 +46,7 @@ export class RowEditService extends BeanStub implements NamedBean {
         }
 
         if (fireRowEditEvent) {
-            this.eventService.dispatchEvent(rowCtrl.createRowEvent('rowValueChanged'));
+            this.eventSvc.dispatchEvent(rowCtrl.createRowEvent('rowValueChanged'));
         }
 
         if (isRowEdit) {
@@ -64,6 +64,6 @@ export class RowEditService extends BeanStub implements NamedBean {
             ? rowCtrl.createRowEvent('rowEditingStarted')
             : rowCtrl.createRowEvent('rowEditingStopped');
 
-        this.eventService.dispatchEvent(event);
+        this.eventSvc.dispatchEvent(event);
     }
 }

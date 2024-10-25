@@ -23,20 +23,20 @@ import type {
 } from './filterExpressionUtils';
 
 export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvancedFilterService {
-    beanName = 'advancedFilterService' as const;
+    beanName = 'advancedFilter' as const;
 
-    private valueService: ValueService;
-    private columnModel: ColumnModel;
-    private dataTypeService?: DataTypeService;
+    private valueSvc: ValueService;
+    private colModel: ColumnModel;
+    private dataTypeSvc?: DataTypeService;
     private advancedFilterExpressionService: AdvancedFilterExpressionService;
-    private filterValueService: FilterValueService;
+    private filterValueSvc: FilterValueService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.valueService = beans.valueService;
-        this.columnModel = beans.columnModel;
-        this.dataTypeService = beans.dataTypeService;
+        this.valueSvc = beans.valueSvc;
+        this.colModel = beans.colModel;
+        this.dataTypeSvc = beans.dataTypeSvc;
         this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
-        this.filterValueService = beans.filterValueService!;
+        this.filterValueSvc = beans.filterValueSvc!;
     }
 
     private enabled: boolean;
@@ -57,8 +57,8 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
 
         this.expressionProxy = {
             getValue: (colId, node) => {
-                const column = this.columnModel.getColDefCol(colId);
-                return column ? this.filterValueService.getValue(column, node) : undefined;
+                const column = this.colModel.getColDefCol(colId);
+                return column ? this.filterValueSvc.getValue(column, node) : undefined;
             },
         };
 
@@ -128,9 +128,9 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
 
         return new FilterExpressionParser({
             expression,
-            columnModel: this.columnModel,
-            dataTypeService: this.dataTypeService,
-            valueService: this.valueService,
+            colModel: this.colModel,
+            dataTypeSvc: this.dataTypeSvc,
+            valueSvc: this.valueSvc,
             advancedFilterExpressionService: this.advancedFilterExpressionService,
         });
     }
@@ -162,7 +162,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
         }
         this.enabled = enabled && isValidRowModel;
         if (!silent && this.enabled !== previousValue) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'advancedFilterEnabledChanged',
                 enabled: this.enabled,
             });
@@ -226,7 +226,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
     }
 
     private onNewColumnsLoaded(event: NewColumnsLoadedEvent): void {
-        if (event.source !== 'gridInitializing' || !this.dataTypeService?.isPendingInference()) {
+        if (event.source !== 'gridInitializing' || !this.dataTypeSvc?.isPendingInference()) {
             return;
         }
 

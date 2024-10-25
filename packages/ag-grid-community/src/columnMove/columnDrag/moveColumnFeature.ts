@@ -26,20 +26,20 @@ const SCROLL_ACCELERATION_RATE = 5;
 const SCROLL_TIME_INTERVAL = 100;
 
 export class MoveColumnFeature extends BeanStub implements DropListener {
-    private columnModel: ColumnModel;
-    private visibleColsService: VisibleColsService;
-    private columnMoveService: ColumnMoveService;
-    private dragAndDropService: DragAndDropService;
-    private ctrlsService: CtrlsService;
-    private pinnedColumnService?: PinnedColumnService;
+    private colModel: ColumnModel;
+    private visibleCols: VisibleColsService;
+    private colMoves: ColumnMoveService;
+    private dragAndDrop: DragAndDropService;
+    private ctrlsSvc: CtrlsService;
+    private pinnedCols?: PinnedColumnService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnModel = beans.columnModel;
-        this.visibleColsService = beans.visibleColsService;
-        this.columnMoveService = beans.columnMoveService!;
-        this.dragAndDropService = beans.dragAndDropService!;
-        this.ctrlsService = beans.ctrlsService;
-        this.pinnedColumnService = beans.pinnedColumnService;
+        this.colModel = beans.colModel;
+        this.visibleCols = beans.visibleCols;
+        this.colMoves = beans.colMoves!;
+        this.dragAndDrop = beans.dragAndDrop!;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.pinnedCols = beans.pinnedCols;
     }
 
     private gridBodyCon: GridBodyCtrl;
@@ -68,7 +68,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     }
 
     public postConstruct(): void {
-        this.ctrlsService.whenReady(this, (p) => {
+        this.ctrlsSvc.whenReady(this, (p) => {
             this.gridBodyCon = p.gridBodyCtrl;
         });
     }
@@ -146,13 +146,13 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             return;
         }
 
-        const { pinned, gos, ctrlsService } = this;
+        const { pinned, gos, ctrlsSvc } = this;
 
         const mouseX = normaliseX({
             x: draggingEvent.x,
             pinned,
             gos,
-            ctrlsService,
+            ctrlsSvc,
         });
 
         // if the user is dragging into the panel, ie coming from the side panel into the main grid,
@@ -193,7 +193,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         }
 
         const allowedCols = columns.filter((c) => !c.getColDef().lockVisible);
-        this.columnModel.setColsVisible(allowedCols, visible, source);
+        this.colModel.setColsVisible(allowedCols, visible, source);
     }
 
     private finishColumnMoving(): void {
@@ -205,7 +205,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
 
         const { columns, toIndex } = this.lastMovedInfo;
 
-        this.columnMoveService.moveColumns(columns, toIndex, 'uiColumnMoved', true);
+        this.colMoves.moveColumns(columns, toIndex, 'uiColumnMoved', true);
     }
 
     private handleColumnDragWhileSuppressingMovement(
@@ -239,7 +239,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
                 fromLeft,
             });
         } else {
-            if (!this.dragAndDropService.isDropZoneWithinThisGrid(draggingEvent)) {
+            if (!this.dragAndDrop.isDropZoneWithinThisGrid(draggingEvent)) {
                 return;
             }
             this.highlightHoveredColumn(allMovingColumns, mouseX);
@@ -307,7 +307,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         fakeEvent: boolean;
     }): ColumnMoveParams {
         const { allMovingColumns, isFromHeader, xPosition, fromLeft, fromEnter, fakeEvent } = params;
-        const { pinned, gos, columnModel, columnMoveService, visibleColsService } = this;
+        const { pinned, gos, colModel, colMoves, visibleCols } = this;
 
         return {
             allMovingColumns,
@@ -318,9 +318,9 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             fromEnter,
             fakeEvent,
             gos,
-            columnModel,
-            columnMoveService,
-            visibleColsService,
+            colModel,
+            colMoves,
+            visibleCols,
         };
     }
 
@@ -357,9 +357,9 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     }
 
     private highlightHoveredColumn(movingColumns: AgColumn[], mouseX: number) {
-        const { gos, columnModel } = this;
+        const { gos, colModel } = this;
         const isRtl = gos.get('enableRtl');
-        const consideredColumns = columnModel
+        const consideredColumns = colModel
             .getCols()
             .filter((col) => col.isVisible() && col.getPinned() === this.pinned);
 
@@ -437,7 +437,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         allMovingColumns: AgColumn[],
         isAttemptingToPin: boolean
     ): { fromLeft: boolean; xPosition: number } | undefined {
-        const { gos, visibleColsService } = this;
+        const { gos, visibleCols } = this;
         const isRtl = gos.get('enableRtl');
 
         const { firstMovingCol, column, position } = this.getColumnMoveAndTargetInfo(
@@ -450,7 +450,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             return;
         }
 
-        const visibleColumns = visibleColsService.allCols;
+        const visibleColumns = visibleCols.allCols;
         const movingColIndex = visibleColumns.indexOf(firstMovingCol);
         const targetIndex = visibleColumns.indexOf(column!);
         const isBefore = (position === ColumnHighlightPosition.Before) !== isRtl;
@@ -528,7 +528,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     }
 
     private getNormalisedColumnLeft(col: AgColumn, padding: number, isRtl: boolean): number | null {
-        const { gos, ctrlsService } = this;
+        const { gos, ctrlsSvc } = this;
         const left = col.getLeft();
 
         if (left == null) {
@@ -543,7 +543,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             useHeaderRow: isRtl,
             skipScrollPadding: true,
             gos,
-            ctrlsService,
+            ctrlsSvc,
         });
     }
 
@@ -601,7 +601,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
 
         // scroll if the mouse has gone outside the grid (or just outside the scrollable part if pinning)
         // putting in 50 buffer, so even if user gets to edge of grid, a scroll will happen
-        const centerCtrl = this.ctrlsService.get('center');
+        const centerCtrl = this.ctrlsSvc.get('center');
         const firstVisiblePixel = centerCtrl.getCenterViewportScrollLeft();
         const lastVisiblePixel = firstVisiblePixel + centerCtrl.getCenterWidth();
 
@@ -628,7 +628,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         this.intervalCount = 0;
         this.failedMoveAttempts = 0;
         this.movingIntervalId = window.setInterval(this.moveInterval.bind(this), SCROLL_TIME_INTERVAL);
-        this.dragAndDropService.getDragAndDropImageComponent()?.setIcon(this.needToMoveLeft ? 'left' : 'right', true);
+        this.dragAndDrop.getDragAndDropImageComponent()?.setIcon(this.needToMoveLeft ? 'left' : 'right', true);
     }
 
     private ensureIntervalCleared(): void {
@@ -639,7 +639,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         window.clearInterval(this.movingIntervalId);
         this.movingIntervalId = null;
         this.failedMoveAttempts = 0;
-        this.dragAndDropService.getDragAndDropImageComponent()?.setIcon(this.getIconName());
+        this.dragAndDrop.getDragAndDropImageComponent()?.setIcon(this.getIconName());
     }
 
     private moveInterval(): void {
@@ -673,7 +673,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
                 return;
             }
 
-            this.dragAndDropService.getDragAndDropImageComponent()?.setIcon('pinned');
+            this.dragAndDrop.getDragAndDropImageComponent()?.setIcon('pinned');
 
             if (!this.gos.get('suppressMoveWhenColumnDragging')) {
                 const columns = this.lastDraggingEvent?.dragItem.columns as AgColumn[] | undefined;
@@ -707,10 +707,10 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             pinned = this.getPinDirection();
         }
 
-        this.pinnedColumnService?.setColsPinned(allowedCols, pinned, 'uiColumnDragged');
+        this.pinnedCols?.setColsPinned(allowedCols, pinned, 'uiColumnDragged');
 
         if (fromMoving) {
-            this.dragAndDropService.nudge();
+            this.dragAndDrop.nudge();
         }
 
         return allowedCols.length;

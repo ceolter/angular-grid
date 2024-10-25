@@ -15,19 +15,20 @@ import { RefPlaceholder } from '../widgets/component';
 import { TabGuardComp } from '../widgets/tabGuardComp';
 import type { PageSizeSelectorComp } from './pageSizeSelector/pageSizeSelectorComp';
 import { PageSizeSelectorSelector } from './pageSizeSelector/pageSizeSelectorComp';
+import { paginationCompCSS } from './paginationComp.css-GENERATED';
 import type { PaginationService } from './paginationService';
 
 export class PaginationComp extends TabGuardComp implements FocusableContainer {
     private rowModel: IRowModel;
-    private paginationService: PaginationService;
-    private focusService: FocusService;
-    private ariaAnnouncementService: AriaAnnouncementService;
+    private pagination: PaginationService;
+    private focusSvc: FocusService;
+    private ariaAnnounce: AriaAnnouncementService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
-        this.paginationService = beans.paginationService!;
-        this.focusService = beans.focusService;
-        this.ariaAnnouncementService = beans.ariaAnnouncementService;
+        this.pagination = beans.pagination!;
+        this.focusSvc = beans.focusSvc;
+        this.ariaAnnounce = beans.ariaAnnounce;
     }
 
     private readonly btFirst: HTMLElement = RefPlaceholder;
@@ -54,6 +55,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
     constructor() {
         super();
+        this.registerCSS(paginationCompCSS);
     }
 
     public postConstruct(): void {
@@ -84,7 +86,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
                 if (this.allowFocusInnerElement) {
                     this.tabGuardFeature.getTabGuardCtrl().focusInnerElement(fromBottom);
                 } else {
-                    this.focusService.focusGridInnerElement(fromBottom);
+                    this.focusSvc.focusGridInnerElement(fromBottom);
                 }
             },
             forceFocusOutWhenTabGuardsAreEmpty: true,
@@ -139,7 +141,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
                 });
             });
 
-            _addFocusableContainerListener(this, this.getGui(), this.focusService);
+            _addFocusableContainerListener(this, this.getGui(), this.focusSvc);
 
             this.areListenersSetup = true;
         }
@@ -147,7 +149,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
     private onBtFirst() {
         if (!this.previousAndFirstButtonsDisabled) {
-            this.paginationService.goToFirstPage();
+            this.pagination.goToFirstPage();
         }
     }
 
@@ -200,26 +202,26 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
     private onBtNext() {
         if (!this.nextButtonDisabled) {
-            this.paginationService.goToNextPage();
+            this.pagination.goToNextPage();
         }
     }
 
     private onBtPrevious() {
         if (!this.previousAndFirstButtonsDisabled) {
-            this.paginationService.goToPreviousPage();
+            this.pagination.goToPreviousPage();
         }
     }
 
     private onBtLast() {
         if (!this.lastButtonDisabled) {
-            this.paginationService.goToLastPage();
+            this.pagination.goToLastPage();
         }
     }
 
     private enableOrDisableButtons() {
-        const currentPage = this.paginationService.getCurrentPage();
+        const currentPage = this.pagination.getCurrentPage();
         const maxRowFound = this.rowModel.isLastRowIndexKnown();
-        const totalPages = this.paginationService.getTotalPages();
+        const totalPages = this.pagination.getTotalPages();
 
         this.previousAndFirstButtonsDisabled = currentPage === 0;
         this.toggleButtonDisabled(this.btFirst, this.previousAndFirstButtonsDisabled);
@@ -242,14 +244,14 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
     private isZeroPagesToDisplay() {
         const maxRowFound = this.rowModel.isLastRowIndexKnown();
-        const totalPages = this.paginationService.getTotalPages();
+        const totalPages = this.pagination.getTotalPages();
         return maxRowFound && totalPages === 0;
     }
 
     private updateLabels(): void {
         const lastPageFound = this.rowModel.isLastRowIndexKnown();
-        const totalPages = this.paginationService.getTotalPages();
-        const masterRowCount = this.paginationService.getMasterRowCount();
+        const totalPages = this.pagination.getTotalPages();
+        const masterRowCount = this.pagination.getMasterRowCount();
         const rowCount = lastPageFound ? masterRowCount : null;
 
         // When `pivotMode=true` and no grouping or value columns exist, a single 'hidden' group row (root node) is in
@@ -266,8 +268,8 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
             }
         }
 
-        const currentPage = this.paginationService.getCurrentPage();
-        const pageSize = this.paginationService.getPageSize();
+        const currentPage = this.pagination.getCurrentPage();
+        const pageSize = this.pagination.getPageSize();
 
         let startRow: any;
         let endRow: any;
@@ -333,11 +335,11 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
         if (ariaRowStatus !== this.ariaRowStatus) {
             this.ariaRowStatus = ariaRowStatus;
-            this.ariaAnnouncementService.announceValue(ariaRowStatus, 'paginationRow');
+            this.ariaAnnounce.announceValue(ariaRowStatus, 'paginationRow');
         }
         if (ariaPageStatus !== this.ariaPageStatus) {
             this.ariaPageStatus = ariaPageStatus;
-            this.ariaAnnouncementService.announceValue(ariaPageStatus, 'paginationPage');
+            this.ariaAnnounce.announceValue(ariaPageStatus, 'paginationPage');
         }
     }
 

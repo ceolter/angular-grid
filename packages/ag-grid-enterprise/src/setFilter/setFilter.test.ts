@@ -19,24 +19,24 @@ import { SetFilter } from './setFilter';
 import type { SetValueModel } from './setValueModel';
 
 let rowModel: jest.Mocked<IRowModel>;
-let eventService: jest.Mocked<EventService>;
-let valueService: jest.Mocked<ValueService>;
+let eventSvc: jest.Mocked<EventService>;
+let valueSvc: jest.Mocked<ValueService>;
 let context: jest.Mocked<Context>;
 let eMiniFilter: jest.Mocked<AgInputTextField>;
 let eGui: jest.Mocked<HTMLElement>;
 let eSelectAll: jest.Mocked<AgCheckbox>;
 let gridOptionsService: jest.Mocked<GridOptionsService>;
-let funcColsService: jest.Mocked<FuncColsService>;
+let funcColsSvc: jest.Mocked<FuncColsService>;
 let virtualList: jest.Mocked<VirtualList>;
 let setValueModel: jest.Mocked<SetValueModel<string>>;
 
 beforeEach(() => {
     rowModel = mock<IClientSideRowModel>('forEachLeafNode', 'isRowDataLoaded');
 
-    eventService = mock<EventService>('addEventListener');
+    eventSvc = mock<EventService>('addEventListener');
 
-    valueService = mock<ValueService>('formatValue');
-    valueService.formatValue.mockImplementation((_1, _2, value) => value);
+    valueSvc = mock<ValueService>('formatValue');
+    valueSvc.formatValue.mockImplementation((_1, _2, value) => value);
 
     context = mock<Context>('createBean');
     context.createBean.mockImplementation((bean) => bean);
@@ -62,8 +62,8 @@ beforeEach(() => {
     gridOptionsService = mock<GridOptionsService>('get', 'addPropertyEventListener');
     gridOptionsService.get.mockImplementation((prop) => (prop === 'rowModelType' ? 'clientSide' : undefined));
 
-    funcColsService = mock<FuncColsService>();
-    funcColsService.rowGroupCols = [];
+    funcColsSvc = mock<FuncColsService>();
+    funcColsSvc.rowGroupCols = [];
 
     virtualList = mock<VirtualList>('refresh');
 
@@ -96,8 +96,8 @@ function createSetFilter(filterParams?: any): SetFilter<unknown> {
     colDef.filterParams = params;
 
     const setFilter = new SetFilter();
-    (setFilter as any).eventService = eventService;
-    (setFilter as any).valueService = valueService;
+    (setFilter as any).eventSvc = eventSvc;
+    (setFilter as any).valueSvc = valueSvc;
     (setFilter as any).rowModel = rowModel;
     (setFilter as any).context = context;
     (setFilter as any).stubContext = context;
@@ -105,7 +105,7 @@ function createSetFilter(filterParams?: any): SetFilter<unknown> {
     (setFilter as any).eMiniFilter = eMiniFilter;
     (setFilter as any).eSelectAll = eSelectAll;
     (setFilter as any).gos = gridOptionsService;
-    (setFilter as any).funcColsService = funcColsService;
+    (setFilter as any).funcColsSvc = funcColsSvc;
     (setFilter as any).beans = {};
 
     setFilter.setParams(params);

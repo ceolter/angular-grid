@@ -157,7 +157,7 @@ const cashFormatter = (params: any) => {
 
 const buildSimpleColumnDefs = (): ColDef[] => [
     { field: 'country' },
-    { field: 'sport' },
+    { field: 'sport', cellEditor: 'agRichSelectCellEditor' },
     { field: 'name' },
     {
         field: 'winningsTotal',

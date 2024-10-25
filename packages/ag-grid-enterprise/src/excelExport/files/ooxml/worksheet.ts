@@ -22,7 +22,7 @@ import {
     XLSX_WORKSHEET_IMAGES,
     addXlsxHeaderFooterImageToMap,
 } from '../../excelXlsxFactory';
-import columnFactory from './column';
+import colFactory from './column';
 import mergeCellFactory from './mergeCell';
 import rowFactory from './row';
 
@@ -277,7 +277,7 @@ const addColumns = (columns: ExcelColumn[]) => {
         if (columns.length) {
             params.children.push({
                 name: 'cols',
-                children: columns.map((column) => columnFactory.getTemplate(column)),
+                children: columns.map((column) => colFactory.getTemplate(column)),
             });
         }
         return params;

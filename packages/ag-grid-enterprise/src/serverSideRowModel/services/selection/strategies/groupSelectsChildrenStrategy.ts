@@ -24,16 +24,16 @@ interface SelectionState {
 
 export class GroupSelectsChildrenStrategy extends BeanStub implements ISelectionStrategy {
     private rowModel: IRowModel;
-    private funcColsService: FuncColsService;
+    private funcColsSvc: FuncColsService;
     private filterManager?: FilterManager;
-    private selectionService: ISelectionService;
+    private selectionSvc: ISelectionService;
     private selectionCtx = new ServerSideRowRangeSelectionContext();
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
-        this.funcColsService = beans.funcColsService;
+        this.funcColsSvc = beans.funcColsSvc;
         this.filterManager = beans.filterManager;
-        this.selectionService = beans.selectionService!;
+        this.selectionSvc = beans.selectionSvc!;
     }
 
     private selectedState: SelectionState = { selectAllChildren: false, toggledNodes: new Map() };
@@ -43,7 +43,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             // if model has updated, a store may now be fully loaded to clean up indeterminate states
             modelUpdated: () => this.removeRedundantState(),
             // when the grouping changes, the state no longer makes sense, so reset the state.
-            columnRowGroupChanged: () => this.selectionService.reset('rowGroupChanged'),
+            columnRowGroupChanged: () => this.selectionSvc.reset('rowGroupChanged'),
         });
 
         this.selectionCtx.init(this.rowModel);
@@ -56,7 +56,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
                 nodeId,
             };
 
-            if (treeData || level <= this.funcColsService.rowGroupCols.length) {
+            if (treeData || level <= this.funcColsSvc.rowGroupCols.length) {
                 normalisedState.selectAllChildren = state.selectAllChildren;
             }
 

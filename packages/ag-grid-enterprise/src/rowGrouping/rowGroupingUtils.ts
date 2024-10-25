@@ -7,11 +7,7 @@ import type {
     RowNode,
 } from 'ag-grid-community';
 
-export function isRowGroupColLocked(
-    funcColsService: FuncColsService,
-    gos: GridOptionsService,
-    column: AgColumn
-): boolean {
+export function isRowGroupColLocked(funcColsSvc: FuncColsService, gos: GridOptionsService, column: AgColumn): boolean {
     const groupLockGroupColumns = gos.get('groupLockGroupColumns');
     if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
         return false;
@@ -21,18 +17,18 @@ export function isRowGroupColLocked(
         return true;
     }
 
-    const rowGroupCols = funcColsService.rowGroupCols;
+    const rowGroupCols = funcColsSvc.rowGroupCols;
     const colIndex = rowGroupCols.findIndex((groupCol) => groupCol.getColId() === column.getColId());
     return groupLockGroupColumns > colIndex;
 }
 
 export function setRowNodeGroupValue(
     rowNode: RowNode,
-    columnModel: ColumnModel,
+    colModel: ColumnModel,
     colKey: string | AgColumn,
     newValue: any
 ): void {
-    const column = columnModel.getCol(colKey)!;
+    const column = colModel.getCol(colKey)!;
 
     if (!rowNode.groupData) {
         rowNode.groupData = {};
@@ -61,6 +57,6 @@ export function setRowNodeGroup(rowNode: RowNode, beans: BeanCollection, group: 
 
     rowNode.group = group;
     rowNode.updateHasChildren();
-    beans.selectionService?.checkRowSelectable(rowNode);
+    beans.selectionSvc?.checkRowSelectable(rowNode);
     rowNode.dispatchRowEvent('groupChanged');
 }

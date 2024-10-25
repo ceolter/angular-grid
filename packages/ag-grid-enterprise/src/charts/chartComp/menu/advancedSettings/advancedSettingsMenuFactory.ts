@@ -9,11 +9,11 @@ import { AdvancedSettingsPanel } from './advancedSettingsPanel';
 export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
     beanName = 'advancedSettingsMenuFactory' as const;
 
-    private focusService: FocusService;
+    private focusSvc: FocusService;
     private chartTranslationService: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
         this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
     }
 
@@ -36,7 +36,7 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
                 centered: true,
                 closable: true,
                 afterGuiAttached: () => {
-                    this.focusService.findFocusableElements(menu.getGui())[0]?.focus();
+                    this.focusSvc.findFocusableElements(menu.getGui())[0]?.focus();
                 },
                 closedCallback: () => {
                     this.activeMenu = this.destroyBean(this.activeMenu);
@@ -63,10 +63,10 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
 }
 
 class AdvancedSettingsMenu extends TabGuardComp {
-    private focusService: FocusService;
+    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.focusService = beans.focusService;
+        this.focusSvc = beans.focusSvc;
     }
 
     private advancedSettingsPanel: AdvancedSettingsPanel;
@@ -93,12 +93,12 @@ class AdvancedSettingsMenu extends TabGuardComp {
 
         const backwards = e.shiftKey;
         const panelGui = this.advancedSettingsPanel.getGui();
-        const nextEl = this.focusService.findNextFocusableElement(panelGui, false, backwards);
+        const nextEl = this.focusSvc.findNextFocusableElement(panelGui, false, backwards);
 
         if (nextEl) {
             nextEl.focus();
         } else {
-            const focusableElements = this.focusService.findFocusableElements(panelGui);
+            const focusableElements = this.focusSvc.findFocusableElements(panelGui);
             if (focusableElements.length) {
                 focusableElements[backwards ? focusableElements.length - 1 : 0].focus();
             }

@@ -2,6 +2,7 @@ import type { BeanCollection, ComponentSelector } from 'ag-grid-community';
 import { Component, RefPlaceholder } from 'ag-grid-community';
 
 import type { GridLicenseManager as LicenseManager } from './gridLicenseManager';
+import { watermarkCSS } from './watermark.css-GENERATED';
 
 export class AgWatermark extends Component {
     licenseManager: LicenseManager;
@@ -19,6 +20,7 @@ export class AgWatermark extends Component {
                 <div data-ref="eLicenseTextRef" class="ag-watermark-text"></div>
             </div>`
         );
+        this.registerCSS(watermarkCSS);
     }
 
     public postConstruct(): void {

@@ -11,12 +11,12 @@ import { _logIfDebug } from '../utils/function';
  */
 
 export class RowContainerHeightService extends BeanStub implements NamedBean {
-    beanName = 'rowContainerHeightService' as const;
+    beanName = 'rowContainerHeight' as const;
 
-    private ctrlsService: CtrlsService;
+    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.ctrlsService = beans.ctrlsService;
+        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private maxDivHeight: number;
@@ -60,7 +60,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
             return;
         }
 
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const newScrollY = gridBodyCon.getScrollFeature().getVScrollPosition().top;
         const newBodyHeight = this.getUiBodyHeight();
 
@@ -92,7 +92,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
     private setUiContainerHeight(height: number | null): void {
         if (height !== this.uiContainerHeight) {
             this.uiContainerHeight = height;
-            this.eventService.dispatchEvent({ type: 'rowContainerHeightChanged' });
+            this.eventSvc.dispatchEvent({ type: 'rowContainerHeightChanged' });
         }
     }
 
@@ -110,7 +110,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
         }
 
         this.divStretchOffset = newOffsetFloor!;
-        this.eventService.dispatchEvent({ type: 'heightScaleChanged' });
+        this.eventSvc.dispatchEvent({ type: 'heightScaleChanged' });
     }
 
     public setModelHeight(modelHeight: number | null): void {
@@ -135,7 +135,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
     }
 
     private getUiBodyHeight(): number {
-        const gridBodyCon = this.ctrlsService.getGridBodyCtrl();
+        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
         const pos = gridBodyCon.getScrollFeature().getVScrollPosition();
         return pos.bottom - pos.top;
     }

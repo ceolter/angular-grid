@@ -16,14 +16,14 @@ import type { ColumnModelItem } from './columnModelItem';
 export class ModelItemUtils extends BeanStub implements NamedBean {
     beanName = 'modelItemUtils' as const;
 
-    private aggFuncService?: IAggFuncService;
-    private columnModel: ColumnModel;
-    private columnStateService: ColumnStateService;
+    private aggFuncSvc?: IAggFuncService;
+    private colModel: ColumnModel;
+    private colState: ColumnStateService;
 
     public wireBeans(beans: BeanCollection) {
-        this.aggFuncService = beans.aggFuncService;
-        this.columnModel = beans.columnModel;
-        this.columnStateService = beans.columnStateService;
+        this.aggFuncSvc = beans.aggFuncSvc;
+        this.colModel = beans.colModel;
+        this.colState = beans.colState;
     }
 
     public selectAllChildren(colTree: ColumnModelItem[], selectAllChecked: boolean, eventType: ColumnEventType): void {
@@ -36,7 +36,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
     }
 
     public setAllColumns(cols: AgColumn[], selectAllChecked: boolean, eventType: ColumnEventType): void {
-        if (this.columnModel.isPivotMode()) {
+        if (this.colModel.isPivotMode()) {
             this.setAllPivot(cols, selectAllChecked, eventType);
         } else {
             this.setAllVisible(cols, selectAllChecked, eventType);
@@ -80,7 +80,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         });
 
         if (colStateItems.length > 0) {
-            this.columnStateService.applyColumnState({ state: colStateItems }, eventType);
+            this.colState.applyColumnState({ state: colStateItems }, eventType);
         }
     }
 
@@ -99,9 +99,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
 
             if (col.isAllowValue()) {
                 const aggFunc =
-                    typeof col.getAggFunc() === 'string'
-                        ? col.getAggFunc()
-                        : this.aggFuncService?.getDefaultAggFunc(col);
+                    typeof col.getAggFunc() === 'string' ? col.getAggFunc() : this.aggFuncSvc?.getDefaultAggFunc(col);
                 colStateItems.push({
                     colId: col.getId(),
                     aggFunc: aggFunc,
@@ -136,7 +134,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         columns.forEach(action);
 
         if (colStateItems.length > 0) {
-            this.columnStateService.applyColumnState({ state: colStateItems }, eventType);
+            this.colState.applyColumnState({ state: colStateItems }, eventType);
         }
     }
 
@@ -155,7 +153,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         const { columns, visibleState, pivotState, eventType } = params;
         const state: ColumnState[] = columns.map((column) => {
             const colId = column.getColId();
-            if (this.columnModel.isPivotMode()) {
+            if (this.colModel.isPivotMode()) {
                 const pivotStateForColumn = pivotState?.[colId];
                 return {
                     colId,
@@ -170,7 +168,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
                 };
             }
         });
-        this.columnStateService.applyColumnState({ state }, eventType);
+        this.colState.applyColumnState({ state }, eventType);
     }
 
     public createPivotState(column: AgColumn): {

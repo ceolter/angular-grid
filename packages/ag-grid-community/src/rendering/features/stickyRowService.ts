@@ -7,7 +7,7 @@ import type { RowCtrlByRowNodeIdMap } from '../rowRenderer';
 import { StickyRowFeature } from './stickyRowFeature';
 
 export class StickyRowService extends BeanStub implements NamedBean {
-    beanName = 'stickyRowService' as const;
+    beanName = 'stickyRowSvc' as const;
 
     public createStickyRowFeature(
         ctrl: BeanStub,

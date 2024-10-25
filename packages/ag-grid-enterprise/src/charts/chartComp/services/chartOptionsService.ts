@@ -639,7 +639,7 @@ export class ChartOptionsService extends BeanStub {
     private raiseChartOptionsChangedEvent(): void {
         const chartModel = this.chartController.getChartModel();
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'chartOptionsChanged',
             chartId: chartModel.chartId,
             chartType: chartModel.chartType,

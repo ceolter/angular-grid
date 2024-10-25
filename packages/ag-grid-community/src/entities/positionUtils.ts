@@ -61,13 +61,13 @@ export function _getFirstRow(beans: BeanCollection): RowPosition | null {
     let rowIndex = 0;
     let rowPinned: RowPinnedType;
 
-    const { pinnedRowModel, rowModel, pageBoundsService } = beans;
+    const { pinnedRowModel, rowModel, pageBounds } = beans;
 
     if (pinnedRowModel?.getPinnedTopRowCount()) {
         rowPinned = 'top';
     } else if (rowModel.getRowCount()) {
         rowPinned = null;
-        rowIndex = pageBoundsService.getFirstRow();
+        rowIndex = pageBounds.getFirstRow();
     } else if (pinnedRowModel?.getPinnedBottomRowCount()) {
         rowPinned = 'bottom';
     }
@@ -79,7 +79,7 @@ export function _getLastRow(beans: BeanCollection): RowPosition | null {
     let rowIndex;
     let rowPinned: RowPinnedType = null;
 
-    const { pinnedRowModel, pageBoundsService } = beans;
+    const { pinnedRowModel, pageBounds } = beans;
 
     const pinnedBottomCount = pinnedRowModel?.getPinnedBottomRowCount();
     const pinnedTopCount = pinnedRowModel?.getPinnedTopRowCount();
@@ -89,7 +89,7 @@ export function _getLastRow(beans: BeanCollection): RowPosition | null {
         rowIndex = pinnedBottomCount - 1;
     } else if (beans.rowModel.getRowCount()) {
         rowPinned = null;
-        rowIndex = pageBoundsService.getLastRow();
+        rowIndex = pageBounds.getLastRow();
     } else if (pinnedTopCount) {
         rowPinned = 'top';
         rowIndex = pinnedTopCount - 1;

@@ -4,7 +4,7 @@ import { BeanStub } from 'ag-grid-community';
 import { AgSideBarSelector } from './agSideBar';
 
 export class SideBarService extends BeanStub implements NamedBean, ISideBarService {
-    beanName = 'sideBarService' as const;
+    beanName = 'sideBar' as const;
 
     private sideBarComp: ISideBar;
 

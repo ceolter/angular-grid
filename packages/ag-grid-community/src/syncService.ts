@@ -10,15 +10,15 @@ import type { IRowModel } from './interfaces/iRowModel';
 import { _logIfDebug } from './utils/function';
 
 export class SyncService extends BeanStub implements NamedBean {
-    beanName = 'syncService' as const;
+    beanName = 'syncSvc' as const;
 
-    private ctrlsService: CtrlsService;
-    private columnModel: ColumnModel;
+    private ctrlsSvc: CtrlsService;
+    private colModel: ColumnModel;
     private rowModel: IRowModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.ctrlsService = beans.ctrlsService;
-        this.columnModel = beans.columnModel;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.colModel = beans.colModel;
         this.rowModel = beans.rowModel;
     }
 
@@ -30,7 +30,7 @@ export class SyncService extends BeanStub implements NamedBean {
 
     public start(): void {
         // we wait until the UI has finished initialising before setting in columns and rows
-        this.ctrlsService.whenReady(this, () => {
+        this.ctrlsSvc.whenReady(this, () => {
             const columnDefs = this.gos.get('columnDefs');
             if (columnDefs) {
                 this.setColumnsAndData(columnDefs);
@@ -42,12 +42,12 @@ export class SyncService extends BeanStub implements NamedBean {
     }
 
     private setColumnsAndData(columnDefs: (ColDef | ColGroupDef)[]): void {
-        this.columnModel.setColumnDefs(columnDefs ?? [], 'gridInitializing');
+        this.colModel.setColumnDefs(columnDefs ?? [], 'gridInitializing');
         this.rowModel.start();
     }
 
     private gridReady(): void {
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'gridReady',
         });
         _logIfDebug(
@@ -68,6 +68,6 @@ export class SyncService extends BeanStub implements NamedBean {
             return;
         }
 
-        this.columnModel.setColumnDefs(columnDefs, _convertColumnEventSourceType(event.source));
+        this.colModel.setColumnDefs(columnDefs, _convertColumnEventSourceType(event.source));
     }
 }

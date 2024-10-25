@@ -22,18 +22,18 @@ import type { ExpressionService } from './expressionService';
 import type { ValueCache } from './valueCache';
 
 export class ValueService extends BeanStub implements NamedBean {
-    beanName = 'valueService' as const;
+    beanName = 'valueSvc' as const;
 
-    private expressionService?: ExpressionService;
-    private columnModel: ColumnModel;
+    private expressionSvc?: ExpressionService;
+    private colModel: ColumnModel;
     private valueCache?: ValueCache;
-    private dataTypeService?: DataTypeService;
+    private dataTypeSvc?: DataTypeService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.expressionService = beans.expressionService;
-        this.columnModel = beans.columnModel;
+        this.expressionSvc = beans.expressionSvc;
+        this.colModel = beans.colModel;
         this.valueCache = beans.valueCache;
-        this.dataTypeService = beans.dataTypeService;
+        this.dataTypeSvc = beans.dataTypeSvc;
     }
 
     private cellExpressions: boolean;
@@ -70,8 +70,8 @@ export class ValueService extends BeanStub implements NamedBean {
         // We listen to our own event and use it to call the columnSpecific callback,
         // this way the handler calls are correctly interleaved with other global events
         const listener = (event: CellValueChangedEvent) => this.callColumnCellValueChangedHandler(event);
-        this.eventService.addEventListener('cellValueChanged', listener, true);
-        this.addDestroyFunc(() => this.eventService.removeEventListener('cellValueChanged', listener, true));
+        this.eventSvc.addEventListener('cellValueChanged', listener, true);
+        this.addDestroyFunc(() => this.eventSvc.removeEventListener('cellValueChanged', listener, true));
 
         this.addManagedPropertyListener('treeData', (propChange) => (this.isTreeData = propChange.currentValue));
     }
@@ -82,7 +82,7 @@ export class ValueService extends BeanStub implements NamedBean {
      */
     public getValueForDisplay(column: AgColumn, node: IRowNode) {
         // when in pivot mode, leafGroups cannot be expanded
-        const lockedClosedGroup = node.leafGroup && this.columnModel.isPivotMode();
+        const lockedClosedGroup = node.leafGroup && this.colModel.isPivotMode();
         const isOpenGroup = node.group && node.expanded && !node.footer && !lockedClosedGroup;
 
         // checks if we show header data regardless of footer
@@ -190,7 +190,7 @@ export class ValueService extends BeanStub implements NamedBean {
             if (typeof valueParser === 'function') {
                 return valueParser(params);
             }
-            return this.expressionService?.evaluate(valueParser, params);
+            return this.expressionSvc?.evaluate(valueParser, params);
         }
         return newValue;
     }
@@ -232,7 +232,7 @@ export class ValueService extends BeanStub implements NamedBean {
             if (typeof formatter === 'function') {
                 result = formatter(params);
             } else {
-                result = this.expressionService ? this.expressionService.evaluate(formatter, params) : null;
+                result = this.expressionSvc ? this.expressionSvc.evaluate(formatter, params) : null;
             }
         } else if (colDef.refData) {
             return colDef.refData[value] || '';
@@ -282,7 +282,7 @@ export class ValueService extends BeanStub implements NamedBean {
      * @returns `True` if the value has been updated, otherwise`False`.
      */
     public setValue(rowNode: IRowNode, colKey: string | AgColumn, newValue: any, eventSource?: string): boolean {
-        const column = this.columnModel.getColDefCol(colKey);
+        const column = this.colModel.getColDefCol(colKey);
 
         if (!rowNode || !column) {
             return false;
@@ -299,7 +299,7 @@ export class ValueService extends BeanStub implements NamedBean {
             return false;
         }
 
-        if (this.dataTypeService && !this.dataTypeService.checkType(column, newValue)) {
+        if (this.dataTypeSvc && !this.dataTypeSvc.checkType(column, newValue)) {
             _warn(135);
             return false;
         }
@@ -321,7 +321,7 @@ export class ValueService extends BeanStub implements NamedBean {
             if (typeof valueSetter === 'function') {
                 valueWasDifferent = valueSetter(params);
             } else {
-                valueWasDifferent = this.expressionService?.evaluate(valueSetter, params);
+                valueWasDifferent = this.expressionSvc?.evaluate(valueSetter, params);
             }
         } else {
             valueWasDifferent = this.setValueUsingField(rowNode.data, field, newValue, column.isFieldContainsDots());
@@ -347,7 +347,7 @@ export class ValueService extends BeanStub implements NamedBean {
 
         const savedValue = this.getValue(column, rowNode);
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: 'cellValueChanged',
             event: null,
             rowIndex: rowNode.rowIndex!,
@@ -462,14 +462,14 @@ export class ValueService extends BeanStub implements NamedBean {
         if (typeof valueGetter === 'function') {
             result = valueGetter(params);
         } else {
-            result = this.expressionService?.evaluate(valueGetter, params);
+            result = this.expressionSvc?.evaluate(valueGetter, params);
         }
 
         return result;
     }
 
     public getValueCallback(node: IRowNode, field: string | AgColumn): any {
-        const otherColumn = this.columnModel.getColDefCol(field);
+        const otherColumn = this.colModel.getColDefCol(field);
 
         if (otherColumn) {
             return this.getValue(otherColumn, node);

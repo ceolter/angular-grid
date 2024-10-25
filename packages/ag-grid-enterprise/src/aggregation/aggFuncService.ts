@@ -13,7 +13,7 @@ const defaultAggFuncNames = {
 type DefaultAggFuncName = keyof typeof defaultAggFuncNames;
 
 export class AggFuncService extends BeanStub implements NamedBean, IAggFuncService {
-    beanName = 'aggFuncService' as const;
+    beanName = 'aggFuncSvc' as const;
 
     private aggFuncsMap: { [key in string]: IAggFunc } = {};
     private initialised = false;

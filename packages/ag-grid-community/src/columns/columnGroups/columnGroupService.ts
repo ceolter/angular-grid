@@ -34,21 +34,21 @@ export interface CreateGroupsParams {
 }
 
 export class ColumnGroupService extends BeanStub implements NamedBean {
-    beanName = 'columnGroupService' as const;
+    beanName = 'columnGroupSvc' as const;
 
-    private columnModel: ColumnModel;
-    private visibleColsService: VisibleColsService;
-    private columnAnimationService?: ColumnAnimationService;
+    private colModel: ColumnModel;
+    private visibleCols: VisibleColsService;
+    private colAnimation?: ColumnAnimationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.visibleColsService = beans.visibleColsService;
-        this.columnAnimationService = beans.columnAnimationService;
+        this.colModel = beans.colModel;
+        this.visibleCols = beans.visibleCols;
+        this.colAnimation = beans.colAnimation;
     }
 
     public getColumnGroupState(): { groupId: string; open: boolean }[] {
         const columnGroupState: { groupId: string; open: boolean }[] = [];
-        const gridBalancedTree = this.columnModel.getColTree();
+        const gridBalancedTree = this.colModel.getColTree();
 
         depthFirstOriginalTreeSearch(null, gridBalancedTree, (node) => {
             if (isProvidedColumnGroup(node)) {
@@ -63,7 +63,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
     }
 
     public resetColumnGroupState(source: ColumnEventType): void {
-        const primaryColumnTree = this.columnModel.getColDefColTree();
+        const primaryColumnTree = this.colModel.getColDefColTree();
         if (!primaryColumnTree) {
             return;
         }
@@ -88,12 +88,12 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         stateItems: { groupId: string; open: boolean | undefined }[],
         source: ColumnEventType
     ): void {
-        const gridBalancedTree = this.columnModel.getColTree();
+        const gridBalancedTree = this.colModel.getColTree();
         if (!gridBalancedTree) {
             return;
         }
 
-        this.columnAnimationService?.start();
+        this.colAnimation?.start();
 
         const impactedGroups: AgProvidedColumnGroup[] = [];
 
@@ -113,17 +113,17 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
             impactedGroups.push(providedColumnGroup);
         });
 
-        this.visibleColsService.refresh(source, true);
+        this.visibleCols.refresh(source, true);
 
         if (impactedGroups.length) {
-            this.eventService.dispatchEvent({
+            this.eventSvc.dispatchEvent({
                 type: 'columnGroupOpened',
                 columnGroup: impactedGroups.length === 1 ? impactedGroups[0] : undefined,
                 columnGroups: impactedGroups,
             });
         }
 
-        this.columnAnimationService?.finish();
+        this.colAnimation?.finish();
     }
 
     // called by headerRenderer - when a header is opened or closed
@@ -145,7 +145,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
     public getProvidedColGroup(key: string): AgProvidedColumnGroup | null {
         let res: AgProvidedColumnGroup | null = null;
 
-        depthFirstOriginalTreeSearch(null, this.columnModel.getColTree(), (node) => {
+        depthFirstOriginalTreeSearch(null, this.colModel.getColTree(), (node) => {
             if (isProvidedColumnGroup(node)) {
                 if (node.getId() === key) {
                     res = node;
@@ -165,7 +165,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
 
         while (true) {
             // keep moving to the next col, until we get to another group
-            const column = this.visibleColsService[getDisplayColMethod](col);
+            const column = this.visibleCols[getDisplayColMethod](col);
 
             if (!column) {
                 return null;
@@ -200,7 +200,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
     }
 
     public updateOpenClosedVisibility(): void {
-        const allColumnGroups = this.visibleColsService.getAllTrees();
+        const allColumnGroups = this.visibleCols.getAllTrees();
 
         depthFirstAllColumnTreeSearch(allColumnGroups, false, (child) => {
             if (isColumnGroup(child)) {
@@ -219,7 +219,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
             return colId;
         }
 
-        const allColumnGroups = this.visibleColsService.getAllTrees();
+        const allColumnGroups = this.visibleCols.getAllTrees();
         const checkPartId = typeof partId === 'number';
         let result: AgColumnGroup | null = null;
 

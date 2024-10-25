@@ -46,12 +46,12 @@ import { JoinPillWrapperComp } from './joinPillWrapperComp';
 import { SelectPillComp } from './selectPillComp';
 
 export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBuilderEvents> {
-    private dragAndDropService: DragAndDropService;
+    private dragAndDrop: DragAndDropService;
     private advancedFilterExpressionService: AdvancedFilterExpressionService;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection): void {
-        this.dragAndDropService = beans.dragAndDropService!;
+        this.dragAndDrop = beans.dragAndDrop!;
         this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
         this.registry = beans.registry;
     }
@@ -440,8 +440,8 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                 }),
         };
 
-        this.dragAndDropService.addDragSource(dragSource, true);
-        this.addDestroyFunc(() => this.dragAndDropService.removeDragSource(dragSource));
+        this.dragAndDrop.addDragSource(dragSource, true);
+        this.addDestroyFunc(() => this.dragAndDrop.removeDragSource(dragSource));
     }
 
     private updateAriaLabel(): void {

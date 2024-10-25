@@ -41,7 +41,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     private checkVisibility(): void {
-        const pivotMode = this.columnModel.isPivotMode();
+        const pivotMode = this.colModel.isPivotMode();
 
         if (this.isHorizontal()) {
             // what we do for horizontal (ie the pivot panel at the top) depends
@@ -51,7 +51,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
                     this.setDisplayed(pivotMode);
                     break;
                 case 'onlyWhenPivoting': {
-                    const pivotActive = this.columnModel.isPivotActive();
+                    const pivotActive = this.colModel.isPivotActive();
                     this.setDisplayed(pivotMode && pivotActive);
                     break;
                 }
@@ -76,7 +76,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]): void {
-        this.funcColsService.setPivotColumns(columns, 'toolPanelUi');
+        this.funcColsSvc.setPivotColumns(columns, 'toolPanelUi');
     }
 
     protected getIconName(): DragAndDropIcon {
@@ -84,6 +84,6 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.funcColsService.pivotCols;
+        return this.funcColsSvc.pivotCols;
     }
 }

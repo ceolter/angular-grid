@@ -19,7 +19,7 @@ export class AgRangeHandle extends AbstractSelectionHandle {
             return;
         }
 
-        const cellRanges = this.rangeService.getCellRanges();
+        const cellRanges = this.rangeSvc.getCellRanges();
         const lastRange = _last(cellRanges);
 
         if (!this.rangeFixed) {
@@ -39,11 +39,11 @@ export class AgRangeHandle extends AbstractSelectionHandle {
             cellRanges[0].type === CellRangeType.DIMENSION &&
             lastRange.type === CellRangeType.VALUE
         ) {
-            const rowChanged = !_isSameRow(this.endPosition, this.rangeService.getRangeEndRow(lastRange));
+            const rowChanged = !_isSameRow(this.endPosition, this.rangeSvc.getRangeEndRow(lastRange));
 
             if (rowChanged) {
                 // ensure the dimension range is kept in sync with the value range (which has the handle)
-                this.rangeService.updateRangeEnd(
+                this.rangeSvc.updateRangeEnd(
                     cellRanges[0],
                     {
                         ...this.endPosition,
@@ -54,11 +54,11 @@ export class AgRangeHandle extends AbstractSelectionHandle {
             }
         }
 
-        this.rangeService.extendLatestRangeToCell(this.endPosition);
+        this.rangeSvc.extendLatestRangeToCell(this.endPosition);
     }
 
     protected onDragEnd(_: MouseEvent) {
-        const cellRange = _last(this.rangeService.getCellRanges())!;
+        const cellRange = _last(this.rangeSvc.getCellRanges())!;
 
         this.fixRangeStartEnd(cellRange);
         this.rangeFixed = false;
@@ -69,8 +69,8 @@ export class AgRangeHandle extends AbstractSelectionHandle {
     }
 
     private fixRangeStartEnd(cellRange: CellRange): void {
-        const startRow = this.rangeService.getRangeStartRow(cellRange);
-        const endRow = this.rangeService.getRangeEndRow(cellRange);
+        const startRow = this.rangeSvc.getRangeStartRow(cellRange);
+        const endRow = this.rangeSvc.getRangeEndRow(cellRange);
         const column = cellRange.columns[0];
 
         cellRange.startRow = startRow;

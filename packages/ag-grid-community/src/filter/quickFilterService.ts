@@ -14,20 +14,20 @@ import type { FilterValueService } from './filterValueService';
 
 export type QuickFilterServiceEvent = 'quickFilterChanged';
 export class QuickFilterService extends BeanStub<QuickFilterServiceEvent> implements NamedBean {
-    beanName = 'quickFilterService' as const;
+    beanName = 'quickFilter' as const;
 
-    private filterValueService: FilterValueService;
-    private columnModel: ColumnModel;
+    private filterValueSvc: FilterValueService;
+    private colModel: ColumnModel;
     private rowModel: IRowModel;
-    private pivotResultColsService?: IPivotResultColsService;
-    private autoColService?: IAutoColService;
+    private pivotResultCols?: IPivotResultColsService;
+    private autoColSvc?: IAutoColService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.filterValueService = beans.filterValueService!;
-        this.columnModel = beans.columnModel;
+        this.filterValueSvc = beans.filterValueSvc!;
+        this.colModel = beans.colModel;
         this.rowModel = beans.rowModel;
-        this.pivotResultColsService = beans.pivotResultColsService;
-        this.autoColService = beans.autoColService;
+        this.pivotResultCols = beans.pivotResultCols;
+        this.autoColSvc = beans.autoColSvc;
     }
 
     // the columns the quick filter should use. this will be all primary columns plus the autoGroupColumns if any exist
@@ -73,13 +73,13 @@ export class QuickFilterService extends BeanStub<QuickFilterServiceEvent> implem
     // b) using tree data and user depends on autoGroupCol for first col, and we also want to filter on this
     //    (tree data is a bit different, as parent rows can be filtered on, unlike row grouping)
     public refreshQuickFilterCols(): void {
-        const pivotMode = this.columnModel.isPivotMode();
-        const groupAutoCols = this.autoColService?.getAutoCols();
-        const providedCols = this.columnModel.getColDefCols();
+        const pivotMode = this.colModel.isPivotMode();
+        const groupAutoCols = this.autoColSvc?.getAutoCols();
+        const providedCols = this.colModel.getColDefCols();
 
         let columnsForQuickFilter =
             (pivotMode && !this.gos.get('applyQuickFilterBeforePivotOrAgg')
-                ? this.pivotResultColsService?.getPivotResultCols()?.list
+                ? this.pivotResultCols?.getPivotResultCols()?.list
                 : providedCols) ?? [];
         if (groupAutoCols) {
             columnsForQuickFilter = columnsForQuickFilter.concat(groupAutoCols);
@@ -195,7 +195,7 @@ export class QuickFilterService extends BeanStub<QuickFilterServiceEvent> implem
     }
 
     private getQuickFilterTextForColumn(column: AgColumn, node: RowNode): string {
-        let value = this.filterValueService.getValue(column, node);
+        let value = this.filterValueSvc.getValue(column, node);
         const colDef = column.getColDef();
 
         if (colDef.getQuickFilterText) {

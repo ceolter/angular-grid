@@ -10,16 +10,16 @@ import { CenterWidthFeature } from './centerWidthFeature';
 import type { ScrollVisibleService } from './scrollVisibleService';
 
 export class FakeHScrollComp extends AbstractFakeScrollComp {
-    private visibleColsService: VisibleColsService;
+    private visibleCols: VisibleColsService;
     private pinnedRowModel?: PinnedRowModel;
-    private ctrlsService: CtrlsService;
-    private scrollVisibleService: ScrollVisibleService;
+    private ctrlsSvc: CtrlsService;
+    private scrollVisibleSvc: ScrollVisibleService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.visibleColsService = beans.visibleColsService;
+        this.visibleCols = beans.visibleCols;
         this.pinnedRowModel = beans.pinnedRowModel;
-        this.ctrlsService = beans.ctrlsService;
-        this.scrollVisibleService = beans.scrollVisibleService;
+        this.ctrlsSvc = beans.ctrlsSvc;
+        this.scrollVisibleSvc = beans.scrollVisibleSvc;
     }
 
     private readonly eLeftSpacer: HTMLElement = RefPlaceholder;
@@ -54,7 +54,7 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
 
         this.addManagedPropertyListener('domLayout', spacerWidthsListener);
 
-        this.ctrlsService.register('fakeHScrollComp', this);
+        this.ctrlsSvc.register('fakeHScrollComp', this);
         this.createManagedBean(new CenterWidthFeature((width) => (this.eContainer.style.width = `${width}px`)));
 
         this.addManagedPropertyListeners(['suppressHorizontalScroll'], this.onScrollVisibilityChanged.bind(this));
@@ -97,13 +97,13 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
     }
 
     private setFakeHScrollSpacerWidths(): void {
-        const vScrollShowing = this.scrollVisibleService.isVerticalScrollShowing();
+        const vScrollShowing = this.scrollVisibleSvc.isVerticalScrollShowing();
 
         // we pad the right based on a) if cols are pinned to the right and
         // b) if v scroll is showing on the right (normal position of scroll)
-        let rightSpacing = this.visibleColsService.getDisplayedColumnsRightWidth();
+        let rightSpacing = this.visibleCols.getDisplayedColumnsRightWidth();
         const scrollOnRight = !this.enableRtl && vScrollShowing;
-        const scrollbarWidth = this.scrollVisibleService.getScrollbarWidth();
+        const scrollbarWidth = this.scrollVisibleSvc.getScrollbarWidth();
 
         if (scrollOnRight) {
             rightSpacing += scrollbarWidth;
@@ -113,7 +113,7 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
 
         // we pad the left based on a) if cols are pinned to the left and
         // b) if v scroll is showing on the left (happens in LTR layout only)
-        let leftSpacing = this.visibleColsService.getColsLeftWidth();
+        let leftSpacing = this.visibleCols.getColsLeftWidth();
         const scrollOnLeft = this.enableRtl && vScrollShowing;
 
         if (scrollOnLeft) {
@@ -127,10 +127,10 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
     private setScrollVisibleDebounce = 0;
 
     protected setScrollVisible(): void {
-        const hScrollShowing = this.scrollVisibleService.isHorizontalScrollShowing();
+        const hScrollShowing = this.scrollVisibleSvc.isHorizontalScrollShowing();
         const invisibleScrollbar = this.invisibleScrollbar;
         const isSuppressHorizontalScroll = this.gos.get('suppressHorizontalScroll');
-        const scrollbarWidth = hScrollShowing ? this.scrollVisibleService.getScrollbarWidth() || 0 : 0;
+        const scrollbarWidth = hScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
         const adjustedScrollbarWidth = scrollbarWidth === 0 && invisibleScrollbar ? 16 : scrollbarWidth;
         const scrollContainerSize = !isSuppressHorizontalScroll ? adjustedScrollbarWidth : 0;
 

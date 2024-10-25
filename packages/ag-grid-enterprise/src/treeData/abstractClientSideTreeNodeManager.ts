@@ -110,7 +110,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const rootNode = this.rootNode;
         if (rootNode && this.gos.get('treeData')) {
             const newGroupDisplayColIds =
-                this.beans.showRowGroupColsService
+                this.beans.showRowGroupCols
                     ?.getShowRowGroupCols()
                     ?.map((c) => c.getId())
                     .join('-') ?? '';
@@ -252,7 +252,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows();
 
-        this.beans.selectionService?.updateSelectableAfterGrouping(changedPath);
+        this.beans.selectionSvc?.updateSelectableAfterGrouping(changedPath);
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */
@@ -438,7 +438,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     private setGroupData(row: RowNode, key: string): void {
         const groupData: Record<string, string> = {};
         row.groupData = groupData;
-        const groupDisplayCols = this.beans.showRowGroupColsService?.getShowRowGroupCols();
+        const groupDisplayCols = this.beans.showRowGroupCols?.getShowRowGroupCols();
         if (groupDisplayCols) {
             for (const col of groupDisplayCols) {
                 // newGroup.rowGroupColumn=null when working off GroupInfo, and we always display the group in the group column
@@ -525,7 +525,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         if (!row.data && row.isSelected()) {
             //we remove selection on filler nodes here, as the selection would not be removed
             // from the RowNodeManager, as filler nodes don't exist on the RowNodeManager
-            this.beans.selectionService?.setSelectedParams({
+            this.beans.selectionSvc?.setSelectedParams({
                 rowNode: row,
                 newValue: false,
                 source: 'rowGroupChanged',
