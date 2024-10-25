@@ -17,5 +17,5 @@ export function setColumnAggFunc(
     key: string | ColDef | Column,
     aggFunc: string | IAggFunc | null | undefined
 ): void {
-    beans.rowGroupColsService?.setColumnAggFunc!(key, aggFunc, 'api');
+    beans.rowGroupColsSvc?.setColumnAggFunc!(key, aggFunc, 'api');
 }

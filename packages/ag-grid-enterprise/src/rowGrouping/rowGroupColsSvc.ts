@@ -9,8 +9,8 @@ import type {
 } from 'ag-grid-community';
 import { BaseColsService, _removeFromArray, _shouldUpdateColVisibilityAfterGroup } from 'ag-grid-community';
 
-export class RowGroupColsService extends BaseColsService implements NamedBean, IColsService {
-    beanName = 'rowGroupColsService' as const;
+export class RowGroupColsSvc extends BaseColsService implements NamedBean, IColsService {
+    beanName = 'rowGroupColsSvc' as const;
     eventName = 'columnRowGroupChanged' as const;
 
     override columnProcessors = {

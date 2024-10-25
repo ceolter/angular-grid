@@ -33,7 +33,7 @@ export class ToolPanelContextMenu extends Component {
     private funcColsSvc: FuncColsService;
     private popupSvc: PopupService;
     private focusSvc: FocusService;
-    private rowGroupColsService?: IColsService;
+    private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
@@ -41,7 +41,7 @@ export class ToolPanelContextMenu extends Component {
         this.funcColsSvc = beans.funcColsSvc;
         this.popupSvc = beans.popupSvc!;
         this.focusSvc = beans.focusSvc;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     private columns: AgColumn[];
@@ -99,7 +99,7 @@ export class ToolPanelContextMenu extends Component {
         this.menuItemMap = new Map<MenuItemName, MenuItemProperty>();
         this.menuItemMap.set('rowGroup', {
             allowedFunction: (col) =>
-                col.isPrimary() && col.isAllowRowGroup() && !this.rowGroupColsService?.isRowGroupColLocked!(col),
+                col.isPrimary() && col.isAllowRowGroup() && !this.rowGroupColsSvc?.isRowGroupColLocked!(col),
             activeFunction: (col) => col.isRowGroupActive(),
             activateLabel: () => `${localeTextFunc('groupBy', 'Group by')} ${this.displayName}`,
             deactivateLabel: () => `${localeTextFunc('ungroupBy', 'Un-Group by')} ${this.displayName}`,

@@ -237,9 +237,9 @@ export interface CoreBeanCollection {
     colDefFactory?: ColumnDefFactory;
     colAutosize?: ColumnAutosizeService;
     funcColsSvc: FuncColsService;
-    rowGroupColsService?: IColsService;
-    valueColsService?: IColsService;
-    pivotColsService?: IColsService;
+    rowGroupColsSvc?: IColsService;
+    valueColsSvc?: IColsService;
+    pivotColsSvc?: IColsService;
     quickFilter?: QuickFilterService;
     showRowGroupCols?: IShowRowGroupColsService;
     dataTypeSvc?: DataTypeService;
@@ -415,10 +415,9 @@ export type BeanName =
     | 'flattenStage'
     | 'focusSvc'
     | 'funcColsSvc'
-    | 'pivotColsService'
-    | 'rowGroupColsService'
-    | 'valueColsService'
-    | 'funcColsService'
+    | 'pivotColsSvc'
+    | 'rowGroupColsSvc'
+    | 'valueColsSvc'
     | 'frameworkComponentWrapper'
     | 'frameworkOverrides'
     | 'globalEventListener'

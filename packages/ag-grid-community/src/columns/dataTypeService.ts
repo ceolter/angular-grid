@@ -41,8 +41,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
     private rowModel: IRowModel;
     private colModel: ColumnModel;
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
     private valueSvc: ValueService;
     private colState: ColumnStateService;
     private filterManager?: FilterManager;
@@ -52,8 +52,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
         this.colModel = beans.colModel;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
         this.valueSvc = beans.valueSvc;
         this.colState = beans.colState;
         this.filterManager = beans.filterManager;
@@ -527,8 +527,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
         const existingColumnStateUpdates: { [colId: string]: ColumnState } = {};
 
-        this.rowGroupColsService?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
-        this.pivotColsService?.orderColumns(existingColumnStateUpdates, updatedPivotColumnState);
+        this.rowGroupColsSvc?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
+        this.pivotColsSvc?.orderColumns(existingColumnStateUpdates, updatedPivotColumnState);
 
         return Object.values(existingColumnStateUpdates);
     }

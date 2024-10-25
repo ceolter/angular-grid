@@ -6,11 +6,11 @@ import { RowGroupDropZonePanel } from './rowGroupDropZonePanel';
 
 export class AgGridHeaderDropZones extends Component {
     private colModel: ColumnModel;
-    private rowGroupColsService?: IColsService;
+    private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     private rowGroupComp: Component;
@@ -78,7 +78,7 @@ export class AgGridHeaderDropZones extends Component {
         if (rowGroupPanelShow === 'always') {
             this.rowGroupComp.setDisplayed(true);
         } else if (rowGroupPanelShow === 'onlyWhenGrouping') {
-            const grouping = !this.rowGroupColsService?.isRowGroupEmpty!();
+            const grouping = !this.rowGroupColsSvc?.isRowGroupEmpty!();
             this.rowGroupComp.setDisplayed(grouping);
         } else {
             this.rowGroupComp.setDisplayed(false);

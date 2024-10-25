@@ -10,8 +10,8 @@ import type {
 } from 'ag-grid-community';
 import { BaseColsService, _exists, _removeFromArray, _warn } from 'ag-grid-community';
 
-export class ValueColsService extends BaseColsService implements NamedBean, IColsService {
-    beanName = 'valueColsService' as const;
+export class ValueColsSvc extends BaseColsService implements NamedBean, IColsService {
+    beanName = 'valueColsSvc' as const;
     eventName = 'columnValueChanged' as const;
 
     override columnProcessors = {

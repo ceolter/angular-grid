@@ -1,8 +1,8 @@
 import type { AgColumn, ColDef, ColumnEventType, ColumnStateParams, IColsService, NamedBean } from 'ag-grid-community';
 import { BaseColsService, _removeFromArray } from 'ag-grid-community';
 
-export class PivotColsService extends BaseColsService implements NamedBean, IColsService {
-    beanName = 'pivotColsService' as const;
+export class PivotColsSvc extends BaseColsService implements NamedBean, IColsService {
+    beanName = 'pivotColsSvc' as const;
     eventName = 'columnPivotChanged' as const;
     override columnProcessors = {
         set: (column: AgColumn, added: boolean, source: ColumnEventType) => column.setPivotActive(true, source),

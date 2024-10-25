@@ -79,9 +79,9 @@ export class ColumnStateService extends BeanStub implements NamedBean {
 
     private colModel: ColumnModel;
     private sortSvc?: SortService;
-    private rowGroupColsService?: IColsService;
-    private valueColsService?: IColsService;
-    private pivotColsService?: IColsService;
+    private rowGroupColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
     private visibleCols: VisibleColsService;
     private colAnimation?: ColumnAnimationService;
     private pivotResultCols?: IPivotResultColsService;
@@ -91,9 +91,9 @@ export class ColumnStateService extends BeanStub implements NamedBean {
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.sortSvc = beans.sortSvc;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.valueColsService = beans.valueColsService;
-        this.pivotColsService = beans.pivotColsService;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
         this.visibleCols = beans.visibleCols;
         this.colAnimation = beans.colAnimation;
         this.pivotResultCols = beans.pivotResultCols;
@@ -132,8 +132,8 @@ export class ColumnStateService extends BeanStub implements NamedBean {
             const unmatchedAndAutoStates: ColumnState[] = [];
             let unmatchedCount = 0;
 
-            const previousRowGroupCols = this.rowGroupColsService?.columns.slice() ?? [];
-            const previousPivotCols = this.pivotColsService?.columns.slice() ?? [];
+            const previousRowGroupCols = this.rowGroupColsSvc?.columns.slice() ?? [];
+            const previousPivotCols = this.pivotColsSvc?.columns.slice() ?? [];
 
             states.forEach((state) => {
                 const colId = state.colId;
@@ -185,8 +185,8 @@ export class ColumnStateService extends BeanStub implements NamedBean {
 
             columnsWithNoState.forEach(applyDefaultsFunc);
 
-            this.rowGroupColsService?.sortColumns(comparatorByIndex.bind(this, rowGroupIndexes, previousRowGroupCols));
-            this.pivotColsService?.sortColumns(comparatorByIndex.bind(this, pivotIndexes, previousPivotCols));
+            this.rowGroupColsSvc?.sortColumns(comparatorByIndex.bind(this, rowGroupIndexes, previousRowGroupCols));
+            this.pivotColsSvc?.sortColumns(comparatorByIndex.bind(this, pivotIndexes, previousPivotCols));
 
             this.colModel.refreshCols(false);
 
@@ -414,9 +414,9 @@ export class ColumnStateService extends BeanStub implements NamedBean {
             return;
         }
 
-        this.valueColsService?.syncColumnWithState(column, source, getValue);
-        this.rowGroupColsService?.syncColumnWithState(column, source, getValue, rowGroupIndexes);
-        this.pivotColsService?.syncColumnWithState(column, source, getValue, pivotIndexes);
+        this.valueColsSvc?.syncColumnWithState(column, source, getValue);
+        this.rowGroupColsSvc?.syncColumnWithState(column, source, getValue, rowGroupIndexes);
+        this.pivotColsSvc?.syncColumnWithState(column, source, getValue, pivotIndexes);
     }
 
     private orderLiveColsLikeState(params: ApplyColumnStateParams): void {
@@ -492,9 +492,9 @@ export class ColumnStateService extends BeanStub implements NamedBean {
     // b) apply new column definitions (so changes from old cols)
     public compareColumnStatesAndDispatchEvents(source: ColumnEventType): () => void {
         const startState = {
-            rowGroupColumns: this.rowGroupColsService?.columns.slice() ?? [],
-            pivotColumns: this.pivotColsService?.columns.slice() ?? [],
-            valueColumns: this.valueColsService?.columns.slice() ?? [],
+            rowGroupColumns: this.rowGroupColsSvc?.columns.slice() ?? [],
+            pivotColumns: this.pivotColsSvc?.columns.slice() ?? [],
+            valueColumns: this.valueColsSvc?.columns.slice() ?? [],
         };
 
         const columnStateBefore = this.getColumnState();
@@ -560,14 +560,14 @@ export class ColumnStateService extends BeanStub implements NamedBean {
             dispatchWhenListsDifferent(
                 'columnRowGroupChanged',
                 startState.rowGroupColumns,
-                this.rowGroupColsService?.columns ?? [],
+                this.rowGroupColsSvc?.columns ?? [],
                 columnIdMapper
             );
 
             dispatchWhenListsDifferent(
                 'columnPivotChanged',
                 startState.pivotColumns,
-                this.pivotColsService?.columns ?? [],
+                this.pivotColsSvc?.columns ?? [],
                 columnIdMapper
             );
 
@@ -668,8 +668,8 @@ export class ColumnStateService extends BeanStub implements NamedBean {
     }
 
     private createStateItemFromColumn(column: AgColumn): ColumnState {
-        const rowGroupColumns = this.rowGroupColsService?.columns;
-        const pivotColumns = this.pivotColsService?.columns;
+        const rowGroupColumns = this.rowGroupColsSvc?.columns;
+        const pivotColumns = this.pivotColsSvc?.columns;
 
         const rowGroupIndex = column.isRowGroupActive() && rowGroupColumns ? rowGroupColumns.indexOf(column) : null;
         const pivotIndex = column.isPivotActive() && pivotColumns ? pivotColumns.indexOf(column) : null;

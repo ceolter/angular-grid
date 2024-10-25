@@ -58,9 +58,9 @@ export class ColumnModel extends BeanStub implements NamedBean {
     private colDefFactory?: ColumnDefFactory;
     private colState: ColumnStateService;
     private colAutosize?: ColumnAutosizeService;
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
-    private valueColsService?: IColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
     private quickFilter?: QuickFilterService;
     private showRowGroupCols?: IShowRowGroupColsService;
     private rowAutoHeight?: RowAutoHeightService;
@@ -77,9 +77,9 @@ export class ColumnModel extends BeanStub implements NamedBean {
         this.colDefFactory = beans.colDefFactory;
         this.colState = beans.colState;
         this.colAutosize = beans.colAutosize;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
-        this.valueColsService = beans.valueColsService;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
         this.quickFilter = beans.quickFilter;
         this.showRowGroupCols = beans.showRowGroupCols;
         this.rowAutoHeight = beans.rowAutoHeight;
@@ -188,9 +188,9 @@ export class ColumnModel extends BeanStub implements NamedBean {
     }
 
     private extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
-        this.rowGroupColsService?.extractCols(source, oldProvidedCols);
-        this.pivotColsService?.extractCols(source, oldProvidedCols);
-        this.valueColsService?.extractCols(source, oldProvidedCols);
+        this.rowGroupColsSvc?.extractCols(source, oldProvidedCols);
+        this.pivotColsSvc?.extractCols(source, oldProvidedCols);
+        this.valueColsSvc?.extractCols(source, oldProvidedCols);
     }
 
     // called from: buildAutoGroupColumns (events 'groupDisplayType', 'treeData', 'treeDataDisplayType', 'groupHideOpenParents')
@@ -274,7 +274,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
         // show columns we are aggregating on
 
         const showAutoGroupAndValuesOnly = this.isPivotMode() && !this.showingPivotResult;
-        const valueColumns = this.valueColsService?.columns;
+        const valueColumns = this.valueColsSvc?.columns;
 
         const res = this.cols.list.filter((col) => {
             const isAutoGroupCol = isColumnGroupAutoCol(col);
@@ -445,7 +445,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
     // + clientSideRowModel
     public isPivotActive(): boolean {
-        const pivotColumns = this.pivotColsService?.columns;
+        const pivotColumns = this.pivotColsSvc?.columns;
         return this.pivotMode && !!pivotColumns?.length;
     }
 
