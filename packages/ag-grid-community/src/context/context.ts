@@ -274,7 +274,7 @@ export interface CoreBeanCollection {
     gridDestroySvc: GridDestroyService;
     expansionSvc?: IExpansionService;
     sideBar?: ISideBarService;
-    ssrmTransactionManager?: IServerSideTransactionManager;
+    ssrmTxnManager?: IServerSideTransactionManager;
     aggFuncSvc?: IAggFuncService;
     advancedFilter: IAdvancedFilterService;
     filterStage?: IRowNodeStage;
@@ -476,7 +476,7 @@ export type BeanName =
     | 'ssrmSortService'
     | 'ssrmStoreFactory'
     | 'ssrmStoreUtils'
-    | 'ssrmTransactionManager'
+    | 'ssrmTxnManager'
     | 'stateSvc'
     | 'statusBarService'
     | 'stickyRowSvc'
