@@ -14,7 +14,7 @@ import type { LazyCache } from './lazyCache';
 import type { LazyStore } from './lazyStore';
 
 export class LazyBlockLoadingService extends BeanStub implements NamedBean {
-    beanName = 'lazyBlockLoadingService' as const;
+    beanName = 'lazyBlockLoadingSvc' as const;
 
     private outboundRequests: number = 0;
     private maxOutboundRequests: number | undefined;

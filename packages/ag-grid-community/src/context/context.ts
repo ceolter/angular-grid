@@ -425,7 +425,7 @@ export type BeanName =
     | 'groupStage'
     | 'headerNavigation'
     | 'horizontalResizeSvc'
-    | 'lazyBlockLoadingService'
+    | 'lazyBlockLoadingSvc'
     | 'licenseManager'
     | 'localeSvc'
     | 'loggerFactory'
