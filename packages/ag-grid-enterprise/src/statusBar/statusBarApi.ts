@@ -7,6 +7,6 @@ export function getStatusPanel<TStatusPanel = IStatusPanel>(
     beans: BeanCollection,
     key: string
 ): TStatusPanel | undefined {
-    const comp = (beans.statusBarService as StatusBarService)?.getStatusPanel(key);
+    const comp = (beans.statusBarSvc as StatusBarService)?.getStatusPanel(key);
     return _unwrapUserComp(comp) as any;
 }

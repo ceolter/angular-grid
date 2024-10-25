@@ -5,7 +5,7 @@ import type { ServerSideRowModel } from '../serverSideRowModel';
 import type { ListenerUtils } from './listenerUtils';
 
 export class SortListener extends BeanStub implements NamedBean {
-    beanName = 'ssrmSortService' as const;
+    beanName = 'ssrmSortSvc' as const;
 
     private sortSvc: SortService;
     private serverSideRowModel: ServerSideRowModel;
