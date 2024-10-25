@@ -24,10 +24,16 @@ const filePathToUrl = (filePath: string) => {
 
 const filePathsString = (filePaths: Set<string>): string => {
     const pageNames = Array.from(filePaths).map((filePath) => {
+        const filePathParts = filePath.split('/');
+        if (filePathParts.at(-1) === 'index.html') {
+            filePathParts.pop();
+        }
         // Take page name from path
         // eg, javascript-data-grid/grid-options/index.html
-        const [, pageName] = filePath.split('/') || [];
-        return pageName ?? filePath;
+        if (filePathParts.length > 1 && filePathParts[0].match(/.*-data-grid/)) {
+            filePathParts.shift();
+        }
+        return filePathParts.join('/');
     });
 
     return pageNames.join(', ');
