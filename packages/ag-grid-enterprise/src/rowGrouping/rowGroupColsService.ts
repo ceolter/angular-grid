@@ -98,7 +98,7 @@ export class RowGroupColsService extends BaseColsService implements NamedBean, I
         column.setRowGroupActive(active, source);
 
         if (_shouldUpdateColVisibilityAfterGroup(this.gos, active)) {
-            this.columnModel.setColsVisible([column], !active, source);
+            this.colModel.setColsVisible([column], !active, source);
         }
     }
 

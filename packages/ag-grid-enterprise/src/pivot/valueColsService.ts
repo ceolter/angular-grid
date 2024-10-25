@@ -77,7 +77,7 @@ export class ValueColsService extends BaseColsService implements NamedBean, ICol
             return;
         }
 
-        const column = this.columnModel.getColDefCol(key);
+        const column = this.colModel.getColDefCol(key);
         if (!column) {
             return;
         }
@@ -128,8 +128,8 @@ export class ValueColsService extends BaseColsService implements NamedBean, ICol
 
         column.setValueActive(active, source);
 
-        if (active && !column.getAggFunc() && this.aggFuncService) {
-            const initialAggFunc = this.aggFuncService.getDefaultAggFunc(column);
+        if (active && !column.getAggFunc() && this.aggFuncSvc) {
+            const initialAggFunc = this.aggFuncSvc.getDefaultAggFunc(column);
             column.setAggFunc(initialAggFunc);
         }
     }

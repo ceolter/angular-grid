@@ -205,18 +205,10 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                             !this.rowGroupColsService ||
                             this.gos.get('functionsReadOnly') ||
                             (underlyingColumn != null &&
-<<<<<<< ours
-                                isRowGroupColLocked(this.funcColsSvc, this.gos, underlyingColumn)),
-                        action: () => this.funcColsSvc.removeRowGroupColumns([showRowGroup], source),
-||||||| ancestor
-                                isRowGroupColLocked(this.funcColsService, this.gos, underlyingColumn)),
-                        action: () => this.funcColsService.removeRowGroupColumns([showRowGroup], source),
-=======
                                 !!this.rowGroupColsService.isRowGroupColLocked!(underlyingColumn)),
                         action: () => {
                             this.rowGroupColsService?.removeColumns([showRowGroup], source);
                         },
->>>>>>> theirs
                         icon: icon,
                     };
                 }
@@ -231,16 +223,8 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                         this.gos.get('functionsReadOnly') ||
                         !column?.isRowGroupActive() ||
                         !column?.getColDef().enableRowGroup ||
-<<<<<<< ours
-                        isRowGroupColLocked(this.funcColsSvc, this.gos, column),
-                    action: () => this.funcColsSvc.removeRowGroupColumns([column], source),
-||||||| ancestor
-                        isRowGroupColLocked(this.funcColsService, this.gos, column),
-                    action: () => this.funcColsService.removeRowGroupColumns([column], source),
-=======
                         !!this.rowGroupColsService.isRowGroupColLocked!(column),
                     action: () => this.rowGroupColsService?.removeColumns([column], source),
->>>>>>> theirs
                     icon: icon,
                 };
             }

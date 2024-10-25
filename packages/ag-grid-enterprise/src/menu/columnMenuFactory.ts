@@ -3,6 +3,7 @@ import type {
     AgProvidedColumnGroup,
     BeanCollection,
     ColumnModel,
+    FuncColsService,
     IColsService,
     MenuItemDef,
     MenuService,
@@ -34,35 +35,17 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
     beanName = 'columnMenuFactory' as const;
 
     private menuItemMapper: MenuItemMapper;
-<<<<<<< ours
     private colModel: ColumnModel;
     private funcColsSvc: FuncColsService;
     private menuSvc: MenuService;
-||||||| ancestor
-    private columnModel: ColumnModel;
-    private funcColsService: FuncColsService;
-    private menuService: MenuService;
-=======
-    private columnModel: ColumnModel;
     private rowGroupColsService?: IColsService;
-    private menuService: MenuService;
->>>>>>> theirs
 
     public wireBeans(beans: BeanCollection) {
         this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
-<<<<<<< ours
         this.colModel = beans.colModel;
         this.funcColsSvc = beans.funcColsSvc;
         this.menuSvc = beans.menuSvc!;
-||||||| ancestor
-        this.columnModel = beans.columnModel;
-        this.funcColsService = beans.funcColsService;
-        this.menuService = beans.menuService!;
-=======
-        this.columnModel = beans.columnModel;
         this.rowGroupColsService = beans.rowGroupColsService;
-        this.menuService = beans.menuService!;
->>>>>>> theirs
     }
 
     public createMenu(
@@ -141,13 +124,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
         const allowPinning = !column.getColDef().lockPinned;
 
-<<<<<<< ours
-        const rowGroupCount = this.funcColsSvc.rowGroupCols.length;
-||||||| ancestor
-        const rowGroupCount = this.funcColsService.rowGroupCols.length;
-=======
         const rowGroupCount = this.rowGroupColsService?.columns.length ?? 0;
->>>>>>> theirs
         const doingGrouping = rowGroupCount > 0;
 
         const allowValue = column.isAllowValue();
@@ -205,13 +182,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push('rowUnGroup');
         } else if (allowRowGroup && column.isPrimary()) {
             if (column.isRowGroupActive()) {
-<<<<<<< ours
-                const groupLocked = isRowGroupColLocked(this.funcColsSvc, this.gos, column);
-||||||| ancestor
-                const groupLocked = isRowGroupColLocked(this.funcColsService, this.gos, column);
-=======
                 const groupLocked = !!this.rowGroupColsService?.isRowGroupColLocked!(column);
->>>>>>> theirs
                 if (!groupLocked) {
                     result.push('rowUnGroup');
                 }

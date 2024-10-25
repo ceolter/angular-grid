@@ -20,9 +20,9 @@ import type { ColumnState, ColumnStateParams } from './columnStateService';
 import type { VisibleColsService } from './visibleColsService';
 
 export abstract class BaseColsService extends BeanStub implements IColsService {
-    protected columnModel: ColumnModel;
-    protected aggFuncService?: IAggFuncService;
-    protected visibleColsService: VisibleColsService;
+    protected colModel: ColumnModel;
+    protected aggFuncSvc?: IAggFuncService;
+    protected visibleCols: VisibleColsService;
     protected dispatchColumnChangedEvent = dispatchColumnChangedEvent;
 
     abstract eventName: ColumnChangedEventType;
@@ -33,9 +33,9 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
     public columns: AgColumn[] = [];
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnModel = beans.columnModel;
-        this.aggFuncService = beans.aggFuncService;
-        this.visibleColsService = beans.visibleColsService;
+        this.colModel = beans.colModel;
+        this.aggFuncSvc = beans.aggFuncSvc;
+        this.visibleCols = beans.visibleCols;
     }
 
     public sortColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
@@ -63,7 +63,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
         columnCallback: ColumnProcessor,
         source: ColumnEventType
     ): void {
-        const gridColumns = this.columnModel.getCols();
+        const gridColumns = this.colModel.getCols();
         if (!gridColumns || gridColumns.length === 0) {
             return;
         }
@@ -76,7 +76,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
 
         if (_exists(colKeys)) {
             colKeys.forEach((key) => {
-                const column = this.columnModel.getColDefCol(key);
+                const column = this.colModel.getColDefCol(key);
                 if (column) {
                     masterList.push(column);
                 }
@@ -101,17 +101,17 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
             changes.delete(col);
         });
 
-        const primaryCols = this.columnModel.getColDefCols();
+        const primaryCols = this.colModel.getColDefCols();
         (primaryCols || []).forEach((column) => {
             const added = masterList.indexOf(column) >= 0;
             columnCallback(column, added, source);
         });
 
-        autoGroupsNeedBuilding && this.columnModel.refreshCols(false);
+        autoGroupsNeedBuilding && this.colModel.refreshCols(false);
 
-        this.visibleColsService.refresh(source);
+        this.visibleCols.refresh(source);
 
-        this.dispatchColumnChangedEvent(this.eventService, eventName, [...changes.keys()], source);
+        this.dispatchColumnChangedEvent(this.eventSvc, eventName, [...changes.keys()], source);
     }
 
     protected updateColList(
@@ -134,7 +134,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
             if (!key) {
                 return;
             }
-            const columnToAdd = this.columnModel.getColDefCol(key);
+            const columnToAdd = this.colModel.getColDefCol(key);
             if (!columnToAdd) {
                 return;
             }
@@ -166,13 +166,13 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
         }
 
         if (autoGroupsNeedBuilding) {
-            this.columnModel.refreshCols(false);
+            this.colModel.refreshCols(false);
         }
 
-        this.visibleColsService.refresh(source);
+        this.visibleCols.refresh(source);
 
         const eventColumns = Array.from(updatedCols);
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: eventType,
             columns: eventColumns,
             column: eventColumns.length === 1 ? eventColumns[0] : null,
@@ -188,7 +188,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
         const { setFlagFunc, getIndexFunc, getInitialIndexFunc, getValueFunc, getInitialValueFunc } =
             this.columnExtractors!;
 
-        const primaryCols = this.columnModel.getColDefCols() || [];
+        const primaryCols = this.colModel.getColDefCols() || [];
 
         // go though all cols.
         // if value, change
@@ -315,7 +315,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
     ): { [colId: string]: ColumnState } {
         const colList = this.columns;
 
-        const primaryCols = this.columnModel.getColDefCols();
+        const primaryCols = this.colModel.getColDefCols();
         if (!colList.length || !primaryCols) {
             return columnStateAccumulator;
         }

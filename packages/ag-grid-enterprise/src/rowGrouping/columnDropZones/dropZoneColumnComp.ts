@@ -5,6 +5,7 @@ import type {
     DragAndDropIcon,
     DragItem,
     DropTarget,
+    FuncColsService,
     IAggFuncService,
     IColsService,
     PopupService,
@@ -18,61 +19,23 @@ import { VirtualList } from '../../widgets/virtualList';
 import type { TDropZone } from './baseDropZonePanel';
 
 export class DropZoneColumnComp extends PillDragComp<AgColumn> {
-<<<<<<< ours
     private popupSvc: PopupService;
     private sortSvc?: SortService;
-    private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private funcColsSvc: FuncColsService;
-||||||| ancestor
-    private popupService: PopupService;
-    private sortController?: SortController;
-    private columnModel: ColumnModel;
-    private columnNameService: ColumnNameService;
-    private funcColsService: FuncColsService;
-=======
-    private popupService: PopupService;
-    private sortController?: SortController;
-    private columnNameService: ColumnNameService;
->>>>>>> theirs
     private valueColsService?: IColsService;
-<<<<<<< ours
     private aggFuncSvc?: IAggFuncService;
-||||||| ancestor
-    private aggFuncService?: IAggFuncService;
-=======
     private rowGroupColsService?: IColsService;
-    private aggFuncService?: IAggFuncService;
->>>>>>> theirs
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
-<<<<<<< ours
         this.popupSvc = beans.popupSvc!;
         this.sortSvc = beans.sortSvc;
-        this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.funcColsSvc = beans.funcColsSvc;
-||||||| ancestor
-        this.popupService = beans.popupService!;
-        this.sortController = beans.sortController;
-        this.columnModel = beans.columnModel;
-        this.columnNameService = beans.columnNameService;
-        this.funcColsService = beans.funcColsService;
-=======
-        this.popupService = beans.popupService!;
-        this.sortController = beans.sortController;
-        this.columnNameService = beans.columnNameService;
->>>>>>> theirs
         this.valueColsService = beans.valueColsService;
-<<<<<<< ours
         this.aggFuncSvc = beans.aggFuncSvc;
-||||||| ancestor
-        this.aggFuncService = beans.aggFuncService;
-=======
         this.rowGroupColsService = beans.rowGroupColsService;
-        this.aggFuncService = beans.aggFuncService;
->>>>>>> theirs
     }
 
     private readonly eSortIndicator: SortIndicatorComp = RefPlaceholder;
@@ -383,13 +346,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     }
 
     private isGroupingAndLocked(): boolean {
-<<<<<<< ours
-        return this.isGroupingZone() && isRowGroupColLocked(this.funcColsSvc, this.gos, this.column);
-||||||| ancestor
-        return this.isGroupingZone() && isRowGroupColLocked(this.funcColsService, this.gos, this.column);
-=======
         return this.isGroupingZone() && !!this.rowGroupColsService?.isRowGroupColLocked!(this.column);
->>>>>>> theirs
     }
 
     private isAggregationZone() {

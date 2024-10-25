@@ -49,7 +49,7 @@ export class SortService extends BeanStub implements NamedBean {
         let columnsToUpdate = [column];
         if (isColumnsSortingCoupledToGroup) {
             if (column.getColDef().showRowGroup) {
-                const rowGroupColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
+                const rowGroupColumns = this.showRowGroupCols?.getSourceColumnsForGroupColumn!(column);
                 const sortableRowGroupColumns = rowGroupColumns?.filter((col) => col.isSortable());
 
                 if (sortableRowGroupColumns) {
@@ -260,7 +260,7 @@ export class SortService extends BeanStub implements NamedBean {
     }
 
     public getDisplaySortForColumn(column: AgColumn): SortDirection | 'mixed' | undefined {
-        const linkedColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
+        const linkedColumns = this.showRowGroupCols?.getSourceColumnsForGroupColumn(column);
         if (!this.canColumnDisplayMixedSort(column) || !linkedColumns?.length) {
             return column.getSort();
         }
@@ -319,7 +319,7 @@ export class SortService extends BeanStub implements NamedBean {
             comp.addOrRemoveCssClass('ag-header-cell-sorted-none', !sort);
 
             if (column.getColDef().showRowGroup) {
-                const sourceColumns = this.funcColsSvc.getSourceColumnsForGroupColumn(column);
+                const sourceColumns = this.showRowGroupCols?.getSourceColumnsForGroupColumn(column);
                 // this == is intentional, as it allows null and undefined to match, which are both unsorted states
                 const sortDirectionsMatch = sourceColumns?.every(
                     (sourceCol) => column.getSort() == sourceCol.getSort()
