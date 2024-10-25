@@ -10,7 +10,6 @@ import type { ColumnEventType } from '../events';
 import type { QuickFilterService } from '../filter/quickFilterService';
 import { _shouldMaintainColumnOrder } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
-import type { IColsService } from '../interfaces/iColsService';
 import type { Column } from '../interfaces/iColumn';
 import type { IPivotResultColsService } from '../interfaces/iPivotResultColsService';
 import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
@@ -28,6 +27,7 @@ import {
     isColumnGroupAutoCol,
 } from './columnUtils';
 import type { ColumnViewportService } from './columnViewportService';
+import type { FuncColsService } from './funcColsService';
 import type { SelectionColService } from './selectionColService';
 import type { VisibleColsService } from './visibleColsService';
 
@@ -58,9 +58,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
     private columnDefFactory?: ColumnDefFactory;
     private columnStateService: ColumnStateService;
     private columnAutosizeService?: ColumnAutosizeService;
-    private valueColsService?: IColsService;
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private quickFilterService?: QuickFilterService;
     private showRowGroupColsService?: IShowRowGroupColsService;
     private rowAutoHeightService?: RowAutoHeightService;
@@ -77,9 +75,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
         this.columnDefFactory = beans.columnDefFactory;
         this.columnStateService = beans.columnStateService;
         this.columnAutosizeService = beans.columnAutosizeService;
-        this.valueColsService = beans.valueColsService;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
+        this.funcColsService = beans.funcColsService;
         this.quickFilterService = beans.quickFilterService;
         this.showRowGroupColsService = beans.showRowGroupColsService;
         this.rowAutoHeightService = beans.rowAutoHeightService;
@@ -153,9 +149,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
         this.colDefCols = { tree, treeDepth, list, map };
 
-        this.rowGroupColsService?.extractCols(source, oldCols);
-        this.pivotColsService?.extractCols(source, oldCols);
-        this.valueColsService?.extractCols(source, oldCols);
+        this.funcColsService.extractCols(source, oldCols);
 
         this.ready = true;
 
@@ -270,12 +264,12 @@ export class ColumnModel extends BeanStub implements NamedBean {
         // show columns we are aggregating on
 
         const showAutoGroupAndValuesOnly = this.isPivotMode() && !this.showingPivotResult;
-        const valueColumns = this.valueColsService?.columns;
+        const valueColumns = this.funcColsService.valueCols;
 
         const res = this.cols.list.filter((col) => {
             const isAutoGroupCol = isColumnGroupAutoCol(col);
             if (showAutoGroupAndValuesOnly) {
-                const isValueCol = valueColumns?.includes(col);
+                const isValueCol = valueColumns && valueColumns.includes(col);
                 return isAutoGroupCol || isValueCol;
             } else {
                 // keep col if a) it's auto-group or b) it's visible
@@ -441,7 +435,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
     // + clientSideRowModel
     public isPivotActive(): boolean {
-        const pivotColumns = this.pivotColsService?.columns;
+        const pivotColumns = this.funcColsService.pivotCols;
         return this.pivotMode && !!pivotColumns?.length;
     }
 

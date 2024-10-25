@@ -14,6 +14,7 @@ import type { ColumnNameService } from '../columns/columnNameService';
 import type { ColumnStateService } from '../columns/columnStateService';
 import type { ColumnViewportService } from '../columns/columnViewportService';
 import type { DataTypeService } from '../columns/dataTypeService';
+import type { FuncColsService } from '../columns/funcColsService';
 import type { SelectionColService } from '../columns/selectionColService';
 import type { VisibleColsService } from '../columns/visibleColsService';
 import type { AgComponentUtils } from '../components/framework/agComponentUtils';
@@ -49,7 +50,6 @@ import type { IAggFuncService } from '../interfaces/iAggFuncService';
 import type { IAutoColService } from '../interfaces/iAutoColService';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type { IClipboardService } from '../interfaces/iClipboardService';
-import type { IColsService } from '../interfaces/iColsService';
 import type { IContextMenuService } from '../interfaces/iContextMenu';
 import type { ICsvCreator } from '../interfaces/iCsvCreator';
 import type { IDetailGridApiService } from '../interfaces/iDetailGridApiService';
@@ -235,9 +235,7 @@ export interface CoreBeanCollection {
     selectionColService?: SelectionColService;
     columnDefFactory?: ColumnDefFactory;
     columnAutosizeService?: ColumnAutosizeService;
-    rowGroupColsService?: IColsService;
-    valueColsService?: IColsService;
-    pivotColsService?: IColsService;
+    funcColsService: FuncColsService;
     quickFilterService?: QuickFilterService;
     showRowGroupColsService?: IShowRowGroupColsService;
     dataTypeService?: DataTypeService;
@@ -412,9 +410,7 @@ export type BeanName =
     | 'flashCellService'
     | 'flattenStage'
     | 'focusService'
-    | 'pivotColsService'
-    | 'rowGroupColsService'
-    | 'valueColsService'
+    | 'funcColsService'
     | 'frameworkComponentWrapper'
     | 'frameworkOverrides'
     | 'globalEventListener'

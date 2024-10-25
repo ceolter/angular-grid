@@ -1,4 +1,5 @@
 import type { ColumnModel } from '../columns/columnModel';
+import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -6,7 +7,6 @@ import type { AgColumn } from '../entities/agColumn';
 import type { SortDirection } from '../entities/colDef';
 import type { ColumnEventType, SortChangedEvent } from '../events';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
-import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
 import type { SortModelItem } from '../interfaces/iSortModelItem';
@@ -19,12 +19,12 @@ export class SortController extends BeanStub implements NamedBean {
     beanName = 'sortController' as const;
 
     private columnModel: ColumnModel;
-    private rowGroupColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private showRowGroupColsService?: IShowRowGroupColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.columnModel = beans.columnModel;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.funcColsService = beans.funcColsService;
         this.showRowGroupColsService = beans.showRowGroupColsService;
     }
 
@@ -49,7 +49,7 @@ export class SortController extends BeanStub implements NamedBean {
         let columnsToUpdate = [column];
         if (isColumnsSortingCoupledToGroup) {
             if (column.getColDef().showRowGroup) {
-                const rowGroupColumns = this.showRowGroupColsService?.getSourceColumnsForGroupColumn(column);
+                const rowGroupColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
                 const sortableRowGroupColumns = rowGroupColumns?.filter((col) => col.isSortable());
 
                 if (sortableRowGroupColumns) {
@@ -173,7 +173,7 @@ export class SortController extends BeanStub implements NamedBean {
             });
         }
 
-        const sortedRowGroupCols = this.rowGroupColsService?.columns.filter((col) => !!col.getSort()) ?? [];
+        const sortedRowGroupCols = this.funcColsService.rowGroupCols.filter((col) => !!col.getSort());
 
         // when both cols are missing sortIndex, we use the position of the col in all cols list.
         // this means if colDefs only have sort, but no sortIndex, we deterministically pick which
@@ -260,7 +260,7 @@ export class SortController extends BeanStub implements NamedBean {
     }
 
     public getDisplaySortForColumn(column: AgColumn): SortDirection | 'mixed' | undefined {
-        const linkedColumns = this.showRowGroupColsService?.getSourceColumnsForGroupColumn(column);
+        const linkedColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
         if (!this.canColumnDisplayMixedSort(column) || !linkedColumns?.length) {
             return column.getSort();
         }
@@ -319,7 +319,7 @@ export class SortController extends BeanStub implements NamedBean {
             comp.addOrRemoveCssClass('ag-header-cell-sorted-none', !sort);
 
             if (column.getColDef().showRowGroup) {
-                const sourceColumns = this.showRowGroupColsService?.getSourceColumnsForGroupColumn(column);
+                const sourceColumns = this.funcColsService.getSourceColumnsForGroupColumn(column);
                 // this == is intentional, as it allows null and undefined to match, which are both unsorted states
                 const sortDirectionsMatch = sourceColumns?.every(
                     (sourceCol) => column.getSort() == sourceCol.getSort()

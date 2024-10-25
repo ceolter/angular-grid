@@ -4,9 +4,9 @@ import type {
     BeanCollection,
     ComponentSelector,
     DataTypeService,
+    FuncColsService,
     GetDataPath,
     IAfterGuiAttachedParams,
-    IColsService,
     IDoesFilterPassParams,
     IRowNode,
     ISetFilter,
@@ -51,13 +51,13 @@ import { SetFilterModelValuesType, SetValueModel } from './setValueModel';
 
 /** @param V type of value in the Set Filter */
 export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> implements ISetFilter<V> {
-    private rowGroupColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private valueService: ValueService;
     private dataTypeService?: DataTypeService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.funcColsService = beans.funcColsService;
         this.valueService = beans.valueService;
         this.dataTypeService = beans.dataTypeService;
     }
@@ -323,7 +323,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         const isGroupCol = newParams.column.getId().startsWith(GROUP_AUTO_COLUMN_ID);
         this.treeDataTreeList = this.gos.get('treeData') && !!newParams.treeList && isGroupCol;
         this.getDataPath = this.gos.get('getDataPath');
-        this.groupingTreeList = !!this.rowGroupColsService?.columns.length && !!newParams.treeList && isGroupCol;
+        this.groupingTreeList = !!this.funcColsService.rowGroupCols.length && !!newParams.treeList && isGroupCol;
         this.createKey = this.generateCreateKey(keyCreator, this.treeDataTreeList || this.groupingTreeList);
     };
 
@@ -345,7 +345,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             valueFormatter: this.valueFormatter,
             usingComplexObjects: !!keyCreator,
             gos: this.gos,
-            rowGroupColsService: this.rowGroupColsService,
+            funcColsService: this.funcColsService,
             valueService: this.valueService,
             treeDataTreeList: this.treeDataTreeList,
             groupingTreeList: this.groupingTreeList,
@@ -968,18 +968,10 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     private doesFilterPassForGrouping(node: IRowNode): boolean {
-        let dataPath: any[];
-        const nodeValue = this.getValueFromNode(node);
-
-        if (this.rowGroupColsService) {
-            dataPath = this.rowGroupColsService.columns.map((groupCol) =>
-                this.valueService.getKeyForNode(groupCol, node)
-            );
-            dataPath.push(nodeValue);
-        } else {
-            dataPath = [nodeValue];
-        }
-
+        const dataPath = this.funcColsService.rowGroupCols.map((groupCol) =>
+            this.valueService.getKeyForNode(groupCol, node)
+        );
+        dataPath.push(this.getValueFromNode(node));
         return this.isInAppliedModel(
             this.createKey(processDataPath(dataPath, false, this.gos.get('groupAllowUnbalanced')) as any) as any
         );

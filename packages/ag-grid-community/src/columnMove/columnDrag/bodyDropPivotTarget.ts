@@ -1,20 +1,16 @@
+import type { FuncColsService } from '../../columns/funcColsService';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { DragAndDropIcon, DraggingEvent } from '../../dragAndDrop/dragAndDropService';
 import type { AgColumn } from '../../entities/agColumn';
-import type { IColsService } from '../../interfaces/iColsService';
 import type { ColumnPinnedType } from '../../interfaces/iColumn';
 import type { DropListener } from './bodyDropTarget';
 
 export class BodyDropPivotTarget extends BeanStub implements DropListener {
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
-    private valueColsService?: IColsService;
+    private funcColsService: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
-        this.valueColsService = beans.valueColsService;
+        this.funcColsService = beans.funcColsService;
     }
 
     private columnsToAggregate: AgColumn[] = [];
@@ -93,13 +89,13 @@ export class BodyDropPivotTarget extends BeanStub implements DropListener {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onDragStop(draggingEvent: DraggingEvent): void {
         if (this.columnsToAggregate.length > 0) {
-            this.valueColsService?.addColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
+            this.funcColsService.addValueColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
         }
         if (this.columnsToGroup.length > 0) {
-            this.rowGroupColsService?.addColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
+            this.funcColsService.addRowGroupColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
         }
         if (this.columnsToPivot.length > 0) {
-            this.pivotColsService?.addColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
+            this.funcColsService.addPivotColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
         }
     }
 

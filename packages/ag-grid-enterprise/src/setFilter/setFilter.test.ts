@@ -4,9 +4,9 @@ import type {
     ColDef,
     Context,
     EventService,
+    FuncColsService,
     GridOptionsService,
     IClientSideRowModel,
-    IColsService,
     IRowModel,
     SetFilterModel,
     SetFilterParams,
@@ -26,7 +26,7 @@ let eMiniFilter: jest.Mocked<AgInputTextField>;
 let eGui: jest.Mocked<HTMLElement>;
 let eSelectAll: jest.Mocked<AgCheckbox>;
 let gridOptionsService: jest.Mocked<GridOptionsService>;
-let rowGroupColsService: jest.Mocked<IColsService>;
+let funcColsService: jest.Mocked<FuncColsService>;
 let virtualList: jest.Mocked<VirtualList>;
 let setValueModel: jest.Mocked<SetValueModel<string>>;
 
@@ -62,8 +62,8 @@ beforeEach(() => {
     gridOptionsService = mock<GridOptionsService>('get', 'addPropertyEventListener');
     gridOptionsService.get.mockImplementation((prop) => (prop === 'rowModelType' ? 'clientSide' : undefined));
 
-    rowGroupColsService = mock<IColsService>();
-    rowGroupColsService.columns = [];
+    funcColsService = mock<FuncColsService>();
+    funcColsService.rowGroupCols = [];
 
     virtualList = mock<VirtualList>('refresh');
 
@@ -105,7 +105,7 @@ function createSetFilter(filterParams?: any): SetFilter<unknown> {
     (setFilter as any).eMiniFilter = eMiniFilter;
     (setFilter as any).eSelectAll = eSelectAll;
     (setFilter as any).gos = gridOptionsService;
-    (setFilter as any).rowGroupColsService = rowGroupColsService;
+    (setFilter as any).funcColsService = funcColsService;
     (setFilter as any).beans = {};
 
     setFilter.setParams(params);

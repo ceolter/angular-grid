@@ -4,11 +4,11 @@ import type {
     ChangedPath,
     ClientSideRowModelStage,
     ColumnModel,
+    FuncColsService,
     GetGroupRowAggParams,
     GridOptions,
     IAggFunc,
     IAggFuncParams,
-    IColsService,
     IPivotResultColsService,
     IRowNodeStage,
     NamedBean,
@@ -45,17 +45,13 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
     private columnModel: ColumnModel;
     private valueService: ValueService;
     private aggFuncService: AggFuncService;
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
-    private valueColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private pivotResultColsService?: IPivotResultColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.columnModel = beans.columnModel;
         this.aggFuncService = beans.aggFuncService as AggFuncService;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
-        this.valueColsService = beans.valueColsService;
+        this.funcColsService = beans.funcColsService;
         this.pivotResultColsService = beans.pivotResultColsService;
         this.valueService = beans.valueService;
     }
@@ -68,7 +64,7 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
         // and there is no cleanup to be done (as value columns don't change between transactions or change
         // detections). if no value columns and no changed path, means we have to go through all nodes in
         // case we need to clean up agg data from before.
-        const noValueColumns = !this.valueColsService?.columns?.length;
+        const noValueColumns = !this.funcColsService.valueCols?.length;
         const noUserAgg = !this.gos.getCallback('getGroupRowAgg');
         const changedPathActive = params.changedPath && params.changedPath.isActive();
         if (noValueColumns && noUserAgg && changedPathActive) {
@@ -83,8 +79,8 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
     private createAggDetails(params: StageExecuteParams): AggregationDetails {
         const pivotActive = this.columnModel.isPivotActive();
 
-        const measureColumns = this.valueColsService?.columns ?? [];
-        const pivotColumns = pivotActive && this.pivotColsService ? this.pivotColsService.columns : [];
+        const measureColumns = this.funcColsService.valueCols;
+        const pivotColumns = pivotActive ? this.funcColsService.pivotCols : [];
 
         const aggDetails: AggregationDetails = {
             alwaysAggregateAtRootLevel: this.gos.get('alwaysAggregateAtRootLevel'),

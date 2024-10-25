@@ -6,6 +6,4 @@ export interface IShowRowGroupColsService {
     getShowRowGroupCols(): AgColumn[];
 
     getShowRowGroupCol(id: string): AgColumn | undefined;
-
-    getSourceColumnsForGroupColumn(groupCol: AgColumn): AgColumn[] | null;
 }

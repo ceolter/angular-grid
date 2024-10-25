@@ -1,7 +1,7 @@
 import type { ApplyColumnStateParams, ColumnState } from '../columns/columnStateService';
 import type { RowDropZoneEvents, RowDropZoneParams } from '../dragAndDrop/rowDragFeature';
 import type { ColDef, ColGroupDef, ColumnChooserParams, HeaderLocation, IAggFunc } from '../entities/colDef';
-import type { ChartRef, GridOptions } from '../entities/gridOptions';
+import type { ChartRef, GridOptions, SelectAllMode } from '../entities/gridOptions';
 import type { AgPublicEventType } from '../eventTypes';
 import type {
     AgEvent,
@@ -117,38 +117,52 @@ export interface _RowSelectionGridApi<TData = any> {
     setNodesSelected(params: { nodes: IRowNode<TData>[]; newValue: boolean; source?: SelectionEventSourceType }): void;
 
     /**
-     * Select all rows, regardless of filtering and rows that are not visible due to grouping being enabled and their groups not expanded.
+     * Select all rows. By default this ignores filtering, expansion and pagination settings. Pass the appropriate select all mode as an
+     * argument in order to select only rows that satisfy the filter, or those rows on the current page.
+     *
+     * @param mode SelectAll mode to use. See `SelectAllMode`
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAll'`
      */
-    selectAll(source?: SelectionEventSourceType): void;
+    selectAll(mode?: SelectAllMode, source?: SelectionEventSourceType): void;
 
     /**
-     * Clear all row selections, regardless of filtering.
+     * Clear all row selections. By default this ignores filtering, expansion and pagination settings. Pass the appropriate select all mode as an
+     * argument in order to select only rows that satisfy the filter, or those rows on the current page.
+     *
+     * @param mode SelectAll mode to use. See `SelectAllMode`
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAll'`
      */
-    deselectAll(source?: SelectionEventSourceType): void;
+    deselectAll(mode?: SelectAllMode, source?: SelectionEventSourceType): void;
 
     /**
      * Select all filtered rows.
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAllFiltered'`
+     *
+     * @deprecated as of v33. Use `selectAll('filtered')` instead
      */
     selectAllFiltered(source?: SelectionEventSourceType): void;
 
     /**
      * Clear all filtered selections.
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAllFiltered'`
+     *
+     * @deprecated as of v33. Use `deselectAll('filtered')` instead
      */
     deselectAllFiltered(source?: SelectionEventSourceType): void;
 
     /**
      * Select all rows on the current page.
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAllCurrentPage'`
+     *
+     * @deprecated as of v33. Use `selectAll('currentPage')` instead
      */
     selectAllOnCurrentPage(source?: SelectionEventSourceType): void;
 
     /**
      * Clear all filtered on the current page.
      * @param source Source property that will appear in the `selectionChanged` event, defaults to `'apiSelectAllCurrentPage'`
+     *
+     * @deprecated as of v33. Use `deselectAll('currentPage')` instead
      */
     deselectAllOnCurrentPage(source?: SelectionEventSourceType): void;
 

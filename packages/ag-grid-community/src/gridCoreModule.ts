@@ -5,6 +5,7 @@ import { ColumnModel } from './columns/columnModel';
 import { ColumnNameService } from './columns/columnNameService';
 import { ColumnStateService } from './columns/columnStateService';
 import { ColumnViewportService } from './columns/columnViewportService';
+import { FuncColsService } from './columns/funcColsService';
 import { VisibleColsService } from './columns/visibleColsService';
 import { Registry } from './components/framework/registry';
 import { UserComponentFactory } from './components/framework/userComponentFactory';
@@ -51,6 +52,7 @@ export const CommunityCoreModule: _ModuleWithoutApi = {
         SyncService,
         AriaAnnouncementService,
         ColumnStateService,
+        FuncColsService,
         ColumnNameService,
         ColumnViewportService,
     ],

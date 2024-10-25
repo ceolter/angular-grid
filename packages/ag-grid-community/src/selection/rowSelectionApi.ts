@@ -1,4 +1,5 @@
 import type { BeanCollection } from '../context/context';
+import type { SelectAllMode } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import type { SelectionEventSourceType } from '../events';
 import type { IRowNode } from '../interfaces/iRowNode';
@@ -30,22 +31,33 @@ export function setNodesSelected(
     beans.selectionService?.setNodesSelected({ nodes: nodesAsRowNode, source: source ?? 'api', newValue });
 }
 
-export function selectAll(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAll') {
-    beans.selectionService?.selectAllRowNodes({ source });
+export function selectAll(
+    beans: BeanCollection,
+    selectAll?: SelectAllMode,
+    source: SelectionEventSourceType = 'apiSelectAll'
+) {
+    beans.selectionService?.selectAllRowNodes({ source, selectAll });
 }
 
-export function deselectAll(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAll') {
-    beans.selectionService?.deselectAllRowNodes({ source });
+export function deselectAll(
+    beans: BeanCollection,
+    selectAll?: SelectAllMode,
+    source: SelectionEventSourceType = 'apiSelectAll'
+) {
+    beans.selectionService?.deselectAllRowNodes({ source, selectAll });
 }
 
+/** @deprecated v33 */
 export function selectAllFiltered(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAllFiltered') {
     beans.selectionService?.selectAllRowNodes({ source, selectAll: 'filtered' });
 }
 
+/** @deprecated v33 */
 export function deselectAllFiltered(beans: BeanCollection, source: SelectionEventSourceType = 'apiSelectAllFiltered') {
     beans.selectionService?.deselectAllRowNodes({ source, selectAll: 'filtered' });
 }
 
+/** @deprecated v33 */
 export function selectAllOnCurrentPage(
     beans: BeanCollection,
     source: SelectionEventSourceType = 'apiSelectAllCurrentPage'
@@ -53,6 +65,7 @@ export function selectAllOnCurrentPage(
     beans.selectionService?.selectAllRowNodes({ source, selectAll: 'currentPage' });
 }
 
+/** @deprecated v33 */
 export function deselectAllOnCurrentPage(
     beans: BeanCollection,
     source: SelectionEventSourceType = 'apiSelectAllCurrentPage'

@@ -11,7 +11,6 @@ import { GroupFilter } from './groupFilter/groupFilter';
 import { GroupFloatingFilterComp } from './groupFilter/groupFloatingFilter';
 import { GroupHideOpenParentsService } from './groupHideOpenParentsService';
 import { GroupStage } from './groupStage/groupStage';
-import { RowGroupColsService } from './rowGroupColsService';
 import {
     addRowGroupColumns,
     getRowGroupColumns,
@@ -22,7 +21,7 @@ import {
 
 export const RowGroupingCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingCoreModule'),
-    beans: [GroupStage, GroupHideOpenParentsService, RowGroupColsService],
+    beans: [GroupStage, GroupHideOpenParentsService],
     dependsOn: [EnterpriseCoreModule, AggregationModule, GroupColumnModule],
 };
 

@@ -2,9 +2,9 @@ import type {
     AgColumn,
     BeanCollection,
     ColumnModel,
+    FuncColsService,
     IAggColumnNameService,
     IAggFunc,
-    IColsService,
     NamedBean,
 } from 'ag-grid-community';
 import { BeanStub, _exists } from 'ag-grid-community';
@@ -12,13 +12,11 @@ import { BeanStub, _exists } from 'ag-grid-community';
 export class AggColumnNameService extends BeanStub implements NamedBean, IAggColumnNameService {
     beanName = 'aggColumnNameService' as const;
 
-    private rowGroupColsService?: IColsService;
-    private valueColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private columnModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.valueColsService = beans.valueColsService;
+        this.funcColsService = beans.funcColsService;
         this.columnModel = beans.columnModel;
     }
 
@@ -35,9 +33,9 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
 
         // otherwise we have a measure that is active, and we are doing aggregation on it
         if (pivotActiveOnThisColumn) {
-            const valueColumns = this.valueColsService?.columns;
+            const valueColumns = this.funcColsService.valueCols;
             const isCollapsedHeaderEnabled =
-                this.gos.get('removePivotHeaderRowWhenSingleValueColumn') && valueColumns?.length === 1;
+                this.gos.get('removePivotHeaderRowWhenSingleValueColumn') && valueColumns.length === 1;
             const isTotalColumn = column.getColDef().pivotTotalColumnIds !== undefined;
             if (isCollapsedHeaderEnabled && !isTotalColumn) {
                 return headerName; // Skip decorating the header - in this case the label is the pivot key, not the value col
@@ -46,7 +44,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
             aggFuncFound = true;
         } else {
             const measureActive = column.isValueActive();
-            const aggregationPresent = this.columnModel.isPivotMode() || !this.rowGroupColsService?.isRowGroupEmpty?.();
+            const aggregationPresent = this.columnModel.isPivotMode() || !this.funcColsService.isRowGroupEmpty();
 
             if (measureActive && aggregationPresent) {
                 aggFunc = column.getAggFunc();

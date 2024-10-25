@@ -1,18 +1,11 @@
-import type { AgColumn, BeanCollection, DragAndDropIcon, DraggingEvent, IColsService } from 'ag-grid-community';
+import type { AgColumn, DragAndDropIcon, DraggingEvent } from 'ag-grid-community';
 import { _createIconNoSpan } from 'ag-grid-community';
 
 import { BaseDropZonePanel } from './baseDropZonePanel';
 
 export class PivotDropZonePanel extends BaseDropZonePanel {
-    private pivotColsService?: IColsService;
-
     constructor(horizontal: boolean) {
         super(horizontal, 'pivot');
-    }
-
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.pivotColsService = beans.pivotColsService;
     }
 
     public postConstruct(): void {
@@ -83,7 +76,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]): void {
-        this.pivotColsService?.setColumns(columns, 'toolPanelUi');
+        this.funcColsService.setPivotColumns(columns, 'toolPanelUi');
     }
 
     protected getIconName(): DragAndDropIcon {
@@ -91,6 +84,6 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.pivotColsService?.columns ?? [];
+        return this.funcColsService.pivotCols;
     }
 }

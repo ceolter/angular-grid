@@ -1,4 +1,5 @@
 import { AutoScrollService } from '../autoScrollService';
+import type { FuncColsService } from '../columns/funcColsService';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
@@ -17,7 +18,6 @@ import type { FocusService } from '../focusService';
 import type { MouseEventService } from '../gridBodyComp/mouseEventService';
 import { _getRowIdCallback, _isClientSideRowModel } from '../gridOptionsUtils';
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
-import type { IColsService } from '../interfaces/iColsService';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { ISelectionService } from '../interfaces/iSelectionService';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
@@ -85,7 +85,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     private selectionService?: ISelectionService;
     private mouseEventService: MouseEventService;
     private ctrlsService: CtrlsService;
-    private rowGroupColsService?: IColsService;
+    private funcColsService: FuncColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.dragAndDropService = beans.dragAndDropService!;
@@ -97,7 +97,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
         this.selectionService = beans.selectionService;
         this.mouseEventService = beans.mouseEventService;
         this.ctrlsService = beans.ctrlsService;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.funcColsService = beans.funcColsService;
     }
 
     private clientSideRowModel: IClientSideRowModel;
@@ -148,7 +148,8 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     }
 
     public shouldPreventRowMove(): boolean {
-        if (this.rowGroupColsService?.columns.length) {
+        const rowGroupCols = this.funcColsService.rowGroupCols;
+        if (rowGroupCols.length) {
             return true;
         }
         const isFilterPresent = this.filterManager?.isAnyFilterPresent();

@@ -4,10 +4,10 @@ import type {
     ColumnNameService,
     FilterDestroyedEvent,
     FilterManager,
+    FuncColsService,
     IAfterGuiAttachedParams,
     IFilterComp,
     IFilterParams,
-    IShowRowGroupColsService,
 } from 'ag-grid-community';
 import {
     AgPromise,
@@ -30,12 +30,12 @@ export type GroupFilterEvent = 'columnRowGroupChanged' | 'selectedColumnChanged'
 export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilterComp {
     private filterManager?: FilterManager;
     private columnNameService: ColumnNameService;
-    private showRowGroupColsService?: IShowRowGroupColsService;
+    private funcColsService: FuncColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
         this.columnNameService = beans.columnNameService;
-        this.showRowGroupColsService = beans.showRowGroupColsService;
+        this.funcColsService = beans.funcColsService;
     }
 
     private readonly eGroupField: HTMLElement = RefPlaceholder;
@@ -107,7 +107,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
             _warn(237);
             return [];
         }
-        const sourceColumns = this.showRowGroupColsService?.getSourceColumnsForGroupColumn?.(this.groupColumn);
+        const sourceColumns = this.funcColsService.getSourceColumnsForGroupColumn(this.groupColumn);
         if (!sourceColumns) {
             _warn(183);
             return [];

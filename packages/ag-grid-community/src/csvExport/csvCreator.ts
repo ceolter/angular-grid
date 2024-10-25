@@ -1,9 +1,9 @@
 import type { ColumnModel } from '../columns/columnModel';
 import type { ColumnNameService } from '../columns/columnNameService';
+import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import type { BeanCollection } from '../context/context';
 import type { CsvCustomContent, CsvExportParams } from '../interfaces/exportParams';
-import type { IColsService } from '../interfaces/iColsService';
 import type { ICsvCreator } from '../interfaces/iCsvCreator';
 import { _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
@@ -19,13 +19,13 @@ export class CsvCreator
 
     private columnModel: ColumnModel;
     private columnNameService: ColumnNameService;
-    private rowGroupColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private valueService: ValueService;
 
     public wireBeans(beans: BeanCollection): void {
         this.columnModel = beans.columnModel;
         this.columnNameService = beans.columnNameService;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.funcColsService = beans.funcColsService;
         this.valueService = beans.valueService;
     }
 
@@ -69,7 +69,7 @@ export class CsvCreator
     }
 
     public createSerializingSession(params?: CsvExportParams): CsvSerializingSession {
-        const { columnModel, columnNameService, rowGroupColsService, valueService, gos } = this;
+        const { columnModel, columnNameService, funcColsService, valueService, gos } = this;
         const {
             processCellCallback,
             processHeaderCallback,
@@ -82,7 +82,7 @@ export class CsvCreator
         return new CsvSerializingSession({
             columnModel,
             columnNameService,
-            rowGroupColsService,
+            funcColsService,
             valueService,
             gos,
             processCellCallback: processCellCallback || undefined,

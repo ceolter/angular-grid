@@ -4,8 +4,8 @@ import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import type { ColDef, ColGroupDef } from '../entities/colDef';
-import type { IColsService } from '../interfaces/iColsService';
 import { SKIP_JS_BUILTINS } from '../utils/object';
+import type { FuncColsService } from './funcColsService';
 
 // returns copy of an object, doing a deep clone of any objects with that object.
 // this is used for eg creating copies of Column Definitions, where we want to
@@ -45,12 +45,10 @@ export function _deepCloneDefinition<T>(object: T, keysToSkip?: string[]): T | u
 export class ColumnDefFactory extends BeanStub implements NamedBean {
     beanName = 'columnDefFactory' as const;
 
-    private rowGroupColsService?: IColsService;
-    private pivotColsService?: IColsService;
+    private funcColsService: FuncColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.pivotColsService = beans.pivotColsService;
+        this.funcColsService = beans.funcColsService;
     }
 
     public getColumnDefs(
@@ -67,8 +65,8 @@ export class ColumnDefFactory extends BeanStub implements NamedBean {
             cols.sort((a, b) => colsList.indexOf(a) - colsList.indexOf(b));
         }
 
-        const rowGroupColumns = this.rowGroupColsService?.columns ?? [];
-        const pivotColumns = this.pivotColsService?.columns ?? [];
+        const rowGroupColumns = this.funcColsService.rowGroupCols;
+        const pivotColumns = this.funcColsService.pivotCols;
 
         return this.buildColumnDefs(cols, rowGroupColumns, pivotColumns);
     }

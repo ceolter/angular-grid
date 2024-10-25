@@ -67,8 +67,11 @@ export interface HeightChangedEvent<TData = any> extends RowNodeEvent<'heightCha
 export interface RowIndexChangedEvent<TData = any> extends RowNodeEvent<'rowIndexChanged', TData> {}
 export interface TopChangedEvent<TData = any> extends RowNodeEvent<'topChanged', TData> {}
 export interface ExpandedChangedEvent<TData = any> extends RowNodeEvent<'expandedChanged', TData> {}
+/** @deprecated v33 Use the `modelUpdated` event instead and calculate whether the first child has changed. */
 export interface FirstChildChangedEvent<TData = any> extends RowNodeEvent<'firstChildChanged', TData> {}
+/** @deprecated v33 Use the `modelUpdated` event instead and calculate whether the last child has changed. */
 export interface LastChildChangedEvent<TData = any> extends RowNodeEvent<'lastChildChanged', TData> {}
+/** @deprecated v33 Use the `modelUpdated` event instead and calculate whether the child index has changed. */
 export interface ChildIndexChangedEvent<TData = any> extends RowNodeEvent<'childIndexChanged', TData> {}
 export interface AllChildrenCountChangedEvent<TData = any> extends RowNodeEvent<'allChildrenCountChanged', TData> {}
 export interface UiLevelChangedEvent<TData = any> extends RowNodeEvent<'uiLevelChanged', TData> {}
@@ -123,11 +126,11 @@ interface BaseRowNode<TData = any> {
     /** `true` if this node is a group node (i.e. it has children) */
     group: boolean | undefined;
 
-    /** `true` if this is the first child in this group. Changes when data is sorted. */
+    /** @deprecated v33 Use `rowNode.parent?.childrenAfterSort?.[0] === rowNode` instead. */
     firstChild: boolean;
-    /** `true` if this is the last child in this group. Changes when data is sorted. */
+    /** @deprecated v33 Use `!!rowNode.parent?.childrenAfterSort && (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)` instead. */
     lastChild: boolean;
-    /** Index of this row with respect to its parent when grouping. Changes when data is sorted. */
+    /** @deprecated v33 Use `rowNode.parent?.childrenAfterSort?.findIndex(r => r === rowNode)` instead. */
     childIndex: number;
 
     /** How many levels this node is from the top when grouping. */

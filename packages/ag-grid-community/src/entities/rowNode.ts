@@ -104,13 +104,8 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     /** `true` if this node is a group and the group is the bottom level in the tree. */
     public leafGroup: boolean | undefined;
 
-    /** `true` if this is the first child in this group. Changes when data is sorted. */
     public firstChild: boolean;
-
-    /** `true` if this is the last child in this group. Changes when data is sorted. */
     public lastChild: boolean;
-
-    /** Index of this row with respect to its parent when grouping. Changes when data is sorted. */
     public childIndex: number;
 
     /** The current row index. If the row is filtered out or in a collapsed group, this value will be `null`. */
@@ -624,6 +619,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
 
     /** Add an event listener. */
     public addEventListener<T extends RowNodeEventType>(eventType: T, userListener: AgRowNodeEventListener<T>): void {
+        this.beans.validationService?.checkRowEvents(eventType);
         if (!this.__localEventService) {
             this.__localEventService = new LocalEventService();
         }

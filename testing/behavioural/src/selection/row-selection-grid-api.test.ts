@@ -68,7 +68,7 @@ describe('Row Selection Grid API', () => {
                 });
             });
 
-            describe('selectAllOnCurrentPage', () => {
+            describe('selectAll("currentPage")', () => {
                 test('Cannot select all rows on current page', () => {
                     const api = createGrid({
                         columnDefs,
@@ -79,13 +79,13 @@ describe('Row Selection Grid API', () => {
                         paginationPageSizeSelector: false,
                     });
 
-                    api.selectAllOnCurrentPage();
+                    api.selectAll('currentPage');
 
                     assertSelectedRowsByIndex([], api);
                 });
             });
 
-            describe('selectAllFiltered', () => {
+            describe('selectAll("filtered")', () => {
                 test('Cannot select all filtered rows', () => {
                     const api = createGrid({
                         columnDefs,
@@ -95,7 +95,7 @@ describe('Row Selection Grid API', () => {
 
                     api.setGridOption('quickFilterText', 'ing');
 
-                    api.selectAllFiltered();
+                    api.selectAll('filtered');
 
                     assertSelectedRowNodes([], api);
                 });

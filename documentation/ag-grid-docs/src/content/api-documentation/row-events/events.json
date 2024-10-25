@@ -89,33 +89,6 @@
                 "returnType": "void"
             }
         },
-        "firstChildChanged": {
-            "description": "`firstChild` has changed.",
-            "type": {
-                "arguments": {
-                    "event": "FirstChildChangedEvent"
-                },
-                "returnType": "void"
-            }
-        },
-        "lastChildChanged": {
-            "description": "`lastChild` has changed.",
-            "type": {
-                "arguments": {
-                    "event": "LastChildChangedEvent"
-                },
-                "returnType": "void"
-            }
-        },
-        "childIndexChanged": {
-            "description": "`childIndex` has changed.",
-            "type": {
-                "arguments": {
-                    "event": "ChildIndexChangedEvent"
-                },
-                "returnType": "void"
-            }
-        },
         "allChildrenCountChanged": {
             "description": "`allChildrenCount` has changed.",
             "type": {

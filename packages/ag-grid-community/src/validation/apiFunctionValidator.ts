@@ -64,6 +64,26 @@ const deprecatedFunctions: {
         old: 'getInfiniteRowCount()',
         new: 'getDisplayedRowCount()',
     },
+    selectAllFiltered: {
+        version: 'v33',
+        old: 'selectAllFiltered()',
+        new: 'selectAll("filtered")',
+    },
+    deselectAllFiltered: {
+        version: 'v33',
+        old: 'deselectAllFiltered()',
+        new: 'deselectAll("filtered")',
+    },
+    selectAllOnCurrentPage: {
+        version: 'v33',
+        old: 'selectAllOnCurrentPage()',
+        new: 'selectAll("currentPage")',
+    },
+    deselectAllOnCurrentPage: {
+        version: 'v33',
+        old: 'deselectAllOnCurrentPage()',
+        new: 'deselectAll("currentPage")',
+    },
 };
 
 export function validateApiFunction<TFunctionName extends ApiFunctionName>(

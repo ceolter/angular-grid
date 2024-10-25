@@ -6,6 +6,7 @@ import type { GridOptions } from '../entities/gridOptions';
 import { INITIAL_GRID_OPTION_KEYS } from '../gridOptionsInitial';
 import type { PropertyChangedSource } from '../gridOptionsService';
 import type { EnterpriseModuleName, ModuleName } from '../interfaces/iModule';
+import type { RowNodeEventType } from '../interfaces/iRowNode';
 import { _areModulesGridScoped } from '../modules/moduleRegistry';
 import { _warnOnce } from '../utils/function';
 import { _fuzzySuggestions } from '../utils/fuzzyMatch';
@@ -90,6 +91,11 @@ export class ValidationService extends BeanStub implements NamedBean {
                 agGridDefaults,
                 jsComps,
             });
+        }
+    }
+    public checkRowEvents(eventType: RowNodeEventType): void {
+        if (DEPRECATED_ROW_NODE_EVENTS.has(eventType)) {
+            _warn(10, { eventType });
         }
     }
 
@@ -317,3 +323,9 @@ export function _fuzzyCheckStrings(
 
     return fuzzyMatches;
 }
+
+const DEPRECATED_ROW_NODE_EVENTS: Set<RowNodeEventType> = new Set([
+    'firstChildChanged',
+    'lastChildChanged',
+    'childIndexChanged',
+]);

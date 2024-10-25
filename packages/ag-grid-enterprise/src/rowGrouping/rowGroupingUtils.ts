@@ -2,15 +2,15 @@ import type {
     AgColumn,
     BeanCollection,
     ColumnModel,
+    FuncColsService,
     GridOptionsService,
-    IColsService,
     RowNode,
 } from 'ag-grid-community';
 
 export function isRowGroupColLocked(
+    funcColsService: FuncColsService,
     gos: GridOptionsService,
-    column: AgColumn,
-    rowGroupColsService?: IColsService
+    column: AgColumn
 ): boolean {
     const groupLockGroupColumns = gos.get('groupLockGroupColumns');
     if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
@@ -21,7 +21,7 @@ export function isRowGroupColLocked(
         return true;
     }
 
-    const rowGroupCols = rowGroupColsService?.columns ?? [];
+    const rowGroupCols = funcColsService.rowGroupCols;
     const colIndex = rowGroupCols.findIndex((groupCol) => groupCol.getColId() === column.getColId());
     return groupLockGroupColumns > colIndex;
 }

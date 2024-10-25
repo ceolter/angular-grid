@@ -6,8 +6,8 @@ import type {
     DragAndDropIcon,
     DragItem,
     DropTarget,
+    FuncColsService,
     IAggFuncService,
-    IColsService,
     PopupService,
     SortController,
     SortIndicatorComp,
@@ -24,8 +24,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     private sortController?: SortController;
     private columnModel: ColumnModel;
     private columnNameService: ColumnNameService;
-    private rowGroupColsService?: IColsService;
-    private valueColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private aggFuncService?: IAggFuncService;
 
     public override wireBeans(beans: BeanCollection) {
@@ -34,8 +33,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         this.sortController = beans.sortController;
         this.columnModel = beans.columnModel;
         this.columnNameService = beans.columnNameService;
-        this.rowGroupColsService = beans.rowGroupColsService;
-        this.valueColsService = beans.valueColsService!;
+        this.funcColsService = beans.funcColsService;
         this.aggFuncService = beans.aggFuncService;
     }
 
@@ -335,7 +333,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         const itemSelected = () => {
             hidePopup();
             this.getGui().focus();
-            this.valueColsService?.setColumnAggFunc?.(this.column, value, 'toolPanelDragAndDrop');
+            this.funcColsService.setColumnAggFunc(this.column, value, 'toolPanelDragAndDrop');
         };
 
         const localeTextFunc = this.getLocaleTextFunc();
@@ -347,7 +345,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     }
 
     private isGroupingAndLocked(): boolean {
-        return this.isGroupingZone() && isRowGroupColLocked(this.gos, this.column, this.rowGroupColsService);
+        return this.isGroupingZone() && isRowGroupColLocked(this.funcColsService, this.gos, this.column);
     }
 
     private isAggregationZone() {

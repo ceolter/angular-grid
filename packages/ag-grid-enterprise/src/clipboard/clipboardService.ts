@@ -1077,7 +1077,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
             let column = node.rowGroupColumn as AgColumn;
 
             if (!column && node.footer && node.level === -1) {
-                column = this.beans.rowGroupColsService?.columns[0] as AgColumn;
+                column = this.beans.funcColsService.rowGroupCols[0];
             }
             return processCellForClipboard({
                 value,

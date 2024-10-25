@@ -1079,7 +1079,7 @@ describe('Row Selection Legacy Grid Options', () => {
                 api.selectAllOnCurrentPage();
 
                 assertSelectedRowsByIndex([0, 1, 2, 3, 4], api);
-                expect(consoleWarnSpy).not.toHaveBeenCalled();
+                expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
             });
 
             test('Can deselect only rows on current page in single selection mode', () => {

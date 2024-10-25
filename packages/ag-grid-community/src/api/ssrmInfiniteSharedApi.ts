@@ -7,7 +7,7 @@ import { _getInfiniteRowModel, _getServerSideRowModel } from './rowModelApiUtils
 export function setRowCount(beans: BeanCollection, rowCount: number, maxRowFound?: boolean): void {
     const serverSideRowModel = _getServerSideRowModel(beans);
     if (serverSideRowModel) {
-        if (beans.rowGroupColsService?.isRowGroupEmpty?.()) {
+        if (beans.funcColsService.isRowGroupEmpty()) {
             serverSideRowModel.setRowCount(rowCount, maxRowFound);
             return;
         }

@@ -6,7 +6,7 @@ interface Params {
 }
 
 export function getErrorRedirectBaseUrl({ errorVersion, pageVersion }: Params) {
-    if (errorVersion === pageVersion) {
+    if (!errorVersion || errorVersion === pageVersion) {
         return;
     }
 

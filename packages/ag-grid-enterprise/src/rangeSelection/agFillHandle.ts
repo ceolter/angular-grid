@@ -243,9 +243,12 @@ export class AgFillHandle extends AbstractSelectionHandle {
                 }
 
                 if (isVertical && column) {
-                    fillValues(values, column, rowNode, () => {
-                        return !_isSameRow(currentRow!, this.isUp ? initialRangeStartRow : initialRangeEndRow);
-                    });
+                    fillValues(
+                        values,
+                        column,
+                        rowNode,
+                        () => !_isSameRow(currentRow!, this.isUp ? initialRangeStartRow : initialRangeEndRow)
+                    );
                 } else if (columns) {
                     withinInitialRange = true;
                     resetValues();
@@ -299,9 +302,19 @@ export class AgFillHandle extends AbstractSelectionHandle {
                     const cellValue = this.valueService.getValue(col, rowNode);
 
                     if (!fromUserFunction) {
-                        if (sourceCol && sourceCol.getColDef()?.useValueFormatterForExport !== false) {
-                            currentValue =
-                                this.valueService.formatValue(sourceCol, sourceRowNode!, currentValue) ?? currentValue;
+                        if (sourceCol) {
+                            const sourceColDef = sourceCol.getColDef();
+                            if (sourceColDef.useValueFormatterForExport !== false && sourceColDef.valueFormatter) {
+                                const formattedValue = this.valueService.formatValue(
+                                    sourceCol,
+                                    sourceRowNode!,
+                                    currentValue
+                                );
+
+                                if (formattedValue != null) {
+                                    currentValue = formattedValue;
+                                }
+                            }
                         }
                         if (col.getColDef().useValueParserForImport !== false) {
                             currentValue = this.valueService.parseValue(

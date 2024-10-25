@@ -1,18 +1,11 @@
-import type { AgColumn, BeanCollection, DragAndDropIcon, DraggingEvent, IColsService } from 'ag-grid-community';
+import type { AgColumn, DragAndDropIcon, DraggingEvent } from 'ag-grid-community';
 import { _createIconNoSpan } from 'ag-grid-community';
 
 import { BaseDropZonePanel } from './baseDropZonePanel';
 
 export class ValuesDropZonePanel extends BaseDropZonePanel {
-    private valueColsService?: IColsService;
-
     constructor(horizontal: boolean) {
         super(horizontal, 'aggregation');
-    }
-
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.valueColsService = beans.valueColsService;
     }
 
     public postConstruct(): void {
@@ -50,10 +43,10 @@ export class ValuesDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]): void {
-        this.valueColsService?.setColumns(columns, 'toolPanelUi');
+        this.funcColsService.setValueColumns(columns, 'toolPanelUi');
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.valueColsService?.columns ?? [];
+        return this.funcColsService.valueCols;
     }
 }

@@ -126,7 +126,7 @@ export class GroupHideOpenParentsService extends BeanStub implements IGroupHideO
         while (currentRowNode) {
             const parentRowNode: RowNode | null = currentRowNode.parent;
 
-            if (parentRowNode && currentRowNode.firstChild) {
+            if (parentRowNode?.childrenAfterSort && currentRowNode === parentRowNode.childrenAfterSort[0]) {
                 if (parentRowNode.rowGroupColumn === rowGroupColumn) {
                     return parentRowNode;
                 }

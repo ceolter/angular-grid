@@ -143,13 +143,13 @@ describe('Row Selection Grid API', () => {
             });
         });
 
-        describe('selectAllFiltered', () => {
+        describe('selectAll("filtered")', () => {
             test('Can select all filtered rows in single selection mode', () => {
                 const api = createGrid({ columnDefs, rowData, rowSelection: 'single' });
 
                 api.setGridOption('quickFilterText', 'ing');
 
-                api.selectAllFiltered();
+                api.selectAll('filtered');
                 const selectedNodes = api.getSelectedNodes();
 
                 expect(selectedNodes.length).toBe(2);
@@ -162,7 +162,7 @@ describe('Row Selection Grid API', () => {
 
                 api.setGridOption('quickFilterText', 'ing');
 
-                api.deselectAllFiltered();
+                api.deselectAll('filtered');
 
                 api.setGridOption('quickFilterText', '');
 

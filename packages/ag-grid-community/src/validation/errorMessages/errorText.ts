@@ -2,6 +2,7 @@ import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
 import type { ModuleName } from '../../interfaces/iModule';
+import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { getErrorLink } from '../logging';
 
@@ -68,7 +69,8 @@ export const AG_GRID_ERRORS = {
     8: ({ key }: { key: string }) => `Unknown key for navigation ${key}` as const,
     9: ({ variable }: { variable: { cssName: string; defaultValue: number } }) =>
         `No value for ${variable.cssName}. This usually means that the grid has been initialised before styles have been loaded. The default value of ${variable.defaultValue} will be used and updated when styles load.` as const,
-    // 10: () => '',
+    10: ({ eventType }: { eventType: RowNodeEventType }) =>
+        `As of v33, the '${eventType}' event is deprecated. Use the global 'modelUpdated' event to determine when row children have changed.`,
     11: () => 'No gridOptions provided to createGrid' as const,
     12: ({ colKey }: { colKey: string | Column }) => ['column ', colKey, ' not found'] as const,
     13: () =>

@@ -4,8 +4,6 @@ import type { ColDef, ColGroupDef, HeaderLocation } from '../entities/colDef';
 import type { Column, ColumnPinnedType } from '../interfaces/iColumn';
 import type { ApplyColumnStateParams, ColumnState } from './columnStateService';
 
-export type ColumnChangedEventType = 'columnValueChanged' | 'columnPivotChanged' | 'columnRowGroupChanged';
-
 export function getColumnDef<TValue = any, TData = any>(
     beans: BeanCollection,
     key: string | Column<TValue>

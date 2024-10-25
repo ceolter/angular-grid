@@ -7,10 +7,8 @@ import type { ColumnEventType } from '../events';
 import type { PropertyChangedSource } from '../gridOptionsService';
 import type { ColumnInstanceId } from '../interfaces/iColumn';
 import { _areEqual } from '../utils/array';
-import { _exists } from '../utils/generic';
 import { depthFirstOriginalTreeSearch } from './columnFactory';
 import type { ColKey, ColumnCollections } from './columnModel';
-import type { ColumnState, ColumnStateParams } from './columnStateService';
 import { CONTROLS_COLUMN_ID_PREFIX } from './selectionColService';
 
 export const GROUP_AUTO_COLUMN_ID = 'ag-Grid-AutoColumn' as const;
@@ -87,41 +85,6 @@ export function convertColumnTypes(type: string | string[]): string[] {
     }
     return typeKeys;
 }
-
-export const getValueFactory =
-    (stateItem: ColumnState | null, defaultState: ColumnStateParams | undefined) =>
-    <U extends keyof ColumnStateParams, S extends keyof ColumnStateParams>(
-        key1: U,
-        key2?: S
-    ): { value1: ColumnStateParams[U] | undefined; value2: ColumnStateParams[S] | undefined } => {
-        const obj: { value1: ColumnStateParams[U] | undefined; value2: ColumnStateParams[S] | undefined } = {
-            value1: undefined,
-            value2: undefined,
-        };
-        let calculated: boolean = false;
-
-        if (stateItem) {
-            if (stateItem[key1] !== undefined) {
-                obj.value1 = stateItem[key1];
-                calculated = true;
-            }
-            if (_exists(key2) && stateItem[key2] !== undefined) {
-                obj.value2 = stateItem[key2];
-                calculated = true;
-            }
-        }
-
-        if (!calculated && defaultState) {
-            if (defaultState[key1] !== undefined) {
-                obj.value1 = defaultState[key1];
-            }
-            if (_exists(key2) && defaultState[key2] !== undefined) {
-                obj.value2 = defaultState[key2];
-            }
-        }
-
-        return obj;
-    };
 
 export function _areColIdsEqual(colsA: AgColumn[] | null, colsB: AgColumn[] | null): boolean {
     return _areEqual(colsA, colsB, (a, b) => a.getColId() === b.getColId());

@@ -1,4 +1,5 @@
 import type { ColumnModel } from '../columns/columnModel';
+import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -7,7 +8,6 @@ import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
-import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IRowNode } from '../interfaces/iRowNode';
@@ -57,14 +57,14 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private sortController: SortController;
     private columnModel: ColumnModel;
-    private rowGroupColsService?: IColsService;
+    private funcColsService: FuncColsService;
     private rowNodeSorter: RowNodeSorter;
     private groupHideOpenParentsService?: IGroupHideOpenParentsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.sortController = beans.sortController!;
         this.columnModel = beans.columnModel;
-        this.rowGroupColsService = beans.rowGroupColsService;
+        this.funcColsService = beans.funcColsService;
         this.rowNodeSorter = beans.rowNodeSorter!;
         this.groupHideOpenParentsService = beans.groupHideOpenParentsService;
     }
@@ -131,7 +131,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             const skipSortingGroups =
                 groupMaintainOrder && groupColumnsPresent && !rowNode.leafGroup && !sortContainsGroupColumns;
             if (skipSortingGroups) {
-                const nextGroup = this.rowGroupColsService?.columns?.[rowNode.level + 1];
+                const nextGroup = this.funcColsService.rowGroupCols?.[rowNode.level + 1];
                 // if the sort is null, then sort was explicitly removed, so remove sort from this group.
                 const wasSortExplicitlyRemoved = nextGroup?.getSort() === null;
 
