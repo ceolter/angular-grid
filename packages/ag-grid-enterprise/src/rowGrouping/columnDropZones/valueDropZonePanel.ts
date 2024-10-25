@@ -50,7 +50,7 @@ export class ValuesDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]): void {
-        this.funcColsSvc.setValueColumns(columns, 'toolPanelUi');
+        this.valueColsSvc?.setColumns(columns, 'toolPanelUi');
     }
 
     protected getExistingItems(): AgColumn[] {

@@ -2,9 +2,7 @@ import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
-import type { ColumnEventType } from '../events';
 import type { IColsService } from '../interfaces/iColsService';
-import type { ColKey } from './columnModel';
 
 export class FuncColsService extends BeanStub implements NamedBean {
     beanName = 'funcColsSvc' as const;
@@ -25,7 +23,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
 
     public set rowGroupCols(cols: AgColumn[]) {
         if (this.rowGroupColsSvc) {
-            this.rowGroupColsSvc.columns = cols ?? [];
+            this.rowGroupColsSvc.columns = cols;
         }
     }
 
@@ -47,29 +45,5 @@ export class FuncColsService extends BeanStub implements NamedBean {
         if (this.pivotColsSvc) {
             this.pivotColsSvc.columns = cols;
         }
-    }
-
-    public addPivotColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.pivotColsSvc?.addColumns(keys, source);
-    }
-
-    public setPivotColumns(colKeys: ColKey[], source: ColumnEventType): void {
-        this.pivotColsSvc?.setColumns(colKeys, source);
-    }
-
-    public removePivotColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.pivotColsSvc?.removeColumns(keys, source);
-    }
-
-    public setValueColumns(colKeys: ColKey[], source: ColumnEventType): void {
-        this.valueColsSvc?.setColumns(colKeys, source);
-    }
-
-    public addValueColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.valueColsSvc?.addColumns(keys, source);
-    }
-
-    public removeValueColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.valueColsSvc?.removeColumns(keys, source);
     }
 }
