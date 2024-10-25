@@ -36,6 +36,7 @@ import {
 } from 'ag-grid-community';
 
 import { AgPillContainer } from './AgPillContainer';
+import { agRichSelectCSS } from './agRichSelect.css-GENERATED';
 import type { AgRichSelectListEvent } from './agRichSelectList';
 import { AgRichSelectList } from './agRichSelectList';
 
@@ -113,6 +114,8 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         if (searchStringCreator) {
             this.searchStringCreator = searchStringCreator;
         }
+
+        this.registerCSS(agRichSelectCSS);
     }
 
     public override postConstruct(): void {

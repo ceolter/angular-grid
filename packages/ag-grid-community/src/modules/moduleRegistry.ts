@@ -10,6 +10,7 @@ type ModuleStore = {
     [modelType in RowModelType | 'all']?: RowModelModuleStore;
 };
 
+const allRegisteredModules = new Set<Module>();
 const globalModulesMap: ModuleStore = {};
 const gridModulesMap: { [gridId: string]: ModuleStore } = {};
 let currentModuleVersion: string;
@@ -50,6 +51,8 @@ function runVersionChecks(module: Module) {
 export function _registerModule(module: Module, gridId: string | undefined): void {
     runVersionChecks(module);
     const rowModels = module.rowModels ?? ['all'];
+
+    allRegisteredModules.add(module);
 
     let moduleStore: ModuleStore;
     if (gridId !== undefined) {
@@ -95,6 +98,10 @@ export function _getRegisteredModules(gridId: string, rowModel: RowModelType): M
         ...Object.values(globalModulesMap[rowModel] ?? {}),
         ...Object.values(gridModules[rowModel] ?? {}),
     ];
+}
+
+export function _getAllRegisteredModules(): Set<Module> {
+    return new Set(allRegisteredModules);
 }
 
 export function _getGridRegisteredModules(gridId: string, rowModel: RowModelType): Module[] {

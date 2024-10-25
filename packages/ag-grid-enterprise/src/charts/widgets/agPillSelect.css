@@ -1,0 +1,27 @@
+.ag-pill-select {
+    display: flex;
+    flex-direction: column;
+
+    .ag-column-drop-list {
+        padding: 0;
+    }
+
+    .ag-select {
+        padding-top: var(--ag-spacing);
+    }
+
+    .ag-picker-field-wrapper {
+        background-color: transparent;
+        border: 0;
+    }
+
+    .ag-picker-field-display {
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--ag-chart-menu-label-color);
+    }
+
+    .ag-picker-field-icon .ag-icon {
+        color: var(--ag-chart-menu-label-color);
+    }
+}

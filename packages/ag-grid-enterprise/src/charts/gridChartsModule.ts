@@ -28,6 +28,7 @@ import {
     restoreChart,
     updateChart,
 } from './chartsApi';
+import { gridChartsModuleCSS } from './gridChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
 export const GridChartsCoreModule: _ModuleWithoutApi = {
@@ -40,6 +41,7 @@ export const GridChartsCoreModule: _ModuleWithoutApi = {
     },
     beans: [ChartService, ChartTranslationService, ChartCrossFilterService, ChartMenuListFactory, ChartMenuService],
     dependsOn: [RangeSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
+    css: [gridChartsModuleCSS],
 };
 
 export const GridChartsApiModule: _ModuleWithApi<_GridChartsGridApi> = {

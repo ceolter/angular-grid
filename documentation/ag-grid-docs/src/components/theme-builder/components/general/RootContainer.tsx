@@ -1,6 +1,4 @@
-import { type ThemeImpl, logErrorMessageOnce, paramToVariableName } from '@components/theme-builder/model/utils';
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
 
 import { useRenderedTheme } from '../../model/rendered-theme';
 import { EditorPanel } from '../editors/EditorPanel';
@@ -9,11 +7,8 @@ import { GetThemeButton } from './GetTheme';
 import { GridPreview } from './GridPreview';
 
 export const RootContainer = () => {
-    const theme = useRenderedTheme();
-
-    useEffect(() => {
-        warnOfUnknownCssVariables(theme);
-    }, [theme]);
+    // makes variables available for use by editors
+    useRenderedTheme();
 
     return (
         <Container>
@@ -104,14 +99,3 @@ const Main = styled('div')`
     position: relative;
     gap: 20px;
 `;
-
-function warnOfUnknownCssVariables(theme: ThemeImpl) {
-    const allowedVariables = new Set(Object.keys(theme.getParams().getValues()).map(paramToVariableName));
-    allowedVariables.add('--ag-line-height');
-    allowedVariables.add('--ag-indentation-level');
-    for (const [, variable] of theme.getCSS().matchAll(/var\((--ag-[\w-]+)[^)]*\)/g)) {
-        if (!allowedVariables.has(variable) && !/^--ag-(internal|inherited)-/.test(variable)) {
-            logErrorMessageOnce(`${variable} does not match a theme param`);
-        }
-    }
-}

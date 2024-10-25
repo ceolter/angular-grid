@@ -15,6 +15,7 @@ import {
     _makeNull,
 } from 'ag-grid-community';
 
+import { agAutocompleteCSS } from './agAutocomplete.css-GENERATED';
 import { AgAutocompleteList } from './agAutocompleteList';
 import type { AutocompleteEntry, AutocompleteListParams } from './autocompleteParams';
 
@@ -73,6 +74,7 @@ export class AgAutocomplete extends Component<AgAutocompleteEvent> {
             </div>`,
             [AgInputTextFieldSelector]
         );
+        this.registerCSS(agAutocompleteCSS);
     }
 
     public postConstruct(): void {

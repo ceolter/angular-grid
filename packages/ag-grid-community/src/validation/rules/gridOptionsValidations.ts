@@ -186,6 +186,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 },
             },
         },
+        groupHideParentOfSingleChild: {
+            dependencies: {
+                groupHideOpenParents: { required: [undefined, false] },
+            },
+        },
         groupRemoveSingleChildren: {
             dependencies: {
                 groupHideOpenParents: { required: [undefined, false] },

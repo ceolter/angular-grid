@@ -22,6 +22,7 @@ import {
     _warn,
 } from 'ag-grid-community';
 
+import { agSideBarCSS } from './agSideBar.css-GENERATED';
 import type { AgSideBarButtons, SideBarButtonClickedEvent } from './agSideBarButtons';
 import { AgSideBarButtonsSelector } from './agSideBarButtons';
 import { parseSideBarDef } from './sideBarDefParser';
@@ -47,11 +48,13 @@ export class AgSideBar extends Component implements ISideBar {
 
     constructor() {
         super(
-            /* html */ `<div class="ag-side-bar ag-unselectable">
-            <ag-side-bar-buttons data-ref="sideBarButtons"></ag-side-bar-buttons>
-        </div>`,
+            /* html */
+            `<div class="ag-side-bar ag-unselectable">
+                <ag-side-bar-buttons data-ref="sideBarButtons"></ag-side-bar-buttons>
+            </div>`,
             [AgSideBarButtonsSelector]
         );
+        this.registerCSS(agSideBarCSS);
     }
 
     public postConstruct(): void {

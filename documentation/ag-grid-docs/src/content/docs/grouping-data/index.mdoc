@@ -85,8 +85,8 @@ const gridOptions = {
 
 ## Hiding Parents of Individual Rows
 
-Groups with only a single child can be hidden from the grid by setting the `groupHideParentOfSingleChild` grid option to `true`. To only remove
-groups with a single leaf child, instead set to `"leafGroupsOnly"`.
+Groups with only a single child can be hidden from the grid by setting the `groupHideParentOfSingleChild` grid option to `true`.
+To remove only groups with a single leaf child, set this option to `"leafGroupsOnly"` instead.
 
 Filtering does not impact which groups get removed. Only groups containing a single child prior to filtering being applied are removed.
 
@@ -100,7 +100,7 @@ const gridOptions = {
 ```
 
 {% note %}
-This property `groupHideParentOfSingleChild` and `groupHideOpenParents` are mutually exclusive, and cannot be used together.
+The properties `groupHideParentOfSingleChild` and `groupHideOpenParents` are mutually exclusive.
 {% /note %}
 
 ## Next Up

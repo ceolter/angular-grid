@@ -70,32 +70,6 @@
     }
 }
 
-.ag-watermark {
-    position: absolute;
-    bottom: 20px;
-    right: 25px;
-    opacity: 0.7;
-    transition: opacity 1s ease-out 3s;
-    color: #9b9b9b;
-    &::before {
-        content: '';
-        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjA5IiBoZWlnaHQ9IjM2IiB2aWV3Qm94PSIwIDAgMjA5IDM2IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTkyLjk5MyAyMy42NTgyVjE1LjcxMTdIMTc5LjQ1MkwxNzEuNTA1IDIzLjY1ODJIMTkyLjk5M1oiIGZpbGw9IiM5QjlCOUIiLz4KPHBhdGggZD0iTTIwOC4yNSAzLjk1MDgxSDE5MS4yNzZMMTgzLjI2NiAxMS44OTczSDIwOC4yNVYzLjk1MDgxWiIgZmlsbD0iIzlCOUI5QiIvPgo8cGF0aCBkPSJNMTYzLjYyMiAzMS42MDQ4TDE2Ny42OTEgMjcuNTM2MUgxODEuNDIzVjM1LjQ4MjdIMTYzLjYyMlYzMS42MDQ4WiIgZmlsbD0iIzlCOUI5QiIvPgo8cGF0aCBkPSJNMTY2LjYxIDE5Ljc4MDNIMTc1LjM4M0wxODMuMzkzIDExLjgzMzdIMTY2LjYxVjE5Ljc4MDNaIiBmaWxsPSIjOUI5QjlCIi8+CjxwYXRoIGQ9Ik0xNTcuMDExIDMxLjYwNDdIMTYzLjYyMkwxNzEuNTA1IDIzLjY1ODJIMTU3LjAxMVYzMS42MDQ3WiIgZmlsbD0iIzlCOUI5QiIvPgo8cGF0aCBkPSJNMTkxLjI3NiAzLjk1MDgxTDE4Ny4yMDggOC4wMTk0MUgxNjEuMjdWMC4wNzI4NzZIMTkxLjI3NlYzLjk1MDgxWiIgZmlsbD0iIzlCOUI5QiIvPgo8cGF0aCBkPSJNMjAuODM5MSAzMC4yMDYxSDguMzc4OTJMNi4yMTc0NSAzNS41NDYySDAuNzUwMjQ0TDEyLjI1NjggOC41OTE1NUgxNy4wMjQ3TDI4LjUzMTMgMzUuNTQ2MkgyMy4wMDA1TDIwLjgzOTEgMzAuMjA2MVpNMTkuMTIyNyAyNS45NDY4TDE0LjYwOSAxNC45NDg4TDEwLjA5NTQgMjUuOTQ2OEgxOS4xMjI3WiIgZmlsbD0iIzlCOUI5QiIvPgo8cGF0aCBkPSJNMTA0LjQzNyAxOC41MDg5QzEwNi4wMjYgMTYuMTU2NyAxMTAuMDMxIDE1LjkwMjQgMTExLjY4NCAxNS45MDI0VjIwLjQ3OTZDMTA5LjY1IDIwLjQ3OTYgMTA3LjYxNSAyMC41NDMyIDEwNi40MDcgMjEuNDMzMkMxMDUuMiAyMi4zMjMyIDEwNC41NjQgMjMuNTMxMSAxMDQuNTY0IDI0Ljk5MzJWMzUuNTQ2Mkg5OS42MDUxVjE1LjkwMjRIMTA0LjM3M0wxMDQuNDM3IDE4LjUwODlaIiBmaWxsPSIjOUI5QjlCIi8+CjxwYXRoIGQ9Ik0xMTkuMzc2IDE1LjkwMjRIMTE0LjQxOFYzNS41NDYySDExOS4zNzZWMTUuOTAyNFoiIGZpbGw9IiM5QjlCOUIiLz4KPHBhdGggZD0iTTExOS4zNzYgNy4xMjkzOUgxMTQuNDE4VjEyLjk3OEgxMTkuMzc2VjcuMTI5MzlaIiBmaWxsPSIjOUI5QjlCIi8+CjxwYXRoIGQ9Ik0xNDMuOTc5IDcuMTI5MzlWMzUuNTQ2MkgxMzkuMjExTDEzOS4wODQgMzIuNTU4M0MxMzguMzg0IDMzLjU3NTUgMTM3LjQ5NCAzNC40MDE5IDEzNi40MTQgMzUuMDM3NkMxMzUuMzMzIDM1LjYwOTggMTMzLjk5OCAzNS45Mjc2IDEzMi40NzIgMzUuOTI3NkMxMzEuMTM3IDM1LjkyNzYgMTI5Ljg2NiAzNS42NzMzIDEyOC43ODUgMzUuMjI4M0MxMjcuNjQxIDM0LjcxOTcgMTI2LjYyMyAzNC4wODQgMTI1Ljc5NyAzMy4xOTRDMTI0Ljk3MSAzMi4zMDQgMTI0LjI3MSAzMS4yMjMzIDEyMy44MjYgMzAuMDE1NEMxMjMuMzE4IDI4LjgwNzUgMTIzLjEyNyAyNy40MDkgMTIzLjEyNyAyNS44ODMyQzEyMy4xMjcgMjQuMzU3NSAxMjMuMzgxIDIyLjk1ODkgMTIzLjgyNiAyMS42ODc0QzEyNC4zMzUgMjAuNDE2IDEyNC45NzEgMTkuMzM1MyAxMjUuNzk3IDE4LjQ0NTNDMTI2LjYyMyAxNy41NTUyIDEyNy42NDEgMTYuODU2IDEyOC43ODUgMTYuMzQ3NEMxMjkuOTI5IDE1LjgzODggMTMxLjEzNyAxNS41ODQ1IDEzMi40NzIgMTUuNTg0NUMxMzMuOTk4IDE1LjU4NDUgMTM1LjI2OSAxNS44Mzg4IDEzNi4zNSAxNi40MTA5QzEzNy40MzEgMTYuOTgzMSAxMzguMzIxIDE3Ljc0NTkgMTM5LjAyIDE4LjgyNjdWNy4xOTI5NUgxNDMuOTc5VjcuMTI5MzlaTTEzMy41NTMgMzEuNjY4M0MxMzUuMjA2IDMxLjY2ODMgMTM2LjQ3NyAzMS4wOTYyIDEzNy40OTQgMzAuMDE1NEMxMzguNTExIDI4LjkzNDcgMTM5LjAyIDI3LjQ3MjUgMTM5LjAyIDI1LjY5MjVDMTM5LjAyIDIzLjkxMjUgMTM4LjUxMSAyMi41MTM5IDEzNy40OTQgMjEuMzY5NkMxMzYuNDc3IDIwLjI4ODggMTM1LjIwNiAxOS43MTY3IDEzMy41NTMgMTkuNzE2N0MxMzEuOTYzIDE5LjcxNjcgMTMwLjYyOCAyMC4yODg4IDEyOS42NzUgMjEuMzY5NkMxMjguNjU4IDIyLjQ1MDMgMTI4LjE0OSAyMy45MTI1IDEyOC4xNDkgMjUuNjkyNUMxMjguMTQ5IDI3LjQ3MjUgMTI4LjY1OCAyOC44NzExIDEyOS42NzUgMjkuOTUxOEMxMzAuNjkyIDMxLjA5NjEgMTMxLjk2MyAzMS42NjgzIDEzMy41NTMgMzEuNjY4M1oiIGZpbGw9IiM5QjlCOUIiLz4KPHBhdGggZD0iTTU3LjIwMjQgMjAuMzUyNUg0NC45MzNWMjQuNjExOEg1MS45MjU5QzUxLjczNTIgMjYuNzczMyA1MC45MDg4IDI4LjQyNjEgNDkuNTEwMiAyOS43NjExQzQ4LjExMTYgMzEuMDMyNiA0Ni4zMzE1IDMxLjY2ODMgNDQuMDQyOSAzMS42NjgzQzQyLjc3MTUgMzEuNjY4MyA0MS41NjM2IDMxLjQxNCA0MC41NDY1IDMwLjk2OUMzOS40NjU3IDMwLjUyNCAzOC41NzU3IDI5Ljg4ODMgMzcuODEyOSAyOC45OTgzQzM3LjA1IDI4LjE3MTggMzYuNDc3OCAyNy4xNTQ3IDM2LjAzMjggMjUuOTQ2OEMzNS41ODc4IDI0LjczODkgMzUuMzk3MSAyMy40Njc1IDM1LjM5NzEgMjIuMDA1M0MzNS4zOTcxIDIwLjU0MzIgMzUuNTg3OCAxOS4yNzE3IDM2LjAzMjggMTguMDYzOEMzNi40MTQzIDE2Ljg1NiAzNy4wNSAxNS45MDI0IDM3LjgxMjkgMTUuMDEyNEMzOC41NzU3IDE0LjE4NTkgMzkuNDY1NyAxMy41NTAyIDQwLjU0NjUgMTMuMDQxNkM0MS42MjcyIDEyLjU5NjYgNDIuNzcxNSAxMi4zNDIzIDQ0LjEwNjUgMTIuMzQyM0M0Ni43NzY2IDEyLjM0MjMgNDguODEwOSAxMi45NzggNTAuMjA5NSAxNC4yNDk1TDUzLjUxNTIgMTAuOTQzOEM1MS4wMzU5IDkuMDM2NTkgNDcuODU3MyA4LjAxOTQxIDQ0LjEwNjUgOC4wMTk0MUM0Mi4wMDg2IDguMDE5NDEgNDAuMTAxNSA4LjMzNzI5IDM4LjM4NSA5LjAzNjU5QzM2LjY2ODYgOS43MzU4OCAzNS4yMDY0IDEwLjYyNTkgMzMuOTk4NSAxMS44MzM3QzMyLjc5MDYgMTMuMDQxNiAzMS44MzcxIDE0LjUwMzggMzEuMjAxNCAxNi4yMjAzQzMwLjU2NTYgMTcuOTM2NyAzMC4yNDc4IDE5Ljg0MzggMzAuMjQ3OCAyMS44NzgyQzMwLjI0NzggMjMuOTEyNSAzMC41NjU2IDI1LjgxOTcgMzEuMjY0OSAyNy41MzYxQzMxLjk2NDIgMjkuMjUyNiAzMi44NTQyIDMwLjcxNDcgMzQuMDYyMSAzMS45MjI2QzM1LjI3IDMzLjEzMDUgMzYuNzMyMSAzNC4wODQxIDM4LjQ0ODYgMzQuNzE5OEM0MC4xNjUgMzUuNDE5MSA0Mi4wNzIyIDM1LjczNyA0NC4xMDY1IDM1LjczN0M0Ni4xNDA4IDM1LjczNyA0Ny45ODQ0IDM1LjQxOTEgNDkuNjM3MyAzNC43MTk4QzUxLjI5MDIgMzQuMDIwNSA1Mi42ODg4IDMzLjEzMDUgNTMuODMzMSAzMS45MjI2QzU0Ljk3NzQgMzAuNzE0NyA1NS44Njc0IDI5LjI1MjYgNTYuNTAzMSAyNy41MzYxQzU3LjEzODggMjUuODE5NyA1Ny40NTY3IDIzLjkxMjUgNTcuNDU2NyAyMS44NzgyVjIxLjA1MTdDNTcuMjY2IDIwLjkyNDYgNTcuMjAyNCAyMC42MDY3IDU3LjIwMjQgMjAuMzUyNVoiIGZpbGw9IiM5QjlCOUIiLz4KPHBhdGggZD0iTTk1Ljk4MTUgMjAuMzUyNUg4My43MTIxVjI0LjYxMThIOTAuNzA1QzkwLjUxNDMgMjYuNzczMyA4OS42ODc5IDI4LjQyNjEgODguMjg5MyAyOS43NjExQzg2Ljg5MDcgMzEuMDMyNiA4NS4xMTA2IDMxLjY2ODMgODIuODIyIDMxLjY2ODNDODEuNTUwNiAzMS42NjgzIDgwLjM0MjcgMzEuNDE0IDc5LjMyNTYgMzAuOTY5Qzc4LjI0NDggMzAuNTI0IDc3LjM1NDggMjkuODg4MyA3Ni41OTIgMjguOTk4M0M3NS44MjkxIDI4LjE3MTggNzUuMjU3IDI3LjE1NDcgNzQuODExOSAyNS45NDY4Qzc0LjM2NjkgMjQuNzM4OSA3NC4xNzYyIDIzLjQ2NzUgNzQuMTc2MiAyMi4wMDUzQzc0LjE3NjIgMjAuNTQzMiA3NC4zNjY5IDE5LjI3MTcgNzQuODExOSAxOC4wNjM4Qzc1LjE5MzQgMTYuODU2IDc1LjgyOTEgMTUuOTAyNCA3Ni41OTIgMTUuMDEyNEM3Ny4zNTQ4IDE0LjE4NTkgNzguMjQ0OCAxMy41NTAyIDc5LjMyNTYgMTMuMDQxNkM4MC40MDYzIDEyLjU5NjYgODEuNTUwNiAxMi4zNDIzIDgyLjg4NTYgMTIuMzQyM0M4NS41NTU3IDEyLjM0MjMgODcuNTkgMTIuOTc4IDg4Ljk4ODYgMTQuMjQ5NUw5Mi4yOTQzIDEwLjk0MzhDODkuODE1IDkuMDM2NTkgODYuNjM2NCA4LjAxOTQxIDgyLjg4NTYgOC4wMTk0MUM4MC43ODc4IDguMDE5NDEgNzguODgwNiA4LjMzNzI5IDc3LjE2NDEgOS4wMzY1OUM3NS40NDc3IDkuNzM1ODggNzMuOTg1NSAxMC42MjU5IDcyLjc3NzYgMTEuODMzN0M3MS41Njk4IDEzLjA0MTYgNzAuNjE2MiAxNC41MDM4IDY5Ljk4MDUgMTYuMjIwM0M2OS4zNDQ3IDE3LjkzNjcgNjkuMDI2OSAxOS44NDM4IDY5LjAyNjkgMjEuODc4MkM2OS4wMjY5IDIzLjkxMjUgNjkuMzQ0NyAyNS44MTk3IDcwLjA0NCAyNy41MzYxQzcwLjc0MzMgMjkuMjUyNiA3MS42MzM0IDMwLjcxNDcgNzIuODQxMiAzMS45MjI2Qzc0LjA0OTEgMzMuMTMwNSA3NS41MTEyIDM0LjA4NDEgNzcuMjI3NyAzNC43MTk4Qzc4Ljk0NDEgMzUuNDE5MSA4MC44NTEzIDM1LjczNyA4Mi44ODU2IDM1LjczN0M4NC45MiAzNS43MzcgODYuNzYzNiAzNS40MTkxIDg4LjQxNjQgMzQuNzE5OEM5MC4wNjkzIDM0LjAyMDUgOTEuNDY3OSAzMy4xMzA1IDkyLjYxMjIgMzEuOTIyNkM5My43NTY1IDMwLjcxNDcgOTQuNjQ2NSAyOS4yNTI2IDk1LjI4MjIgMjcuNTM2MUM5NS45MTggMjUuODE5NyA5Ni4yMzU4IDIzLjkxMjUgOTYuMjM1OCAyMS44NzgyVjIxLjA1MTdDOTYuMDQ1MSAyMC45MjQ2IDk1Ljk4MTUgMjAuNjA2NyA5NS45ODE1IDIwLjM1MjVaIiBmaWxsPSIjOUI5QjlCIi8+Cjwvc3ZnPgo=);
-        background-repeat: no-repeat;
-        background-size: 170px 40px;
-        display: block;
-        height: 40px;
-        width: 170px;
-    }
-}
-
-.ag-watermark-text {
-    opacity: 0.5;
-    font-weight: bold;
-    font-family: Impact, sans-serif;
-    font-size: 19px;
-    padding-left: 0.7rem;
-}
-
 /**
  ****************************
  * Viewports
@@ -317,27 +291,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 /**
   ****************************
-  * Columns
-  ****************************
-  */
-.ag-column-moving {
-    .ag-cell {
-        transition: left 0.2s;
-    }
-
-    .ag-header-cell {
-        transition: left 0.2s;
-    }
-
-    .ag-header-group-cell {
-        transition:
-            left 0.2s,
-            width 0.2s;
-    }
-}
-
-/**
-  ****************************
   * Rows
   ****************************
   */
@@ -427,15 +380,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     word-break: break-word;
 }
 
-.ag-sparkline-wrapper {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    /*rtl:ignore*/
-    left: 0;
-    top: 0;
-}
-
 .ag-full-width-row .ag-cell-wrapper.ag-row-group {
     height: 100%;
     align-items: center;
@@ -460,20 +404,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     border-bottom: var(--ag-pinned-row-border);
 }
 
-.ag-pinned-left-floating-top {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    min-width: 0px;
-}
-
-.ag-pinned-right-floating-top {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    min-width: 0px;
-}
-
 .ag-floating-bottom {
     overflow: hidden;
     white-space: nowrap;
@@ -481,20 +411,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     position: relative;
     display: flex;
     border-top: var(--ag-pinned-row-border);
-}
-
-.ag-pinned-left-floating-bottom {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    min-width: 0px;
-}
-
-.ag-pinned-right-floating-bottom {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    min-width: 0px;
 }
 
 /**
@@ -517,61 +433,8 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     border-top: var(--ag-row-border);
 }
 
-.ag-pinned-left-sticky-top,
-.ag-pinned-right-sticky-top {
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-}
-
-.ag-sticky-top-full-width-container,
-.ag-sticky-bottom-full-width-container {
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-}
-
-/**
-  ****************************
-  * Animations
-  ****************************
-  */
-
-/* this is used by the animateShowChangeCellRenderer. it is arguable that this belongs in the themes,
-     however it is not tied to color, only placement and visiblity, which is behaviour and not style,
-     thus belongs here, besides it doesn't change wih the themes */
-.ag-value-slide-out {
-    margin-right: 5px;
-    opacity: 1;
-    transition:
-        opacity 3s,
-        margin-right 3s;
-    transition-timing-function: linear;
-}
-
-.ag-value-slide-out-end {
-    margin-right: 10px;
-    opacity: 0;
-}
-
 .ag-opacity-zero {
     opacity: 0 !important;
-}
-
-.ag-details-row {
-    width: 100%;
-}
-
-.ag-details-row-fixed-height {
-    height: 100%;
-}
-
-.ag-details-grid {
-    width: 100%;
-}
-
-.ag-details-grid-fixed-height {
-    height: 100%;
 }
 
 .ag-cell-label-container {
@@ -602,28 +465,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 .ag-column-group-icons {
     display: block;
     > * {
-        cursor: pointer;
-    }
-}
-
-.ag-pill-select {
-    display: flex;
-    flex-direction: column;
-
-    .ag-column-drop-list {
-        padding: 0;
-    }
-
-    .ag-select {
-        padding-top: var(--ag-spacing);
-    }
-
-    .ag-picker-field-wrapper {
-        background-color: transparent;
-        border: 0;
-    }
-
-    .ag-picker-field-display {
         cursor: pointer;
     }
 }

@@ -4,6 +4,7 @@ import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { UndoRedoService } from '../undoRedo/undoRedoService';
 import { PopupModule } from '../widgets/popupModule';
+import { cellEditingCSS } from './cell-editing.css-GENERATED';
 import { CheckboxCellEditor } from './cellEditors/checkboxCellEditor';
 import { DateCellEditor } from './cellEditors/dateCellEditor';
 import { DateStringCellEditor } from './cellEditors/dateStringCellEditor';
@@ -28,6 +29,8 @@ export const EditCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('EditCoreModule'),
     beans: [EditService],
     dependsOn: [PopupModule],
+
+    css: [cellEditingCSS],
 };
 
 export const EditApiModule: _ModuleWithApi<_EditGridApi<any>> = {

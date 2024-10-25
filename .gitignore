@@ -44,6 +44,8 @@ community-modules/styles/*.css
 packages/ag-grid-community/styles
 packages/ag-grid-community/**/GENERATED-*
 packages/ag-grid-enterprise/styles
+packages/**/*.css-GENERATED.ts
+
 # compiled css files as SCSS
 community-modules/styles/_css-content.scss
 

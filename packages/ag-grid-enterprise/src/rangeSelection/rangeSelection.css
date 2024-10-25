@@ -68,21 +68,6 @@
     }
 }
 
-/* ltr/rtl needed so that this overrides the rtl/ltr styles of pinned column borders */
-.ag-ltr,
-.ag-rtl {
-    .ag-cell-focus:not(.ag-cell-range-selected):focus-within,
-    .ag-context-menu-open .ag-cell-focus:not(.ag-cell-range-selected),
-    .ag-full-width-row.ag-row-focus:focus .ag-cell-wrapper.ag-row-group,
-    .ag-cell-range-single-cell,
-    .ag-cell-range-single-cell.ag-cell-range-handle {
-        border: 1px solid;
-        border-color: var(--ag-range-selection-border-color);
-        border-style: var(--ag-range-selection-border-style);
-        outline: initial;
-    }
-}
-
 .ag-cell.ag-selection-fill-top,
 .ag-cell.ag-selection-fill-top.ag-cell-range-selected {
     border-top: 1px dashed;
@@ -121,8 +106,4 @@
 
 .ag-range-handle {
     cursor: nwse-resize;
-}
-
-.ag-cell-inline-editing {
-    border: var(--ag-input-focus-border) !important;
 }

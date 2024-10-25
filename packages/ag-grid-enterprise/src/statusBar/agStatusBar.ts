@@ -11,6 +11,7 @@ import type {
 } from 'ag-grid-community';
 import { AgPromise, Component, RefPlaceholder, _removeFromParent } from 'ag-grid-community';
 
+import { agStatusBarCSS } from './agStatusBar.css-GENERATED';
 import type { StatusBarService } from './statusBarService';
 
 function getStatusPanelCompDetails(
@@ -49,6 +50,7 @@ export class AgStatusBar extends Component {
             <div data-ref="eStatusBarCenter" class="ag-status-bar-center" role="status"></div>
             <div data-ref="eStatusBarRight" class="ag-status-bar-right" role="status"></div>
         </div>`);
+        this.registerCSS(agStatusBarCSS);
     }
 
     public postConstruct(): void {

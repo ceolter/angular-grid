@@ -37,6 +37,7 @@ export interface Module {
     selectors?: ComponentSelector[];
     rowModels?: RowModelType[];
     dependsOn?: Module[];
+    css?: string[];
 }
 
 /** Used to define a module that contains api functions. */
