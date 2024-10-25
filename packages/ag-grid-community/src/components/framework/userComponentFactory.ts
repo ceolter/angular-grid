@@ -87,12 +87,12 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
     beanName = 'userCompFactory' as const;
 
     private gridOptions: GridOptions;
-    private agComponentUtils?: AgComponentUtils;
+    private agCompUtils?: AgComponentUtils;
     private registry: Registry;
     private frameworkComponentWrapper?: FrameworkComponentWrapper;
 
     public wireBeans(beans: BeanCollection): void {
-        this.agComponentUtils = beans.agComponentUtils;
+        this.agCompUtils = beans.agCompUtils;
         this.registry = beans.registry;
         this.frameworkComponentWrapper = beans.frameworkComponentWrapper;
         this.gridOptions = beans.gridOptions;
@@ -144,7 +144,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
 
         // if we have a comp option, and it's a function, replace it with an object equivalent adaptor
         if (jsComp && cellRenderer && !doesImplementIComponent(jsComp)) {
-            jsComp = this.agComponentUtils?.adaptFunction(type, jsComp);
+            jsComp = this.agCompUtils?.adaptFunction(type, jsComp);
         }
 
         if (!jsComp && !fwComp) {

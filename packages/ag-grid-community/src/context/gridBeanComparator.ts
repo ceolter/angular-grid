@@ -19,7 +19,7 @@ const orderedCoreBeans: BeanName[] = [
     'apiFunctionSvc',
     'gridApi',
     'registry',
-    'agComponentUtils',
+    'agCompUtils',
     'userCompFactory',
     'rowContainerHeight',
     'horizontalResizeSvc',

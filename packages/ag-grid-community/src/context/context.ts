@@ -257,7 +257,7 @@ export interface CoreBeanCollection {
     pinnedCols?: PinnedColumnService;
     expressionSvc?: ExpressionService;
     autoWidthCalc?: AutoWidthCalculator;
-    agComponentUtils?: AgComponentUtils;
+    agCompUtils?: AgComponentUtils;
     frameworkComponentWrapper: FrameworkComponentWrapper;
     horizontalResizeSvc?: HorizontalResizeService;
     filterMenuFactory?: IMenuFactory;
@@ -335,7 +335,7 @@ export type BeanName =
     | 'advancedFilter'
     | 'advancedSettingsMenuFactory'
     | 'aggFuncSvc'
-    | 'agComponentUtils'
+    | 'agCompUtils'
     | 'aggColumnNameSvc'
     | 'aggregationStage'
     | 'alignedGridsSvc'
