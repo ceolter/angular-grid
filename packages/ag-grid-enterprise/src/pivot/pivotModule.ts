@@ -26,10 +26,11 @@ import {
 import { PivotColDefService } from './pivotColDefService';
 import { PivotResultColsService } from './pivotResultColsService';
 import { PivotStage } from './pivotStage';
+import { ValueColsService } from './valueColsService';
 
 export const PivotCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('PivotCoreModule'),
-    beans: [PivotResultColsService, PivotColDefService, PivotStage],
+    beans: [PivotResultColsService, PivotColDefService, PivotStage, PivotColDefService, ValueColsService],
     dependsOn: [RowGroupingCoreModule, ColumnGroupCoreModule],
 };
 
