@@ -3,15 +3,15 @@ import type { BeanCollection, ColDef, Column } from 'ag-grid-community';
 import type { RowGroupColsSvc } from './rowGroupColsSvc';
 
 export function setRowGroupColumns(beans: BeanCollection, colKeys: (string | ColDef | Column)[]): void {
-    beans.funcColsSvc.setRowGroupColumns(colKeys, 'api');
+    beans.rowGroupColsSvc?.setColumns(colKeys, 'api');
 }
 
 export function removeRowGroupColumns(beans: BeanCollection, colKeys: (string | ColDef | Column)[]): void {
-    beans.funcColsSvc.removeRowGroupColumns(colKeys, 'api');
+    beans.rowGroupColsSvc?.removeColumns(colKeys, 'api');
 }
 
 export function addRowGroupColumns(beans: BeanCollection, colKeys: (string | ColDef | Column)[]): void {
-    beans.funcColsSvc.addRowGroupColumns(colKeys, 'api');
+    beans.rowGroupColsSvc?.addColumns(colKeys, 'api');
 }
 
 export function moveRowGroupColumn(beans: BeanCollection, fromIndex: number, toIndex: number): void {
@@ -19,5 +19,5 @@ export function moveRowGroupColumn(beans: BeanCollection, fromIndex: number, toI
 }
 
 export function getRowGroupColumns(beans: BeanCollection): Column[] {
-    return beans.funcColsSvc.rowGroupCols;
+    return beans.rowGroupColsSvc?.columns ?? [];
 }

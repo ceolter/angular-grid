@@ -5,7 +5,6 @@ import type {
     DragAndDropIcon,
     DragItem,
     DropTarget,
-    FuncColsService,
     IAggFuncService,
     IColsService,
     PopupService,
@@ -22,20 +21,18 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     private popupSvc: PopupService;
     private sortSvc?: SortService;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
-    private valueColsSvc?: IColsService;
     private aggFuncSvc?: IAggFuncService;
     private rowGroupColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
         this.popupSvc = beans.popupSvc!;
         this.sortSvc = beans.sortSvc;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
-        this.valueColsSvc = beans.valueColsSvc;
         this.aggFuncSvc = beans.aggFuncSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
     }
 
     private readonly eSortIndicator: SortIndicatorComp = RefPlaceholder;

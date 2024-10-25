@@ -166,10 +166,11 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                         ' ' +
                         _escapeString(this.colNames.getDisplayNameForColumn(column, 'header')),
                     disabled:
+                        !this.rowGroupColsSvc ||
                         this.gos.get('functionsReadOnly') ||
                         column?.isRowGroupActive() ||
                         !column?.getColDef().enableRowGroup,
-                    action: () => this.funcColsSvc.addRowGroupColumns([column], source),
+                    action: () => this.rowGroupColsSvc?.addColumns([column], source),
                     icon: _createIconNoSpan('menuAddRowGroup', this.gos, null),
                 };
             case 'rowUnGroup': {
@@ -181,14 +182,18 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return {
                         name: localeTextFunc('ungroupAll', 'Un-Group All'),
                         disabled:
+                            !this.rowGroupColsSvc ||
                             this.gos.get('functionsReadOnly') ||
                             lockedGroups === -1 ||
-                            lockedGroups >= this.funcColsSvc.rowGroupCols.length,
-                        action: () =>
-                            this.funcColsSvc.setRowGroupColumns(
-                                this.funcColsSvc.rowGroupCols.slice(0, lockedGroups),
-                                source
-                            ),
+                            lockedGroups >= (this.rowGroupColsSvc?.columns.length ?? 0),
+                        action: () => {
+                            if (this.rowGroupColsSvc) {
+                                this.rowGroupColsSvc.setColumns(
+                                    this.rowGroupColsSvc.columns.slice(0, lockedGroups),
+                                    source
+                                );
+                            }
+                        },
                         icon: icon,
                     };
                 }
