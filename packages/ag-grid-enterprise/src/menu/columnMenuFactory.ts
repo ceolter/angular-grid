@@ -3,7 +3,6 @@ import type {
     AgProvidedColumnGroup,
     BeanCollection,
     ColumnModel,
-    FuncColsService,
     IColsService,
     MenuItemDef,
     MenuService,
@@ -36,14 +35,12 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
     private menuItemMapper: MenuItemMapper;
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
     private menuSvc: MenuService;
     private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
         this.menuSvc = beans.menuSvc!;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }

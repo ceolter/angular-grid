@@ -4,11 +4,11 @@ import type {
     ChangedPath,
     ClientSideRowModelStage,
     ColumnModel,
-    FuncColsService,
     GetGroupRowAggParams,
     GridOptions,
     IAggFunc,
     IAggFuncParams,
+    IColsService,
     IPivotResultColsService,
     IRowNodeStage,
     NamedBean,
@@ -45,13 +45,15 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
     private colModel: ColumnModel;
     private valueSvc: ValueService;
     private aggFuncSvc: AggFuncService;
-    private funcColsSvc: FuncColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
     private pivotResultCols?: IPivotResultColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.aggFuncSvc = beans.aggFuncSvc as AggFuncService;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
         this.pivotResultCols = beans.pivotResultCols;
         this.valueSvc = beans.valueSvc;
     }
@@ -64,7 +66,7 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
         // and there is no cleanup to be done (as value columns don't change between transactions or change
         // detections). if no value columns and no changed path, means we have to go through all nodes in
         // case we need to clean up agg data from before.
-        const noValueColumns = !this.funcColsSvc.valueCols?.length;
+        const noValueColumns = !this.valueColsSvc?.columns?.length;
         const noUserAgg = !this.gos.getCallback('getGroupRowAgg');
         const changedPathActive = params.changedPath && params.changedPath.isActive();
         if (noValueColumns && noUserAgg && changedPathActive) {
@@ -79,14 +81,14 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
     private createAggDetails(params: StageExecuteParams): AggregationDetails {
         const pivotActive = this.colModel.isPivotActive();
 
-        const measureColumns = this.funcColsSvc.valueCols;
-        const pivotColumns = pivotActive ? this.funcColsSvc.pivotCols : [];
+        const measureColumns = this.valueColsSvc?.columns;
+        const pivotColumns = pivotActive && this.pivotColsSvc ? this.pivotColsSvc.columns : [];
 
         const aggDetails: AggregationDetails = {
             alwaysAggregateAtRootLevel: this.gos.get('alwaysAggregateAtRootLevel'),
             groupIncludeTotalFooter: !!_getGrandTotalRow(this.gos),
             changedPath: params.changedPath!,
-            valueColumns: measureColumns,
+            valueColumns: measureColumns ?? [],
             pivotColumns: pivotColumns,
             filteredOnly: !this.isSuppressAggFilteredOnly(),
             userAggFunc: this.gos.getCallback('getGroupRowAgg') as any,

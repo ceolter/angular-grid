@@ -7,7 +7,7 @@ import type {
     ColumnVO,
     FilterManager,
     FilterModel,
-    FuncColsService,
+    IColsService,
     IPivotColDefService,
     IPivotResultColsService,
     IServerSideDatasource,
@@ -57,7 +57,9 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private pivotResultCols?: IPivotResultColsService;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
     private filterManager?: FilterManager;
     private sortSvc?: SortService;
     private rowRenderer: RowRenderer;
@@ -69,7 +71,9 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.pivotResultCols = beans.pivotResultCols;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
         this.filterManager = beans.filterManager;
         this.sortSvc = beans.sortSvc;
         this.rowRenderer = beans.rowRenderer;
@@ -206,9 +210,9 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
 
         // check if anything pertaining to fetching data has changed, and if it has, reset, but if
         // it has not, don't reset
-        const rowGroupColumnVos = this.columnsToValueObjects(this.funcColsSvc.rowGroupCols);
-        const valueColumnVos = this.columnsToValueObjects(this.funcColsSvc.valueCols);
-        const pivotColumnVos = this.columnsToValueObjects(this.funcColsSvc.pivotCols);
+        const rowGroupColumnVos = this.columnsToValueObjects(this.rowGroupColsSvc?.columns);
+        const valueColumnVos = this.columnsToValueObjects(this.valueColsSvc?.columns);
+        const pivotColumnVos = this.columnsToValueObjects(this.pivotColsSvc?.columns);
 
         // compares two sets of columns, ensuring no columns have been added or removed (unless specified via allowRemovedColumns)
         // if the columns are found, also ensures the field and aggFunc properties have not been changed.
@@ -359,7 +363,7 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
         this.dispatchModelUpdated(true);
     }
 
-    public columnsToValueObjects(columns: AgColumn[]): ColumnVO[] {
+    public columnsToValueObjects(columns: AgColumn[] = []): ColumnVO[] {
         return columns.map(
             (col) =>
                 ({
@@ -372,9 +376,9 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
     }
 
     private createStoreParams(): SSRMParams {
-        const rowGroupColumnVos = this.columnsToValueObjects(this.funcColsSvc.rowGroupCols);
-        const valueColumnVos = this.columnsToValueObjects(this.funcColsSvc.valueCols);
-        const pivotColumnVos = this.columnsToValueObjects(this.funcColsSvc.pivotCols);
+        const rowGroupColumnVos = this.columnsToValueObjects(this.rowGroupColsSvc?.columns);
+        const valueColumnVos = this.columnsToValueObjects(this.valueColsSvc?.columns);
+        const pivotColumnVos = this.columnsToValueObjects(this.pivotColsSvc?.columns);
 
         const dynamicRowHeight = _isGetRowHeightFunction(this.gos);
 

@@ -5,7 +5,6 @@ import type {
     ColumnEventType,
     ColumnModel,
     ColumnNameService,
-    FuncColsService,
     IAggFuncService,
     IClipboardService,
     IColsService,
@@ -24,7 +23,6 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
 
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
     private valueColsSvc?: IColsService;
     private rowGroupColsSvc?: IColsService;
     private chartMenuItemMapper: ChartMenuItemMapper;
@@ -38,7 +36,6 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
         this.valueColsSvc = beans.valueColsSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.chartMenuItemMapper = beans.chartMenuItemMapper as ChartMenuItemMapper;

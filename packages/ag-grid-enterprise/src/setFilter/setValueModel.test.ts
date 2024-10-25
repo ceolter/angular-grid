@@ -1,5 +1,4 @@
 import type {
-    FuncColsService,
     GridOptionsService,
     IClientSideRowModel,
     RowNode,
@@ -9,6 +8,7 @@ import type {
 } from 'ag-grid-community';
 import { _makeNull, _toStringOrNull } from 'ag-grid-community';
 
+import type { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
 import { mock } from '../test-utils/mock';
 import { SetFilterModelValuesType, SetValueModel } from './setValueModel';
 
@@ -85,8 +85,8 @@ function createSetValueModel(opts: Partial<typeof DEFAULT_OPTS> = DEFAULT_OPTS) 
     gos.addGridCommonParams.mockImplementation((params) => params as any);
     gos.get.mockImplementation((prop) => (prop === 'rowModelType' ? 'clientSide' : undefined));
 
-    const funcColsSvc = mock<FuncColsService>();
-    funcColsSvc.rowGroupCols = [];
+    const rowGroupColsSvc = mock<RowGroupColsSvc>();
+    rowGroupColsSvc.columns = [];
 
     return new SetValueModel<string>({
         filterParams: svmParams,
@@ -98,7 +98,7 @@ function createSetValueModel(opts: Partial<typeof DEFAULT_OPTS> = DEFAULT_OPTS) 
         gos,
         valueSvc,
         addManagedEventListeners: () => [],
-        funcColsSvc,
+        rowGroupColsSvc,
     });
 }
 

@@ -14,7 +14,6 @@ export type { ColumnGroupService } from './columns/columnGroups/columnGroupServi
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
 export type { ColumnAutosizeService } from './columnAutosize/columnAutosizeService';
-export type { FuncColsService } from './columns/funcColsService';
 export { BaseColsService } from './columns/baseColsService';
 export type { ColumnStateService } from './columns/columnStateService';
 export { ColumnState, ColumnStateParams, ApplyColumnStateParams } from './columns/columnStateService';

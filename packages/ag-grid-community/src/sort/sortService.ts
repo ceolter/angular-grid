@@ -1,5 +1,4 @@
 import type { ColumnModel } from '../columns/columnModel';
-import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -7,6 +6,7 @@ import type { AgColumn } from '../entities/agColumn';
 import type { SortDirection } from '../entities/colDef';
 import type { ColumnEventType, SortChangedEvent } from '../events';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
+import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
 import type { SortModelItem } from '../interfaces/iSortModelItem';
@@ -19,12 +19,12 @@ export class SortService extends BeanStub implements NamedBean {
     beanName = 'sortSvc' as const;
 
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
     private showRowGroupCols?: IShowRowGroupColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.showRowGroupCols = beans.showRowGroupCols;
     }
 
@@ -173,7 +173,7 @@ export class SortService extends BeanStub implements NamedBean {
             });
         }
 
-        const sortedRowGroupCols = this.funcColsSvc.rowGroupCols.filter((col) => !!col.getSort());
+        const sortedRowGroupCols = this.rowGroupColsSvc?.columns.filter((col) => !!col.getSort()) ?? [];
 
         // when both cols are missing sortIndex, we use the position of the col in all cols list.
         // this means if colDefs only have sort, but no sortIndex, we deterministically pick which

@@ -6,7 +6,6 @@ import type {
     DragItem,
     DraggingEvent,
     DropTarget,
-    FuncColsService,
     IColsService,
 } from 'ag-grid-community';
 import { DragSourceType, _shouldUpdateColVisibilityAfterGroup } from 'ag-grid-community';
@@ -19,13 +18,11 @@ export type TDropZone = 'rowGroup' | 'pivot' | 'aggregation';
 
 export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumnComp, AgColumn> {
     protected colModel: ColumnModel;
-    protected funcColsSvc: FuncColsService;
     protected rowGroupColsSvc?: IColsService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 

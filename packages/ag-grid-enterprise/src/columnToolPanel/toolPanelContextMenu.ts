@@ -5,7 +5,6 @@ import type {
     ColumnModel,
     ColumnNameService,
     FocusService,
-    FuncColsService,
     IColsService,
     MenuItemDef,
     PopupService,
@@ -30,7 +29,6 @@ type MenuItemProperty = {
 export class ToolPanelContextMenu extends Component {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
     private popupSvc: PopupService;
     private focusSvc: FocusService;
     private rowGroupColsSvc?: IColsService;
@@ -40,7 +38,6 @@ export class ToolPanelContextMenu extends Component {
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
         this.popupSvc = beans.popupSvc!;
         this.focusSvc = beans.focusSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
