@@ -54,7 +54,7 @@ export class RowGroupColsService extends BaseColsService implements NamedBean, I
         this.columns.splice(fromIndex, 1);
         this.columns.splice(toIndex, 0, column);
 
-        this.eventService.dispatchEvent({
+        this.eventSvc.dispatchEvent({
             type: this.eventName,
             columns: impactedColumns,
             column: impactedColumns.length === 1 ? impactedColumns[0] : null,

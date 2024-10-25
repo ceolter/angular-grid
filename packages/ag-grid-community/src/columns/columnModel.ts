@@ -193,12 +193,6 @@ export class ColumnModel extends BeanStub implements NamedBean {
         this.valueColsService?.extractCols(source, oldProvidedCols);
     }
 
-    private extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
-        this.rowGroupColsService?.extractCols(source, oldProvidedCols);
-        this.pivotColsService?.extractCols(source, oldProvidedCols);
-        this.valueColsService?.extractCols(source, oldProvidedCols);
-    }
-
     // called from: buildAutoGroupColumns (events 'groupDisplayType', 'treeData', 'treeDataDisplayType', 'groupHideOpenParents')
     // createColsFromColDefs (recreateColumnDefs, setColumnsDefs),
     // setPivotMode, applyColumnState,

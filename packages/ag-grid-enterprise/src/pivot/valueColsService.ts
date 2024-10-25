@@ -84,7 +84,7 @@ export class ValueColsService extends BaseColsService implements NamedBean, ICol
 
         column.setAggFunc(aggFunc);
 
-        this.dispatchColumnChangedEvent(this.eventService, this.eventName, [column], source);
+        this.dispatchColumnChangedEvent(this.eventSvc, this.eventName, [column], source);
     }
 
     public override syncColumnWithState(
