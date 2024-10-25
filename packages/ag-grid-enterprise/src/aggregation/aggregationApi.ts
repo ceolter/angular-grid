@@ -17,7 +17,7 @@ export function setColumnAggFunc(
     key: string | ColDef | Column,
     aggFunc: string | IAggFunc | null | undefined
 ): void {
-    beans.funcColsSvc.setColumnAggFunc(key, aggFunc, 'api');
+    beans.rowGroupColsService?.setColumnAggFunc!(key, aggFunc, 'api');
 }
 
 export function isPivotMode(beans: BeanCollection): boolean {

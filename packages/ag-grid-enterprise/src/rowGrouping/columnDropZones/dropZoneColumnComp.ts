@@ -8,6 +8,7 @@ import type {
     DropTarget,
     FuncColsService,
     IAggFuncService,
+    IColsService,
     PopupService,
     SortIndicatorComp,
     SortService,
@@ -25,6 +26,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private funcColsSvc: FuncColsService;
+    private valueColsService?: IColsService;
     private aggFuncSvc?: IAggFuncService;
 
     public override wireBeans(beans: BeanCollection) {
@@ -34,6 +36,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.funcColsSvc = beans.funcColsSvc;
+        this.valueColsService = beans.valueColsService;
         this.aggFuncSvc = beans.aggFuncSvc;
     }
 
@@ -333,7 +336,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         const itemSelected = () => {
             hidePopup();
             this.getGui().focus();
-            this.funcColsSvc.setColumnAggFunc(this.column, value, 'toolPanelDragAndDrop');
+            this.valueColsService?.setColumnAggFunc!(this.column, value, 'toolPanelDragAndDrop');
         };
 
         const localeTextFunc = this.getLocaleTextFunc();

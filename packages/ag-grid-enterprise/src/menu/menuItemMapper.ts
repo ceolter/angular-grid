@@ -8,6 +8,7 @@ import type {
     FuncColsService,
     IAggFuncService,
     IClipboardService,
+    IColsService,
     IExpansionService,
     MenuItemDef,
     NamedBean,
@@ -25,6 +26,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private funcColsSvc: FuncColsService;
+    private valueColsService?: IColsService;
     private chartMenuItemMapper: ChartMenuItemMapper;
     private sortSvc?: SortService;
     private colAutosize?: ColumnAutosizeService;
@@ -37,6 +39,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.funcColsSvc = beans.funcColsSvc;
+        this.valueColsService = beans.valueColsService;
         this.chartMenuItemMapper = beans.chartMenuItemMapper as ChartMenuItemMapper;
         this.sortSvc = beans.sortSvc;
         this.colAutosize = beans.colAutosize;
@@ -397,9 +400,12 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
 
             result.push({
                 name: localeTextFunc('noAggregation', 'None'),
+                disabled: !this.valueColsService,
                 action: () => {
-                    this.funcColsSvc.removeValueColumns([columnToUse!], 'contextMenu');
-                    this.funcColsSvc.setColumnAggFunc(columnToUse, undefined, 'contextMenu');
+                    if (this.valueColsService) {
+                        this.valueColsService.removeColumns([columnToUse!], 'contextMenu');
+                        this.valueColsService.setColumnAggFunc!(columnToUse, undefined, 'contextMenu');
+                    }
                 },
                 checked: !columnIsAlreadyAggValue,
             });
@@ -407,9 +413,12 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
             funcNames.forEach((funcName) => {
                 result.push({
                     name: localeTextFunc(funcName, aggFuncSvc.getDefaultFuncLabel(funcName)),
+                    disabled: !this.valueColsService,
                     action: () => {
-                        this.funcColsSvc.setColumnAggFunc(columnToUse, funcName, 'contextMenu');
-                        this.funcColsSvc.addValueColumns([columnToUse!], 'contextMenu');
+                        if (this.valueColsService) {
+                            this.valueColsService.setColumnAggFunc!(columnToUse, funcName, 'contextMenu');
+                            this.valueColsService.addColumns([columnToUse!], 'contextMenu');
+                        }
                     },
                     checked: columnIsAlreadyAggValue && columnToUse!.getAggFunc() === funcName,
                 });

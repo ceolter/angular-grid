@@ -2,11 +2,9 @@ import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
-import type { IAggFunc } from '../entities/colDef';
 import type { ColumnEventType } from '../events';
 import type { IAggFuncService } from '../interfaces/iAggFuncService';
 import type { IColsService } from '../interfaces/iColsService';
-import { dispatchColumnChangedEvent } from './columnEventUtils';
 import type { ColKey, ColumnModel, Maybe } from './columnModel';
 import type { ColumnState } from './columnStateService';
 
@@ -55,25 +53,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
         if (this.pivotColsService) {
             this.pivotColsService.columns = cols;
         }
-    }
-
-    public setColumnAggFunc(
-        key: Maybe<ColKey>,
-        aggFunc: string | IAggFunc | null | undefined,
-        source: ColumnEventType
-    ): void {
-        if (!key) {
-            return;
-        }
-
-        const column = this.colModel.getColDefCol(key);
-        if (!column) {
-            return;
-        }
-
-        column.setAggFunc(aggFunc);
-
-        dispatchColumnChangedEvent(this.eventSvc, 'columnValueChanged', [column], source);
     }
 
     public setRowGroupColumns(colKeys: ColKey[], source: ColumnEventType): void {
