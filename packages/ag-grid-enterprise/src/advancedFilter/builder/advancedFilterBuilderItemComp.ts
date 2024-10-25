@@ -47,12 +47,12 @@ import { SelectPillComp } from './selectPillComp';
 
 export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBuilderEvents> {
     private dragAndDrop: DragAndDropService;
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection): void {
         this.dragAndDrop = beans.dragAndDrop!;
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.registry = beans.registry;
     }
 
@@ -221,7 +221,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
 
     private setupAddButton(): void {
         const addButtonParams = getAdvancedFilterBuilderAddButtonParams(
-            (key) => this.advancedFilterExpressionService.translate(key),
+            (key) => this.advFilterExpSvc.translate(key),
             this.gos.get('advancedFilterBuilderParams')?.addSelectWidth
         );
         const eAddButton = this.createManagedBean(new AddDropdownComp(addButtonParams));
@@ -239,8 +239,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
             this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
                 getGui: () => this.eAddButton,
                 getLocation: () => 'advancedFilter',
-                getTooltipValue: () =>
-                    this.advancedFilterExpressionService.translate('advancedFilterBuilderAddButtonTooltip'),
+                getTooltipValue: () => this.advFilterExpSvc.translate('advancedFilterBuilderAddButtonTooltip'),
             } as ITooltipCtrl)
         );
     }
@@ -264,14 +263,10 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
             this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
                 getGui: () => this.eRemoveButton,
                 getLocation: () => 'advancedFilter',
-                getTooltipValue: () =>
-                    this.advancedFilterExpressionService.translate('advancedFilterBuilderRemoveButtonTooltip'),
+                getTooltipValue: () => this.advFilterExpSvc.translate('advancedFilterBuilderRemoveButtonTooltip'),
             } as ITooltipCtrl)
         );
-        _setAriaLabel(
-            this.eRemoveButton,
-            this.advancedFilterExpressionService.translate('advancedFilterBuilderRemoveButtonTooltip')
-        );
+        _setAriaLabel(this.eRemoveButton, this.advFilterExpSvc.translate('advancedFilterBuilderRemoveButtonTooltip'));
 
         this.activateTabIndex([this.eRemoveButton]);
     }
@@ -300,14 +295,12 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                     getTooltipValue: () =>
                         this.moveUpDisabled
                             ? null
-                            : this.advancedFilterExpressionService.translate(
-                                  'advancedFilterBuilderMoveUpButtonTooltip'
-                              ),
+                            : this.advFilterExpSvc.translate('advancedFilterBuilderMoveUpButtonTooltip'),
                 } as ITooltipCtrl)
             );
             _setAriaLabel(
                 this.eMoveUpButton,
-                this.advancedFilterExpressionService.translate('advancedFilterBuilderMoveUpButtonTooltip')
+                this.advFilterExpSvc.translate('advancedFilterBuilderMoveUpButtonTooltip')
             );
 
             this.eMoveDownButton.appendChild(_createIconNoSpan('advancedFilterBuilderMoveDown', this.gos)!);
@@ -331,14 +324,12 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                     getTooltipValue: () =>
                         this.moveDownDisabled
                             ? null
-                            : this.advancedFilterExpressionService.translate(
-                                  'advancedFilterBuilderMoveDownButtonTooltip'
-                              ),
+                            : this.advFilterExpSvc.translate('advancedFilterBuilderMoveDownButtonTooltip'),
                 } as ITooltipCtrl)
             );
             _setAriaLabel(
                 this.eMoveDownButton,
-                this.advancedFilterExpressionService.translate('advancedFilterBuilderMoveDownButtonTooltip')
+                this.advFilterExpSvc.translate('advancedFilterBuilderMoveDownButtonTooltip')
             );
 
             this.activateTabIndex([this.eMoveUpButton, this.eMoveDownButton]);
@@ -449,16 +440,13 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
         const validationMessage = this.ePillWrapper.getValidationMessage();
         let ariaLabel;
         if (validationMessage) {
-            ariaLabel = this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderItemValidation', [
+            ariaLabel = this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderItemValidation', [
                 wrapperLabel,
                 level,
                 validationMessage,
             ]);
         } else {
-            ariaLabel = this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderItem', [
-                wrapperLabel,
-                level,
-            ]);
+            ariaLabel = this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderItem', [wrapperLabel, level]);
         }
         _setAriaLabel(this.focusWrapper, ariaLabel);
     }

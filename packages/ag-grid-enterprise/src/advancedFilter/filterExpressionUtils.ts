@@ -8,7 +8,7 @@ export interface FilterExpressionParserParams {
     colModel: ColumnModel;
     dataTypeSvc?: DataTypeService;
     valueSvc: ValueService;
-    advancedFilterExpressionService: AdvancedFilterExpressionService;
+    advFilterExpSvc: AdvancedFilterExpressionService;
 }
 
 export interface AutocompleteUpdate {

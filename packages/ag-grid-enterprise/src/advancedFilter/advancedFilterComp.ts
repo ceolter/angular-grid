@@ -17,12 +17,12 @@ import type { AutocompleteUpdate } from './filterExpressionUtils';
 
 export class AdvancedFilterComp extends Component {
     private advancedFilter: AdvancedFilterService;
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private filterManager?: FilterManager;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection): void {
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.advancedFilter = beans.advancedFilter as AdvancedFilterService;
         this.filterManager = beans.filterManager;
         this.registry = beans.registry;
@@ -68,8 +68,8 @@ export class AdvancedFilterComp extends Component {
             .setForceLastSelection((lastSelection, searchString) =>
                 this.forceLastSelection(lastSelection, searchString)
             )
-            .setInputAriaLabel(this.advancedFilterExpressionService.translate('ariaAdvancedFilterInput'))
-            .setListAriaLabel(this.advancedFilterExpressionService.translate('ariaLabelAdvancedFilterAutocomplete'));
+            .setInputAriaLabel(this.advFilterExpSvc.translate('ariaAdvancedFilterInput'))
+            .setListAriaLabel(this.advFilterExpSvc.translate('ariaLabelAdvancedFilterAutocomplete'));
 
         this.refresh();
 
@@ -101,7 +101,7 @@ export class AdvancedFilterComp extends Component {
     }
 
     private setupApplyButton(): void {
-        this.eApplyFilterButton.innerText = this.advancedFilterExpressionService.translate('advancedFilterApply');
+        this.eApplyFilterButton.innerText = this.advFilterExpSvc.translate('advancedFilterApply');
         this.activateTabIndex([this.eApplyFilterButton]);
         this.addManagedElementListeners(this.eApplyFilterButton, {
             click: () => this.onValueConfirmed(this.eAutocomplete.isValid()),
@@ -111,8 +111,7 @@ export class AdvancedFilterComp extends Component {
 
     private setupBuilderButton(): void {
         this.eBuilderFilterButtonIcon.appendChild(_createIconNoSpan('advancedFilterBuilder', this.gos)!);
-        this.eBuilderFilterButtonLabel.innerText =
-            this.advancedFilterExpressionService.translate('advancedFilterBuilder');
+        this.eBuilderFilterButtonLabel.innerText = this.advFilterExpSvc.translate('advancedFilterBuilder');
         this.activateTabIndex([this.eBuilderFilterButton]);
         this.addManagedElementListeners(this.eBuilderFilterButton, { click: () => this.openBuilder() });
         this.addManagedListeners(this.advancedFilter.getCtrl(), {
@@ -162,11 +161,11 @@ export class AdvancedFilterComp extends Component {
     private generateAutocompleteListParams(position: number): AutocompleteListParams {
         return this.expressionParser
             ? this.expressionParser.getAutocompleteListParams(position)
-            : this.advancedFilterExpressionService.getDefaultAutocompleteListParams('');
+            : this.advFilterExpSvc.getDefaultAutocompleteListParams('');
     }
 
     private updateExpression(position: number, updateEntry: AutocompleteEntry, type?: string): AutocompleteUpdate {
-        this.advancedFilterExpressionService.updateAutocompleteCache(updateEntry, type);
+        this.advFilterExpSvc.updateAutocompleteCache(updateEntry, type);
         return (
             this.expressionParser?.updateExpression(position, updateEntry, type) ??
             this.advancedFilter.getDefaultExpression(updateEntry)
