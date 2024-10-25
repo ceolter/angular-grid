@@ -265,7 +265,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
             const mergedGridOps = _combineAttributesAndGridOptions(this.gridOptions, this, gridOptionKeys);
 
             const gridParams: GridParams = {
-                globalEventListener: this.globalEventListener.bind(this),
+                globalListener: this.globalListener.bind(this),
                 frameworkOverrides: this._angularFrameworkOverrides,
                 providedBeanInstances: {
                     frameworkComponentWrapper: this._frameworkComponentWrapper,
@@ -326,7 +326,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
         return hasEmitter || hasGridOptionListener;
     }
 
-    private globalEventListener(eventType: string, event: any): void {
+    private globalListener(eventType: string, event: any): void {
         // if we are tearing down, don't emit angular events, as this causes
         // problems with the angular router
         if (this._destroyed) {

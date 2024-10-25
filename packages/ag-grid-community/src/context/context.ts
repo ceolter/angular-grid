@@ -239,8 +239,8 @@ export interface CoreBeanCollection {
     quickFilter?: QuickFilterService;
     showRowGroupCols?: IShowRowGroupColsService;
     dataTypeSvc?: DataTypeService;
-    globalEventListener: AgGlobalEventListener;
-    globalSyncEventListener: AgGlobalEventListener;
+    globalListener: AgGlobalEventListener;
+    globalSyncListener: AgGlobalEventListener;
     stateSvc?: StateService;
     overlays?: OverlayService;
     pinnedRowModel?: PinnedRowModel;
@@ -413,8 +413,8 @@ export type BeanName =
     | 'funcColsSvc'
     | 'frameworkComponentWrapper'
     | 'frameworkOverrides'
-    | 'globalEventListener'
-    | 'globalSyncEventListener'
+    | 'globalListener'
+    | 'globalSyncListener'
     | 'gridApi'
     | 'gridDestroySvc'
     | 'gridOptions'

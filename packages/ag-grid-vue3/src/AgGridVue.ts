@@ -215,8 +215,8 @@ export const AgGridVue = defineComponent({
         }
 
         const gridParams = {
-            globalEventListener: this.globalEventListenerFactory().bind(this),
-            globalSyncEventListener: this.globalEventListenerFactory(true).bind(this),
+            globalListener: this.globalEventListenerFactory().bind(this),
+            globalSyncListener: this.globalEventListenerFactory(true).bind(this),
             frameworkOverrides: new VueFrameworkOverrides(this),
             providedBeanInstances: {
                 frameworkComponentWrapper,
