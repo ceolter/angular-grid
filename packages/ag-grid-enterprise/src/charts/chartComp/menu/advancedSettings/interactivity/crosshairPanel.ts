@@ -8,10 +8,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class CrosshairPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     constructor(private readonly chartMenuParamsFactory: ChartMenuParamsFactory) {
@@ -25,7 +25,7 @@ export class CrosshairPanel extends Component {
                 cssIdentifier: 'charts-advanced-settings-top-level',
                 direction: 'vertical',
                 suppressOpenCloseIcons: true,
-                title: this.chartTranslationService.translate('crosshair'),
+                title: this.chartTranslation.translate('crosshair'),
                 suppressEnabledCheckbox: true,
                 useToggle: true,
             }

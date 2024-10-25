@@ -70,7 +70,7 @@ export interface GridChartParams {
 
 export class GridChartComp extends Component {
     private crossFilterService: ChartCrossFilterService;
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
     private chartMenuService: ChartMenuService;
     private focusSvc: FocusService;
     private popupSvc: PopupService;
@@ -78,7 +78,7 @@ export class GridChartComp extends Component {
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterService as ChartCrossFilterService;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
         this.chartMenuService = beans.chartMenuService as ChartMenuService;
         this.focusSvc = beans.focusSvc;
         this.popupSvc = beans.popupSvc!;
@@ -190,7 +190,7 @@ export class GridChartComp extends Component {
             chartOptionsToRestore: this.params.chartOptionsToRestore,
             chartPaletteToRestore: this.params.chartPaletteToRestore,
             seriesChartTypes: this.chartController.getSeriesChartTypes(),
-            translate: (toTranslate: ChartTranslationKey) => this.chartTranslationService.translate(toTranslate),
+            translate: (toTranslate: ChartTranslationKey) => this.chartTranslation.translate(toTranslate),
         };
 
         // ensure 'restoring' options are not reused when switching chart types
@@ -278,9 +278,7 @@ export class GridChartComp extends Component {
     }
 
     private addDialog(): void {
-        const title = this.chartTranslationService.translate(
-            this.params.pivotChart ? 'pivotChartTitle' : 'rangeChartTitle'
-        );
+        const title = this.chartTranslation.translate(this.params.pivotChart ? 'pivotChartTitle' : 'rangeChartTitle');
 
         const { width, height } = this.getBestDialogSize();
 
@@ -472,12 +470,12 @@ export class GridChartComp extends Component {
         }
 
         if (pivotModeDisabled) {
-            this.eEmpty.innerText = this.chartTranslationService.translate('pivotChartRequiresPivotMode');
+            this.eEmpty.innerText = this.chartTranslation.translate('pivotChartRequiresPivotMode');
             return true;
         }
 
         if (isEmptyChart) {
-            this.eEmpty.innerText = this.chartTranslationService.translate('noDataToChart');
+            this.eEmpty.innerText = this.chartTranslation.translate('noDataToChart');
             return true;
         }
 

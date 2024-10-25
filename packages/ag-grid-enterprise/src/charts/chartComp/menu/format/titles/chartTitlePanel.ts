@@ -15,7 +15,7 @@ export class ChartTitlePanel extends TitlePanel {
     private titlePlaceholder: string;
 
     public override postConstruct(): void {
-        this.titlePlaceholder = this.chartTranslationService.translate('titlePlaceholder');
+        this.titlePlaceholder = this.chartTranslation.translate('titlePlaceholder');
         super.postConstruct();
         // edits to the title can disable it, so keep the checkbox in sync:
         this.addManagedEventListeners({

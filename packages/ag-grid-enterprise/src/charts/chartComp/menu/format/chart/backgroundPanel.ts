@@ -8,10 +8,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class BackgroundPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -24,7 +24,7 @@ export class BackgroundPanel extends Component {
                 cssIdentifier: 'charts-format-sub-level',
                 direction: 'vertical',
                 suppressOpenCloseIcons: true,
-                title: this.chartTranslationService.translate('background'),
+                title: this.chartTranslation.translate('background'),
                 suppressEnabledCheckbox: true,
                 useToggle: true,
             }

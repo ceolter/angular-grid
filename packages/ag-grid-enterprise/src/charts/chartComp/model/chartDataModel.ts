@@ -47,11 +47,11 @@ export const DEFAULT_CHART_CATEGORY = 'AG-GRID-DEFAULT-CATEGORY';
 
 export class ChartDataModel extends BeanStub {
     private rangeSvc: IRangeService;
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rangeSvc = beans.rangeSvc!;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     public readonly params: ChartModelParams;
@@ -349,7 +349,7 @@ export class ChartDataModel extends BeanStub {
 
         const defaultCategory = {
             colId: DEFAULT_CHART_CATEGORY,
-            displayName: this.chartTranslationService.translate('defaultCategory'),
+            displayName: this.chartTranslation.translate('defaultCategory'),
             selected: !hasSelectedDimension, // if no dimensions in range select the default
             order: 0,
         };

@@ -9,11 +9,11 @@ import type { ChartMenuContext } from '../chartMenuContext';
 import { ChartMenuParamsFactory } from '../chartMenuParamsFactory';
 
 export class ChartSpecificDataPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
     private chartSvc: IChartService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
         this.chartSvc = beans.chartSvc!;
     }
 
@@ -64,7 +64,7 @@ export class ChartSpecificDataPanel extends Component {
 
     private getTitle(): string {
         const chartType = this.chartMenuContext.chartController.getChartType();
-        return this.chartTranslationService.translate(getFullChartNameTranslationKey(chartType));
+        return this.chartTranslation.translate(getFullChartNameTranslationKey(chartType));
     }
 
     private createDirectionSelect(): AgSelect[] {
@@ -80,7 +80,7 @@ export class ChartSpecificDataPanel extends Component {
         );
         const options = (['horizontal', 'vertical'] as const).map((value) => ({
             value,
-            text: this.chartTranslationService.translate(value),
+            text: this.chartTranslation.translate(value),
         }));
         const params = chartSeriesMenuParamsFactory.getDefaultSelectParams('direction', 'direction', options);
         const onValueChange = params.onValueChange;
@@ -107,7 +107,7 @@ export class ChartSpecificDataPanel extends Component {
                     'seriesGroupType',
                     ChartMappings.SERIES_GROUP_TYPES.map((value) => ({
                         value,
-                        text: this.chartTranslationService.translate(`${value}SeriesGroupType`),
+                        text: this.chartTranslation.translate(`${value}SeriesGroupType`),
                     })),
                     chartController.getSeriesGroupType(),
                     (value) => chartController.setSeriesGroupType(value)

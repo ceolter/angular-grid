@@ -358,7 +358,7 @@ export type BeanName =
     | 'chartMenuItemMapper'
     | 'chartMenuListFactory'
     | 'chartMenuService'
-    | 'chartTranslationService'
+    | 'chartTranslation'
     | 'chartSvc'
     | 'clipboardSvc'
     | 'colAnimation'

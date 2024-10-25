@@ -9,10 +9,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class AxisTicksPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
@@ -25,7 +25,7 @@ export class AxisTicksPanel extends Component {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
             suppressOpenCloseIcons: true,
-            title: this.chartTranslationService.translate('ticks'),
+            title: this.chartTranslation.translate('ticks'),
             suppressEnabledCheckbox: true,
             useToggle: true,
         });
