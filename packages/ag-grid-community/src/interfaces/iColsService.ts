@@ -52,7 +52,12 @@ export interface IColsService {
     // RowGroup
     isRowGroupEmpty?(): boolean;
     moveColumn?(fromIndex: number, toIndex: number, source: ColumnEventType): void;
+    isRowGroupColLocked?(column: AgColumn): boolean;
 
     // Value
-    setColumnAggFunc?(key: ColKey, aggFunc: string | IAggFunc | null | undefined, source: ColumnEventType): void;
+    setColumnAggFunc?(
+        key: ColKey | undefined,
+        aggFunc: string | IAggFunc | null | undefined,
+        source: ColumnEventType
+    ): void;
 }

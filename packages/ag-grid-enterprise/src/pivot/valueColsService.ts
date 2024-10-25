@@ -68,7 +68,11 @@ export class ValueColsService extends BaseColsService implements NamedBean, ICol
         return this.columns;
     }
 
-    public setColumnAggFunc(key: ColKey, aggFunc: string | IAggFunc | null | undefined, source: ColumnEventType): void {
+    public setColumnAggFunc(
+        key: ColKey | undefined,
+        aggFunc: string | IAggFunc | null | undefined,
+        source: ColumnEventType
+    ): void {
         if (!key) {
             return;
         }

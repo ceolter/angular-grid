@@ -6,12 +6,12 @@ import type {
     ColumnNameService,
     FocusService,
     FuncColsService,
+    IColsService,
     MenuItemDef,
     PopupService,
 } from 'ag-grid-community';
 import { Component, _createIconNoSpan, isColumn, isProvidedColumnGroup } from 'ag-grid-community';
 
-import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
 
 type MenuItemName = 'rowGroup' | 'value' | 'pivot';
@@ -28,18 +28,48 @@ type MenuItemProperty = {
 };
 
 export class ToolPanelContextMenu extends Component {
+<<<<<<< ours
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private funcColsSvc: FuncColsService;
     private popupSvc: PopupService;
     private focusSvc: FocusService;
+||||||| ancestor
+    private columnModel: ColumnModel;
+    private columnNameService: ColumnNameService;
+    private funcColsService: FuncColsService;
+    private popupService: PopupService;
+    private focusService: FocusService;
+=======
+    private columnModel: ColumnModel;
+    private columnNameService: ColumnNameService;
+    private funcColsService: FuncColsService;
+    private rowGroupColsService?: IColsService;
+    private popupService: PopupService;
+    private focusService: FocusService;
+>>>>>>> theirs
 
     public wireBeans(beans: BeanCollection) {
+<<<<<<< ours
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.funcColsSvc = beans.funcColsSvc;
         this.popupSvc = beans.popupSvc!;
         this.focusSvc = beans.focusSvc;
+||||||| ancestor
+        this.columnModel = beans.columnModel;
+        this.columnNameService = beans.columnNameService;
+        this.funcColsService = beans.funcColsService;
+        this.popupService = beans.popupService!;
+        this.focusService = beans.focusService;
+=======
+        this.columnModel = beans.columnModel;
+        this.columnNameService = beans.columnNameService;
+        this.funcColsService = beans.funcColsService;
+        this.rowGroupColsService = beans.rowGroupColsService;
+        this.popupService = beans.popupService!;
+        this.focusService = beans.focusService;
+>>>>>>> theirs
     }
 
     private columns: AgColumn[];
@@ -97,7 +127,13 @@ export class ToolPanelContextMenu extends Component {
         this.menuItemMap = new Map<MenuItemName, MenuItemProperty>();
         this.menuItemMap.set('rowGroup', {
             allowedFunction: (col) =>
+<<<<<<< ours
                 col.isPrimary() && col.isAllowRowGroup() && !isRowGroupColLocked(this.funcColsSvc, this.gos, col),
+||||||| ancestor
+                col.isPrimary() && col.isAllowRowGroup() && !isRowGroupColLocked(this.funcColsService, this.gos, col),
+=======
+                col.isPrimary() && col.isAllowRowGroup() && !this.rowGroupColsService?.isRowGroupColLocked!(col),
+>>>>>>> theirs
             activeFunction: (col) => col.isRowGroupActive(),
             activateLabel: () => `${localeTextFunc('groupBy', 'Group by')} ${this.displayName}`,
             deactivateLabel: () => `${localeTextFunc('ungroupBy', 'Un-Group by')} ${this.displayName}`,
