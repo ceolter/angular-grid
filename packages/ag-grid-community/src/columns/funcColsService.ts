@@ -57,10 +57,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
         }
     }
 
-    public isRowGroupEmpty(): boolean {
-        return this.rowGroupColsService?.isRowGroupEmpty!() ?? true;
-    }
-
     public setColumnAggFunc(
         key: Maybe<ColKey>,
         aggFunc: string | IAggFunc | null | undefined,
