@@ -1,5 +1,7 @@
 import type { BeanCollection, ColDef, ColGroupDef, Column, IAggFunc } from 'ag-grid-community';
 
+import type { RowGroupColsService } from './rowGroupColsService';
+
 export function addAggFuncs(beans: BeanCollection, aggFuncs: { [key: string]: IAggFunc }): void {
     if (beans.aggFuncSvc) {
         beans.aggFuncSvc.addAggFuncs(aggFuncs);
@@ -61,7 +63,7 @@ export function addRowGroupColumns(beans: BeanCollection, colKeys: (string | Col
 }
 
 export function moveRowGroupColumn(beans: BeanCollection, fromIndex: number, toIndex: number): void {
-    beans.funcColsSvc.moveRowGroupColumn(fromIndex, toIndex, 'api');
+    (beans.rowGroupColsService as RowGroupColsService)?.moveColumn!(fromIndex, toIndex, 'api');
 }
 
 export function getRowGroupColumns(beans: BeanCollection): Column[] {

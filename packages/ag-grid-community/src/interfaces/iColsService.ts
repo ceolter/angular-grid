@@ -51,7 +51,6 @@ export interface IColsService {
 
     // RowGroup
     isRowGroupEmpty?(): boolean;
-    moveColumn?(fromIndex: number, toIndex: number, source: ColumnEventType): void;
     isRowGroupColLocked?(column: AgColumn): boolean;
 
     // Value

@@ -83,29 +83,12 @@ export class FuncColsService extends BeanStub implements NamedBean {
         this.valueColsService?.setColumns(colKeys, source);
     }
 
-    private setValueActive(active: boolean, column: AgColumn, source: ColumnEventType): void {
-        if (active === column.isValueActive()) {
-            return;
-        }
-
-        column.setValueActive(active, source);
-
-        if (active && !column.getAggFunc() && this.aggFuncSvc) {
-            const initialAggFunc = this.aggFuncSvc.getDefaultAggFunc(column);
-            column.setAggFunc(initialAggFunc);
-        }
-    }
-
     public addValueColumns(keys: ColKey[], source: ColumnEventType): void {
         this.valueColsService?.addColumns(keys, source);
     }
 
     public removeValueColumns(keys: ColKey[], source: ColumnEventType): void {
         this.valueColsService?.removeColumns(keys, source);
-    }
-
-    public moveRowGroupColumn(fromIndex: number, toIndex: number, source: ColumnEventType): void {
-        this.rowGroupColsService?.moveColumn!(fromIndex, toIndex, source);
     }
 
     public extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
