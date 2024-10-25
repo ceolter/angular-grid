@@ -22,14 +22,14 @@ interface ColumnSizeAndRatios {
 }
 export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature {
     private horizontalResizeSvc: HorizontalResizeService;
-    private autoWidthCalculator: AutoWidthCalculator;
+    private autoWidthCalc: AutoWidthCalculator;
     private columnGroupSvc?: ColumnGroupService;
     private colResize?: ColumnResizeService;
     private colAutosize?: ColumnAutosizeService;
 
     public wireBeans(beans: BeanCollection) {
         this.horizontalResizeSvc = beans.horizontalResizeSvc!;
-        this.autoWidthCalculator = beans.autoWidthCalculator!;
+        this.autoWidthCalc = beans.autoWidthCalc!;
         this.columnGroupSvc = beans.columnGroupSvc;
         this.colResize = beans.colResize;
         this.colAutosize = beans.colAutosize;
@@ -153,7 +153,7 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
     }
 
     public resizeLeafColumnsToFit(source: ColumnEventType): void {
-        const preferredSize = this.autoWidthCalculator.getPreferredWidthForColumnGroup(this.columnGroup);
+        const preferredSize = this.autoWidthCalc.getPreferredWidthForColumnGroup(this.columnGroup);
         const initialValues = this.getInitialValues();
 
         if (preferredSize > initialValues.resizeStartWidth) {

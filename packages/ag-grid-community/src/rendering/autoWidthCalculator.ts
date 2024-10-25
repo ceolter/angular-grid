@@ -8,7 +8,7 @@ import type { RowContainerCtrl } from '../gridBodyComp/rowContainer/rowContainer
 import type { RowRenderer } from './rowRenderer';
 
 export class AutoWidthCalculator extends BeanStub implements NamedBean {
-    beanName = 'autoWidthCalculator' as const;
+    beanName = 'autoWidthCalc' as const;
 
     private rowRenderer: RowRenderer;
     private ctrlsSvc: CtrlsService;

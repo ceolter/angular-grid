@@ -256,7 +256,7 @@ export interface CoreBeanCollection {
     scrollVisibleSvc: ScrollVisibleService;
     pinnedCols?: PinnedColumnService;
     expressionSvc?: ExpressionService;
-    autoWidthCalculator?: AutoWidthCalculator;
+    autoWidthCalc?: AutoWidthCalculator;
     agComponentUtils?: AgComponentUtils;
     frameworkComponentWrapper: FrameworkComponentWrapper;
     horizontalResizeSvc?: HorizontalResizeService;
@@ -344,7 +344,7 @@ export type BeanName =
     | 'ariaAnnounce'
     | 'apiEventSvc'
     | 'autoColSvc'
-    | 'autoWidthCalculator'
+    | 'autoWidthCalc'
     | 'beans'
     | 'cellEditorFactory'
     | 'cellFlashSvc'

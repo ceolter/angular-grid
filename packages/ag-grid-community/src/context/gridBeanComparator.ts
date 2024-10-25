@@ -48,7 +48,7 @@ const orderedCoreBeans: BeanName[] = [
     'valueCache',
     'valueSvc',
     'loggerFactory',
-    'autoWidthCalculator',
+    'autoWidthCalc',
     'filterMenuFactory',
     'dragAndDrop',
     'focusSvc',
