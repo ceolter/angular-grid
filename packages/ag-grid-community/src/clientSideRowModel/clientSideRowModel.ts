@@ -78,7 +78,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private groupStage?: IRowNodeStage;
     private aggregationStage?: IRowNodeStage;
     private pivotStage?: IRowNodeStage;
-    private filterAggregatesStage?: IRowNodeStage;
+    private filterAggStage?: IRowNodeStage;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
@@ -94,7 +94,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.groupStage = beans.groupStage;
         this.aggregationStage = beans.aggregationStage;
         this.pivotStage = beans.pivotStage;
-        this.filterAggregatesStage = beans.filterAggregatesStage;
+        this.filterAggStage = beans.filterAggStage;
     }
 
     private onRowHeightChanged_debounced = _debounce(this, this.onRowHeightChanged.bind(this), 100);
@@ -129,7 +129,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             this.pivotStage,
             this.aggregationStage,
             this.sortStage,
-            this.filterAggregatesStage,
+            this.filterAggStage,
             this.flattenStage,
         ].filter((stage) => !!stage) as IRowNodeStage[];
         const refreshEverythingFunc = this.refreshModel.bind(this, { step: 'group' }, undefined);
@@ -1084,10 +1084,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private doFilterAggregates(changedPath: ChangedPath): void {
         const rootNode = this.rootNode!;
-        if (this.filterAggregatesStage) {
-            this.filterAggregatesStage.execute({ rowNode: rootNode, changedPath: changedPath });
+        if (this.filterAggStage) {
+            this.filterAggStage.execute({ rowNode: rootNode, changedPath: changedPath });
         } else {
-            // If filterAggregatesStage is undefined, then so is the grouping stage, so all children should be on the rootNode.
+            // If filterAggStage is undefined, then so is the grouping stage, so all children should be on the rootNode.
             rootNode.childrenAfterAggFilter = rootNode.childrenAfterFilter;
         }
     }

@@ -283,7 +283,7 @@ export interface CoreBeanCollection {
     groupStage?: IRowNodeStage;
     aggregationStage?: IRowNodeStage;
     pivotStage?: IRowNodeStage;
-    filterAggregatesStage?: IRowNodeStage;
+    filterAggStage?: IRowNodeStage;
     rowNodeSorter?: RowNodeSorter;
     pivotColDefSvc?: IPivotColDefService;
     chartSvc?: IChartService;
@@ -402,7 +402,7 @@ export type BeanName =
     | 'enterpriseChartProxyFactory'
     | 'expansionSvc'
     | 'expressionSvc'
-    | 'filterAggregatesStage'
+    | 'filterAggStage'
     | 'filterManager'
     | 'filterMenuFactory'
     | 'filterStage'
