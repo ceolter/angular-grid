@@ -37,6 +37,7 @@ export interface Module {
     /** selectors for grid components that can be defined in templates and created by AG stack */
     selectors?: ComponentSelector[];
     /**
+     * icon mappings
      * *** IMPORTANT NOTE! ***
      * If you change the icons, copy/paste the new content into the docs page custom-icons
      */
