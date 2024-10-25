@@ -418,6 +418,7 @@ export type BeanName =
     | 'pivotColsService'
     | 'rowGroupColsService'
     | 'valueColsService'
+    | 'funcColsService'
     | 'frameworkComponentWrapper'
     | 'frameworkOverrides'
     | 'globalEventListener'

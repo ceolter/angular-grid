@@ -44,7 +44,16 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public valueCols: AgColumn[] = [];
-    public pivotCols: AgColumn[] = [];
+
+    public get pivotCols() {
+        return this.pivotColsService?.columns ?? [];
+    }
+
+    public set pivotCols(cols: AgColumn[]) {
+        if (this.pivotColsService) {
+            this.pivotColsService.columns = cols;
+        }
+    }
 
     public getModifyColumnsNoEventsCallbacks(): ModifyColumnsNoEventsCallbacks {
         return {
@@ -52,8 +61,10 @@ export class FuncColsService extends BeanStub implements NamedBean {
             removeGroupCol: (column) =>
                 this.rowGroupColsService && _removeFromArray(this.rowGroupColsService.columns, column),
 
-            addPivotCol: (column) => this.pivotCols.push(column),
-            removePivotCol: (column) => _removeFromArray(this.pivotCols, column),
+            addPivotCol: (column) => this.pivotColsService?.columns.push(column),
+            removePivotCol: (column) =>
+                this.pivotColsService && _removeFromArray(this.pivotColsService.columns, column),
+
             addValueCol: (column) => this.valueCols.push(column),
             removeValueCol: (column) => _removeFromArray(this.valueCols, column),
         };
@@ -78,7 +89,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public sortPivotColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
-        this.pivotCols.sort(compareFn);
+        this.pivotColsService?.sortColumns(compareFn);
     }
 
     public isRowGroupEmpty(): boolean {
@@ -117,41 +128,15 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public addPivotColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.updateColList(
-            keys,
-            this.pivotCols,
-            true,
-            false,
-            (column) => column.setPivotActive(true, source),
-            'columnPivotChanged',
-            source
-        );
+        this.pivotColsService?.addColumns(keys, source);
     }
 
     public setPivotColumns(colKeys: ColKey[], source: ColumnEventType): void {
-        this.setColList(
-            colKeys,
-            this.pivotCols,
-            'columnPivotChanged',
-            true,
-            false,
-            (added, column) => {
-                column.setPivotActive(added, source);
-            },
-            source
-        );
+        this.pivotColsService?.setColumns(colKeys, source);
     }
 
     public removePivotColumns(keys: ColKey[], source: ColumnEventType): void {
-        this.updateColList(
-            keys,
-            this.pivotCols,
-            false,
-            false,
-            (column) => column.setPivotActive(false, source),
-            'columnPivotChanged',
-            source
-        );
+        this.pivotColsService?.removeColumns(keys, source);
     }
 
     public setValueColumns(colKeys: ColKey[], source: ColumnEventType): void {
@@ -335,7 +320,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
 
     public extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
         this.rowGroupColsService?.extractCols(source, oldProvidedCols);
-        this.extractPivotCols(source, oldProvidedCols);
+        this.pivotColsService?.extractCols(source, oldProvidedCols);
         this.extractValueCols(source, oldProvidedCols);
     }
 
@@ -379,18 +364,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
                 }
             }
         });
-    }
-
-    private extractPivotCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
-        this.pivotCols = this.extractColsCommon(
-            oldProvidedCols,
-            this.pivotCols,
-            (col, flag) => col.setPivotActive(flag, source),
-            (colDef: ColDef) => colDef.pivotIndex,
-            (colDef: ColDef) => colDef.initialPivotIndex,
-            (colDef: ColDef) => colDef.pivot,
-            (colDef: ColDef) => colDef.initialPivot
-        );
     }
 
     private extractColsCommon(
@@ -526,105 +499,8 @@ export class FuncColsService extends BeanStub implements NamedBean {
 
         const existingColumnStateUpdates: { [colId: string]: ColumnState } = {};
 
-        const orderColumns = (
-            updatedColumnState: { [colId: string]: ColumnState },
-            colList: AgColumn[],
-            enableProp: 'rowGroup' | 'pivot',
-            initialEnableProp: 'initialRowGroup' | 'initialPivot',
-            indexProp: 'rowGroupIndex' | 'pivotIndex',
-            initialIndexProp: 'initialRowGroupIndex' | 'initialPivotIndex'
-        ) => {
-            const primaryCols = this.colModel.getColDefCols();
-            if (!colList.length || !primaryCols) {
-                return [];
-            }
-            const updatedColIdArray = Object.keys(updatedColumnState);
-            const updatedColIds = new Set(updatedColIdArray);
-            const newColIds = new Set(updatedColIdArray);
-            const allColIds = new Set(
-                colList
-                    .map((column) => {
-                        const colId = column.getColId();
-                        newColIds.delete(colId);
-                        return colId;
-                    })
-                    .concat(updatedColIdArray)
-            );
-
-            const colIdsInOriginalOrder: string[] = [];
-            const originalOrderMap: { [colId: string]: number } = {};
-            let orderIndex = 0;
-            for (let i = 0; i < primaryCols.length; i++) {
-                const colId = primaryCols[i].getColId();
-                if (allColIds.has(colId)) {
-                    colIdsInOriginalOrder.push(colId);
-                    originalOrderMap[colId] = orderIndex++;
-                }
-            }
-
-            // follow approach in `resetColumnState`
-            let index = 1000;
-            let hasAddedNewCols = false;
-            let lastIndex = 0;
-
-            const processPrecedingNewCols = (colId: string) => {
-                const originalOrderIndex = originalOrderMap[colId];
-                for (let i = lastIndex; i < originalOrderIndex; i++) {
-                    const newColId = colIdsInOriginalOrder[i];
-                    if (newColIds.has(newColId)) {
-                        updatedColumnState[newColId][indexProp] = index++;
-                        newColIds.delete(newColId);
-                    }
-                }
-                lastIndex = originalOrderIndex;
-            };
-
-            colList.forEach((column) => {
-                const colId = column.getColId();
-                if (updatedColIds.has(colId)) {
-                    // New col already exists. Add any other new cols that should be before it.
-                    processPrecedingNewCols(colId);
-                    updatedColumnState[colId][indexProp] = index++;
-                } else {
-                    const colDef = column.getColDef();
-                    const missingIndex =
-                        colDef[indexProp] === null ||
-                        (colDef[indexProp] === undefined && colDef[initialIndexProp] == null);
-                    if (missingIndex) {
-                        if (!hasAddedNewCols) {
-                            const propEnabled =
-                                colDef[enableProp] || (colDef[enableProp] === undefined && colDef[initialEnableProp]);
-                            if (propEnabled) {
-                                processPrecedingNewCols(colId);
-                            } else {
-                                // Reached the first manually added column. Add all the new columns now.
-                                newColIds.forEach((newColId) => {
-                                    // Rather than increment the index, just use the original order index - doesn't need to be contiguous.
-                                    updatedColumnState[newColId][indexProp] = index + originalOrderMap[newColId];
-                                });
-                                index += colIdsInOriginalOrder.length;
-                                hasAddedNewCols = true;
-                            }
-                        }
-                        if (!existingColumnStateUpdates[colId]) {
-                            existingColumnStateUpdates[colId] = { colId };
-                        }
-                        existingColumnStateUpdates[colId][indexProp] = index++;
-                    }
-                }
-            });
-        };
-
         this.rowGroupColsService?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
-
-        orderColumns(
-            updatedPivotColumnState,
-            this.pivotCols,
-            'pivot',
-            'initialPivot',
-            'pivotIndex',
-            'initialPivotIndex'
-        );
+        this.pivotColsService?.orderColumns(existingColumnStateUpdates, updatedPivotColumnState);
 
         return Object.values(existingColumnStateUpdates);
     }
