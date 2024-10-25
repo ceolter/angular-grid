@@ -7,7 +7,7 @@ import type { ChartMenuContext } from '../chartMenuContext';
 import { AdvancedSettingsPanel } from './advancedSettingsPanel';
 
 export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
-    beanName = 'advancedSettingsMenuFactory' as const;
+    beanName = 'advSettingsMenuFactory' as const;
 
     private focusSvc: FocusService;
     private chartTranslationService: ChartTranslationService;

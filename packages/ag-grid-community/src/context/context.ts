@@ -333,7 +333,7 @@ export class Context extends GenericContext<BeanName, BeanCollection> {
 export type BeanName =
     | 'advFilterExpSvc'
     | 'advancedFilter'
-    | 'advancedSettingsMenuFactory'
+    | 'advSettingsMenuFactory'
     | 'aggFuncSvc'
     | 'agCompUtils'
     | 'aggColumnNameSvc'
