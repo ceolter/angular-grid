@@ -74,20 +74,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
         };
     }
 
-    public getSourceColumnsForGroupColumn(groupCol: AgColumn): AgColumn[] | null {
-        const sourceColumnId = groupCol.getColDef().showRowGroup;
-        if (!sourceColumnId) {
-            return null;
-        }
-
-        if (sourceColumnId === true && this.rowGroupColsService) {
-            return this.rowGroupColsService?.columns.slice(0);
-        }
-
-        const column = this.colModel.getColDefCol(sourceColumnId as string);
-        return column ? [column] : null;
-    }
-
     public sortRowGroupColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
         this.rowGroupColsService?.sortColumns(compareFn);
     }
