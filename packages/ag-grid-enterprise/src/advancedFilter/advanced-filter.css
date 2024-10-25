@@ -30,7 +30,7 @@
     font-weight: 600;
     padding: var(--ag-spacing);
 
-    &:not(:disabled) {
+    &:where(:not(:disabled)) {
         cursor: pointer;
 
         &:hover {
@@ -64,11 +64,9 @@
     border-top: var(--ag-advanced-filter-builder-button-bar-border);
 }
 
-.ag-advanced-filter-builder .ag-advanced-filter-builder-button-panel {
-    .ag-advanced-filter-builder-apply-button,
-    .ag-advanced-filter-builder-cancel-button {
-        margin-left: calc(var(--ag-spacing) * 2);
-    }
+.ag-advanced-filter-builder-apply-button,
+.ag-advanced-filter-builder-cancel-button {
+    margin-left: calc(var(--ag-spacing) * 2);
 }
 
 .ag-advanced-filter-builder-item-wrapper {
@@ -81,7 +79,7 @@
     padding-right: var(--ag-icon-size);
 }
 
-.ag-virtual-list-viewport .ag-advanced-filter-builder-item-wrapper .ag-tab-guard {
+:where(.ag-virtual-list-viewport .ag-advanced-filter-builder-item-wrapper) .ag-tab-guard {
     position: absolute;
 }
 
@@ -89,7 +87,7 @@
     width: var(--ag-advanced-filter-builder-indent-size);
 }
 
-.ag-advanced-filter-builder-item-tree-lines .ag-advanced-filter-builder-item-tree-line-root {
+.ag-advanced-filter-builder-item-tree-line-root {
     width: var(--ag-icon-size);
 
     &::before {
@@ -172,7 +170,9 @@
     padding: var(--ag-spacing) calc(var(--ag-spacing) * 2);
     min-height: calc(100% - var(--ag-spacing) * 3);
     min-width: calc(var(--ag-spacing) * 2);
+}
 
+:where(.ag-advanced-filter-builder-pill) {
     .ag-picker-field-display {
         margin-right: var(--ag-spacing);
     }
@@ -214,7 +214,7 @@
     cursor: text;
     max-width: 140px;
 
-    .ag-advanced-filter-builder-pill-display {
+    :where(.ag-advanced-filter-builder-pill-display) {
         display: block;
     }
 }
@@ -253,7 +253,7 @@
     &:hover {
         background-color: var(--ag-row-hover-color);
 
-        .ag-advanced-filter-builder-item-button {
+        :where(.ag-advanced-filter-builder-item-button) {
             opacity: 1;
         }
     }
@@ -265,7 +265,7 @@
     cursor: default;
 }
 
-.ag-advanced-filter-builder-virtual-list-item-highlight .ag-advanced-filter-builder-item-button:focus-visible,
-.ag-advanced-filter-builder-validation .ag-advanced-filter-builder-invalid {
+:where(.ag-advanced-filter-builder-virtual-list-item-highlight) .ag-advanced-filter-builder-item-button:focus-visible,
+:where(.ag-advanced-filter-builder-validation) .ag-advanced-filter-builder-invalid {
     opacity: 1;
 }

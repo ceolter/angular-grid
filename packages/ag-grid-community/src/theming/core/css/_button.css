@@ -9,10 +9,6 @@
     line-height: inherit;
     cursor: pointer;
     font-weight: inherit;
-
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
-    }
 }
 
 .ag-standard-button {

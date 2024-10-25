@@ -16,19 +16,6 @@
     height: var(--ag-header-height);
 }
 
-.ag-header-cell,
-.ag-header-group-cell {
-    display: inline-flex;
-    align-items: center;
-    position: absolute;
-    height: 100%;
-
-    /* without this the ag-header-row becomes scrollable */
-    overflow: hidden;
-    gap: var(--ag-cell-widget-spacing);
-    padding: 0 var(--ag-cell-horizontal-padding);
-}
-
 .ag-header-cell-menu-button,
 .ag-header-cell-filter-button,
 .ag-panel-title-bar-button,
@@ -38,26 +25,20 @@
     cursor: pointer;
 }
 
-.ag-header-cell,
-.ag-header-group-cell,
-.ag-advanced-filter-header-cell {
-    &:focus-visible {
-        box-shadow: inset var(--ag-focus-shadow);
-    }
-}
-
-.ag-header-row:not(:first-child) {
-    .ag-header-cell:not(.ag-header-span-height.ag-header-span-total, .ag-header-parent-hidden),
-    .ag-header-group-cell.ag-header-group-cell-with-group {
+.ag-header-row:where(:not(:first-child)) {
+    :where(
+            .ag-header-cell:not(.ag-header-span-height.ag-header-span-total, .ag-header-parent-hidden),
+            .ag-header-group-cell.ag-header-group-cell-with-group
+        ) {
         border-top: var(--ag-header-row-border);
     }
 }
 
-.ag-header-row:not(.ag-header-row-column-group) {
+.ag-header-row:where(:not(.ag-header-row-column-group)) {
     overflow: hidden;
 }
 
-.ag-header.ag-header-allow-overflow .ag-header-row {
+:where(.ag-header.ag-header-allow-overflow) .ag-header-row {
     overflow: visible;
 }
 
@@ -65,6 +46,7 @@
 
 .ag-header-cell {
     display: inline-flex;
+
     /* without this the ag-header-row becomes scrollable */
     overflow: hidden;
 }
@@ -75,6 +57,8 @@
 
 .ag-header-cell,
 .ag-header-group-cell {
+    /* without this the ag-header-row becomes scrollable */
+    overflow: hidden;
     align-items: center;
     position: absolute;
     height: 100%;
@@ -98,7 +82,7 @@
 /* Implement header cell hover and moving background colors as a pseudoelement,
    because some applications set the color of the header cells and we want the
    hover effect to overlay on top of this color rather than replacing it. */
-.ag-header-cell:not(.ag-floating-filter),
+.ag-header-cell:where(:not(.ag-floating-filter)),
 .ag-header-group-cell {
     &::before {
         content: '';
@@ -120,11 +104,11 @@
             --ag-internal-hover-color var(--ag-header-cell-background-transition-duration);
     }
 
-    &:hover::before {
+    &:where(:hover)::before {
         --ag-internal-hover-color: var(--ag-header-cell-hover-background-color);
     }
 
-    &.ag-header-cell-moving::before {
+    &:where(.ag-header-cell-moving)::before {
         --ag-internal-moving-color: var(--ag-header-cell-moving-background-color);
         --ag-internal-hover-color: var(--ag-header-cell-hover-background-color);
     }
@@ -136,12 +120,12 @@
     z-index: 1;
 }
 
-.ag-header-cell-menu-button:not(.ag-header-menu-always-show) {
+.ag-header-cell-menu-button:where(:not(.ag-header-menu-always-show)) {
     transition: opacity 0.2s;
     opacity: 0;
 }
 
-.ag-header-cell.ag-header-active .ag-header-cell-menu-button,
+:where(.ag-header-cell.ag-header-active) .ag-header-cell-menu-button,
 .ag-header-cell-filter-button {
     opacity: 1;
 }
@@ -154,6 +138,7 @@
     align-items: center;
     gap: var(--ag-spacing);
     padding: 5px 0;
+    overflow: hidden;
 }
 
 .ag-header-cell-label {
@@ -183,33 +168,25 @@
     width: 100%;
 }
 
-.ag-header-group-cell .ag-header-cell-comp-wrapper {
+:where(.ag-header-group-cell) .ag-header-cell-comp-wrapper {
     display: flex;
 }
 
-.ag-header-cell-wrap-text .ag-header-cell-comp-wrapper {
-    white-space: normal;
-}
-
-.ag-header-cell:not(.ag-header-cell-auto-height) .ag-header-cell-comp-wrapper {
+:where(.ag-header-cell:not(.ag-header-cell-auto-height)) .ag-header-cell-comp-wrapper {
     height: 100%;
     display: flex;
     align-items: center;
 }
 
-.ag-header-cell-comp-wrapper {
-    width: 100%;
-}
-
 .ag-header-cell-wrap-text .ag-header-cell-comp-wrapper {
     white-space: normal;
 }
 
-.ag-header-cell-comp-wrapper-limited-height > div {
+.ag-header-cell-comp-wrapper-limited-height > * {
     overflow: hidden;
 }
 
-.ag-right-aligned-header .ag-header-cell-label {
+:where(.ag-right-aligned-header) .ag-header-cell-label {
     flex-direction: row-reverse;
 }
 
@@ -230,7 +207,7 @@
 /* COLUMN SEPARATOR */
 
 .ag-header-cell::after,
-.ag-header-group-cell:not(.ag-header-span-height.ag-header-group-cell-no-group)::after {
+.ag-header-group-cell:where(:not(.ag-header-span-height.ag-header-group-cell-no-group))::after {
     content: '';
     position: absolute;
     z-index: 1;
@@ -257,10 +234,10 @@
 
 .ag-header-highlight-after::after {
     right: 0;
-}
 
-.ag-pinned-left-header .ag-header-highlight-after::after {
-    right: 1px;
+    :where(.ag-pinned-left-header) & {
+        right: 1px;
+    }
 }
 
 /* RESIZE HANDLE */
@@ -290,11 +267,11 @@
     }
 }
 
-.ag-header-cell.ag-header-span-height .ag-header-cell-resize::after {
+:where(.ag-header-cell.ag-header-span-height) .ag-header-cell-resize::after {
     height: calc(100% - calc(var(--ag-spacing) * 4));
     top: calc(var(--ag-spacing) * 2);
 }
 
-.ag-header-group-cell-no-group.ag-header-span-height {
+.ag-header-group-cell-no-group:where(.ag-header-span-height) {
     display: none;
 }

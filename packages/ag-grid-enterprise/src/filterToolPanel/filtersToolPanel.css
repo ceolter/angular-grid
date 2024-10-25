@@ -38,12 +38,9 @@
     margin-bottom: var(--ag-spacing);
 }
 
-.ag-filter-toolpanel-group:not(.ag-has-filter) > .ag-group-title-bar .ag-filter-toolpanel-group-instance-header-icon {
+:where(.ag-filter-toolpanel-group:not(.ag-has-filter) > .ag-group-title-bar)
+    .ag-filter-toolpanel-group-instance-header-icon {
     display: none;
-}
-
-.ag-filter-toolpanel-group-level-0-header {
-    height: calc(var(--ag-spacing) * 8);
 }
 
 .ag-filter-toolpanel-search-input {

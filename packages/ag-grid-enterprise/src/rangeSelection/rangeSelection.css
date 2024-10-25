@@ -1,3 +1,5 @@
+/* stylelint-disable selector-max-specificity */
+
 .ag-cell-range-selected:not(.ag-cell-focus),
 .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {
     background-color: var(--ag-range-selection-background-color);

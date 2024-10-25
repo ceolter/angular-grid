@@ -7,6 +7,6 @@
     top: 0;
 }
 
-.ag-sparkline-wrapper canvas {
+.ag-sparkline-wrapper :where(canvas) {
     position: absolute;
 }

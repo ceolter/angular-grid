@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
 
-    .ag-input-wrapper {
+    :where(.ag-input-wrapper) {
         height: 100%;
     }
 }
@@ -20,7 +20,9 @@
     }
 }
 
-/* IMPORTANT this block must contain ONLY -webkit styles, as any browsers that
+/* stylelint-disable-next-line no-duplicate-selectors --
+
+   IMPORTANT this block must contain ONLY -webkit styles, as any browsers that
    don't support the -webkit prefix will ignore the entire block */
 .ag-range-field-input {
     &::-webkit-slider-runnable-track {
@@ -44,21 +46,19 @@
         transform: translateY(calc(var(--ag-icon-size) * -0.5 + 1.5px));
     }
 
-    &:focus {
-        &::-webkit-slider-thumb {
-            box-shadow: var(--ag-focus-shadow);
-            border-color: var(--ag-accent-color);
-        }
+    &:focus::-webkit-slider-thumb {
+        box-shadow: var(--ag-focus-shadow);
+        border-color: var(--ag-accent-color);
     }
 
-    &:active {
-        &::-webkit-slider-runnable-track {
-            background-color: var(--ag-accent-color);
-        }
+    &:active::-webkit-slider-runnable-track {
+        background-color: var(--ag-accent-color);
     }
 }
 
-/* IMPORTANT this block must contain ONLY -moz styles, as any browsers that
+/* stylelint-disable-next-line no-duplicate-selectors --
+
+   IMPORTANT this block must contain ONLY -moz styles, as any browsers that
    don't support the -moz prefix will ignore the entire block */
 .ag-range-field-input {
     &::-moz-range-track {
@@ -82,16 +82,12 @@
         transform: translateY(calc(var(--ag-icon-size) * -0.5 + 1.5px));
     }
 
-    &:focus {
-        &::-moz-ag-range-thumb {
-            box-shadow: var(--ag-focus-shadow);
-            border-color: var(--ag-accent-color);
-        }
+    &:focus::-moz-ag-range-thumb {
+        box-shadow: var(--ag-focus-shadow);
+        border-color: var(--ag-accent-color);
     }
 
-    &:active {
-        &::-moz-ag-range-track {
-            background-color: var(--ag-accent-color);
-        }
+    &:active::-moz-ag-range-track {
+        background-color: var(--ag-accent-color);
     }
 }

@@ -1,3 +1,8 @@
+/* stylelint-disable selector-max-specificity -- grid layout has
+    lots of overlapping rules defined in different files that rely on different
+    specificities to work, one day it would be good to tackle this and properly
+    refactor border styles to be less specific */
+
 .ag-rtl {
     text-align: right;
 }
@@ -8,7 +13,7 @@
 
 .ag-row-group-leaf-indent {
     /* Indent leaf content to align with group row label which has an expand
-       icon and a space before the text */
+           icon and a space before the text */
     margin-left: calc(var(--ag-cell-widget-spacing) + var(--ag-icon-size));
 }
 
@@ -60,15 +65,15 @@
     border-bottom: var(--ag-row-border);
 
     /* Work out the correct line height. --ag-row-height is the default row
-       height, --ag-line-height is the actual row height, only set if variable row
-       heights are enabled.
-
-      - use line height rather than flex align to centre single line text within a
-        default height row, because if the row is larger than the default height
-        then we want content to be top aligned.
-      - don't allow line height to be larger than the actual row height as then
-        content won't fit
-        */
+           height, --ag-line-height is the actual row height, only set if variable row
+           heights are enabled.
+    
+          - use line height rather than flex align to centre single line text within a
+            default height row, because if the row is larger than the default height
+            then we want content to be top aligned.
+          - don't allow line height to be larger than the actual row height as then
+            content won't fit
+            */
     --ag-internal-content-line-height: min(calc(var(--ag-row-height) - 1px), var(--ag-line-height, 1000px));
 }
 
@@ -87,14 +92,10 @@
     cursor: pointer;
 }
 
-.ag-cell-wrapper.ag-row-group {
-    align-items: flex-start;
-}
-
 .ag-cell,
 .ag-full-width-row .ag-cell-wrapper.ag-row-group {
     /* There is always a 1px border around cells, defaulting to transparent to
-       avoid layout shift when we add a selection border. */
+           avoid layout shift when we add a selection border. */
     border: 1px solid transparent;
     line-height: var(--ag-internal-content-line-height);
 }
@@ -113,11 +114,20 @@
     align-items: center;
     padding-left: calc(var(--ag-indentation-level) * var(--ag-row-group-indent-size));
 
-    > *:not(.ag-cell-value, .ag-group-value) {
+    > *:where(:not(.ag-cell-value, .ag-group-value)) {
         /* cell widgets like checkboxes don't respond to line-height, so set their
-           height to vertically centre them */
+               height to vertically centre them */
         height: var(--ag-internal-content-line-height);
         display: flex;
+        align-items: center;
+    }
+
+    &:where(.ag-row-group) {
+        align-items: flex-start;
+    }
+
+    :where(.ag-full-width-row) &:where(.ag-row-group) {
+        height: 100%;
         align-items: center;
     }
 }
@@ -177,8 +187,8 @@
 }
 
 /* row selection and hover colors are added on a ::before pseudo element so
-  that they overlay on top of the alternating row backgrounds rather than
-  replacing them */
+      that they overlay on top of the alternating row backgrounds rather than
+      replacing them */
 .ag-row-selected::before {
     content: '';
     background-color: var(--ag-selected-row-background-color);
@@ -202,7 +212,7 @@
     background-color: var(--ag-row-hover-color);
 
     /* apply hover with a background-image so that it overlays on top of the
-    existing background-color */
+        existing background-color */
     background-image: linear-gradient(var(--ag-selected-row-background-color), var(--ag-selected-row-background-color));
 }
 
@@ -228,8 +238,8 @@
 }
 
 .ag-cell:not(.ag-cell-inline-editing),
-/* stylelint-disable-next-line no-descending-specificity */
-.ag-full-width-row .ag-cell-wrapper.ag-row-group {
+    /* stylelint-disable-next-line no-descending-specificity */
+    .ag-full-width-row .ag-cell-wrapper.ag-row-group {
     padding-left: calc(
         var(--ag-cell-horizontal-padding) + var(--ag-row-group-indent-size) * var(--ag-indentation-level)
     );
@@ -238,8 +248,8 @@
 }
 
 /* in full width rows, a cell renderer is rendered directly into a row with no
-  cell in between, in which case we need to apply the padding to the cell
-  renderer's wrapper. */
+      cell in between, in which case we need to apply the padding to the cell
+      renderer's wrapper. */
 .ag-row > .ag-cell-wrapper {
     padding-left: var(--ag-cell-horizontal-padding);
     padding-right: var(--ag-cell-horizontal-padding);

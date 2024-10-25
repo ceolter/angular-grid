@@ -8,11 +8,11 @@
     align-items: center;
     height: 100%;
 
-    .ag-picker-field-display {
+    :where(.ag-picker-field-display) {
         overflow: hidden;
         text-overflow: ellipsis;
 
-        &.ag-display-as-placeholder {
+        &:where(.ag-display-as-placeholder) {
             opacity: 0.5;
         }
     }
@@ -30,7 +30,7 @@
     border: var(--ag-input-border);
     box-shadow: var(--ag-dropdown-shadow);
 
-    .ag-loading-text {
+    :where(.ag-loading-text) {
         padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);
     }
 }
@@ -61,7 +61,7 @@
 .ag-rich-select-field-input {
     flex: 1 1 auto;
 
-    .ag-input-field-input {
+    :where(.ag-input-field-input) {
         padding: 0 !important;
         border: none !important;
         box-shadow: none !important;
@@ -75,7 +75,7 @@
     left: var(--ag-spacing);
 }
 
-.ag-popup-editor .ag-rich-select-value {
+:where(.ag-popup-editor) .ag-rich-select-value {
     height: var(--ag-row-height);
     min-width: 200px;
 }
@@ -99,13 +99,9 @@
     border-radius: var(--ag-border-radius);
     background: var(--ag-select-cell-background-color);
     border: var(--ag-select-cell-border);
-
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
-    }
 }
 
-.ag-pill .ag-pill-button {
+.ag-pill-button {
     border: none;
     padding: 0;
     margin-left: var(--ag-spacing);

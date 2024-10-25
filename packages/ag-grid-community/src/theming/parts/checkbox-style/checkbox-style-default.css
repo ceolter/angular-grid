@@ -7,7 +7,7 @@
     background-color: var(--ag-checkbox-unchecked-background-color);
     border: solid var(--ag-checkbox-border-width) var(--ag-checkbox-unchecked-border-color);
 
-    & input {
+    :where(input) {
         cursor: pointer;
         appearance: none;
         opacity: 0;

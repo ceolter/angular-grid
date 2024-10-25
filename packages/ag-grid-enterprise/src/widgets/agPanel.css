@@ -54,7 +54,9 @@
     pointer-events: none;
     z-index: 1;
     user-select: none;
+}
 
+:where(.ag-resizer) {
     /* stylelint-disable-next-line selector-class-pattern */
     &.ag-resizer-topLeft {
         top: 0;
@@ -132,8 +134,8 @@
     }
 }
 
-.ag-dragging-range-handle .ag-dialog,
-.ag-dragging-fill-handle .ag-dialog {
+:where(.ag-dragging-range-handle) .ag-dialog,
+:where(.ag-dragging-fill-handle) .ag-dialog {
     opacity: 0.7;
     pointer-events: none;
 }

@@ -33,11 +33,11 @@
     --ag-icon-size: 20px;
 }
 
-.ag-chart .ag-chart-menu {
+:where(.ag-chart) .ag-chart-menu {
     display: none;
 }
 
-.ag-chart-menu-hidden:hover .ag-chart-menu {
+:where(.ag-chart-menu-hidden:hover) .ag-chart-menu {
     display: block;
 }
 
@@ -46,7 +46,7 @@
     min-width: var(--ag-chart-menu-panel-width);
 }
 
-.ag-chart-menu-hidden ~ .ag-chart-docked-container {
+:where(.ag-chart-menu-hidden) ~ .ag-chart-docked-container {
     display: none;
 }
 
@@ -284,7 +284,7 @@
     padding-bottom: var(--ag-widget-container-vertical-padding);
 }
 
-.ag-charts-data-group-item:not(:last-child) {
+.ag-charts-data-group-item:where(:not(:last-child)) {
     margin-bottom: var(--ag-spacing);
 }
 
@@ -318,14 +318,14 @@
 
 .ag-charts-data-group-container {
     padding: calc(var(--ag-widget-container-vertical-padding) * 0.5) var(--ag-widget-container-horizontal-padding);
+}
 
-    .ag-charts-data-group-item:not(.ag-charts-format-sub-level-group, .ag-pill-select, .ag-select) {
-        height: var(--ag-list-item-height);
-    }
+.ag-charts-data-group-item:where(:not(.ag-charts-format-sub-level-group, .ag-pill-select, .ag-select)) {
+    height: var(--ag-list-item-height);
+}
 
-    .ag-charts-data-group-item.ag-picker-field {
-        margin-top: var(--ag-spacing);
-    }
+.ag-charts-data-group-item:where(.ag-picker-field) {
+    margin-top: var(--ag-spacing);
 }
 
 .ag-charts-format-top-level-group-container,
@@ -354,15 +354,15 @@
     display: grid;
     grid-template-columns: 60px 1fr 60px 1fr 60px;
 
-    .ag-chart-mini-thumbnail:nth-child(3n + 1) {
+    :where(.ag-chart-mini-thumbnail:nth-child(3n + 1)) {
         grid-column: 1;
     }
 
-    .ag-chart-mini-thumbnail:nth-child(3n + 2) {
+    :where(.ag-chart-mini-thumbnail:nth-child(3n + 2)) {
         grid-column: 3;
     }
 
-    .ag-chart-mini-thumbnail:nth-child(3n + 3) {
+    :where(.ag-chart-mini-thumbnail:nth-child(3n + 3)) {
         grid-column: 5;
     }
 }
@@ -372,20 +372,20 @@
     display: flex;
     margin: 0;
 
-    .ag-label:not(.ag-group-title-bar) {
+    :where(.ag-label:not(.ag-group-title-bar)) {
         color: var(--ag-chart-menu-label-color);
     }
 
-    .ag-label-align-top .ag-label {
+    :where(.ag-label-align-top .ag-label) {
         margin-top: calc(var(--ag-widget-vertical-spacing) * 0.5);
         margin-bottom: var(--ag-widget-vertical-spacing);
     }
 
-    .ag-slider.ag-label-align-top .ag-label {
+    :where(.ag-slider.ag-label-align-top .ag-label) {
         margin-bottom: 0;
     }
 
-    & label {
+    :where(label) {
         display: inline-block;
     }
 }
@@ -414,7 +414,7 @@
 .ag-chart-data-wrapper,
 .ag-charts-format-top-level-group,
 .ag-charts-format-top-level-group-title-bar,
-.ag-charts-format-top-level-group .ag-charts-format-top-level-group-container,
+:where(.ag-charts-format-top-level-group) .ag-charts-format-top-level-group-container,
 .ag-charts-format-top-level-group-item,
 .ag-charts-format-sub-level-group,
 .ag-charts-format-sub-level-group-title-bar,
@@ -441,9 +441,9 @@
     border-top: solid 1px var(--ag-border-color);
 }
 
-.ag-charts-format-top-level-group .ag-charts-format-top-level-group-container,
-.ag-charts-data-group .ag-charts-data-group-container,
-.ag-charts-settings-group .ag-charts-settings-group-container {
+:where(.ag-charts-format-top-level-group) .ag-charts-format-top-level-group-container,
+:where(.ag-charts-data-group) .ag-charts-data-group-container,
+:where(.ag-charts-settings-group) .ag-charts-settings-group-container {
     padding: 0 var(--ag-widget-container-horizontal-padding);
 }
 
@@ -457,7 +457,7 @@
     margin: 0;
 }
 
-.ag-charts-advanced-settings-top-level-group {
+:where(.ag-charts-advanced-settings-top-level-group) {
     .ag-charts-advanced-settings-top-level-group-title-bar,
     .ag-charts-advanced-settings-top-level-group-container {
         padding: 0 var(--ag-widget-container-horizontal-padding);
@@ -471,13 +471,4 @@
 
 .ag-chart-settings-card-item.ag-not-selected:hover {
     opacity: 0.35;
-}
-
-.ag-charts-settings-group-title-bar,
-.ag-charts-data-group-title-bar,
-.ag-charts-format-top-level-group-title-bar,
-.ag-charts-advanced-settings-top-level-group-title-bar {
-    &:focus-visible {
-        box-shadow: inset var(--ag-focus-shadow);
-    }
 }

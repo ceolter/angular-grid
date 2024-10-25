@@ -11,7 +11,7 @@
     max-width: var(--ag-toggle-button-width);
     height: var(--ag-toggle-button-height);
 
-    & input {
+    :where(.ag-toggle-button-input) {
         cursor: pointer;
         appearance: none;
         opacity: 0;

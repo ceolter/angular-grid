@@ -35,7 +35,7 @@
 .ag-slider-wrapper {
     display: flex;
 
-    .ag-input-field {
+    :where(.ag-input-field) {
         flex: 1 1 auto;
     }
 }
@@ -122,7 +122,7 @@
     box-shadow: 0 1px 4px 0 rgb(0 0 0 / 37%);
 }
 
-.ag-spectrum-alpha .ag-spectrum-slider {
+:where(.ag-spectrum-alpha) .ag-spectrum-slider {
     background: linear-gradient(
             to bottom,
             var(--ag-internal-spectrum-alpha-color),
@@ -154,33 +154,11 @@
     margin-right: calc(var(--ag-spacing) * 2);
 }
 
-.ag-angle-select-parent-circle {
-    width: 24px;
-    height: 24px;
-    border-radius: 12px;
-    border: solid 1px;
-    border-color: var(--ag-border-color);
-    background-color: var(--ag-background-color);
-}
-
-.ag-angle-select-child-circle {
-    top: 4px;
-    /*rtl:ignore*/
-    left: 12px;
-    width: 6px;
-    height: 6px;
-    /*rtl:ignore*/
-    margin-left: -3px;
-    margin-top: -4px;
-    border-radius: 3px;
-    background-color: var(--ag-foreground-color);
-}
-
-.ag-dialog.ag-color-dialog {
+.ag-color-dialog {
     border-radius: 5px;
 }
 
-.ag-color-picker {
+:where(.ag-color-picker) {
     .ag-picker-field-wrapper {
         padding-left: var(--ag-spacing);
         padding-right: var(--ag-spacing);
@@ -224,7 +202,7 @@
 .ag-spectrum-color,
 .ag-spectrum-slider,
 .ag-recent-color {
-    &:focus-visible:not(:disabled, [readonly]) {
+    &:where(:not(:disabled, [readonly])):focus-visible {
         box-shadow: var(--ag-focus-shadow);
     }
 }
@@ -237,7 +215,7 @@
     border-radius: 2px;
 }
 
-.ag-color-input {
+:where(.ag-color-input) {
     .ag-input-field-input {
         padding-left: calc(var(--ag-icon-size) + (var(--ag-spacing) * 2));
     }

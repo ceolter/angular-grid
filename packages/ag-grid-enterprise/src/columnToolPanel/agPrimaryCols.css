@@ -29,7 +29,7 @@
     gap: var(--ag-widget-horizontal-spacing);
     padding-left: calc(var(--ag-indentation-level) * var(--ag-column-select-indent-size));
 
-    &:not(:last-child) {
+    &:where(:not(:last-child)) {
         margin-bottom: var(--ag-widget-vertical-spacing);
     }
 }
@@ -76,10 +76,6 @@
 
 .ag-column-select-virtual-list-item {
     padding: 0 var(--ag-widget-container-horizontal-padding);
-
-    &:focus-visible {
-        box-shadow: inset var(--ag-focus-shadow);
-    }
 }
 
 .ag-column-select-column-label {

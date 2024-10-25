@@ -1,3 +1,8 @@
+/* stylelint-disable selector-max-specificity -- cell and column borders have
+    lots of overlapping rules defined in different files that rely on different
+    specificities to work, one day it would be good to tackle this and properly
+    refactor border styles to be less specific */
+
 /**
  * NOTE: these don't need RTL versions when pinning columns, "left" always means
  * visually on the left

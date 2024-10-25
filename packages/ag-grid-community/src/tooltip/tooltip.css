@@ -14,16 +14,15 @@
     z-index: 99999;
 }
 
-.ag-tooltip:not(.ag-tooltip-interactive),
-.ag-tooltip-custom:not(.ag-tooltip-interactive) {
+.ag-tooltip:where(:not(.ag-tooltip-interactive)),
+.ag-tooltip-custom:where(:not(.ag-tooltip-interactive)) {
     pointer-events: none;
 }
 
-.ag-tooltip.ag-tooltip-animate,
-.ag-tooltip-custom.ag-tooltip-animate {
+.ag-tooltip-animate {
     transition: opacity 1s;
 
-    &.ag-tooltip-hiding {
+    &:where(.ag-tooltip-hiding) {
         opacity: 0;
     }
 }

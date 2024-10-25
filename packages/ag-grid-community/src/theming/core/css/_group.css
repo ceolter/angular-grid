@@ -17,7 +17,7 @@
     text-overflow: ellipsis;
 }
 
-.ag-group-title-bar .ag-group-title {
+:where(.ag-group-title-bar) .ag-group-title {
     cursor: default;
 }
 
@@ -54,14 +54,14 @@
     margin-right: var(--ag-spacing);
 }
 
-.ag-group-item-alignment-stretch .ag-group-item {
+:where(.ag-group-item-alignment-stretch) .ag-group-item {
     align-items: stretch;
 }
 
-.ag-group-item-alignment-start .ag-group-item {
+:where(.ag-group-item-alignment-start) .ag-group-item {
     align-items: flex-start;
 }
 
-.ag-group-item-alignment-end .ag-group-item {
+:where(.ag-group-item-alignment-end) .ag-group-item {
     align-items: flex-end;
 }

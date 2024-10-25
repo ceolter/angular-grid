@@ -1,3 +1,6 @@
+/* stylelint-disable selector-max-specificity -- we want print styles to be
+   slightly more specific than screen styles to ensure that customers don't break
+   print while overriding screen styles */
 .ag-layout-print {
     &.ag-body {
         display: block;

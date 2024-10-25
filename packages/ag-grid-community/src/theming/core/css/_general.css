@@ -35,7 +35,7 @@
 
 /* special setting for lists to prevent scroll
      while tabbing out of the container */
-.ag-virtual-list-viewport .ag-tab-guard {
+:where(.ag-virtual-list-viewport) .ag-tab-guard {
     /* this keeps the tabguard within "visible" range
        while scrolling so focusing the tabguard doesn't
        scroll the list viewport. */
@@ -113,7 +113,7 @@
     display: flex;
     overflow-x: hidden;
 
-    &.ag-layout-normal {
+    &:where(.ag-layout-normal) {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -246,17 +246,16 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     display: flex;
     position: relative;
 
-    &.ag-scrollbar-invisible {
+    &:where(.ag-scrollbar-invisible) {
         position: absolute;
         bottom: 0;
 
-        &.ag-apple-scrollbar {
+        &:where(.ag-apple-scrollbar) {
             opacity: 0;
             transition: opacity 400ms;
             visibility: hidden;
 
-            &.ag-scrollbar-scrolling,
-            &.ag-scrollbar-active {
+            &:where(.ag-scrollbar-scrolling, .ag-scrollbar-active) {
                 visibility: visible;
                 opacity: 1;
             }
@@ -267,7 +266,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 .ag-body-horizontal-scroll {
     width: 100%;
 
-    &.ag-scrollbar-invisible {
+    &:where(.ag-scrollbar-invisible) {
         left: 0;
         right: 0;
     }
@@ -276,7 +275,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 .ag-body-vertical-scroll {
     height: 100%;
 
-    &.ag-scrollbar-invisible {
+    &:where(.ag-scrollbar-invisible) {
         top: 0;
         z-index: 10;
         right: 0;
@@ -293,7 +292,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     min-width: 0;
     overflow-x: scroll;
 
-    &.ag-scroller-corner {
+    &:where(.ag-scroller-corner) {
         overflow-x: hidden;
     }
 }
@@ -303,24 +302,24 @@ always be 0 and then making a row sticky causes the grid to scroll. */
   * Rows
   ****************************
   */
-.ag-row-animation .ag-row {
+:where(.ag-row-animation) .ag-row {
     transition:
         transform 0.4s,
         top 0.4s,
         opacity 0.2s;
+
+    /* for rows older than one second, we also animate the height. we don't include the height
+       initially so we are not animating auto-height rows on initial render. */
+    &:where(.ag-after-created) {
+        transition:
+            transform 0.4s,
+            top 0.4s,
+            height 0.4s,
+            opacity 0.2s;
+    }
 }
 
-/* for rows older than one second, we also animate the height. we don't include the height
-     initially so we are not animating auto-height rows on initial render. */
-.ag-row-animation .ag-row.ag-after-created {
-    transition:
-        transform 0.4s,
-        top 0.4s,
-        height 0.4s,
-        opacity 0.2s;
-}
-
-.ag-row-no-animation .ag-row {
+:where(.ag-row-no-animation) .ag-row {
     transition: none;
 }
 
@@ -391,12 +390,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     word-break: break-word;
 }
 
-.ag-full-width-row .ag-cell-wrapper.ag-row-group {
-    height: 100%;
-    align-items: center;
-}
-
-.ag-cell .ag-icon {
+:where(.ag-cell) .ag-icon {
     display: inline-block;
     vertical-align: middle;
 }
@@ -457,7 +451,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     width: 100%;
 }
 
-.ag-right-aligned-header {
+:where(.ag-right-aligned-header) {
     .ag-cell-label-container {
         flex-direction: row;
     }
@@ -481,7 +475,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     }
 }
 
-.ag-ltr {
+:where(.ag-ltr) {
     direction: ltr;
 
     .ag-body,
@@ -496,7 +490,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     }
 }
 
-.ag-rtl {
+:where(.ag-rtl) {
     direction: rtl;
 
     .ag-body,
@@ -522,8 +516,4 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     width: 0;
     overflow: hidden;
     visibility: hidden;
-
-    & div {
-        position: absolute;
-    }
 }

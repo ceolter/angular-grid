@@ -33,7 +33,7 @@
     user-select: none;
     cursor: default;
 
-    & span {
+    :where(span) {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;

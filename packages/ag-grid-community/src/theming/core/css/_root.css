@@ -3,6 +3,8 @@ ag-grid-angular {
     display: block;
 }
 
+/* NOTE: this list of root selectors is present in _reset.css too, if you update
+   one then don't forget the other */
 .ag-root-wrapper,
 .ag-popup,
 .ag-dnd-ghost,

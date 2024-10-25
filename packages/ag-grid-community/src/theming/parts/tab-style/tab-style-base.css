@@ -4,14 +4,11 @@
     padding: var(--ag-tab-bar-top-padding) var(--ag-tab-bar-horizontal-padding) 0;
     gap: var(--ag-tab-spacing);
     border-bottom: var(--ag-tab-bar-border);
+    flex: 1;
 }
 
 .ag-tabs-header-wrapper {
     display: flex;
-
-    .ag-tabs-header {
-        flex: 1;
-    }
 }
 
 .ag-tabs-close-button-wrapper {
@@ -49,11 +46,11 @@
         background-color: var(--ag-tab-selected-background-color);
         color: var(--ag-tab-selected-text-color);
 
-        &:not(:first-of-type) {
+        &:where(:not(:first-of-type)) {
             border-left-color: var(--ag-tab-selected-border-color);
         }
 
-        &:not(:last-of-type) {
+        &:where(:not(:last-of-type)) {
             border-right-color: var(--ag-tab-selected-border-color);
         }
     }
@@ -73,9 +70,5 @@
 
     &.ag-tab-selected::after {
         opacity: 1;
-    }
-
-    &:focus-visible {
-        box-shadow: inset var(--ag-focus-shadow);
     }
 }

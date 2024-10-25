@@ -8,7 +8,7 @@
     border-top: var(--ag-footer-row-border);
 }
 
-.ag-paging-page-size .ag-wrapper {
+:where(.ag-paging-page-size) .ag-wrapper {
     min-width: 50px;
 }
 
@@ -25,10 +25,6 @@
 .ag-paging-button {
     position: relative;
     cursor: pointer;
-
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
-    }
 
     &.ag-disabled {
         cursor: default;
