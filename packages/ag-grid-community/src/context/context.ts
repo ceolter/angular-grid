@@ -258,7 +258,7 @@ export interface CoreBeanCollection {
     expressionSvc?: ExpressionService;
     autoWidthCalc?: AutoWidthCalculator;
     agCompUtils?: AgComponentUtils;
-    frameworkComponentWrapper: FrameworkComponentWrapper;
+    frameworkCompWrapper: FrameworkComponentWrapper;
     horizontalResizeSvc?: HorizontalResizeService;
     filterMenuFactory?: IMenuFactory;
     enterpriseMenuFactory?: IMenuFactory;
@@ -411,7 +411,7 @@ export type BeanName =
     | 'flattenStage'
     | 'focusSvc'
     | 'funcColsSvc'
-    | 'frameworkComponentWrapper'
+    | 'frameworkCompWrapper'
     | 'frameworkOverrides'
     | 'globalListener'
     | 'globalSyncListener'

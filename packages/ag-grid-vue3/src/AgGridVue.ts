@@ -196,7 +196,7 @@ export const AgGridVue = defineComponent({
         }, 20);
 
         const provides = this.getProvides();
-        const frameworkComponentWrapper = new VueFrameworkComponentWrapper(this, provides);
+        const frameworkCompWrapper = new VueFrameworkComponentWrapper(this, provides);
 
         // the gridOptions we pass to the grid don't need to be reactive (and shouldn't be - it'll cause issues
         // with mergeDeep for example
@@ -219,7 +219,7 @@ export const AgGridVue = defineComponent({
             globalSyncListener: this.globalEventListenerFactory(true).bind(this),
             frameworkOverrides: new VueFrameworkOverrides(this),
             providedBeanInstances: {
-                frameworkComponentWrapper,
+                frameworkCompWrapper,
             },
             modules: this.modules,
             setThemeOnGridDiv: true,
