@@ -287,7 +287,7 @@ export interface CoreBeanCollection {
     rowNodeSorter?: RowNodeSorter;
     pivotColDefSvc?: IPivotColDefService;
     chartSvc?: IChartService;
-    aggColumnNameSvc?: IAggColumnNameService;
+    aggColNameSvc?: IAggColumnNameService;
     renderStatus?: IRenderStatusService;
     rowDragSvc?: RowDragService;
     stickyRowSvc?: StickyRowService;
@@ -336,7 +336,7 @@ export type BeanName =
     | 'advSettingsMenuFactory'
     | 'aggFuncSvc'
     | 'agCompUtils'
-    | 'aggColumnNameSvc'
+    | 'aggColNameSvc'
     | 'aggregationStage'
     | 'alignedGridsSvc'
     | 'animationFrameSvc'
