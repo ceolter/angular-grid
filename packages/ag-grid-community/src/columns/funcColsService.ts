@@ -4,8 +4,8 @@ import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { ColDef, IAggFunc } from '../entities/colDef';
 import type { ColumnEvent, ColumnEventType } from '../events';
-import { _shouldUpdateColVisibilityAfterGroup } from '../gridOptionsUtils';
 import type { IAggFuncService } from '../interfaces/iAggFuncService';
+import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import { _removeFromArray } from '../utils/array';
 import { _exists } from '../utils/generic';
@@ -20,21 +20,38 @@ export class FuncColsService extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private aggFuncSvc?: IAggFuncService;
     private visibleCols: VisibleColsService;
+    private rowGroupColsService?: IColsService;
+    private pivotColsService?: IColsService;
+    private valueColsService?: IColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.aggFuncSvc = beans.aggFuncSvc;
         this.visibleCols = beans.visibleCols;
+        this.rowGroupColsService = beans.rowGroupColsService;
+        this.pivotColsService = beans.pivotColsService;
+        this.valueColsService = beans.valueColsService;
     }
 
-    public rowGroupCols: AgColumn[] = [];
+    public get rowGroupCols() {
+        return this.rowGroupColsService?.columns ?? [];
+    }
+
+    public set rowGroupCols(cols: AgColumn[]) {
+        if (this.rowGroupColsService) {
+            this.rowGroupColsService.columns = cols ?? [];
+        }
+    }
+
     public valueCols: AgColumn[] = [];
     public pivotCols: AgColumn[] = [];
 
     public getModifyColumnsNoEventsCallbacks(): ModifyColumnsNoEventsCallbacks {
         return {
-            addGroupCol: (column) => this.rowGroupCols.push(column),
-            removeGroupCol: (column) => _removeFromArray(this.rowGroupCols, column),
+            addGroupCol: (column) => this.rowGroupColsService?.columns.push(column),
+            removeGroupCol: (column) =>
+                this.rowGroupColsService && _removeFromArray(this.rowGroupColsService.columns, column),
+
             addPivotCol: (column) => this.pivotCols.push(column),
             removePivotCol: (column) => _removeFromArray(this.pivotCols, column),
             addValueCol: (column) => this.valueCols.push(column),
@@ -48,16 +65,16 @@ export class FuncColsService extends BeanStub implements NamedBean {
             return null;
         }
 
-        if (sourceColumnId === true) {
-            return this.rowGroupCols.slice(0);
+        if (sourceColumnId === true && this.rowGroupColsService) {
+            return this.rowGroupColsService?.columns.slice(0);
         }
 
-        const column = this.colModel.getColDefCol(sourceColumnId);
+        const column = this.colModel.getColDefCol(sourceColumnId as string);
         return column ? [column] : null;
     }
 
     public sortRowGroupColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
-        this.rowGroupCols.sort(compareFn);
+        this.rowGroupColsService?.sortColumns(compareFn);
     }
 
     public sortPivotColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
@@ -65,7 +82,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public isRowGroupEmpty(): boolean {
-        return !this.rowGroupCols?.length;
+        return this.rowGroupColsService?.isRowGroupEmpty!() ?? true;
     }
 
     public setColumnAggFunc(
@@ -88,51 +105,15 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public setRowGroupColumns(colKeys: ColKey[], source: ColumnEventType): void {
-        this.setColList(
-            colKeys,
-            this.rowGroupCols,
-            'columnRowGroupChanged',
-            true,
-            true,
-            (added, column) => this.setRowGroupActive(added, column, source),
-            source
-        );
-    }
-
-    private setRowGroupActive(active: boolean, column: AgColumn, source: ColumnEventType): void {
-        if (active === column.isRowGroupActive()) {
-            return;
-        }
-
-        column.setRowGroupActive(active, source);
-
-        if (_shouldUpdateColVisibilityAfterGroup(this.gos, active)) {
-            this.colModel.setColsVisible([column], !active, source);
-        }
+        this.rowGroupColsService?.setColumns(colKeys, source);
     }
 
     public addRowGroupColumns(keys: Maybe<ColKey>[], source: ColumnEventType): void {
-        this.updateColList(
-            keys,
-            this.rowGroupCols,
-            true,
-            true,
-            (column) => this.setRowGroupActive(true, column, source),
-            'columnRowGroupChanged',
-            source
-        );
+        this.rowGroupColsService?.addColumns(keys, source);
     }
 
-    public removeRowGroupColumns(keys: Maybe<ColKey>[] | null, source: ColumnEventType): void {
-        this.updateColList(
-            keys,
-            this.rowGroupCols,
-            false,
-            true,
-            (column) => this.setRowGroupActive(false, column, source),
-            'columnRowGroupChanged',
-            source
-        );
+    public removeRowGroupColumns(keys: Maybe<ColKey>[] = [], source: ColumnEventType): void {
+        this.rowGroupColsService?.removeColumns(keys, source);
     }
 
     public addPivotColumns(keys: ColKey[], source: ColumnEventType): void {
@@ -223,22 +204,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public moveRowGroupColumn(fromIndex: number, toIndex: number, source: ColumnEventType): void {
-        if (this.isRowGroupEmpty()) {
-            return;
-        }
-
-        const column = this.rowGroupCols[fromIndex];
-
-        const impactedColumns = this.rowGroupCols.slice(fromIndex, toIndex);
-        this.rowGroupCols.splice(fromIndex, 1);
-        this.rowGroupCols.splice(toIndex, 0, column);
-
-        this.eventSvc.dispatchEvent({
-            type: 'columnRowGroupChanged',
-            columns: impactedColumns,
-            column: impactedColumns.length === 1 ? impactedColumns[0] : null,
-            source,
-        });
+        this.rowGroupColsService?.moveColumn!(fromIndex, toIndex, source);
     }
 
     private setColList(
@@ -368,7 +334,7 @@ export class FuncColsService extends BeanStub implements NamedBean {
     }
 
     public extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
-        this.extractRowGroupCols(source, oldProvidedCols);
+        this.rowGroupColsService?.extractCols(source, oldProvidedCols);
         this.extractPivotCols(source, oldProvidedCols);
         this.extractValueCols(source, oldProvidedCols);
     }
@@ -413,18 +379,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
                 }
             }
         });
-    }
-
-    private extractRowGroupCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
-        this.rowGroupCols = this.extractColsCommon(
-            oldProvidedCols,
-            this.rowGroupCols,
-            (col, flag) => col.setRowGroupActive(flag, source),
-            (colDef: ColDef) => colDef.rowGroupIndex,
-            (colDef: ColDef) => colDef.initialRowGroupIndex,
-            (colDef: ColDef) => colDef.rowGroup,
-            (colDef: ColDef) => colDef.initialRowGroup
-        );
     }
 
     private extractPivotCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
@@ -661,14 +615,8 @@ export class FuncColsService extends BeanStub implements NamedBean {
             });
         };
 
-        orderColumns(
-            updatedRowGroupColumnState,
-            this.rowGroupCols,
-            'rowGroup',
-            'initialRowGroup',
-            'rowGroupIndex',
-            'initialRowGroupIndex'
-        );
+        this.rowGroupColsService?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
+
         orderColumns(
             updatedPivotColumnState,
             this.pivotCols,
