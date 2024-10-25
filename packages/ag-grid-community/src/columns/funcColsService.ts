@@ -6,10 +6,9 @@ import type { IAggFunc } from '../entities/colDef';
 import type { ColumnEventType } from '../events';
 import type { IAggFuncService } from '../interfaces/iAggFuncService';
 import type { IColsService } from '../interfaces/iColsService';
-import { _removeFromArray } from '../utils/array';
 import { dispatchColumnChangedEvent } from './columnEventUtils';
 import type { ColKey, ColumnModel, Maybe } from './columnModel';
-import type { ColumnState, ModifyColumnsNoEventsCallbacks } from './columnStateService';
+import type { ColumnState } from './columnStateService';
 
 export class FuncColsService extends BeanStub implements NamedBean {
     beanName = 'funcColsSvc' as const;
@@ -56,30 +55,6 @@ export class FuncColsService extends BeanStub implements NamedBean {
         if (this.pivotColsService) {
             this.pivotColsService.columns = cols;
         }
-    }
-
-    public getModifyColumnsNoEventsCallbacks(): ModifyColumnsNoEventsCallbacks {
-        return {
-            addGroupCol: (column) => this.rowGroupColsService?.columns.push(column),
-            removeGroupCol: (column) =>
-                this.rowGroupColsService && _removeFromArray(this.rowGroupColsService.columns, column),
-
-            addPivotCol: (column) => this.pivotColsService?.columns.push(column),
-            removePivotCol: (column) =>
-                this.pivotColsService && _removeFromArray(this.pivotColsService.columns, column),
-
-            addValueCol: (column) => this.valueColsService?.columns.push(column),
-            removeValueCol: (column) =>
-                this.valueColsService && _removeFromArray(this.valueColsService.columns, column),
-        };
-    }
-
-    public sortRowGroupColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
-        this.rowGroupColsService?.sortColumns(compareFn);
-    }
-
-    public sortPivotColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void {
-        this.pivotColsService?.sortColumns(compareFn);
     }
 
     public isRowGroupEmpty(): boolean {
