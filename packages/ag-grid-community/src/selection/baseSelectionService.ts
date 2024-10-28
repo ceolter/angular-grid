@@ -29,7 +29,7 @@ export abstract class BaseSelectionService extends BeanStub {
     private ariaAnnounce: AriaAnnouncementService;
 
     protected isRowSelectable?: IsRowSelectable;
-    protected isRowSelection = false;
+    protected enabled = false;
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
@@ -46,13 +46,13 @@ export abstract class BaseSelectionService extends BeanStub {
             }
 
             const isRowSelection = _isRowSelection(gos);
-            if (isRowSelection !== this.isRowSelection) {
-                this.isRowSelection = isRowSelection;
+            if (isRowSelection !== this.enabled) {
+                this.enabled = isRowSelection;
             }
         });
 
         this.isRowSelectable = _getIsRowSelectable(gos);
-        this.isRowSelection = _isRowSelection(gos);
+        this.enabled = _isRowSelection(gos);
     }
 
     public createCheckboxSelectionComponent(): CheckboxSelectionComponent {
