@@ -256,20 +256,20 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
                     ],
                 },
                 {
-                    _key: 'pivotXYChart',
-                    name: localeTextFunc('xyChart', 'X Y (Scatter)'),
-                    subMenu: [
-                        getMenuItem('scatter', 'Scatter&lrm;', 'scatter', 'pivotScatter'),
-                        getMenuItem('bubble', 'Bubble&lrm;', 'bubble', 'pivotBubble'),
-                    ],
-                },
-                {
                     _key: 'pivotAreaChart',
                     name: localeTextFunc('areaChart', 'Area'),
                     subMenu: [
                         getMenuItem('area', 'Area&lrm;', 'area', 'pivotArea'),
                         getMenuItem('stackedArea', 'Stacked&lrm;', 'stackedArea', 'pivotStackedArea'),
                         getMenuItem('normalizedArea', '100% Stacked&lrm;', 'normalizedArea', 'pivotNormalizedArea'),
+                    ],
+                },
+                {
+                    _key: 'pivotXYChart',
+                    name: localeTextFunc('xyChart', 'X Y (Scatter)'),
+                    subMenu: [
+                        getMenuItem('scatter', 'Scatter&lrm;', 'scatter', 'pivotScatter'),
+                        getMenuItem('bubble', 'Bubble&lrm;', 'bubble', 'pivotBubble'),
                     ],
                 },
                 {
@@ -323,19 +323,19 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
             lineGroup: {
                 _key: 'pivotLineChart',
                 line: 'pivotLineChart',
-                stackedLine: 'pivotLineChart',
-                normalizedLine: 'pivotLineChart',
-            },
-            scatterGroup: {
-                _key: 'pivotXYChart',
-                bubble: 'pivotBubble',
-                scatter: 'pivotScatter',
+                stackedLine: 'pivotStackedLine',
+                normalizedLine: 'pivotNormalizedLine',
             },
             areaGroup: {
                 _key: 'pivotAreaChart',
                 area: 'pivotArea',
                 stackedArea: 'pivotStackedArea',
                 normalizedArea: 'pivotNormalizedArea',
+            },
+            scatterGroup: {
+                _key: 'pivotXYChart',
+                bubble: 'pivotBubble',
+                scatter: 'pivotScatter',
             },
             combinationGroup: {
                 _key: 'pivotCombinationChart',
@@ -467,14 +467,14 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                     ],
                     _key: 'rangePieChart',
                 },
-                getMenuItem('line', 'Line&lrm;', 'line', 'rangeLineChart'),
                 {
-                    name: localeTextFunc('xyChart', 'X Y (Scatter)'),
+                    name: localeTextFunc('lineChart', 'Line'),
                     subMenu: [
-                        getMenuItem('scatter', 'Scatter&lrm;', 'scatter', 'rangeScatter'),
-                        getMenuItem('bubble', 'Bubble&lrm;', 'bubble', 'rangeBubble'),
+                        getMenuItem('line', 'Line&lrm;', 'line', 'rangeLineChart'),
+                        getMenuItem('stackedLine', 'Stacked&lrm;', 'stackedLine', 'rangeStackedLine'),
+                        getMenuItem('normalizedLine', '100% Stacked&lrm;', 'normalizedLine', 'rangeNormalizedLine'),
                     ],
-                    _key: 'rangeXYChart',
+                    _key: 'rangeAreaChart',
                 },
                 {
                     name: localeTextFunc('areaChart', 'Area'),
@@ -484,6 +484,14 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                         getMenuItem('normalizedArea', '100% Stacked&lrm;', 'normalizedArea', 'rangeNormalizedArea'),
                     ],
                     _key: 'rangeAreaChart',
+                },
+                {
+                    name: localeTextFunc('xyChart', 'X Y (Scatter)'),
+                    subMenu: [
+                        getMenuItem('scatter', 'Scatter&lrm;', 'scatter', 'rangeScatter'),
+                        getMenuItem('bubble', 'Bubble&lrm;', 'bubble', 'rangeBubble'),
+                    ],
+                    _key: 'rangeXYChart',
                 },
                 {
                     name: localeTextFunc('polarChart', 'Polar'),
@@ -565,16 +573,16 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                 stackedLine: 'rangeStackedLine',
                 normalizedLine: 'rangeNormalizedLine',
             },
-            scatterGroup: {
-                _key: 'rangeXYChart',
-                bubble: 'rangeBubble',
-                scatter: 'rangeScatter',
-            },
             areaGroup: {
                 _key: 'rangeAreaChart',
                 area: 'rangeArea',
                 stackedArea: 'rangeStackedArea',
                 normalizedArea: 'rangeNormalizedArea',
+            },
+            scatterGroup: {
+                _key: 'rangeXYChart',
+                bubble: 'rangeBubble',
+                scatter: 'rangeScatter',
             },
             polarGroup: {
                 _key: 'rangePolarChart',
