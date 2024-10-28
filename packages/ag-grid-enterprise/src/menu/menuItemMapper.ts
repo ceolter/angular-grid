@@ -15,6 +15,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, _createIconNoSpan, _escapeString, _exists, _getRowNode, _warn } from 'ag-grid-community';
 
+import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import type { ChartMenuItemMapper } from './chartMenuItemMapper';
 import type { ColumnChooserFactory } from './columnChooserFactory';
 
@@ -206,7 +207,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                         disabled:
                             !this.rowGroupColsSvc ||
                             this.gos.get('functionsReadOnly') ||
-                            (underlyingColumn != null && !!this.rowGroupColsSvc.isRowGroupColLocked!(underlyingColumn)),
+                            isRowGroupColLocked(underlyingColumn, this.beans),
                         action: () => {
                             this.rowGroupColsSvc?.removeColumns([showRowGroup], source);
                         },
@@ -224,7 +225,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                         this.gos.get('functionsReadOnly') ||
                         !column?.isRowGroupActive() ||
                         !column?.getColDef().enableRowGroup ||
-                        !!this.rowGroupColsSvc.isRowGroupColLocked!(column),
+                        isRowGroupColLocked(column, this.beans),
                     action: () => this.rowGroupColsSvc?.removeColumns([column], source),
                     icon: icon,
                 };

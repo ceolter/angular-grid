@@ -527,8 +527,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
         const existingColumnStateUpdates: { [colId: string]: ColumnState } = {};
 
-        this.rowGroupColsSvc?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
-        this.pivotColsSvc?.orderColumns(existingColumnStateUpdates, updatedPivotColumnState);
+        this.rowGroupColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedRowGroupColumnState);
+        this.pivotColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedPivotColumnState);
 
         return Object.values(existingColumnStateUpdates);
     }

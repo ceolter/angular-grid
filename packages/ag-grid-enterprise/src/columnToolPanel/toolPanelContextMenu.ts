@@ -11,6 +11,7 @@ import type {
 } from 'ag-grid-community';
 import { Component, _createIconNoSpan, isColumn, isProvidedColumnGroup } from 'ag-grid-community';
 
+import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
 
 type MenuItemName = 'rowGroup' | 'value' | 'pivot';
@@ -96,26 +97,18 @@ export class ToolPanelContextMenu extends Component {
 
     private buildMenuItemMap(): void {
         const localeTextFunc = this.getLocaleTextFunc();
+        const { rowGroupColsSvc, valueColsSvc, pivotColsSvc } = this;
 
         this.menuItemMap = new Map<MenuItemName, MenuItemProperty>();
         this.menuItemMap.set('rowGroup', {
-            allowedFunction: (col) =>
-                col.isPrimary() && col.isAllowRowGroup() && !this.rowGroupColsSvc?.isRowGroupColLocked!(col),
+            allowedFunction: (col) => col.isPrimary() && col.isAllowRowGroup() && !isRowGroupColLocked(col, this.beans),
             activeFunction: (col) => col.isRowGroupActive(),
             activateLabel: () => `${localeTextFunc('groupBy', 'Group by')} ${this.displayName}`,
             deactivateLabel: () => `${localeTextFunc('ungroupBy', 'Un-Group by')} ${this.displayName}`,
-            activateFunction: () => {
-                if (this.rowGroupColsSvc) {
-                    const groupedColumns = this.rowGroupColsSvc.columns;
-                    this.rowGroupColsSvc.setColumns(this.addColumnsToList(groupedColumns), 'toolPanelUi');
-                }
-            },
-            deActivateFunction: () => {
-                if (this.rowGroupColsSvc) {
-                    const groupedColumns = this.rowGroupColsSvc.columns;
-                    this.rowGroupColsSvc.setColumns(this.removeColumnsFromList(groupedColumns), 'toolPanelUi');
-                }
-            },
+            activateFunction: () =>
+                rowGroupColsSvc?.setColumns(this.addColumnsToList(rowGroupColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                rowGroupColsSvc?.setColumns(this.removeColumnsFromList(rowGroupColsSvc.columns), 'toolPanelUi'),
             addIcon: 'menuAddRowGroup',
             removeIcon: 'menuRemoveRowGroup',
         });
@@ -127,18 +120,10 @@ export class ToolPanelContextMenu extends Component {
                 localeTextFunc('addToValues', `Add ${this.displayName} to values`, [this.displayName!]),
             deactivateLabel: () =>
                 localeTextFunc('removeFromValues', `Remove ${this.displayName} from values`, [this.displayName!]),
-            activateFunction: () => {
-                if (this.valueColsSvc) {
-                    const valueColumns = this.valueColsSvc.columns;
-                    this.valueColsSvc.setColumns(this.addColumnsToList(valueColumns), 'toolPanelUi');
-                }
-            },
-            deActivateFunction: () => {
-                if (this.valueColsSvc) {
-                    const valueColumns = this.valueColsSvc.columns;
-                    this.valueColsSvc.setColumns(this.removeColumnsFromList(valueColumns), 'toolPanelUi');
-                }
-            },
+            activateFunction: () =>
+                valueColsSvc?.setColumns(this.addColumnsToList(valueColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                valueColsSvc?.setColumns(this.removeColumnsFromList(valueColsSvc.columns), 'toolPanelUi'),
             addIcon: 'valuePanel',
             removeIcon: 'valuePanel',
         });
@@ -150,18 +135,10 @@ export class ToolPanelContextMenu extends Component {
                 localeTextFunc('addToLabels', `Add ${this.displayName} to labels`, [this.displayName!]),
             deactivateLabel: () =>
                 localeTextFunc('removeFromLabels', `Remove ${this.displayName} from labels`, [this.displayName!]),
-            activateFunction: () => {
-                if (this.pivotColsSvc) {
-                    const pivotColumns = this.pivotColsSvc.columns;
-                    this.pivotColsSvc.setColumns(this.addColumnsToList(pivotColumns), 'toolPanelUi');
-                }
-            },
-            deActivateFunction: () => {
-                if (this.pivotColsSvc) {
-                    const pivotColumns = this.pivotColsSvc.columns;
-                    this.pivotColsSvc.setColumns(this.removeColumnsFromList(pivotColumns), 'toolPanelUi');
-                }
-            },
+            activateFunction: () =>
+                pivotColsSvc?.setColumns(this.addColumnsToList(pivotColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                pivotColsSvc?.setColumns(this.removeColumnsFromList(pivotColsSvc.columns), 'toolPanelUi'),
             addIcon: 'pivotPanel',
             removeIcon: 'pivotPanel',
         });

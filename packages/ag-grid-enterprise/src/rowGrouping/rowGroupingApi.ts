@@ -15,7 +15,7 @@ export function addRowGroupColumns(beans: BeanCollection, colKeys: (string | Col
 }
 
 export function moveRowGroupColumn(beans: BeanCollection, fromIndex: number, toIndex: number): void {
-    (beans.rowGroupColsSvc as RowGroupColsSvc)?.moveColumn!(fromIndex, toIndex, 'api');
+    (beans.rowGroupColsSvc as RowGroupColsSvc)?.moveColumn?.(fromIndex, toIndex, 'api');
 }
 
 export function getRowGroupColumns(beans: BeanCollection): Column[] {

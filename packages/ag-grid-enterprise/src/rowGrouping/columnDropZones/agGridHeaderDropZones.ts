@@ -78,7 +78,7 @@ export class AgGridHeaderDropZones extends Component {
         if (rowGroupPanelShow === 'always') {
             this.rowGroupComp.setDisplayed(true);
         } else if (rowGroupPanelShow === 'onlyWhenGrouping') {
-            const grouping = !this.rowGroupColsSvc?.isRowGroupEmpty!();
+            const grouping = this.rowGroupColsSvc?.columns?.length !== 0;
             this.rowGroupComp.setDisplayed(grouping);
         } else {
             this.rowGroupComp.setDisplayed(false);

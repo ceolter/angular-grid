@@ -10,6 +10,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, _isClientSideRowModel, _isLegacyMenuEnabled } from 'ag-grid-community';
 
+import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
 import type { MenuItemMapper } from './menuItemMapper';
 
@@ -179,7 +180,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push('rowUnGroup');
         } else if (allowRowGroup && column.isPrimary()) {
             if (column.isRowGroupActive()) {
-                const groupLocked = !!this.rowGroupColsSvc?.isRowGroupColLocked!(column);
+                const groupLocked = isRowGroupColLocked(column, this.beans);
                 if (!groupLocked) {
                     result.push('rowUnGroup');
                 }
