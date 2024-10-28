@@ -15,7 +15,7 @@ export class GridLicenseManager extends BeanStub implements NamedBean, IWatermar
     }
 
     public validateLicense(): void {
-        this.licenseManager = new LicenseManager(_getDocument(this.gos));
+        this.licenseManager = new LicenseManager(_getDocument(this.beans));
         this.licenseManager.validateLicense();
     }
 

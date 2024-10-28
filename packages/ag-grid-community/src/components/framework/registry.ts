@@ -83,20 +83,19 @@ export class Registry extends BeanStub implements NamedBean {
             params,
         });
 
+        const { frameworkOverrides } = this.beans;
+
         // FrameworkOverrides.frameworkComponent() is used in two locations:
         // 1) for Vue, user provided components get registered via a framework specific way.
         // 2) for React, it's how the React UI provides alternative default components (eg GroupCellRenderer and DetailCellRenderer)
-        const registeredViaFrameworkComp = this.beans.frameworkOverrides.frameworkComponent(
-            name,
-            this.gos.get('components')
-        );
+        const registeredViaFrameworkComp = frameworkOverrides.frameworkComponent(name, this.gos.get('components'));
         if (registeredViaFrameworkComp != null) {
             return createResult(registeredViaFrameworkComp, true);
         }
 
         const jsComponent = this.jsComps[name];
         if (jsComponent) {
-            const isFwkComp = this.beans.frameworkOverrides.isFrameworkComponent(jsComponent);
+            const isFwkComp = frameworkOverrides.isFrameworkComponent(jsComponent);
             return createResult(jsComponent, isFwkComp);
         }
 

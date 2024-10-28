@@ -61,7 +61,11 @@ export class VisibleColsService extends BeanStub implements NamedBean {
 
     public autoHeightCols: AgColumn[];
 
-    private bodyWidth = 0;
+    // used by:
+    // + angularGrid -> for setting body width
+    // + rowController -> setting main row widths (when inserting and resizing)
+    // need to cache this
+    public bodyWidth = 0;
     private leftWidth = 0;
     private rightWidth = 0;
 
@@ -372,14 +376,6 @@ export class VisibleColsService extends BeanStub implements NamedBean {
         }
 
         return result;
-    }
-
-    // used by:
-    // + angularGrid -> for setting body width
-    // + rowController -> setting main row widths (when inserting and resizing)
-    // need to cache this
-    public getBodyContainerWidth(): number {
-        return this.bodyWidth;
     }
 
     public getContainerWidth(pinned: ColumnPinnedType): number {

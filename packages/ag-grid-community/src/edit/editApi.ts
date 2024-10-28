@@ -38,8 +38,8 @@ export function getEditingCells(beans: BeanCollection): CellPosition[] {
     const res: CellPosition[] = [];
 
     beans.rowRenderer.getAllCellCtrls().forEach((cellCtrl) => {
-        if (cellCtrl.isEditing()) {
-            const cellPosition = cellCtrl.getCellPosition();
+        if (cellCtrl.editing) {
+            const { cellPosition } = cellCtrl;
             res.push(cellPosition);
         }
     });
@@ -75,8 +75,8 @@ export function startEditingCell(beans: BeanCollection, params: StartEditingCell
     }
     const { focusSvc, gos } = beans;
     const isFocusWithinCell = () => {
-        const activeElement = _getActiveDomElement(gos);
-        const eCell = cell.getGui();
+        const activeElement = _getActiveDomElement(beans);
+        const eCell = cell.eGui;
         return activeElement !== eCell && !!eCell?.contains(activeElement);
     };
     const forceBrowserFocus = gos.get('stopEditingWhenCellsLoseFocus') && isFocusWithinCell();

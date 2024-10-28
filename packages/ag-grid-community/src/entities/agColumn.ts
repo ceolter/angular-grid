@@ -237,7 +237,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     private initMinAndMaxWidths(): void {
         const colDef = this.colDef;
 
-        this.minWidth = colDef.minWidth ?? this.gos.environment.getDefaultColumnMinWidth();
+        this.minWidth = colDef.minWidth ?? this.beans.environment.getDefaultColumnMinWidth();
         this.maxWidth = colDef.maxWidth ?? Number.MAX_SAFE_INTEGER;
     }
 

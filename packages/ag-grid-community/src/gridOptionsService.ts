@@ -3,7 +3,6 @@ import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
 import type { GridOptions } from './entities/gridOptions';
-import type { Environment } from './environment';
 import type { AgEventType } from './eventTypes';
 import type { AgEvent } from './events';
 import { ALWAYS_SYNC_GLOBAL_EVENTS } from './events';
@@ -77,25 +76,27 @@ export type PropertyValueChangedListener<K extends keyof GridOptions> = (event: 
 
 let changeSetId = 0;
 
+// this is added to the main DOM element
+let gridInstanceSequence = 0;
+
 export class GridOptionsService extends BeanStub implements NamedBean {
     beanName = 'gos' as const;
 
     private gridOptions: GridOptions;
-    public eGridDiv: HTMLElement;
     private validation?: ValidationService;
-    public environment: Environment;
     private api: GridApi;
     private gridId: string;
 
     public wireBeans(beans: BeanCollection): void {
         this.gridOptions = beans.gridOptions;
-        this.eGridDiv = beans.eGridDiv;
         this.validation = beans.validation;
-        this.environment = beans.environment;
         this.api = beans.gridApi;
         this.gridId = beans.context.getGridId();
     }
     private domDataKey = '__AG_' + Math.random().toString();
+
+    /** This is only used for the main DOM element */
+    public readonly gridInstanceId = gridInstanceSequence++;
 
     // This is quicker then having code call gridOptionsService.get('context')
     private get gridOptionsContext() {

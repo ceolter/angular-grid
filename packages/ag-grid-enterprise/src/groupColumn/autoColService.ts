@@ -3,7 +3,6 @@ import type {
     ColDef,
     ColKey,
     ColumnEventType,
-    ColumnFactory,
     ColumnGroupService,
     ColumnModel,
     ColumnNameService,
@@ -18,6 +17,8 @@ import {
     AgProvidedColumnGroup,
     BeanStub,
     GROUP_AUTO_COLUMN_ID,
+    _addColumnDefaultAndTypes,
+    _applyColumnState,
     _areColIdsEqual,
     _columnsMatch,
     _convertColumnEventSourceType,
@@ -37,7 +38,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
 
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private colFactory: ColumnFactory;
     private rowGroupColsSvc?: IColsService;
     private context: Context;
     private columnGroupSvc?: ColumnGroupService;
@@ -48,7 +48,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.colFactory = beans.colFactory;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.context = beans.context;
         this.columnGroupSvc = beans.columnGroupSvc;
@@ -244,7 +243,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const colDef = this.createAutoColDef(colToUpdate.getId(), underlyingColumn ?? undefined, index);
 
         colToUpdate.setColDef(colDef, null, source);
-        this.colFactory.applyColumnState(colToUpdate, colDef, source);
+        _applyColumnState(colToUpdate, colDef, source);
     }
 
     private createAutoColDef(colId: string, underlyingColumn?: AgColumn, index?: number): ColDef {
@@ -254,7 +253,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const autoGroupColumnDef = this.gos.get('autoGroupColumnDef');
         _mergeDeep(res, autoGroupColumnDef);
 
-        res = this.colFactory.addColumnDefaultAndTypes(res, colId);
+        res = _addColumnDefaultAndTypes(this.beans, res, colId);
 
         // For tree data the filter is always allowed
         if (!this.gos.get('treeData')) {

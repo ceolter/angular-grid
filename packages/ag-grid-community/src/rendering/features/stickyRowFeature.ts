@@ -197,8 +197,8 @@ export class StickyRowFeature extends BeanStub {
         }
 
         const pixelAtContainerBoundary = isTop
-            ? this.rowRenderer.getFirstVisibleVerticalPixel() - this.extraTopHeight
-            : this.rowRenderer.getLastVisibleVerticalPixel() - this.extraTopHeight;
+            ? this.rowRenderer.firstVisibleVPixel - this.extraTopHeight
+            : this.rowRenderer.lastVisibleVPixel - this.extraTopHeight;
         const newStickyRows = new Set<RowNode>();
 
         const addStickyRow = (stickyRow: RowNode) => {
@@ -385,9 +385,9 @@ export class StickyRowFeature extends BeanStub {
 
     public refreshStickyNode(stickRowNode: RowNode): void {
         const allStickyNodes = new Set<RowNode>();
-        if (this.stickyTopRowCtrls.some((ctrl) => ctrl.getRowNode() === stickRowNode)) {
+        if (this.stickyTopRowCtrls.some((ctrl) => ctrl.rowNode === stickRowNode)) {
             for (let i = 0; i < this.stickyTopRowCtrls.length; i++) {
-                const currentNode = this.stickyTopRowCtrls[i].getRowNode();
+                const currentNode = this.stickyTopRowCtrls[i].rowNode;
                 if (currentNode !== stickRowNode) {
                     allStickyNodes.add(currentNode);
                 }
@@ -400,7 +400,7 @@ export class StickyRowFeature extends BeanStub {
         }
 
         for (let i = 0; i < this.stickyBottomRowCtrls.length; i++) {
-            const currentNode = this.stickyBottomRowCtrls[i].getRowNode();
+            const currentNode = this.stickyBottomRowCtrls[i].rowNode;
             if (currentNode !== stickRowNode) {
                 allStickyNodes.add(currentNode);
             }
@@ -426,7 +426,7 @@ export class StickyRowFeature extends BeanStub {
         const removedCtrlsMap: RowCtrlByRowNodeIdMap = {};
         const remainingCtrls: RowCtrl[] = [];
         for (let i = 0; i < previousCtrls.length; i++) {
-            const node = previousCtrls[i].getRowNode();
+            const node = previousCtrls[i].rowNode;
             const hasBeenRemoved = !newStickyNodes.has(node);
             if (hasBeenRemoved) {
                 removedCtrlsMap[node.id!] = previousCtrls[i];
@@ -442,7 +442,7 @@ export class StickyRowFeature extends BeanStub {
         // get set of existing nodes for quick lookup
         const existingNodes = new Set<RowNode>();
         for (let i = 0; i < remainingCtrls.length; i++) {
-            existingNodes.add(remainingCtrls[i].getRowNode());
+            existingNodes.add(remainingCtrls[i].rowNode);
         }
 
         // find the new ctrls to add
@@ -477,11 +477,11 @@ export class StickyRowFeature extends BeanStub {
 
         // set up new ctrls list
         const newCtrlsList = [...remainingCtrls, ...newCtrls];
-        newCtrlsList.sort((a, b) => b.getRowNode().rowIndex! - a.getRowNode().rowIndex!);
+        newCtrlsList.sort((a, b) => b.rowNode.rowIndex! - a.rowNode.rowIndex!);
         if (!isTop) {
             newCtrlsList.reverse();
         }
-        newCtrlsList.forEach((ctrl) => ctrl.setRowTop(ctrl.getRowNode().stickyRowTop));
+        newCtrlsList.forEach((ctrl) => ctrl.setRowTop(ctrl.rowNode.stickyRowTop));
 
         let extraHeight = 0;
         if (isTop) {
@@ -522,9 +522,9 @@ export class StickyRowFeature extends BeanStub {
     public ensureRowHeightsValid(): boolean {
         let anyChange = false;
         const updateRowHeight = (ctrl: RowCtrl) => {
-            const rowNode = ctrl.getRowNode();
+            const rowNode = ctrl.rowNode;
             if (rowNode.rowHeightEstimated) {
-                const rowHeight = _getRowHeightForNode(this.gos, rowNode);
+                const rowHeight = _getRowHeightForNode(this.beans, rowNode);
                 rowNode.setRowHeight(rowHeight.height);
                 anyChange = true;
             }

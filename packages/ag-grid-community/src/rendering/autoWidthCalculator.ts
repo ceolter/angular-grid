@@ -69,7 +69,7 @@ export class AutoWidthCalculator extends BeanStub implements NamedBean {
 
         // we put the dummy into the body container, so it will inherit all the
         // css styles that the real cells are inheriting
-        const eBodyContainer = this.centerRowContainerCtrl.getContainerElement();
+        const eBodyContainer = this.centerRowContainerCtrl.eContainer;
 
         elements.forEach((el) => this.cloneItemIntoDummy(el, eDummyContainer));
 

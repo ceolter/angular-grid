@@ -6,7 +6,7 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
+import { _isElementInThisGrid } from '../gridBodyComp/mouseEventUtils';
 import type { DefaultProvidedCellEditorParams, ICellEditorParams } from '../interfaces/iCellEditor';
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { NavigationService } from '../navigation/navigationService';
@@ -25,7 +25,6 @@ export class EditService extends BeanStub implements NamedBean {
     private userCompFactory: UserComponentFactory;
     private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
-    private mouseEventSvc: MouseEventService;
     private popupSvc?: PopupService;
 
     public wireBeans(beans: BeanCollection): void {
@@ -43,7 +42,7 @@ export class EditService extends BeanStub implements NamedBean {
         event: KeyboardEvent | MouseEvent | null = null
     ): boolean {
         const editorParams = this.createCellEditorParams(cellCtrl, key, cellStartedEdit);
-        const colDef = cellCtrl.getColumn().getColDef();
+        const colDef = cellCtrl.column.getColDef();
         const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
 
         // if cellEditorSelector was used, we give preference to popup and popupPosition from the selector
@@ -54,7 +53,7 @@ export class EditService extends BeanStub implements NamedBean {
                 : colDef.cellEditorPopupPosition;
 
         cellCtrl.setEditing(true, compDetails);
-        cellCtrl.getComp().setEditDetails(compDetails, popup, position, this.gos.get('reactiveCustomComponents'));
+        cellCtrl.comp.setEditDetails(compDetails, popup, position, this.gos.get('reactiveCustomComponents'));
 
         this.eventSvc.dispatchEvent(cellCtrl.createEvent(event, 'cellEditingStarted'));
 
@@ -62,10 +61,8 @@ export class EditService extends BeanStub implements NamedBean {
     }
 
     public stopEditing(cellCtrl: CellCtrl, cancel: boolean): boolean {
-        const cellComp = cellCtrl.getComp();
+        const { comp: cellComp, column, rowNode } = cellCtrl;
         const { newValue, newValueExists } = this.takeValueFromCellEditor(cancel, cellComp);
-        const rowNode = cellCtrl.getRowNode();
-        const column = cellCtrl.getColumn();
         const oldValue = this.valueSvc.getValueForDisplay(column, rowNode);
         let valueChanged = false;
 
@@ -92,16 +89,16 @@ export class EditService extends BeanStub implements NamedBean {
     public handleColDefChanged(cellCtrl: CellCtrl): void {
         const cellEditor = cellCtrl.getCellEditor();
         if (cellEditor?.refresh) {
-            const { eventKey, cellStartedEdit } = cellCtrl.getEditCompDetails()!.params;
+            const { eventKey, cellStartedEdit } = cellCtrl.editCompDetails!.params;
             const editorParams = this.createCellEditorParams(cellCtrl, eventKey, cellStartedEdit);
-            const colDef = cellCtrl.getColumn().getColDef();
+            const colDef = cellCtrl.column.getColDef();
             const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
             cellEditor.refresh(compDetails!.params);
         }
     }
 
     public setFocusOutOnEditor(cellCtrl: CellCtrl): void {
-        const cellEditor = cellCtrl.getComp().getCellEditor();
+        const cellEditor = cellCtrl.comp.getCellEditor();
 
         if (cellEditor && cellEditor.focusOut) {
             cellEditor.focusOut();
@@ -109,7 +106,7 @@ export class EditService extends BeanStub implements NamedBean {
     }
 
     public setFocusInOnEditor(cellCtrl: CellCtrl): void {
-        const cellComp = cellCtrl.getComp();
+        const cellComp = cellCtrl.comp;
         const cellEditor = cellComp.getCellEditor();
 
         if (cellEditor?.focusIn) {
@@ -129,7 +126,7 @@ export class EditService extends BeanStub implements NamedBean {
         cellCtrl.focusCell(true);
 
         if (!suppressNavigateAfterEdit) {
-            this.navigateAfterEdit(shiftKey, cellCtrl.getCellPosition());
+            this.navigateAfterEdit(shiftKey, cellCtrl.cellPosition);
         }
     }
 
@@ -159,7 +156,7 @@ export class EditService extends BeanStub implements NamedBean {
                 // see if click came from inside the viewports
                 viewports.some((viewport) => viewport.contains(elementWithFocus)) &&
                 // and also that it's not from a detail grid
-                this.mouseEventSvc.isElementInThisGrid(elementWithFocus);
+                _isElementInThisGrid(this.gos, elementWithFocus);
 
             if (!clickInsideGrid) {
                 const popupSvc = this.popupSvc;
@@ -179,7 +176,7 @@ export class EditService extends BeanStub implements NamedBean {
     }
 
     public setInlineEditingCss(rowCtrl: RowCtrl): void {
-        const editing = rowCtrl.isEditing() || rowCtrl.getAllCellCtrls().some((cellCtrl) => cellCtrl.isEditing());
+        const editing = rowCtrl.editing || rowCtrl.getAllCellCtrls().some((cellCtrl) => cellCtrl.editing);
         rowCtrl.forEachGui(undefined, (gui) => {
             gui.rowComp.addOrRemoveCssClass('ag-row-inline-editing', editing);
             gui.rowComp.addOrRemoveCssClass('ag-row-not-inline-editing', !editing);
@@ -231,9 +228,9 @@ export class EditService extends BeanStub implements NamedBean {
         // getting triggered, which results in all cells getting refreshed. we do not want this refresh
         // to happen on this call as we want to call it explicitly below. otherwise refresh gets called twice.
         // if we only did this refresh (and not the one below) then the cell would flash and not be forced.
-        cellCtrl.setSuppressRefreshCell(true);
+        cellCtrl.suppressRefreshCell = true;
         const valueChanged = rowNode.setDataValue(column, newValue, 'edit');
-        cellCtrl.setSuppressRefreshCell(false);
+        cellCtrl.suppressRefreshCell = false;
 
         return valueChanged;
     }
@@ -243,21 +240,25 @@ export class EditService extends BeanStub implements NamedBean {
         key: string | null,
         cellStartedEdit: boolean
     ): ICellEditorParams {
-        const column = cellCtrl.getColumn();
-        const rowNode = cellCtrl.getRowNode();
+        const {
+            column,
+            rowNode,
+            eGui,
+            cellPosition: { rowIndex },
+        } = cellCtrl;
         return this.gos.addGridCommonParams({
             value: this.valueSvc.getValueForDisplay(column, rowNode),
             eventKey: key,
-            column: column,
+            column,
             colDef: column.getColDef(),
-            rowIndex: cellCtrl.getCellPosition().rowIndex,
+            rowIndex,
             node: rowNode,
             data: rowNode.data,
             cellStartedEdit: cellStartedEdit,
             onKeyDown: cellCtrl.onKeyDown.bind(cellCtrl),
             stopEditing: cellCtrl.stopEditingAndFocus.bind(cellCtrl),
-            eGridCell: cellCtrl.getGui(),
-            parseValue: (newValue: any) => this.valueSvc.parseValue(column, rowNode, newValue, cellCtrl.getValue()),
+            eGridCell: eGui,
+            parseValue: (newValue: any) => this.valueSvc.parseValue(column, rowNode, newValue, cellCtrl.value),
             formatValue: cellCtrl.formatValue.bind(cellCtrl),
         });
     }

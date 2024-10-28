@@ -8,16 +8,15 @@ import { _isEventSupported, _isStopPropagationForAgGrid } from '../../utils/even
 import type { CellCtrl } from './cellCtrl';
 
 export class CellMouseListenerFeature extends BeanStub {
-    private readonly cellCtrl: CellCtrl;
-    private readonly column: AgColumn;
-
     private lastIPadMouseClickEvent: number;
 
-    constructor(ctrl: CellCtrl, beans: BeanCollection, column: AgColumn) {
+    constructor(
+        private readonly cellCtrl: CellCtrl,
+        beans: BeanCollection,
+        private readonly column: AgColumn
+    ) {
         super();
-        this.cellCtrl = ctrl;
         this.beans = beans;
-        this.column = column;
     }
 
     public onMouseEvent(eventName: string, mouseEvent: MouseEvent): void {
@@ -60,7 +59,7 @@ export class CellMouseListenerFeature extends BeanStub {
         if (rangeSvc && isMultiKey) {
             // the mousedown event has created the range already, so we only intersect if there is more than one
             // range on this cell
-            if (rangeSvc.getCellRangeCount(this.cellCtrl.getCellPosition()) > 1) {
+            if (rangeSvc.getCellRangeCount(this.cellCtrl.cellPosition) > 1) {
                 rangeSvc.intersectLastRange(true);
             }
         }
@@ -151,7 +150,7 @@ export class CellMouseListenerFeature extends BeanStub {
             // an editor would be blocked.
             const forceBrowserFocus =
                 (_isBrowserSafari() || shouldFocus) &&
-                !cellCtrl.isEditing() &&
+                !cellCtrl.editing &&
                 !_isFocusableFormField(target) &&
                 !containsWidget;
 
@@ -160,7 +159,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         // if shift clicking, and a range exists, we keep the focus on the cell that started the
         // range as the user then changes the range selection.
-        if (shiftKey && ranges && !focusSvc.isCellFocused(cellCtrl.getCellPosition())) {
+        if (shiftKey && ranges && !focusSvc.isCellFocused(cellCtrl.cellPosition)) {
             // this stops the cell from getting focused
             mouseEvent.preventDefault();
 
@@ -171,7 +170,7 @@ export class CellMouseListenerFeature extends BeanStub {
                 const focusedCellCtrl = focusedRowCtrl?.getCellCtrl(column as AgColumn);
 
                 // if the focused cell is editing, need to stop editing first
-                if (focusedCellCtrl?.isEditing()) {
+                if (focusedCellCtrl?.editing) {
                     focusedCellCtrl.stopEditing();
                 }
 
@@ -193,7 +192,7 @@ export class CellMouseListenerFeature extends BeanStub {
         }
 
         if (rangeSvc) {
-            const thisCell = this.cellCtrl.getCellPosition();
+            const thisCell = this.cellCtrl.cellPosition;
 
             if (shiftKey) {
                 rangeSvc.extendLatestRangeToCell(thisCell);
@@ -210,7 +209,7 @@ export class CellMouseListenerFeature extends BeanStub {
         const { rangeSvc } = this.beans;
 
         if (rangeSvc) {
-            const cellInRange = rangeSvc.isCellInAnyRange(this.cellCtrl.getCellPosition());
+            const cellInRange = rangeSvc.isCellInAnyRange(this.cellCtrl.cellPosition);
             const isRightClick =
                 mouseEvent.button === 2 || (mouseEvent.ctrlKey && this.beans.gos.get('allowContextMenuWithControlKey'));
 
@@ -233,23 +232,25 @@ export class CellMouseListenerFeature extends BeanStub {
         if (this.mouseStayingInsideCell(mouseEvent)) {
             return;
         }
-        this.beans.eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOut'));
-        this.beans.colHover?.clearMouseOver();
+        const { eventSvc, colHover } = this.beans;
+        eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOut'));
+        colHover?.clearMouseOver();
     }
 
     private onMouseOver(mouseEvent: MouseEvent): void {
         if (this.mouseStayingInsideCell(mouseEvent)) {
             return;
         }
-        this.beans.eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOver'));
-        this.beans.colHover?.setMouseOver([this.column]);
+        const { eventSvc, colHover } = this.beans;
+        eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOver'));
+        colHover?.setMouseOver([this.column]);
     }
 
     private mouseStayingInsideCell(e: MouseEvent): boolean {
         if (!e.target || !e.relatedTarget) {
             return false;
         }
-        const eGui = this.cellCtrl.getGui();
+        const { eGui } = this.cellCtrl;
         const cellContainsTarget = eGui.contains(e.target as Node);
         const cellContainsRelatedTarget = eGui.contains(e.relatedTarget as Node);
         return cellContainsTarget && cellContainsRelatedTarget;

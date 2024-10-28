@@ -262,7 +262,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         const scrollWidthToRemove = removeScrollWidth ? this.scrollVisibleSvc.getScrollbarWidth() : 0;
         // bodyViewportWidth should be calculated from eGridBody, not eBodyViewport
         // because we change the width of the bodyViewport to hide the real browser scrollbar
-        const bodyViewportWidth = _getInnerWidth(gridBodyCtrl.getGridBodyElement());
+        const bodyViewportWidth = _getInnerWidth(gridBodyCtrl.eGridBody);
         const availableWidth = bodyViewportWidth - scrollWidthToRemove;
 
         if (availableWidth > 0) {

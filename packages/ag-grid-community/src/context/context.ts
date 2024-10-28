@@ -5,7 +5,6 @@ import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeServ
 import type { ColumnMoveService } from '../columnMove/columnMoveService';
 import type { ColumnResizeService } from '../columnResize/columnResizeService';
 import type { ColumnDefFactory } from '../columns/columnDefFactory';
-import type { ColumnFactory } from '../columns/columnFactory';
 import type { ColumnFlexService } from '../columns/columnFlexService';
 import type { ColumnGroupService } from '../columns/columnGroups/columnGroupService';
 import type { ColumnHoverService } from '../columns/columnHover/columnHoverService';
@@ -36,7 +35,6 @@ import type { FilterManager } from '../filter/filterManager';
 import type { FilterValueService } from '../filter/filterValueService';
 import type { QuickFilterService } from '../filter/quickFilterService';
 import type { FocusService } from '../focusService';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
 import type { ScrollVisibleService } from '../gridBodyComp/scrollVisibleService';
 import type { GridDestroyService } from '../gridDestroyService';
 import type { GridOptionsService } from '../gridOptionsService';
@@ -229,7 +227,6 @@ export interface CoreBeanCollection {
     gridOptions: GridOptions;
     eGridDiv: HTMLElement;
     colState: ColumnStateService;
-    colFactory: ColumnFactory;
     pivotResultCols?: IPivotResultColsService;
     autoColSvc?: IAutoColService;
     selectionColSvc?: SelectionColService;
@@ -253,7 +250,6 @@ export interface CoreBeanCollection {
     csvCreator?: ICsvCreator;
     excelCreator?: IExcelCreator;
     clipboardSvc?: IClipboardService;
-    mouseEventSvc: MouseEventService;
     cellNavigation?: CellNavigationService;
     scrollVisibleSvc: ScrollVisibleService;
     pinnedCols?: PinnedColumnService;
@@ -369,7 +365,6 @@ export type BeanName =
     | 'columnController'
     | 'colDefFactory'
     | 'columnEditorFactory'
-    | 'colFactory'
     | 'colFilter'
     | 'colFlex'
     | 'columnGroupSvc'
@@ -439,7 +434,6 @@ export type BeanName =
     | 'menuSvc'
     | 'menuUtils'
     | 'modelItemUtils'
-    | 'mouseEventSvc'
     | 'navigation'
     | 'overlays'
     | 'paginationAutoPageSizeSvc'

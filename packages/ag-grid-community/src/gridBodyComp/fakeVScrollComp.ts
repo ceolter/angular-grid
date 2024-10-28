@@ -36,7 +36,7 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
     }
 
     protected setScrollVisible(): void {
-        const vScrollShowing = this.scrollVisibleSvc.isVerticalScrollShowing();
+        const vScrollShowing = this.scrollVisibleSvc.verticalScrollShowing;
         const invisibleScrollbar = this.invisibleScrollbar;
 
         const scrollbarWidth = vScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
@@ -52,7 +52,7 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
     private onRowContainerHeightChanged(): void {
         const { ctrlsSvc } = this;
         const gridBodyCtrl = ctrlsSvc.getGridBodyCtrl();
-        const gridBodyViewportEl = gridBodyCtrl.getBodyViewportElement();
+        const gridBodyViewportEl = gridBodyCtrl.eBodyViewport;
 
         const eViewportScrollTop = this.getScrollPosition();
         const gridBodyViewportScrollTop = gridBodyViewportEl.scrollTop;
@@ -63,14 +63,14 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
     }
 
     public getScrollPosition(): number {
-        return this.getViewportElement().scrollTop;
+        return this.eViewport.scrollTop;
     }
 
     public setScrollPosition(value: number, force?: boolean): void {
-        if (!force && !_isVisible(this.getViewportElement())) {
+        if (!force && !_isVisible(this.eViewport)) {
             this.attemptSettingScrollPosition(value);
         }
-        this.getViewportElement().scrollTop = value;
+        this.eViewport.scrollTop = value;
     }
 }
 

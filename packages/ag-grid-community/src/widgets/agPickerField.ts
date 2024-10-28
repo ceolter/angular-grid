@@ -222,7 +222,7 @@ export abstract class AgPickerField<
             eChild: ePicker,
             closeOnEsc: true,
             closedCallback: () => {
-                const shouldRestoreFocus = _isNothingFocused(this.gos);
+                const shouldRestoreFocus = _isNothingFocused(this.beans);
                 this.beforeHidePicker();
 
                 if (shouldRestoreFocus && this.isAlive()) {

@@ -20,7 +20,7 @@ import type { PopupService } from '../widgets/popupService';
 import type { LongTapEvent } from '../widgets/touchListener';
 import { TouchListener } from '../widgets/touchListener';
 import { GridBodyScrollFeature } from './gridBodyScrollFeature';
-import type { MouseEventService } from './mouseEventService';
+import { _isEventFromThisGrid } from './mouseEventUtils';
 import { _getRowContainerOptions } from './rowContainer/rowContainerCtrl';
 import type { ScrollVisibleService } from './scrollVisibleService';
 
@@ -63,7 +63,6 @@ export class GridBodyCtrl extends BeanStub {
     private pinnedRowModel?: PinnedRowModel;
     private editSvc?: EditService;
     private popupSvc?: PopupService;
-    private mouseEventSvc: MouseEventService;
     private rowModel: IRowModel;
     private filterManager?: FilterManager;
     private environment: Environment;
@@ -78,15 +77,14 @@ export class GridBodyCtrl extends BeanStub {
         this.pinnedRowModel = beans.pinnedRowModel;
         this.editSvc = beans.editSvc;
         this.popupSvc = beans.popupSvc;
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.rowModel = beans.rowModel;
         this.filterManager = beans.filterManager;
         this.environment = beans.environment;
     }
 
     private comp: IGridBodyComp;
-    private eGridBody: HTMLElement;
-    private eBodyViewport: HTMLElement;
+    public eGridBody: HTMLElement;
+    public eBodyViewport: HTMLElement;
     private eTop: HTMLElement;
     private eBottom: HTMLElement;
     private eStickyTop: HTMLElement;
@@ -96,19 +94,11 @@ export class GridBodyCtrl extends BeanStub {
     private eStickyTopFullWidthContainer: HTMLElement;
     private eStickyBottomFullWidthContainer: HTMLElement;
 
-    private stickyTopHeight: number = 0;
+    public stickyTopHeight: number = 0;
     private eStickyBottom: HTMLElement;
-    private stickyBottomHeight: number = 0;
+    public stickyBottomHeight: number = 0;
 
-    private bodyScrollFeature: GridBodyScrollFeature;
-
-    public getScrollFeature(): GridBodyScrollFeature {
-        return this.bodyScrollFeature;
-    }
-
-    public getBodyViewportElement(): HTMLElement {
-        return this.eBodyViewport;
-    }
+    public scrollFeature: GridBodyScrollFeature;
 
     public setComp(
         comp: IGridBodyComp,
@@ -146,8 +136,8 @@ export class GridBodyCtrl extends BeanStub {
         );
 
         this.createManagedBean(new LayoutFeature(this.comp));
-        this.bodyScrollFeature = this.createManagedBean(new GridBodyScrollFeature(this.eBodyViewport));
-        this.addRowDragListener();
+        this.scrollFeature = this.createManagedBean(new GridBodyScrollFeature(this.eBodyViewport));
+        this.rowDragSvc?.setupRowDrag(this.eBodyViewport, this);
 
         this.setupRowAnimationCssClass();
 
@@ -165,19 +155,15 @@ export class GridBodyCtrl extends BeanStub {
         this.ctrlsSvc.register('gridBodyCtrl', this);
     }
 
-    public getComp(): IGridBodyComp {
-        return this.comp;
-    }
-
     private addEventListeners(): void {
         const setFloatingHeights = this.setFloatingHeights.bind(this);
         this.addManagedEventListeners({
             gridColumnsChanged: this.onGridColumnsChanged.bind(this),
             scrollVisibilityChanged: this.onScrollVisibilityChanged.bind(this),
-            scrollGapChanged: this.onScrollGapChanged.bind(this),
+            scrollGapChanged: this.updateScrollingClasses.bind(this),
             pinnedRowDataChanged: setFloatingHeights,
             pinnedHeightChanged: setFloatingHeights,
-            headerHeightChanged: this.onHeaderHeightChanged.bind(this),
+            headerHeightChanged: this.setStickyTopOffsetTop.bind(this),
         });
     }
 
@@ -227,7 +213,7 @@ export class GridBodyCtrl extends BeanStub {
     }
 
     private onScrollVisibilityChanged(): void {
-        const visible = this.scrollVisibleSvc.isVerticalScrollShowing();
+        const visible = this.scrollVisibleSvc.verticalScrollShowing;
         this.setVerticalScrollPaddingVisible(visible);
         this.setStickyWidth(visible);
         this.setStickyBottomOffsetBottom();
@@ -236,24 +222,18 @@ export class GridBodyCtrl extends BeanStub {
         const pad = _isInvisibleScrollbar() ? 16 : 0;
         const width = `calc(100% + ${scrollbarWidth + pad}px)`;
 
-        _requestAnimationFrame(this.gos, () => this.comp.setBodyViewportWidth(width));
+        _requestAnimationFrame(this.beans, () => this.comp.setBodyViewportWidth(width));
 
-        this.updateScrollingClasses();
-    }
-
-    private onScrollGapChanged(): void {
         this.updateScrollingClasses();
     }
 
     private updateScrollingClasses(): void {
-        this.eGridBody.classList.toggle(
-            'ag-body-vertical-content-no-gap',
-            !this.scrollVisibleSvc.hasVerticalScrollGap()
-        );
-        this.eGridBody.classList.toggle(
-            'ag-body-horizontal-content-no-gap',
-            !this.scrollVisibleSvc.hasHorizontalScrollGap()
-        );
+        const {
+            eGridBody: { classList },
+            scrollVisibleSvc,
+        } = this;
+        classList.toggle('ag-body-vertical-content-no-gap', !scrollVisibleSvc.verticalScrollGap);
+        classList.toggle('ag-body-horizontal-content-no-gap', !scrollVisibleSvc.horizontalScrollGap);
     }
 
     private onGridColumnsChanged(): void {
@@ -313,13 +293,13 @@ export class GridBodyCtrl extends BeanStub {
     }
 
     private setupRowAnimationCssClass(): void {
-        let initialSizeMeasurementComplete = this.environment.hasMeasuredSizes();
+        let initialSizeMeasurementComplete = this.environment.sizesMeasured;
 
         const updateAnimationClass = () => {
             // we don't want to use row animation if scaling, as rows jump strangely as you scroll,
             // when scaling and doing row animation.
             const animateRows =
-                initialSizeMeasurementComplete && _isAnimateRows(this.gos) && !this.rowContainerHeight.isStretching();
+                initialSizeMeasurementComplete && _isAnimateRows(this.gos) && !this.rowContainerHeight.stretching;
             const animateRowsCssClass: RowAnimationCssClasses = animateRows
                 ? 'ag-row-animation'
                 : 'ag-row-no-animation';
@@ -333,16 +313,12 @@ export class GridBodyCtrl extends BeanStub {
 
         this.addManagedEventListeners({
             gridStylesChanged: () => {
-                if (!initialSizeMeasurementComplete && this.environment.hasMeasuredSizes()) {
+                if (!initialSizeMeasurementComplete && this.environment.sizesMeasured) {
                     initialSizeMeasurementComplete = true;
                     updateAnimationClass();
                 }
             },
         });
-    }
-
-    public getGridBodyElement(): HTMLElement {
-        return this.eGridBody;
     }
 
     private addBodyViewportListener(): void {
@@ -370,7 +346,7 @@ export class GridBodyCtrl extends BeanStub {
         const { deltaX, deltaY, shiftKey } = e;
         const isHorizontalScroll = shiftKey || Math.abs(deltaX) > Math.abs(deltaY);
 
-        if (isHorizontalScroll && this.mouseEventSvc.isEventFromThisGrid(e)) {
+        if (isHorizontalScroll && _isEventFromThisGrid(this.gos, e)) {
             this.scrollGridBodyToMatchEvent(e);
         }
     }
@@ -414,7 +390,7 @@ export class GridBodyCtrl extends BeanStub {
 
         const { target } = (mouseEvent || touch)!;
 
-        if (target === this.eBodyViewport || target === this.ctrlsSvc.get('center').getViewportElement()) {
+        if (target === this.eBodyViewport || target === this.ctrlsSvc.get('center').eViewport) {
             // show it
             this.contextMenuSvc?.showContextMenu({
                 mouseEvent,
@@ -452,20 +428,12 @@ export class GridBodyCtrl extends BeanStub {
         }
     }
 
-    public getGui(): HTMLElement {
-        return this.eGridBody;
-    }
-
     // called by rowDragFeature
     public scrollVertically(pixels: number): number {
         const oldScrollPosition = this.eBodyViewport.scrollTop;
 
-        this.bodyScrollFeature.setVerticalScrollPosition(oldScrollPosition + pixels);
+        this.scrollFeature.setVerticalScrollPosition(oldScrollPosition + pixels);
         return this.eBodyViewport.scrollTop - oldScrollPosition;
-    }
-
-    private addRowDragListener(): void {
-        this.rowDragSvc?.setupRowDrag(this.eBodyViewport, this);
     }
 
     private setFloatingHeights(): void {
@@ -487,17 +455,9 @@ export class GridBodyCtrl extends BeanStub {
         this.stickyTopHeight = height;
     }
 
-    public getStickyTopHeight(): number {
-        return this.stickyTopHeight;
-    }
-
     public setStickyBottomHeight(height: number = 0): void {
         this.comp.setStickyBottomHeight(`${height}px`);
         this.stickyBottomHeight = height;
-    }
-
-    public getStickyBottomHeight(): number {
-        return this.stickyBottomHeight;
     }
 
     private setStickyWidth(vScrollVisible: boolean) {
@@ -511,13 +471,9 @@ export class GridBodyCtrl extends BeanStub {
         }
     }
 
-    private onHeaderHeightChanged(): void {
-        this.setStickyTopOffsetTop();
-    }
-
     private setStickyTopOffsetTop(): void {
         const headerCtrl = this.ctrlsSvc.get('gridHeaderCtrl');
-        const headerHeight = headerCtrl.getHeaderHeight() + (this.filterManager?.getHeaderHeight() ?? 0);
+        const headerHeight = headerCtrl.headerHeight + (this.filterManager?.getHeaderHeight() ?? 0);
         const pinnedTopHeight = this.pinnedRowModel?.getPinnedTopTotalHeight() ?? 0;
 
         let height = 0;
@@ -536,21 +492,12 @@ export class GridBodyCtrl extends BeanStub {
     }
 
     private setStickyBottomOffsetBottom(): void {
-        const pinnedBottomHeight = this.pinnedRowModel?.getPinnedBottomTotalHeight() ?? 0;
-        const hScrollShowing = this.scrollVisibleSvc.isHorizontalScrollShowing();
-        const scrollbarWidth = hScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
+        const { pinnedRowModel, scrollVisibleSvc, comp } = this;
+        const pinnedBottomHeight = pinnedRowModel?.getPinnedBottomTotalHeight() ?? 0;
+        const hScrollShowing = scrollVisibleSvc.horizontalScrollShowing;
+        const scrollbarWidth = hScrollShowing ? scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
         const height = pinnedBottomHeight + scrollbarWidth;
 
-        this.comp.setStickyBottomBottom(`${height}px`);
-    }
-
-    // + rangeService
-    public addScrollEventListener(listener: () => void): void {
-        this.eBodyViewport.addEventListener('scroll', listener, { passive: true });
-    }
-
-    // + focusService
-    public removeScrollEventListener(listener: () => void): void {
-        this.eBodyViewport.removeEventListener('scroll', listener);
+        comp.setStickyBottomBottom(`${height}px`);
     }
 }

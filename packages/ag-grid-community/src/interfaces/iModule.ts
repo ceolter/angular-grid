@@ -65,6 +65,7 @@ type CommunityModuleName =
     | 'AnimateShowChangeCellRendererModule'
     | 'AnimateSlideCellRendererModule'
     | 'AnimationFrameModule'
+    | 'AriaModule'
     | 'AutoWidthModule'
     | 'CellApiModule'
     | 'CellFlashModule'

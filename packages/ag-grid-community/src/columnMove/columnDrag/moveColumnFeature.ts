@@ -653,7 +653,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         }
 
         let pixelsMoved: number | null = null;
-        const scrollFeature = this.gridBodyCon.getScrollFeature();
+        const scrollFeature = this.gridBodyCon.scrollFeature;
 
         if (this.needToMoveLeft) {
             pixelsMoved = scrollFeature.scrollHorizontally(-pixelsToMove);

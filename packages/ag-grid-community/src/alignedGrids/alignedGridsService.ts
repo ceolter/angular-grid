@@ -139,8 +139,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
 
     private onScrollEvent(event: BodyScrollEvent): void {
         this.onEvent(() => {
-            const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-            gridBodyCon.getScrollFeature().setHorizontalScrollPosition(event.left, true);
+            this.ctrlsSvc.getScrollFeature().setHorizontalScrollPosition(event.left, true);
         });
     }
 

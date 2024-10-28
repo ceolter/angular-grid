@@ -9,7 +9,7 @@ globalObj.Node = typeof Node === 'undefined' ? {} : Node;
 globalObj.MouseEvent = typeof MouseEvent === 'undefined' ? {} : MouseEvent;
 
 // columns
-export type { ColumnFactory } from './columns/columnFactory';
+export { _applyColumnState, _addColumnDefaultAndTypes, _createColumnTree } from './columns/columnFactoryUtils';
 export type { ColumnGroupService } from './columns/columnGroups/columnGroupService';
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
@@ -267,7 +267,7 @@ export { IAdvancedFilterService } from './interfaces/iAdvancedFilterService';
 // gridPanel
 export { GridBodyCtrl, IGridBodyComp, RowAnimationCssClasses } from './gridBodyComp/gridBodyCtrl';
 export type { ScrollVisibleService } from './gridBodyComp/scrollVisibleService';
-export type { MouseEventService } from './gridBodyComp/mouseEventService';
+export { _getCellPositionForEvent, _getNormalisedMousePosition } from './gridBodyComp/mouseEventUtils';
 export type { NavigationService } from './navigation/navigationService';
 export { FakeHScrollComp } from './gridBodyComp/fakeHScrollComp';
 export { FakeVScrollComp } from './gridBodyComp/fakeVScrollComp';
@@ -491,7 +491,11 @@ export { AgInputDateField } from './widgets/agInputDateField';
 export { AgSelect, AgSelectParams, AgSelectSelector } from './widgets/agSelect';
 export { ListOption } from './widgets/agList';
 export { Component, VisibleChangedEvent } from './widgets/component';
-export { ManagedFocusFeature, ManagedFocusCallbacks } from './widgets/managedFocusFeature';
+export {
+    ManagedFocusFeature,
+    ManagedFocusCallbacks,
+    FOCUS_MANAGED_CLASS as _FOCUS_MANAGED_CLASS,
+} from './widgets/managedFocusFeature';
 export { TabGuardComp } from './widgets/tabGuardComp';
 export { TabGuardCtrl, ITabGuard, TabGuardClassNames } from './widgets/tabGuardCtrl';
 export { TabGuardFeature } from './widgets/tabGuardFeature';
@@ -968,7 +972,16 @@ export { _formatNumberCommas } from './utils/number';
 export { _mergeDeep } from './utils/object';
 export { _escapeString } from './utils/string';
 export { AgPromise } from './utils/promise';
-export { _addFocusableContainerListener } from './utils/focus';
+export {
+    _addFocusableContainerListener,
+    _findFocusableElements,
+    _focusInto,
+    _findNextFocusableElement,
+    _findTabbableParent,
+    _focusGridInnerElement,
+    _isKeyboardMode,
+    _focusNextGridCoreContainer,
+} from './utils/focus';
 
 // charts
 export * from './interfaces/iChartOptions';

@@ -24,7 +24,7 @@ import { _getCtrlForEventTarget, _isEventSupported, _isStopPropagationForAgGrid 
 import { _isEventFromPrintableCharacter, _isUserSuppressingKeyboardEvent } from '../../utils/keyboard';
 import type { LongTapEvent } from '../../widgets/touchListener';
 import { TouchListener } from '../../widgets/touchListener';
-import type { MouseEventService } from './../mouseEventService';
+import { _isEventFromThisGrid } from '../mouseEventUtils';
 
 const A_KEYCODE = 65;
 const C_KEYCODE = 67;
@@ -64,7 +64,6 @@ function _normaliseQwertyAzerty(keyboardEvent: KeyboardEvent): string {
 }
 
 export class RowContainerEventsFeature extends BeanStub {
-    private mouseEventSvc: MouseEventService;
     private contextMenuSvc?: IContextMenuService;
     private navigation?: NavigationService;
     private focusSvc: FocusService;
@@ -77,7 +76,6 @@ export class RowContainerEventsFeature extends BeanStub {
     private selectionSvc?: ISelectionService;
 
     public wireBeans(beans: BeanCollection) {
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.contextMenuSvc = beans.contextMenuSvc;
         this.navigation = beans.navigation;
         this.focusSvc = beans.focusSvc;
@@ -90,11 +88,8 @@ export class RowContainerEventsFeature extends BeanStub {
         this.selectionSvc = beans.selectionSvc;
     }
 
-    private element: HTMLElement;
-
-    constructor(element: HTMLElement) {
+    constructor(private readonly element: HTMLElement) {
         super();
-        this.element = element;
     }
 
     public postConstruct(): void {
@@ -120,12 +115,12 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private processMouseEvent(eventName: string, mouseEvent: MouseEvent): void {
-        if (!this.mouseEventSvc.isEventFromThisGrid(mouseEvent) || _isStopPropagationForAgGrid(mouseEvent)) {
+        if (!_isEventFromThisGrid(this.gos, mouseEvent) || _isStopPropagationForAgGrid(mouseEvent)) {
             return;
         }
 
         const rowComp = this.getRowForEvent(mouseEvent.target);
-        const cellCtrl = this.mouseEventSvc.getRenderedCellForEvent(mouseEvent)!;
+        const cellCtrl = _getCellCtrlForEventTarget(this.gos, mouseEvent.target)!;
 
         if (eventName === 'contextmenu') {
             this.contextMenuSvc?.handleContextMenuMouseEvent(mouseEvent, undefined, rowComp, cellCtrl);
@@ -148,7 +143,7 @@ export class RowContainerEventsFeature extends BeanStub {
         const touchListener = new TouchListener(this.element);
         const longTapListener = (event: LongTapEvent) => {
             const rowComp = this.getRowForEvent(event.touchEvent.target);
-            const cellComp = this.mouseEventSvc.getRenderedCellForEvent(event.touchEvent)!;
+            const cellComp = _getCellCtrlForEventTarget(this.gos, event.touchEvent.target)!;
 
             this.contextMenuSvc?.handleContextMenuMouseEvent(undefined, event.touchEvent, rowComp, cellComp);
         };
@@ -185,9 +180,7 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private processCellKeyboardEvent(cellCtrl: CellCtrl, eventName: string, keyboardEvent: KeyboardEvent): void {
-        const rowNode = cellCtrl.getRowNode();
-        const column = cellCtrl.getColumn();
-        const editing = cellCtrl.isEditing();
+        const { rowNode, column, editing } = cellCtrl;
 
         const gridProcessingAllowed = !_isUserSuppressingKeyboardEvent(
             this.gos,
@@ -208,7 +201,7 @@ export class RowContainerEventsFeature extends BeanStub {
                 }
 
                 // perform clipboard and undo / redo operations
-                this.doGridOperations(keyboardEvent, cellCtrl.isEditing());
+                this.doGridOperations(keyboardEvent, cellCtrl.editing);
 
                 if (_isEventFromPrintableCharacter(keyboardEvent)) {
                     cellCtrl.processCharacter(keyboardEvent);
@@ -222,7 +215,7 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private processFullWidthRowKeyboardEvent(rowComp: RowCtrl, eventName: string, keyboardEvent: KeyboardEvent) {
-        const rowNode = rowComp.getRowNode();
+        const { rowNode } = rowComp;
         const focusedCell = this.focusSvc.getFocusedCell();
         const column = (focusedCell && focusedCell.column) as AgColumn;
         const gridProcessingAllowed = !_isUserSuppressingKeyboardEvent(this.gos, keyboardEvent, rowNode, column, false);
@@ -270,7 +263,7 @@ export class RowContainerEventsFeature extends BeanStub {
 
         // for copy / paste, we don't want to execute when the event
         // was from a child grid (happens in master detail)
-        if (!this.mouseEventSvc.isEventFromThisGrid(keyboardEvent)) {
+        if (!_isEventFromThisGrid(this.gos, keyboardEvent)) {
             return;
         }
 
@@ -347,7 +340,7 @@ export class RowContainerEventsFeature extends BeanStub {
 
         const { cellCtrl, rowCtrl } = this.getControlsForEventTarget(event.target);
 
-        if (cellCtrl?.isEditing() || rowCtrl?.isEditing()) {
+        if (cellCtrl?.editing || rowCtrl?.editing) {
             return;
         }
 
@@ -362,7 +355,7 @@ export class RowContainerEventsFeature extends BeanStub {
 
         const { cellCtrl, rowCtrl } = this.getControlsForEventTarget(event.target);
 
-        if (cellCtrl?.isEditing() || rowCtrl?.isEditing()) {
+        if (cellCtrl?.editing || rowCtrl?.editing) {
             return;
         }
 
@@ -373,7 +366,7 @@ export class RowContainerEventsFeature extends BeanStub {
     private onCtrlAndV(event: KeyboardEvent): void {
         const { cellCtrl, rowCtrl } = this.getControlsForEventTarget(event.target);
 
-        if (cellCtrl?.isEditing() || rowCtrl?.isEditing()) {
+        if (cellCtrl?.editing || rowCtrl?.editing) {
             return;
         }
         if (this.clipboardSvc && !this.gos.get('suppressClipboardPaste')) {
@@ -389,15 +382,16 @@ export class RowContainerEventsFeature extends BeanStub {
     }
 
     private onCtrlAndZ(event: KeyboardEvent): void {
-        if (!this.gos.get('undoRedoCellEditing') || !this.undoRedo) {
+        const { undoRedo } = this;
+        if (!this.gos.get('undoRedoCellEditing') || !undoRedo) {
             return;
         }
         event.preventDefault();
 
         if (event.shiftKey) {
-            this.undoRedo.redo('ui');
+            undoRedo.redo('ui');
         } else {
-            this.undoRedo.undo('ui');
+            undoRedo.undo('ui');
         }
     }
 

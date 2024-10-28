@@ -225,25 +225,25 @@ export class CellNavigationService extends BeanStub implements NamedBean {
 
         const isTopCtrls = this.rowRenderer
             .getStickyTopRowCtrls()
-            .some((ctrl) => ctrl.getRowNode().rowIndex === rowNode.rowIndex);
+            .some((ctrl) => ctrl.rowNode.rowIndex === rowNode.rowIndex);
 
         let stickyRowCtrls: RowCtrl[] = [];
         if (isTopCtrls) {
             stickyRowCtrls = [...this.rowRenderer.getStickyTopRowCtrls()].sort(
-                (a, b) => a.getRowNode().rowIndex! - b.getRowNode().rowIndex!
+                (a, b) => a.rowNode.rowIndex! - b.rowNode.rowIndex!
             );
         } else {
             stickyRowCtrls = [...this.rowRenderer.getStickyBottomRowCtrls()].sort(
-                (a, b) => b.getRowNode().rowIndex! - a.getRowNode().rowIndex!
+                (a, b) => b.rowNode.rowIndex! - a.rowNode.rowIndex!
             );
         }
 
         const diff = up ? -1 : 1;
-        const idx = stickyRowCtrls.findIndex((ctrl) => ctrl.getRowNode().rowIndex === rowNode.rowIndex);
+        const idx = stickyRowCtrls.findIndex((ctrl) => ctrl.rowNode.rowIndex === rowNode.rowIndex);
         const nextCtrl = stickyRowCtrls[idx + diff];
 
         if (nextCtrl) {
-            return { rowIndex: nextCtrl.getRowNode().rowIndex!, rowPinned: null };
+            return { rowIndex: nextCtrl.rowNode.rowIndex!, rowPinned: null };
         }
     }
 

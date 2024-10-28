@@ -71,13 +71,15 @@ export class GridComp extends TabGuardComp {
 
     private updateLayoutClasses(cssClass: string, params: UpdateLayoutClassesParams): void {
         const eRootWrapperBodyClassList = this.rootWrapperBody.classList;
-        eRootWrapperBodyClassList.toggle(LayoutCssClasses.AUTO_HEIGHT, params.autoHeight);
-        eRootWrapperBodyClassList.toggle(LayoutCssClasses.NORMAL, params.normal);
-        eRootWrapperBodyClassList.toggle(LayoutCssClasses.PRINT, params.print);
+        const { AUTO_HEIGHT, NORMAL, PRINT } = LayoutCssClasses;
+        const { autoHeight, normal, print } = params;
+        eRootWrapperBodyClassList.toggle(AUTO_HEIGHT, autoHeight);
+        eRootWrapperBodyClassList.toggle(NORMAL, normal);
+        eRootWrapperBodyClassList.toggle(PRINT, print);
 
-        this.addOrRemoveCssClass(LayoutCssClasses.AUTO_HEIGHT, params.autoHeight);
-        this.addOrRemoveCssClass(LayoutCssClasses.NORMAL, params.normal);
-        this.addOrRemoveCssClass(LayoutCssClasses.PRINT, params.print);
+        this.addOrRemoveCssClass(AUTO_HEIGHT, autoHeight);
+        this.addOrRemoveCssClass(NORMAL, normal);
+        this.addOrRemoveCssClass(PRINT, print);
     }
 
     private createTemplate(params: OptionalGridComponents): string {

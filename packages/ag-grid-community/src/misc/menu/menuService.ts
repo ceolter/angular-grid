@@ -178,9 +178,9 @@ export class MenuService extends BeanStub implements NamedBean {
             menuFactory.showMenuAfterMouseEvent(column, mouseEvent, containerType, filtersOnly);
         } else if (column) {
             // auto
-            this.ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureColumnVisible(column, 'auto');
+            this.ctrlsSvc.getScrollFeature().ensureColumnVisible(column, 'auto');
             // make sure we've finished scrolling into view before displaying the menu
-            _requestAnimationFrame(this.gos, () => {
+            _requestAnimationFrame(this.beans, () => {
                 const headerCellCtrl = this.ctrlsSvc
                     .getHeaderRowContainerCtrl(column.getPinned())
                     ?.getHeaderCtrlForColumn(column) as HeaderCellCtrl | undefined;

@@ -36,10 +36,10 @@ export class Environment extends BeanStub implements NamedBean {
     private sizeEls = new Map<Variable, HTMLElement>();
     private lastKnownValues = new Map<Variable, number>();
     private eMeasurementContainer: HTMLElement | undefined;
-    private sizesMeasured = false;
+    public sizesMeasured = false;
 
     private gridTheme: GridTheme | undefined;
-    private themeClass: string | undefined;
+    public themeClass: string | undefined;
     private globalCSS: string[] = [];
 
     public postConstruct(): void {
@@ -74,16 +74,8 @@ export class Environment extends BeanStub implements NamedBean {
         return this.getCSSVariablePixelValue(LIST_ITEM_HEIGHT);
     }
 
-    public hasMeasuredSizes(): boolean {
-        return this.sizesMeasured;
-    }
-
     public getGridThemeClass(): string | null {
         return this.gridTheme?.getCssClass() || null;
-    }
-
-    public getThemeClass(): string | undefined {
-        return this.themeClass;
     }
 
     public applyThemeClasses(el: HTMLElement) {
@@ -188,7 +180,7 @@ export class Environment extends BeanStub implements NamedBean {
             _warn(9, { variable });
         }
 
-        const unsubscribe = _observeResize(this.gos, sizeEl, () => {
+        const unsubscribe = _observeResize(this.beans, sizeEl, () => {
             const newMeasurement = this.measureSizeEl(variable);
             if (newMeasurement === 'detached' || newMeasurement === 'no-styles') {
                 return;

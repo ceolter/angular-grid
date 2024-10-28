@@ -458,7 +458,7 @@ export class PositionableFeature extends BeanStub<PositionableFeatureEvent> {
 
         if (constrain && this.popupSvc) {
             this.resizeObserverSubscriber = _observeResize(
-                this.gos,
+                this.beans,
                 this.popupSvc?.getPopupParent(),
                 applyMaxHeightToElement
             );

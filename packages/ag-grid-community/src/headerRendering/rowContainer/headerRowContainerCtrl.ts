@@ -54,7 +54,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     private filtersRowCtrl: HeaderRowCtrl | undefined;
     private columnsRowCtrl: HeaderRowCtrl | undefined;
     private groupsRowCtrls: HeaderRowCtrl[] = [];
-    private eViewport: HTMLElement;
+    public eViewport: HTMLElement;
 
     constructor(pinned: ColumnPinnedType) {
         super();
@@ -119,7 +119,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
 
             const needNewInstance =
                 !this.hidden &&
-                (this.columnsRowCtrl == null || !keepColumns || this.columnsRowCtrl.getRowIndex() !== rowIndex);
+                (this.columnsRowCtrl == null || !keepColumns || this.columnsRowCtrl.rowIndex !== rowIndex);
             const shouldDestroyInstance = needNewInstance || this.hidden;
 
             if (shouldDestroyInstance) {
@@ -146,7 +146,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
             const rowIndex = sequence++;
 
             if (this.filtersRowCtrl) {
-                const rowIndexMismatch = this.filtersRowCtrl.getRowIndex() !== rowIndex;
+                const rowIndexMismatch = this.filtersRowCtrl.rowIndex !== rowIndex;
                 if (!keepColumns || rowIndexMismatch) {
                     destroyPreviousComp();
                 }
@@ -186,19 +186,11 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     public getHtmlElementForColumnHeader(column: AgColumn | AgColumnGroup): HTMLElement | null {
-        const cellCtrl = this.getHeaderCtrlForColumn(column);
-
-        if (!cellCtrl) {
-            return null;
-        }
-
-        return cellCtrl.getGui();
+        return this.getHeaderCtrlForColumn(column)?.eGui ?? null;
     }
 
     public getRowType(rowIndex: number): HeaderRowType | undefined {
-        const allCtrls = this.getAllCtrls();
-        const ctrl = allCtrls[rowIndex];
-        return ctrl ? ctrl.getType() : undefined;
+        return this.getAllCtrls()[rowIndex]?.type;
     }
 
     public focusHeader(rowIndex: number, column: AgColumn | AgColumnGroup, event?: KeyboardEvent): boolean {
@@ -209,10 +201,6 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
         }
 
         return ctrl.focusHeader(column, event);
-    }
-
-    public getViewportElement(): HTMLElement {
-        return this.eViewport;
     }
 
     public getGroupRowCount(): number {
@@ -232,21 +220,15 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     public onScrollCallback(fn: () => void): void {
-        this.addManagedElementListeners(this.getViewportElement(), { scroll: fn });
+        this.addManagedElementListeners(this.eViewport, { scroll: fn });
     }
 
     public override destroy(): void {
-        if (this.filtersRowCtrl) {
-            this.filtersRowCtrl = this.destroyBean(this.filtersRowCtrl);
-        }
+        this.filtersRowCtrl = this.destroyBean(this.filtersRowCtrl);
 
-        if (this.columnsRowCtrl) {
-            this.columnsRowCtrl = this.destroyBean(this.columnsRowCtrl);
-        }
+        this.columnsRowCtrl = this.destroyBean(this.columnsRowCtrl);
 
-        if (this.groupsRowCtrls && this.groupsRowCtrls.length) {
-            this.groupsRowCtrls = this.destroyBeans(this.groupsRowCtrls);
-        }
+        this.groupsRowCtrls = this.destroyBeans(this.groupsRowCtrls);
 
         super.destroy();
     }
@@ -318,7 +300,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
             // in the body, then we add extra space to keep header aligned with the body,
             // as body width fits the cols and the scrollbar
             const addPaddingForScrollbar =
-                this.scrollVisibleSvc.isVerticalScrollShowing() && ((isRtl && pinningLeft) || (!isRtl && pinningRight));
+                this.scrollVisibleSvc.verticalScrollShowing && ((isRtl && pinningLeft) || (!isRtl && pinningRight));
             const widthWithPadding = addPaddingForScrollbar ? width + scrollbarWidth : width;
 
             this.comp.setPinnedContainerWidth(`${widthWithPadding}px`);

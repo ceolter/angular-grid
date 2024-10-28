@@ -2,6 +2,7 @@ import type { VisibleColsService } from '../columns/visibleColsService';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { FocusService } from '../focusService';
+import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
 import { _getActiveDomElement } from '../gridOptionsUtils';
 import type { FocusableContainer } from '../interfaces/iFocusableContainer';
 import type { IWatermark } from '../interfaces/iWatermark';
@@ -9,6 +10,7 @@ import type { LayoutView } from '../styling/layoutFeature';
 import { LayoutFeature } from '../styling/layoutFeature';
 import { _last } from '../utils/array';
 import { _observeResize } from '../utils/dom';
+import { _findTabbableParent, _focusInto, _isHeaderFocusSuppressed } from '../utils/focus';
 import type { ComponentSelector } from '../widgets/component';
 
 export interface IGridComp extends LayoutView {
@@ -50,24 +52,24 @@ export class GridCtrl extends BeanStub {
 
         this.eGui.setAttribute('grid-id', this.beans.context.getGridId());
 
-        const { dragAndDrop, mouseEventSvc, ctrlsSvc } = this.beans;
+        const { dragAndDrop, ctrlsSvc } = this.beans;
 
         dragAndDrop?.registerGridDropTarget(() => this.eGui, this);
 
-        mouseEventSvc.stampTopLevelGridCompWithGridInstance(eGridDiv);
+        _stampTopLevelGridCompWithGridInstance(this.gos, eGridDiv);
 
         this.createManagedBean(new LayoutFeature(this.view));
 
         this.view.setRtlClass(this.gos.get('enableRtl') ? 'ag-rtl' : 'ag-ltr');
 
-        const unsubscribeFromResize = _observeResize(this.gos, this.eGridHostDiv, this.onGridSizeChanged.bind(this));
+        const unsubscribeFromResize = _observeResize(this.beans, this.eGridHostDiv, this.onGridSizeChanged.bind(this));
         this.addDestroyFunc(() => unsubscribeFromResize());
 
         ctrlsSvc.register('gridCtrl', this);
     }
 
     public isDetailGrid(): boolean {
-        const el = this.focusSvc.findTabbableParent(this.getGui());
+        const el = _findTabbableParent(this.getGui());
 
         return el?.getAttribute('row-id')?.startsWith('detail') || false;
     }
@@ -136,7 +138,8 @@ export class GridCtrl extends BeanStub {
         }
 
         const focusableContainers = this.getFocusableContainers();
-        const allColumns = this.visibleCols.allCols;
+        const { focusSvc, visibleCols } = this;
+        const allColumns = visibleCols.allCols;
 
         if (fromBottom) {
             if (focusableContainers.length > 1) {
@@ -144,25 +147,25 @@ export class GridCtrl extends BeanStub {
             }
 
             const lastColumn = _last(allColumns);
-            if (this.focusSvc.focusGridView(lastColumn, true)) {
+            if (focusSvc.focusGridView(lastColumn, true)) {
                 return true;
             }
         }
 
-        if (this.gos.get('headerHeight') === 0 || this.focusSvc.isHeaderFocusSuppressed()) {
-            if (this.focusSvc.focusGridView(allColumns[0])) {
+        if (this.gos.get('headerHeight') === 0 || _isHeaderFocusSuppressed(this.beans)) {
+            if (focusSvc.focusGridView(allColumns[0])) {
                 return true;
             }
 
             for (let i = 1; i < focusableContainers.length; i++) {
-                if (this.focusSvc.focusInto(focusableContainers[i].getGui())) {
+                if (_focusInto(focusableContainers[i].getGui())) {
                     return true;
                 }
             }
             return false;
         }
 
-        return this.focusSvc.focusFirstHeader();
+        return focusSvc.focusFirstHeader();
     }
 
     public forceFocusOutOfContainer(up = false): void {
@@ -199,7 +202,7 @@ export class GridCtrl extends BeanStub {
         indexWithFocus: number;
         nextIndex: number;
     } {
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
         const indexWithFocus = focusableContainers.findIndex((container) => container.getGui().contains(activeEl));
         const nextIndex = indexWithFocus + (backwards ? -1 : 1);
         return {
@@ -210,7 +213,7 @@ export class GridCtrl extends BeanStub {
 
     private focusContainer(comp: FocusableContainer, up?: boolean): boolean {
         comp.setAllowFocus?.(true);
-        const result = this.focusSvc.focusInto(comp.getGui(), up);
+        const result = _focusInto(comp.getGui(), up);
         comp.setAllowFocus?.(false);
         return result;
     }

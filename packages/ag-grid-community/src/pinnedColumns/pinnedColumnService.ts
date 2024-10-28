@@ -75,7 +75,7 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
     }
 
     public keepPinnedColumnsNarrowerThanViewport(): void {
-        const eBodyViewport = this.gridBodyCtrl.getBodyViewportElement();
+        const eBodyViewport = this.gridBodyCtrl.eBodyViewport;
         const bodyWidth = _getInnerWidth(eBodyViewport);
 
         if (bodyWidth <= 50) {

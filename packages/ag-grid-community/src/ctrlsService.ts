@@ -4,6 +4,7 @@ import type { BeanCollection } from './context/context';
 import type { FakeHScrollComp } from './gridBodyComp/fakeHScrollComp';
 import type { FakeVScrollComp } from './gridBodyComp/fakeVScrollComp';
 import type { GridBodyCtrl } from './gridBodyComp/gridBodyCtrl';
+import type { GridBodyScrollFeature } from './gridBodyComp/gridBodyScrollFeature';
 import type { RowContainerCtrl } from './gridBodyComp/rowContainer/rowContainerCtrl';
 import type { GridCtrl } from './gridComp/gridCtrl';
 import type { GridHeaderCtrl } from './headerRendering/gridHeaderCtrl';
@@ -150,5 +151,9 @@ export class CtrlsService extends BeanStub<'ready'> implements NamedBean {
             default:
                 return params.centerHeader;
         }
+    }
+
+    public getScrollFeature(): GridBodyScrollFeature {
+        return this.getGridBodyCtrl().scrollFeature;
     }
 }

@@ -382,7 +382,7 @@ export function normaliseX(params: {
     ctrlsSvc: CtrlsService;
 }): number {
     const { pinned, fromKeyboard, gos, ctrlsSvc, useHeaderRow, skipScrollPadding } = params;
-    let eViewport = ctrlsSvc.getHeaderRowContainerCtrl(pinned)?.getViewportElement();
+    let eViewport = ctrlsSvc.getHeaderRowContainerCtrl(pinned)?.eViewport;
 
     let { x } = params;
 

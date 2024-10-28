@@ -648,7 +648,7 @@ export class StateService extends BeanStub implements NamedBean {
             // can't restore, so don't provide
             return undefined;
         }
-        const scrollFeature = this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature();
+        const scrollFeature = this.ctrlsSvc.getScrollFeature();
         const { left } = scrollFeature?.getHScrollPosition() ?? { left: 0 };
         const { top } = scrollFeature?.getVScrollPosition() ?? { top: 0 };
         return top || left
@@ -664,7 +664,7 @@ export class StateService extends BeanStub implements NamedBean {
             return;
         }
         const { top, left } = scrollState;
-        this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature().setScrollPosition(top, left);
+        this.ctrlsSvc.getScrollFeature()?.setScrollPosition(top, left);
     }
 
     private getSideBarState(): SideBarState | undefined {

@@ -35,9 +35,10 @@ const PopupEditorComp = (props: {
             }
         }
 
+        const { column, rowNode } = cellCtrl;
         const positionParams = {
-            column: cellCtrl.getColumn(),
-            rowNode: cellCtrl.getRowNode(),
+            column,
+            rowNode,
             type: 'popupCellEditor',
             eventSource: eParentCell,
             ePopup: ePopupGui,

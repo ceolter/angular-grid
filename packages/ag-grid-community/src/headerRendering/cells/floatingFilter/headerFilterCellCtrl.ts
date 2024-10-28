@@ -8,9 +8,9 @@ import type { UserCompDetails } from '../../../interfaces/iUserCompDetails';
 import { SetLeftFeature } from '../../../rendering/features/setLeftFeature';
 import { _setAriaLabel } from '../../../utils/aria';
 import { _isElementChildOfClass } from '../../../utils/dom';
+import { _findNextFocusableElement, _focusInto } from '../../../utils/focus';
 import { _createIconNoSpan } from '../../../utils/icon';
 import { ManagedFocusFeature } from '../../../widgets/managedFocusFeature';
-import type { HeaderRowCtrl } from '../../row/headerRowCtrl';
 import { AbstractHeaderCellCtrl } from '../abstractCell/abstractHeaderCellCtrl';
 import type { IHeaderFilterCellComp } from './iHeaderFilterCellComp';
 
@@ -26,11 +26,6 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     private userCompDetails?: UserCompDetails | null;
     private destroySyncListener: () => null;
     private destroyFilterChangedListener: () => null;
-
-    constructor(column: AgColumn, parentRowCtrl: HeaderRowCtrl) {
-        super(column, parentRowCtrl);
-        this.column = column;
-    }
 
     public setComp(
         comp: IHeaderFilterCellComp,
@@ -118,14 +113,14 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     }
 
     private onTabKeyDown(e: KeyboardEvent) {
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
         const wrapperHasFocus = activeEl === this.eGui;
 
         if (wrapperHasFocus) {
             return;
         }
 
-        const nextFocusableEl = this.focusSvc.findNextFocusableElement(this.eGui, null, e.shiftKey);
+        const nextFocusableEl = _findNextFocusableElement(this.beans, this.eGui, null, e.shiftKey);
 
         if (nextFocusableEl) {
             this.beans.headerNavigation?.scrollToColumn(this.column);
@@ -143,7 +138,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
         if (
             this.focusSvc.focusHeaderPosition({
                 headerPosition: {
-                    headerRowIndex: this.getParentRowCtrl().getRowIndex(),
+                    headerRowIndex: this.rowCtrl.rowIndex,
                     column: nextFocusableColumn,
                 },
                 event: e,
@@ -191,7 +186,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             // eslint-disable-next-line no-fallthrough
             case KeyCode.ENTER:
                 if (wrapperHasFocus) {
-                    if (this.focusSvc.focusInto(this.eGui)) {
+                    if (_focusInto(this.eGui)) {
                         e.preventDefault();
                     }
                 }
@@ -224,12 +219,11 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             if (lastFocusEvent && fromTab) {
                 const shouldFocusLast = lastFocusEvent.shiftKey;
 
-                this.focusSvc.focusInto(this.eGui, shouldFocusLast);
+                _focusInto(this.eGui, shouldFocusLast);
             }
         }
 
-        const rowIndex = this.getRowIndex();
-        this.beans.focusSvc.setFocusedHeader(rowIndex, this.column);
+        this.focusThis();
     }
 
     private setupHover(compBean: BeanStub): void {

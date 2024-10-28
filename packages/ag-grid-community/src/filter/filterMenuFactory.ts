@@ -4,12 +4,12 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
-import type { FocusService } from '../focusService';
 import { _isColumnMenuAnchoringEnabled, _isLegacyMenuEnabled } from '../gridOptionsUtils';
 import type { ContainerType } from '../interfaces/iAfterGuiAttachedParams';
 import type { IMenuFactory } from '../interfaces/iMenuFactory';
 import { _setAriaRole } from '../utils/aria';
 import { _isVisible } from '../utils/dom';
+import { _findNextFocusableElement, _findTabbableParent, _focusInto } from '../utils/focus';
 import type { PopupService } from '../widgets/popupService';
 import { FilterWrapperComp } from './filterWrapperComp';
 
@@ -17,12 +17,10 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
     beanName = 'filterMenuFactory' as const;
 
     private popupSvc?: PopupService;
-    private focusSvc: FocusService;
     private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc;
-        this.focusSvc = beans.focusSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
     }
 
@@ -127,7 +125,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         const afterGuiDetached = () => comp?.afterGuiDetached();
 
         const anchorToElement = _isColumnMenuAnchoringEnabled(this.gos)
-            ? eventSource ?? this.ctrlsSvc.getGridBodyCtrl().getGui()
+            ? eventSource ?? this.ctrlsSvc.getGridBodyCtrl().eGridBody
             : undefined;
         const closedCallback = (e: MouseEvent | TouchEvent | KeyboardEvent) => {
             column.setMenuVisible(false, 'contextMenu');
@@ -138,7 +136,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             }
 
             if (isKeyboardEvent && eventSource && _isVisible(eventSource)) {
-                const focusableEl = this.focusSvc.findTabbableParent(eventSource);
+                const focusableEl = _findTabbableParent(eventSource);
 
                 if (focusableEl) {
                     focusableEl.focus();
@@ -187,14 +185,14 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         if (
             e.key !== KeyCode.TAB ||
             e.defaultPrevented ||
-            this.focusSvc.findNextFocusableElement(menu, false, e.shiftKey)
+            _findNextFocusableElement(this.beans, menu, false, e.shiftKey)
         ) {
             return;
         }
 
         e.preventDefault();
 
-        this.focusSvc.focusInto(menu, e.shiftKey);
+        _focusInto(menu, e.shiftKey);
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, containerType: ContainerType, column?: AgColumn): void {

@@ -12,6 +12,7 @@ import type { MenuService } from '../misc/menu/menuService';
 import type { HeaderNavigationService } from '../navigation/headerNavigationService';
 import type { HeaderNavigationDirection } from '../navigation/headerNavigationService';
 import { _isIOSUserAgent } from '../utils/browser';
+import { _focusNextGridCoreContainer } from '../utils/focus';
 import { _exists } from '../utils/generic';
 import { ManagedFocusFeature } from '../widgets/managedFocusFeature';
 import type { LongTapEvent } from '../widgets/touchListener';
@@ -44,7 +45,7 @@ export class GridHeaderCtrl extends BeanStub {
 
     private comp: IGridHeaderComp;
     private eGui: HTMLElement;
-    private headerHeight: number;
+    public headerHeight: number;
 
     public setComp(comp: IGridHeaderComp, eGui: HTMLElement, eFocusableElement: HTMLElement): void {
         this.comp = comp;
@@ -95,14 +96,10 @@ export class GridHeaderCtrl extends BeanStub {
             displayedColumnsChanged: listener,
             columnHeaderHeightChanged: listener,
             // add this to the animation frame to avoid a feedback loop
-            columnGroupHeaderHeightChanged: () => _requestAnimationFrame(this.gos, () => listener()),
+            columnGroupHeaderHeightChanged: () => _requestAnimationFrame(this.beans, () => listener()),
             gridStylesChanged: listener,
             advancedFilterEnabledChanged: listener,
         });
-    }
-
-    public getHeaderHeight(): number {
-        return this.headerHeight;
     }
 
     private setHeaderHeight(): void {
@@ -158,7 +155,7 @@ export class GridHeaderCtrl extends BeanStub {
         if (
             this.headerNavigation!.navigateHorizontally(direction, true, e) ||
             (!backwards && this.focusSvc.focusOverlay(false)) ||
-            this.focusSvc.focusNextGridCoreContainer(backwards, true)
+            _focusNextGridCoreContainer(this.beans, backwards, true)
         ) {
             // preventDefault so that the tab key doesn't cause focus to get lost
             e.preventDefault();
@@ -203,7 +200,7 @@ export class GridHeaderCtrl extends BeanStub {
     protected onFocusOut(e: FocusEvent): void {
         const { relatedTarget } = e;
 
-        if (!relatedTarget && this.eGui.contains(_getActiveDomElement(this.gos))) {
+        if (!relatedTarget && this.eGui.contains(_getActiveDomElement(this.beans))) {
             return;
         }
 
@@ -219,7 +216,7 @@ export class GridHeaderCtrl extends BeanStub {
 
         const { target } = (mouseEvent ?? touch)!;
 
-        if (target === this.eGui || target === this.ctrlsSvc.getHeaderRowContainerCtrl()?.getViewportElement()) {
+        if (target === this.eGui || target === this.ctrlsSvc.getHeaderRowContainerCtrl()?.eViewport) {
             this.menuSvc.showHeaderContextMenu(undefined, mouseEvent, touchEvent);
         }
     }

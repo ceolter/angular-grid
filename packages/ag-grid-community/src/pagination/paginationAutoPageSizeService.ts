@@ -56,11 +56,11 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
             return;
         }
 
-        const bodyHeight = this.centerRowsCtrl.getViewportSizeFeature()!.getBodyHeight();
+        const bodyHeight = this.centerRowsCtrl.viewportSizeFeature!.getBodyHeight();
 
         if (bodyHeight > 0) {
             const update = () => {
-                const rowHeight = Math.max(_getRowHeightAsNumber(this.gos), 1); // prevent divide by zero error if row height is 0
+                const rowHeight = Math.max(_getRowHeightAsNumber(this.beans), 1); // prevent divide by zero error if row height is 0
                 const newPageSize = Math.floor(bodyHeight / rowHeight);
                 this.pagination.setPageSize(newPageSize, 'autoCalculated');
             };

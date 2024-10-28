@@ -346,7 +346,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             for (let rowIndex = firstRow; rowIndex <= lastRow; rowIndex++) {
                 const rowNode = this.getRow(rowIndex);
                 if (rowNode.rowHeightEstimated) {
-                    const rowHeight = _getRowHeightForNode(this.gos, rowNode);
+                    const rowHeight = _getRowHeightForNode(this.beans, rowNode);
                     rowNode.setRowHeight(rowHeight.height);
                     atLeastOneChange = true;
                     res = true;
@@ -384,7 +384,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
 
             if (rowNode.rowHeight == null) {
-                const rowHeight = _getRowHeightForNode(this.gos, rowNode, allowEstimate, defaultRowHeight);
+                const rowHeight = _getRowHeightForNode(this.beans, rowNode, allowEstimate, defaultRowHeight);
                 rowNode.setRowHeight(rowHeight.height, rowHeight.estimated);
             }
 

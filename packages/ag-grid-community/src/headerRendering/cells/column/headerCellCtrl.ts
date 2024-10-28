@@ -8,6 +8,7 @@ import type { SortDirection } from '../../../entities/colDef';
 import { _getActiveDomElement, _isLegacyMenuEnabled } from '../../../gridOptionsUtils';
 import { ColumnHighlightPosition } from '../../../interfaces/iColumn';
 import type { UserCompDetails } from '../../../interfaces/iUserCompDetails';
+import { _isKeyboardMode } from '../../../main-umd-noStyles';
 import { SetLeftFeature } from '../../../rendering/features/setLeftFeature';
 import type { SelectAllFeature } from '../../../selection/selectAllFeature';
 import type { TooltipFeature } from '../../../tooltip/tooltipFeature';
@@ -16,7 +17,6 @@ import { _getAriaSortState } from '../../../utils/aria';
 import { _setDisplayed } from '../../../utils/dom';
 import { ManagedFocusFeature } from '../../../widgets/managedFocusFeature';
 import { getColumnHeaderRowHeight, getGroupRowsHeight } from '../../headerUtils';
-import type { HeaderRowCtrl } from '../../row/headerRowCtrl';
 import type { IAbstractHeaderCellComp } from '../abstractCell/abstractHeaderCellCtrl';
 import { AbstractHeaderCellCtrl } from '../abstractCell/abstractHeaderCellCtrl';
 import { _getHeaderClassesFromColDef } from '../cssClassApplier';
@@ -50,11 +50,6 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     private ariaDescriptionProperties = new Map<HeaderAriaDescriptionKey, string>();
     private tooltipFeature: TooltipFeature | undefined;
 
-    constructor(column: AgColumn, parentRowCtrl: HeaderRowCtrl) {
-        super(column, parentRowCtrl);
-        this.column = column;
-    }
-
     public setComp(
         comp: IHeaderCellComp,
         eGui: HTMLElement,
@@ -63,7 +58,9 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         compBeanInput: BeanStub | undefined
     ): void {
         this.comp = comp;
-        const compBean = setupCompBean(this, this.beans.context, compBeanInput);
+
+        const { colResize, context, colHover } = this.beans;
+        const compBean = setupCompBean(this, context, compBeanInput);
 
         this.setGui(eGui, compBean);
         this.updateState();
@@ -89,14 +86,14 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.setupUserComp();
         this.refreshAria();
 
-        if (this.beans.colResize) {
+        if (colResize) {
             this.resizeFeature = compBean.createManagedBean(
-                this.beans.colResize.createResizeFeature(this.getPinned(), this.column, eResize, comp, this)
+                colResize.createResizeFeature(this.rowCtrl.pinned, this.column, eResize, comp, this)
             );
         } else {
             _setDisplayed(eResize, false);
         }
-        this.beans.colHover?.createHoverFeature(compBean, [this.column], eGui);
+        colHover?.createHoverFeature(compBean, [this.column], eGui);
         compBean.createManagedBean(new SetLeftFeature(this.column, eGui, this.beans));
         compBean.createManagedBean(
             new ManagedFocusFeature(eGui, {
@@ -193,7 +190,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             setSort: (sort: SortDirection, multiSort?: boolean) => {
                 this.beans.sortSvc?.setSortForColumn(this.column, sort, !!multiSort, 'uiColumnSorted');
             },
-            eGridHeader: this.getGui(),
+            eGridHeader: this.eGui,
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
                 this.setupTooltip(value, shouldDisplayTooltip);
             },
@@ -203,10 +200,11 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     private setupSelectAll(compBean: BeanStub): void {
-        if (!this.beans.selectionSvc) {
+        const { selectionSvc } = this.beans;
+        if (!selectionSvc) {
             return;
         }
-        this.selectAllFeature = compBean.createManagedBean(this.beans.selectionSvc.createSelectAllFeature(this.column));
+        this.selectAllFeature = compBean.createManagedBean(selectionSvc.createSelectAllFeature(this.column));
         this.selectAllFeature.setComp(this);
     }
 
@@ -249,19 +247,18 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     private onFocusIn(e: FocusEvent) {
-        if (!this.getGui().contains(e.relatedTarget as HTMLElement)) {
-            const rowIndex = this.getRowIndex();
-            this.focusSvc.setFocusedHeader(rowIndex, this.column);
+        if (!this.eGui.contains(e.relatedTarget as HTMLElement)) {
+            this.focusThis();
             this.announceAriaDescription();
         }
 
-        if (this.focusSvc.isKeyboardMode()) {
+        if (_isKeyboardMode()) {
             this.setActiveHeader(true);
         }
     }
 
     private onFocusOut(e: FocusEvent) {
-        if (this.getGui().contains(e.relatedTarget as HTMLElement)) {
+        if (this.eGui.contains(e.relatedTarget as HTMLElement)) {
             return;
         }
 
@@ -566,7 +563,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     public announceAriaDescription(): void {
-        if (!this.eGui.contains(_getActiveDomElement(this.beans.gos))) {
+        if (!this.eGui.contains(_getActiveDomElement(this.beans))) {
             return;
         }
         const ariaDescription = Array.from(this.ariaDescriptionProperties.keys())
@@ -575,7 +572,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             .map((key: HeaderAriaDescriptionKey) => this.ariaDescriptionProperties.get(key))
             .join('. ');
 
-        this.beans.ariaAnnounce.announceValue(ariaDescription, 'columnHeader');
+        this.beans.ariaAnnounce?.announceValue(ariaDescription, 'columnHeader');
     }
 
     private refreshAria(): void {
@@ -589,17 +586,13 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.beans.colHover?.addHeaderColumnHoverListener(compBean, this.comp, this.column);
     }
 
-    public getColId(): string {
-        return this.column.getColId();
-    }
-
     private addActiveHeaderMouseListeners(compBean: BeanStub): void {
         const listener = (e: MouseEvent) => this.handleMouseOverChange(e.type === 'mouseenter');
         const clickListener = () => this.dispatchColumnMouseEvent('columnHeaderClicked', this.column);
         const contextMenuListener = (event: MouseEvent) =>
             this.handleContextMenuMouseEvent(event, undefined, this.column);
 
-        compBean.addManagedListeners(this.getGui(), {
+        compBean.addManagedListeners(this.eGui, {
             mouseenter: listener,
             mouseleave: listener,
             click: clickListener,
@@ -625,7 +618,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         if (headerComp instanceof HeaderComp) {
             return headerComp.getAnchorElementForMenu(isFilter);
         }
-        return this.getGui();
+        return this.eGui;
     }
 
     public override destroy(): void {

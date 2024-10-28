@@ -24,7 +24,8 @@ interface SectionProperties {
 }
 
 const GridBodyComp = () => {
-    const { context, gos, overlays } = useContext(BeansContext);
+    const beans = useContext(BeansContext);
+    const { context, overlays } = beans;
 
     const [rowAnimationClass, setRowAnimationClass] = useState<string>('');
     const [topHeight, setTopHeight] = useState<number>(0);
@@ -140,7 +141,7 @@ const GridBodyComp = () => {
             },
             registerBodyViewportResizeListener: (listener: () => void) => {
                 if (eBodyViewport.current) {
-                    const unsubscribeFromResize = _observeResize(gos, eBodyViewport.current, listener);
+                    const unsubscribeFromResize = _observeResize(beans, eBodyViewport.current, listener);
                     destroyFuncs.current.push(() => unsubscribeFromResize());
                 }
             },

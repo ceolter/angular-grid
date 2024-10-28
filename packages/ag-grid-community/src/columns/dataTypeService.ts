@@ -27,8 +27,9 @@ import { _toStringOrNull } from '../utils/generic';
 import { _getValueUsingField } from '../utils/object';
 import { _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
-import type { ColumnFactory } from './columnFactory';
+import { _addColumnDefaultAndTypes } from './columnFactoryUtils';
 import type { ColumnModel } from './columnModel';
+import { getColumnStateFromColDef } from './columnStateService';
 import type { ColumnState, ColumnStateParams, ColumnStateService } from './columnStateService';
 import { _convertColumnEventSourceType, convertColumnTypes } from './columnUtils';
 
@@ -47,7 +48,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
     private colState: ColumnStateService;
     private filterManager?: FilterManager;
     private colAutosize?: ColumnAutosizeService;
-    private colFactory: ColumnFactory;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
@@ -58,7 +58,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
         this.colState = beans.colState;
         this.filterManager = beans.filterManager;
         this.colAutosize = beans.colAutosize;
-        this.colFactory = beans.colFactory;
     }
 
     private dataTypeDefinitions: {
@@ -538,13 +537,13 @@ export class DataTypeService extends BeanStub implements NamedBean {
         if (!userColDef) {
             return false;
         }
-        const newColDef = this.colFactory.addColumnDefaultAndTypes(userColDef, column.getColId());
+        const newColDef = _addColumnDefaultAndTypes(this.beans, userColDef, column.getColId());
         column.setColDef(newColDef, userColDef, source);
         return true;
     }
 
     private getUpdatedColumnState(column: AgColumn, columnStateUpdates: Set<keyof ColumnStateParams>): ColumnState {
-        const columnState = this.colState.getColumnStateFromColDef(column);
+        const columnState = getColumnStateFromColDef(column);
         columnStateUpdates.forEach((key) => {
             // if the column state has been updated, don't update again
             delete columnState[key];

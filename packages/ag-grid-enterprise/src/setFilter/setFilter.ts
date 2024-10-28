@@ -164,7 +164,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     private getComponentForKeyEvent(e: KeyboardEvent): SetFilterListItem<V> | undefined {
-        if (!this.eSetFilterList.contains(_getActiveDomElement(this.gos)) || !this.virtualList) {
+        if (!this.eSetFilterList.contains(_getActiveDomElement(this.beans)) || !this.virtualList) {
             return;
         }
 

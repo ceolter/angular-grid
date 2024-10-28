@@ -11,6 +11,7 @@ import { isColumnGroup } from '../entities/agColumnGroup';
 import type { FocusService } from '../focusService';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 import { _getDocument } from '../gridOptionsUtils';
+import { getFocusHeaderRowCount } from '../headerRendering/headerUtils';
 import type { HeaderRowType } from '../headerRendering/row/headerRowComp';
 import type { Column, ColumnGroup } from '../interfaces/iColumn';
 import type { HeaderPosition } from '../interfaces/iHeaderPosition';
@@ -73,7 +74,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             this.gridBodyCon = p.gridBodyCtrl;
         });
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         this.addManagedElementListeners(eDocument, { mousedown: () => this.setCurrentHeaderRowWithoutSpan(-1) });
     }
 
@@ -98,8 +99,8 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
 
         const centerHeaderContainer = this.ctrlsSvc.getHeaderRowContainerCtrl();
         const allCtrls = centerHeaderContainer?.getAllCtrls();
-        const isFloatingFilterVisible = _last(allCtrls || []).getType() === 'filter';
-        const headerRowCount = this.focusSvc.getHeaderRowCount() - 1;
+        const isFloatingFilterVisible = _last(allCtrls || []).type === 'filter';
+        const headerRowCount = getFocusHeaderRowCount(this.beans) - 1;
 
         let row = -1;
         let col: AgColumn | AgColumnGroup | null = column;
@@ -142,7 +143,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
 
         const { headerRowIndex } = fromHeader;
         const column = fromHeader.column as AgColumn;
-        const rowLen = this.focusSvc.getHeaderRowCount();
+        const rowLen = getFocusHeaderRowCount(this.beans);
         const isUp = direction === 'UP';
 
         let {
@@ -253,7 +254,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             }
         } else {
             nextRowIndex = currentIndex + 1;
-            if (this.currentHeaderRowWithoutSpan < this.focusSvc.getHeaderRowCount()) {
+            if (this.currentHeaderRowWithoutSpan < getFocusHeaderRowCount(this.beans)) {
                 this.currentHeaderRowWithoutSpan += 1;
             } else {
                 this.setCurrentHeaderRowWithoutSpan(-1);
@@ -293,7 +294,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             columnToScrollTo = column;
         }
 
-        this.gridBodyCon.getScrollFeature().ensureColumnVisible(columnToScrollTo);
+        this.gridBodyCon.scrollFeature.ensureColumnVisible(columnToScrollTo);
     }
 
     private findHeader(focusedHeader: HeaderPosition, direction: 'Before' | 'After'): HeaderPosition | undefined {

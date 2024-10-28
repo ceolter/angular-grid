@@ -1,8 +1,7 @@
 import { KeyCode } from '../constants/keyCode';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { FocusService } from '../focusService';
 import { _isStopPropagationForAgGrid, _stopPropagationForAgGrid } from '../utils/event';
+import { _findNextFocusableElement } from '../utils/focus';
 
 export interface ManagedFocusCallbacks {
     shouldStopEventPropagation?: (e: KeyboardEvent) => boolean;
@@ -15,14 +14,8 @@ export interface ManagedFocusCallbacks {
 export const FOCUS_MANAGED_CLASS = 'ag-focus-managed';
 
 export class ManagedFocusFeature extends BeanStub {
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-    }
-
     constructor(
-        private readonly eFocusableElement: HTMLElement,
+        private readonly eFocusable: HTMLElement,
         private callbacks: ManagedFocusCallbacks = {}
     ) {
         super();
@@ -33,7 +26,7 @@ export class ManagedFocusFeature extends BeanStub {
                     return;
                 }
 
-                const nextRoot = this.focusSvc.findNextFocusableElement(this.eFocusableElement, false, e.shiftKey);
+                const nextRoot = _findNextFocusableElement(this.beans, this.eFocusable, false, e.shiftKey);
 
                 if (!nextRoot) {
                     return;
@@ -47,16 +40,20 @@ export class ManagedFocusFeature extends BeanStub {
     }
 
     public postConstruct(): void {
-        this.eFocusableElement.classList.add(FOCUS_MANAGED_CLASS);
+        const {
+            eFocusable,
+            callbacks: { onFocusIn, onFocusOut },
+        } = this;
+        eFocusable.classList.add(FOCUS_MANAGED_CLASS);
 
-        this.addKeyDownListeners(this.eFocusableElement);
+        this.addKeyDownListeners(eFocusable);
 
-        if (this.callbacks.onFocusIn) {
-            this.addManagedElementListeners(this.eFocusableElement, { focusin: this.callbacks.onFocusIn });
+        if (onFocusIn) {
+            this.addManagedElementListeners(eFocusable, { focusin: onFocusIn });
         }
 
-        if (this.callbacks.onFocusOut) {
-            this.addManagedElementListeners(this.eFocusableElement, { focusout: this.callbacks.onFocusOut });
+        if (onFocusOut) {
+            this.addManagedElementListeners(eFocusable, { focusout: onFocusOut });
         }
     }
 
@@ -67,15 +64,17 @@ export class ManagedFocusFeature extends BeanStub {
                     return;
                 }
 
-                if (this.callbacks.shouldStopEventPropagation!(e)) {
+                const { callbacks } = this;
+
+                if (callbacks.shouldStopEventPropagation!(e)) {
                     _stopPropagationForAgGrid(e);
                     return;
                 }
 
                 if (e.key === KeyCode.TAB) {
-                    this.callbacks.onTabKeyDown!(e);
-                } else if (this.callbacks.handleKeyDown) {
-                    this.callbacks.handleKeyDown(e);
+                    callbacks.onTabKeyDown!(e);
+                } else if (callbacks.handleKeyDown) {
+                    callbacks.handleKeyDown(e);
                 }
             },
         });

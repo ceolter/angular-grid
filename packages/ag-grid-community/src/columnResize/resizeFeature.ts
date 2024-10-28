@@ -111,7 +111,7 @@ export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
         if (this.column.getPinned()) {
             const leftWidth = this.pinnedCols?.getPinnedLeftWidth() ?? 0;
             const rightWidth = this.pinnedCols?.getPinnedRightWidth() ?? 0;
-            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().getBodyViewportElement()) - 50;
+            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
 
             if (leftWidth + rightWidth + (resizeAmountNormalised - lastResizeAmount) > bodyWidth) {
                 return;

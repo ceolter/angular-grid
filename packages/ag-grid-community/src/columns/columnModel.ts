@@ -18,7 +18,7 @@ import type { RowAutoHeightService } from '../rendering/row/rowAutoHeightService
 import { _areEqual } from '../utils/array';
 import type { ValueCache } from '../valueService/valueCache';
 import type { ColumnDefFactory } from './columnDefFactory';
-import type { ColumnFactory } from './columnFactory';
+import { _createColumnTree } from './columnFactoryUtils';
 import type { ColumnState, ColumnStateService } from './columnStateService';
 import {
     _columnsMatch,
@@ -48,7 +48,6 @@ export class ColumnModel extends BeanStub implements NamedBean {
     beanName = 'colModel' as const;
 
     private context: Context;
-    private colFactory: ColumnFactory;
     private visibleCols: VisibleColsService;
     private colViewport: ColumnViewportService;
     private pivotResultCols?: IPivotResultColsService;
@@ -67,7 +66,6 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
     public wireBeans(beans: BeanCollection): void {
         this.context = beans.context;
-        this.colFactory = beans.colFactory;
         this.visibleCols = beans.visibleCols;
         this.colViewport = beans.colViewport;
         this.pivotResultCols = beans.pivotResultCols;
@@ -140,7 +138,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
         const oldCols = this.colDefCols?.list;
         const oldTree = this.colDefCols?.tree;
-        const newTree = this.colFactory.createColumnTree(this.colDefs, true, oldTree, source);
+        const newTree = _createColumnTree(this.beans, this.colDefs, true, oldTree, source);
 
         _destroyColumnTree(this.context, this.colDefCols?.tree, newTree.columnTree);
 
@@ -482,7 +480,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
     // + clientSideRowController -> sorting, building quick filter text
     // + headerRenderer -> sorting (clearing icon)
     public getColDefCols(): AgColumn[] | null {
-        return this.colDefCols?.list ? this.colDefCols.list : null;
+        return this.colDefCols?.list ?? null;
     }
 
     // + moveColumnController

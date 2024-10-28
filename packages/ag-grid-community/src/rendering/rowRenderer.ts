@@ -84,24 +84,24 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
     private destroyFuncsForColumnListeners: (() => void)[] = [];
 
-    private firstRenderedRow: number;
-    private lastRenderedRow: number;
+    public firstRenderedRow: number;
+    public lastRenderedRow: number;
 
     // map of row ids to row objects. keeps track of which elements
     // are rendered for which rows in the dom.
     private rowCtrlsByRowIndex: RowCtrlByRowIndex = {};
     private zombieRowCtrls: RowCtrlIdMap = {};
     private cachedRowCtrls: RowCtrlCache;
-    private allRowCtrls: RowCtrl[] = [];
+    public allRowCtrls: RowCtrl[] = [];
 
-    private topRowCtrls: RowCtrl[] = [];
-    private bottomRowCtrls: RowCtrl[] = [];
+    public topRowCtrls: RowCtrl[] = [];
+    public bottomRowCtrls: RowCtrl[] = [];
 
     private pinningLeft: boolean;
     private pinningRight: boolean;
 
-    private firstVisibleVPixel: number;
-    private lastVisibleVPixel: number;
+    public firstVisibleVPixel: number;
+    public lastVisibleVPixel: number;
 
     // we only allow one refresh at a time, otherwise the internal memory structure here
     // will get messed up. this can happen if the user has a cellRenderer, and inside the
@@ -188,25 +188,17 @@ export class RowRenderer extends BeanStub implements NamedBean {
     }
 
     public getStickyTopRowCtrls(): RowCtrl[] {
-        if (!this.stickyRowFeature) {
-            return [];
-        }
-
-        return this.stickyRowFeature.getStickyTopRowCtrls();
+        return this.stickyRowFeature?.getStickyTopRowCtrls() ?? [];
     }
 
     public getStickyBottomRowCtrls(): RowCtrl[] {
-        if (!this.stickyRowFeature) {
-            return [];
-        }
-
-        return this.stickyRowFeature.getStickyBottomRowCtrls();
+        return this.stickyRowFeature?.getStickyBottomRowCtrls() ?? [];
     }
 
     private updateAllRowCtrls(): void {
         const liveList = Object.values(this.rowCtrlsByRowIndex);
         const zombieList = Object.values(this.zombieRowCtrls);
-        const cachedList = this.cachedRowCtrls ? this.cachedRowCtrls.getEntries() : [];
+        const cachedList = this.cachedRowCtrls?.getEntries() ?? [];
 
         if (zombieList.length > 0 || cachedList.length > 0) {
             // Only spread if we need to.
@@ -326,7 +318,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         cols.forEach((col) => {
             const forEachCellWithThisCol = (callback: (cellCtrl: CellCtrl) => void) => {
                 this.getAllCellCtrls().forEach((cellCtrl) => {
-                    if (cellCtrl.getColumn() === col) {
+                    if (cellCtrl.column === col) {
                         callback(cellCtrl);
                     }
                 });
@@ -408,7 +400,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const res: HTMLElement[] = [];
 
         this.getAllRowCtrls().forEach((rowCtrl) => {
-            const eCell = rowCtrl.getCellElement(column);
+            const eCell = rowCtrl.getCellCtrl(column)?.eGui;
             if (eCell) {
                 res.push(eCell);
             }
@@ -421,18 +413,6 @@ export class RowRenderer extends BeanStub implements NamedBean {
         this.refreshFloatingRows(this.topRowCtrls, 'top');
 
         this.refreshFloatingRows(this.bottomRowCtrls, 'bottom');
-    }
-
-    public getTopRowCtrls(): RowCtrl[] {
-        return this.topRowCtrls;
-    }
-
-    public getCentreRowCtrls(): RowCtrl[] {
-        return this.allRowCtrls;
-    }
-
-    public getBottomRowCtrls(): RowCtrl[] {
-        return this.bottomRowCtrls;
     }
 
     /**
@@ -450,12 +430,12 @@ export class RowRenderer extends BeanStub implements NamedBean {
      */
     private refreshFloatingRows(rowCtrls: RowCtrl[], floating: NonNullable<RowPinnedType>): void {
         const { pinnedRowModel, beans, printLayout } = this;
-        const rowCtrlMap = Object.fromEntries(rowCtrls.map((ctrl) => [ctrl.getRowNode().id!, ctrl]));
+        const rowCtrlMap = Object.fromEntries(rowCtrls.map((ctrl) => [ctrl.rowNode.id!, ctrl]));
 
         pinnedRowModel?.forEachPinnedRow(floating, (node, i) => {
             const rowCtrl = rowCtrls[i];
             const rowCtrlDoesNotExist =
-                rowCtrl && pinnedRowModel.getPinnedRowById(rowCtrl.getRowNode().id!, floating) === undefined;
+                rowCtrl && pinnedRowModel.getPinnedRowById(rowCtrl.rowNode.id!, floating) === undefined;
 
             if (rowCtrlDoesNotExist) {
                 // ctrl not in new nodes list, destroy
@@ -505,7 +485,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
                 if (!ctrl) {
                     return;
                 }
-                if (ctrl.getRowNode() !== rowNode) {
+                if (ctrl.rowNode !== rowNode) {
                     // if the node is in the wrong place, then the row model is responsible for triggering a full refresh.
                     return;
                 }
@@ -558,7 +538,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         // has the focus and not the cell div. therefore, when the refresh is finished, the grid will focus
         // the cell, and not the textfield. that means if the user is in a text field, and the grid refreshes,
         // the focus is lost from the text field. we do not want this.
-        const activeElement = _getActiveDomElement(this.gos);
+        const activeElement = _getActiveDomElement(this.beans);
         const cellDomData = _getDomData(this.gos, activeElement, DOM_DATA_KEY_CELL_CTRL);
         const rowDomData = _getDomData(this.gos, activeElement, DOM_DATA_KEY_ROW_CTRL);
 
@@ -595,13 +575,13 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
         this.workOutFirstAndLastRowsToRender();
 
-        if (this.stickyRowFeature) {
-            this.stickyRowFeature.checkStickyRows();
+        const { stickyRowFeature } = this;
+        if (stickyRowFeature) {
+            stickyRowFeature.checkStickyRows();
 
             // this is a hack, if sticky rows brings in rows from other pages
             // need to update the model height to include them.
-            const extraHeight =
-                this.stickyRowFeature.getExtraTopHeight() + this.stickyRowFeature.getExtraBottomHeight();
+            const extraHeight = stickyRowFeature.getExtraTopHeight() + stickyRowFeature.getExtraBottomHeight();
             if (extraHeight) {
                 this.updateContainerHeights(extraHeight);
             }
@@ -630,7 +610,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const suppressScrollToTop = this.gos.get('suppressScrollOnNewData');
 
         if (scrollToTop && !suppressScrollToTop) {
-            this.gridBodyCtrl.getScrollFeature().scrollToTop();
+            this.gridBodyCtrl.scrollFeature.scrollToTop();
             this.stickyRowFeature?.resetOffsets();
         }
     }
@@ -779,7 +759,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
             const refreshed = rowCtrl.refreshFullWidth();
             if (!refreshed) {
-                this.redrawRow(rowCtrl.getRowNode(), true);
+                this.redrawRow(rowCtrl.rowNode, true);
             }
         }
 
@@ -801,7 +781,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         }
 
         return allRowCtrls.filter((rowCtrl) => {
-            const rowNode = rowCtrl.getRowNode();
+            const rowNode = rowCtrl.rowNode;
             return isRowInMap(rowNode, rowIdsMap);
         });
     }
@@ -823,7 +803,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const res: CellCtrl[] = [];
         this.getRowCtrls(rowNodes).forEach((rowCtrl) => {
             rowCtrl.getAllCellCtrls().forEach((cellCtrl) => {
-                const colId: string = cellCtrl.getColumn().getId();
+                const colId: string = cellCtrl.column.getId();
                 const excludeColFromRefresh = colIdsMap && !colIdsMap[colId];
 
                 if (excludeColFromRefresh) {
@@ -845,16 +825,14 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const rowIndexesToRemove = Object.keys(this.rowCtrlsByRowIndex);
         this.removeRowCtrls(rowIndexesToRemove, suppressAnimation);
 
-        if (this.stickyRowFeature) {
-            this.stickyRowFeature.destroyStickyCtrls();
-        }
+        this.stickyRowFeature?.destroyStickyCtrls();
     }
 
     private getRowsToRecycle(): RowCtrlByRowNodeIdMap {
         // remove all stub nodes, they can't be reused, as no rowNode id
         const stubNodeIndexes: string[] = [];
         for (const [index, rowCtrl] of Object.entries(this.rowCtrlsByRowIndex)) {
-            const stubNode = rowCtrl.getRowNode().id == null;
+            const stubNode = rowCtrl.rowNode.id == null;
             if (stubNode) {
                 stubNodeIndexes.push(index);
             }
@@ -864,7 +842,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         // then clear out rowCompsByIndex, but before that take a copy, but index by id, not rowIndex
         const ctrlsByIdMap: RowCtrlByRowNodeIdMap = {};
         for (const rowCtrl of Object.values(this.rowCtrlsByRowIndex)) {
-            const rowNode = rowCtrl.getRowNode();
+            const rowNode = rowCtrl.rowNode;
             ctrlsByIdMap[rowNode.id!] = rowCtrl;
         }
         this.rowCtrlsByRowIndex = {};
@@ -967,7 +945,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         }
 
         const checkRowToDraw = (rowComp: RowCtrl) => {
-            const index = rowComp.getRowNode().rowIndex;
+            const index = rowComp.rowNode.rowIndex;
             if (index == null) {
                 return;
             }
@@ -1084,7 +1062,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const rowsToRemove: string[] = [];
 
         this.getFullWidthRowCtrls().forEach((fullWidthCtrl) => {
-            const rowIndex = fullWidthCtrl.getRowNode().rowIndex;
+            const rowIndex = fullWidthCtrl.rowNode.rowIndex;
             rowsToRemove.push(rowIndex!.toString());
         });
 
@@ -1103,7 +1081,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
             }
 
             // if Row Nodes provided, we exclude where Row Node is missing
-            const rowNode = rowCtrl.getRowNode();
+            const rowNode = rowCtrl.rowNode;
             if (rowNodesMap != null && !isRowInMap(rowNode, rowNodesMap)) {
                 return false;
             }
@@ -1202,37 +1180,38 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
     private getRowBufferInPixels() {
         const rowsToBuffer = this.getRowBuffer();
-        const defaultRowHeight = _getRowHeightAsNumber(this.gos);
+        const defaultRowHeight = _getRowHeightAsNumber(this.beans);
 
         return rowsToBuffer * defaultRowHeight;
     }
 
     private workOutFirstAndLastRowsToRender(): void {
-        this.rowContainerHeight.updateOffset();
+        const { rowContainerHeight, pageBounds, rowModel } = this;
+        rowContainerHeight.updateOffset();
         let newFirst: number;
         let newLast: number;
 
-        if (!this.rowModel.isRowsToRender()) {
+        if (!rowModel.isRowsToRender()) {
             newFirst = 0;
             newLast = -1; // setting to -1 means nothing in range
         } else if (this.printLayout) {
             this.environment.refreshRowHeightVariable();
-            newFirst = this.pageBounds.getFirstRow();
-            newLast = this.pageBounds.getLastRow();
+            newFirst = pageBounds.getFirstRow();
+            newLast = pageBounds.getLastRow();
         } else {
             const bufferPixels = this.getRowBufferInPixels();
-            const gridBodyCtrl = this.ctrlsSvc.getGridBodyCtrl();
+            const scrollFeature = this.ctrlsSvc.getScrollFeature();
             const suppressRowVirtualisation = this.gos.get('suppressRowVirtualisation');
 
             let rowHeightsChanged = false;
             let firstPixel: number;
             let lastPixel: number;
             do {
-                const paginationOffset = this.pageBounds.getPixelOffset();
-                const { pageFirstPixel, pageLastPixel } = this.pageBounds.getCurrentPagePixelRange();
-                const divStretchOffset = this.rowContainerHeight.getDivStretchOffset();
+                const paginationOffset = pageBounds.getPixelOffset();
+                const { pageFirstPixel, pageLastPixel } = pageBounds.getCurrentPagePixelRange();
+                const divStretchOffset = rowContainerHeight.divStretchOffset;
 
-                const bodyVRange = gridBodyCtrl.getScrollFeature().getVScrollPosition();
+                const bodyVRange = scrollFeature.getVScrollPosition();
                 const bodyTopPixel = bodyVRange.top;
                 const bodyBottomPixel = bodyVRange.bottom;
 
@@ -1253,11 +1232,11 @@ export class RowRenderer extends BeanStub implements NamedBean {
                 rowHeightsChanged = this.ensureAllRowsInRangeHaveHeightsCalculated(firstPixel, lastPixel);
             } while (rowHeightsChanged);
 
-            let firstRowIndex = this.rowModel.getRowIndexAtPixel(firstPixel);
-            let lastRowIndex = this.rowModel.getRowIndexAtPixel(lastPixel);
+            let firstRowIndex = rowModel.getRowIndexAtPixel(firstPixel);
+            let lastRowIndex = rowModel.getRowIndexAtPixel(lastPixel);
 
-            const pageFirstRow = this.pageBounds.getFirstRow();
-            const pageLastRow = this.pageBounds.getLastRow();
+            const pageFirstRow = pageBounds.getFirstRow();
+            const pageLastRow = pageBounds.getLastRow();
 
             // adjust, in case buffer extended actual size
             if (firstRowIndex < pageFirstRow) {
@@ -1348,22 +1327,6 @@ export class RowRenderer extends BeanStub implements NamedBean {
         return false;
     }
 
-    public getFirstVisibleVerticalPixel(): number {
-        return this.firstVisibleVPixel;
-    }
-
-    public getLastVisibleVerticalPixel(): number {
-        return this.lastVisibleVPixel;
-    }
-
-    public getFirstVirtualRenderedRow() {
-        return this.firstRenderedRow;
-    }
-
-    public getLastVirtualRenderedRow() {
-        return this.lastRenderedRow;
-    }
-
     // check that none of the rows to remove are editing or focused as:
     // a) if editing, we want to keep them, otherwise the user will loose the context of the edit,
     //    eg user starts editing, enters some text, then scrolls down and then up, next time row rendered
@@ -1375,13 +1338,13 @@ export class RowRenderer extends BeanStub implements NamedBean {
     //    was getting lost when detail row out of view. eg user expands to show detail row,
     //    then manipulates the detail panel (eg sorts the detail grid), then context is lost
     //    after detail panel is scrolled out of / into view.
-    private doNotUnVirtualiseRow(rowComp: RowCtrl): boolean {
+    private doNotUnVirtualiseRow(rowCtrl: RowCtrl): boolean {
         const REMOVE_ROW: boolean = false;
         const KEEP_ROW: boolean = true;
-        const rowNode = rowComp.getRowNode();
+        const rowNode = rowCtrl.rowNode;
 
         const rowHasFocus = this.focusSvc.isRowNodeFocused(rowNode);
-        const rowIsEditing = rowComp.isEditing();
+        const rowIsEditing = rowCtrl.editing;
         const rowIsDetail = rowNode.detail;
 
         const mightWantToKeepRow = rowHasFocus || rowIsEditing || rowIsDetail;
@@ -1402,11 +1365,11 @@ export class RowRenderer extends BeanStub implements NamedBean {
         if (!this.rowModel.isRowPresent(rowNode)) {
             return false;
         }
-        return this.pagination ? this.pagination.isRowPresent(rowNode) : true;
+        return this.pagination?.isRowPresent(rowNode) ?? true;
     }
 
     private createRowCon(rowNode: RowNode, animate: boolean, afterScroll: boolean): RowCtrl {
-        const rowCtrlFromCache = this.cachedRowCtrls ? this.cachedRowCtrls.getRow(rowNode) : null;
+        const rowCtrlFromCache = this.cachedRowCtrls?.getRow(rowNode) ?? null;
         if (rowCtrlFromCache) {
             return rowCtrlFromCache;
         }
@@ -1429,7 +1392,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
     public getRenderedNodes() {
         const renderedRows = this.rowCtrlsByRowIndex;
-        return Object.values(renderedRows).map((rowCtrl) => rowCtrl.getRowNode());
+        return Object.values(renderedRows).map((rowCtrl) => rowCtrl.rowNode);
     }
 
     public getRowByPosition(rowPosition: RowPosition): RowCtrl | null {
@@ -1445,13 +1408,11 @@ export class RowRenderer extends BeanStub implements NamedBean {
             default:
                 rowCtrl = this.rowCtrlsByRowIndex[rowIndex];
                 if (!rowCtrl) {
-                    rowCtrl =
-                        this.getStickyTopRowCtrls().find((ctrl) => ctrl.getRowNode().rowIndex === rowIndex) || null;
+                    rowCtrl = this.getStickyTopRowCtrls().find((ctrl) => ctrl.rowNode.rowIndex === rowIndex) || null;
 
                     if (!rowCtrl) {
                         rowCtrl =
-                            this.getStickyBottomRowCtrls().find((ctrl) => ctrl.getRowNode().rowIndex === rowIndex) ||
-                            null;
+                            this.getStickyBottomRowCtrls().find((ctrl) => ctrl.rowNode.rowIndex === rowIndex) || null;
                     }
                 }
                 break;
@@ -1491,7 +1452,7 @@ class RowCtrlCache {
     }
 
     public addRow(rowCtrl: RowCtrl): void {
-        this.entriesMap[rowCtrl.getRowNode().id!] = rowCtrl;
+        this.entriesMap[rowCtrl.rowNode.id!] = rowCtrl;
         this.entriesList.push(rowCtrl);
         rowCtrl.setCached(true);
 
@@ -1519,7 +1480,7 @@ class RowCtrlCache {
 
         // this can happen if user reloads data, and a new RowNode is reusing
         // the same ID as the old one
-        const rowNodeMismatch = res.getRowNode() != rowNode;
+        const rowNodeMismatch = res.rowNode != rowNode;
 
         return rowNodeMismatch ? null : res;
     }
@@ -1536,7 +1497,7 @@ class RowCtrlCache {
     }
 
     public removeFromCache(rowCtrl: RowCtrl): void {
-        const rowNodeId = rowCtrl.getRowNode().id!;
+        const rowNodeId = rowCtrl.rowNode.id!;
         delete this.entriesMap[rowNodeId];
         _removeFromArray(this.entriesList, rowCtrl);
     }

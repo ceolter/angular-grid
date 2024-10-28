@@ -13,7 +13,6 @@ import type {
     IAfterGuiAttachedParams,
     IMenuFactory,
     MenuItemDef,
-    MenuService,
     NamedBean,
     PopupEventParams,
     PopupService,
@@ -26,6 +25,7 @@ import {
     FilterWrapperComp,
     RefPlaceholder,
     _createIconNoSpan,
+    _focusInto,
     _isColumnMenuAnchoringEnabled,
     _isLegacyMenuEnabled,
     _warn,
@@ -65,7 +65,6 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
     private visibleCols: VisibleColsService;
     private filterManager?: FilterManager;
     private menuUtils: MenuUtils;
-    private menuSvc: MenuService;
     private columnMenuFactory: ColumnMenuFactory;
 
     public wireBeans(beans: BeanCollection) {
@@ -75,7 +74,6 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         this.visibleCols = beans.visibleCols;
         this.filterManager = beans.filterManager;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.menuSvc = beans.menuSvc!;
         this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
     }
 
@@ -298,7 +296,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             ? {
                   menu,
                   eMenuGui: menu.getGui(),
-                  anchorToElement: eventSource || this.ctrlsSvc.getGridBodyCtrl().getGui(),
+                  anchorToElement: eventSource || this.ctrlsSvc.getGridBodyCtrl().eGridBody,
                   restoreFocusParams,
               }
             : undefined;
@@ -600,12 +598,10 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
 class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
     private columnMenuFactory: ColumnMenuFactory;
     private menuUtils: MenuUtils;
-    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.focusSvc = beans.focusSvc;
     }
 
     private readonly eColumnMenu: HTMLElement = RefPlaceholder;
@@ -644,6 +640,6 @@ class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusSvc.focusInto(this.mainMenuList.getGui());
+        _focusInto(this.mainMenuList.getGui());
     }
 }

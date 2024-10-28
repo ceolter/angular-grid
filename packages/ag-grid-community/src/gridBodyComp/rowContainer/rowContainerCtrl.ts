@@ -58,11 +58,11 @@ export type RowContainerOptions = {
     fullWidth?: boolean;
     getRowCtrls: GetRowCtrls;
 };
-const getTopRowCtrls: GetRowCtrls = (r) => r.getTopRowCtrls();
+const getTopRowCtrls: GetRowCtrls = (r) => r.topRowCtrls;
 const getStickyTopRowCtrls: GetRowCtrls = (r) => r.getStickyTopRowCtrls();
 const getStickyBottomRowCtrls: GetRowCtrls = (r) => r.getStickyBottomRowCtrls();
-const getBottomRowCtrls: GetRowCtrls = (r) => r.getBottomRowCtrls();
-const getCentreRowCtrls: GetRowCtrls = (r) => r.getCentreRowCtrls();
+const getBottomRowCtrls: GetRowCtrls = (r) => r.bottomRowCtrls;
+const getCentreRowCtrls: GetRowCtrls = (r) => r.allRowCtrls;
 
 const ContainerCssClasses: Record<RowContainerName, RowContainerOptions> = {
     center: {
@@ -247,22 +247,20 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     private readonly options: RowContainerOptions;
-    private readonly name: RowContainerName;
 
     private comp: IRowContainerComp;
-    private eContainer: HTMLElement;
-    private eViewport: HTMLElement;
+    public eContainer: HTMLElement;
+    public eViewport: HTMLElement;
     private enableRtl: boolean;
 
-    private viewportSizeFeature: ViewportSizeFeature | undefined; // only center has this
+    public viewportSizeFeature: ViewportSizeFeature | undefined; // only center has this
     private pinnedWidthFeature: SetPinnedWidthFeature | undefined;
     private visible: boolean = true;
     // Maintaining a constant reference enables optimization in React.
     private EMPTY_CTRLS = [];
 
-    constructor(name: RowContainerName) {
+    constructor(private readonly name: RowContainerName) {
         super();
-        this.name = name;
         this.options = _getRowContainerOptions(name);
     }
 
@@ -291,14 +289,6 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
         if (names.indexOf(this.name) >= 0) {
             callback();
         }
-    }
-
-    public getContainerElement(): HTMLElement {
-        return this.eContainer;
-    }
-
-    public getViewportSizeFeature(): ViewportSizeFeature | undefined {
-        return this.viewportSizeFeature;
     }
 
     public setComp(view: IRowContainerComp, eContainer: HTMLElement, eViewport: HTMLElement): void {
@@ -345,18 +335,17 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     public onScrollCallback(fn: () => void): void {
-        this.addManagedElementListeners(this.getViewportElement(), { scroll: fn });
+        this.addManagedElementListeners(this.eViewport, { scroll: fn });
     }
 
     private addListeners(): void {
         this.addManagedEventListeners({
             displayedColumnsChanged: this.onDisplayedColumnsChanged.bind(this),
-            displayedColumnsWidthChanged: this.onDisplayedColumnsWidthChanged.bind(this),
+            displayedColumnsWidthChanged: this.onDisplayedColumnsChanged.bind(this),
             displayedRowsChanged: (params) => this.onDisplayedRowsChanged(params.afterScroll),
         });
 
         this.onDisplayedColumnsChanged();
-        this.onDisplayedColumnsWidthChanged();
         this.onDisplayedRowsChanged();
     }
 
@@ -381,10 +370,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
         this.forContainers(['center'], () => this.onHorizontalViewportChanged());
     }
 
-    private onDisplayedColumnsWidthChanged(): void {
-        this.forContainers(['center'], () => this.onHorizontalViewportChanged());
-    }
-    // this methods prevents the grid views from being scrolled while the dragSvc is being used
+    // this methods prevents the grid views from being scrolled while the dragService is being used
     // eg. the view should not scroll up and down while dragging rows using the rowDragComp.
     private addPreventScrollWhileDragging(): void {
         if (!this.dragSvc) {
@@ -430,7 +416,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     public registerViewportResizeListener(listener: () => void) {
-        const unsubscribeFromResize = _observeResize(this.gos, this.eViewport, listener);
+        const unsubscribeFromResize = _observeResize(this.beans, this.eViewport, listener);
         this.addDestroyFunc(() => unsubscribeFromResize());
     }
 
@@ -445,10 +431,6 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     public isHorizontalScrollShowing(): boolean {
         const isAlwaysShowHorizontalScroll = this.gos.get('alwaysShowHorizontalScroll');
         return isAlwaysShowHorizontalScroll || _isHorizontalScrollShowing(this.eViewport);
-    }
-
-    public getViewportElement(): HTMLElement {
-        return this.eViewport;
     }
 
     public setHorizontalScroll(offset: number): void {

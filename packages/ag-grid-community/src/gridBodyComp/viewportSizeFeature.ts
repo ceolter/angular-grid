@@ -28,15 +28,13 @@ export class ViewportSizeFeature extends BeanStub {
         this.colViewport = beans.colViewport;
     }
 
-    private centerContainerCtrl: RowContainerCtrl;
     private gridBodyCtrl: GridBodyCtrl;
 
     private centerWidth: number;
     private bodyHeight: number;
 
-    constructor(centerContainerCtrl: RowContainerCtrl) {
+    constructor(private readonly centerContainerCtrl: RowContainerCtrl) {
         super();
-        this.centerContainerCtrl = centerContainerCtrl;
     }
 
     public postConstruct(): void {
@@ -51,7 +49,7 @@ export class ViewportSizeFeature extends BeanStub {
     }
 
     private listenForResize(): void {
-        const { gos, centerContainerCtrl, gridBodyCtrl } = this;
+        const { beans, centerContainerCtrl, gridBodyCtrl } = this;
 
         const listener = () => {
             // onCenterViewportResize causes resize events to be fired (flex-columns).
@@ -60,7 +58,7 @@ export class ViewportSizeFeature extends BeanStub {
             // only processing elements deeper in the DOM during each iteration.
             // so the solution here is to use the animation frame service to avoid infinite loops.
             // For more info, see: https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver#observation_errors
-            _requestAnimationFrame(gos, () => {
+            _requestAnimationFrame(beans, () => {
                 this.onCenterViewportResized();
             });
         };
@@ -77,7 +75,7 @@ export class ViewportSizeFeature extends BeanStub {
     }
 
     private onCenterViewportResized(): void {
-        this.scrollVisibleSvc.onCentreViewportResized();
+        this.scrollVisibleSvc.updateScrollGap();
         if (this.centerContainerCtrl.isViewportInTheDOMTree()) {
             this.pinnedCols?.keepPinnedColumnsNarrowerThanViewport();
             this.checkViewportAndScrolls();
@@ -109,7 +107,7 @@ export class ViewportSizeFeature extends BeanStub {
         // check for virtual columns for ColumnController
         this.onHorizontalViewportChanged();
 
-        this.gridBodyCtrl.getScrollFeature().checkScrollLeft();
+        this.gridBodyCtrl.scrollFeature.checkScrollLeft();
     }
 
     public getBodyHeight(): number {
@@ -117,7 +115,7 @@ export class ViewportSizeFeature extends BeanStub {
     }
 
     private checkBodyHeight(): void {
-        const eBodyViewport = this.gridBodyCtrl.getBodyViewportElement();
+        const eBodyViewport = this.gridBodyCtrl.eBodyViewport;
         const bodyHeight = _getInnerHeight(eBodyViewport);
 
         if (this.bodyHeight !== bodyHeight) {
@@ -141,15 +139,11 @@ export class ViewportSizeFeature extends BeanStub {
 
     private updateScrollVisibleServiceImpl(): void {
         const params: SetScrollsVisibleParams = {
-            horizontalScrollShowing: this.isHorizontalScrollShowing(),
+            horizontalScrollShowing: this.centerContainerCtrl.isHorizontalScrollShowing(),
             verticalScrollShowing: this.gridBodyCtrl.isVerticalScrollShowing(),
         };
 
         this.scrollVisibleSvc.setScrollsVisible(params);
-    }
-
-    private isHorizontalScrollShowing(): boolean {
-        return this.centerContainerCtrl.isHorizontalScrollShowing();
     }
 
     // this gets called whenever a change in the viewport, so we can inform column controller it has to work

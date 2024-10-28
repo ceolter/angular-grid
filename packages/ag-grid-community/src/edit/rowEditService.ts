@@ -22,7 +22,7 @@ export class RowEditService extends BeanStub implements NamedBean {
             } else {
                 cellCtrl.startEditing(null, cellStartedEdit, event);
             }
-            atLeastOneEditing ||= cellCtrl.isEditing();
+            atLeastOneEditing ||= cellCtrl.editing;
         });
 
         if (atLeastOneEditing) {
@@ -33,9 +33,9 @@ export class RowEditService extends BeanStub implements NamedBean {
 
     public stopEditing(rowCtrl: RowCtrl, cancel = false): void {
         const cellControls = rowCtrl.getAllCellCtrls();
-        const isRowEdit = rowCtrl.isEditing();
+        const isRowEdit = rowCtrl.editing;
 
-        rowCtrl.setStoppingRowEdit(true);
+        rowCtrl.stoppingRowEdit = true;
 
         let fireRowEditEvent = false;
         for (const ctrl of cellControls) {
@@ -53,7 +53,7 @@ export class RowEditService extends BeanStub implements NamedBean {
             this.setEditing(rowCtrl, false);
         }
 
-        rowCtrl.setStoppingRowEdit(false);
+        rowCtrl.stoppingRowEdit = false;
     }
 
     private setEditing(rowCtrl: RowCtrl, value: boolean): void {

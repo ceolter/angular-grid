@@ -28,6 +28,7 @@ import { KeyboardNavigationModule } from './navigation/navigationModule';
 import { PaginationModule } from './pagination/paginationModule';
 import { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
 import { PinnedRowModule } from './pinnedRowModel/pinnedRowModule';
+import { AriaModule } from './rendering/ariaModule';
 import { CellFlashModule } from './rendering/cell/cellFlashModule';
 import {
     AnimateShowChangeCellRendererModule,
@@ -100,5 +101,6 @@ export const CommunityFeaturesModule: _ModuleWithoutApi = {
         LocaleModule,
         RowAutoHeightModule,
         NativeDragModule,
+        AriaModule,
     ],
 };

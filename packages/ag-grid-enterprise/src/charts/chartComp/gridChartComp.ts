@@ -16,6 +16,8 @@ import {
     Component,
     RefPlaceholder,
     _clearElement,
+    _focusGridInnerElement,
+    _focusInto,
     _getAbsoluteHeight,
     _getAbsoluteWidth,
     _mergeDeep,
@@ -285,7 +287,7 @@ export class GridChartComp extends Component {
         const { width, height } = this.getBestDialogSize();
 
         const afterGuiAttached = this.params.focusDialogOnOpen
-            ? () => setTimeout(() => this.focusSvc.focusInto(this.getGui()))
+            ? () => setTimeout(() => _focusInto(this.getGui()))
             : undefined;
 
         this.chartDialog = new AgDialog({
@@ -316,7 +318,7 @@ export class GridChartComp extends Component {
                     if (lastFocusedCell) {
                         this.focusSvc.setFocusedCell({ ...lastFocusedCell, forceBrowserFocus: true });
                     } else {
-                        this.focusSvc.focusGridInnerElement();
+                        _focusGridInnerElement(this.beans);
                     }
                 }
             });

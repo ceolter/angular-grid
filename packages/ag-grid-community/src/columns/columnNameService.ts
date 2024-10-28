@@ -63,7 +63,7 @@ export class ColumnNameService extends BeanStub implements NamedBean {
         providedColumnGroup: AgProvidedColumnGroup | null,
         location: HeaderLocation
     ): string | null {
-        const colGroupDef = providedColumnGroup ? providedColumnGroup.getColGroupDef() : null;
+        const colGroupDef = providedColumnGroup?.getColGroupDef();
 
         if (colGroupDef) {
             return this.getHeaderName(colGroupDef, null, columnGroup, providedColumnGroup, location);

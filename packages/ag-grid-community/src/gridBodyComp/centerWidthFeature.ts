@@ -43,10 +43,11 @@ export class CenterWidthFeature extends BeanStub {
 
     private setWidth(): void {
         const printLayout = _isDomLayout(this.gos, 'print');
+        const { visibleCols, scrollVisibleSvc } = this;
 
-        const centerWidth = this.visibleCols.getBodyContainerWidth();
-        const leftWidth = this.visibleCols.getColsLeftWidth();
-        const rightWidth = this.visibleCols.getDisplayedColumnsRightWidth();
+        const centerWidth = visibleCols.bodyWidth;
+        const leftWidth = visibleCols.getColsLeftWidth();
+        const rightWidth = visibleCols.getDisplayedColumnsRightWidth();
 
         let totalWidth: number;
 
@@ -57,8 +58,8 @@ export class CenterWidthFeature extends BeanStub {
 
             if (this.addSpacer) {
                 const relevantWidth = this.gos.get('enableRtl') ? leftWidth : rightWidth;
-                if (relevantWidth === 0 && this.scrollVisibleSvc.isVerticalScrollShowing()) {
-                    totalWidth += this.scrollVisibleSvc.getScrollbarWidth();
+                if (relevantWidth === 0 && scrollVisibleSvc.verticalScrollShowing) {
+                    totalWidth += scrollVisibleSvc.getScrollbarWidth();
                 }
             }
         }

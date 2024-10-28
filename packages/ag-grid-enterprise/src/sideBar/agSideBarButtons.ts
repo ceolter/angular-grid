@@ -1,12 +1,11 @@
-import type {
-    AgEvent,
-    BeanCollection,
-    ComponentSelector,
-    FocusService,
-    ToolPanelDef,
-    VisibleColsService,
+import type { AgEvent, ComponentSelector, ToolPanelDef } from 'ag-grid-community';
+import {
+    Component,
+    KeyCode,
+    _clearElement,
+    _focusNextGridCoreContainer,
+    _stopPropagationForAgGrid,
 } from 'ag-grid-community';
-import { Component, KeyCode, _clearElement, _stopPropagationForAgGrid } from 'ag-grid-community';
 
 import { SideBarButtonComp } from './sideBarButtonComp';
 
@@ -16,14 +15,6 @@ export interface SideBarButtonClickedEvent extends AgEvent<'sideBarButtonClicked
 
 export type AgSideBarButtonsEvent = 'sideBarButtonClicked';
 export class AgSideBarButtons extends Component<AgSideBarButtonsEvent> {
-    private focusSvc: FocusService;
-    private visibleCols: VisibleColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-        this.visibleCols = beans.visibleCols;
-    }
-
     private buttonComps: SideBarButtonComp[] = [];
 
     constructor() {
@@ -39,7 +30,7 @@ export class AgSideBarButtons extends Component<AgSideBarButtonsEvent> {
             return;
         }
 
-        if (this.focusSvc.focusNextGridCoreContainer(true)) {
+        if (_focusNextGridCoreContainer(this.beans, true)) {
             e.preventDefault();
             return;
         }

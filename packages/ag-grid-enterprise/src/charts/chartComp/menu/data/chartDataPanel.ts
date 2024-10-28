@@ -174,7 +174,7 @@ export class ChartDataPanel extends Component {
         if (!this.panels.length) {
             return;
         }
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const fragment = eDocument.createDocumentFragment();
         for (const panel of this.panels) {
             panel.addCssClass('ag-chart-data-section');

@@ -284,7 +284,7 @@ export class LazyCache extends BeanStub {
         if (numberOfRowsToSkip === 0) {
             return;
         }
-        const defaultRowHeight = _getRowHeightAsNumber(this.gos);
+        const defaultRowHeight = _getRowHeightAsNumber(this.beans);
 
         displayIndexSeq.value += numberOfRowsToSkip;
         nextRowTop.value += numberOfRowsToSkip * defaultRowHeight;
@@ -673,8 +673,8 @@ export class LazyCache extends BeanStub {
      * Deletes any stub nodes not within the given range
      */
     public purgeStubsOutsideOfViewport() {
-        const firstRow = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRow = this.rowRenderer.getLastVirtualRenderedRow();
+        const firstRow = this.rowRenderer.firstRenderedRow;
+        const lastRow = this.rowRenderer.lastRenderedRow;
         const firstRowBlockStart = this.getBlockStartIndex(firstRow);
         const [, lastRowBlockEnd] = this.getBlockBounds(lastRow);
 
@@ -717,8 +717,8 @@ export class LazyCache extends BeanStub {
             return;
         }
 
-        const firstRowInViewport = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRowInViewport = this.rowRenderer.getLastVirtualRenderedRow();
+        const firstRowInViewport = this.rowRenderer.firstRenderedRow;
+        const lastRowInViewport = this.rowRenderer.lastRenderedRow;
 
         // the start storeIndex of every block in this store
         const allLoadedBlocks: Set<number> = new Set();
