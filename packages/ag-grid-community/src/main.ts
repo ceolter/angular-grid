@@ -344,6 +344,8 @@ export { ICellEditorRendererComp, ICellEditorRendererParams } from './interfaces
 
 export type { CheckboxCellEditor } from './edit/cellEditors/checkboxCellEditor';
 
+export type { CheckboxSelectionComponent } from './selection/checkboxSelectionComponent';
+
 // rendering / cellRenderers
 export {
     ICellRenderer,
