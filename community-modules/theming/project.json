@@ -98,6 +98,42 @@
       "options": {
         "jestConfig": "community-modules/theming/jest.config.js"
       }
+    },
+    "pack": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "inputs": ["allTransitiveOutputs"],
+      "outputs": ["{workspaceRoot}/dist/artifacts/{projectRoot}.tgz"],
+      "options": {
+        "cwd": "{projectRoot}",
+        "parallel": false,
+        "commands": [
+          "mkdir -p ../../dist/artifacts/{projectRoot}",
+          "yarn pack -f ../../dist/artifacts/{projectRoot}.tgz",
+          "rm -rf ../../dist/artifacts/{projectRoot}"
+        ]
+      }
+    },
+    "pack:extract": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["pack"],
+      "inputs": ["allOutputs"],
+      "outputs": ["{workspaceRoot}/dist/artifacts/contents/{projectRoot}"],
+      "options": {
+        "command": "scripts/package/extract-contents.sh {projectRoot}"
+      }
+    },
+    "pack:verify": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["pack:extract"],
+      "inputs": ["allOutputs"],
+      "options": {
+        "commands": ["node scripts/package/sanity-check-package.js dist/artifacts/contents/{projectRoot}/package"]
+      },
+      "configurations": {
+        "production": {},
+        "archive": {}
+      }
     }
   },
   "tags": ["module:community", "module", "community"]
