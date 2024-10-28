@@ -36,7 +36,6 @@ export interface IColsService {
     addColumns(keys: Maybe<ColKey>[] | undefined, source: ColumnEventType): void;
     removeColumns(keys: Maybe<ColKey>[] | undefined, source: ColumnEventType): void;
     extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void;
-
     syncColumnWithState(
         column: AgColumn,
         source: ColumnEventType,
