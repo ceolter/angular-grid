@@ -6,7 +6,6 @@ import type { IAggFunc } from '../entities/colDef';
 import type { EventService } from '../eventService';
 import type { ColumnEvent, ColumnEventType } from '../events';
 import type { GridOptionsService } from '../gridOptionsService';
-import type { IColsService } from '../interfaces/iColsService';
 import type { ColumnPinnedType } from '../interfaces/iColumn';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import { _areEqual, _removeFromArray } from '../utils/array';
@@ -97,7 +96,75 @@ export class ColumnStateService extends BeanStub implements NamedBean {
             return false;
         }
 
-        const defaultColumnMinWidth = environment.getDefaultColumnMinWidth();
+        const syncColumnWithStateItem = (
+            column: AgColumn | null,
+            stateItem: ColumnState | null,
+            rowGroupIndexes: { [key: string]: number } | null,
+            pivotIndexes: { [key: string]: number } | null,
+            autoCol: boolean
+        ) => {
+            if (!column) {
+                return;
+            }
+
+            const getValue = getValueFactory(stateItem, params.defaultState);
+
+            // following ensures we are left with boolean true or false, eg converts (null, undefined, 0) all to true
+            const hide = getValue('hide').value1;
+            if (hide !== undefined) {
+                column.setVisible(!hide, source);
+            }
+
+            // sets pinned to 'left' or 'right'
+            const pinned = getValue('pinned').value1;
+            if (pinned !== undefined) {
+                column.setPinned(pinned);
+            }
+
+            // if width provided and valid, use it, otherwise stick with the old width
+            const minColWidth = column.getColDef().minWidth ?? environment.getDefaultColumnMinWidth();
+
+            // flex
+            const flex = getValue('flex').value1;
+            // if flex is null or a value, set into the col
+            if (flex !== undefined) {
+                column.setFlex(flex);
+            }
+
+            // if flex is null or undefined, fall back to setting width
+            if (flex == null) {
+                // if no flex, then use width if it's there
+                const width = getValue('width').value1;
+                if (width != null) {
+                    if (minColWidth != null && width >= minColWidth) {
+                        column.setActualWidth(width, source);
+                    }
+                }
+            }
+
+            const sort = getValue('sort').value1;
+            if (sort !== undefined) {
+                if (sort === 'desc' || sort === 'asc') {
+                    column.setSort(sort, source);
+                } else {
+                    column.setSort(undefined, source);
+                }
+            }
+
+            const sortIndex = getValue('sortIndex').value1;
+            if (sortIndex !== undefined) {
+                column.setSortIndex(sortIndex);
+            }
+
+            // we do not do aggFunc, rowGroup or pivot for auto cols or secondary cols
+            if (autoCol || !column.isPrimary()) {
+                return;
+            }
+
+            valueColsSvc?.syncColumnWithState(column, source, getValue);
+            rowGroupColsSvc?.syncColumnWithState(column, source, getValue, rowGroupIndexes);
+            pivotColsSvc?.syncColumnWithState(column, source, getValue, pivotIndexes);
+        };
 
         const applyStates = (
             states: ColumnState[],
@@ -144,38 +211,14 @@ export class ColumnStateService extends BeanStub implements NamedBean {
                     unmatchedAndAutoStates.push(state);
                     unmatchedCount += 1;
                 } else {
-                    this.syncColumnWithStateItem(
-                        column,
-                        state,
-                        params.defaultState,
-                        rowGroupIndexes,
-                        pivotIndexes,
-                        false,
-                        source,
-                        defaultColumnMinWidth,
-                        rowGroupColsSvc,
-                        valueColsSvc,
-                        pivotColsSvc
-                    );
+                    syncColumnWithStateItem(column, state, rowGroupIndexes, pivotIndexes, false);
                     _removeFromArray(columnsWithNoState, column);
                 }
             });
 
             // anything left over, we got no data for, so add in the column as non-value, non-rowGroup and hidden
             const applyDefaultsFunc = (col: AgColumn) =>
-                this.syncColumnWithStateItem(
-                    col,
-                    null,
-                    params.defaultState,
-                    rowGroupIndexes,
-                    pivotIndexes,
-                    false,
-                    source,
-                    defaultColumnMinWidth,
-                    rowGroupColsSvc,
-                    valueColsSvc,
-                    pivotColsSvc
-                );
+                syncColumnWithStateItem(col, null, rowGroupIndexes, pivotIndexes, false);
 
             columnsWithNoState.forEach(applyDefaultsFunc);
 
@@ -192,19 +235,7 @@ export class ColumnStateService extends BeanStub implements NamedBean {
                 colStates.forEach((stateItem) => {
                     const col = getCol(stateItem.colId);
                     _removeFromArray(columns, col);
-                    this.syncColumnWithStateItem(
-                        col,
-                        stateItem,
-                        params.defaultState,
-                        null,
-                        null,
-                        true,
-                        source,
-                        defaultColumnMinWidth,
-                        rowGroupColsSvc,
-                        valueColsSvc,
-                        pivotColsSvc
-                    );
+                    syncColumnWithStateItem(col, stateItem, null, null, true);
                 });
                 columns.forEach(applyDefaultsFunc);
             };
@@ -303,82 +334,6 @@ export class ColumnStateService extends BeanStub implements NamedBean {
         });
 
         this.applyColumnState({ state: columnStates, applyOrder: true }, source);
-    }
-
-    private syncColumnWithStateItem(
-        column: AgColumn | null,
-        stateItem: ColumnState | null,
-        defaultState: ColumnStateParams | undefined,
-        rowGroupIndexes: { [key: string]: number } | null,
-        pivotIndexes: { [key: string]: number } | null,
-        autoCol: boolean,
-        source: ColumnEventType,
-        defaultColumnMinWidth: number,
-        rowGroupColsSvc: IColsService | undefined,
-        valueColsSvc: IColsService | undefined,
-        pivotColsSvc: IColsService | undefined
-    ): void {
-        if (!column) {
-            return;
-        }
-
-        const getValue = getValueFactory(stateItem, defaultState);
-
-        // following ensures we are left with boolean true or false, eg converts (null, undefined, 0) all to true
-        const hide = getValue('hide').value1;
-        if (hide !== undefined) {
-            column.setVisible(!hide, source);
-        }
-
-        // sets pinned to 'left' or 'right'
-        const pinned = getValue('pinned').value1;
-        if (pinned !== undefined) {
-            column.setPinned(pinned);
-        }
-
-        // if width provided and valid, use it, otherwise stick with the old width
-        const minColWidth = column.getColDef().minWidth ?? defaultColumnMinWidth;
-
-        // flex
-        const flex = getValue('flex').value1;
-        // if flex is null or a value, set into the col
-        if (flex !== undefined) {
-            column.setFlex(flex);
-        }
-
-        // if flex is null or undefined, fall back to setting width
-        if (flex == null) {
-            // if no flex, then use width if it's there
-            const width = getValue('width').value1;
-            if (width != null) {
-                if (minColWidth != null && width >= minColWidth) {
-                    column.setActualWidth(width, source);
-                }
-            }
-        }
-
-        const sort = getValue('sort').value1;
-        if (sort !== undefined) {
-            if (sort === 'desc' || sort === 'asc') {
-                column.setSort(sort, source);
-            } else {
-                column.setSort(undefined, source);
-            }
-        }
-
-        const sortIndex = getValue('sortIndex').value1;
-        if (sortIndex !== undefined) {
-            column.setSortIndex(sortIndex);
-        }
-
-        // we do not do aggFunc, rowGroup or pivot for auto cols or secondary cols
-        if (autoCol || !column.isPrimary()) {
-            return;
-        }
-
-        valueColsSvc?.syncColumnWithState(column, source, getValue);
-        rowGroupColsSvc?.syncColumnWithState(column, source, getValue, rowGroupIndexes);
-        pivotColsSvc?.syncColumnWithState(column, source, getValue, pivotIndexes);
     }
 
     // calculates what events to fire between column state changes. gets used when:
@@ -511,55 +466,50 @@ export class ColumnStateService extends BeanStub implements NamedBean {
         }
 
         const colsForState = colModel.getAllCols();
-        const res = colsForState.map((col) =>
-            createStateItemFromColumn(col, rowGroupColsSvc?.columns, pivotColsSvc?.columns)
+        const rowGroupColumns = rowGroupColsSvc?.columns;
+        const pivotColumns = pivotColsSvc?.columns;
+
+        const createStateItemFromColumn = (column: AgColumn) => {
+            const rowGroupIndex = column.isRowGroupActive() && rowGroupColumns ? rowGroupColumns.indexOf(column) : null;
+            const pivotIndex = column.isPivotActive() && pivotColumns ? pivotColumns.indexOf(column) : null;
+
+            const aggFunc = column.isValueActive() ? column.getAggFunc() : null;
+            const sort = column.getSort() != null ? column.getSort() : null;
+            const sortIndex = column.getSortIndex() != null ? column.getSortIndex() : null;
+
+            const res: ColumnState = {
+                colId: column.getColId(),
+                width: column.getActualWidth(),
+                hide: !column.isVisible(),
+                pinned: column.getPinned(),
+                sort,
+                sortIndex,
+                aggFunc,
+                rowGroup: column.isRowGroupActive(),
+                rowGroupIndex,
+                pivot: column.isPivotActive(),
+                pivotIndex: pivotIndex,
+                flex: column.getFlex() ?? null,
+            };
+
+            return res;
+        };
+
+        const res = colsForState.map((col) => createStateItemFromColumn(col));
+
+        // for fast looking, store the index of each column
+        const colIdToGridIndexMap = new Map<string, number>(
+            colModel.getCols().map((col, index) => [col.getColId(), index])
         );
 
-        orderColumnStateList(res, colModel.getCols());
+        res.sort((itemA: any, itemB: any) => {
+            const posA = colIdToGridIndexMap.has(itemA.colId) ? colIdToGridIndexMap.get(itemA.colId) : -1;
+            const posB = colIdToGridIndexMap.has(itemB.colId) ? colIdToGridIndexMap.get(itemB.colId) : -1;
+            return posA! - posB!;
+        });
 
         return res;
     }
-}
-
-function createStateItemFromColumn(
-    column: AgColumn,
-    rowGroupColumns: AgColumn[] | undefined,
-    pivotColumns: AgColumn[] | undefined
-): ColumnState {
-    const rowGroupIndex = column.isRowGroupActive() && rowGroupColumns ? rowGroupColumns.indexOf(column) : null;
-    const pivotIndex = column.isPivotActive() && pivotColumns ? pivotColumns.indexOf(column) : null;
-
-    const aggFunc = column.isValueActive() ? column.getAggFunc() : null;
-    const sort = column.getSort() != null ? column.getSort() : null;
-    const sortIndex = column.getSortIndex() != null ? column.getSortIndex() : null;
-
-    const res: ColumnState = {
-        colId: column.getColId(),
-        width: column.getActualWidth(),
-        hide: !column.isVisible(),
-        pinned: column.getPinned(),
-        sort,
-        sortIndex,
-        aggFunc,
-        rowGroup: column.isRowGroupActive(),
-        rowGroupIndex,
-        pivot: column.isPivotActive(),
-        pivotIndex: pivotIndex,
-        flex: column.getFlex() ?? null,
-    };
-
-    return res;
-}
-
-function orderColumnStateList(columnStateList: any[], gridColumns: AgColumn[]): void {
-    // for fast looking, store the index of each column
-    const colIdToGridIndexMap = new Map<string, number>(gridColumns.map((col, index) => [col.getColId(), index]));
-
-    columnStateList.sort((itemA: any, itemB: any) => {
-        const posA = colIdToGridIndexMap.has(itemA.colId) ? colIdToGridIndexMap.get(itemA.colId) : -1;
-        const posB = colIdToGridIndexMap.has(itemB.colId) ? colIdToGridIndexMap.get(itemB.colId) : -1;
-        return posA! - posB!;
-    });
 }
 
 export function getColumnStateFromColDef(column: AgColumn): ColumnState {
@@ -620,6 +570,7 @@ function orderLiveColsLikeState(params: ApplyColumnStateParams, colModel: Column
     });
     sortColsLikeKeys(colModel.cols, colIds, colModel, gos);
 }
+
 function sortColsLikeKeys(
     cols: ColumnCollections | undefined,
     colIds: string[],
