@@ -24,12 +24,14 @@ import {
     setValueColumns,
 } from './pivotApi';
 import { PivotColDefService } from './pivotColDefService';
+import { PivotColsSvc } from './pivotColsSvc';
 import { PivotResultColsService } from './pivotResultColsService';
 import { PivotStage } from './pivotStage';
+import { ValueColsSvc } from './valueColsSvc';
 
 export const PivotCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('PivotCoreModule'),
-    beans: [PivotResultColsService, PivotColDefService, PivotStage],
+    beans: [PivotResultColsService, PivotColDefService, PivotStage, PivotColDefService, PivotColsSvc, ValueColsSvc],
     dependsOn: [RowGroupingCoreModule, ColumnGroupCoreModule],
 };
 

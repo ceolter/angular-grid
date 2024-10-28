@@ -3,14 +3,13 @@ import type {
     AgProvidedColumnGroup,
     BeanCollection,
     ColumnModel,
-    FuncColsService,
+    IColsService,
     MenuItemDef,
     MenuService,
     NamedBean,
 } from 'ag-grid-community';
 import { BeanStub, _isClientSideRowModel, _isLegacyMenuEnabled } from 'ag-grid-community';
 
-import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
 import type { MenuItemMapper } from './menuItemMapper';
 
@@ -36,14 +35,14 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
     private menuItemMapper: MenuItemMapper;
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
     private menuSvc: MenuService;
+    private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
         this.menuSvc = beans.menuSvc!;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     public createMenu(
@@ -122,7 +121,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
         const allowPinning = !column.getColDef().lockPinned;
 
-        const rowGroupCount = this.funcColsSvc.rowGroupCols.length;
+        const rowGroupCount = this.rowGroupColsSvc?.columns.length ?? 0;
         const doingGrouping = rowGroupCount > 0;
 
         const allowValue = column.isAllowValue();
@@ -180,7 +179,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push('rowUnGroup');
         } else if (allowRowGroup && column.isPrimary()) {
             if (column.isRowGroupActive()) {
-                const groupLocked = isRowGroupColLocked(this.funcColsSvc, this.gos, column);
+                const groupLocked = !!this.rowGroupColsSvc?.isRowGroupColLocked!(column);
                 if (!groupLocked) {
                     result.push('rowUnGroup');
                 }

@@ -4,7 +4,6 @@ import type {
     ColDef,
     Context,
     EventService,
-    FuncColsService,
     GridOptionsService,
     IClientSideRowModel,
     IRowModel,
@@ -13,6 +12,7 @@ import type {
     ValueService,
 } from 'ag-grid-community';
 
+import type { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
 import { mock } from '../test-utils/mock';
 import type { VirtualList } from '../widgets/virtualList';
 import { SetFilter } from './setFilter';
@@ -26,7 +26,7 @@ let eMiniFilter: jest.Mocked<AgInputTextField>;
 let eGui: jest.Mocked<HTMLElement>;
 let eSelectAll: jest.Mocked<AgCheckbox>;
 let gridOptionsService: jest.Mocked<GridOptionsService>;
-let funcColsSvc: jest.Mocked<FuncColsService>;
+let rowGroupColsSvc: jest.Mocked<RowGroupColsSvc>;
 let virtualList: jest.Mocked<VirtualList>;
 let setValueModel: jest.Mocked<SetValueModel<string>>;
 
@@ -62,8 +62,8 @@ beforeEach(() => {
     gridOptionsService = mock<GridOptionsService>('get', 'addPropertyEventListener');
     gridOptionsService.get.mockImplementation((prop) => (prop === 'rowModelType' ? 'clientSide' : undefined));
 
-    funcColsSvc = mock<FuncColsService>();
-    funcColsSvc.rowGroupCols = [];
+    rowGroupColsSvc = mock<RowGroupColsSvc>();
+    rowGroupColsSvc.columns = [];
 
     virtualList = mock<VirtualList>('refresh');
 
@@ -105,7 +105,7 @@ function createSetFilter(filterParams?: any): SetFilter<unknown> {
     (setFilter as any).eMiniFilter = eMiniFilter;
     (setFilter as any).eSelectAll = eSelectAll;
     (setFilter as any).gos = gridOptionsService;
-    (setFilter as any).funcColsSvc = funcColsSvc;
+    (setFilter as any).rowGroupColsSvc = rowGroupColsSvc;
     (setFilter as any).beans = {};
 
     setFilter.setParams(params);

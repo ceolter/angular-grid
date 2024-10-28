@@ -5,9 +5,9 @@ import type {
     ComponentType,
     CtrlsService,
     ExpressionService,
-    FuncColsService,
     GroupCellRendererParams,
     ICellRendererParams,
+    IColsService,
     IGroupCellRenderer,
     IGroupCellRendererCtrl,
     IGroupHideOpenParentsService,
@@ -65,7 +65,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
     private visibleCols: VisibleColsService;
     private userCompFactory: UserComponentFactory;
     private ctrlsSvc: CtrlsService;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
     private rowDragSvc?: RowDragService;
     private selectionSvc?: ISelectionService;
     private groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
@@ -77,7 +77,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         this.visibleCols = beans.visibleCols;
         this.userCompFactory = beans.userCompFactory;
         this.ctrlsSvc = beans.ctrlsSvc;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.selectionSvc = beans.selectionSvc;
         this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
     }
@@ -149,20 +149,22 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
 
         if (!topLevelFooter) {
             const showingFooterTotal =
+                this.rowGroupColsSvc &&
                 params.node.footer &&
                 params.node.rowGroupIndex ===
-                    this.funcColsSvc.rowGroupCols.findIndex((c) => c.getColId() === params.colDef?.showRowGroup);
+                    this.rowGroupColsSvc.columns.findIndex((c) => c.getColId() === params.colDef?.showRowGroup);
             // if we're always showing a group value
             const isAlwaysShowing = this.gos.get('groupDisplayType') != 'multipleColumns' || this.gos.get('treeData');
             // if the cell is populated with a parent value due to `showOpenedGroup`
             const showOpenGroupValue =
                 isAlwaysShowing ||
                 (this.gos.get('showOpenedGroup') &&
+                    this.rowGroupColsSvc &&
                     !params.node.footer &&
                     (!params.node.group ||
                         (params.node.rowGroupIndex != null &&
                             params.node.rowGroupIndex >
-                                this.funcColsSvc.rowGroupCols.findIndex(
+                                this.rowGroupColsSvc?.columns.findIndex(
                                     (c) => c.getColId() === params.colDef?.showRowGroup
                                 ))));
             // not showing a leaf value (field/valueGetter)
@@ -253,7 +255,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
             return true;
         }
 
-        const rowGroupCols = this.funcColsSvc.rowGroupCols;
+        const rowGroupCols = this.rowGroupColsSvc?.columns;
         // this is a sanity check, rowGroupCols should always be present
         if (!rowGroupCols || rowGroupCols.length === 0) {
             return true;

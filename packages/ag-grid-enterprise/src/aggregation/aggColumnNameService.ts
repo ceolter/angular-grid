@@ -2,9 +2,9 @@ import type {
     AgColumn,
     BeanCollection,
     ColumnModel,
-    FuncColsService,
     IAggColumnNameService,
     IAggFunc,
+    IColsService,
     NamedBean,
 } from 'ag-grid-community';
 import { BeanStub, _exists } from 'ag-grid-community';
@@ -12,11 +12,13 @@ import { BeanStub, _exists } from 'ag-grid-community';
 export class AggColumnNameService extends BeanStub implements NamedBean, IAggColumnNameService {
     beanName = 'aggColumnNameSvc' as const;
 
-    private funcColsSvc: FuncColsService;
+    private valueColsSvc?: IColsService;
+    private rowGroupColsSvc?: IColsService;
     private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.funcColsSvc = beans.funcColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.colModel = beans.colModel;
     }
 
@@ -33,7 +35,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
 
         // otherwise we have a measure that is active, and we are doing aggregation on it
         if (pivotActiveOnThisColumn) {
-            const valueColumns = this.funcColsSvc.valueCols;
+            const valueColumns = this.valueColsSvc?.columns ?? [];
             const isCollapsedHeaderEnabled =
                 this.gos.get('removePivotHeaderRowWhenSingleValueColumn') && valueColumns.length === 1;
             const isTotalColumn = column.getColDef().pivotTotalColumnIds !== undefined;
@@ -44,7 +46,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
             aggFuncFound = true;
         } else {
             const measureActive = column.isValueActive();
-            const aggregationPresent = this.colModel.isPivotMode() || !this.funcColsSvc.isRowGroupEmpty();
+            const aggregationPresent = this.colModel.isPivotMode() || !this.rowGroupColsSvc?.isRowGroupEmpty!();
 
             if (measureActive && aggregationPresent) {
                 aggFunc = column.getAggFunc();

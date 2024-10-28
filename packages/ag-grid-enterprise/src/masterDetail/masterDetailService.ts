@@ -1,7 +1,7 @@
 import type {
     BeanCollection,
     BeanName,
-    FuncColsService,
+    IColsService,
     IMasterDetailService,
     IRowModel,
     NamedBean,
@@ -23,7 +23,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
 
     private enabled: boolean;
     private rowModel: IRowModel;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
 
     private isEnabled(): boolean {
         const gos = this.gos;
@@ -35,7 +35,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     }
 
     public wireBeans(beans: BeanCollection): void {
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.rowModel = beans.rowModel;
     }
 
@@ -92,7 +92,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                     row.expanded = true;
                 } else {
                     // need to take row group into account when determining level
-                    const masterRowLevel = this.funcColsSvc.rowGroupCols?.length ?? 0;
+                    const masterRowLevel = this.rowGroupColsSvc?.columns.length ?? 0;
                     row.expanded = masterRowLevel < groupDefaultExpanded;
                 }
             } else if (!newMaster && oldMaster) {

@@ -1,16 +1,20 @@
-import type { FuncColsService } from '../../columns/funcColsService';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { DragAndDropIcon, DraggingEvent } from '../../dragAndDrop/dragAndDropService';
 import type { AgColumn } from '../../entities/agColumn';
+import type { IColsService } from '../../interfaces/iColsService';
 import type { ColumnPinnedType } from '../../interfaces/iColumn';
 import type { DropListener } from './bodyDropTarget';
 
 export class BodyDropPivotTarget extends BeanStub implements DropListener {
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
     }
 
     private columnsToAggregate: AgColumn[] = [];
@@ -89,13 +93,13 @@ export class BodyDropPivotTarget extends BeanStub implements DropListener {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onDragStop(draggingEvent: DraggingEvent): void {
         if (this.columnsToAggregate.length > 0) {
-            this.funcColsSvc.addValueColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
+            this.valueColsSvc?.addColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
         }
         if (this.columnsToGroup.length > 0) {
-            this.funcColsSvc.addRowGroupColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
+            this.rowGroupColsSvc?.addColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
         }
         if (this.columnsToPivot.length > 0) {
-            this.funcColsSvc.addPivotColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
+            this.pivotColsSvc?.addColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
         }
     }
 
