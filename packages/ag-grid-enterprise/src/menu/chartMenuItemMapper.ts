@@ -250,7 +250,7 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
                     _key: 'pivotLineChart',
                     name: localeTextFunc('lineChart', 'Line'),
                     subMenu: [
-                        getMenuItem('line', 'Line&lrm;', 'line', 'pivotLineChart'),
+                        getMenuItem('lineChart', 'Line&lrm;', 'line', 'pivotLineChart'),
                         getMenuItem('stackedLine', 'Stacked&lrm;', 'stackedLine', 'pivotStackedLine'),
                         getMenuItem('normalizedLine', '100% Stacked&lrm;', 'normalizedLine', 'pivotNormalizedLine'),
                     ],
@@ -259,7 +259,7 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
                     _key: 'pivotAreaChart',
                     name: localeTextFunc('areaChart', 'Area'),
                     subMenu: [
-                        getMenuItem('area', 'Area&lrm;', 'area', 'pivotArea'),
+                        getMenuItem('areaChart', 'Area&lrm;', 'area', 'pivotArea'),
                         getMenuItem('stackedArea', 'Stacked&lrm;', 'stackedArea', 'pivotStackedArea'),
                         getMenuItem('normalizedArea', '100% Stacked&lrm;', 'normalizedArea', 'pivotNormalizedArea'),
                     ],
@@ -470,16 +470,16 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                 {
                     name: localeTextFunc('lineChart', 'Line'),
                     subMenu: [
-                        getMenuItem('line', 'Line&lrm;', 'line', 'rangeLineChart'),
+                        getMenuItem('lineChart', 'Line&lrm;', 'line', 'rangeLineChart'),
                         getMenuItem('stackedLine', 'Stacked&lrm;', 'stackedLine', 'rangeStackedLine'),
                         getMenuItem('normalizedLine', '100% Stacked&lrm;', 'normalizedLine', 'rangeNormalizedLine'),
                     ],
-                    _key: 'rangeAreaChart',
+                    _key: 'rangeLineChart',
                 },
                 {
                     name: localeTextFunc('areaChart', 'Area'),
                     subMenu: [
-                        getMenuItem('area', 'Area&lrm;', 'area', 'rangeArea'),
+                        getMenuItem('areaChart', 'Area&lrm;', 'area', 'rangeArea'),
                         getMenuItem('stackedArea', 'Stacked&lrm;', 'stackedArea', 'rangeStackedArea'),
                         getMenuItem('normalizedArea', '100% Stacked&lrm;', 'normalizedArea', 'rangeNormalizedArea'),
                     ],

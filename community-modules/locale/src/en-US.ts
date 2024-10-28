@@ -218,7 +218,7 @@ export const AG_GRID_LOCALE_EN = {
     pie: 'Pie',
     donut: 'Donut',
 
-    line: 'Line',
+    lineChart: 'Line',
     stackedLine: 'Stacked',
     normalizedLine: '100% Stacked',
 
