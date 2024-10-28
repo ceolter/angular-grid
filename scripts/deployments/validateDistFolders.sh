@@ -139,11 +139,11 @@ validateLocale()
 }
 
 # check all expected modules & packages are there
-validateExpectedDirs "dist/artifacts/contents/community-modules" 10
+validateExpectedDirs "dist/artifacts/contents/community-modules" 11
 validateExpectedDirs "dist/artifacts/contents/enterprise-modules" 21
 validateExpectedDirs "dist/artifacts/contents/packages" 7
 
-validateExpectedDirs "dist/artifacts/community-modules" 10
+validateExpectedDirs "dist/artifacts/community-modules" 11
 validateExpectedDirs "dist/artifacts/enterprise-modules" 21
 validateExpectedDirs "dist/artifacts/packages" 7
 
