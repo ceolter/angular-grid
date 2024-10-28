@@ -345,9 +345,10 @@ export const isSelectionUIEvent = (
         source === 'checkboxSelected' ||
         source === 'rowClicked' ||
         source === 'spaceKey' ||
+        source === 'keyboardSelectAll' ||
         source === 'uiSelectAll' ||
-        source === 'uiSelectAllCurrentPage' ||
-        source === 'uiSelectAllFiltered'
+        source === 'uiSelectAllFiltered' ||
+        source === 'uiSelectAllCurrentPage'
     );
 };
 
