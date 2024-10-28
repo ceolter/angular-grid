@@ -402,6 +402,8 @@ export const AG_GRID_LOCALE_EN = {
     pieTooltip: 'Pie',
     donutTooltip: 'Donut',
     lineTooltip: 'Line',
+    stackedLineTooltip: 'Stacked',
+    normalizedLineTooltip: '100% Stacked',
     groupedAreaTooltip: 'Area',
     stackedAreaTooltip: 'Stacked',
     normalizedAreaTooltip: '100% Stacked',
