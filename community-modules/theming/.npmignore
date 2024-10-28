@@ -13,3 +13,5 @@ dist/**/*.test.*
 project.json
 jest.config.js
 *.map
+scripts
+
