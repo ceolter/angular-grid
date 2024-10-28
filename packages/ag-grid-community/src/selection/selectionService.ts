@@ -38,21 +38,21 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     private selectionCtx: ISelectionContext<RowNode>;
 
     private groupSelectsDescendants: boolean;
-    private rowSelectionMode?: RowSelectionMode = undefined;
+    private mode?: RowSelectionMode;
 
     public override postConstruct(): void {
         super.postConstruct();
         const { gos, rowModel, onRowSelected } = this;
-        this.rowSelectionMode = _getRowSelectionMode(gos);
         this.selectionCtx = new RowRangeSelectionContext(rowModel);
+        this.mode = _getRowSelectionMode(gos);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
         this.addManagedPropertyListeners(['groupSelectsChildren', 'rowSelection'], () => {
             const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
             const selectionMode = _getRowSelectionMode(gos);
 
-            if (groupSelectsDescendants !== this.groupSelectsDescendants || selectionMode !== this.rowSelectionMode) {
+            if (groupSelectsDescendants !== this.groupSelectsDescendants || selectionMode !== this.mode) {
                 this.groupSelectsDescendants = groupSelectsDescendants;
-                this.rowSelectionMode = selectionMode;
+                this.mode = selectionMode;
                 this.deselectAllRowNodes({ source: 'api' });
             }
         });
@@ -67,7 +67,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private isMultiSelect(): boolean {
-        return this.rowSelectionMode === 'multiRow';
+        return this.mode === 'multiRow';
     }
 
     /**
