@@ -2,7 +2,6 @@ import type { RowNode } from '../entities/rowNode';
 import type { IRowModel } from '../interfaces/iRowModel';
 
 export interface ISelectionContext<TNode> {
-    init(rowModel: IRowModel): void;
     reset(): void;
     setRoot(node: TNode): void;
     setEndRange(node: TNode): void;
@@ -32,7 +31,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
     private rowModel: IRowModel;
     private cachedRange: RowNode[] = [];
 
-    public init(rowModel: IRowModel): void {
+    constructor(rowModel: IRowModel) {
         this.rowModel = rowModel;
     }
 

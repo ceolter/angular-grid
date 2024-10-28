@@ -15,7 +15,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
     private end: string | null = null;
     private cachedRange: RowNode[] = [];
 
-    public init(rowModel: IRowModel): void {
+    constructor(rowModel: IRowModel) {
         this.rowModel = rowModel;
     }
 

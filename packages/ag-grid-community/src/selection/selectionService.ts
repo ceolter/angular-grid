@@ -22,6 +22,7 @@ import { _exists, _missing } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 import { BaseSelectionService } from './baseSelectionService';
 import { RowRangeSelectionContext } from './rowRangeSelectionContext';
+import type { ISelectionContext } from './rowRangeSelectionContext';
 
 export class SelectionService extends BaseSelectionService implements NamedBean, ISelectionService {
     beanName = 'selectionSvc' as const;
@@ -34,7 +35,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private selectedNodes: Map<string, RowNode> = new Map();
-    private selectionCtx: RowRangeSelectionContext = new RowRangeSelectionContext();
+    private selectionCtx: ISelectionContext<RowNode>;
 
     private groupSelectsDescendants: boolean;
     private rowSelectionMode?: RowSelectionMode = undefined;
@@ -42,8 +43,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     public override postConstruct(): void {
         super.postConstruct();
         const { gos, rowModel, onRowSelected } = this;
-        this.selectionCtx.init(rowModel);
         this.rowSelectionMode = _getRowSelectionMode(gos);
+        this.selectionCtx = new RowRangeSelectionContext(rowModel);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
         this.addManagedPropertyListeners(['groupSelectsChildren', 'rowSelection'], () => {
             const groupSelectsDescendants = _getGroupSelectsDescendants(gos);

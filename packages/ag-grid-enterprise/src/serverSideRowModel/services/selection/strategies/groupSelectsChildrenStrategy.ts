@@ -4,6 +4,7 @@ import type {
     IColsService,
     IRowModel,
     IRowNode,
+    ISelectionContext,
     ISelectionService,
     IServerSideGroupSelectionState,
     IServerSideSelectionState,
@@ -27,7 +28,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
     private rowGroupColsSvc?: IColsService;
     private filterManager?: FilterManager;
     private selectionSvc: ISelectionService;
-    private selectionCtx = new ServerSideRowRangeSelectionContext();
+    private selectionCtx: ISelectionContext<string>;
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
@@ -46,7 +47,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             columnRowGroupChanged: () => this.selectionSvc.reset('rowGroupChanged'),
         });
 
-        this.selectionCtx.init(this.rowModel);
+        this.selectionCtx = new ServerSideRowRangeSelectionContext(this.rowModel);
     }
 
     public getSelectedState() {
