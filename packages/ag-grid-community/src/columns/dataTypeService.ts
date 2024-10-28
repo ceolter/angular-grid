@@ -18,6 +18,7 @@ import type { AgGridEvent, ColumnEventType } from '../events';
 import type { FilterManager } from '../filter/filterManager';
 import { _isClientSideRowModel } from '../gridOptionsUtils';
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
+import type { IColsService } from '../interfaces/iColsService';
 import type { ColumnEventName } from '../interfaces/iColumn';
 import type { IEventListener } from '../interfaces/iEventEmitter';
 import type { IRowModel } from '../interfaces/iRowModel';
@@ -30,7 +31,6 @@ import type { ColumnFactory } from './columnFactory';
 import type { ColumnModel } from './columnModel';
 import type { ColumnState, ColumnStateParams, ColumnStateService } from './columnStateService';
 import { _convertColumnEventSourceType, convertColumnTypes } from './columnUtils';
-import type { FuncColsService } from './funcColsService';
 
 interface GroupSafeValueFormatter {
     groupSafeValueFormatter?: ValueFormatterFunc;
@@ -41,7 +41,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
     private rowModel: IRowModel;
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
     private valueSvc: ValueService;
     private colState: ColumnStateService;
     private filterManager?: FilterManager;
@@ -51,7 +52,8 @@ export class DataTypeService extends BeanStub implements NamedBean {
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
         this.valueSvc = beans.valueSvc;
         this.colState = beans.colState;
         this.filterManager = beans.filterManager;
@@ -503,7 +505,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
         });
         if (columnTypeOverridesExist) {
             state.push(
-                ...this.funcColsSvc.generateColumnStateForRowGroupAndPivotIndexes(
+                ...this.generateColumnStateForRowGroupAndPivotIndexes(
                     newRowGroupColumnStateWithoutIndex,
                     newPivotColumnStateWithoutIndex
                 )
@@ -513,6 +515,22 @@ export class DataTypeService extends BeanStub implements NamedBean {
             this.colState.applyColumnState({ state }, 'cellDataTypeInferred');
         }
         this.initialData = null;
+    }
+
+    private generateColumnStateForRowGroupAndPivotIndexes(
+        updatedRowGroupColumnState: { [colId: string]: ColumnState },
+        updatedPivotColumnState: { [colId: string]: ColumnState }
+    ): ColumnState[] {
+        // Generally columns should appear in the order they were before. For any new columns, these should appear in the original col def order.
+        // The exception is for columns that were added via `addGroupColumns`. These should appear at the end.
+        // We don't have to worry about full updates, as in this case the arrays are correct, and they won't appear in the updated lists.
+
+        const existingColumnStateUpdates: { [colId: string]: ColumnState } = {};
+
+        this.rowGroupColsSvc?.orderColumns(existingColumnStateUpdates, updatedRowGroupColumnState);
+        this.pivotColsSvc?.orderColumns(existingColumnStateUpdates, updatedPivotColumnState);
+
+        return Object.values(existingColumnStateUpdates);
     }
 
     private resetColDefIntoCol(column: AgColumn, source: ColumnEventType): boolean {

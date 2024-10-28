@@ -1,9 +1,9 @@
 import type { ColumnModel } from '../columns/columnModel';
 import type { ColumnNameService } from '../columns/columnNameService';
-import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import type { BeanCollection } from '../context/context';
 import type { CsvCustomContent, CsvExportParams } from '../interfaces/exportParams';
+import type { IColsService } from '../interfaces/iColsService';
 import type { ICsvCreator } from '../interfaces/iCsvCreator';
 import { _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
@@ -19,13 +19,13 @@ export class CsvCreator
 
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
     private valueSvc: ValueService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.valueSvc = beans.valueSvc;
     }
 
@@ -69,7 +69,7 @@ export class CsvCreator
     }
 
     public createSerializingSession(params?: CsvExportParams): CsvSerializingSession {
-        const { colModel, colNames, funcColsSvc, valueSvc, gos } = this;
+        const { colModel, colNames, rowGroupColsSvc, valueSvc, gos } = this;
         const {
             processCellCallback,
             processHeaderCallback,
@@ -82,7 +82,6 @@ export class CsvCreator
         return new CsvSerializingSession({
             colModel,
             colNames,
-            funcColsSvc,
             valueSvc,
             gos,
             processCellCallback: processCellCallback || undefined,
@@ -91,6 +90,7 @@ export class CsvCreator
             processRowGroupCallback: processRowGroupCallback || undefined,
             suppressQuotes: suppressQuotes || false,
             columnSeparator: columnSeparator || ',',
+            rowGroupColsSvc,
         });
     }
 
