@@ -221,80 +221,17 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         //                       - the application would change these functions, far more likely the functions were
         //                       - non memoised correctly.
 
-        const resetProps = new Set<keyof GridOptions>(['treeData', 'treeDataChildrenField']);
-
         const allProps: (keyof GridOptions)[] = [
             'rowData',
-            ...resetProps,
+            'treeData',
+            'treeDataChildrenField',
             ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
         ];
 
         this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
-            if (!properties) {
-                return;
-            }
-
-            const propertiesSet = new Set(properties);
-
-            const rowDataChanged = propertiesSet.has('rowData');
-            const treeDataChanged = propertiesSet.has('treeData');
-            const treeDataChildrenFieldChanged = propertiesSet.has('treeDataChildrenField');
-
-            const needFullReload =
-                treeDataChildrenFieldChanged || (treeDataChanged && !this.gos.get('treeDataChildrenField'));
-
-            let newRowData: any[] | null | undefined;
-
-            if (needFullReload || rowDataChanged) {
-                newRowData = this.gos.get('rowData');
-            }
-
-            if (needFullReload) {
-                // If we are here, it means that the row manager need to be changed or fully reloaded
-                if (!rowDataChanged) {
-                    // No new rowData was passed, so to include user executed transaction we need to extract
-                    // the row data from the node manager as it might be different from the original rowData
-                    newRowData = this.nodeManager?.extractRowData() ?? newRowData;
-                }
-                this.initRowManager();
-            }
-
-            if (newRowData) {
-                const immutable =
-                    !needFullReload &&
-                    this.gos.exists('getRowId') &&
-                    // this property is a backwards compatibility property, for those who want
-                    // the old behaviour of Row IDs but NOT Immutable Data.
-                    !this.gos.get('resetRowDataOnUpdate');
-
-                if (immutable) {
-                    this.setImmutableRowData(newRowData);
-                } else {
-                    this.setNewRowData(newRowData);
-                }
-                return;
-            }
-
-            let refreshModelStep: ClientSideRowModelStage | undefined;
-
-            if (treeDataChanged) {
-                // We need to notify the nodeManager that the treeData property has changed, and refresh everything
-                this.nodeManager.onTreeDataChanged?.();
-                refreshModelStep = 'group';
-            }
-
-            if (!refreshModelStep) {
-                for (const { refreshProps, step } of this.orderedStages) {
-                    if (properties.some((prop) => refreshProps.has(prop))) {
-                        refreshModelStep = step;
-                        break;
-                    }
-                }
-            }
-
-            if (refreshModelStep) {
-                this.refreshModel({ step: refreshModelStep });
+            if (properties) {
+                this.onPropChange(properties);
             }
         });
 
@@ -314,7 +251,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const rowData = this.gos.get('rowData');
         if (rowData) {
             this.shouldSkipSettingDataOnStart = true;
-            this.setNewRowData(rowData);
+            this.onPropChange(['rowData']);
         }
     }
 
@@ -356,6 +293,92 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         } while (atLeastOneChange);
 
         return res;
+    }
+
+    private onPropChange(properties: (keyof GridOptions)[]): void {
+        const gos = this.gos;
+
+        const propertiesSet = new Set(properties);
+
+        const rowDataChanged = propertiesSet.has('rowData');
+        const treeDataChanged = propertiesSet.has('treeData');
+        const treeDataChildrenFieldChanged = propertiesSet.has('treeDataChildrenField');
+
+        const needFullReload = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField'));
+
+        let newRowData: any[] | null | undefined;
+
+        if (needFullReload || rowDataChanged) {
+            newRowData = gos.get('rowData');
+        }
+
+        if (!Array.isArray(newRowData)) {
+            _warn(1);
+            newRowData = null;
+        }
+
+        if (needFullReload) {
+            // If we are here, it means that the row manager need to be changed or fully reloaded
+            if (!rowDataChanged) {
+                // No new rowData was passed, so to include user executed transaction we need to extract
+                // the row data from the node manager as it might be different from the original rowData
+                newRowData = this.nodeManager?.extractRowData() ?? newRowData;
+            }
+            this.initRowManager();
+        }
+
+        if (newRowData) {
+            const immutable =
+                !needFullReload &&
+                !this.isEmpty() &&
+                gos.exists('getRowId') &&
+                // this property is a backwards compatibility property, for those who want
+                // the old behaviour of Row IDs but NOT Immutable Data.
+                !gos.get('resetRowDataOnUpdate');
+
+            if (immutable) {
+                const updateRowDataResult = this.nodeManager.setImmutableRowData(newRowData);
+                if (updateRowDataResult) {
+                    const { rowNodeTransaction, rowsInserted, rowsOrderChanged } = updateRowDataResult;
+                    this.commitTransactions([rowNodeTransaction], rowsInserted || rowsOrderChanged);
+                }
+            } else {
+                // no need to invalidate cache, as the cache is stored on the rowNode,
+                // so new rowNodes means the cache is wiped anyway.
+
+                // - clears selection, done before we set row data to ensure it isn't readded via `selectionSvc.syncInOldRowNode`
+                this.selectionSvc?.reset('rowDataChanged');
+
+                this.rowNodesCountReady = true;
+                this.nodeManager.setNewRowData(newRowData);
+
+                if (this.hasStarted) {
+                    this.dispatchUpdateEventsAndRefresh();
+                }
+            }
+            return;
+        }
+
+        let refreshModelStep: ClientSideRowModelStage | undefined;
+
+        if (treeDataChanged) {
+            // We need to notify the nodeManager that the treeData property has changed, and refresh everything
+            this.nodeManager.onTreeDataChanged?.();
+            refreshModelStep = 'group';
+        }
+
+        if (!refreshModelStep) {
+            for (const { refreshProps, step } of this.orderedStages) {
+                if (properties.some((prop) => refreshProps.has(prop))) {
+                    refreshModelStep = step;
+                    break;
+                }
+            }
+        }
+
+        if (refreshModelStep) {
+            this.refreshModel({ step: refreshModelStep });
+        }
     }
 
     private setRowTopAndRowIndex(): Set<string> {
@@ -1185,34 +1208,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         return this.nodeManager.getRowNode(id);
-    }
-
-    // rows: the rows to put into the model
-    private setNewRowData(rowData: any[]): void {
-        // no need to invalidate cache, as the cache is stored on the rowNode,
-        // so new rowNodes means the cache is wiped anyway.
-
-        // - clears selection, done before we set row data to ensure it isn't readded via `selectionSvc.syncInOldRowNode`
-        this.selectionSvc?.reset('rowDataChanged');
-
-        if (!Array.isArray(rowData)) {
-            _warn(1);
-        } else {
-            this.rowNodesCountReady = true;
-            this.nodeManager.setNewRowData(rowData);
-        }
-
-        if (this.hasStarted) {
-            this.dispatchUpdateEventsAndRefresh();
-        }
-    }
-
-    private setImmutableRowData(rowData: any[]): void {
-        const updateRowDataResult = this.nodeManager.setImmutableRowData(rowData);
-        if (updateRowDataResult) {
-            const { rowNodeTransaction, rowsInserted, rowsOrderChanged } = updateRowDataResult;
-            this.commitTransactions([rowNodeTransaction], rowsInserted || rowsOrderChanged);
-        }
     }
 
     private dispatchUpdateEventsAndRefresh(): void {
