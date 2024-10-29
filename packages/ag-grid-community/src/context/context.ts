@@ -53,6 +53,7 @@ import type { ICsvCreator } from '../interfaces/iCsvCreator';
 import type { IDetailGridApiService } from '../interfaces/iDetailGridApiService';
 import type { IExcelCreator } from '../interfaces/iExcelCreator';
 import type { IExpansionService } from '../interfaces/iExpansionService';
+import type { IFooterService } from '../interfaces/iFooterService';
 import type { IFrameworkOverrides } from '../interfaces/iFrameworkOverrides';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IMenuFactory } from '../interfaces/iMenuFactory';
@@ -300,6 +301,7 @@ export interface CoreBeanCollection {
     columnGroupSvc?: ColumnGroupService;
     rowAutoHeight?: RowAutoHeightService;
     rowChildrenSvc?: IRowChildrenService;
+    footerSvc?: IFooterService;
 }
 
 export type BeanCollection = CoreBeanCollection & {
@@ -407,6 +409,7 @@ export type BeanName =
     | 'flashCellService'
     | 'flattenStage'
     | 'focusSvc'
+    | 'footerSvc'
     | 'funcColsSvc'
     | 'pivotColsSvc'
     | 'rowGroupColsSvc'

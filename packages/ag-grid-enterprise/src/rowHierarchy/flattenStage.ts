@@ -8,14 +8,9 @@ import type {
     StageExecuteParams,
     WithoutGridCommon,
 } from 'ag-grid-community';
-import {
-    BeanStub,
-    _createRowNodeFooter,
-    _destroyRowNodeFooter,
-    _getGrandTotalRow,
-    _getGroupTotalRowCallback,
-    _isGroupMultiAutoColumn,
-} from 'ag-grid-community';
+import { BeanStub, _getGrandTotalRow, _getGroupTotalRowCallback, _isGroupMultiAutoColumn } from 'ag-grid-community';
+
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../aggregation/footerUtils';
 
 interface FlattenDetails {
     hideOpenParents: boolean;

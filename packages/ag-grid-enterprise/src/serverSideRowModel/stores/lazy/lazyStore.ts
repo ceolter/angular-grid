@@ -19,14 +19,13 @@ import type {
 import {
     BeanStub,
     ServerSideTransactionResultStatus,
-    _createRowNodeFooter,
-    _destroyRowNodeFooter,
     _getGroupTotalRowCallback,
     _getRowHeightAsNumber,
     _getRowIdCallback,
     _warn,
 } from 'ag-grid-community';
 
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../../../aggregation/footerUtils';
 import type { BlockUtils } from '../../blocks/blockUtils';
 import type { SSRMParams } from '../../serverSideRowModel';
 import type { StoreUtils } from '../storeUtils';

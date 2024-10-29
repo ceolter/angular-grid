@@ -9,8 +9,6 @@ import type {
 import {
     BeanStub,
     RowNode,
-    _createRowNodeFooter,
-    _destroyRowNodeFooter,
     _doOnce,
     _exists,
     _getGroupTotalRowCallback,
@@ -19,6 +17,7 @@ import {
     _warn,
 } from 'ag-grid-community';
 
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../../aggregation/footerUtils';
 import type { NodeManager } from '../nodeManager';
 import type { ServerSideRowModel } from '../serverSideRowModel';
 import type { ServerSideExpansionService } from '../services/serverSideExpansionService';

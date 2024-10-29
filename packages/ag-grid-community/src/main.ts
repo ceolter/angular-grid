@@ -134,7 +134,7 @@ export { AgColumn, isColumn } from './entities/agColumn';
 export { AgColumnGroup, isColumnGroup } from './entities/agColumnGroup';
 export { AgProvidedColumnGroup, isProvidedColumnGroup } from './entities/agProvidedColumnGroup';
 export { type ITreeNode, RowNode, ROW_ID_PREFIX_ROW_GROUP as _ROW_ID_PREFIX_ROW_GROUP } from './entities/rowNode';
-export { _createRowNodeFooter, _destroyRowNodeFooter, _createGlobalRowEvent } from './entities/rowNodeUtils';
+export { _createGlobalRowEvent } from './entities/rowNodeUtils';
 export {
     RowPinnedType,
     IRowNode,
@@ -899,6 +899,7 @@ export {
     _isShowTooltipWhenTruncated,
 } from './tooltip/tooltipFeature';
 export { IAggregationStage } from './interfaces/iAggregationStage';
+export { IFooterService } from './interfaces/iFooterService';
 export {
     MenuItemLeafDef,
     MenuItemDef,

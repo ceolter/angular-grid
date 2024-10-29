@@ -292,7 +292,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
         if (!changedPath) {
             changedPath = new ChangedPath(true, rootNode);
-            changedPath.setInactive();
+            changedPath.active = false;
         }
 
         let selectionChanged = false;

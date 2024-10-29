@@ -5,16 +5,8 @@ import type { BeanCollection } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition } from '../entities/rowNode';
 import { ROW_ID_PREFIX_ROW_GROUP, RowNode } from '../entities/rowNode';
-import { _createRowNodeFooter } from '../entities/rowNodeUtils';
 import type { CssVariablesChanged, FilterChangedEvent } from '../events';
-import {
-    _getGrandTotalRow,
-    _getGroupSelectsDescendants,
-    _getGroupTotalRowCallback,
-    _getRowHeightForNode,
-    _isAnimateRows,
-    _isDomLayout,
-} from '../gridOptionsUtils';
+import { _getGroupSelectsDescendants, _getRowHeightForNode, _isAnimateRows, _isDomLayout } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
     ClientSideRowModelStage,
@@ -389,7 +381,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private clearRowTopAndRowIndex(changedPath: ChangedPath, displayedRowsMapped: Set<string>): void {
-        const changedPathActive = changedPath.isActive();
+        const changedPathActive = changedPath.active;
 
         const clearIfNotDisplayed = (rowNode: RowNode) => {
             if (rowNode && rowNode.id != null && !displayedRowsMapped.has(rowNode.id)) {
@@ -590,34 +582,27 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return topLevelIndex;
         }
 
-        let adjustedIndex = topLevelIndex;
-        if (rowsToDisplay[0].footer) {
-            // if footer is first displayed row and looking for first row, return footer
-            if (topLevelIndex === 0) {
-                return 0;
+        const { childrenAfterSort } = rootNode;
+
+        const getDefaultIndex = (adjustedIndex: number) => {
+            let rowNode = childrenAfterSort![adjustedIndex];
+
+            if (this.gos.get('groupHideOpenParents')) {
+                // if hideOpenParents, then get lowest displayed descendent
+                while (rowNode.expanded && rowNode.childrenAfterSort && rowNode.childrenAfterSort.length > 0) {
+                    rowNode = rowNode.childrenAfterSort[0];
+                }
             }
 
-            // if first row is footer, offset index to check sorted rows by 1
-            adjustedIndex -= 1;
+            return rowNode.rowIndex!;
+        };
+
+        const { footerSvc } = this.beans;
+        if (footerSvc) {
+            return footerSvc.getTopDisplayIndex(rowsToDisplay, topLevelIndex, childrenAfterSort!, getDefaultIndex);
+        } else {
+            return getDefaultIndex(topLevelIndex);
         }
-
-        const lastRow = rowsToDisplay[rowsToDisplay.length - 1];
-        const indexOutsideGroupBounds = adjustedIndex >= rootNode.childrenAfterSort!.length;
-        // if last row is footer, and attempting to retrieve row of too high index, return footer row index
-        if (lastRow.footer && indexOutsideGroupBounds) {
-            return lastRow.rowIndex!;
-        }
-
-        let rowNode = rootNode.childrenAfterSort![adjustedIndex];
-
-        if (this.gos.get('groupHideOpenParents')) {
-            // if hideOpenParents, then get lowest displayed descendent
-            while (rowNode.expanded && rowNode.childrenAfterSort && rowNode.childrenAfterSort.length > 0) {
-                rowNode = rowNode.childrenAfterSort[0];
-            }
-        }
-
-        return rowNode.rowIndex!;
     }
 
     public getRowBounds(index: number): RowBounds | null {
@@ -685,7 +670,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const changedPath = new ChangedPath(false, this.rootNode!);
 
         if (noTransactions) {
-            changedPath.setInactive();
+            changedPath.active = false;
         }
 
         return changedPath;
@@ -1002,31 +987,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const { nodes, callback, recursionType, includeFooterNodes } = params;
         let { index } = params;
 
-        const addFooters = (position: 'top' | 'bottom') => {
-            const parentNode = nodes[0]?.parent;
+        const { footerSvc } = this.beans;
 
-            if (!parentNode) return;
-
-            const grandTotal = includeFooterNodes && _getGrandTotalRow(this.gos);
-            const isGroupIncludeFooter = _getGroupTotalRowCallback(this.gos);
-            const groupTotal = includeFooterNodes && isGroupIncludeFooter({ node: parentNode });
-
-            const isRootNode = parentNode === this.rootNode;
-            if (isRootNode) {
-                if (grandTotal === position) {
-                    _createRowNodeFooter(parentNode, this.beans);
-                    callback(parentNode.sibling, index++);
-                }
-                return;
-            }
-
-            if (groupTotal === position) {
-                _createRowNodeFooter(parentNode, this.beans);
-                callback(parentNode.sibling, index++);
-            }
-        };
-
-        addFooters('top');
+        footerSvc?.addNodes(params, nodes, callback, includeFooterNodes, this.rootNode, 'top');
 
         for (let i = 0; i < nodes.length; i++) {
             const node = nodes[i];
@@ -1061,7 +1024,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 }
             }
         }
-        addFooters('bottom');
+        footerSvc?.addNodes(params, nodes, callback, includeFooterNodes, this.rootNode, 'bottom');
         return index;
     }
 
