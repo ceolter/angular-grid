@@ -392,7 +392,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test.only('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
+                test('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,

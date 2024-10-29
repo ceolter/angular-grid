@@ -308,9 +308,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public clearOtherNodes(rowNodeToKeepSelected: RowNode, source: SelectionEventSourceType): number {
-        const groupsToRefresh: Map<string, RowNode> = new Map();
+        const groupsToRefresh = new Map<string, RowNode>();
         let updatedCount = 0;
-        this.selectedNodes.forEach((otherRowNode: RowNode) => {
+        this.selectedNodes.forEach((otherRowNode) => {
             if (otherRowNode && otherRowNode.id !== rowNodeToKeepSelected.id) {
                 const rowNode = this.selectedNodes.get(otherRowNode.id!)!;
                 updatedCount += this.setSelectedParams({
@@ -327,7 +327,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             }
         });
 
-        groupsToRefresh.forEach((group: RowNode) => {
+        groupsToRefresh.forEach((group) => {
             const selected = this.calculateSelectedFromChildren(group);
             this.selectRowNode(group, selected === null ? false : selected, undefined, source);
         });
@@ -362,8 +362,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         const oldNode = new RowNode(this.beans);
 
         // just copy the id and data, this is enough for the node to be used
-        // in the selection controller (the selection controller is the only
-        // place where daemon nodes can live).
+        // in the selection service
         oldNode.id = rowNode.id;
         oldNode.data = rowNode.data;
         oldNode.__daemon = true;
@@ -385,10 +384,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     // used by the grid for rendering, it's a copy of what the node used
     // to be like before the id was changed.
     private syncInOldRowNode(rowNode: RowNode, oldNode?: RowNode): void {
-        const oldNodeHasDifferentId = _exists(oldNode) && rowNode.id !== oldNode.id;
-        if (oldNodeHasDifferentId && oldNode) {
-            const id = oldNode.id!;
-            const oldNodeSelected = this.selectedNodes.get(id) == rowNode;
+        if (oldNode && rowNode.id !== oldNode.id) {
+            const oldNodeSelected = this.selectedNodes.get(oldNode.id!) == rowNode;
             if (oldNodeSelected) {
                 this.selectedNodes.set(oldNode.id!, oldNode);
             }
@@ -427,10 +424,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             return;
         }
 
-        const clientSideRowModel = this.rowModel;
-
-        const topLevelNodes = clientSideRowModel.getTopLevelNodes();
-
+        const topLevelNodes = this.rowModel.getTopLevelNodes();
         if (topLevelNodes === null) {
             return;
         }
