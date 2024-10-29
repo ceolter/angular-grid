@@ -297,6 +297,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private onPropChange(properties: (keyof GridOptions)[]): void {
+        if (!this.rootNode) {
+            return; // Destroyed.
+        }
+
         const gos = this.gos;
 
         const changedProps = new Set(properties);
@@ -1394,6 +1398,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         // Forcefully deallocate memory
         this.clearHighlightedRow();
+        this.hasStarted = false;
         this.rootNode = null;
         this.nodeManager = null!;
         this.rowDataTransactionBatch = null;
