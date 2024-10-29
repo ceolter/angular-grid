@@ -359,8 +359,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 params.animate = !this.gos.get('suppressAnimationFrame');
 
                 this.nodeManager.setImmutableRowData(params, newRowData);
-
-                params.changedPath ??= this.createChangePath(params.rowNodeTransactions);
             } else {
                 params.newData = true;
 
