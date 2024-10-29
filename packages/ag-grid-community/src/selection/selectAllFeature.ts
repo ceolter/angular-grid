@@ -206,10 +206,9 @@ export class SelectAllFeature extends BeanStub {
         const { headerCheckboxSelection } = colDef;
 
         let result = false;
-        let newHeaderCheckbox = false;
-        if (typeof rowSelection === 'object') {
+        const newHeaderCheckbox = typeof rowSelection === 'object';
+        if (newHeaderCheckbox) {
             // new selection config
-            newHeaderCheckbox = true;
             const isSelectionCol = isColumnSelectionCol(column);
             const isAutoCol = isColumnGroupAutoCol(column);
             // default to displaying header checkbox in the selection column

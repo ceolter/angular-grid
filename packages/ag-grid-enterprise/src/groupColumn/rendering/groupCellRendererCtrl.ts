@@ -221,6 +221,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         super.destroy();
         // property cleanup to avoid memory leaks
         this.expandListener = null;
+        this.destroyCheckbox();
     }
 
     private refreshAriaExpanded(): void {
@@ -749,7 +750,6 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
                 },
             });
             this.eCheckbox.appendChild(cbSelectionComponent.getGui());
-            this.addDestroyFunc(() => this.destroyCheckbox());
         }
 
         this.comp.setCheckboxVisible(checkboxNeeded);
@@ -757,8 +757,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
 
     private destroyCheckbox(): void {
         this.cbComp && this.eCheckbox.removeChild(this.cbComp.getGui());
-        this.destroyBean(this.cbComp);
-        this.cbComp = undefined;
+        this.cbComp = this.destroyBean(this.cbComp);
     }
 
     private refreshCheckbox(): void {
