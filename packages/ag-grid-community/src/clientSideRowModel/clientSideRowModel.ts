@@ -218,20 +218,19 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         //                       - the application would change these functions, far more likely the functions were
         //                       - non memoised correctly.
 
-        this.addManagedPropertyListeners(
-            [
-                'rowData',
-                'treeData',
-                'treeDataChildrenField',
-                ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
-            ],
-            (params) => {
-                const properties = params.changeSet?.properties;
-                if (properties) {
-                    this.onPropChange(properties);
-                }
+        const allProps: (keyof GridOptions)[] = [
+            'rowData',
+            'treeData',
+            'treeDataChildrenField',
+            ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
+        ];
+
+        this.addManagedPropertyListeners(allProps, (params) => {
+            const properties = params.changeSet?.properties;
+            if (properties) {
+                this.onPropChange(properties);
             }
-        );
+        });
 
         this.addManagedPropertyListener('rowHeight', () => this.resetRowHeights());
     }

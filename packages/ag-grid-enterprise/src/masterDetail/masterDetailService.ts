@@ -42,19 +42,16 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     public postConstruct(): void {
         if (_isClientSideRowModel(this.gos)) {
             this.enabled = this.isEnabled();
-            this.addManagedEventListeners({ beforeRefreshModel: this.onRefreshModel.bind(this) });
+            this.addManagedEventListeners({ beforeRefreshModel: this.beforeRefreshModel.bind(this) });
         }
     }
 
-    private onRefreshModel({ params }: BeforeRefreshModelEvent) {
-        const changedProps = params.changedProps;
-        if (changedProps) {
-            if (changedProps.has('masterDetail') || changedProps.has('treeData')) {
-                const enabled = this.isEnabled();
-                if (this.enabled !== enabled) {
-                    this.setMasters(null);
-                    return;
-                }
+    private beforeRefreshModel({ params }: BeforeRefreshModelEvent) {
+        if (params.changedProps) {
+            const enabled = this.isEnabled();
+            if (this.enabled !== enabled) {
+                this.setMasters(null);
+                return;
             }
         }
 
