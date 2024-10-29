@@ -38,7 +38,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         this.setAllColumns([col], selectAllChecked, eventType);
     }
 
-    public setAllColumns(cols: AgColumn[], selectAllChecked: boolean, eventType: ColumnEventType): void {
+    private setAllColumns(cols: AgColumn[], selectAllChecked: boolean, eventType: ColumnEventType): void {
         if (this.colModel.isPivotMode()) {
             this.setAllPivot(cols, selectAllChecked, eventType);
         } else {
