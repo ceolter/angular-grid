@@ -190,7 +190,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         super.destroy();
     }
 
-    public refreshVisibility(): void {
+    public refreshVisibility(source: ColumnEventType): void {
         if (!this.isSelectionColumnEnabled()) {
             return;
         }
@@ -209,7 +209,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
                 return;
             }
 
-            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, 'api');
+            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
 
             return;
         }
@@ -223,7 +223,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
                     {
                         state: [{ colId: existingState.colId, hide: !existingState.hide }],
                     },
-                    'api'
+                    source
                 );
             }
         }

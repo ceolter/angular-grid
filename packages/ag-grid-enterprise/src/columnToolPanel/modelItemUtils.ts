@@ -86,7 +86,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
             this.colState.applyColumnState({ state: colStateItems }, eventType);
         }
 
-        this.selectionColSvc?.refreshVisibility();
+        this.selectionColSvc?.refreshVisibility(eventType);
     }
 
     private setAllPivot(columns: AgColumn[], value: boolean, eventType: ColumnEventType): void {
