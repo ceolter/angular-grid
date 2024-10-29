@@ -103,7 +103,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         // to the sibling (the parent of the group)
         const filteredNodes = nodes.map((node) => (node.footer ? node.sibling! : node));
 
-        if (rangeSelect) {
+        if (rangeSelect && this.isMultiSelect()) {
             if (filteredNodes.length > 1) {
                 _warn(131);
                 return 0;
@@ -112,9 +112,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             const node = filteredNodes[0];
             const newSelectionValue = this.overrideSelectionValue(newValue, source);
 
-            if (!this.isMultiSelect()) {
-                // let the normal selection logic handle this
-            } else if (this.selectionCtx.isInRange(node)) {
+            if (this.selectionCtx.isInRange(node)) {
                 const partition = this.selectionCtx.truncate(node);
 
                 // When we are selecting a range, we may need to de-select part of the previously

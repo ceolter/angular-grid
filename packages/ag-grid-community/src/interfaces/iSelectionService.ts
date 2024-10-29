@@ -62,17 +62,17 @@ export interface ISelectionService {
 }
 
 interface INodeSelectionParams {
-    // true or false, whatever you want to set selection to
+    /** true or false, whatever you want to set selection to */
     newValue: boolean;
-    // whether to remove other selections after this selection is done
+    /** whether to remove other selections after this selection is done */
     clearSelection?: boolean;
-    // true when action is NOT on this node, ie user clicked a group and this is the child of a group
+    /** true when action is NOT on this node, ie user clicked a group and this is the child of a group */
     suppressFinishActions?: boolean;
-    // gets used when user shift-selects a range
+    /** true when user shift-selects a range */
     rangeSelect?: boolean;
-    // used in group selection, if true, filtered out children will not be selected
+    /** used in group selection, if true, filtered out children will not be selected */
     groupSelectsFiltered?: boolean;
-    // event source, if from an event
+    /** event source, if from an event */
     source: SelectionEventSourceType;
     // event
     event?: Event;

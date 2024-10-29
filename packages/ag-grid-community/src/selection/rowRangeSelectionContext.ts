@@ -8,7 +8,21 @@ export interface ISelectionContext<TNode> {
     getRange(): RowNode[];
     getRoot(): TNode | null;
     isInRange(node: TNode): boolean;
+    /**
+     * Truncates the range to the given node (assumed to be within the current range).
+     * Returns nodes that remain in the current range and those that should be removed
+     *
+     * @param node - Node at which to truncate the range
+     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
+     */
     truncate(node: TNode): { keep: RowNode[]; discard: RowNode[] };
+    /**
+     * Extends the range to the given node. Returns nodes that remain in the current range
+     * and those that should be removed.
+     *
+     * @param node - Node marking the new end of the range
+     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
+     */
     extend(node: TNode, groupSelectsChildren?: boolean): { keep: RowNode[]; discard: RowNode[] };
 }
 
@@ -91,13 +105,6 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         return this.end;
     }
 
-    /**
-     * Truncates the range to the given node (assumed to be within the current range).
-     * Returns nodes that remain in the current range and those that should be removed
-     *
-     * @param node - Node at which to truncate the range
-     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
-     */
     public truncate(node: RowNode): { keep: RowNode[]; discard: RowNode[] } {
         const range = this.getRange();
 
@@ -120,13 +127,6 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         }
     }
 
-    /**
-     * Extends the range to the given node. Returns nodes that remain in the current range
-     * and those that should be removed.
-     *
-     * @param node - Node marking the new end of the range
-     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
-     */
     public extend(node: RowNode, groupSelectsChildren = false): { keep: RowNode[]; discard: RowNode[] } {
         const root = this.getRoot();
 
