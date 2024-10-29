@@ -519,7 +519,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     public refreshModel(params: RefreshModelParams<TData>): void {
-        if (params.afterColumnsChanged && !params.newData) {
+        if (params.afterColumnsChanged) {
             // Check if group data need to be recomputed due to group columns change
 
             if (this.gos.get('treeData')) {
