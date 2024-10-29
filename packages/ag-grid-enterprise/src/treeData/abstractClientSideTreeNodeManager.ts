@@ -2,6 +2,7 @@ import type {
     ChangedPath,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
+    RefreshModelParams,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { AbstractClientSideNodeManager, RowNode, _ROW_ID_PREFIX_ROW_GROUP, _warn } from 'ag-grid-community';
@@ -104,28 +105,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         super.deactivate();
         this.treeRoot = null;
-    }
-
-    /** Called by ClientSideRowModel if group data need to be recomputed due to group columns change */
-    public afterColumnsChanged(): void {
-        const rootNode = this.rootNode;
-        if (rootNode && this.gos.get('treeData')) {
-            const newGroupDisplayColIds =
-                this.beans.showRowGroupCols
-                    ?.getShowRowGroupCols()
-                    ?.map((c) => c.getId())
-                    .join('-') ?? '';
-
-            // if the group display cols have changed, then we need to update rowNode.groupData
-            // (regardless of tree data or row grouping)
-            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
-                this.oldGroupDisplayColIds = newGroupDisplayColIds;
-
-                this.checkAllGroupDataAfterColsChanged(rootNode.childrenAfterGroup);
-            }
-        } else {
-            this.oldGroupDisplayColIds = '';
-        }
+        this.oldGroupDisplayColIds = '';
     }
 
     private checkAllGroupDataAfterColsChanged(rowNodes: RowNode[] | null | undefined) {
@@ -545,6 +525,34 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             for (const row of rowsPendingDestruction) {
                 this.treeDestroyRow(row, true);
             }
+        }
+    }
+
+    /** Called by ClientSideRowModel if group data need to be recomputed due to group columns change */
+    private afterColumnsChanged(): void {
+        const rootNode = this.rootNode;
+        if (rootNode && this.gos.get('treeData')) {
+            const newGroupDisplayColIds =
+                this.beans.showRowGroupCols
+                    ?.getShowRowGroupCols()
+                    ?.map((c) => c.getId())
+                    .join('-') ?? '';
+
+            // if the group display cols have changed, then we need to update rowNode.groupData
+            // (regardless of tree data or row grouping)
+            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
+                this.oldGroupDisplayColIds = newGroupDisplayColIds;
+
+                this.checkAllGroupDataAfterColsChanged(rootNode.childrenAfterGroup);
+            }
+        } else {
+            this.oldGroupDisplayColIds = '';
+        }
+    }
+
+    public refreshModel(params: RefreshModelParams<TData>): void {
+        if (params.afterColumnsChanged && !params.newData) {
+            this.afterColumnsChanged();
         }
     }
 }

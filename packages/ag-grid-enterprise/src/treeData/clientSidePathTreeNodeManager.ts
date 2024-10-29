@@ -24,7 +24,7 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public refreshModel(params: RefreshModelParams<TData>): void {
+    public override refreshModel(params: RefreshModelParams<TData>): void {
         const transactions = params.rowNodeTransactions;
         if (transactions?.length) {
             this.treeRoot?.setRow(this.rootNode);
@@ -51,6 +51,8 @@ export class ClientSidePathTreeNodeManager<TData>
 
             this.treeCommit(params.changedPath); // One single commit for all the transactions
         }
+
+        super.refreshModel(params);
     }
 
     /** Transactional removal */
