@@ -54,7 +54,6 @@ export type AgEventTypeParams<TData = any, TContext = any> = BuildEventTypeMap<
         toolPanelVisibleChanged: ToolPanelVisibleChangedEvent<TData, TContext>;
         toolPanelSizeChanged: ToolPanelSizeChangedEvent<TData, TContext>;
         modelUpdated: ModelUpdatedEvent<TData, TContext>;
-        beforeRefreshModel: BeforeRefreshModelEvent<TData, TContext>;
         cutStart: CutStartEvent<TData, TContext>;
         cutEnd: CutEndEvent<TData, TContext>;
         pasteStart: PasteStartEvent<TData, TContext>;
@@ -119,6 +118,7 @@ export type AgEventTypeParams<TData = any, TContext = any> = BuildEventTypeMap<
         rowDragEnd: RowDragEndEvent<TData, TContext>;
         rowDragCancel: RowDragCancelEvent<TData, TContext>;
         // Internal events
+        beforeRefreshModel: BeforeRefreshModelEvent<TData, TContext>;
         scrollbarWidthChanged: ScrollbarWidthChangedEvent<TData, TContext>;
         keyShortcutChangedCellStart: KeyShortcutChangedCellStartEvent<TData, TContext>;
         keyShortcutChangedCellEnd: KeyShortcutChangedCellEndEvent<TData, TContext>;
