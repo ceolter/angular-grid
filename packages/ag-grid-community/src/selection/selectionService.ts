@@ -263,9 +263,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
      */
     public filterFromSelection(predicate: (node: RowNode) => boolean): void {
         const newSelectedNodes: Map<string, RowNode> = new Map();
-        this.selectedNodes.forEach((rowNode: RowNode, key: string) => {
-            const passesPredicate = rowNode && predicate(rowNode);
-            if (passesPredicate) {
+        this.selectedNodes.forEach((rowNode, key) => {
+            if (predicate(rowNode)) {
                 newSelectedNodes.set(key, rowNode);
             }
         });

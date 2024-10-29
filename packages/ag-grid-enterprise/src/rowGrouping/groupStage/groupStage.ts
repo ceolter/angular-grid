@@ -449,7 +449,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         }
 
         // groups are about to get disposed, so need to deselect any that are selected
-        this.selectionSvc?.filterFromSelection?.((node: RowNode) => node && !node.group);
+        this.selectionSvc?.filterFromSelection?.((node) => !node.group);
 
         const { groupedCols } = details;
         const rootNode: GroupRow = details.rootNode;
