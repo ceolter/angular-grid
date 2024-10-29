@@ -519,31 +519,33 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     public refreshModel(params: RefreshModelParams<TData>): void {
-        if (params.afterColumnsChanged) {
-            // Check if group data need to be recomputed due to group columns change
+        if (!params.afterColumnsChanged) {
+            return; // nothing to do
+        }
 
-            if (this.gos.get('treeData')) {
-                const newGroupDisplayColIds =
-                    this.beans.showRowGroupCols
-                        ?.getShowRowGroupCols()
-                        ?.map((c) => c.getId())
-                        .join('-') ?? '';
+        // Check if group data need to be recomputed due to group columns change
 
-                // if the group display cols have changed, then we need to update rowNode.groupData
-                // (regardless of tree data or row grouping)
-                if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
-                    this.oldGroupDisplayColIds = newGroupDisplayColIds;
-                    const rowNodes = this.rootNode?.childrenAfterGroup;
-                    if (rowNodes) {
-                        for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
-                            const rowNode = rowNodes[i];
-                            this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
-                        }
+        if (this.gos.get('treeData')) {
+            const newGroupDisplayColIds =
+                this.beans.showRowGroupCols
+                    ?.getShowRowGroupCols()
+                    ?.map((c) => c.getId())
+                    .join('-') ?? '';
+
+            // if the group display cols have changed, then we need to update rowNode.groupData
+            // (regardless of tree data or row grouping)
+            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
+                this.oldGroupDisplayColIds = newGroupDisplayColIds;
+                const rowNodes = this.rootNode?.childrenAfterGroup;
+                if (rowNodes) {
+                    for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
+                        const rowNode = rowNodes[i];
+                        this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
                     }
                 }
-            } else {
-                this.oldGroupDisplayColIds = '';
             }
+        } else {
+            this.oldGroupDisplayColIds = '';
         }
     }
 }
