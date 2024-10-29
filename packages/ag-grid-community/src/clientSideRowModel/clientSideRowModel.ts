@@ -137,7 +137,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const refreshEverythingAfterColsChangedFunc = this.refreshModel.bind(this, {
             step: 'group', // after cols change, row grouping (the first stage) could of changed
             afterColumnsChanged: true,
-            keepRenderedRows: true, // we want animations cos sorting or filtering could be applied
+            keepRenderedRows: true,
+            // we want animations cos sorting or filtering could be applied
             animate: !this.gos.get('suppressAnimationFrame'),
         });
 
@@ -724,17 +725,18 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return false;
         }
 
-        // return true if we are only doing update transactions
-        if (params.rowNodeTransactions == null) {
+        const rowNodeTransactions = params.rowNodeTransactions;
+
+        if (!rowNodeTransactions) {
             return false;
         }
 
-        const transWithAddsOrDeletes = params.rowNodeTransactions.filter(
+        const transWithAddsOrDeletes = rowNodeTransactions.some(
             (tx) => (tx.add != null && tx.add.length > 0) || (tx.remove != null && tx.remove.length > 0)
         );
 
-        const transactionsContainUpdatesOnly = transWithAddsOrDeletes == null || transWithAddsOrDeletes.length == 0;
-
+        // return true if we are only doing update transactions
+        const transactionsContainUpdatesOnly = !transWithAddsOrDeletes;
         return transactionsContainUpdatesOnly;
     }
 
@@ -750,8 +752,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public refreshModel(params: RefreshModelParams): void {
-        if (!this.rootNode || !this.hasStarted) {
-            return; // Destroyed or not yet started
+        if (!this.rootNode) {
+            return; // Destroyed
         }
 
         // this goes through the pipeline of stages. what's in my head is similar
@@ -772,15 +774,19 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         this.nodeManager.refreshModel?.(params);
 
+        if (!this.rootNode || !this.hasStarted) {
+            return; // Destroyed or not yet started
+        }
+
         if (params.rowDataUpdated) {
             this.eventSvc.dispatchEvent({ type: 'rowDataUpdated', transactions: rowNodeTransactions });
         }
 
-        if (this.isRefreshingModel || this.colModel.changeEventsDispatching) {
-            return;
-        }
-
-        if (this.isSuppressModelUpdateAfterUpdateTransaction(params)) {
+        if (
+            this.isRefreshingModel ||
+            this.colModel.changeEventsDispatching ||
+            this.isSuppressModelUpdateAfterUpdateTransaction(params)
+        ) {
             return;
         }
 
