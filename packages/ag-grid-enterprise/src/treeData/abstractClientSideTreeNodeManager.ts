@@ -85,9 +85,9 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         super.destroy();
 
         // Forcefully deallocate memory
-        this.treeRoot = null!;
-        this.oldGroupDisplayColIds = null!;
-        this.rowsPendingDestruction = null!;
+        this.treeRoot = null;
+        this.rowsPendingDestruction = null;
+        this.oldGroupDisplayColIds = '';
     }
 
     public override deactivate(): void {
@@ -103,6 +103,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         this.commitDestroyedRows();
 
         super.deactivate();
+        this.treeRoot = null;
     }
 
     /** Called by ClientSideRowModel if group data need to be recomputed due to group columns change */

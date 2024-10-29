@@ -11,7 +11,7 @@ export function onGroupExpandedOrCollapsed(beans: BeanCollection): void {
 }
 
 export function refreshClientSideRowModel(beans: BeanCollection, step?: ClientSideRowModelStep): void {
-    _getClientSideRowModel(beans)?.refreshModel(step === 'everything' ? 'group' : step);
+    _getClientSideRowModel(beans)?.refreshModelApi(step);
 }
 
 export function isRowDataEmpty(beans: BeanCollection): boolean {

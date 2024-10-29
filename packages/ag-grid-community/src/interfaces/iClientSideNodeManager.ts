@@ -1,5 +1,5 @@
 import type { RowNode } from '../entities/rowNode';
-import type { ChangedPath } from '../main-umd-noStyles';
+import type { RefreshModelParams } from './iClientSideRowModel';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -30,17 +30,9 @@ export interface IClientSideNodeManager<TData = any> {
 
     setNewRowData(rowData: TData[]): void;
 
-    setImmutableRowData(rowData: TData[]): ClientSideNodeManagerUpdateRowDataResult<TData> | null;
+    setImmutableRowData(rowData: TData[]): ClientSideNodeManagerUpdateRowDataResult<TData>;
 
     updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData>;
 
-    onTreeDataChanged?(): void;
-
-    afterColumnsChanged?(): void;
-
-    commitTransactions?(
-        transactions: RowNodeTransaction<TData>[],
-        changedPath: ChangedPath | undefined,
-        rowNodesOrderChanged: boolean
-    ): void;
+    refreshModel?(params: RefreshModelParams<TData>): void;
 }
