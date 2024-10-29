@@ -12,9 +12,6 @@ export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
 
     /** True if at least one row was inserted (and not just appended) */
     rowsInserted: boolean;
-
-    /** True if the order of rows has changed */
-    rowsOrderChanged: boolean;
 }
 
 export interface IClientSideNodeManager<TData = any> {
@@ -30,7 +27,7 @@ export interface IClientSideNodeManager<TData = any> {
 
     setNewRowData(rowData: TData[]): void;
 
-    setImmutableRowData(rowData: TData[]): ClientSideNodeManagerUpdateRowDataResult<TData>;
+    setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void;
 
     updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData>;
 

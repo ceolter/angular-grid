@@ -342,6 +342,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
             const immutable =
                 !needFullReload &&
+                this.hasStarted &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
                 gos.exists('getRowId') &&
@@ -350,14 +351,12 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 !gos.get('resetRowDataOnUpdate');
 
             if (immutable) {
-                const updateRowDataResult = this.nodeManager.setImmutableRowData(newRowData);
-
-                const { rowNodeTransaction, rowsInserted, rowsOrderChanged } = updateRowDataResult;
                 params.keepRenderedRows = true;
                 params.animate = !this.gos.get('suppressAnimationFrame');
-                params.rowNodeTransactions = [rowNodeTransaction];
-                params.rowNodesOrderChanged = rowsInserted || rowsOrderChanged;
-                params.changedPath = this.createChangePath(params.rowNodeTransactions);
+
+                this.nodeManager.setImmutableRowData(params, newRowData);
+
+                params.changedPath ??= this.createChangePath(params.rowNodeTransactions);
             } else {
                 params.newData = true;
 
