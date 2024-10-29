@@ -1,4 +1,4 @@
-import type { IClientSideNodeManager, NamedBean, RowNode } from 'ag-grid-community';
+import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
 import { _error } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -79,15 +79,23 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public onTreeDataChanged() {
+    public override refreshModel(params: RefreshModelParams<TData>): void {
         const { rootNode, treeRoot } = this;
-        treeRoot?.setRow(rootNode);
-        const allLeafChildren = rootNode?.allLeafChildren;
-        if (allLeafChildren) {
-            for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
-                allLeafChildren[i].treeNode?.invalidate();
-            }
+        if (!treeRoot) {
+            return; // Not active, destroyed
         }
-        this.treeCommit();
+
+        if (params.changedProps?.has('treeData') && !params.newData) {
+            treeRoot.setRow(rootNode);
+            const allLeafChildren = rootNode?.allLeafChildren;
+            if (allLeafChildren) {
+                for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
+                    allLeafChildren[i].treeNode?.invalidate();
+                }
+            }
+            this.treeCommit();
+        }
+
+        super.refreshModel(params);
     }
 }

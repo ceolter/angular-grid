@@ -6,7 +6,7 @@ import type {
     DragItem,
     DraggingEvent,
     DropTarget,
-    FuncColsService,
+    IColsService,
 } from 'ag-grid-community';
 import { DragSourceType, _shouldUpdateColVisibilityAfterGroup } from 'ag-grid-community';
 
@@ -18,12 +18,12 @@ export type TDropZone = 'rowGroup' | 'pivot' | 'aggregation';
 
 export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumnComp, AgColumn> {
     protected colModel: ColumnModel;
-    protected funcColsSvc: FuncColsService;
+    protected rowGroupColsSvc?: IColsService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     constructor(
@@ -55,7 +55,7 @@ export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumn
 
     protected override minimumAllowedNewInsertIndex(): number {
         const numberOfLockedCols = this.gos.get('groupLockGroupColumns');
-        const numberOfGroupCols = this.funcColsSvc.rowGroupCols.length;
+        const numberOfGroupCols = this.rowGroupColsSvc?.columns.length ?? 0;
         if (numberOfLockedCols === -1) {
             return numberOfGroupCols;
         }

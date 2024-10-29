@@ -14,7 +14,7 @@ export type { ColumnGroupService } from './columns/columnGroups/columnGroupServi
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
 export type { ColumnAutosizeService } from './columnAutosize/columnAutosizeService';
-export type { FuncColsService } from './columns/funcColsService';
+export { BaseColsService } from './columns/baseColsService';
 export type { ColumnStateService } from './columns/columnStateService';
 export { ColumnState, ColumnStateParams, ApplyColumnStateParams } from './columns/columnStateService';
 export type { ColumnMoveService } from './columnMove/columnMoveService';
@@ -311,6 +311,7 @@ export { _requestAnimationFrame } from './misc/animationFrameService';
 export type { AnimationFrameService } from './misc/animationFrameService';
 export { AlignedGrid } from './interfaces/iAlignedGrid';
 export type { MenuService } from './misc/menu/menuService';
+export type { IColsService } from './interfaces/iColsService';
 
 // editing / cellEditors
 export {
@@ -343,6 +344,8 @@ export {
 export { ICellEditorRendererComp, ICellEditorRendererParams } from './interfaces/iCellEditorRenderer';
 
 export type { CheckboxCellEditor } from './edit/cellEditors/checkboxCellEditor';
+
+export type { CheckboxSelectionComponent } from './selection/checkboxSelectionComponent';
 
 // rendering / cellRenderers
 export {
@@ -633,6 +636,8 @@ export {
     _getGroupSelection,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
+    _getCheckboxes,
+    _getCheckboxLocation,
     _getHeaderCheckbox,
     _isMultiRowSelection,
     _getFillHandle,

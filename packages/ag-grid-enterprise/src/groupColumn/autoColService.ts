@@ -8,8 +8,8 @@ import type {
     ColumnModel,
     ColumnNameService,
     Context,
-    FuncColsService,
     IAutoColService,
+    IColsService,
     NamedBean,
     _ColumnCollections,
 } from 'ag-grid-community';
@@ -38,7 +38,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private colFactory: ColumnFactory;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
     private context: Context;
     private columnGroupSvc?: ColumnGroupService;
 
@@ -49,7 +49,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.colFactory = beans.colFactory;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.context = beans.context;
         this.columnGroupSvc = beans.columnGroupSvc;
     }
@@ -83,9 +83,9 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         // of the group column in this instance.
         const suppressAutoColumn = isPivotMode ? this.gos.get('pivotSuppressAutoColumn') : this.isSuppressAutoCol();
 
-        const rowGroupCols = this.funcColsSvc.rowGroupCols;
+        const rowGroupCols = this.rowGroupColsSvc?.columns;
 
-        const groupingActive = rowGroupCols.length > 0 || this.gos.get('treeData');
+        const groupingActive = (rowGroupCols && rowGroupCols.length > 0) || this.gos.get('treeData');
 
         const noAutoCols = !groupingActive || suppressAutoColumn || groupFullWidthRow;
 
@@ -102,7 +102,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
             return;
         }
 
-        const list = this.generateAutoCols(rowGroupCols) ?? [];
+        const list = this.generateAutoCols(rowGroupCols);
         const autoColsSame = _areColIdsEqual(list, this.autoCols?.list || null);
 
         // the new tree dept will equal the current tree dept of cols
@@ -175,7 +175,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         return this.autoCols?.list ?? null;
     }
 
-    private generateAutoCols(rowGroupCols: AgColumn[]): AgColumn[] {
+    private generateAutoCols(rowGroupCols: AgColumn[] = []): AgColumn[] {
         const autoCols: AgColumn[] = [];
 
         const doingTreeData = this.gos.get('treeData');

@@ -1,13 +1,12 @@
 import type {
     AgColumn,
     BeanCollection,
-    ColumnModel,
     ColumnNameService,
     DragAndDropIcon,
     DragItem,
     DropTarget,
-    FuncColsService,
     IAggFuncService,
+    IColsService,
     PopupService,
     SortIndicatorComp,
     SortService,
@@ -22,19 +21,19 @@ import type { TDropZone } from './baseDropZonePanel';
 export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     private popupSvc: PopupService;
     private sortSvc?: SortService;
-    private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
     private aggFuncSvc?: IAggFuncService;
+    private rowGroupColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
 
     public override wireBeans(beans: BeanCollection) {
         super.wireBeans(beans);
         this.popupSvc = beans.popupSvc!;
         this.sortSvc = beans.sortSvc;
-        this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
         this.aggFuncSvc = beans.aggFuncSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
     }
 
     private readonly eSortIndicator: SortIndicatorComp = RefPlaceholder;
@@ -333,7 +332,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         const itemSelected = () => {
             hidePopup();
             this.getGui().focus();
-            this.funcColsSvc.setColumnAggFunc(this.column, value, 'toolPanelDragAndDrop');
+            this.valueColsSvc?.setColumnAggFunc?.(this.column, value, 'toolPanelDragAndDrop');
         };
 
         const localeTextFunc = this.getLocaleTextFunc();
@@ -345,7 +344,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     }
 
     private isGroupingAndLocked(): boolean {
-        return this.isGroupingZone() && isRowGroupColLocked(this.funcColsSvc, this.gos, this.column);
+        return this.isGroupingZone() && isRowGroupColLocked(this.column, this.beans);
     }
 
     private isAggregationZone() {

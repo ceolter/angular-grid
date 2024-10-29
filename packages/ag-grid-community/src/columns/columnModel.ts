@@ -10,6 +10,7 @@ import type { ColumnEventType } from '../events';
 import type { QuickFilterService } from '../filter/quickFilterService';
 import { _shouldMaintainColumnOrder } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
+import type { IColsService } from '../interfaces/iColsService';
 import type { Column } from '../interfaces/iColumn';
 import type { IPivotResultColsService } from '../interfaces/iPivotResultColsService';
 import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
@@ -27,7 +28,6 @@ import {
     isColumnGroupAutoCol,
 } from './columnUtils';
 import type { ColumnViewportService } from './columnViewportService';
-import type { FuncColsService } from './funcColsService';
 import type { SelectionColService } from './selectionColService';
 import type { VisibleColsService } from './visibleColsService';
 
@@ -58,7 +58,9 @@ export class ColumnModel extends BeanStub implements NamedBean {
     private colDefFactory?: ColumnDefFactory;
     private colState: ColumnStateService;
     private colAutosize?: ColumnAutosizeService;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
     private quickFilter?: QuickFilterService;
     private showRowGroupCols?: IShowRowGroupColsService;
     private rowAutoHeight?: RowAutoHeightService;
@@ -75,7 +77,9 @@ export class ColumnModel extends BeanStub implements NamedBean {
         this.colDefFactory = beans.colDefFactory;
         this.colState = beans.colState;
         this.colAutosize = beans.colAutosize;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
         this.quickFilter = beans.quickFilter;
         this.showRowGroupCols = beans.showRowGroupCols;
         this.rowAutoHeight = beans.rowAutoHeight;
@@ -149,7 +153,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
         this.colDefCols = { tree, treeDepth, list, map };
 
-        this.funcColsSvc.extractCols(source, oldCols);
+        this.extractCols(source, oldCols);
 
         this.ready = true;
 
@@ -181,6 +185,12 @@ export class ColumnModel extends BeanStub implements NamedBean {
         if (source === 'gridInitializing') {
             this.colAutosize?.applyAutosizeStrategy();
         }
+    }
+
+    private extractCols(source: ColumnEventType, oldProvidedCols: AgColumn[] | undefined): void {
+        this.rowGroupColsSvc?.extractCols(source, oldProvidedCols);
+        this.pivotColsSvc?.extractCols(source, oldProvidedCols);
+        this.valueColsSvc?.extractCols(source, oldProvidedCols);
     }
 
     // called from: buildAutoGroupColumns (events 'groupDisplayType', 'treeData', 'treeDataDisplayType', 'groupHideOpenParents')
@@ -264,12 +274,12 @@ export class ColumnModel extends BeanStub implements NamedBean {
         // show columns we are aggregating on
 
         const showAutoGroupAndValuesOnly = this.isPivotMode() && !this.showingPivotResult;
-        const valueColumns = this.funcColsSvc.valueCols;
+        const valueColumns = this.valueColsSvc?.columns;
 
         const res = this.cols.list.filter((col) => {
             const isAutoGroupCol = isColumnGroupAutoCol(col);
             if (showAutoGroupAndValuesOnly) {
-                const isValueCol = valueColumns && valueColumns.includes(col);
+                const isValueCol = valueColumns?.includes(col);
                 return isAutoGroupCol || isValueCol;
             } else {
                 // keep col if a) it's auto-group or b) it's visible
@@ -435,7 +445,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
     // + clientSideRowModel
     public isPivotActive(): boolean {
-        const pivotColumns = this.funcColsSvc.pivotCols;
+        const pivotColumns = this.pivotColsSvc?.columns;
         return this.pivotMode && !!pivotColumns?.length;
     }
 

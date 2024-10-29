@@ -149,6 +149,7 @@ export const _INTERNAL_EVENTS = [
     'recalculateRowBounds',
     'stickyTopOffsetChanged',
     'overlayExclusiveChanged',
+    'beforeRefreshModel',
 ] as const;
 
 export const _ALL_EVENTS = [..._PUBLIC_EVENTS, ..._INTERNAL_EVENTS] as const;
