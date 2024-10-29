@@ -141,7 +141,7 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
             }
 
             if (column.getPinned() !== actualPinned) {
-                column.setPinned(actualPinned);
+                this.setColPinned(column, actualPinned);
                 updatedCols.push(column);
             }
         });
@@ -152,6 +152,26 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
         }
 
         this.colAnimation?.finish();
+    }
+
+    public initCol(column: AgColumn): void {
+        const { pinned, initialPinned } = column.colDef;
+        if (pinned !== undefined) {
+            this.setColPinned(column, pinned);
+        } else {
+            this.setColPinned(column, initialPinned);
+        }
+    }
+
+    public setColPinned(column: AgColumn, pinned: ColumnPinnedType): void {
+        if (pinned === true || pinned === 'left') {
+            column.pinned = 'left';
+        } else if (pinned === 'right') {
+            column.pinned = 'right';
+        } else {
+            column.pinned = null;
+        }
+        column.dispatchStateUpdatedEvent('pinned');
     }
 
     private getPinnedColumnsOverflowingViewport(viewportWidth: number): AgColumn[] {

@@ -6,6 +6,7 @@ import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import type { CheckboxSelectionComponent } from '../selection/checkboxSelectionComponent';
 import type { SelectAllFeature } from '../selection/selectAllFeature';
 import type { ChangedPath } from '../utils/changedPath';
+import type { IRowNode } from './iRowNode';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from './selectionState';
 
 export interface SetSelectedParams {
@@ -59,6 +60,7 @@ export interface ISelectionService {
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
     setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
+    isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
 }
 
 interface INodeSelectionParams {

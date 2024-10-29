@@ -28,6 +28,7 @@ import {
     _focusInto,
     _isColumnMenuAnchoringEnabled,
     _isLegacyMenuEnabled,
+    _setColMenuVisible,
     _warn,
     isColumn,
 } from 'ag-grid-community';
@@ -201,7 +202,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             const eComp = menu.getGui();
             this.destroyBean(menu);
             if (column) {
-                column.setMenuVisible(false, 'contextMenu');
+                _setColMenuVisible(column, false, 'contextMenu');
                 // if we don't have a column, then the menu wasn't launched via keyboard navigation
                 this.menuUtils.restoreFocusOnClose(restoreFocusParams, eComp, e);
             }
@@ -252,7 +253,9 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             this.dispatchVisibleChangedEvent(true, true, column);
         });
 
-        column?.setMenuVisible(true, 'contextMenu');
+        if (column) {
+            _setColMenuVisible(column, true, 'contextMenu');
+        }
 
         this.activeMenu = menu;
 

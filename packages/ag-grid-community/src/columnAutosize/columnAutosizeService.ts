@@ -369,7 +369,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                         column.setActualWidth(widthOverride, source, true);
                         return;
                     }
-                    column.setMinimum(source);
+                    column.setActualWidth(column.minWidth, source);
                 });
             } else {
                 const scale = availablePixels / getWidthOfColsInList(colsToSpread);

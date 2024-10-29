@@ -8,6 +8,7 @@ import type { RowNode } from '../entities/rowNode';
 import { _isGroupRowsSticky } from '../gridOptionsUtils';
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { IRowModel } from '../interfaces/iRowModel';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { RowPosition } from '../interfaces/iRowPosition';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
 import type { PaginationService } from '../pagination/paginationService';
@@ -135,7 +136,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
             return false;
         }
 
-        const suppressNavigable = column.isSuppressNavigable(rowNode);
+        const suppressNavigable = this.isSuppressNavigable(column, rowNode);
         return !suppressNavigable;
     }
 
@@ -426,5 +427,22 @@ export class CellNavigationService extends BeanStub implements NamedBean {
         }
 
         return { rowIndex: newRowIndex, column: newColumn, rowPinned: newFloating } as CellPosition;
+    }
+
+    public isSuppressNavigable(column: AgColumn, rowNode: IRowNode): boolean {
+        const { suppressNavigable } = column.colDef;
+        // if boolean set, then just use it
+        if (typeof suppressNavigable === 'boolean') {
+            return suppressNavigable;
+        }
+
+        // if function, then call the function to find out
+        if (typeof suppressNavigable === 'function') {
+            const params = column.createColumnFunctionCallbackParams(rowNode);
+            const userFunc = suppressNavigable;
+            return userFunc(params);
+        }
+
+        return false;
     }
 }

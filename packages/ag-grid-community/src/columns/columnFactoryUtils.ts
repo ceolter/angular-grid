@@ -2,7 +2,7 @@ import type { BeanCollection } from '../context/context';
 import { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import { isProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
-import type { ColDef, ColGroupDef } from '../entities/colDef';
+import type { ColDef, ColGroupDef, SortDirection } from '../entities/colDef';
 import { DefaultColumnTypes } from '../entities/defaultColumnTypes';
 import type { ColumnEventType } from '../events';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
@@ -49,7 +49,7 @@ export function _createColumnTree(
         }
         // we set the original parents at the end, rather than when we go along, as balancing the tree
         // adds extra levels into the tree. so we can only set parents when balancing is done.
-        child.setOriginalParent(parent);
+        child.originalParent = parent;
     };
 
     depthFirstOriginalTreeSearch(null, columnTree, deptFirstCallback);
@@ -145,7 +145,7 @@ function createColumn(
     } else {
         const colDefMerged = _addColumnDefaultAndTypes(beans, colDef, column.getColId());
         column.setColDef(colDefMerged, colDef, source);
-        _applyColumnState(column, colDefMerged, source);
+        _applyColumnState(beans, column, colDefMerged, source);
     }
 
     beans.dataTypeSvc?.addColumnListeners(column);
@@ -153,11 +153,62 @@ function createColumn(
     return column;
 }
 
-export function _applyColumnState(column: AgColumn, colDef: ColDef, source: ColumnEventType): void {
-    // flex
-    if (colDef.flex !== undefined) {
-        column.setFlex(colDef.flex);
+/** Updates hide, sort, sortIndex, pinned and flex */
+
+export function updateSomeColumnState(
+    beans: BeanCollection,
+    column: AgColumn,
+    hide: boolean | null | undefined,
+    sort: SortDirection | undefined,
+    sortIndex: number | null | undefined,
+    pinned: boolean | 'left' | 'right' | null | undefined,
+    flex: number | null | undefined,
+    source: ColumnEventType
+): void {
+    const { sortSvc, pinnedCols, colFlex } = beans;
+
+    // hide - anything but undefined, thus null will clear the hide
+    if (hide !== undefined) {
+        column.setVisible(!hide, source);
     }
+
+    if (sortSvc) {
+        // sort - anything but undefined will set sort, thus null or empty string will clear the sort
+        sortSvc.updateColSort(column, sort, source);
+
+        // sorted at - anything but undefined, thus null will clear the sortIndex
+        if (sortIndex !== undefined) {
+            sortSvc.setColSortIndex(column, sortIndex);
+        }
+    }
+
+    // pinned - anything but undefined, thus null or empty string will remove pinned
+    if (pinned !== undefined) {
+        pinnedCols?.setColPinned(column, pinned);
+    }
+
+    // flex
+    if (flex !== undefined) {
+        colFlex?.setColFlex(column, flex);
+    }
+}
+
+export function _applyColumnState(
+    beans: BeanCollection,
+    column: AgColumn,
+    colDef: ColDef,
+    source: ColumnEventType
+): void {
+    updateSomeColumnState(
+        beans,
+        column,
+        colDef.hide,
+        colDef.sort,
+        colDef.sortIndex,
+        colDef.pinned,
+        colDef.flex,
+        source
+    );
 
     // width - we only set width if column is not flexing
     const noFlexThisCol = column.getFlex() != null;
@@ -171,30 +222,6 @@ export function _applyColumnState(column: AgColumn, colDef: ColDef, source: Colu
             const widthBeforeUpdate = column.getActualWidth();
             column.setActualWidth(widthBeforeUpdate, source);
         }
-    }
-
-    // sort - anything but undefined will set sort, thus null or empty string will clear the sort
-    if (colDef.sort !== undefined) {
-        if (colDef.sort == 'asc' || colDef.sort == 'desc') {
-            column.setSort(colDef.sort, source);
-        } else {
-            column.setSort(undefined, source);
-        }
-    }
-
-    // sorted at - anything but undefined, thus null will clear the sortIndex
-    if (colDef.sortIndex !== undefined) {
-        column.setSortIndex(colDef.sortIndex);
-    }
-
-    // hide - anything but undefined, thus null will clear the hide
-    if (colDef.hide !== undefined) {
-        column.setVisible(!colDef.hide, source);
-    }
-
-    // pinned - anything but undefined, thus null or empty string will remove pinned
-    if (colDef.pinned !== undefined) {
-        column.setPinned(colDef.pinned);
     }
 }
 

@@ -1,3 +1,4 @@
+import { isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
@@ -7,6 +8,7 @@ import { _createGlobalRowEvent } from '../entities/rowNodeUtils';
 import type { SelectionEventSourceType } from '../events';
 import {
     _getActiveDomElement,
+    _getCheckboxes,
     _getEnableDeselection,
     _getEnableSelection,
     _getEnableSelectionWithoutKeys,
@@ -15,6 +17,7 @@ import {
     _isRowSelection,
 } from '../gridOptionsUtils';
 import type { IRowModel } from '../interfaces/iRowModel';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { ISetNodesSelectedParams, SetSelectedParams } from '../interfaces/iSelectionService';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
@@ -302,5 +305,16 @@ export abstract class BaseSelectionService extends BeanStub {
         }
 
         return this.setNodesSelected({ ...params, nodes: [rowNode.footer ? rowNode.sibling : rowNode] });
+    }
+
+    public isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean {
+        const so = this.gos.get('rowSelection');
+
+        if (so && typeof so !== 'string') {
+            const checkbox = isColumnSelectionCol(column) && _getCheckboxes(so);
+            return column.isColumnFunc(rowNode, checkbox);
+        } else {
+            return column.isColumnFunc(rowNode, column.colDef.checkboxSelection);
+        }
     }
 }

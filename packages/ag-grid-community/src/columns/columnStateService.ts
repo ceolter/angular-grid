@@ -17,6 +17,7 @@ import {
     dispatchColumnResizedEvent,
     dispatchColumnVisibleEvent,
 } from './columnEventUtils';
+import { updateSomeColumnState } from './columnFactoryUtils';
 import type { ColumnCollections, ColumnModel } from './columnModel';
 import { GROUP_AUTO_COLUMN_ID, _getColumnsFromTree, getValueFactory, isColumnSelectionCol } from './columnUtils';
 
@@ -72,6 +73,7 @@ export class ColumnStateService extends BeanStub implements NamedBean {
     beanName = 'colState' as const;
 
     public applyColumnState(params: ApplyColumnStateParams, source: ColumnEventType): boolean {
+        const { beans } = this;
         const {
             colModel,
             rowGroupColsSvc,
@@ -83,7 +85,7 @@ export class ColumnStateService extends BeanStub implements NamedBean {
             pivotResultCols,
             environment,
             valueColsSvc,
-        } = this.beans;
+        } = beans;
 
         const providedCols = colModel.getColDefCols() || [];
         if (!providedCols?.length) {
@@ -109,51 +111,30 @@ export class ColumnStateService extends BeanStub implements NamedBean {
 
             const getValue = getValueFactory(stateItem, params.defaultState);
 
-            // following ensures we are left with boolean true or false, eg converts (null, undefined, 0) all to true
-            const hide = getValue('hide').value1;
-            if (hide !== undefined) {
-                column.setVisible(!hide, source);
-            }
-
-            // sets pinned to 'left' or 'right'
-            const pinned = getValue('pinned').value1;
-            if (pinned !== undefined) {
-                column.setPinned(pinned);
-            }
-
-            // if width provided and valid, use it, otherwise stick with the old width
-            const minColWidth = column.getColDef().minWidth ?? environment.getDefaultColumnMinWidth();
-
-            // flex
             const flex = getValue('flex').value1;
-            // if flex is null or a value, set into the col
-            if (flex !== undefined) {
-                column.setFlex(flex);
-            }
+
+            updateSomeColumnState(
+                beans,
+                column,
+                getValue('hide').value1,
+                getValue('sort').value1,
+                getValue('sortIndex').value1,
+                getValue('pinned').value1,
+                flex,
+                source
+            );
 
             // if flex is null or undefined, fall back to setting width
             if (flex == null) {
                 // if no flex, then use width if it's there
                 const width = getValue('width').value1;
                 if (width != null) {
+                    // if width provided and valid, use it, otherwise stick with the old width
+                    const minColWidth = column.getColDef().minWidth ?? environment.getDefaultColumnMinWidth();
                     if (minColWidth != null && width >= minColWidth) {
                         column.setActualWidth(width, source);
                     }
                 }
-            }
-
-            const sort = getValue('sort').value1;
-            if (sort !== undefined) {
-                if (sort === 'desc' || sort === 'asc') {
-                    column.setSort(sort, source);
-                } else {
-                    column.setSort(undefined, source);
-                }
-            }
-
-            const sortIndex = getValue('sortIndex').value1;
-            if (sortIndex !== undefined) {
-                column.setSortIndex(sortIndex);
             }
 
             // we do not do aggFunc, rowGroup or pivot for auto cols or secondary cols

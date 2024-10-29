@@ -2,6 +2,7 @@ import type { Registry } from '../components/framework/registry';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
+import type { AgColumn } from '../entities/agColumn';
 import type { HeaderCellCtrl } from '../headerRendering/cells/column/headerCellCtrl';
 import type { HeaderGroupCellCtrl } from '../headerRendering/cells/columnGroup/headerGroupCellCtrl';
 import type { CellCtrl } from '../rendering/cell/cellCtrl';
@@ -187,5 +188,11 @@ export class TooltipService extends BeanStub implements NamedBean {
         );
 
         return ctrl.createBean(tooltipFeature, this.beans.context);
+    }
+
+    public initCol(column: AgColumn): void {
+        const { colDef } = column;
+        column.tooltipEnabled =
+            _exists(colDef.tooltipField) || _exists(colDef.tooltipValueGetter) || _exists(colDef.tooltipComponent);
     }
 }

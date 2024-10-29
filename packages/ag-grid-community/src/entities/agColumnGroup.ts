@@ -32,23 +32,19 @@ export class AgColumnGroup<TValue = any> extends BeanStub<AgColumnGroupEvent> im
     // The measured height of this column's header when autoHeaderHeight is enabled
     private autoHeaderHeight: number | null = null;
 
-    private readonly groupId: string;
-    private readonly partId: number;
-    private readonly providedColumnGroup: AgProvidedColumnGroup;
-    private readonly pinned: ColumnPinnedType;
-
     // private moving = false
     private left: number | null;
     private oldLeft: number | null;
 
-    private parent: AgColumnGroup | null = null;
+    public parent: AgColumnGroup | null = null;
 
-    constructor(providedColumnGroup: AgProvidedColumnGroup, groupId: string, partId: number, pinned: ColumnPinnedType) {
+    constructor(
+        private readonly providedColumnGroup: AgProvidedColumnGroup,
+        private readonly groupId: string,
+        private readonly partId: number,
+        private readonly pinned: ColumnPinnedType
+    ) {
         super();
-        this.groupId = groupId;
-        this.partId = partId;
-        this.providedColumnGroup = providedColumnGroup;
-        this.pinned = pinned;
     }
 
     // as the user is adding and removing columns, the groups are recalculated.
@@ -61,10 +57,6 @@ export class AgColumnGroup<TValue = any> extends BeanStub<AgColumnGroupEvent> im
 
     public getParent(): AgColumnGroup | null {
         return this.parent;
-    }
-
-    public setParent(parent: AgColumnGroup | null): void {
-        this.parent = parent;
     }
 
     public getUniqueId(): HeaderColumnId {
@@ -139,11 +131,9 @@ export class AgColumnGroup<TValue = any> extends BeanStub<AgColumnGroupEvent> im
 
     public getActualWidth(): number {
         let groupActualWidth = 0;
-        if (this.displayedChildren) {
-            this.displayedChildren.forEach((child) => {
-                groupActualWidth += child.getActualWidth();
-            });
-        }
+        this.displayedChildren?.forEach((child) => {
+            groupActualWidth += child.getActualWidth();
+        });
         return groupActualWidth;
     }
 

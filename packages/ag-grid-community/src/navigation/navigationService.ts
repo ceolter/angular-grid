@@ -693,7 +693,7 @@ export class NavigationService extends BeanStub implements NamedBean {
                 return row;
             }
 
-            if (nextCell.column.isSuppressNavigable(nextCell.rowNode)) {
+            if (this.cellNavigation.isSuppressNavigable(nextCell.column, nextCell.rowNode)) {
                 continue;
             }
 

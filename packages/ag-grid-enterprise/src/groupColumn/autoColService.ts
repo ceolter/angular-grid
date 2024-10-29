@@ -151,12 +151,12 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
                 const autoGroup = new AgProvidedColumnGroup(null, `FAKE_PATH_${col.getId()}}_${i}`, true, i);
                 this.createBean(autoGroup);
                 autoGroup.setChildren([nextChild]);
-                nextChild.setOriginalParent(autoGroup);
+                nextChild.originalParent = autoGroup;
                 nextChild = autoGroup;
             }
 
             if (depth === 0) {
-                col.setOriginalParent(null);
+                col.originalParent = null;
             }
 
             // at this point, the nextChild is the top most item in the tree
@@ -243,7 +243,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const colDef = this.createAutoColDef(colToUpdate.getId(), underlyingColumn ?? undefined, index);
 
         colToUpdate.setColDef(colDef, null, source);
-        _applyColumnState(colToUpdate, colDef, source);
+        _applyColumnState(this.beans, colToUpdate, colDef, source);
     }
 
     private createAutoColDef(colId: string, underlyingColumn?: AgColumn, index?: number): ColDef {

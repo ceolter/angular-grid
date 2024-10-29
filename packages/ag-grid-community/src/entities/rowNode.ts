@@ -468,29 +468,34 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
      * @returns `true` if the value was changed, otherwise `false`.
      */
     public setDataValue(colKey: string | AgColumn, newValue: any, eventSource?: string): boolean {
-        const getColumnFromKey = () => {
-            if (typeof colKey !== 'string') {
-                return colKey;
-            }
-            // if in pivot mode, grid columns wont include primary columns
-            return this.beans.colModel.getCol(colKey) ?? this.beans.colModel.getColDefCol(colKey);
-        };
         // When it is done via the editors, no 'cell changed' event gets fired, as it's assumed that
         // the cell knows about the change given it's in charge of the editing.
         // this method is for the client to call, so the cell listens for the change
         // event, and also flashes the cell when the change occurs.
-        const column = getColumnFromKey()!;
-        const oldValue = this.beans.valueSvc.getValueForDisplay(column, this);
+        const { colModel, valueSvc, gos, selectionSvc } = this.beans;
 
-        if (this.beans.gos.get('readOnlyEdit')) {
-            this.beans.eventSvc.dispatchEvent({
+        // if in pivot mode, grid columns wont include primary columns
+        const column = typeof colKey !== 'string' ? colKey : colModel.getCol(colKey) ?? colModel.getColDefCol(colKey);
+        if (!column) {
+            return false;
+        }
+        const oldValue = valueSvc.getValueForDisplay(column, this);
+
+        if (gos.get('readOnlyEdit')) {
+            const {
+                beans: { eventSvc },
+                data,
+                rowIndex,
+                rowPinned,
+            } = this;
+            eventSvc.dispatchEvent({
                 type: 'cellEditRequest',
                 event: null,
-                rowIndex: this.rowIndex!,
-                rowPinned: this.rowPinned,
-                column: column,
-                colDef: column.getColDef(),
-                data: this.data,
+                rowIndex,
+                rowPinned,
+                column,
+                colDef: column.colDef,
+                data,
                 node: this,
                 oldValue,
                 newValue,
@@ -500,10 +505,10 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
             return false;
         }
 
-        const valueChanged = this.beans.valueSvc.setValue(this, column, newValue, eventSource);
+        const valueChanged = valueSvc.setValue(this, column, newValue, eventSource);
 
         this.dispatchCellChangedEvent(column, newValue, oldValue);
-        this.beans.selectionSvc?.checkRowSelectable(this);
+        selectionSvc?.checkRowSelectable(this);
 
         return valueChanged;
     }
@@ -575,9 +580,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
 
     /** Perform a depth-first search of this node and its children. */
     public depthFirstSearch(callback: (rowNode: RowNode<TData>) => void): void {
-        if (this.childrenAfterGroup) {
-            this.childrenAfterGroup.forEach((child) => child.depthFirstSearch(callback));
-        }
+        this.childrenAfterGroup?.forEach((child) => child.depthFirstSearch(callback));
         callback(this);
     }
 

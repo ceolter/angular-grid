@@ -5,6 +5,7 @@ import type { CtrlsService } from '../../ctrlsService';
 import type { AgColumn } from '../../entities/agColumn';
 import { isColumn } from '../../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../../entities/agProvidedColumnGroup';
+import type { ColumnEventType } from '../../events';
 import type { FilterManager } from '../../filter/filterManager';
 import { _isLegacyMenuEnabled } from '../../gridOptionsUtils';
 import type { HeaderCellCtrl } from '../../headerRendering/cells/column/headerCellCtrl';
@@ -195,5 +196,12 @@ export class MenuService extends BeanStub implements NamedBean {
                 }
             });
         }
+    }
+}
+
+export function _setColMenuVisible(column: AgColumn, visible: boolean, source: ColumnEventType): void {
+    if (column.menuVisible !== visible) {
+        column.menuVisible = visible;
+        column.dispatchColEvent('menuVisibleChanged', source);
     }
 }

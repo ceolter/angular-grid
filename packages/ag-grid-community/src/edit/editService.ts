@@ -9,6 +9,7 @@ import type { RowNode } from '../entities/rowNode';
 import { _isElementInThisGrid } from '../gridBodyComp/mouseEventUtils';
 import type { DefaultProvidedCellEditorParams, ICellEditorParams } from '../interfaces/iCellEditor';
 import type { CellPosition } from '../interfaces/iCellPosition';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { NavigationService } from '../navigation/navigationService';
 import type { CellCtrl, ICellComp } from '../rendering/cell/cellCtrl';
 import type { RowCtrl } from '../rendering/row/rowCtrl';
@@ -181,6 +182,26 @@ export class EditService extends BeanStub implements NamedBean {
             gui.rowComp.addOrRemoveCssClass('ag-row-inline-editing', editing);
             gui.rowComp.addOrRemoveCssClass('ag-row-not-inline-editing', !editing);
         });
+    }
+
+    public isCellEditable(column: AgColumn, rowNode: IRowNode): boolean {
+        if (rowNode.group) {
+            // This is a group - it could be a tree group or a grouping group...
+            if (this.gos.get('treeData')) {
+                // tree - allow editing of groups with data by default.
+                // Allow editing filler nodes (node without data) only if enableGroupEdit is true.
+                if (!rowNode.data && !this.gos.get('enableGroupEdit')) {
+                    return false;
+                }
+            } else {
+                // grouping - allow editing of groups if the user has enableGroupEdit option enabled
+                if (!this.gos.get('enableGroupEdit')) {
+                    return false;
+                }
+            }
+        }
+
+        return column.isColumnFunc(rowNode, column.colDef.editable);
     }
 
     private takeValueFromCellEditor(cancel: boolean, cellComp: ICellComp): { newValue?: any; newValueExists: boolean } {

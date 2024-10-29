@@ -7,6 +7,7 @@ import type { AgColumn } from '../entities/agColumn';
 import { _isColumnMenuAnchoringEnabled, _isLegacyMenuEnabled } from '../gridOptionsUtils';
 import type { ContainerType } from '../interfaces/iAfterGuiAttachedParams';
 import type { IMenuFactory } from '../interfaces/iMenuFactory';
+import { _setColMenuVisible } from '../misc/menu/menuService';
 import { _setAriaRole } from '../utils/aria';
 import { _isVisible } from '../utils/dom';
 import { _findNextFocusableElement, _findTabbableParent, _focusInto } from '../utils/focus';
@@ -128,7 +129,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             ? eventSource ?? this.ctrlsSvc.getGridBodyCtrl().eGridBody
             : undefined;
         const closedCallback = (e: MouseEvent | TouchEvent | KeyboardEvent) => {
-            column.setMenuVisible(false, 'contextMenu');
+            _setColMenuVisible(column, false, 'contextMenu');
             const isKeyboardEvent = e instanceof KeyboardEvent;
 
             if (this.tabListener) {
@@ -176,7 +177,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             comp.afterGuiAttached({ container: containerType, hidePopup });
         });
 
-        column.setMenuVisible(true, 'contextMenu');
+        _setColMenuVisible(column, true, 'contextMenu');
 
         this.dispatchVisibleChangedEvent(true, containerType, column);
     }

@@ -560,7 +560,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         parent: AgColumnGroup | null
     ): void {
         columnsOrGroups!.forEach((columnsOrGroup) => {
-            columnsOrGroup.setParent(parent);
+            columnsOrGroup.parent = parent;
             if (isColumnGroup(columnsOrGroup)) {
                 const columnGroup = columnsOrGroup;
                 this.setupParentsIntoCols(columnGroup.getChildren(), columnGroup);
