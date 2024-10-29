@@ -2,8 +2,8 @@ import type { _MasterDetailGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { ClientSideRowModelExpansionModule } from '../expansion/expansionModule';
-import { GroupCellRendererModule } from '../groupColumn/groupColumnModule';
 import { baseEnterpriseModule } from '../moduleUtils';
+import { ClientSideRowModelHierarchyModule, GroupCellRendererModule } from '../rowHierarchy/rowHierarchyModule';
 import { DetailCellRenderer } from './detailCellRenderer';
 import { DetailCellRendererCtrl } from './detailCellRendererCtrl';
 import { DetailGridApiService } from './detailGridApiService';
@@ -32,5 +32,10 @@ export const MasterDetailApiModule: _ModuleWithApi<_MasterDetailGridApi> = {
 
 export const MasterDetailModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MasterDetailModule'),
-    dependsOn: [MasterDetailCoreModule, MasterDetailApiModule, ClientSideRowModelExpansionModule],
+    dependsOn: [
+        MasterDetailCoreModule,
+        MasterDetailApiModule,
+        ClientSideRowModelExpansionModule,
+        ClientSideRowModelHierarchyModule,
+    ],
 };

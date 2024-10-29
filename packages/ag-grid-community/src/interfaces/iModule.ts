@@ -192,6 +192,7 @@ export type EnterpriseModuleName =
     | 'AdvancedFilterModule'
     | 'AggregationModule'
     | 'ClientSideRowModelExpansionModule'
+    | 'ClientSideRowModelHierarchyModule'
     | 'ClipboardApiModule'
     | 'ClipboardCoreModule'
     | 'ClipboardModule'

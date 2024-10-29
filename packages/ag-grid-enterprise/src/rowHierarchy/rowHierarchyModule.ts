@@ -5,6 +5,7 @@ import { PivotColsSvc } from '../pivot/pivotColsSvc';
 import { ValueColsSvc } from '../pivot/valueColsSvc';
 import { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
 import { AutoColService } from './autoColService';
+import { FlattenStage } from './flattenStage';
 import { GroupCellRenderer } from './rendering/groupCellRenderer';
 import { GroupCellRendererCtrl } from './rendering/groupCellRendererCtrl';
 import { ShowRowGroupColsService } from './showRowGroupColsService';
@@ -29,4 +30,10 @@ export const GroupColumnModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupColumnModule'),
     beans: [AutoColService, ShowRowGroupColsService, RowGroupColsSvc, PivotColsSvc, ValueColsSvc],
     dependsOn: [GroupCellRendererModule],
+};
+
+export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ClientSideRowModelHierarchyModule'),
+    rowModels: ['clientSide'],
+    beans: [FlattenStage],
 };
