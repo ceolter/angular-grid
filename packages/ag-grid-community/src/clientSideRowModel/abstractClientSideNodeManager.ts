@@ -133,15 +133,20 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const result = this.updateRowData(rowDataTransaction);
 
         let rowsOrderChanged = false;
-
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
         if (!this.gos.get('suppressMaintainUnsortedOrder')) {
             // we need to reorder the nodes to match the new data order
             rowsOrderChanged = this.updateRowOrderFromRowData(rowData);
         }
 
-        params.rowNodeTransactions = [result.rowNodeTransaction];
-        params.rowNodesOrderChanged = result.rowsInserted || rowsOrderChanged;
+        const { rowNodeTransaction, rowsInserted } = result;
+        const { add, remove, update } = rowNodeTransaction;
+        if (rowsInserted || rowsOrderChanged || add.length || remove.length || update.length) {
+            params.step = 'group';
+            params.rowDataUpdated = true;
+            params.rowNodeTransactions = [rowNodeTransaction];
+            params.rowNodesOrderChanged = rowsInserted || rowsOrderChanged;
+        }
     }
 
     public updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData> {

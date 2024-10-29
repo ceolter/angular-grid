@@ -340,9 +340,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (newRowData) {
-            params.step = 'group';
-            params.rowDataUpdated = true;
-
             const immutable =
                 !needFullReload &&
                 this.started &&
@@ -359,6 +356,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
                 this.nodeManager.setImmutableRowData(params, newRowData);
             } else {
+                params.step = 'group';
+                params.rowDataUpdated = true;
                 params.newData = true;
 
                 // no need to invalidate cache, as the cache is stored on the rowNode,
