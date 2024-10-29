@@ -7,6 +7,7 @@ import type { FilterRequestSource } from './filter/iColumnFilter';
 import type { CellRange, CellRangeParams } from './interfaces/IRangeService';
 import type { GridState } from './interfaces/gridState';
 import type { ChartType } from './interfaces/iChartOptions';
+import type { RefreshModelParams } from './interfaces/iClientSideRowModel';
 import type { Column, ColumnEventName, ColumnGroup, ColumnPinnedType, ProvidedColumnGroup } from './interfaces/iColumn';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
 import type { BuildEventTypeMap } from './interfaces/iEventEmitter';
@@ -53,6 +54,7 @@ export type AgEventTypeParams<TData = any, TContext = any> = BuildEventTypeMap<
         toolPanelVisibleChanged: ToolPanelVisibleChangedEvent<TData, TContext>;
         toolPanelSizeChanged: ToolPanelSizeChangedEvent<TData, TContext>;
         modelUpdated: ModelUpdatedEvent<TData, TContext>;
+        beforeRefreshModel: BeforeRefreshModelEvent<TData, TContext>;
         cutStart: CutStartEvent<TData, TContext>;
         cutEnd: CutEndEvent<TData, TContext>;
         pasteStart: PasteStartEvent<TData, TContext>;
@@ -270,8 +272,12 @@ export interface DisplayedColumnsChangedEvent<TData = any, TContext = any>
 }
 
 export interface RowDataUpdatedEvent<TData = any, TContext = any>
-    extends AgGlobalEvent<'rowDataUpdated', TData, TContext> {
-    transactions?: RowNodeTransaction[];
+    extends AgGlobalEvent<'rowDataUpdated', TData, TContext> {}
+
+/** Raised by ClientSideRowModel */
+export interface BeforeRefreshModelEvent<TData = any, TContext = any>
+    extends AgGlobalEvent<'beforeRefreshModel', TData, TContext> {
+    params: RefreshModelParams<TData>;
 }
 
 export interface RowDataUpdateStartedEvent<TData = any, TContext = any>

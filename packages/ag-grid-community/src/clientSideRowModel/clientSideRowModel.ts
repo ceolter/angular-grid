@@ -109,7 +109,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private lastHighlightedRow: RowNode | null;
     private applyAsyncTransactionsTimeout: number | undefined;
     /** Has the start method been called */
-    private hasStarted: boolean = false;
+    private started: boolean = false;
     /** E.g. data has been set into the node manager already */
     private shouldSkipSettingDataOnStart: boolean = false;
     /**
@@ -237,7 +237,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public start(): void {
-        this.hasStarted = true;
+        this.started = true;
         if (this.shouldSkipSettingDataOnStart) {
             this.refreshModel({
                 step: 'group',
@@ -347,7 +347,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
             const immutable =
                 !needFullReload &&
-                this.hasStarted &&
+                this.started &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
                 gos.exists('getRowId') &&
@@ -774,12 +774,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         this.nodeManager.refreshModel?.(params);
 
-        if (!this.rootNode || !this.hasStarted) {
+        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', params });
+
+        if (!this.started) {
             return; // Destroyed or not yet started
         }
 
         if (params.rowDataUpdated) {
-            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated', transactions: rowNodeTransactions });
+            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
         }
 
         if (
@@ -1387,7 +1389,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private onGridReady(): void {
-        if (!this.hasStarted) {
+        if (!this.started) {
             // App can start using API to add transactions, so need to add data into the node manager if not started
             this.setInitialData();
         }
@@ -1402,7 +1404,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         // Forcefully deallocate memory
         this.clearHighlightedRow();
-        this.hasStarted = false;
+        this.started = false;
         this.rootNode = null;
         this.nodeManager = null!;
         this.rowDataTransactionBatch = null;
