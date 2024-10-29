@@ -19,7 +19,6 @@ import {
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
     ClientSideRowModelStage,
-    ClientSideRowModelStep,
     IClientSideRowModel,
     RefreshModelParams,
 } from '../interfaces/iClientSideRowModel';
@@ -737,17 +736,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // return true if we are only doing update transactions
         const transactionsContainUpdatesOnly = !transWithAddsOrDeletes;
         return transactionsContainUpdatesOnly;
-    }
-
-    public refreshModelApi(step: ClientSideRowModelStep | undefined): void {
-        if (!step || step === 'everything') {
-            step = 'group';
-        }
-        this.refreshModel({
-            step,
-            keepRenderedRows: true,
-            animate: !this.gos.get('suppressAnimationFrame'),
-        });
     }
 
     public refreshModel(params: RefreshModelParams): void {

@@ -11,7 +11,17 @@ export function onGroupExpandedOrCollapsed(beans: BeanCollection): void {
 }
 
 export function refreshClientSideRowModel(beans: BeanCollection, step?: ClientSideRowModelStep): void {
-    _getClientSideRowModel(beans)?.refreshModelApi(step);
+    const clientSideRowModel = _getClientSideRowModel(beans);
+    if (clientSideRowModel) {
+        if (!step || step === 'everything') {
+            step = 'group';
+        }
+        clientSideRowModel.refreshModel({
+            step,
+            keepRenderedRows: true,
+            animate: !beans.gos.get('suppressAnimationFrame'),
+        });
+    }
 }
 
 export function isRowDataEmpty(beans: BeanCollection): boolean {

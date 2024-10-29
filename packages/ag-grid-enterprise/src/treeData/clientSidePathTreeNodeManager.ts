@@ -1,5 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type { NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
+import type { ChangedPath, NamedBean, RefreshModelParams, RowNode, RowNodeTransaction } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -27,32 +27,36 @@ export class ClientSidePathTreeNodeManager<TData>
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const transactions = params.rowNodeTransactions;
         if (transactions?.length) {
-            this.treeRoot?.setRow(this.rootNode);
-
-            for (const { remove, update, add } of transactions) {
-                // the order of [add, remove, update] is the same as in ClientSideNodeManager.
-                // Order is important when a record with the same id is added and removed in the same transaction.
-                this.removeRows(remove as RowNode[] | null);
-                this.addOrUpdateRows(update as RowNode[] | null, true);
-                this.addOrUpdateRows(add as RowNode[] | null, false);
-            }
-
-            if (transactions) {
-                const rows = this.treeRoot?.row?.allLeafChildren;
-                if (rows) {
-                    for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
-                        const node = rows[rowIdx].treeNode as TreeNode | null;
-                        if (node && node.oldSourceRowIndex !== rowIdx) {
-                            node.invalidateOrder(); // Order might have changed
-                        }
-                    }
-                }
-            }
-
-            this.treeCommit(params.changedPath); // One single commit for all the transactions
+            this.executeTransactions(transactions, params.changedPath);
         }
 
         super.refreshModel(params);
+    }
+
+    private executeTransactions(transactions: RowNodeTransaction<TData>[], changedPath: ChangedPath | undefined): void {
+        this.treeRoot?.setRow(this.rootNode);
+
+        for (const { remove, update, add } of transactions) {
+            // the order of [add, remove, update] is the same as in ClientSideNodeManager.
+            // Order is important when a record with the same id is added and removed in the same transaction.
+            this.removeRows(remove as RowNode[] | null);
+            this.addOrUpdateRows(update as RowNode[] | null, true);
+            this.addOrUpdateRows(add as RowNode[] | null, false);
+        }
+
+        if (transactions) {
+            const rows = this.treeRoot?.row?.allLeafChildren;
+            if (rows) {
+                for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
+                    const node = rows[rowIdx].treeNode as TreeNode | null;
+                    if (node && node.oldSourceRowIndex !== rowIdx) {
+                        node.invalidateOrder(); // Order might have changed
+                    }
+                }
+            }
+        }
+
+        this.treeCommit(changedPath); // One single commit for all the transactions
     }
 
     /** Transactional removal */
