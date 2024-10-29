@@ -244,39 +244,36 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             const needFullReload =
                 treeDataChildrenFieldChanged || (treeDataChanged && !this.gos.get('treeDataChildrenField'));
 
+            let newRowData: any[] | null | undefined;
+
+            if (needFullReload || rowDataChanged) {
+                newRowData = this.gos.get('rowData');
+            }
+
             if (needFullReload) {
                 // If we are here, it means that the row manager need to be changed or fully reloaded
-
-                let newRowData = this.gos.get('rowData');
                 if (!rowDataChanged) {
                     // No new rowData was passed, so to include user executed transaction we need to extract
                     // the row data from the node manager as it might be different from the original rowData
                     newRowData = this.nodeManager?.extractRowData() ?? newRowData;
                 }
                 this.initRowManager();
-                if (newRowData) {
-                    // We have new rowData to load from scratch
-                    this.setNewRowData(newRowData);
-                    return;
-                }
             }
 
-            if (rowDataChanged) {
-                const rowData = this.gos.get('rowData');
-                if (rowData) {
-                    const getRowIdProvided =
-                        this.gos.exists('getRowId') &&
-                        // this property is a backwards compatibility property, for those who want
-                        // the old behaviour of Row IDs but NOT Immutable Data.
-                        !this.gos.get('resetRowDataOnUpdate');
+            if (newRowData) {
+                const immutable =
+                    !needFullReload &&
+                    this.gos.exists('getRowId') &&
+                    // this property is a backwards compatibility property, for those who want
+                    // the old behaviour of Row IDs but NOT Immutable Data.
+                    !this.gos.get('resetRowDataOnUpdate');
 
-                    if (getRowIdProvided) {
-                        this.setImmutableRowData(rowData);
-                    } else {
-                        this.setNewRowData(rowData);
-                    }
-                    return;
+                if (immutable) {
+                    this.setImmutableRowData(newRowData);
+                } else {
+                    this.setNewRowData(newRowData);
                 }
+                return;
             }
 
             let refreshModelStep: ClientSideRowModelStage | undefined;
@@ -466,7 +463,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.refreshModel({
             step: 'group',
             keepRenderedRows: true,
-            keepEditingRows: true,
             animate,
             rowNodesOrderChanged: true, // We assume the order changed and we don't need to check if it really did
         });
@@ -663,7 +659,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             step: 'sort',
             keepRenderedRows: true,
             animate: animate,
-            keepEditingRows: true,
         });
     }
 
@@ -722,7 +717,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return {
             step,
             keepRenderedRows: true,
-            keepEditingRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
         };
     }
@@ -1338,7 +1332,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 rowNodeTransactions: transactions,
                 rowNodesOrderChanged,
                 keepRenderedRows: true,
-                keepEditingRows: true,
                 animate,
             },
             changedPath
@@ -1353,7 +1346,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.refreshModel({
             step: 'map',
             keepRenderedRows: true,
-            keepEditingRows: true,
             keepUndoRedoStack: true,
         });
     }

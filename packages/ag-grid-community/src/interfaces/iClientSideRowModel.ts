@@ -63,8 +63,6 @@ export interface RefreshModelParams<TData = any> {
     keepRenderedRows?: boolean;
     // if true, rows that are kept are animated to the new position
     animate?: boolean;
-    // if true, then rows we are editing will be kept
-    keepEditingRows?: boolean;
     // if doing delta updates, this has the changes that were done
     rowNodeTransactions?: RowNodeTransaction<TData>[];
     // true if the order of root.allLeafChildren has changed.

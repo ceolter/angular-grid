@@ -72,7 +72,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
     public deactivate(): void {
         if (this.rootNode) {
-            this.setNewRowData([]);
+            this.allNodesMap = {};
             this.rootNode = null!;
         }
     }
