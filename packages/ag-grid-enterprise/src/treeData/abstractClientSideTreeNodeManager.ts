@@ -108,16 +108,6 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         this.oldGroupDisplayColIds = '';
     }
 
-    private checkAllGroupDataAfterColsChanged(rowNodes: RowNode[] | null | undefined) {
-        if (rowNodes) {
-            for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
-                const rowNode = rowNodes[i];
-                this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
-                this.checkAllGroupDataAfterColsChanged(rowNode.childrenAfterGroup);
-            }
-        }
-    }
-
     /** Add or updates the row to a non-root node, preparing the tree correctly for the commit. */
     protected treeSetRow(node: TreeNode, newRow: RowNode, update: boolean): void {
         const { level, row: oldRow } = node;
@@ -532,8 +522,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         if (params.afterColumnsChanged && !params.newData) {
             // Check if group data need to be recomputed due to group columns change
 
-            const rootNode = this.rootNode;
-            if (rootNode && this.gos.get('treeData')) {
+            if (this.gos.get('treeData')) {
                 const newGroupDisplayColIds =
                     this.beans.showRowGroupCols
                         ?.getShowRowGroupCols()
@@ -544,8 +533,13 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 // (regardless of tree data or row grouping)
                 if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
                     this.oldGroupDisplayColIds = newGroupDisplayColIds;
-
-                    this.checkAllGroupDataAfterColsChanged(rootNode.childrenAfterGroup);
+                    const rowNodes = this.rootNode?.childrenAfterGroup;
+                    if (rowNodes) {
+                        for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
+                            const rowNode = rowNodes[i];
+                            this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
+                        }
+                    }
                 }
             } else {
                 this.oldGroupDisplayColIds = '';
