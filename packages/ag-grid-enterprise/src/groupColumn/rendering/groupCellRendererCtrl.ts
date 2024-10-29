@@ -749,19 +749,20 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
                 },
             });
             this.eCheckbox.appendChild(cbSelectionComponent.getGui());
-            this.addDestroyFunc(() => {
-                this.cbComp && this.eCheckbox.removeChild(this.cbComp.getGui());
-                this.destroyBean(this.cbComp);
-            });
+            this.addDestroyFunc(() => this.destroyCheckbox());
         }
 
         this.comp.setCheckboxVisible(checkboxNeeded);
     }
 
-    private refreshCheckbox(): void {
+    private destroyCheckbox(): void {
         this.cbComp && this.eCheckbox.removeChild(this.cbComp.getGui());
         this.destroyBean(this.cbComp);
         this.cbComp = undefined;
+    }
+
+    private refreshCheckbox(): void {
+        this.destroyCheckbox();
         this.addCheckboxIfNeeded();
     }
 
