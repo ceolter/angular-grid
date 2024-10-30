@@ -1168,6 +1168,30 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowsByIndex([], api);
             });
 
+            test('clicking group row with `groupSelects = "filteredDescendants"` enabled selects that row and all its filtered children', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: { mode: 'multiRow', groupSelects: 'filteredDescendants' },
+                    quickFilterText: 'ing',
+                });
+
+                // Group selects children
+                toggleCheckboxByIndex(0);
+                assertSelectedRowsByIndex([2, 3, 4, 5, 6, 7, 8, 9, 10, 11], api);
+
+                // Can un-select child row
+                toggleCheckboxByIndex(4);
+                assertSelectedRowsByIndex([2, 3, 5, 6, 7, 8, 9, 10, 11], api);
+
+                // Toggling group row from indeterminate state selects all children
+                toggleCheckboxByIndex(0);
+                assertSelectedRowsByIndex([2, 3, 5, 6, 7, 8, 9, 10, 11, 4], api);
+
+                // Toggle group row again de-selects all children
+                toggleCheckboxByIndex(0);
+                assertSelectedRowsByIndex([], api);
+            });
+
             test('Cannot select group rows where `isRowSelectable` returns false and `groupSelects` = "self"', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,

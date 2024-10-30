@@ -5,6 +5,10 @@ import { RowNode } from '../entities/rowNode';
 import type { RowSelectedEvent, SelectionEventSourceType } from '../events';
 import { isSelectionUIEvent } from '../events';
 import {
+    _getEnableDeselection,
+    _getEnableSelection,
+    _getEnableSelectionWithoutKeys,
+    _getGroupSelection,
     _getGroupSelectsDescendants,
     _getRowSelectionMode,
     _isClientSideRowModel,
@@ -38,6 +42,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     private selectionCtx: ISelectionContext<RowNode>;
 
     private groupSelectsDescendants: boolean;
+    private groupSelectsFiltered: boolean;
     private mode?: RowSelectionMode;
 
     public override postConstruct(): void {
@@ -46,12 +51,19 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         this.selectionCtx = new RowRangeSelectionContext(rowModel);
         this.mode = _getRowSelectionMode(gos);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
+        this.groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
         this.addManagedPropertyListeners(['groupSelectsChildren', 'rowSelection'], () => {
             const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
             const selectionMode = _getRowSelectionMode(gos);
+            const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
 
-            if (groupSelectsDescendants !== this.groupSelectsDescendants || selectionMode !== this.mode) {
+            if (
+                groupSelectsDescendants !== this.groupSelectsDescendants ||
+                groupSelectsFiltered !== this.groupSelectsFiltered ||
+                selectionMode !== this.mode
+            ) {
                 this.groupSelectsDescendants = groupSelectsDescendants;
+                this.groupSelectsFiltered = groupSelectsFiltered;
                 this.mode = selectionMode;
                 this.deselectAllRowNodes({ source: 'api' });
             }
@@ -95,9 +107,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             _warn(130);
             return 0;
         }
-
-        // groupSelectsFiltered only makes sense when group selects children
-        const groupSelectsFiltered = this.groupSelectsDescendants && params.groupSelectsFiltered === true;
 
         // if node is a footer, we don't do selection, just pass the info
         // to the sibling (the parent of the group)
@@ -150,7 +159,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             // trying to set it to true / false. this group will be calculated further on
             // down when we call updateGroupsFromChildrenSelections(). we need to skip it
             // here, otherwise the updatedCount would include it.
-            const skipThisNode = groupSelectsFiltered && node.group;
+            const skipThisNode = this.groupSelectsFiltered && node.group;
 
             if (!skipThisNode) {
                 const thisNodeWasSelected = this.selectRowNode(node, newValue, event, source);
@@ -160,7 +169,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             }
 
             if (this.groupSelectsDescendants && node.childrenAfterGroup?.length) {
-                updatedCount += this.selectChildren(node, newValue, groupSelectsFiltered, source);
+                updatedCount += this.selectChildren(node, newValue, source);
             }
         }
 
@@ -208,13 +217,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         return updatedCount;
     }
 
-    private selectChildren(
-        node: RowNode,
-        newValue: boolean,
-        groupSelectsFiltered: boolean,
-        source: SelectionEventSourceType
-    ): number {
-        const children = groupSelectsFiltered ? node.childrenAfterAggFilter : node.childrenAfterGroup;
+    private selectChildren(node: RowNode, newValue: boolean, source: SelectionEventSourceType): number {
+        const children = this.groupSelectsFiltered ? node.childrenAfterAggFilter : node.childrenAfterGroup;
 
         if (_missing(children)) {
             return 0;
@@ -224,7 +228,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             newValue: newValue,
             clearSelection: false,
             suppressFinishActions: true,
-            groupSelectsFiltered,
             source,
             nodes: children,
         });

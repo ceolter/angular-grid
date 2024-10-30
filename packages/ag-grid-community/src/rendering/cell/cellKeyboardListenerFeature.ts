@@ -2,7 +2,7 @@ import { KeyCode } from '../../constants/keyCode';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { RowNode } from '../../entities/rowNode';
-import { _getGroupSelection, _isCellSelectionEnabled, _isRowSelection } from '../../gridOptionsUtils';
+import { _isCellSelectionEnabled, _isRowSelection } from '../../gridOptionsUtils';
 import { _isMacOsUserAgent } from '../../utils/browser';
 import type { RowCtrl } from '../row/rowCtrl';
 import type { CellCtrl } from './cellCtrl';
@@ -186,12 +186,10 @@ export class CellKeyboardListenerFeature extends BeanStub {
         if (!this.cellCtrl.isEditing() && _isRowSelection(gos)) {
             const currentSelection = this.rowNode.isSelected();
             const newSelection = !currentSelection;
-            const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
             const updatedCount = this.beans.selectionSvc?.setSelectedParams({
                 rowNode: this.rowNode,
                 newValue: newSelection,
                 rangeSelect: event.shiftKey,
-                groupSelectsFiltered,
                 event,
                 source: 'spaceKey',
             });
@@ -200,7 +198,6 @@ export class CellKeyboardListenerFeature extends BeanStub {
                     rowNode: this.rowNode,
                     newValue: false,
                     rangeSelect: event.shiftKey,
-                    groupSelectsFiltered,
                     event,
                     source: 'spaceKey',
                 });

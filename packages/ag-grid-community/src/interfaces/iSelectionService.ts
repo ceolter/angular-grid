@@ -70,8 +70,6 @@ interface INodeSelectionParams {
     suppressFinishActions?: boolean;
     /** true when user shift-selects a range */
     rangeSelect?: boolean;
-    /** used in group selection, if true, filtered out children will not be selected */
-    groupSelectsFiltered?: boolean;
     /** event source, if from an event */
     source: SelectionEventSourceType;
     // event

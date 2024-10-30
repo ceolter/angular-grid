@@ -67,13 +67,12 @@ export class CheckboxSelectionComponent extends Component {
         this.eCheckbox.setInputAriaLabel(`${translatedLabel} (${stateName})`);
     }
 
-    private onClicked(newValue: boolean, groupSelectsFiltered: boolean | undefined, event: MouseEvent): number {
+    private onClicked(newValue: boolean, event: MouseEvent): number {
         return (
             this.beans.selectionSvc?.setSelectedParams({
                 rowNode: this.rowNode,
                 newValue,
                 rangeSelect: event.shiftKey,
-                groupSelectsFiltered,
                 event,
                 source: 'checkboxSelected',
             }) ?? 0
@@ -97,8 +96,8 @@ export class CheckboxSelectionComponent extends Component {
 
         this.addManagedListeners(this.eCheckbox.getInputElement(), {
             // we don't want double click on this icon to open a group
-            dblclick: (event) => _stopPropagationForAgGrid(event),
-            click: (event) => {
+            dblclick: _stopPropagationForAgGrid,
+            click: (event: MouseEvent) => {
                 // we don't want the row clicked event to fire when selecting the checkbox, otherwise the row
                 // would possibly get selected twice
                 _stopPropagationForAgGrid(event);
@@ -108,14 +107,14 @@ export class CheckboxSelectionComponent extends Component {
 
                 if (this.shouldHandleIndeterminateState(isSelected, groupSelectsFiltered)) {
                     // try toggling children to determine action.
-                    const result = this.onClicked(true, groupSelectsFiltered, event || {});
+                    const result = this.onClicked(true, event || {});
                     if (result === 0) {
-                        this.onClicked(false, groupSelectsFiltered, event);
+                        this.onClicked(false, event);
                     }
                 } else if (isSelected) {
-                    this.onClicked(false, groupSelectsFiltered, event);
+                    this.onClicked(false, event);
                 } else {
-                    this.onClicked(true, groupSelectsFiltered, event || {});
+                    this.onClicked(true, event || {});
                 }
             },
         });
