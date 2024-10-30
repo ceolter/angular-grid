@@ -2,13 +2,13 @@ import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { AgColumn } from '../../entities/agColumn';
 import type { CellClickedEvent, CellDoubleClickedEvent } from '../../events';
-import { _isBrowserSafari, _isIOSUserAgent } from '../../utils/browser';
+import { _isBrowserSafari } from '../../utils/browser';
 import { _isElementChildOfClass, _isFocusableFormField } from '../../utils/dom';
-import { _isEventSupported, _isStopPropagationForAgGrid } from '../../utils/event';
+import { _isStopPropagationForAgGrid } from '../../utils/event';
 import type { CellCtrl } from './cellCtrl';
 
 export class CellMouseListenerFeature extends BeanStub {
-    private lastIPadMouseClickEvent: number;
+    public lastIPadMouseClickEvent: number;
 
     constructor(
         private readonly cellCtrl: CellCtrl,
@@ -46,10 +46,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
     private onCellClicked(mouseEvent: MouseEvent): void {
         // iPad doesn't have double click - so we need to mimic it to enable editing for iPad.
-        if (this.isDoubleClickOnIPad()) {
-            this.onCellDoubleClicked(mouseEvent);
-            mouseEvent.preventDefault(); // if we don't do this, then iPad zooms in
-
+        if (this.beans.touchSvc?.handleCellDoubleClickOnIPad(this, mouseEvent)) {
             return;
         }
 
@@ -87,20 +84,7 @@ export class CellMouseListenerFeature extends BeanStub {
         }
     }
 
-    // returns true if on iPad and this is second 'click' event in 200ms
-    private isDoubleClickOnIPad(): boolean {
-        if (!_isIOSUserAgent() || _isEventSupported('dblclick')) {
-            return false;
-        }
-
-        const nowMillis = new Date().getTime();
-        const res = nowMillis - this.lastIPadMouseClickEvent < 200;
-        this.lastIPadMouseClickEvent = nowMillis;
-
-        return res;
-    }
-
-    private onCellDoubleClicked(mouseEvent: MouseEvent) {
+    public onCellDoubleClicked(mouseEvent: MouseEvent) {
         const { column, beans, cellCtrl } = this;
         const { eventSvc, frameworkOverrides, gos } = beans;
 

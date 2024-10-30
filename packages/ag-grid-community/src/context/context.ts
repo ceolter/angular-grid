@@ -72,6 +72,7 @@ import type { ApiEventService } from '../misc/apiEvents/apiEventService';
 import type { LocaleService } from '../misc/locale/localeService';
 import type { MenuService } from '../misc/menu/menuService';
 import type { StateService } from '../misc/state/stateService';
+import type { TouchService } from '../misc/touchService';
 import { _unRegisterGridModules } from '../modules/moduleRegistry';
 import type { CellNavigationService } from '../navigation/cellNavigationService';
 import type { HeaderNavigationService } from '../navigation/headerNavigationService';
@@ -300,6 +301,7 @@ export interface CoreBeanCollection {
     rowAutoHeight?: RowAutoHeightService;
     rowChildrenSvc?: IRowChildrenService;
     footerSvc?: IFooterService;
+    touchSvc?: TouchService;
 }
 
 export type BeanCollection = CoreBeanCollection & {
@@ -483,6 +485,7 @@ export type BeanName =
     | 'templateService'
     | 'toolPanelColDefService'
     | 'tooltipSvc'
+    | 'touchSvc'
     | 'undoRedo'
     | 'userCompFactory'
     | 'valueCache'

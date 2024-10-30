@@ -10,11 +10,8 @@ import type { RowCtrl } from '../../rendering/row/rowCtrl';
 import { DOM_DATA_KEY_ROW_CTRL } from '../../rendering/row/rowCtrl';
 import type { UndoRedoService } from '../../undoRedo/undoRedoService';
 import { _last } from '../../utils/array';
-import { _isIOSUserAgent } from '../../utils/browser';
 import { _getCtrlForEventTarget, _isEventSupported, _isStopPropagationForAgGrid } from '../../utils/event';
 import { _isEventFromPrintableCharacter, _isUserSuppressingKeyboardEvent } from '../../utils/keyboard';
-import type { LongTapEvent } from '../../widgets/touchListener';
-import { TouchListener } from '../../widgets/touchListener';
 import { _isEventFromThisGrid } from '../mouseEventUtils';
 
 const A_KEYCODE = 65;
@@ -55,14 +52,14 @@ function _normaliseQwertyAzerty(keyboardEvent: KeyboardEvent): string {
 }
 
 export class RowContainerEventsFeature extends BeanStub {
-    constructor(private readonly element: HTMLElement) {
+    constructor(public readonly element: HTMLElement) {
         super();
     }
 
     public postConstruct(): void {
         this.addKeyboardListeners();
         this.addMouseListeners();
-        this.mockContextMenuForIPad();
+        this.beans.touchSvc?.mockRowContextMenuForIPad(this);
     }
 
     private addKeyboardListeners(): void {
@@ -86,50 +83,28 @@ export class RowContainerEventsFeature extends BeanStub {
             return;
         }
 
-        const rowComp = this.getRowForEvent(mouseEvent.target);
-        const cellCtrl = _getCellCtrlForEventTarget(this.gos, mouseEvent.target)!;
+        const { cellCtrl, rowCtrl } = this.getControlsForEventTarget(mouseEvent.target);
 
         if (eventName === 'contextmenu') {
-            this.beans.contextMenuSvc?.handleContextMenuMouseEvent(mouseEvent, undefined, rowComp, cellCtrl);
+            this.beans.contextMenuSvc?.handleContextMenuMouseEvent(mouseEvent, undefined, rowCtrl, cellCtrl!);
         } else {
             if (cellCtrl) {
                 cellCtrl.onMouseEvent(eventName, mouseEvent);
             }
-            if (rowComp) {
-                rowComp.onMouseEvent(eventName, mouseEvent);
+            if (rowCtrl) {
+                rowCtrl.onMouseEvent(eventName, mouseEvent);
             }
         }
     }
 
-    private mockContextMenuForIPad(): void {
-        // we do NOT want this when not in iPad, otherwise we will be doing
-        if (!_isIOSUserAgent()) {
-            return;
-        }
-
-        const touchListener = new TouchListener(this.element);
-        const longTapListener = (event: LongTapEvent) => {
-            const rowComp = this.getRowForEvent(event.touchEvent.target);
-            const cellComp = _getCellCtrlForEventTarget(this.gos, event.touchEvent.target)!;
-
-            this.beans.contextMenuSvc?.handleContextMenuMouseEvent(undefined, event.touchEvent, rowComp, cellComp);
-        };
-
-        this.addManagedListeners(touchListener, { longTap: longTapListener });
-        this.addDestroyFunc(() => touchListener.destroy());
-    }
-
-    private getRowForEvent(eventTarget: EventTarget | null): RowCtrl | null {
-        return _getCtrlForEventTarget(this.gos, eventTarget, DOM_DATA_KEY_ROW_CTRL);
-    }
-
-    private getControlsForEventTarget(target: EventTarget | null): {
+    public getControlsForEventTarget(target: EventTarget | null): {
         cellCtrl: CellCtrl | null;
         rowCtrl: RowCtrl | null;
     } {
+        const { gos } = this;
         return {
-            cellCtrl: _getCellCtrlForEventTarget(this.gos, target),
-            rowCtrl: this.getRowForEvent(target),
+            cellCtrl: _getCellCtrlForEventTarget(gos, target),
+            rowCtrl: _getCtrlForEventTarget(gos, target, DOM_DATA_KEY_ROW_CTRL),
         };
     }
 

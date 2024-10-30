@@ -7,11 +7,9 @@ import { _requestAnimationFrame } from '../misc/animationFrameService';
 import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import type { LayoutView } from '../styling/layoutFeature';
 import { LayoutFeature } from '../styling/layoutFeature';
-import { _isIOSUserAgent, _isInvisibleScrollbar } from '../utils/browser';
+import { _isInvisibleScrollbar } from '../utils/browser';
 import { _isElementChildOfClass, _isVerticalScrollShowing } from '../utils/dom';
 import type { PopupService } from '../widgets/popupService';
-import type { LongTapEvent } from '../widgets/touchListener';
-import { TouchListener } from '../widgets/touchListener';
 import { GridBodyScrollFeature } from './gridBodyScrollFeature';
 import { _isEventFromThisGrid } from './mouseEventUtils';
 import { _getRowContainerOptions } from './rowContainer/rowContainerCtrl';
@@ -302,14 +300,15 @@ export class GridBodyCtrl extends BeanStub {
     }
 
     private addBodyViewportListener(): void {
+        const { popupSvc, touchSvc } = this.beans;
         // we want to listen for clicks directly on the eBodyViewport, so the user has a way of showing
         // the context menu if no rows or columns are displayed, or user simply clicks outside of a cell
         const listener = this.onBodyViewportContextMenu.bind(this);
         this.addManagedElementListeners(this.eBodyViewport, { contextmenu: listener });
-        this.mockContextMenuForIPad(listener);
+        touchSvc?.mockBodyContextMenuForIPad(this, listener);
 
         this.addManagedElementListeners(this.eBodyViewport, {
-            wheel: this.onBodyViewportWheel.bind(this, this.beans.popupSvc),
+            wheel: this.onBodyViewportWheel.bind(this, popupSvc),
         });
         this.addManagedElementListeners(this.eStickyTop, { wheel: this.onStickyWheel.bind(this) });
         this.addManagedElementListeners(this.eStickyBottom, { wheel: this.onStickyWheel.bind(this) });
@@ -381,23 +380,6 @@ export class GridBodyCtrl extends BeanStub {
                 anchorToElement: this.eGridBody,
             });
         }
-    }
-
-    private mockContextMenuForIPad(
-        listener: (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => void
-    ): void {
-        // we do NOT want this when not in iPad
-        if (!_isIOSUserAgent()) {
-            return;
-        }
-
-        const touchListener = new TouchListener(this.eBodyViewport);
-        const longTapListener = (event: LongTapEvent) => {
-            listener(undefined, event.touchStart, event.touchEvent);
-        };
-
-        this.addManagedListeners(touchListener, { longTap: longTapListener });
-        this.addDestroyFunc(() => touchListener.destroy());
     }
 
     private onBodyViewportWheel(popupSvc: PopupService, e: WheelEvent): void {

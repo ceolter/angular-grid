@@ -182,6 +182,7 @@ type CommunityModuleName =
     | 'TooltipCoreModule'
     | 'TooltipCompModule'
     | 'TooltipModule'
+    | 'TouchModule'
     | 'UndoRedoEditModule'
     | 'ValidationModule'
     | 'ValueCacheModule';

@@ -4,12 +4,9 @@ import type { BeanCollection } from '../context/context';
 import { _getActiveDomElement } from '../gridOptionsUtils';
 import { _requestAnimationFrame } from '../misc/animationFrameService';
 import type { HeaderNavigationDirection } from '../navigation/headerNavigationService';
-import { _isIOSUserAgent } from '../utils/browser';
 import { _focusNextGridCoreContainer } from '../utils/focus';
 import { _exists } from '../utils/generic';
 import { ManagedFocusFeature } from '../widgets/managedFocusFeature';
-import type { LongTapEvent } from '../widgets/touchListener';
-import { TouchListener } from '../widgets/touchListener';
 import { getColumnHeaderRowHeight, getFloatingFiltersHeight, getGroupRowsHeight } from './headerUtils';
 
 export interface IGridHeaderComp {
@@ -19,7 +16,7 @@ export interface IGridHeaderComp {
 
 export class GridHeaderCtrl extends BeanStub {
     private comp: IGridHeaderComp;
-    private eGui: HTMLElement;
+    public eGui: HTMLElement;
     public headerHeight: number;
 
     public setComp(comp: IGridHeaderComp, eGui: HTMLElement, eFocusableElement: HTMLElement): void {
@@ -27,8 +24,9 @@ export class GridHeaderCtrl extends BeanStub {
         this.eGui = eGui;
 
         const { beans } = this;
+        const { headerNavigation, touchSvc, ctrlsSvc } = beans;
 
-        if (beans.headerNavigation) {
+        if (headerNavigation) {
             this.createManagedBean(
                 new ManagedFocusFeature(eFocusableElement, {
                     onTabKeyDown: this.onTabKeyDown.bind(this),
@@ -49,9 +47,9 @@ export class GridHeaderCtrl extends BeanStub {
 
         const listener = this.onHeaderContextMenu.bind(this);
         this.addManagedElementListeners(this.eGui, { contextmenu: listener });
-        this.mockContextMenuForIPad(listener);
+        touchSvc?.mockHeaderContextMenuForIPad(this, listener);
 
-        beans.ctrlsSvc.register('gridHeaderCtrl', this);
+        ctrlsSvc.register('gridHeaderCtrl', this);
     }
 
     private setupHeaderHeight(): void {
@@ -200,22 +198,5 @@ export class GridHeaderCtrl extends BeanStub {
         if (target === this.eGui || target === ctrlsSvc.getHeaderRowContainerCtrl()?.eViewport) {
             menuSvc.showHeaderContextMenu(undefined, mouseEvent, touchEvent);
         }
-    }
-
-    private mockContextMenuForIPad(
-        listener: (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => void
-    ): void {
-        // we do NOT want this when not in iPad
-        if (!_isIOSUserAgent()) {
-            return;
-        }
-
-        const touchListener = new TouchListener(this.eGui);
-        const longTapListener = (event: LongTapEvent) => {
-            listener(undefined, event.touchStart, event.touchEvent);
-        };
-
-        this.addManagedListeners(touchListener, { longTap: longTapListener });
-        this.addDestroyFunc(() => touchListener.destroy());
     }
 }

@@ -24,6 +24,7 @@ import { EventApiModule } from './misc/apiEvents/apiEventModule';
 import { LocaleModule } from './misc/locale/localeModule';
 import { CommunityMenuApiModule } from './misc/menu/sharedMenuModule';
 import { StateModule } from './misc/state/stateModule';
+import { TouchModule } from './misc/touchModule';
 import { KeyboardNavigationModule } from './navigation/navigationModule';
 import { PaginationModule } from './pagination/paginationModule';
 import { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
@@ -102,5 +103,6 @@ export const CommunityFeaturesModule: _ModuleWithoutApi = {
         RowAutoHeightModule,
         NativeDragModule,
         AriaModule,
+        TouchModule,
     ],
 };
