@@ -123,9 +123,11 @@ export class TreeNode implements ITreeNode {
     /**
      * Gets a node a key in the given parent. If the node does not exists, creates a filler node, with null row.
      * We cast to string just to be sure the user passed a string correctly and not a number or something else.
+     * @param key - The key of the node to get.
+     * @param append - If true, the node will be moved to the end of the children list.
      * @returns the node at the given key, or a new filler node inserted there if it does not exist.
      */
-    public upsertKey(key: string | number): TreeNode {
+    public upsertKey(key: string | number, append: boolean = false): TreeNode {
         if (typeof key !== 'string') {
             key = String(key);
         }
@@ -133,6 +135,10 @@ export class TreeNode implements ITreeNode {
         if (!node) {
             node = new TreeNode(this, key, this.level + 1);
             (this.children ??= new Map())?.set(node.key, node); // Add to the map
+        } else if (append) {
+            const children = this.children!;
+            children.delete(key); // Remove from the map
+            children.set(key, node); // Reinsert to the map
         }
         return node;
     }
