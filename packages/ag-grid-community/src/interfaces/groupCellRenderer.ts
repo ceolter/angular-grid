@@ -33,6 +33,8 @@ export interface IGroupCellRendererParams<TData = any, TValue = any> {
     suppressCount?: boolean;
     /**
      * Set to `true`, or a function that returns `true`, if a checkbox should be included.
+     *
+     * @deprecated v33 Use `rowSelection.checkboxes` and `rowSelection.checkboxLocation` instead.
      */
     checkbox?: boolean | GroupCheckboxSelectionCallback<TData, TValue>;
 

@@ -137,10 +137,11 @@ export class CellMouseListenerFeature extends BeanStub {
             return;
         }
 
-        const ranges = rangeSvc && rangeSvc.getCellRanges().length != 0;
+        const hasRanges = rangeSvc && !rangeSvc.isEmpty();
         const containsWidget = this.containsWidget(target);
+        const cellPosition = cellCtrl.getCellPosition();
 
-        if (!shiftKey || !ranges) {
+        if (!shiftKey || !hasRanges) {
             const isEnableCellTextSelection = gos.get('enableCellTextSelection');
             // when `enableCellTextSelection` is true, we call prevent default on `mousedown`
             // within the row dragger to block text selection while dragging, but the cell
@@ -160,7 +161,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         // if shift clicking, and a range exists, we keep the focus on the cell that started the
         // range as the user then changes the range selection.
-        if (shiftKey && ranges && !focusSvc.isCellFocused(cellCtrl.getCellPosition())) {
+        if (shiftKey && hasRanges && !focusSvc.isCellFocused(cellPosition)) {
             // this stops the cell from getting focused
             mouseEvent.preventDefault();
 
@@ -193,13 +194,11 @@ export class CellMouseListenerFeature extends BeanStub {
         }
 
         if (rangeSvc) {
-            const thisCell = this.cellCtrl.getCellPosition();
-
             if (shiftKey) {
-                rangeSvc.extendLatestRangeToCell(thisCell);
+                rangeSvc.extendLatestRangeToCell(cellPosition);
             } else {
                 const isMultiKey = ctrlKey || metaKey;
-                rangeSvc.setRangeToCell(thisCell, isMultiKey);
+                rangeSvc.setRangeToCell(cellPosition, isMultiKey);
             }
         }
 

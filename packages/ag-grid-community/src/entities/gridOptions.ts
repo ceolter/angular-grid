@@ -2556,6 +2556,15 @@ interface CommonRowSelectionOptions<TData = any, TValue = any> {
      */
     checkboxes?: boolean | CheckboxSelectionCallback<TData, TValue>;
     /**
+     * Configure where checkboxes are displayed.
+     *
+     * Choosing 'selectionColumn' displays checkboxes in a dedicated selection column. Choosing 'autoGroupColumn'
+     * displays checkboxes in the autoGroupColumn. This applies to row checkboxes and header checkboxes.
+     *
+     * @default 'selectionColumn'
+     */
+    checkboxLocation?: CheckboxLocation;
+    /**
      * Set to `true` to hide a disabled checkbox when row is not selectable and checkboxes are enabled.
      * @default false
      */
@@ -2679,3 +2688,5 @@ export type GroupSelectionMode = 'self' | 'descendants' | 'filteredDescendants';
 export type SelectAllMode = 'all' | 'filtered' | 'currentPage';
 
 export type RowSelectionMode = RowSelectionOptions['mode'];
+
+export type CheckboxLocation = 'selectionColumn' | 'autoGroupColumn';

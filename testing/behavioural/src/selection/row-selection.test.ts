@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, isColumnSelectionCol } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager } from '../test-utils';
@@ -10,6 +10,7 @@ import {
     assertSelectedRowElementsById,
     assertSelectedRowsByIndex,
     clickRowByIndex,
+    getRowByIndex,
     selectRowsByIndex,
     toggleCheckboxByIndex,
     toggleHeaderCheckboxByIndex,
@@ -1016,13 +1017,47 @@ describe('Row Selection Grid Options', () => {
                     headerName: 'Athlete',
                     field: 'athlete',
                     cellRenderer: 'agGroupCellRenderer',
-                    cellRendererParams: {
-                        checkbox: true,
-                    },
                 },
                 rowData: GROUP_ROW_DATA,
                 groupDefaultExpanded: -1,
             };
+
+            test('Checkbox location can be altered with `checkboxLocation` setting', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: { mode: 'multiRow', checkboxes: true },
+                });
+
+                expect(getRowByIndex(0)?.querySelector('[role="gridcell"]')?.getAttribute('col-id')).toEqual(
+                    'ag-Grid-SelectionColumn'
+                );
+                const colState1 = api.getColumnState();
+                expect(isColumnSelectionCol(colState1[0].colId)).toBeTruthy();
+
+                api.setGridOption('rowSelection', {
+                    mode: 'multiRow',
+                    checkboxes: true,
+                    checkboxLocation: 'autoGroupColumn',
+                });
+
+                expect(getRowByIndex(0)?.querySelector('[role="gridcell"]')?.getAttribute('col-id')).toEqual(
+                    'ag-Grid-AutoColumn'
+                );
+                const colState2 = api.getColumnState();
+                expect(isColumnSelectionCol(colState2[0].colId)).toBeFalsy();
+
+                api.setGridOption('rowSelection', {
+                    mode: 'multiRow',
+                    checkboxes: true,
+                    checkboxLocation: 'selectionColumn',
+                });
+
+                expect(getRowByIndex(0)?.querySelector('[role="gridcell"]')?.getAttribute('col-id')).toEqual(
+                    'ag-Grid-SelectionColumn'
+                );
+                const colState3 = api.getColumnState();
+                expect(isColumnSelectionCol(colState3[0].colId)).toBeTruthy();
+            });
 
             test('clicking group row selects only that row', async () => {
                 const api = await createGridAndWait({

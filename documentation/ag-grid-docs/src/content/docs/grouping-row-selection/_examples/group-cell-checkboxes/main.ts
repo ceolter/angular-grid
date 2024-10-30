@@ -27,15 +27,11 @@ const gridOptions: GridOptions<IOlympicData> = {
         field: 'athlete',
         minWidth: 250,
         cellRenderer: 'agGroupCellRenderer',
-        cellRendererParams: {
-            checkbox: true,
-        },
     },
     rowSelection: {
         mode: 'multiRow',
         groupSelects: 'self',
-        checkboxes: false,
-        headerCheckbox: false,
+        checkboxLocation: 'autoGroupColumn',
     },
     suppressAggFuncInHeader: true,
 };

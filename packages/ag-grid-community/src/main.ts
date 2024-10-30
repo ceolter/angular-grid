@@ -344,6 +344,8 @@ export { ICellEditorRendererComp, ICellEditorRendererParams } from './interfaces
 
 export type { CheckboxCellEditor } from './edit/cellEditors/checkboxCellEditor';
 
+export type { CheckboxSelectionComponent } from './selection/checkboxSelectionComponent';
+
 // rendering / cellRenderers
 export {
     ICellRenderer,
@@ -633,6 +635,8 @@ export {
     _getGroupSelection,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
+    _getCheckboxes,
+    _getCheckboxLocation,
     _getHeaderCheckbox,
     _isMultiRowSelection,
     _getFillHandle,

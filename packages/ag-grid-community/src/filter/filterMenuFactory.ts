@@ -141,7 +141,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
                 const focusableEl = this.focusSvc.findTabbableParent(eventSource);
 
                 if (focusableEl) {
-                    focusableEl.focus();
+                    focusableEl.focus({ preventScroll: true });
                 }
             }
             afterGuiDetached();
