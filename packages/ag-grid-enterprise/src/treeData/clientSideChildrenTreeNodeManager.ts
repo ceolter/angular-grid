@@ -97,10 +97,34 @@ export class ClientSideChildrenTreeNodeManager<TData>
         let orderChanged = false;
         let rowsChanged = false;
 
-        const processChild = (node: TreeNode, data: TData) => {
+        const processChildren = (node: TreeNode, children: TData[]): void => {
+            const childrenLen = children?.length;
+            let minIndex = -1;
+            let inOrder = true;
+            for (let i = 0; i < childrenLen; ++i) {
+                const row = processChild(node, children[i])?.row;
+                const sourceRowIndex = row?.sourceRowIndex ?? -1;
+                if (sourceRowIndex >= 0) {
+                    if (sourceRowIndex < minIndex) {
+                        inOrder = false;
+                    }
+                    minIndex = sourceRowIndex;
+                }
+            }
+
+            if (!inOrder) {
+                orderChanged = true;
+                if (!node.childrenChanged) {
+                    node.childrenChanged = true;
+                    node.invalidate();
+                }
+            }
+        };
+
+        const processChild = (node: TreeNode, data: TData): TreeNode | null => {
             if (processedDataSet.has(data)) {
                 _error(5, { data }); // Duplicate node
-                return;
+                return null;
             }
 
             const id = getRowIdFunc({ data, level: node.level + 1 });
@@ -109,7 +133,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             let row = this.getRowNode(id) as TreeRow<TData> | undefined;
             if (row) {
                 if (row.data !== data) {
-                    row.data = data;
+                    row.setData(data);
                     update = true;
                 }
             } else {
@@ -125,24 +149,14 @@ export class ClientSideChildrenTreeNodeManager<TData>
             }
 
             const children = childrenGetter?.(data);
-            const childrenLen = children?.length;
-            if (childrenLen) {
-                for (let i = 0; i < childrenLen; ++i) {
-                    processChild(node, children[i]);
-                }
-
-                // Now check children are in order, ignoring sourceRowIndex negative (new rows)
-                if (!childrenInOrder(node)) {
-                    orderChanged = true;
-                    node.childrenChanged = true;
-                    node.invalidate();
-                }
+            if (children) {
+                processChildren(node, children);
             }
+
+            return node;
         };
 
-        for (let i = 0, len = rowData.length; i < len; ++i) {
-            processChild(treeRoot, rowData[i]);
-        }
+        processChildren(treeRoot, rowData);
 
         if (oldAllLeafChildren) {
             for (let i = 0, len = oldAllLeafChildren.length; i < len; ++i) {
@@ -186,21 +200,4 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         super.refreshModel(params);
     }
-}
-function childrenInOrder(node: TreeNode) {
-    let minIndex = -1;
-    for (const child of node.enumChildren()) {
-        const childRow = child.row;
-        if (childRow) {
-            const sourceRowIndex = childRow.sourceRowIndex;
-            if (sourceRowIndex >= 0) {
-                if (sourceRowIndex < minIndex) {
-                    return false;
-                }
-
-                minIndex = sourceRowIndex;
-            }
-        }
-    }
-    return true;
 }

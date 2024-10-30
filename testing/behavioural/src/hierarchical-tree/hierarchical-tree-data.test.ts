@@ -421,4 +421,57 @@ describe('ag-grid hierarchical tree data', () => {
             · └── idI LEAF id:idI ag-Grid-AutoColumn:"idI" x:"I"
         `);
     });
+
+    test('ag-grid hierarchical tree data (with id)', async () => {
+        const rowData = [
+            {
+                id: 'A',
+                children: [{ id: 'B', children: [] }],
+            },
+            {
+                id: 'C',
+                children: [{ id: 'D' }],
+            },
+
+            {
+                id: 'E',
+                children: [
+                    { id: 'F', children: [{ id: 'G' }, { id: 'H' }, { id: 'I' }] },
+                    { id: 'J', children: [] },
+                ],
+            },
+        ];
+
+        const gridOptions: GridOptions = {
+            columnDefs: [],
+            treeData: true,
+            treeDataChildrenField: 'children',
+            animateRows: false,
+            groupDefaultExpanded: -1,
+            rowData,
+            getRowId: ({ data }) => data.id,
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: true,
+        };
+
+        const gridRows = new GridRows(api, 'data', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ A GROUP id:A ag-Grid-AutoColumn:"A"
+            │ └── B LEAF id:B ag-Grid-AutoColumn:"B"
+            ├─┬ C GROUP id:C ag-Grid-AutoColumn:"C"
+            │ └── D LEAF id:D ag-Grid-AutoColumn:"D"
+            └─┬ E GROUP id:E ag-Grid-AutoColumn:"E"
+            · ├─┬ F GROUP id:F ag-Grid-AutoColumn:"F"
+            · │ ├── G LEAF id:G ag-Grid-AutoColumn:"G"
+            · │ ├── H LEAF id:H ag-Grid-AutoColumn:"H"
+            · │ └── I LEAF id:I ag-Grid-AutoColumn:"I"
+            · └── J LEAF id:J ag-Grid-AutoColumn:"J"
+        `);
+    });
 });
