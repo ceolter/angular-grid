@@ -1,6 +1,6 @@
 {
   "name": "ag-grid-angular",
-  "version": "32.3.1",
+  "version": "32.3.2",
   "scripts": {
     "build": "./node_modules/.bin/ng build"
   },
@@ -29,8 +29,8 @@
     "zone.js": "~0.13.3"
   },
   "devDependencies": {
-    "@ag-grid-community/core": "32.3.1",
-    "@ag-grid-community/client-side-row-model": "32.3.1",
+    "@ag-grid-community/core": "32.3.2",
+    "@ag-grid-community/client-side-row-model": "32.3.2",
     "@angular-devkit/build-angular": "^16.2.14",
     "@angular/cli": "^16.2.14",
     "@angular/forms": "^16.2.12",

@@ -1,6 +1,6 @@
 {
   "name": "ag-grid-community",
-  "version": "32.3.1",
+  "version": "32.3.2",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/main.d.ts",
@@ -88,19 +88,19 @@
   ],
   "homepage": "https://www.ag-grid.com/",
   "dependencies": {
-    "ag-charts-types": "10.3.1"
+    "ag-charts-types": "10.3.1-beta.20241028"
   },
   "devDependencies": {
     "source-map-loader": "^5.0.0",
     "gulp": "^4.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-rename": "^2.0.0",
-    "@ag-grid-community/client-side-row-model": "32.3.1",
-    "@ag-grid-community/core": "32.3.1",
-    "@ag-grid-community/csv-export": "32.3.1",
-    "@ag-grid-community/infinite-row-model": "32.3.1",
-    "@ag-grid-community/styles": "32.3.1",
-    "@ag-grid-community/theming": "32.3.1",
+    "@ag-grid-community/client-side-row-model": "32.3.2",
+    "@ag-grid-community/core": "32.3.2",
+    "@ag-grid-community/csv-export": "32.3.2",
+    "@ag-grid-community/infinite-row-model": "32.3.2",
+    "@ag-grid-community/styles": "32.3.2",
+    "@ag-grid-community/theming": "32.3.2",
     "ts-loader": "^9.5.1",
     "style-loader": "^3.3.4",
     "css-loader": "^6.10.0",

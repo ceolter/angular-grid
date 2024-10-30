@@ -1,6 +1,6 @@
 {
   "name": "@ag-grid-enterprise/rich-select",
-  "version": "32.3.1",
+  "version": "32.3.2",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
@@ -13,8 +13,8 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@ag-grid-community/core": "32.3.1",
-    "@ag-grid-enterprise/core": "32.3.1"
+    "@ag-grid-community/core": "32.3.2",
+    "@ag-grid-enterprise/core": "32.3.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

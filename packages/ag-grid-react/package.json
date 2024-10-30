@@ -1,6 +1,6 @@
 {
   "name": "ag-grid-react",
-  "version": "32.3.1",
+  "version": "32.3.2",
   "description": "AG Grid React Component",
   "main": "./dist/package/index.cjs.js",
   "types": "./dist/types/src/index.d.ts",
@@ -32,7 +32,7 @@
   },
   "homepage": "https://www.ag-grid.com/react-grid/",
   "devDependencies": {
-    "ag-grid-community": "32.3.1",
+    "ag-grid-community": "32.3.2",
     "gulp": "^4.0.0",
     "gulp-replace": "^1.0.0",
     "prop-types": "^15.6.2",
@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "prop-types": "^15.8.1",
-    "ag-grid-community": "32.3.1"
+    "ag-grid-community": "32.3.2"
   },
   "peerDependencies": {
     "react": "^16.3.0 || ^17.0.0 || ^18.0.0",
