@@ -1,7 +1,11 @@
 [
     {
+        "release version": "32.3.2",
+        "markdown": "/releases/32_3_2.md"
+    },
+    {
         "release version": "32.3.1",
-        "markdown": "/releases/32_3_0.md"
+        "markdown": "/releases/32_3_1.md"
     },
     {
         "release version": "32.3.0",
