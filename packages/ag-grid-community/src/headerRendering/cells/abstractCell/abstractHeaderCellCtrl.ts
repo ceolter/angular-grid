@@ -1,19 +1,13 @@
-import type { UserComponentFactory } from '../../../components/framework/userComponentFactory';
 import type { HorizontalDirection } from '../../../constants/direction';
 import { BeanStub } from '../../../context/beanStub';
-import type { BeanCollection } from '../../../context/context';
-import type { CtrlsService } from '../../../ctrlsService';
-import type { DragAndDropService, DragSource } from '../../../dragAndDrop/dragAndDropService';
+import type { DragSource } from '../../../dragAndDrop/dragAndDropService';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { AgColumnGroup } from '../../../entities/agColumnGroup';
 import type { AgProvidedColumnGroup } from '../../../entities/agProvidedColumnGroup';
 import type { SuppressHeaderKeyboardEventParams } from '../../../entities/colDef';
-import type { FocusService } from '../../../focusService';
 import { _getActiveDomElement, _getDocument, _setDomData } from '../../../gridOptionsUtils';
 import type { BrandedType } from '../../../interfaces/brandedType';
 import { _requestAnimationFrame } from '../../../misc/animationFrameService';
-import type { MenuService } from '../../../misc/menu/menuService';
-import type { PinnedColumnService } from '../../../pinnedColumns/pinnedColumnService';
 import { _setAriaColIndex } from '../../../utils/aria';
 import { _addOrRemoveAttribute, _getElementSize, _getInnerWidth, _observeResize } from '../../../utils/dom';
 import { _isHeaderFocusSuppressed } from '../../../utils/focus';
@@ -42,22 +36,6 @@ export abstract class AbstractHeaderCellCtrl<
     TFeature extends IHeaderResizeFeature = any,
 > extends BeanStub {
     public readonly instanceId: HeaderCellCtrlInstanceId;
-
-    private pinnedCols?: PinnedColumnService;
-    protected focusSvc: FocusService;
-    protected userCompFactory: UserComponentFactory;
-    protected ctrlsSvc: CtrlsService;
-    protected dragAndDrop?: DragAndDropService;
-    protected menuSvc?: MenuService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.pinnedCols = beans.pinnedCols;
-        this.focusSvc = beans.focusSvc;
-        this.userCompFactory = beans.userCompFactory;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.dragAndDrop = beans.dragAndDrop;
-        this.menuSvc = beans.menuSvc;
-    }
 
     private isResizing: boolean;
     private resizeToggleTimeout = 0;
@@ -92,7 +70,7 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected shouldStopEventPropagation(event: KeyboardEvent): boolean {
-        const { headerRowIndex, column } = this.focusSvc.getFocusedHeader()!;
+        const { headerRowIndex, column } = this.beans.focusSvc.getFocusedHeader()!;
 
         const colDef = column.getDefinition();
         const colDefFunc = colDef && colDef.suppressHeaderKeyboardEvent;
@@ -307,9 +285,10 @@ export abstract class AbstractHeaderCellCtrl<
 
         const pinned = this.column.getPinned();
         if (pinned) {
-            const leftWidth = this.pinnedCols?.getPinnedLeftWidth() ?? 0;
-            const rightWidth = this.pinnedCols?.getPinnedRightWidth() ?? 0;
-            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
+            const { pinnedCols, ctrlsSvc } = this.beans;
+            const leftWidth = pinnedCols?.getPinnedLeftWidth() ?? 0;
+            const rightWidth = pinnedCols?.getPinnedRightWidth() ?? 0;
+            const bodyWidth = _getInnerWidth(ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
 
             if (leftWidth + rightWidth + diff > bodyWidth) {
                 if (bodyWidth > leftWidth + rightWidth) {
@@ -391,7 +370,7 @@ export abstract class AbstractHeaderCellCtrl<
 
     protected removeDragSource(): void {
         if (this.dragSource) {
-            this.dragAndDrop?.removeDragSource(this.dragSource);
+            this.beans.dragAndDrop?.removeDragSource(this.dragSource);
             this.dragSource = null;
         }
     }
@@ -405,8 +384,9 @@ export abstract class AbstractHeaderCellCtrl<
         if (this.gos.get('preventDefaultOnContextMenu')) {
             event.preventDefault();
         }
-        if (this.menuSvc?.isHeaderContextMenuEnabled(column)) {
-            this.menuSvc.showHeaderContextMenu(column, mouseEvent, touchEvent);
+        const { menuSvc } = this.beans;
+        if (menuSvc?.isHeaderContextMenuEnabled(column)) {
+            menuSvc.showHeaderContextMenu(column, mouseEvent, touchEvent);
         }
 
         this.dispatchColumnMouseEvent('columnHeaderContextMenu', column);

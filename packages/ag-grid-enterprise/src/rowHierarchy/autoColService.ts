@@ -6,7 +6,6 @@ import type {
     ColumnGroupService,
     ColumnModel,
     ColumnNameService,
-    Context,
     IAutoColService,
     IColsService,
     NamedBean,
@@ -18,7 +17,6 @@ import {
     BeanStub,
     GROUP_AUTO_COLUMN_ID,
     _addColumnDefaultAndTypes,
-    _applyColumnState,
     _areColIdsEqual,
     _columnsMatch,
     _convertColumnEventSourceType,
@@ -29,6 +27,7 @@ import {
     _mergeDeep,
     _missing,
     _updateColsMap,
+    _updateColumnState,
     _warn,
     isColumnGroupAutoCol,
 } from 'ag-grid-community';
@@ -39,7 +38,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private rowGroupColsSvc?: IColsService;
-    private context: Context;
     private columnGroupSvc?: ColumnGroupService;
 
     // group auto columns
@@ -49,7 +47,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.context = beans.context;
         this.columnGroupSvc = beans.columnGroupSvc;
     }
 
@@ -90,7 +87,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
 
         const destroyPrevious = () => {
             if (this.autoCols) {
-                _destroyColumnTree(this.context, this.autoCols.tree);
+                _destroyColumnTree(this.beans, this.autoCols.tree);
                 this.autoCols = null;
             }
         };
@@ -243,7 +240,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const colDef = this.createAutoColDef(colToUpdate.getId(), underlyingColumn ?? undefined, index);
 
         colToUpdate.setColDef(colDef, null, source);
-        _applyColumnState(this.beans, colToUpdate, colDef, source);
+        _updateColumnState(this.beans, colToUpdate, colDef, source);
     }
 
     private createAutoColDef(colId: string, underlyingColumn?: AgColumn, index?: number): ColDef {
@@ -329,7 +326,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     }
 
     public override destroy(): void {
-        _destroyColumnTree(this.context, this.autoCols?.tree);
+        _destroyColumnTree(this.beans, this.autoCols?.tree);
         super.destroy();
     }
 }

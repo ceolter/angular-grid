@@ -10,7 +10,6 @@ import type { ColumnGroupService } from '../columns/columnGroups/columnGroupServ
 import type { ColumnHoverService } from '../columns/columnHover/columnHoverService';
 import type { ColumnModel } from '../columns/columnModel';
 import type { ColumnNameService } from '../columns/columnNameService';
-import type { ColumnStateService } from '../columns/columnStateService';
 import type { ColumnViewportService } from '../columns/columnViewportService';
 import type { DataTypeService } from '../columns/dataTypeService';
 import type { SelectionColService } from '../columns/selectionColService';
@@ -227,7 +226,6 @@ export interface CoreBeanCollection {
     gridApi: GridApi;
     gridOptions: GridOptions;
     eGridDiv: HTMLElement;
-    colState: ColumnStateService;
     pivotResultCols?: IPivotResultColsService;
     autoColSvc?: IAutoColService;
     selectionColSvc?: SelectionColService;
@@ -377,7 +375,6 @@ export type BeanName =
     | 'colNames'
     | 'columnPositionService'
     | 'colResize'
-    | 'colState'
     | 'columnToolPanelFactory'
     | 'columnUtils'
     | 'colViewport'

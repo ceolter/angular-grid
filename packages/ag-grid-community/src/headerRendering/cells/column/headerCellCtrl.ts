@@ -151,33 +151,34 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     private lookupUserCompDetails(): UserCompDetails {
         const params = this.createParams();
         const colDef = this.column.getColDef();
-        return _getHeaderCompDetails(this.userCompFactory, colDef, params)!;
+        return _getHeaderCompDetails(this.beans.userCompFactory, colDef, params)!;
     }
 
     private createParams(): IHeaderParams {
+        const { menuSvc, sortSvc } = this.beans;
         const params: IHeaderParams = this.gos.addGridCommonParams({
             column: this.column,
             displayName: this.displayName!,
             enableSorting: this.column.isSortable(),
             enableMenu: this.menuEnabled,
-            enableFilterButton: this.openFilterEnabled && !!this.menuSvc?.isHeaderFilterButtonEnabled(this.column),
+            enableFilterButton: this.openFilterEnabled && !!menuSvc?.isHeaderFilterButtonEnabled(this.column),
             enableFilterIcon: !this.openFilterEnabled || _isLegacyMenuEnabled(this.gos),
             showColumnMenu: (buttonElement: HTMLElement) => {
-                this.menuSvc?.showColumnMenu({
+                menuSvc?.showColumnMenu({
                     column: this.column,
                     buttonElement,
                     positionBy: 'button',
                 });
             },
             showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch) => {
-                this.menuSvc?.showColumnMenu({
+                menuSvc?.showColumnMenu({
                     column: this.column,
                     mouseEvent,
                     positionBy: 'mouse',
                 });
             },
             showFilter: (buttonElement: HTMLElement) => {
-                this.menuSvc?.showFilterMenu({
+                menuSvc?.showFilterMenu({
                     column: this.column,
                     buttonElement: buttonElement,
                     containerType: 'columnFilter',
@@ -185,10 +186,10 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
                 });
             },
             progressSort: (multiSort?: boolean) => {
-                this.beans.sortSvc?.progressSort(this.column, !!multiSort, 'uiColumnSorted');
+                sortSvc?.progressSort(this.column, !!multiSort, 'uiColumnSorted');
             },
             setSort: (sort: SortDirection, multiSort?: boolean) => {
-                this.beans.sortSvc?.setSortForColumn(this.column, sort, !!multiSort, 'uiColumnSorted');
+                sortSvc?.setSortForColumn(this.column, sort, !!multiSort, 'uiColumnSorted');
             },
             eGridHeader: this.eGui,
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
@@ -312,8 +313,9 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     private updateState(): void {
-        this.menuEnabled = !!this.menuSvc?.isColumnMenuInHeaderEnabled(this.column);
-        this.openFilterEnabled = !!this.menuSvc?.isFilterMenuInHeaderEnabled(this.column);
+        const { menuSvc } = this.beans;
+        this.menuEnabled = !!menuSvc?.isColumnMenuInHeaderEnabled(this.column);
+        this.openFilterEnabled = !!menuSvc?.isFilterMenuInHeaderEnabled(this.column);
         this.sortable = this.column.isSortable();
         this.displayName = this.calculateDisplayName();
         this.draggable = this.workOutDraggable();

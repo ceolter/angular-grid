@@ -1,15 +1,12 @@
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection, DynamicBeanName, UserComponentName } from '../../context/context';
+import type { DynamicBeanName, UserComponentName } from '../../context/context';
 import type { Module } from '../../interfaces/iModule';
 import type { IconName, IconValue } from '../../utils/icon';
-import type { ValidationService } from '../../validation/validationService';
 import type { AgComponentSelector, ComponentSelector } from '../../widgets/component';
 
 export class Registry extends BeanStub implements NamedBean {
     beanName = 'registry' as const;
-
-    private validation?: ValidationService;
 
     private agGridDefaults: { [key in UserComponentName]?: any } = {};
 
@@ -22,10 +19,6 @@ export class Registry extends BeanStub implements NamedBean {
     private selectors: { [name in AgComponentSelector]?: ComponentSelector } = {};
 
     private icons: { [K in IconName]?: IconValue } = {};
-
-    public wireBeans(beans: BeanCollection): void {
-        this.validation = beans.validation;
-    }
 
     public postConstruct(): void {
         const comps = this.gos.get('components');
@@ -104,7 +97,7 @@ export class Registry extends BeanStub implements NamedBean {
             return createResult(defaultComponent, false, this.agGridDefaultParams[name as UserComponentName]);
         }
 
-        this.validation?.missingUserComponent(propertyName, name, this.agGridDefaults, this.jsComps);
+        this.beans.validation?.missingUserComponent(propertyName, name, this.agGridDefaults, this.jsComps);
 
         return null;
     }

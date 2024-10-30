@@ -48,7 +48,8 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     }
 
     public setScrollPosition(scrollWidth: number, scrollPosition: number, afterScroll: boolean = false): void {
-        const bodyWidthDirty = this.visibleCols.isBodyWidthDirty;
+        const { visibleCols } = this;
+        const bodyWidthDirty = visibleCols.isBodyWidthDirty;
 
         const noChange = scrollWidth === this.scrollWidth && scrollPosition === this.scrollPosition && !bodyWidthDirty;
         if (noChange) {
@@ -60,10 +61,10 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         // we need to call setVirtualViewportLeftAndRight() at least once after the body width changes,
         // as the viewport can stay the same, but in RTL, if body width changes, we need to work out the
         // virtual columns again
-        this.visibleCols.isBodyWidthDirty = true;
+        visibleCols.isBodyWidthDirty = true;
 
         if (this.gos.get('enableRtl')) {
-            const bodyWidth = this.visibleCols.bodyWidth;
+            const bodyWidth = visibleCols.bodyWidth;
             this.viewportLeft = bodyWidth - scrollPosition - scrollWidth;
             this.viewportRight = bodyWidth - scrollPosition;
         } else {
@@ -179,14 +180,10 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         const inViewportCallback = this.isColumnVirtualisationSuppressed()
             ? undefined
             : this.isColumnInRowViewport.bind(this);
-        const displayedColumnsCenter = this.visibleCols.centerCols;
+        const { visibleCols } = this;
+        const displayedColumnsCenter = visibleCols.centerCols;
 
-        return this.visibleCols.getColsForRow(
-            rowNode,
-            displayedColumnsCenter,
-            inViewportCallback,
-            emptySpaceBeforeColumn
-        );
+        return visibleCols.getColsForRow(rowNode, displayedColumnsCenter, inViewportCallback, emptySpaceBeforeColumn);
     }
 
     // checks what columns are currently displayed due to column virtualisation. dispatches an event
@@ -210,7 +207,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         // for easy lookup when building the groups.
         const renderedColIds: { [key: string]: boolean } = {};
 
-        const { leftCols, rightCols } = this.visibleCols;
+        const { leftCols, rightCols, treeLeft, treeRight, treeCenter } = this.visibleCols;
         const allRenderedCols = this.headerColsWithinViewport.concat(leftCols).concat(rightCols);
 
         allRenderedCols.forEach((col) => (renderedColIds[col.getId()] = true));
@@ -251,7 +248,6 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
             return returnValue;
         };
 
-        const { treeLeft, treeRight, treeCenter } = this.visibleCols;
         testGroup(treeLeft, this.rowsOfHeadersToRenderLeft, 0);
         testGroup(treeRight, this.rowsOfHeadersToRenderRight, 0);
         testGroup(treeCenter, this.rowsOfHeadersToRenderCenter, 0);

@@ -3,7 +3,6 @@ import type { VisibleColsService } from './columns/visibleColsService';
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
-import type { CtrlsService } from './ctrlsService';
 import type { AgColumn } from './entities/agColumn';
 import type { AgColumnGroup } from './entities/agColumnGroup';
 import { _areCellsEqual, _getFirstRow, _getLastRow } from './entities/positionUtils';
@@ -43,7 +42,6 @@ export class FocusService extends BeanStub implements NamedBean {
     private headerNavigation?: HeaderNavigationService;
     private rowRenderer: RowRenderer;
     private navigation?: NavigationService;
-    private ctrlsSvc: CtrlsService;
     private filterManager?: FilterManager;
     private overlays?: OverlayService;
 
@@ -53,7 +51,6 @@ export class FocusService extends BeanStub implements NamedBean {
         this.headerNavigation = beans.headerNavigation;
         this.rowRenderer = beans.rowRenderer;
         this.navigation = beans.navigation;
-        this.ctrlsSvc = beans.ctrlsSvc;
         this.filterManager = beans.filterManager;
         this.overlays = beans.overlays;
     }
@@ -436,7 +433,7 @@ export class FocusService extends BeanStub implements NamedBean {
 
         this.headerNavigation?.scrollToColumn(column as AgColumn, direction);
 
-        const headerRowContainerCtrl = this.ctrlsSvc.getHeaderRowContainerCtrl(column.getPinned());
+        const headerRowContainerCtrl = this.beans.ctrlsSvc.getHeaderRowContainerCtrl(column.getPinned());
 
         // this will automatically call the setFocusedHeader method above
         const focusSuccess =

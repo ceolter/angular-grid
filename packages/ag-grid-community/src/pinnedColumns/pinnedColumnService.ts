@@ -10,6 +10,7 @@ import type { ColumnEventType } from '../events';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 import { SetPinnedWidthFeature } from '../gridBodyComp/rowContainer/setPinnedWidthFeature';
 import { _isDomLayout } from '../gridOptionsUtils';
+import type { HeaderRowContainerCtrl } from '../headerRendering/rowContainer/headerRowContainerCtrl';
 import type { ProcessUnpinnedColumnsParams } from '../interfaces/iCallbackParams';
 import type { ColumnPinnedType } from '../interfaces/iColumn';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
@@ -172,6 +173,53 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
             column.pinned = null;
         }
         column.dispatchStateUpdatedEvent('pinned');
+    }
+
+    public setupHeaderPinnedWidth(ctrl: HeaderRowContainerCtrl): void {
+        const { scrollVisibleSvc } = this.beans;
+
+        if (ctrl.pinned == null) {
+            return;
+        }
+
+        const pinningLeft = ctrl.pinned === 'left';
+        const pinningRight = ctrl.pinned === 'right';
+
+        ctrl.hidden = true;
+
+        const listener = () => {
+            const width = pinningLeft ? this.getPinnedLeftWidth() : this.getPinnedRightWidth();
+            if (width == null) {
+                return;
+            } // can happen at initialisation, width not yet set
+
+            const hidden = width == 0;
+            const hiddenChanged = ctrl.hidden !== hidden;
+            const isRtl = this.gos.get('enableRtl');
+            const scrollbarWidth = scrollVisibleSvc.getScrollbarWidth();
+
+            // if there is a scroll showing (and taking up space, so Windows, and not iOS)
+            // in the body, then we add extra space to keep header aligned with the body,
+            // as body width fits the cols and the scrollbar
+            const addPaddingForScrollbar =
+                scrollVisibleSvc.verticalScrollShowing && ((isRtl && pinningLeft) || (!isRtl && pinningRight));
+            const widthWithPadding = addPaddingForScrollbar ? width + scrollbarWidth : width;
+
+            ctrl.comp.setPinnedContainerWidth(`${widthWithPadding}px`);
+            ctrl.comp.setDisplayed(!hidden);
+
+            if (hiddenChanged) {
+                ctrl.hidden = hidden;
+                ctrl.refresh();
+            }
+        };
+
+        ctrl.addManagedEventListeners({
+            leftPinnedWidthChanged: listener,
+            rightPinnedWidthChanged: listener,
+            scrollVisibilityChanged: listener,
+            scrollbarWidthChanged: listener,
+        });
     }
 
     private getPinnedColumnsOverflowingViewport(viewportWidth: number): AgColumn[] {

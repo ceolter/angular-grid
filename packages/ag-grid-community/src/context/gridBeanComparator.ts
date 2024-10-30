@@ -76,7 +76,6 @@ const orderedCoreBeans: BeanName[] = [
     'apiEventSvc',
     'ariaAnnounce',
     'menuSvc',
-    'colState',
     'colMoves',
     'colAutosize',
     'colFlex',

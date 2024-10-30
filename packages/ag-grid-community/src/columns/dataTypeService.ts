@@ -29,8 +29,8 @@ import { _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
 import { _addColumnDefaultAndTypes } from './columnFactoryUtils';
 import type { ColumnModel } from './columnModel';
-import { getColumnStateFromColDef } from './columnStateService';
-import type { ColumnState, ColumnStateParams, ColumnStateService } from './columnStateService';
+import { _applyColumnState, getColumnStateFromColDef } from './columnStateUtils';
+import type { ColumnState, ColumnStateParams } from './columnStateUtils';
 import { _convertColumnEventSourceType, convertColumnTypes } from './columnUtils';
 
 interface GroupSafeValueFormatter {
@@ -45,7 +45,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
     private rowGroupColsSvc?: IColsService;
     private pivotColsSvc?: IColsService;
     private valueSvc: ValueService;
-    private colState: ColumnStateService;
     private filterManager?: FilterManager;
     private colAutosize?: ColumnAutosizeService;
 
@@ -55,7 +54,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.pivotColsSvc = beans.pivotColsSvc;
         this.valueSvc = beans.valueSvc;
-        this.colState = beans.colState;
         this.filterManager = beans.filterManager;
         this.colAutosize = beans.colAutosize;
     }
@@ -511,7 +509,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
             );
         }
         if (state.length) {
-            this.colState.applyColumnState({ state }, 'cellDataTypeInferred');
+            _applyColumnState(this.beans, { state }, 'cellDataTypeInferred');
         }
         this.initialData = null;
     }

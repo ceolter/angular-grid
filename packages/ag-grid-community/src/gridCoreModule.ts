@@ -2,7 +2,6 @@ import { ApiFunctionService } from './api/apiFunctionService';
 import { CoreApiModule } from './api/apiModule';
 import { ColumnModel } from './columns/columnModel';
 import { ColumnNameService } from './columns/columnNameService';
-import { ColumnStateService } from './columns/columnStateService';
 import { ColumnViewportService } from './columns/columnViewportService';
 import { VisibleColsService } from './columns/visibleColsService';
 import { Registry } from './components/framework/registry';
@@ -44,7 +43,6 @@ export const CommunityCoreModule: _ModuleWithoutApi = {
         ScrollVisibleService,
         CtrlsService,
         SyncService,
-        ColumnStateService,
         ColumnNameService,
         ColumnViewportService,
     ],

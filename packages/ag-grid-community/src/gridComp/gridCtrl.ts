@@ -1,7 +1,4 @@
-import type { VisibleColsService } from '../columns/visibleColsService';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { FocusService } from '../focusService';
 import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
 import { _getActiveDomElement } from '../gridOptionsUtils';
 import type { FocusableContainer } from '../interfaces/iFocusableContainer';
@@ -31,14 +28,6 @@ export interface OptionalGridComponents {
 }
 
 export class GridCtrl extends BeanStub {
-    private focusSvc: FocusService;
-    private visibleCols: VisibleColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-        this.visibleCols = beans.visibleCols;
-    }
-
     private view: IGridComp;
     private eGridHostDiv: HTMLElement;
     private eGui: HTMLElement;
@@ -119,9 +108,10 @@ export class GridCtrl extends BeanStub {
 
         if (nextIndex === 0) {
             if (indexWithFocus > 0) {
-                const allColumns = this.visibleCols.allCols;
+                const { visibleCols, focusSvc } = this.beans;
+                const allColumns = visibleCols.allCols;
                 const lastColumn = _last(allColumns);
-                if (this.focusSvc.focusGridView(lastColumn, true)) {
+                if (focusSvc.focusGridView(lastColumn, true)) {
                     return true;
                 }
             }
@@ -138,7 +128,7 @@ export class GridCtrl extends BeanStub {
         }
 
         const focusableContainers = this.getFocusableContainers();
-        const { focusSvc, visibleCols } = this;
+        const { focusSvc, visibleCols } = this.beans;
         const allColumns = visibleCols.allCols;
 
         if (fromBottom) {

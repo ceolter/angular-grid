@@ -9,14 +9,23 @@ globalObj.Node = typeof Node === 'undefined' ? {} : Node;
 globalObj.MouseEvent = typeof MouseEvent === 'undefined' ? {} : MouseEvent;
 
 // columns
-export { _applyColumnState, _addColumnDefaultAndTypes, _createColumnTree } from './columns/columnFactoryUtils';
+export {
+    _updateColumnState as _updateColumnState,
+    _addColumnDefaultAndTypes,
+    _createColumnTree,
+} from './columns/columnFactoryUtils';
 export type { ColumnGroupService } from './columns/columnGroups/columnGroupService';
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
 export type { ColumnAutosizeService } from './columnAutosize/columnAutosizeService';
 export { BaseColsService } from './columns/baseColsService';
-export type { ColumnStateService } from './columns/columnStateService';
-export { ColumnState, ColumnStateParams, ApplyColumnStateParams } from './columns/columnStateService';
+export {
+    ColumnState,
+    ColumnStateParams,
+    ApplyColumnStateParams,
+    _resetColumnState,
+    _applyColumnState,
+} from './columns/columnStateUtils';
 export type { ColumnMoveService } from './columnMove/columnMoveService';
 export type { ColumnNameService } from './columns/columnNameService';
 export { IAggColumnNameService } from './interfaces/iAggColumnNameService';

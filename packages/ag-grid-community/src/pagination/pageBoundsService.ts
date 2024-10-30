@@ -1,21 +1,14 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { IRowModel, RowBounds } from '../interfaces/iRowModel';
+import type { RowBounds } from '../interfaces/iRowModel';
 
 // note that everything in this service is used even when pagination is off
 export class PageBoundsService extends BeanStub implements NamedBean {
     beanName = 'pageBounds' as const;
 
-    private rowModel: IRowModel;
-
     private topRowBounds?: Required<RowBounds> | null;
     private bottomRowBounds?: Required<RowBounds> | null;
     private pixelOffset = 0;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-    }
 
     public getFirstRow(): number {
         return this.topRowBounds?.rowIndex ?? -1;
@@ -41,14 +34,14 @@ export class PageBoundsService extends BeanStub implements NamedBean {
     }
 
     public calculateBounds(topDisplayedRowIndex: number, bottomDisplayedRowIndex: number): void {
-        const { rowModel } = this;
+        const { rowModel } = this.beans;
         const topRowBounds = rowModel.getRowBounds(topDisplayedRowIndex)!;
         if (topRowBounds) {
             topRowBounds.rowIndex = topDisplayedRowIndex;
         }
         this.topRowBounds = topRowBounds as Required<RowBounds> | null;
 
-        const bottomRowBounds = this.rowModel.getRowBounds(bottomDisplayedRowIndex)!;
+        const bottomRowBounds = rowModel.getRowBounds(bottomDisplayedRowIndex)!;
         if (bottomRowBounds) {
             bottomRowBounds.rowIndex = bottomDisplayedRowIndex;
         }

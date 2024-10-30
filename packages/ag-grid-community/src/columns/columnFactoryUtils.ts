@@ -145,7 +145,7 @@ function createColumn(
     } else {
         const colDefMerged = _addColumnDefaultAndTypes(beans, colDef, column.getColId());
         column.setColDef(colDefMerged, colDef, source);
-        _applyColumnState(beans, column, colDefMerged, source);
+        _updateColumnState(beans, column, colDefMerged, source);
     }
 
     beans.dataTypeSvc?.addColumnListeners(column);
@@ -193,7 +193,7 @@ export function updateSomeColumnState(
     }
 }
 
-export function _applyColumnState(
+export function _updateColumnState(
     beans: BeanCollection,
     column: AgColumn,
     colDef: ColDef,

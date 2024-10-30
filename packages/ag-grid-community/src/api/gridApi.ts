@@ -1,4 +1,4 @@
-import type { ApplyColumnStateParams, ColumnState } from '../columns/columnStateService';
+import type { ApplyColumnStateParams, ColumnState } from '../columns/columnStateUtils';
 import type { RowDropZoneEvents, RowDropZoneParams } from '../dragAndDrop/rowDragFeature';
 import type { ColDef, ColGroupDef, ColumnChooserParams, HeaderLocation, IAggFunc } from '../entities/colDef';
 import type { ChartRef, GridOptions, SelectAllMode } from '../entities/gridOptions';

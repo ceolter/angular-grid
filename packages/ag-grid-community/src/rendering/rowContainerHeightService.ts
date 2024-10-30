@@ -1,7 +1,5 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import { _getMaxDivHeight } from '../utils/browser';
 import { _logIfDebug } from '../utils/function';
 
@@ -12,12 +10,6 @@ import { _logIfDebug } from '../utils/function';
 
 export class RowContainerHeightService extends BeanStub implements NamedBean {
     beanName = 'rowContainerHeight' as const;
-
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
 
     private maxDivHeight: number;
 
@@ -52,7 +44,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
             return;
         }
 
-        const newScrollY = this.ctrlsSvc.getScrollFeature().getVScrollPosition().top;
+        const newScrollY = this.beans.ctrlsSvc.getScrollFeature().getVScrollPosition().top;
         const newBodyHeight = this.getUiBodyHeight();
 
         const atLeastOneChanged = newScrollY !== this.scrollY || newBodyHeight !== this.uiBodyHeight;
@@ -122,7 +114,7 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
     }
 
     private getUiBodyHeight(): number {
-        const pos = this.ctrlsSvc.getScrollFeature().getVScrollPosition();
+        const pos = this.beans.ctrlsSvc.getScrollFeature().getVScrollPosition();
         return pos.bottom - pos.top;
     }
 

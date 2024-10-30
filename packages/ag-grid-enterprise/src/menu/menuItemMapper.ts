@@ -13,7 +13,15 @@ import type {
     NamedBean,
     SortService,
 } from 'ag-grid-community';
-import { BeanStub, _createIconNoSpan, _escapeString, _exists, _getRowNode, _warn } from 'ag-grid-community';
+import {
+    BeanStub,
+    _createIconNoSpan,
+    _escapeString,
+    _exists,
+    _getRowNode,
+    _resetColumnState,
+    _warn,
+} from 'ag-grid-community';
 
 import type { ChartMenuItemMapper } from './chartMenuItemMapper';
 import type { ColumnChooserFactory } from './columnChooserFactory';
@@ -232,7 +240,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
             case 'resetColumns':
                 return {
                     name: localeTextFunc('resetColumns', 'Reset Columns'),
-                    action: () => this.beans.colState.resetColumnState(source),
+                    action: () => _resetColumnState(this.beans, source),
                 };
             case 'expandAll':
                 return {

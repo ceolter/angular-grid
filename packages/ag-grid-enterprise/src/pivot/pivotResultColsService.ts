@@ -8,7 +8,6 @@ import type {
     ColKey,
     ColumnEventType,
     ColumnModel,
-    Context,
     IPivotResultColsService,
     NamedBean,
     VisibleColsService,
@@ -26,12 +25,10 @@ import {
 export class PivotResultColsService extends BeanStub implements NamedBean, IPivotResultColsService {
     beanName = 'pivotResultCols' as const;
 
-    private context: Context;
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.context = beans.context;
         this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
     }
@@ -43,7 +40,7 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
     private previousPivotResultCols: (AgColumn | AgProvidedColumnGroup)[] | null;
 
     public override destroy(): void {
-        _destroyColumnTree(this.context, this.pivotResultCols?.tree);
+        _destroyColumnTree(this.beans, this.pivotResultCols?.tree);
         super.destroy();
     }
 
@@ -105,7 +102,7 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
                 this.pivotResultCols?.tree || this.previousPivotResultCols || undefined,
                 source
             );
-            _destroyColumnTree(this.context, this.pivotResultCols?.tree, balancedTreeResult.columnTree);
+            _destroyColumnTree(this.beans, this.pivotResultCols?.tree, balancedTreeResult.columnTree);
 
             const tree = balancedTreeResult.columnTree;
             const treeDepth = balancedTreeResult.treeDept;

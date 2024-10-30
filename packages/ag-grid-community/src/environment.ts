@@ -104,12 +104,13 @@ export class Environment extends BeanStub implements NamedBean {
     }
 
     public refreshRowHeightVariable(): number {
-        const oldRowHeight = this.eGridDiv.style.getPropertyValue('--ag-line-height').trim();
+        const { eGridDiv } = this;
+        const oldRowHeight = eGridDiv.style.getPropertyValue('--ag-line-height').trim();
         const height = this.gos.get('rowHeight');
 
         if (height == null || isNaN(height) || !isFinite(height)) {
             if (oldRowHeight !== null) {
-                this.eGridDiv.style.setProperty('--ag-line-height', null);
+                eGridDiv.style.setProperty('--ag-line-height', null);
             }
             return -1;
         }
@@ -117,7 +118,7 @@ export class Environment extends BeanStub implements NamedBean {
         const newRowHeight = `${height}px`;
 
         if (oldRowHeight != newRowHeight) {
-            this.eGridDiv.style.setProperty('--ag-line-height', newRowHeight);
+            eGridDiv.style.setProperty('--ag-line-height', newRowHeight);
             return height;
         }
 

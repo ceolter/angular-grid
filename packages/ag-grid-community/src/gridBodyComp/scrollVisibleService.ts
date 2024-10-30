@@ -47,9 +47,10 @@ export class ScrollVisibleService extends BeanStub implements NamedBean {
         // location at the start of the animation, so pre animation the H scrollbar is still
         // needed, but post animation it is not. So if animation is active, we only update
         // after the animation has ended.
-        if (this.colAnimation?.isActive()) {
-            this.colAnimation.executeLaterVMTurn(() => {
-                this.colAnimation!.executeLaterVMTurn(() => this.updateScrollVisibleImpl());
+        const { colAnimation } = this;
+        if (colAnimation?.isActive()) {
+            colAnimation.executeLaterVMTurn(() => {
+                colAnimation!.executeLaterVMTurn(() => this.updateScrollVisibleImpl());
             });
         } else {
             this.updateScrollVisibleImpl();

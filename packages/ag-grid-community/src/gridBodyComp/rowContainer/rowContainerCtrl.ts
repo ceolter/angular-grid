@@ -1,13 +1,7 @@
-import type { ColumnViewportService } from '../../columns/columnViewportService';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { CtrlsService } from '../../ctrlsService';
-import type { DragService } from '../../dragAndDrop/dragService';
 import type { StickyTopOffsetChangedEvent } from '../../events';
 import { _isDomLayout } from '../../gridOptionsUtils';
-import type { IRangeService } from '../../interfaces/IRangeService';
 import type { ColumnPinnedType } from '../../interfaces/iColumn';
-import type { PinnedColumnService } from '../../pinnedColumns/pinnedColumnService';
 import type { RowCtrl } from '../../rendering/row/rowCtrl';
 import type { RowRenderer } from '../../rendering/rowRenderer';
 import {
@@ -230,22 +224,6 @@ export interface IRowContainerComp {
 }
 
 export class RowContainerCtrl extends BeanStub implements ScrollPartner {
-    private dragSvc?: DragService;
-    private ctrlsSvc: CtrlsService;
-    private colViewport: ColumnViewportService;
-    private rowRenderer: RowRenderer;
-    private rangeSvc?: IRangeService;
-    private pinnedCols?: PinnedColumnService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.dragSvc = beans.dragSvc;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.colViewport = beans.colViewport;
-        this.rowRenderer = beans.rowRenderer;
-        this.rangeSvc = beans.rangeSvc;
-        this.pinnedCols = beans.pinnedCols;
-    }
-
     private readonly options: RowContainerOptions;
 
     private comp: IRowContainerComp;
@@ -282,7 +260,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     private registerWithCtrlsService(): void {
         // we don't register full width containers
         if (this.options.fullWidth) return;
-        this.ctrlsSvc.register(this.name as any, this);
+        this.beans.ctrlsSvc.register(this.name as any, this);
     }
 
     private forContainers(names: RowContainerName[], callback: () => void): void {
@@ -300,16 +278,18 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
         this.addPreventScrollWhileDragging();
         this.listenOnDomOrder();
 
+        const { pinnedCols, rangeSvc } = this.beans;
+
         const pinnedWidthChanged = () => this.onPinnedWidthChanged();
         this.forContainers(allLeft, () => {
             this.pinnedWidthFeature = this.createOptionalManagedBean(
-                this.pinnedCols?.createPinnedWidthFeature(this.eContainer, true)
+                pinnedCols?.createPinnedWidthFeature(this.eContainer, true)
             );
             this.addManagedEventListeners({ leftPinnedWidthChanged: pinnedWidthChanged });
         });
         this.forContainers(allRight, () => {
             this.pinnedWidthFeature = this.createOptionalManagedBean(
-                this.pinnedCols?.createPinnedWidthFeature(this.eContainer, false)
+                pinnedCols?.createPinnedWidthFeature(this.eContainer, false)
             );
             this.addManagedEventListeners({ rightPinnedWidthChanged: pinnedWidthChanged });
         });
@@ -318,9 +298,9 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
                 new SetHeightFeature(this.eContainer, this.name === 'center' ? eViewport : undefined)
             )
         );
-        if (this.rangeSvc) {
+        if (rangeSvc) {
             this.forContainers(allNoFW, () =>
-                this.createManagedBean(this.rangeSvc!.createDragListenerFeature(this.eContainer))
+                this.createManagedBean(rangeSvc.createDragListenerFeature(this.eContainer))
             );
         }
 
@@ -373,11 +353,12 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     // this methods prevents the grid views from being scrolled while the dragService is being used
     // eg. the view should not scroll up and down while dragging rows using the rowDragComp.
     private addPreventScrollWhileDragging(): void {
-        if (!this.dragSvc) {
+        const { dragSvc } = this.beans;
+        if (!dragSvc) {
             return;
         }
         const preventScroll = (e: TouchEvent) => {
-            if (this.dragSvc!.isDragging()) {
+            if (dragSvc!.isDragging()) {
                 if (e.cancelable) {
                     e.preventDefault();
                 }
@@ -395,7 +376,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
         const scrollWidth = this.getCenterWidth();
         const scrollPosition = this.getCenterViewportScrollLeft();
 
-        this.colViewport.setScrollPosition(scrollWidth, scrollPosition, afterScroll);
+        this.beans.colViewport.setScrollPosition(scrollWidth, scrollPosition, afterScroll);
     }
 
     public hasHorizontalScrollGap(): boolean {
@@ -464,7 +445,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     private onDisplayedRowsChanged(afterScroll: boolean = false): void {
-        const rows = this.options.getRowCtrls(this.rowRenderer);
+        const rows = this.options.getRowCtrls(this.beans.rowRenderer);
         if (!this.visible || rows.length === 0) {
             this.comp.setRowCtrls({ rowCtrls: this.EMPTY_CTRLS });
             return;

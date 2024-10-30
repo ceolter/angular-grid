@@ -187,11 +187,12 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     }
 
     private setupUserComp(): void {
-        const params: IHeaderGroupParams = this.gos.addGridCommonParams({
+        const { columnGroupSvc, userCompFactory, gos } = this.beans;
+        const params: IHeaderGroupParams = gos.addGridCommonParams({
             displayName: this.displayName!,
             columnGroup: this.column,
             setExpanded: (expanded: boolean) => {
-                this.beans.columnGroupSvc!.setColumnGroupOpened(
+                columnGroupSvc!.setColumnGroupOpened(
                     this.column.getProvidedColumnGroup(),
                     expanded,
                     'gridInitializing'
@@ -202,7 +203,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             },
         });
 
-        const compDetails = _getHeaderGroupCompDetails(this.userCompFactory, params)!;
+        const compDetails = _getHeaderGroupCompDetails(userCompFactory, params)!;
         this.comp.setUserCompDetails(compDetails);
     }
 

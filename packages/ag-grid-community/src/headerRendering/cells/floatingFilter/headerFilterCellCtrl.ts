@@ -113,17 +113,18 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     }
 
     private onTabKeyDown(e: KeyboardEvent) {
-        const activeEl = _getActiveDomElement(this.beans);
+        const { beans } = this;
+        const activeEl = _getActiveDomElement(beans);
         const wrapperHasFocus = activeEl === this.eGui;
 
         if (wrapperHasFocus) {
             return;
         }
 
-        const nextFocusableEl = _findNextFocusableElement(this.beans, this.eGui, null, e.shiftKey);
+        const nextFocusableEl = _findNextFocusableElement(beans, this.eGui, null, e.shiftKey);
 
         if (nextFocusableEl) {
-            this.beans.headerNavigation?.scrollToColumn(this.column);
+            beans.headerNavigation?.scrollToColumn(this.column);
             e.preventDefault();
             nextFocusableEl.focus();
             return;
@@ -136,7 +137,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
         }
 
         if (
-            this.focusSvc.focusHeaderPosition({
+            beans.focusSvc.focusHeaderPosition({
                 headerPosition: {
                     headerRowIndex: this.rowCtrl.rowIndex,
                     column: nextFocusableColumn,
@@ -236,7 +237,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
     }
 
     private setupFilterButton(): void {
-        this.suppressFilterButton = !this.menuSvc?.isFloatingFilterButtonEnabled(this.column);
+        this.suppressFilterButton = !this.beans.menuSvc?.isFloatingFilterButtonEnabled(this.column);
         this.highlightFilterButtonWhenActive = !_isLegacyMenuEnabled(this.gos);
     }
 
@@ -261,7 +262,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
 
     private showParentFilter() {
         const eventSource = this.suppressFilterButton ? this.eFloatingFilterBody : this.eButtonShowMainFilter;
-        this.menuSvc?.showFilterMenu({
+        this.beans.menuSvc?.showFilterMenu({
             column: this.column,
             buttonElement: eventSource,
             containerType: 'floatingFilter',

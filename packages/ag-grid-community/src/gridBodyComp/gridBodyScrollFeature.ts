@@ -1,4 +1,3 @@
-import type { ColumnModel } from '../columns/columnModel';
 import type { VisibleColsService } from '../columns/visibleColsService';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -7,13 +6,8 @@ import type { AgColumn } from '../entities/agColumn';
 import type { BodyScrollEvent } from '../events';
 import { _isDomLayout } from '../gridOptionsUtils';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { IRowModel } from '../interfaces/iRowModel';
 import type { IRowNode, VerticalScrollPosition } from '../interfaces/iRowNode';
 import type { AnimationFrameService } from '../misc/animationFrameService';
-import type { PageBoundsService } from '../pagination/pageBoundsService';
-import type { PaginationService } from '../pagination/paginationService';
-import type { RowContainerHeightService } from '../rendering/rowContainerHeightService';
-import type { RowRenderer } from '../rendering/rowRenderer';
 import { _isIOSUserAgent } from '../utils/browser';
 import { _getInnerHeight, _getScrollLeft, _isRtlNegativeScroll, _setScrollLeft } from '../utils/dom';
 import { _debounce } from '../utils/function';
@@ -49,23 +43,11 @@ export interface ScrollPartner {
 export class GridBodyScrollFeature extends BeanStub {
     private ctrlsSvc: CtrlsService;
     private animationFrameSvc?: AnimationFrameService;
-    private pagination?: PaginationService;
-    private pageBounds: PageBoundsService;
-    private rowModel: IRowModel;
-    private heightScaler: RowContainerHeightService;
-    private rowRenderer: RowRenderer;
-    private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.ctrlsSvc = beans.ctrlsSvc;
         this.animationFrameSvc = beans.animationFrameSvc;
-        this.pagination = beans.pagination;
-        this.pageBounds = beans.pageBounds;
-        this.rowModel = beans.rowModel;
-        this.heightScaler = beans.rowContainerHeight;
-        this.rowRenderer = beans.rowRenderer;
-        this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
     }
 
@@ -254,7 +236,8 @@ export class GridBodyScrollFeature extends BeanStub {
         if (this.shouldBlockScrollUpdate(ScrollDirection.Vertical, scrollTop, true)) {
             return;
         }
-        this.animationFrameSvc?.setScrollTop(scrollTop);
+        const { animationFrameSvc } = this;
+        animationFrameSvc?.setScrollTop(scrollTop);
         this.nextScrollTop = scrollTop;
 
         if (source === VIEWPORT) {
@@ -266,10 +249,10 @@ export class GridBodyScrollFeature extends BeanStub {
         // the `scrollGridIfNeeded` will recalculate the rows to be rendered by the grid
         // so it should only be called after `eBodyViewport` has been scrolled to the correct
         // position, otherwise the `first` and `last` row could be miscalculated.
-        if (!this.animationFrameSvc || this.gos.get('suppressAnimationFrame')) {
+        if (!animationFrameSvc || this.gos.get('suppressAnimationFrame')) {
             this.scrollGridIfNeeded();
         } else {
-            this.animationFrameSvc.schedule();
+            animationFrameSvc.schedule();
         }
 
         this.resetLastVScrollDebounced();
@@ -466,12 +449,13 @@ export class GridBodyScrollFeature extends BeanStub {
         comparator: TData | IRowNode<TData> | ((row: IRowNode<TData>) => boolean),
         position: 'top' | 'bottom' | 'middle' | null = null
     ) {
+        const { rowModel } = this.beans;
         // look for the node index we want to display
-        const rowCount = this.rowModel.getRowCount();
+        const rowCount = rowModel.getRowCount();
         let indexToSelect = -1;
         // go through all the nodes, find the one we want to show
         for (let i = 0; i < rowCount; i++) {
-            const node = this.rowModel.getRow(i);
+            const node = rowModel.getRow(i);
             if (typeof comparator === 'function') {
                 // Have to assert type here, as type could be TData & Function
                 const predicate = comparator as (row: IRowNode<TData>) => boolean;
@@ -504,7 +488,8 @@ export class GridBodyScrollFeature extends BeanStub {
             return;
         }
 
-        const rowCount = this.rowModel.getRowCount();
+        const { rowModel } = this.beans;
+        const rowCount = rowModel.getRowCount();
 
         if (typeof index !== 'number' || index < 0 || index >= rowCount) {
             _warn(88, { index });
@@ -514,28 +499,35 @@ export class GridBodyScrollFeature extends BeanStub {
         const isPaging = this.gos.get('pagination');
         const paginationPanelEnabled = isPaging && !this.gos.get('suppressPaginationPanel');
 
-        this.beans.frameworkOverrides.wrapIncoming(() => {
+        const {
+            frameworkOverrides,
+            pagination,
+            pageBounds,
+            rowContainerHeight: heightScaler,
+            rowRenderer,
+        } = this.beans;
+        frameworkOverrides.wrapIncoming(() => {
             if (!paginationPanelEnabled) {
-                this.pagination?.goToPageWithIndex(index);
+                pagination?.goToPageWithIndex(index);
             }
 
             const gridBodyCtrl = this.ctrlsSvc.getGridBodyCtrl();
             const stickyTopHeight = gridBodyCtrl.stickyTopHeight;
             const stickyBottomHeight = gridBodyCtrl.stickyBottomHeight;
 
-            const rowNode = this.rowModel.getRow(index);
+            const rowNode = rowModel.getRow(index);
             let rowGotShiftedDuringOperation: boolean;
 
             do {
                 const startingRowTop = rowNode!.rowTop;
                 const startingRowHeight = rowNode!.rowHeight;
 
-                const paginationOffset = this.pageBounds.getPixelOffset();
+                const paginationOffset = pageBounds.getPixelOffset();
                 const rowTopPixel = rowNode!.rowTop! - paginationOffset;
                 const rowBottomPixel = rowTopPixel + rowNode!.rowHeight!;
 
                 const scrollPosition = this.getVScrollPosition();
-                const heightOffset = this.heightScaler.divStretchOffset;
+                const heightOffset = heightScaler.divStretchOffset;
 
                 const vScrollTop = scrollPosition.top + heightOffset;
                 const vScrollBottom = scrollPosition.bottom + heightOffset;
@@ -544,8 +536,8 @@ export class GridBodyScrollFeature extends BeanStub {
 
                 // work out the pixels for top, middle and bottom up front,
                 // make the if/else below easier to read
-                const pxTop = this.heightScaler.getScrollPositionForPixel(rowTopPixel);
-                const pxBottom = this.heightScaler.getScrollPositionForPixel(rowBottomPixel - viewportHeight);
+                const pxTop = heightScaler.getScrollPositionForPixel(rowTopPixel);
+                const pxBottom = heightScaler.getScrollPositionForPixel(rowBottomPixel - viewportHeight);
                 // make sure if middle, the row is not outside the top of the grid
                 const pxMiddle = Math.min((pxTop + pxBottom) / 2, rowTopPixel);
 
@@ -570,7 +562,7 @@ export class GridBodyScrollFeature extends BeanStub {
 
                 if (newScrollPosition !== null) {
                     this.setVerticalScrollPosition(newScrollPosition);
-                    this.rowRenderer.redraw({ afterScroll: true });
+                    rowRenderer.redraw({ afterScroll: true });
                 }
 
                 // the row can get shifted if during the rendering (during rowRenderer.redraw()),
@@ -587,7 +579,8 @@ export class GridBodyScrollFeature extends BeanStub {
     }
 
     public ensureColumnVisible(key: any, position: 'auto' | 'start' | 'middle' | 'end' = 'auto'): void {
-        const column = this.colModel.getCol(key);
+        const { colModel, frameworkOverrides } = this.beans;
+        const column = colModel.getCol(key);
 
         if (!column) {
             return;
@@ -605,7 +598,7 @@ export class GridBodyScrollFeature extends BeanStub {
 
         const newHorizontalScroll: number | null = this.getPositionedHorizontalScroll(column, position);
 
-        this.beans.frameworkOverrides.wrapIncoming(() => {
+        frameworkOverrides.wrapIncoming(() => {
             if (newHorizontalScroll !== null) {
                 this.centerRowsCtrl.setCenterViewportScrollLeft(newHorizontalScroll);
             }
@@ -617,15 +610,6 @@ export class GridBodyScrollFeature extends BeanStub {
             this.centerRowsCtrl.onHorizontalViewportChanged();
 
             // so when we return back to user, the cells have rendered
-            this.animationFrameSvc?.flushAllFrames();
-        });
-    }
-
-    public setScrollPosition(top: number, left: number): void {
-        this.beans.frameworkOverrides.wrapIncoming(() => {
-            this.centerRowsCtrl.setCenterViewportScrollLeft(left);
-            this.setVerticalScrollPosition(top);
-            this.rowRenderer.redraw({ afterScroll: true });
             this.animationFrameSvc?.flushAllFrames();
         });
     }

@@ -1,4 +1,4 @@
-import type { ColumnState } from '../columns/columnStateService';
+import type { ColumnState } from '../columns/columnStateUtils';
 import { BeanStub } from '../context/beanStub';
 import type { AgEvent, ColumnEvent, ColumnEventType } from '../events';
 import type {
