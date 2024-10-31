@@ -629,6 +629,7 @@ export {
     _getActiveDomElement,
     _isNothingFocused,
     _getDocument,
+    _getPageBody,
     _getGroupAggFiltering,
     _isRowSelection,
     _isGetRowHeightFunction,
@@ -971,7 +972,7 @@ export { _isEventFromPrintableCharacter } from './utils/keyboard';
 export { _formatNumberCommas } from './utils/number';
 export { _mergeDeep } from './utils/object';
 export { _escapeString } from './utils/string';
-export { AgPromise } from './utils/promise';
+export { AgPromise, _isPromise } from './utils/promise';
 export { _addFocusableContainerListener } from './utils/focus';
 
 // charts

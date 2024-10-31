@@ -20,7 +20,18 @@ import type {
     TouchShowContextMenuParam,
     ValueService,
 } from 'ag-grid-community';
-import { BeanStub, Component, _areCellsEqual, _exists, _isIOSUserAgent, _isNothingFocused } from 'ag-grid-community';
+import {
+    BeanStub,
+    Component,
+    _areCellsEqual,
+    _createIconNoSpan,
+    _exists,
+    _getPageBody,
+    _isIOSUserAgent,
+    _isNothingFocused,
+    _isPromise,
+    _warn,
+} from 'ag-grid-community';
 
 import type { CloseMenuEvent } from '../widgets/agMenuItemComponent';
 import { AgMenuList } from '../widgets/agMenuList';
@@ -63,7 +74,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         node: RowNode | null,
         column: AgColumn | null,
         value: any
-    ): (MenuItemDef | string)[] | undefined {
+    ): (string | MenuItemDef<any, any>)[] | Promise<(string | MenuItemDef<any, any>)[]> | undefined {
         const defaultMenuOptions: string[] = [];
 
         if (_exists(node) && this.gos.isModuleRegistered('ClipboardCoreModule')) {
@@ -118,6 +129,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }
 
         const userFunc = this.gos.getCallback('getContextMenuItems');
+
         if (userFunc) {
             return userFunc({ column, node, value, defaultItems });
         }
@@ -218,12 +230,82 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         anchorToElement: HTMLElement
     ): boolean {
         const menuItems = this.getMenuItems(node, column, value);
-        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().getGui();
+
+        if (_isPromise<(string | MenuItemDef)[]>(menuItems)) {
+            const destroyPopup = this.createLoadingIcon(mouseEvent);
+            menuItems.then((menuItems) => {
+                if (menuItems) {
+                    this.createContextMenu({ menuItems, node, column, value, mouseEvent, anchorToElement });
+                }
+                destroyPopup();
+            });
+            return true;
+        }
 
         if (menuItems === undefined || !menuItems?.length) {
             return false;
         }
 
+        this.createContextMenu({ menuItems, node, column, value, mouseEvent, anchorToElement });
+
+        return true;
+    }
+
+    private createLoadingIcon(e: MouseEvent | Touch) {
+        const translate = this.getLocaleTextFunc();
+
+        const loadingIcon = _createIconNoSpan('loading', this.gos) as HTMLElement;
+        const wrapperEl = document.createElement('div');
+        wrapperEl.style.setProperty('position', 'absolute');
+        wrapperEl.appendChild(loadingIcon);
+
+        const positionWrapper = (e: MouseEvent | Touch) => {
+            this.popupSvc.positionPopupUnderMouseEvent({
+                type: 'contextMenu',
+                ePopup: wrapperEl,
+                mouseEvent: e,
+            });
+        };
+
+        const hideFunc = this.popupSvc.addPopup({
+            eChild: wrapperEl,
+            ariaLabel: translate('ariaLabelLoading', 'Loading'),
+            click: e,
+            positionCallback: () => positionWrapper(e),
+        }).hideFunc;
+
+        const targetEl = _getPageBody(this.gos);
+        let listeners: (() => void)[] = [];
+
+        if (!targetEl) {
+            _warn(54);
+        } else {
+            listeners = this.addManagedElementListeners(targetEl as HTMLElement, {
+                mousemove: (e: MouseEvent) => {
+                    positionWrapper(e);
+                },
+            });
+        }
+
+        return () => {
+            for (const listener of listeners) {
+                listener();
+            }
+            hideFunc();
+        };
+    }
+
+    private createContextMenu(params: {
+        menuItems: (string | MenuItemDef<any, any>)[];
+        node: RowNode | null;
+        column: AgColumn | null;
+        value: any;
+        mouseEvent: MouseEvent | Touch;
+        anchorToElement: HTMLElement;
+    }) {
+        const { menuItems, node, column, value, mouseEvent, anchorToElement } = params;
+
+        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().getGui();
         const menu = new ContextMenu(menuItems, column, node, value);
         this.createBean(menu);
 
@@ -307,8 +389,6 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         // generates a `mousedown` event to display the context menu.
         const isApi = mouseEvent && mouseEvent instanceof MouseEvent && mouseEvent.type === 'mousedown';
         this.dispatchVisibleChangedEvent(true, isApi ? 'api' : 'ui');
-
-        return true;
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, source: 'api' | 'ui' = 'ui'): void {

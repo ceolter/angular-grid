@@ -197,6 +197,34 @@ export function _getActiveDomElement(gos: GridOptionsService): Element | null {
     return _getRootNode(gos).activeElement;
 }
 
+export function _getPageBody(gos: GridOptionsService): HTMLElement | ShadowRoot {
+    let rootNode: Document | ShadowRoot | HTMLElement | null = null;
+    let targetEl: HTMLElement | ShadowRoot | null = null;
+
+    try {
+        rootNode = _getDocument(gos).fullscreenElement as HTMLElement;
+    } catch (e) {
+        // some environments like SalesForce will throw errors
+        // simply by trying to read the fullscreenElement property
+    } finally {
+        if (!rootNode) {
+            rootNode = _getRootNode(gos);
+        }
+        const body = rootNode.querySelector('body');
+        if (body) {
+            targetEl = body;
+        } else if (rootNode instanceof ShadowRoot) {
+            targetEl = rootNode;
+        } else if (rootNode instanceof Document) {
+            targetEl = rootNode?.documentElement;
+        } else {
+            targetEl = rootNode;
+        }
+    }
+
+    return targetEl;
+}
+
 export function _isNothingFocused(gos: GridOptionsService): boolean {
     const eDocument = _getDocument(gos);
     const activeEl = _getActiveDomElement(gos);
