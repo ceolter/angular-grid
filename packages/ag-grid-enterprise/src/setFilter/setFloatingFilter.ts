@@ -7,7 +7,7 @@ import type {
     IFloatingFilterParams,
     SetFilterModel,
 } from 'ag-grid-community';
-import { AgInputTextFieldSelector, Component, RefPlaceholder } from 'ag-grid-community';
+import { AgInputTextFieldSelector, Component, RefPlaceholder, _error } from 'ag-grid-community';
 
 import { SetFilter } from './setFilter';
 import { SetFilterModelFormatter } from './setFilterModelFormatter';
@@ -67,7 +67,8 @@ export class SetFloatingFilterComp<V = string> extends Component implements IFlo
     private parentSetFilterInstance(cb: (instance: SetFilter<V>) => void): void {
         this.params.parentFilterInstance((filter) => {
             if (!(filter instanceof SetFilter)) {
-                throw new Error('AG Grid - SetFloatingFilter expects SetFilter as its parent');
+                _error(248);
+                return;
             }
 
             cb(filter);

@@ -552,8 +552,10 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
      * @param selectAll See `MultiRowSelectionOptions.selectAll`
      * @returns all nodes including unselectable nodes which are the target of this selection attempt
      */
-    private getNodesToSelect(selectAll?: SelectAllMode) {
-        this.validateSelectAllType();
+    private getNodesToSelect(selectAll?: SelectAllMode): RowNode[] {
+        if (!this.canSelectAll()) {
+            return [];
+        }
 
         const nodes: RowNode[] = [];
         if (selectAll === 'currentPage') {
@@ -609,12 +611,14 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
     }
 
-    public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
+    public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void {
         if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
             _warn(132);
             return;
         }
-        this.validateSelectAllType();
+        if (!this.canSelectAll()) {
+            return;
+        }
 
         const { source, selectAll } = params;
 
@@ -664,12 +668,12 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         });
     }
 
-    private validateSelectAllType(): void {
+    private canSelectAll(): boolean {
         if (!_isClientSideRowModel(this.gos)) {
-            throw new Error(
-                `selectAll only available when rowModelType='clientSide', ie not ${this.rowModel.getType()}`
-            );
+            _error(100, { rowModel: this.rowModel });
+            return false;
         }
+        return true;
     }
 
     /**

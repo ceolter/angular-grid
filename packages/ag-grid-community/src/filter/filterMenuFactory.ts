@@ -11,6 +11,7 @@ import { _setColMenuVisible } from '../misc/menu/menuService';
 import { _setAriaRole } from '../utils/aria';
 import { _isVisible } from '../utils/dom';
 import { _findNextFocusableElement, _findTabbableParent, _focusInto } from '../utils/focus';
+import { _error } from '../validation/logging';
 import type { PopupService } from '../widgets/popupService';
 import { FilterWrapperComp } from './filterWrapperComp';
 
@@ -103,7 +104,8 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         const comp = column ? this.createBean(new FilterWrapperComp(column, 'COLUMN_MENU')) : undefined;
         this.activeMenu = comp;
         if (!comp?.hasFilter() || !column) {
-            throw new Error('AG Grid - unable to show popup filter, filter instantiation failed');
+            _error(57);
+            return;
         }
 
         const eMenu = document.createElement('div');

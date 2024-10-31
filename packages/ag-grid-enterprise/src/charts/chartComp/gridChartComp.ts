@@ -16,6 +16,7 @@ import {
     Component,
     RefPlaceholder,
     _clearElement,
+    _errMsg,
     _focusGridInnerElement,
     _focusInto,
     _getAbsoluteHeight,
@@ -242,7 +243,8 @@ export class GridChartComp extends Component {
     }
 
     private createChartProxy(chartProxyParams: ChartProxyParams): ChartProxy {
-        switch (chartProxyParams.chartType) {
+        const { chartType } = chartProxyParams;
+        switch (chartType) {
             case 'column':
             case 'bar':
             case 'groupedColumn':
@@ -274,7 +276,7 @@ export class GridChartComp extends Component {
         }
         const enterpriseChartProxy = this.enterpriseChartProxyFactory?.createChartProxy(chartProxyParams);
         if (!enterpriseChartProxy) {
-            throw `AG Grid: Unable to create chart as an invalid chartType = '${chartProxyParams.chartType}' was supplied.`;
+            throw _errMsg(251, { chartType });
         }
         return enterpriseChartProxy;
     }
@@ -524,7 +526,7 @@ export class GridChartComp extends Component {
         const availableChartThemes = this.gos.get('chartThemes') || DEFAULT_THEMES;
 
         if (availableChartThemes.length === 0) {
-            throw new Error('Cannot create chart: no chart themes available.');
+            throw new Error(_errMsg(254));
         }
 
         const { chartThemeName } = this.params;

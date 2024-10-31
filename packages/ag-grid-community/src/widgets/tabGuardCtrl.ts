@@ -1,6 +1,6 @@
 import { BeanStub } from '../context/beanStub';
 import { _getDocument } from '../gridOptionsUtils';
-import { _findFocusableElements, _findNextFocusableElement } from '../main-umd-noStyles';
+import { _findFocusableElements, _findNextFocusableElement } from '../utils/focus';
 import { ManagedFocusFeature } from './managedFocusFeature';
 
 export const TabGuardClassNames = {

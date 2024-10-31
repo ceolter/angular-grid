@@ -28,7 +28,7 @@ import type { UserCompDetails } from '../interfaces/iUserCompDetails';
 import type { RowRenderer } from '../rendering/rowRenderer';
 import { _exists, _jsonEquals } from '../utils/generic';
 import { AgPromise } from '../utils/promise';
-import { _warn } from '../validation/logging';
+import { _error, _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
 import type { FilterManager } from './filterManager';
 import type { FilterValueService } from './filterValueService';
@@ -363,7 +363,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
             if (typeof filter.doesFilterPass !== 'function') {
                 // because users can do custom filters, give nice error message
-                throw new Error('Filter is missing method doesFilterPass');
+                _error(91);
+                continue;
             }
 
             if (!filter.doesFilterPass({ node, data: targetedData })) {

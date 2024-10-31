@@ -27,6 +27,7 @@ import type { PageBoundsService } from '../pagination/pageBoundsService';
 import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import { _removeFromArray } from '../utils/array';
 import { _exists } from '../utils/generic';
+import { _errMsg } from '../validation/logging';
 import type { CellCtrl } from './cell/cellCtrl';
 import { DOM_DATA_KEY_CELL_CTRL } from './cell/cellCtrl';
 import type { StickyRowFeature } from './features/stickyRowFeature';
@@ -623,13 +624,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
     private getLockOnRefresh(): void {
         if (this.refreshInProgress) {
-            throw new Error(
-                'AG Grid: cannot get grid to draw rows when it is in the middle of drawing rows. ' +
-                    'Your code probably called a grid API method while the grid was in the render stage. To overcome ' +
-                    'this, put the API call into a timeout, e.g. instead of api.redrawRows(), ' +
-                    'call setTimeout(function() { api.redrawRows(); }, 0). To see what part of your code ' +
-                    'that caused the refresh check this stacktrace.'
-            );
+            throw new Error(_errMsg(252));
         }
 
         this.refreshInProgress = true;

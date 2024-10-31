@@ -1,5 +1,5 @@
 import type { RowNode } from '../entities/rowNode';
-import type { ChangedPath } from '../main-umd-noStyles';
+import type { ChangedPath } from '../utils/changedPath';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 

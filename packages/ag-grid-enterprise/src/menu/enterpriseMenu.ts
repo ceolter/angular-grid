@@ -25,6 +25,7 @@ import {
     FilterWrapperComp,
     RefPlaceholder,
     _createIconNoSpan,
+    _error,
     _focusInto,
     _isColumnMenuAnchoringEnabled,
     _isLegacyMenuEnabled,
@@ -537,12 +538,12 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
         const comp = this.column ? this.createBean(new FilterWrapperComp(this.column, 'COLUMN_MENU')) : null;
         this.filterComp = comp;
         if (!comp?.hasFilter()) {
-            throw new Error('AG Grid - Unable to instantiate filter');
+            _error(119);
         }
 
-        const afterAttachedCallback = (params: IAfterGuiAttachedParams) => comp.afterGuiAttached(params);
+        const afterAttachedCallback = (params: IAfterGuiAttachedParams) => comp?.afterGuiAttached(params);
 
-        const afterDetachedCallback = () => comp.afterGuiDetached();
+        const afterDetachedCallback = () => comp?.afterGuiDetached();
 
         this.tabItemFilter = {
             title: _createIconNoSpan('filterTab', this.beans, this.column)!,

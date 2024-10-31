@@ -336,6 +336,9 @@ export class VirtualList<
         _waitUntil(
             () => this.eContainer.clientHeight >= rowCount * this.rowHeight,
             () => {
+                if (!this.isAlive()) {
+                    return;
+                }
                 const callbacks = this.awaitStableCallbacks;
                 this.awaitStableCallbacks = [];
                 callbacks.forEach((c) => c());
