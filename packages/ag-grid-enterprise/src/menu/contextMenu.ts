@@ -40,6 +40,7 @@ import type { MenuUtils } from './menuUtils';
 
 const CSS_MENU = 'ag-menu';
 const CSS_CONTEXT_MENU_OPEN = 'ag-context-menu-open';
+const CSS_CONTEXT_MENU_LOADING_ICON = 'ag-context-menu-loading-icon';
 
 export class ContextMenuService extends BeanStub implements NamedBean, IContextMenuService {
     beanName = 'contextMenuSvc' as const;
@@ -52,6 +53,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     private focusSvc: FocusService;
     private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
+    private destroyLoadingSpinner: (() => void) | null = null;
+    private promiseCount: number = 0;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
@@ -232,12 +235,19 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         const menuItems = this.getMenuItems(node, column, value);
 
         if (_isPromise<(string | MenuItemDef)[]>(menuItems)) {
-            const destroyPopup = this.createLoadingIcon(mouseEvent);
+            this.promiseCount++;
+            if (!this.destroyLoadingSpinner) {
+                this.createLoadingIcon(mouseEvent);
+            }
+
             menuItems.then((menuItems) => {
                 if (menuItems) {
                     this.createContextMenu({ menuItems, node, column, value, mouseEvent, anchorToElement });
                 }
-                destroyPopup();
+                this.promiseCount--;
+                if (this.destroyLoadingSpinner && this.promiseCount === 0) {
+                    this.destroyLoadingSpinner();
+                }
             });
             return true;
         }
@@ -256,7 +266,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const loadingIcon = _createIconNoSpan('loading', this.gos) as HTMLElement;
         const wrapperEl = document.createElement('div');
-        wrapperEl.style.setProperty('position', 'absolute');
+        wrapperEl.classList.add(CSS_CONTEXT_MENU_LOADING_ICON);
         wrapperEl.appendChild(loadingIcon);
 
         const positionWrapper = (e: MouseEvent | Touch) => {
@@ -264,6 +274,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
                 type: 'contextMenu',
                 ePopup: wrapperEl,
                 mouseEvent: e,
+                nudgeX: -15,
+                nudgeY: -15,
             });
         };
 
@@ -275,23 +287,25 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }).hideFunc;
 
         const targetEl = _getPageBody(this.gos);
-        let listeners: (() => void)[] = [];
+        let listener: (() => void) | null = null;
 
         if (!targetEl) {
             _warn(54);
         } else {
-            listeners = this.addManagedElementListeners(targetEl as HTMLElement, {
+            listener = this.addManagedElementListeners(targetEl as HTMLElement, {
                 mousemove: (e: MouseEvent) => {
                     positionWrapper(e);
                 },
-            });
+            })[0];
         }
 
-        return () => {
-            for (const listener of listeners) {
+        this.destroyLoadingSpinner = () => {
+            if (listener) {
                 listener();
             }
+
             hideFunc();
+            this.destroyLoadingSpinner = null;
         };
     }
 
@@ -302,7 +316,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         value: any;
         mouseEvent: MouseEvent | Touch;
         anchorToElement: HTMLElement;
-    }) {
+    }): void {
         const { menuItems, node, column, value, mouseEvent, anchorToElement } = params;
 
         const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().getGui();
@@ -438,6 +452,14 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }
 
         return gridBodyEl;
+    }
+
+    public override destroy(): void {
+        if (this.destroyLoadingSpinner) {
+            this.destroyLoadingSpinner();
+        }
+
+        super.destroy();
     }
 }
 
