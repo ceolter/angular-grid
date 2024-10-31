@@ -70,6 +70,10 @@ export interface AbstractColDef<TData = any, TValue = any> {
     autoHeaderHeight?: boolean;
 
     /**
+     * Customise the list of menu items available in the column menu.
+     */
+    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
+    /**
      * Set to `true` to not display the column menu when the column header is right-clicked.
      * Doesn't apply when `columnMenu = 'legacy'`.
      * @default false
@@ -410,10 +414,6 @@ export interface ColDef<TData = any, TValue = any> extends AbstractColDef<TData,
      * @default false
      */
     suppressHeaderFilterButton?: boolean;
-    /**
-     * Customise the list of menu items available in the column menu.
-     */
-    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
     /**
      * Customise the list of menu items available in the context menu.
      */
