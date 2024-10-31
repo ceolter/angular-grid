@@ -70,10 +70,6 @@ export interface AbstractColDef<TData = any, TValue = any> {
     autoHeaderHeight?: boolean;
 
     /**
-     * Customise the list of menu items available in the column menu.
-     */
-    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
-    /**
      * Set to `true` to not display the column menu when the column header is right-clicked.
      * Doesn't apply when `columnMenu = 'legacy'`.
      * @default false
@@ -110,6 +106,12 @@ export interface ColGroupDef<TData = any> extends AbstractColDef<TData> {
     headerGroupComponent?: any;
     /** The params used to configure the `headerGroupComponent`. */
     headerGroupComponentParams?: any;
+
+    /**
+     * Customise the list of menu items available in the column group header context menu (on right-click).
+     * The column menu button is not displayed for column groups.
+     */
+    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
 }
 
 export interface IAggFunc<TData = any, TValue = any> {
@@ -414,6 +416,10 @@ export interface ColDef<TData = any, TValue = any> extends AbstractColDef<TData,
      * @default false
      */
     suppressHeaderFilterButton?: boolean;
+    /**
+     * Customise the list of menu items available in the column menu.
+     */
+    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
     /**
      * Customise the list of menu items available in the context menu.
      */
