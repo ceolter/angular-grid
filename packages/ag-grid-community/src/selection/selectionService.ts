@@ -98,8 +98,99 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         return root ? root.isSelected() ?? false : true;
     }
 
+    public processSelectionAction(
+        event: MouseEvent | KeyboardEvent,
+        rowNode: RowNode,
+        source: SelectionEventSourceType
+    ): number {
+        if (this.isRowSelectionBlocked(rowNode)) return 0;
+
+        if (event instanceof MouseEvent) {
+            return this.handleMouseEvent(event, rowNode, source);
+        } else {
+            throw new Error('unimplemented');
+        }
+    }
+
+    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
+        // if node is a footer, we don't do selection, just pass the info
+        // to the sibling (the parent of the group)
+        const node = rowNode.footer ? rowNode.sibling : rowNode;
+
+        const { gos } = this;
+        const currentSelection = node.isSelected();
+        const enableClickSelection = _getEnableSelection(gos);
+        const enableDeselection = _getEnableDeselection(gos);
+        const isRowClicked = source === 'rowClicked';
+        const isMeta = event.metaKey || event.ctrlKey;
+
+        if (isRowClicked && !(enableClickSelection || enableDeselection)) return 0;
+
+        if (event.shiftKey && isMeta && this.isMultiSelect()) {
+            // range deselection
+            const root = this.selectionCtx.getRoot();
+            if (root && !root.isSelected()) {
+                // deselection mode
+                const partition = this.selectionCtx.extend(node, this.groupSelectsDescendants);
+                return this.selectRange(partition.keep, false, source);
+            } else {
+                throw new Error('unimplemented');
+            }
+        } else if (event.shiftKey && this.isMultiSelect()) {
+            // range selection
+            const root = this.selectionCtx.getRoot();
+            const partition = this.selectionCtx.isInRange(node)
+                ? this.selectionCtx.truncate(node)
+                : this.selectionCtx.extend(node, this.groupSelectsDescendants);
+            if (root && !root.isSelected()) {
+                this.resetNodes();
+            } else {
+                this.selectRange(partition.discard, false, source);
+            }
+            return this.selectRange(partition.keep, true, source);
+        } else if (isMeta) {
+            // multi-selection + deselection
+            this.selectionCtx.setRoot(node);
+
+            if (isRowClicked && currentSelection && !enableDeselection) {
+                return 0;
+            }
+
+            return this.setNodesSelected({
+                nodes: [node],
+                newValue: currentSelection ? false : true,
+                clearSelection: !this.isMultiSelect(),
+                event,
+                source,
+            });
+        } else {
+            // selection
+            this.selectionCtx.setRoot(node);
+            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+            const shouldClear = isRowClicked && !enableSelectionWithoutKeys;
+
+            if (this.groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
+                return this.setNodesSelected({
+                    nodes: [node],
+                    newValue: false,
+                    clearSelection: !this.isMultiSelect() || shouldClear,
+                    event,
+                    source,
+                });
+            }
+
+            return this.setNodesSelected({
+                nodes: [node],
+                newValue: !currentSelection,
+                clearSelection: !this.isMultiSelect() || shouldClear,
+                event,
+                source,
+            });
+        }
+    }
+
     public setNodesSelected(params: ISetNodesSelectedParams): number {
-        const { newValue, clearSelection, suppressFinishActions, rangeSelect, nodes, event, source } = params;
+        const { newValue, clearSelection, suppressFinishActions, nodes, event, source } = params;
 
         if (nodes.length === 0) return 0;
 
@@ -108,53 +199,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             return 0;
         }
 
-        // if node is a footer, we don't do selection, just pass the info
-        // to the sibling (the parent of the group)
-        const filteredNodes = nodes.map((node) => (node.footer ? node.sibling! : node));
-
-        if (rangeSelect && this.isMultiSelect()) {
-            if (filteredNodes.length > 1) {
-                _warn(131);
-                return 0;
-            }
-
-            const node = filteredNodes[0];
-            const newSelectionValue = this.overrideSelectionValue(newValue, source);
-
-            if (this.selectionCtx.isInRange(node)) {
-                const partition = this.selectionCtx.truncate(node);
-
-                // When we are selecting a range, we may need to de-select part of the previously
-                // selected range (see AG-9620)
-                // When we are de-selecting a range, we can/should leave the other nodes unchanged
-                // (i.e. selected nodes outside the current range should remain selected - see AG-10215)
-                if (newSelectionValue) {
-                    this.selectRange(partition.discard, false, source);
-                }
-                return this.selectRange(partition.keep, newSelectionValue, source);
-            } else {
-                const fromNode = this.selectionCtx.getRoot();
-                const toNode = node;
-                if (fromNode !== toNode) {
-                    const partition = this.selectionCtx.extend(node, this.groupSelectsDescendants);
-                    if (newSelectionValue) {
-                        this.selectRange(partition.discard, false, source);
-                    }
-                    return this.selectRange(partition.keep, newSelectionValue, source);
-                }
-            }
-        }
-
-        // Avoid re-setting here because if `suppressFinishActions` is true then this
-        // call is not a result of a user action, but rather a follow-on call (e.g
-        // in this.clearOtherNodes).
-        if (!suppressFinishActions) {
-            this.selectionCtx.setRoot(filteredNodes[0]);
-        }
-
         let updatedCount = 0;
-        for (let i = 0; i < filteredNodes.length; i++) {
-            const node = filteredNodes[i];
+        for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
             // when groupSelectsFiltered, then this node may end up indeterminate despite
             // trying to set it to true / false. this group will be calculated further on
             // down when we call updateGroupsFromChildrenSelections(). we need to skip it
@@ -177,7 +224,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         if (!suppressFinishActions) {
             const clearOtherNodes = newValue && (clearSelection || !this.isMultiSelect());
             if (clearOtherNodes) {
-                updatedCount += this.clearOtherNodes(filteredNodes[0], source);
+                updatedCount += this.clearOtherNodes(nodes[0], source);
             }
 
             // only if we selected something, then update groups and fire events
@@ -194,7 +241,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     // not to be mixed up with 'cell range selection' where you drag the mouse, this is row range selection, by
     // holding down 'shift'.
-    private selectRange(nodesToSelect: RowNode[], value: boolean, source: SelectionEventSourceType): number {
+    private selectRange(nodesToSelect: readonly RowNode[], value: boolean, source: SelectionEventSourceType): number {
         let updatedCount = 0;
 
         nodesToSelect.forEach((rowNode) => {
@@ -413,7 +460,10 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private resetNodes(): void {
-        this.selectedNodes?.clear();
+        this.selectedNodes.forEach((node) => {
+            this.selectRowNode(node, false);
+        });
+        this.selectedNodes.clear();
     }
 
     // returns a list of all nodes at 'best cost' - a feature to be used

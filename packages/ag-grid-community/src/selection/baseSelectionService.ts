@@ -55,9 +55,16 @@ export abstract class BaseSelectionService extends BeanStub {
         return new SelectAllFeature(column);
     }
 
+    public abstract processSelectionAction(
+        event: MouseEvent | KeyboardEvent,
+        rowNode: RowNode,
+        source: SelectionEventSourceType
+    ): number;
+
     public handleRowClick(rowNode: RowNode, mouseEvent: MouseEvent): void {
         const { gos } = this;
-
+        this.processSelectionAction(mouseEvent, rowNode, 'rowClicked');
+        return;
         // ctrlKey for windows, metaKey for Apple
         const isMultiKey = mouseEvent.ctrlKey || mouseEvent.metaKey;
         const isShiftKey = mouseEvent.shiftKey;
@@ -170,7 +177,7 @@ export abstract class BaseSelectionService extends BeanStub {
 
     protected abstract updateSelectable(changedPath?: ChangedPath): void;
 
-    private isRowSelectionBlocked(rowNode: RowNode): boolean {
+    protected isRowSelectionBlocked(rowNode: RowNode): boolean {
         return !rowNode.selectable || !!rowNode.rowPinned || !_isRowSelection(this.gos);
     }
 

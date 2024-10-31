@@ -59,6 +59,11 @@ export interface ISelectionService {
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
     setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
+    processSelectionAction(
+        event: MouseEvent | KeyboardEvent,
+        rowNode: RowNode,
+        source?: SelectionEventSourceType
+    ): number;
 }
 
 interface INodeSelectionParams {
@@ -68,8 +73,6 @@ interface INodeSelectionParams {
     clearSelection?: boolean;
     /** true when action is NOT on this node, ie user clicked a group and this is the child of a group */
     suppressFinishActions?: boolean;
-    /** true when user shift-selects a range */
-    rangeSelect?: boolean;
     /** event source, if from an event */
     source: SelectionEventSourceType;
     // event

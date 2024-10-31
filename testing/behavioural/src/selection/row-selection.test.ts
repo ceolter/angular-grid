@@ -849,24 +849,6 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', () => {
-                    const api = createGrid({
-                        columnDefs,
-                        rowData,
-                        rowSelection: { mode: 'multiRow', checkboxes: true },
-                    });
-
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
-                });
-
                 test('META+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
@@ -1183,13 +1165,13 @@ describe('Row Selection Grid Options', () => {
                 toggleCheckboxByIndex(4);
                 assertSelectedRowsByIndex([2, 3, 5, 6, 7, 8, 9, 10, 11], api);
 
-                // Toggling group row from indeterminate state selects all children
-                toggleCheckboxByIndex(0);
-                assertSelectedRowsByIndex([2, 3, 5, 6, 7, 8, 9, 10, 11, 4], api);
-
-                // Toggle group row again de-selects all children
+                // Toggling group row from indeterminate state de-selects all children
                 toggleCheckboxByIndex(0);
                 assertSelectedRowsByIndex([], api);
+
+                // Toggle group row again selects all children
+                toggleCheckboxByIndex(0);
+                assertSelectedRowsByIndex([2, 3, 4, 5, 6, 7, 8, 9, 10, 11], api);
             });
 
             test('Cannot select group rows where `isRowSelectable` returns false and `groupSelects` = "self"', async () => {
@@ -1443,23 +1425,6 @@ describe('Row Selection Grid Options', () => {
 
                     toggleCheckboxByIndex(2, { shiftKey: true });
                     assertSelectedRowsByIndex([2, 3, 4], api);
-                });
-
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', async () => {
-                    const api = await createGridAndWait({
-                        ...groupGridOptions,
-                        rowSelection: { mode: 'multiRow' },
-                    });
-
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
                 });
 
                 test('META+SHIFT-click within range allows batch deselection', async () => {

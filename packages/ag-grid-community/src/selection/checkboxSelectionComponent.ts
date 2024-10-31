@@ -102,6 +102,9 @@ export class CheckboxSelectionComponent extends Component {
                 // would possibly get selected twice
                 _stopPropagationForAgGrid(event);
 
+                this.beans.selectionSvc?.processSelectionAction(event, this.rowNode, 'checkboxSelected');
+                return;
+
                 const groupSelectsFiltered = _getGroupSelection(this.gos) === 'filteredDescendants';
                 const isSelected = this.eCheckbox.getValue();
 

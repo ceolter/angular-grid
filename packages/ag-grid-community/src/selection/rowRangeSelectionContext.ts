@@ -1,11 +1,16 @@
 import type { RowNode } from '../entities/rowNode';
 import type { IRowModel } from '../interfaces/iRowModel';
 
+interface RangePartition {
+    keep: readonly RowNode[];
+    discard: readonly RowNode[];
+}
+
 export interface ISelectionContext<TNode> {
     reset(): void;
     setRoot(node: TNode): void;
     setEndRange(node: TNode): void;
-    getRange(): RowNode[];
+    getRange(): readonly RowNode[];
     getRoot(): TNode | null;
     isInRange(node: TNode): boolean;
     /**
@@ -15,7 +20,7 @@ export interface ISelectionContext<TNode> {
      * @param node - Node at which to truncate the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    truncate(node: TNode): { keep: RowNode[]; discard: RowNode[] };
+    truncate(node: TNode): RangePartition;
     /**
      * Extends the range to the given node. Returns nodes that remain in the current range
      * and those that should be removed.
@@ -23,7 +28,7 @@ export interface ISelectionContext<TNode> {
      * @param node - Node marking the new end of the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    extend(node: TNode, groupSelectsChildren?: boolean): { keep: RowNode[]; discard: RowNode[] };
+    extend(node: TNode, groupSelectsChildren?: boolean): RangePartition;
 }
 
 /**
@@ -66,7 +71,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         this.cachedRange.length = 0;
     }
 
-    public getRange(): RowNode[] {
+    public getRange(): readonly RowNode[] {
         if (this.cachedRange.length === 0) {
             const root = this.getRoot();
             const end = this.getEnd();
@@ -105,7 +110,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         return this.end;
     }
 
-    public truncate(node: RowNode): { keep: RowNode[]; discard: RowNode[] } {
+    public truncate(node: RowNode): RangePartition {
         const range = this.getRange();
 
         if (range.length === 0) {
@@ -127,7 +132,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         }
     }
 
-    public extend(node: RowNode, groupSelectsChildren = false): { keep: RowNode[]; discard: RowNode[] } {
+    public extend(node: RowNode, groupSelectsChildren = false): RangePartition {
         const root = this.getRoot();
 
         // If the root node is null, we cannot iterate from the root to the given `node`.

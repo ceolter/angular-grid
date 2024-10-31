@@ -225,7 +225,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         return 1;
     }
 
-    private selectRange(nodes: RowNode[], newValue: boolean) {
+    private selectRange(nodes: readonly RowNode[], newValue: boolean) {
         // sort routes longest to shortest, meaning we can do the lowest level children first
         const routes = nodes.map(this.getRouteToNode).sort((a, b) => b.length - a.length);
 

@@ -68,6 +68,14 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy = this.createManagedBean(new Strategy());
     }
 
+    public processSelectionAction(
+        event: MouseEvent | KeyboardEvent,
+        rowNode: RowNode<any>,
+        source?: SelectionEventSourceType | undefined
+    ): number {
+        throw new Error('unimplemented');
+    }
+
     public getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null {
         return this.selectionStrategy.getSelectedState();
     }
