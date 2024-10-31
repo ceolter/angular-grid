@@ -1303,9 +1303,16 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private doRowsToDisplay() {
         const { flattenStage, rootNode } = this;
-        this.rowsToDisplay = flattenStage
-            ? flattenStage.execute({ rowNode: rootNode! })
-            : rootNode?.childrenAfterSort ?? [];
+        let rowsToDisplay: RowNode[];
+        if (flattenStage) {
+            rowsToDisplay = flattenStage.execute({ rowNode: rootNode! });
+        } else {
+            rowsToDisplay = rootNode?.childrenAfterSort ?? [];
+            for (const row of rowsToDisplay) {
+                row.setUiLevel(0);
+            }
+        }
+        this.rowsToDisplay = rowsToDisplay;
     }
 
     public onRowHeightChanged(): void {
