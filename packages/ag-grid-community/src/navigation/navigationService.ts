@@ -517,7 +517,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
         // only prevent default if we found a cell. so if user is on last cell and hits tab, then we default
         // to the normal tabbing so user can exit the grid.
-        nextCell.startEditing(null, true, event);
+        this.beans.editSvc?.startEditing(nextCell, null, true, event);
         nextCell.focusCell(false);
         return true;
     }
@@ -547,20 +547,21 @@ export class NavigationService extends BeanStub implements NamedBean {
         const rowsMatch =
             nextPos && previousPos.rowIndex === nextPos.rowIndex && previousPos.rowPinned === nextPos.rowPinned;
 
+        const { editSvc, rowEditSvc } = this.beans;
         if (previousEditable) {
-            previousCell.setFocusOutOnEditor();
+            editSvc?.setFocusOutOnEditor(previousCell);
         }
 
         if (!rowsMatch) {
             const pRow = previousCell.rowCtrl;
-            pRow!.stopEditing();
+            editSvc?.stopRowEditing(pRow);
 
             const nRow = nextCell.rowCtrl;
-            nRow!.startRowEditing(undefined, undefined, event);
+            rowEditSvc?.startEditing(nRow, undefined, undefined, event);
         }
 
         if (nextEditable) {
-            nextCell.setFocusInOnEditor();
+            editSvc?.setFocusInOnEditor(nextCell);
             nextCell.focusCell();
         } else {
             nextCell.focusCell(true);

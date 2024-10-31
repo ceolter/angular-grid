@@ -50,7 +50,7 @@ export class CellMouseListenerFeature extends BeanStub {
             return;
         }
 
-        const { eventSvc, rangeSvc, gos } = this.beans;
+        const { eventSvc, rangeSvc, gos, editSvc } = this.beans;
         const isMultiKey = mouseEvent.ctrlKey || mouseEvent.metaKey;
 
         if (rangeSvc && isMultiKey) {
@@ -80,13 +80,13 @@ export class CellMouseListenerFeature extends BeanStub {
 
         // edit on single click, but not if extending a range
         if (editOnSingleClick && !(mouseEvent.shiftKey && rangeSvc?.getCellRanges().length != 0)) {
-            this.cellCtrl.startRowOrCellEdit();
+            editSvc?.startRowOrCellEdit(this.cellCtrl);
         }
     }
 
     public onCellDoubleClicked(mouseEvent: MouseEvent) {
         const { column, beans, cellCtrl } = this;
-        const { eventSvc, frameworkOverrides, gos } = beans;
+        const { eventSvc, frameworkOverrides, gos, editSvc } = beans;
 
         const colDef = column.getColDef();
         // always dispatch event to eventService
@@ -105,7 +105,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         const editOnDoubleClick = !gos.get('singleClickEdit') && !gos.get('suppressClickEdit');
         if (editOnDoubleClick) {
-            cellCtrl.startRowOrCellEdit(null, mouseEvent);
+            editSvc?.startRowOrCellEdit(cellCtrl, null, mouseEvent);
         }
     }
 

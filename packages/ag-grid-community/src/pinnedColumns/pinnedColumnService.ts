@@ -6,6 +6,7 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
+import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColumnEventType } from '../events';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 import { SetPinnedWidthFeature } from '../gridBodyComp/rowContainer/setPinnedWidthFeature';
@@ -220,6 +221,26 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
             scrollVisibilityChanged: listener,
             scrollbarWidthChanged: listener,
         });
+    }
+
+    public getHeaderResizeDiff(diff: number, column: AgColumn | AgColumnGroup): number {
+        const pinned = column.getPinned();
+        if (pinned) {
+            const leftWidth = this.getPinnedLeftWidth();
+            const rightWidth = this.getPinnedRightWidth();
+            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
+
+            if (leftWidth + rightWidth + diff > bodyWidth) {
+                if (bodyWidth > leftWidth + rightWidth) {
+                    // allow body width to ignore resize multiplier and fill space for last tick
+                    diff = bodyWidth - leftWidth - rightWidth;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+        return diff;
     }
 
     private getPinnedColumnsOverflowingViewport(viewportWidth: number): AgColumn[] {

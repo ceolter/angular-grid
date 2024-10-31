@@ -114,22 +114,23 @@ export class CellKeyboardListenerFeature extends BeanStub {
                 rowNode.setDataValue(column, emptyValue, 'cellClear');
             }
         } else {
-            cellCtrl.startRowOrCellEdit(key, event);
+            beans.editSvc?.startRowOrCellEdit(cellCtrl, key, event);
         }
 
         eventSvc.dispatchEvent({ type: 'keyShortcutChangedCellEnd' });
     }
 
     private onEnterKeyDown(e: KeyboardEvent): void {
-        if (this.cellCtrl.editing || this.rowCtrl.editing) {
-            this.cellCtrl.stopEditingAndFocus(false, e.shiftKey);
+        const { cellCtrl, beans } = this;
+        if (cellCtrl.editing || this.rowCtrl.editing) {
+            cellCtrl.stopEditingAndFocus(false, e.shiftKey);
         } else {
-            if (this.beans.gos.get('enterNavigatesVertically')) {
+            if (beans.gos.get('enterNavigatesVertically')) {
                 const key = e.shiftKey ? KeyCode.UP : KeyCode.DOWN;
-                this.beans.navigation?.navigateToNextCell(null, key, this.cellCtrl.cellPosition, false);
+                beans.navigation?.navigateToNextCell(null, key, cellCtrl.cellPosition, false);
             } else {
-                this.cellCtrl.startRowOrCellEdit(KeyCode.ENTER, e);
-                if (this.cellCtrl.editing) {
+                beans.editSvc?.startRowOrCellEdit(cellCtrl, KeyCode.ENTER, e);
+                if (cellCtrl.editing) {
                     // if we started editing, then we need to prevent default, otherwise the Enter action can get
                     // applied to the cell editor. this happened, for example, with largeTextCellEditor where not
                     // preventing default results in a 'new line' character getting inserted in the text area
@@ -141,16 +142,18 @@ export class CellKeyboardListenerFeature extends BeanStub {
     }
 
     private onF2KeyDown(event: KeyboardEvent): void {
-        if (!this.cellCtrl.editing) {
-            this.cellCtrl.startRowOrCellEdit(KeyCode.F2, event);
+        const { cellCtrl, beans } = this;
+        if (!cellCtrl.editing) {
+            beans.editSvc?.startRowOrCellEdit(cellCtrl, KeyCode.F2, event);
         }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private onEscapeKeyDown(event: KeyboardEvent): void {
-        if (this.cellCtrl.editing) {
-            this.cellCtrl.stopRowOrCellEdit(true);
-            this.cellCtrl.focusCell(true);
+        const { cellCtrl } = this;
+        if (cellCtrl.editing) {
+            this.beans.editSvc?.stopRowOrCellEdit(cellCtrl, true);
+            cellCtrl.focusCell(true);
         }
     }
 
@@ -168,7 +171,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         if (key === ' ') {
             this.onSpaceKeyDown(event);
         } else {
-            if (this.cellCtrl.startRowOrCellEdit(key, event)) {
+            if (this.beans.editSvc?.startRowOrCellEdit(this.cellCtrl, key, event)) {
                 // if we don't prevent default, then the event also gets applied to the text field
                 // (at least when doing the default editor), but we need to allow the editor to decide
                 // what it wants to do. we only do this IF editing was started - otherwise it messes

@@ -44,11 +44,12 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         eHeaderCompWrapper: HTMLElement,
         compBean: BeanStub<any> | undefined
     ): void {
+        const { context, colNames, colHover, colResize } = this.beans;
         this.comp = comp;
-        compBean = setupCompBean(this, this.beans.context, compBean);
+        compBean = setupCompBean(this, context, compBean);
         this.setGui(eGui, compBean);
 
-        this.displayName = this.beans.colNames.getDisplayNameForColumnGroup(this.column, 'header');
+        this.displayName = colNames.getDisplayNameForColumnGroup(this.column, 'header');
 
         this.addClasses();
         this.setupMovingCss(compBean);
@@ -69,12 +70,12 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         const pinned = this.rowCtrl.pinned;
         const leafCols = this.column.getProvidedColumnGroup().getLeafColumns();
 
-        this.beans.colHover?.createHoverFeature(compBean, leafCols, eGui);
+        colHover?.createHoverFeature(compBean, leafCols, eGui);
         compBean.createManagedBean(new SetLeftFeature(this.column, eGui, this.beans));
         compBean.createManagedBean(new GroupWidthFeature(comp, this.column));
-        if (this.beans.colResize) {
+        if (colResize) {
             this.resizeFeature = compBean.createManagedBean(
-                this.beans.colResize.createGroupResizeFeature(comp, eResize, pinned, this.column)
+                colResize.createGroupResizeFeature(comp, eResize, pinned, this.column)
             );
         } else {
             comp.setResizableDisplayed(false);

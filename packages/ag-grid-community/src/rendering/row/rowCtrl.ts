@@ -827,14 +827,15 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         }
 
         const node = this.rowNode;
-        const lastFocusedCell = this.beans.focusSvc.getFocusedCell();
+        const { focusSvc, navigation } = this.beans;
+        const lastFocusedCell = focusSvc.getFocusedCell();
         const cellPosition: CellPosition = {
             rowIndex: node.rowIndex!,
             rowPinned: node.rowPinned,
             column: (lastFocusedCell?.column as AgColumn) ?? this.getColumnForFullWidth(currentFullWidthComp),
         };
 
-        this.beans.navigation?.navigateToNextCell(keyboardEvent, keyboardEvent.key, cellPosition, true);
+        navigation?.navigateToNextCell(keyboardEvent, keyboardEvent.key, cellPosition, true);
         keyboardEvent.preventDefault();
     }
 
@@ -949,12 +950,13 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
     }
 
     public createRowEvent<T extends AgEventType>(type: T, domEvent?: Event): RowEvent<T> {
+        const { rowNode } = this;
         return this.gos.addGridCommonParams({
             type: type,
-            node: this.rowNode,
-            data: this.rowNode.data,
-            rowIndex: this.rowNode.rowIndex!,
-            rowPinned: this.rowNode.rowPinned,
+            node: rowNode,
+            data: rowNode.data,
+            rowIndex: rowNode.rowIndex!,
+            rowPinned: rowNode.rowPinned,
             event: domEvent,
         });
     }
@@ -1002,9 +1004,8 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
 
         const node = this.rowNode;
 
-        if (this.beans.rangeSvc) {
-            this.beans.rangeSvc.removeAllCellRanges();
-        }
+        const { rangeSvc, focusSvc } = this.beans;
+        rangeSvc?.removeAllCellRanges();
 
         const fullWidthRowGui = this.findFullWidthRowGui(mouseEvent.target as HTMLElement);
         const element = fullWidthRowGui?.element;
@@ -1016,7 +1017,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             forceBrowserFocus = false;
         }
 
-        this.beans.focusSvc.setFocusedCell({
+        focusSvc.setFocusedCell({
             rowIndex: node.rowIndex!,
             column: this.getColumnForFullWidth(fullWidthRowGui),
             rowPinned: node.rowPinned,
@@ -1031,9 +1032,10 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             return;
         }
 
-        this.beans.eventSvc.dispatchEvent(this.createRowEventWithSource('rowClicked', mouseEvent));
+        const { eventSvc, selectionSvc } = this.beans;
+        eventSvc.dispatchEvent(this.createRowEventWithSource('rowClicked', mouseEvent));
 
-        this.beans.selectionSvc?.handleRowClick(this.rowNode, mouseEvent);
+        selectionSvc?.handleRowClick(this.rowNode, mouseEvent);
     }
 
     public setupDetailRowAutoHeight(eDetailGui: HTMLElement): void {
@@ -1094,11 +1096,12 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         value: string = '',
         suppressVisibilityChange?: boolean
     ): void {
-        if (!this.beans.rowDragSvc || !this.isFullWidth()) {
+        const { rowDragSvc, context } = this.beans;
+        if (!rowDragSvc || !this.isFullWidth()) {
             return;
         }
 
-        const rowDragComp = this.beans.rowDragSvc.createRowDragComp(
+        const rowDragComp = rowDragSvc.createRowDragComp(
             () => value,
             this.rowNode,
             undefined,
@@ -1106,10 +1109,10 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             dragStartPixels,
             suppressVisibilityChange
         );
-        this.createBean(rowDragComp, this.beans.context);
+        this.createBean(rowDragComp, context);
 
         this.addDestroyFunc(() => {
-            this.destroyBean(rowDragComp, this.beans.context);
+            this.destroyBean(rowDragComp, context);
         });
     }
 
@@ -1146,33 +1149,6 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             this.lastRowOnPage = newLast;
             this.allRowGuis.forEach((gui) => gui.rowComp.addOrRemoveCssClass('ag-row-last', newLast));
         }
-    }
-
-    public stopEditing(cancel = false): void {
-        // if we are already stopping row edit, there is
-        // no need to start this process again.
-        if (this.stoppingRowEdit) {
-            return;
-        }
-
-        this.beans.rowEditSvc?.stopEditing(this, cancel);
-    }
-
-    public setEditingRow(value: boolean): void {
-        this.editing = value;
-    }
-
-    public startRowEditing(
-        key: string | null = null,
-        sourceRenderedCell: CellCtrl | null = null,
-        event: KeyboardEvent | null = null
-    ): boolean {
-        // don't do it if already editing
-        if (this.editing) {
-            return true;
-        }
-
-        return this.beans.rowEditSvc?.startEditing(this, key, sourceRenderedCell, event) ?? true;
     }
 
     public getAllCellCtrls(): CellCtrl[] {
@@ -1446,7 +1422,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         this.allRowGuis.length = 0;
 
         // if we are editing, destroying the row will stop editing
-        this.stopEditing();
+        this.beans.editSvc?.stopRowEditing(this);
 
         const destroyCellCtrls = (ctrls: CellCtrlListAndMap): CellCtrlListAndMap => {
             ctrls.list.forEach((c) => c.destroy());
@@ -1466,7 +1442,8 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
     }
 
     private onCellFocusChanged(): void {
-        const rowFocused = this.beans.focusSvc.isRowFocused(this.rowNode.rowIndex!, this.rowNode.rowPinned);
+        const { focusSvc, editSvc } = this.beans;
+        const rowFocused = focusSvc.isRowFocused(this.rowNode.rowIndex!, this.rowNode.rowPinned);
 
         if (rowFocused !== this.rowFocused) {
             this.rowFocused = rowFocused;
@@ -1475,7 +1452,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
 
         // if we are editing, then moving the focus out of a row will stop editing
         if (!rowFocused && this.editing) {
-            this.stopEditing(false);
+            editSvc?.stopRowEditing(this, false);
         }
     }
 

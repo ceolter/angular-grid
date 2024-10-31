@@ -9,7 +9,7 @@ import { _getActiveDomElement, _getDocument, _setDomData } from '../../../gridOp
 import type { BrandedType } from '../../../interfaces/brandedType';
 import { _requestAnimationFrame } from '../../../misc/animationFrameService';
 import { _setAriaColIndex } from '../../../utils/aria';
-import { _addOrRemoveAttribute, _getElementSize, _getInnerWidth, _observeResize } from '../../../utils/dom';
+import { _addOrRemoveAttribute, _getElementSize, _observeResize } from '../../../utils/dom';
 import { _isHeaderFocusSuppressed } from '../../../utils/focus';
 import { _exists } from '../../../utils/generic';
 import { KeyCode } from '../.././../constants/keyCode';
@@ -281,26 +281,9 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     private getViewportAdjustedResizeDiff(e: KeyboardEvent): number {
-        let diff = this.getResizeDiff(e);
-
-        const pinned = this.column.getPinned();
-        if (pinned) {
-            const { pinnedCols, ctrlsSvc } = this.beans;
-            const leftWidth = pinnedCols?.getPinnedLeftWidth() ?? 0;
-            const rightWidth = pinnedCols?.getPinnedRightWidth() ?? 0;
-            const bodyWidth = _getInnerWidth(ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
-
-            if (leftWidth + rightWidth + diff > bodyWidth) {
-                if (bodyWidth > leftWidth + rightWidth) {
-                    // allow body width to ignore resize multiplier and fill space for last tick
-                    diff = bodyWidth - leftWidth - rightWidth;
-                } else {
-                    return 0;
-                }
-            }
-        }
-
-        return diff;
+        const diff = this.getResizeDiff(e);
+        const { pinnedCols } = this.beans;
+        return pinnedCols ? pinnedCols.getHeaderResizeDiff(diff, this.column) : diff;
     }
 
     private getResizeDiff(e: KeyboardEvent): number {

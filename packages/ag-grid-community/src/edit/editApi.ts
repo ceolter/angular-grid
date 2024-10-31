@@ -24,7 +24,7 @@ export function getCellEditorInstances<TData = any>(
     const res: ICellEditor[] = [];
 
     beans.rowRenderer.getCellCtrls(params.rowNodes, params.columns as AgColumn[]).forEach((cellCtrl) => {
-        const cellEditor = cellCtrl.getCellEditor() as ICellEditor;
+        const cellEditor = cellCtrl.comp?.getCellEditor() as ICellEditor;
 
         if (cellEditor) {
             res.push(_unwrapUserComp(cellEditor));
@@ -73,7 +73,7 @@ export function startEditingCell(beans: BeanCollection, params: StartEditingCell
     if (!cell) {
         return;
     }
-    const { focusSvc, gos } = beans;
+    const { focusSvc, gos, editSvc } = beans;
     const isFocusWithinCell = () => {
         const activeElement = _getActiveDomElement(beans);
         const eCell = cell.eGui;
@@ -87,7 +87,7 @@ export function startEditingCell(beans: BeanCollection, params: StartEditingCell
             preventScrollOnBrowserFocus: true,
         });
     }
-    cell.startRowOrCellEdit(params.key);
+    editSvc?.startRowOrCellEdit(cell, params.key);
 }
 
 export function getCurrentUndoSize(beans: BeanCollection): number {
