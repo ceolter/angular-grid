@@ -15,6 +15,7 @@ import {
     _getGroupSelectsDescendants,
     _getRowSelectionMode,
     _isMultiRowSelection,
+    _isRowSelection,
     _isUsingNewRowSelectionAPI,
     _warn,
 } from 'ag-grid-community';
@@ -75,7 +76,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         state: string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState,
         source: SelectionEventSourceType
     ): void {
-        if (!this.enabled) {
+        if (!_isRowSelection(this.gos)) {
             _warn(241);
             return;
         }
@@ -89,7 +90,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
-        if (!this.enabled) {
+        if (!_isRowSelection(this.gos)) {
             _warn(241);
             return 0;
         }
@@ -198,7 +199,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void {
-        if (!this.enabled) {
+        if (!_isRowSelection(this.gos)) {
             _warn(241);
             return;
         }
@@ -255,7 +256,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
      *  - after grouping / treeData
      */
     protected override updateSelectable(): void {
-        if (!this.enabled) {
+        if (!_isRowSelection(this.gos)) {
             return;
         }
 
