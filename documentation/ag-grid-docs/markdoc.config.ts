@@ -102,7 +102,7 @@ export default defineMarkdocConfig({
             },
         },
         matrixTable: {
-            render: component('./src/features/matrixTable/components/MatrixTable.astro'),
+            render: component('./src/components/matrix-table/components/MatrixTable.astro'),
             attributes: {
                 /**
                  * Data file name within `src/content/matrix-table`
