@@ -77,7 +77,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         source: SelectionEventSourceType
     ): void {
         if (!_isRowSelection(this.gos)) {
-            _warn(241);
+            _warn(132);
             return;
         }
         if (Array.isArray(state)) {
@@ -91,7 +91,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
         if (!_isRowSelection(this.gos)) {
-            _warn(241);
+            _warn(132);
             return 0;
         }
 
@@ -200,7 +200,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void {
         if (!_isRowSelection(this.gos)) {
-            _warn(241);
+            _warn(132);
             return;
         }
 

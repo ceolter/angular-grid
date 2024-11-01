@@ -87,7 +87,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
         if (!_isRowSelection(this.gos)) {
-            _warn(241);
+            _warn(132);
             return 0;
         }
 
@@ -616,7 +616,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
         if (!_isRowSelection(this.gos)) {
-            _warn(241);
+            _warn(132);
             return;
         }
 

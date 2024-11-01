@@ -309,7 +309,7 @@ export const AG_GRID_ERRORS = {
         `${feature} is only available if using 'clientSide' or 'serverSide' rowModelType, you are using ${rowModel}.` as const,
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
     131: () => 'cannot range select while selecting multiple rows' as const,
-    132: () => '' as const,
+    132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
     133: () => 'iconRenderer should return back a string or a dom object' as const,
     134: ({ iconName }: { iconName: string }) => `Did not find icon ${iconName}` as const,
     135: () => `Data type of the new value does not match the cell data type of the column` as const,
@@ -496,7 +496,6 @@ export const AG_GRID_ERRORS = {
         'Invalid mixing of Theming API and CSS File Themes in the same page. No value was provided to the `theme` grid option so it defaulted to themeQuartz, but the file (ag-grid.css) is also included and will cause styling issues. Pass the string "legacy" to the theme grid option to use v32 style themes, or remove ag-grid.css from the page.' as const,
     240: ({ theme }: { theme: any }) =>
         `theme grid option must be a Theming API theme object or the string "legacy", received: ${theme}` as const,
-    241: () => 'Row selection features are not available unless `rowSelection` is enabled.',
 } as const;
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
