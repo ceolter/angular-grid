@@ -686,6 +686,11 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      * @default false
      */
     @Input({ transform: booleanAttribute }) public enableAdvancedFilter: boolean | undefined = undefined;
+    /** Allows rows to always be displayed, even if they don't match the applied filtering.
+     * Return `true` for the provided row to always be displayed.
+     * Only works with the Client-Side Row Model.
+     */
+    @Input() public alwaysPassFilter: ((rowNode: IRowNode<TData>) => boolean) | undefined = undefined;
     /** Hidden columns are excluded from the Advanced Filter by default.
      * To include hidden columns, set to `true`.
      * @default false
