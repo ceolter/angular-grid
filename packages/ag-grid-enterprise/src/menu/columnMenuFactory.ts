@@ -72,27 +72,30 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return menuList;
     }
 
-    // columnGroup to be added
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getMenuItems(column?: AgColumn, columnGroup?: AgProvidedColumnGroup): (string | MenuItemDef)[] {
+    public getMenuItems(
+        column: AgColumn | null = null,
+        columnGroup: AgProvidedColumnGroup | null = null
+    ): (string | MenuItemDef)[] {
         const defaultItems = this.getDefaultMenuOptions(column);
         let result: (string | MenuItemDef)[];
 
-        const columnMainMenuItems = column?.getColDef().mainMenuItems;
+        const columnMainMenuItems = (column?.getColDef() ?? columnGroup?.getColGroupDef())?.mainMenuItems;
         if (Array.isArray(columnMainMenuItems)) {
             result = columnMainMenuItems;
         } else if (typeof columnMainMenuItems === 'function') {
             result = columnMainMenuItems(
                 this.gos.addGridCommonParams({
-                    column: column!,
+                    column,
+                    columnGroup,
                     defaultItems,
                 })
             );
         } else {
             const userFunc = this.gos.getCallback('getMainMenuItems');
-            if (userFunc && column) {
+            if (userFunc) {
                 result = userFunc({
                     column,
+                    columnGroup,
                     defaultItems,
                 });
             } else {
@@ -107,7 +110,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return result;
     }
 
-    private getDefaultMenuOptions(column?: AgColumn): string[] {
+    private getDefaultMenuOptions(column: AgColumn | null): string[] {
         const result: string[] = [];
 
         const isLegacyMenuEnabled = _isLegacyMenuEnabled(this.gos);

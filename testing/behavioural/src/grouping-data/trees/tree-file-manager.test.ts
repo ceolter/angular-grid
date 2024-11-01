@@ -156,6 +156,7 @@ describe('ag-grid tree transactions', () => {
             getDataPath: (data) => data.filePath,
             getRowId: (params) => '' + params.data.id,
             animateRows: false,
+            rowSelection: { mode: 'singleRow' },
         };
     }
 });

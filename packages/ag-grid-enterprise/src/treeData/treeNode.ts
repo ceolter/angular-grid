@@ -81,7 +81,7 @@ export class TreeNode implements ITreeNode {
      * in this case the row.allLeafChildren will be the same as one of the childrenAfterGroup[x].allLeafChildren,
      * to get the allLeafChildren if is null, do node.allLeafChildren ?? node.row.allLeafChildren.
      */
-    private allLeafChildren: TreeRow[] | null = _EmptyArray;
+    public allLeafChildren: TreeRow[] | null = _EmptyArray;
 
     /** Indicates whether childrenAfterGroup might need to be recomputed and sorted. Reset during commit. */
     public childrenChanged: boolean = false;
@@ -123,6 +123,8 @@ export class TreeNode implements ITreeNode {
     /**
      * Gets a node a key in the given parent. If the node does not exists, creates a filler node, with null row.
      * We cast to string just to be sure the user passed a string correctly and not a number or something else.
+     * @param key - The key of the node to get.
+     * @param append - If true, the node will be moved to the end of the children list.
      * @returns the node at the given key, or a new filler node inserted there if it does not exist.
      */
     public upsertKey(key: string | number): TreeNode {
@@ -131,6 +133,23 @@ export class TreeNode implements ITreeNode {
         }
         let node = this.children?.get(key);
         if (!node) {
+            node = new TreeNode(this, key, this.level + 1);
+            (this.children ??= new Map())?.set(node.key, node); // Add to the map
+        }
+        return node;
+    }
+
+    /** Same as upsertKey, but moves the node to the end no matter what. */
+    public appendKey(key: string | number): TreeNode {
+        const children = this.children;
+        if (typeof key !== 'string') {
+            key = String(key);
+        }
+        let node = children?.get(key);
+        if (node) {
+            children!.delete(key); // Remove from the map
+            children!.set(key, node); // Reinsert to the map
+        } else {
             node = new TreeNode(this, key, this.level + 1);
             (this.children ??= new Map())?.set(node.key, node); // Add to the map
         }

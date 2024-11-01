@@ -309,7 +309,7 @@ export const AG_GRID_ERRORS = {
         `${feature} is only available if using 'clientSide' or 'serverSide' rowModelType, you are using ${rowModel}.` as const,
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
     131: () => 'cannot range select while selecting multiple rows' as const,
-    132: () => `cannot multi select unless selection mode is 'multiRow'` as const,
+    132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
     133: () => 'iconRenderer should return back a string or a dom object' as const,
     134: ({ iconName }: { iconName: string }) => `Did not find icon ${iconName}` as const,
     135: () => `Data type of the new value does not match the cell data type of the column` as const,

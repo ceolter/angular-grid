@@ -190,6 +190,11 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return 0;
+        }
+
         const { newValue, clearSelection, suppressFinishActions, nodes, event, source } = params;
 
         if (nodes.length === 0) return 0;
@@ -655,8 +660,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
-        if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
+        if (!_isRowSelection(this.gos)) {
             _warn(132);
+            return;
+        }
+
+        if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
+            _warn(130);
             return;
         }
         this.validateSelectAllType();

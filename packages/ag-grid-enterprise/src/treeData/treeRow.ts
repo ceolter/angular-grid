@@ -15,6 +15,7 @@ export interface TreeRow<TData = any> extends RowNode<TData> {
     treeNode: ITreeNode | null;
     treeNodeFlags: number;
     sibling: TreeRow<TData>;
+    sourceRowIndex: number;
 }
 
 const enum Flags {

@@ -991,36 +991,121 @@ export { Module, ModuleValidationResult, _ModuleWithApi, _ModuleWithoutApi, Modu
 export { ModuleRegistry, _getGridRegisteredModules } from './modules/moduleRegistry';
 
 export { ValidationModule } from './validation/validationModule';
-
-export { ColumnMoveModule } from './columnMove/columnMoveModule';
-export { DragModule, HorizontalResizeModule, DragAndDropModule } from './dragAndDrop/dragModule';
+export { ColumnMoveModule, ColumnMoveApiModule, ColumnMoveCoreModule } from './columnMove/columnMoveModule';
+export {
+    DragModule,
+    HorizontalResizeModule,
+    DragAndDropModule,
+    NativeDragModule,
+    RowDragApiModule,
+    RowDragCoreModule,
+    RowDragModule,
+} from './dragAndDrop/dragModule';
 export {
     ColumnFilterModule,
     FilterCoreModule,
     FloatingFilterModule,
     ReadOnlyFloatingFilterModule,
     FilterValueModule,
+    ColumnFilterApiModule,
+    ColumnFilterMenuModule,
+    FilterApiModule,
+    FilterModule,
+    FloatingFilterCoreModule,
+    QuickFilterApiModule,
+    QuickFilterCoreModule,
+    QuickFilterModule,
+    SimpleFilterModule,
+    SimpleFloatingFilterModule,
 } from './filter/filterModule';
-export { EditCoreModule } from './edit/editModule';
+export {
+    EditModule,
+    EditCoreModule,
+    DataTypeEditorsModule,
+    DefaultEditorModule,
+    EditApiModule,
+    FullRowEditModule,
+    LargeTextEditorModule,
+    SelectEditorModule,
+    UndoRedoEditModule,
+} from './edit/editModule';
 export { StickyRowModule } from './rendering/features/stickyRowModule';
-export { RowSelectionCoreModule } from './selection/rowSelectionModule';
+export { RowSelectionCoreModule, RowSelectionApiModule, RowSelectionModule } from './selection/rowSelectionModule';
 export {
     CsrmSsrmSharedApiModule as _CsrmSsrmSharedApiModule,
     SsrmInfiniteSharedApiModule as _SsrmInfiniteSharedApiModule,
 } from './api/sharedApiModule';
-export { CommunityMenuApiModule } from './misc/menu/sharedMenuModule';
+export { CommunityMenuApiModule, SharedMenuModule } from './misc/menu/sharedMenuModule';
 export { CommunityFeaturesModule } from './communityFeaturesModule';
-export { SortModule } from './sort/sortModule';
+export { SortModule, SortApiModule, SortCoreModule, SortIndicatorCompModule } from './sort/sortModule';
 export { AlignedGridsModule } from './alignedGrids/alignedGridsModule';
-export { ClientSideRowModelModule, ClientSideRowModelCoreModule } from './clientSideRowModel/clientSideRowModelModule';
-export { CsvExportModule, CsvExportCoreModule } from './csvExport/csvExportModule';
-export { InfiniteRowModelModule } from './infiniteRowModel/infiniteRowModelModule';
+export {
+    ClientSideRowModelModule,
+    ClientSideRowModelCoreModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelFilterModule,
+    ClientSideRowModelSortModule,
+} from './clientSideRowModel/clientSideRowModelModule';
+export { CsvExportModule, CsvExportCoreModule, CsvExportApiModule } from './csvExport/csvExportModule';
+export {
+    InfiniteRowModelModule,
+    InfiniteRowModelApiModule,
+    InfiniteRowModelCoreModule,
+} from './infiniteRowModel/infiniteRowModelModule';
 export { PopupModule } from './widgets/popupModule';
-export { SharedMenuModule } from './misc/menu/sharedMenuModule';
-export { KeyboardNavigationCoreModule } from './navigation/navigationModule';
+export {
+    KeyboardNavigationCoreModule,
+    KeyboardNavigationApiModule,
+    KeyboardNavigationModule,
+} from './navigation/navigationModule';
 export { CellFlashModule } from './rendering/cell/cellFlashModule';
-export { ColumnGroupCoreModule } from './columns/columnGroups/columnGroupModule';
+export {
+    ColumnGroupCoreModule,
+    ColumnGroupApiModule,
+    ColumnGroupModule,
+} from './columns/columnGroups/columnGroupModule';
 export { ColumnGroupHeaderCompModule, ColumnHeaderCompModule } from './headerRendering/cells/headerModule';
+export { StateModule, StateApiModule, StateCoreModule } from './misc/state/stateModule';
+export {
+    DataTypeModule,
+    ColumnApiModule,
+    ColumnFlexModule,
+    GetColumnDefsApiModule,
+    SelectionColumnModule,
+} from './columns/columnModule';
+export { PaginationModule, PaginationApiModule, PaginationCoreModule } from './pagination/paginationModule';
+export { RowApiModule, ScrollApiModule } from './api/apiModule';
+export { RenderApiModule } from './rendering/renderModule';
+export {
+    ColumnAutosizeModule,
+    ColumnAutosizeApiModule,
+    ColumnAutosizeCoreModule,
+} from './columnAutosize/columnAutosizeModule';
+export { ColumnResizeModule, ColumnResizeApiModule, ColumnResizeCoreModule } from './columnResize/columnResizeModule';
+export { PinnedRowModule, PinnedRowApiModule, PinnedRowCoreModule } from './pinnedRowModel/pinnedRowModule';
+export { ValueCacheModule, CellApiModule, ChangeDetectionModule, ExpressionModule } from './valueService/valueModule';
+export {
+    AnimateShowChangeCellRendererModule,
+    AnimateSlideCellRendererModule,
+    CheckboxCellRendererModule,
+} from './rendering/cellRenderers/cellRendererModule';
+export {
+    OverlayModule,
+    LoadingOverlayModule,
+    NoRowsOverlayModule,
+    OverlayApiModule,
+    OverlayCoreModule,
+} from './rendering/overlays/overlayModule';
+export { CellRendererFunctionModule } from './components/framework/cellRendererFunctionModule';
+export { CellStyleModule, RowStyleModule } from './styling/stylingModule';
+export { ColumnHoverModule } from './columns/columnHover/columnHoverModule';
+export { ColumnAnimationModule } from './rendering/columnAnimationModule';
+export { AnimationFrameModule } from './misc/animationFrameModule';
+export { EventApiModule } from './misc/apiEvents/apiEventModule';
+export { TooltipModule, TooltipCompModule, TooltipCoreModule } from './tooltip/tooltipModule';
+export { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
+export { LocaleModule } from './misc/locale/localeModule';
+export { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
 
 //  events
 export * from './events';
