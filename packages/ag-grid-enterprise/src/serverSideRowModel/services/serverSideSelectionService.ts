@@ -71,10 +71,18 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     public processSelectionAction(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode<any>,
-        source?: SelectionEventSourceType | undefined
+        source: SelectionEventSourceType
     ): number {
-        throw new Error('unimplemented');
+        if (this.isRowSelectionBlocked(rowNode)) return 0;
+
+        if (event instanceof MouseEvent) {
+            return this.handleMouseEvent(event, rowNode, source);
+        } else {
+            throw new Error('unimplemented');
+        }
     }
+
+    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {}
 
     public getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null {
         return this.selectionStrategy.getSelectedState();

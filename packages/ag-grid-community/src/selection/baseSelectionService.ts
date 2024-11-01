@@ -8,8 +8,6 @@ import type { SelectionEventSourceType } from '../events';
 import {
     _getActiveDomElement,
     _getEnableDeselection,
-    _getEnableSelection,
-    _getEnableSelectionWithoutKeys,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
     _isRowSelection,
@@ -61,72 +59,6 @@ export abstract class BaseSelectionService extends BeanStub {
         rowNode: RowNode,
         source: SelectionEventSourceType
     ): number;
-
-    public handleRowClick(rowNode: RowNode, mouseEvent: MouseEvent): void {
-        const { gos } = this;
-        this.processSelectionAction(mouseEvent, rowNode, 'rowClicked');
-        return;
-        // ctrlKey for windows, metaKey for Apple
-        const isMultiKey = mouseEvent.ctrlKey || mouseEvent.metaKey;
-        const isShiftKey = mouseEvent.shiftKey;
-
-        const isSelected = rowNode.isSelected();
-
-        // we do not allow selecting the group by clicking, when groupSelectChildren, as the logic to
-        // handle this is broken. to observe, change the logic below and allow groups to be selected.
-        // you will see the group gets selected, then all children get selected, then the grid unselects
-        // the children (as the default behaviour when clicking is to unselect other rows) which results
-        // in the group getting unselected (as all children are unselected). the correct thing would be
-        // to change this, so that children of the selected group are not then subsequently un-selected.
-        const groupSelectsChildren = _getGroupSelectsDescendants(gos);
-        const rowDeselectionWithCtrl = _getEnableDeselection(gos);
-        const rowClickSelection = _getEnableSelection(gos);
-        if (
-            // we do not allow selecting groups by clicking (as the click here expands the group), or if it's a detail row,
-            // so return if it's a group row
-            (groupSelectsChildren && rowNode.group) ||
-            this.isRowSelectionBlocked(rowNode) ||
-            // if selecting and click selection disabled, do nothing
-            (!rowClickSelection && !isSelected) ||
-            // if deselecting and click deselection disabled, do nothing
-            (!rowDeselectionWithCtrl && isSelected)
-        ) {
-            return;
-        }
-
-        const multiSelectOnClick = _getEnableSelectionWithoutKeys(gos);
-        const source = 'rowClicked';
-
-        if (isSelected) {
-            if (multiSelectOnClick) {
-                this.setSelectedParams({ rowNode, newValue: false, event: mouseEvent, source });
-            } else if (isMultiKey) {
-                if (rowDeselectionWithCtrl) {
-                    this.setSelectedParams({ rowNode, newValue: false, event: mouseEvent, source });
-                }
-            } else if (rowClickSelection) {
-                // selected with no multi key, must make sure anything else is unselected
-                this.setSelectedParams({
-                    rowNode,
-                    newValue: true,
-                    clearSelection: !isShiftKey,
-                    rangeSelect: isShiftKey,
-                    event: mouseEvent,
-                    source,
-                });
-            }
-        } else {
-            const clearSelection = multiSelectOnClick ? false : !isMultiKey;
-            this.setSelectedParams({
-                rowNode,
-                newValue: true,
-                clearSelection: clearSelection,
-                rangeSelect: isShiftKey,
-                event: mouseEvent,
-                source,
-            });
-        }
-    }
 
     public onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void {
         // Treat undefined as false, if we pass undefined down it gets treated as toggle class, rather than explicitly

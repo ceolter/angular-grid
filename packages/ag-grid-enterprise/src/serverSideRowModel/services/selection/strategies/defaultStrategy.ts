@@ -55,12 +55,6 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
     }
 
     public setSelectedState(state: IServerSideSelectionState | IServerSideGroupSelectionState): void {
-        // fire selection changed event
-        const newState: SelectedState = {
-            selectAll: false,
-            toggledNodes: new Set(),
-        };
-
         if (typeof state !== 'object') {
             // The provided selection state should be an object
             _error(115);
@@ -73,26 +67,28 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
             return;
         }
 
-        if (typeof state.selectAll === 'boolean') {
-            newState.selectAll = state.selectAll;
-        } else {
+        if (typeof state.selectAll !== 'boolean') {
             //selectAll must be of boolean type.
             _error(117);
             return;
         }
 
-        if ('toggledNodes' in state && Array.isArray(state.toggledNodes)) {
-            state.toggledNodes.forEach((key: any) => {
-                if (typeof key === 'string') {
-                    newState.toggledNodes.add(key);
-                } else {
-                    _warn(196, { key });
-                }
-            });
-        } else {
-            _warn(197);
-            return;
+        if (!('toggledNodes' in state) || !Array.isArray(state.toggledNodes)) {
+            return _warn(197);
         }
+
+        const newState: SelectedState = {
+            selectAll: state.selectAll,
+            toggledNodes: new Set(),
+        };
+
+        state.toggledNodes.forEach((key: any) => {
+            if (typeof key === 'string') {
+                newState.toggledNodes.add(key);
+            } else {
+                _warn(196, { key });
+            }
+        });
 
         const isSelectingMultipleRows = newState.selectAll || newState.toggledNodes.size > 1;
         if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos) && isSelectingMultipleRows) {
@@ -128,6 +124,48 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
         const node = root ? this.rowModel.getRowNode(root) : null;
 
         return node ? node.isSelected() ?? false : true;
+    }
+
+    public handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
+        const currentSelection = rowNode.isSelected();
+        const isMeta = event.metaKey || event.ctrlKey;
+        const isRowClicked = source === 'rowClicked';
+
+        if (event.shiftKey && isMeta) {
+            throw new Error('unimplemented');
+        } else if (event.shiftKey && _isMultiRowSelection(this.gos)) {
+            throw new Error('unimplemented');
+        } else if (isMeta) {
+            throw new Error('unimplemented');
+        } else {
+            if (!rowNode.selectable) return 0;
+            this.selectionCtx.setRoot(rowNode.id!);
+            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+            const shouldClear = isRowClicked && !enableSelectionWithoutKeys;
+            const newValue = !currentSelection;
+
+            const updateNode = (node: RowNode, val: boolean) => {
+                if (val) {
+                    if (shouldClear) {
+                        this.selectedNodes = {};
+                    }
+                    this.selectedNodes[node.id!] = node;
+                } else {
+                    delete this.selectedNodes[node.id!];
+                }
+
+                const state = this.selectedState;
+                const conformsToSelectAll = val === state.selectAll;
+                if (conformsToSelectAll) {
+                    state.toggledNodes.delete(node.id!);
+                } else {
+                    state.toggledNodes.add(node.id!);
+                }
+            };
+
+            updateNode(rowNode, newValue);
+            return 1;
+        }
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {

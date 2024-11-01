@@ -3,7 +3,6 @@ import type { CheckboxSelectionCallback } from '../entities/colDef';
 import type { RowNode } from '../entities/rowNode';
 import {
     _getCheckboxes,
-    _getGroupSelection,
     _getHideDisabledCheckboxes,
     _getIsRowSelectable,
     _isClientSideRowModel,
@@ -103,22 +102,6 @@ export class CheckboxSelectionComponent extends Component {
                 _stopPropagationForAgGrid(event);
 
                 this.beans.selectionSvc?.processSelectionAction(event, this.rowNode, 'checkboxSelected');
-                return;
-
-                const groupSelectsFiltered = _getGroupSelection(this.gos) === 'filteredDescendants';
-                const isSelected = this.eCheckbox.getValue();
-
-                if (this.shouldHandleIndeterminateState(isSelected, groupSelectsFiltered)) {
-                    // try toggling children to determine action.
-                    const result = this.onClicked(true, event || {});
-                    if (result === 0) {
-                        this.onClicked(false, event);
-                    }
-                } else if (isSelected) {
-                    this.onClicked(false, event);
-                } else {
-                    this.onClicked(true, event || {});
-                }
             },
         });
 

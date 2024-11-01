@@ -50,7 +50,6 @@ export interface ISelectionService {
     deselectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void;
     createCheckboxSelectionComponent(): CheckboxSelectionComponent;
     createSelectAllFeature(column: AgColumn): SelectAllFeature;
-    handleRowClick(rowNode: RowNode, mouseEvent: MouseEvent): void;
     onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void;
     announceAriaRowSelection(rowNode: RowNode): void;
     /** Called after grouping / treeData */
@@ -62,7 +61,7 @@ export interface ISelectionService {
     processSelectionAction(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode,
-        source?: SelectionEventSourceType
+        source: SelectionEventSourceType
     ): number;
 }
 

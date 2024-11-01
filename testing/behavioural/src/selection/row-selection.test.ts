@@ -1535,6 +1535,17 @@ describe('Row Selection Grid Options', () => {
                     toggleCheckboxByIndex(1, { shiftKey: true, ctrlKey: true });
                     assertSelectedRowsByIndex([4, 5], api);
                 });
+
+                test('CTRL+SHIFT-click selects range if root is selected', async () => {
+                    const api = await createGridAndWait({
+                        ...groupGridOptions,
+                        rowSelection: { mode: 'multiRow' },
+                    });
+
+                    toggleCheckboxByIndex(2);
+                    toggleCheckboxByIndex(5, { shiftKey: true, ctrlKey: true });
+                    assertSelectedRowsByIndex([2, 3, 4, 5], api);
+                });
             });
         });
     });

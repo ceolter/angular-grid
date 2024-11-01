@@ -3,7 +3,6 @@ import type { BeanCollection } from '../context/context';
 import type { RowSelectionMode, SelectAllMode } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import type { RowSelectedEvent, SelectionEventSourceType } from '../events';
-import { isSelectionUIEvent } from '../events';
 import {
     _getEnableDeselection,
     _getEnableSelection,
@@ -82,22 +81,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         return this.mode === 'multiRow';
     }
 
-    /**
-     * We override the selection value for UI-triggered events because it's the
-     * current selection state that should determine the next selection state. This
-     * is a stepping stone towards removing selection logic from event listeners and
-     * other code external to the selection service(s).
-     */
-    private overrideSelectionValue(newValue: boolean, source: SelectionEventSourceType): boolean {
-        if (!isSelectionUIEvent(source)) {
-            return newValue;
-        }
-
-        const root = this.selectionCtx.getRoot();
-
-        return root ? root.isSelected() ?? false : true;
-    }
-
     public processSelectionAction(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode,
@@ -117,7 +100,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         // to the sibling (the parent of the group)
         const node = rowNode.footer ? rowNode.sibling : rowNode;
 
-        const { gos } = this;
+        const { gos, groupSelectsDescendants, groupSelectsFiltered, selectionCtx } = this;
         const currentSelection = node.isSelected();
         const enableClickSelection = _getEnableSelection(gos);
         const enableDeselection = _getEnableDeselection(gos);
@@ -128,20 +111,24 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
         if (event.shiftKey && isMeta && this.isMultiSelect()) {
             // range deselection
-            const root = this.selectionCtx.getRoot();
+            const root = selectionCtx.getRoot();
             if (root && !root.isSelected()) {
                 // deselection mode
-                const partition = this.selectionCtx.extend(node, this.groupSelectsDescendants);
+                const partition = selectionCtx.extend(node, groupSelectsDescendants);
                 return this.selectRange(partition.keep, false, source);
             } else {
-                throw new Error('unimplemented');
+                const partition = selectionCtx.isInRange(node)
+                    ? selectionCtx.truncate(node)
+                    : selectionCtx.extend(node, groupSelectsDescendants);
+                this.selectRange(partition.discard, false, source);
+                return this.selectRange(partition.keep, true, source);
             }
         } else if (event.shiftKey && this.isMultiSelect()) {
             // range selection
-            const root = this.selectionCtx.getRoot();
-            const partition = this.selectionCtx.isInRange(node)
-                ? this.selectionCtx.truncate(node)
-                : this.selectionCtx.extend(node, this.groupSelectsDescendants);
+            const root = selectionCtx.getRoot();
+            const partition = selectionCtx.isInRange(node)
+                ? selectionCtx.truncate(node)
+                : selectionCtx.extend(node, groupSelectsDescendants);
             if (root && !root.isSelected()) {
                 this.resetNodes();
             } else {
@@ -150,7 +137,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             return this.selectRange(partition.keep, true, source);
         } else if (isMeta) {
             // multi-selection + deselection
-            this.selectionCtx.setRoot(node);
+            selectionCtx.setRoot(node);
 
             if (isRowClicked && currentSelection && !enableDeselection) {
                 return 0;
@@ -165,11 +152,12 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             });
         } else {
             // selection
-            this.selectionCtx.setRoot(node);
+            selectionCtx.setRoot(node);
             const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
             const shouldClear = isRowClicked && !enableSelectionWithoutKeys;
 
-            if (this.groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
+            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'`
+            if (groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
                 return this.setNodesSelected({
                     nodes: [node],
                     newValue: false,
