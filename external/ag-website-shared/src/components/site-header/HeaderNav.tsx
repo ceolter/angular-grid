@@ -2,7 +2,7 @@ import type { MenuItem } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import MenuIcon from '@ag-website-shared/images/inline-svgs/menu-icon.svg?react';
 import { Collapsible } from '@components/Collapsible';
-import { getPageNameFromPath } from '@features/docs/utils/urlPaths';
+import { getPageNameFromPath } from '@components/docs/utils/urlPaths';
 import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classnames from 'classnames';

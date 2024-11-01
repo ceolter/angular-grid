@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import DebugLayout from '@layouts/DebugLayout.astro';
-import { getDocsExamplePages } from '@features/docs/utils/pageData';
-import { getExampleContentsUrl, getExampleUrl } from '@features/docs/utils/urlPaths';
+import { getDocsExamplePages } from '@components/docs/utils/pageData';
+import { getExampleContentsUrl, getExampleUrl } from '@components/docs/utils/urlPaths';
 import { ENABLE_GENERATE_DEBUG_PAGES } from '@constants';
 
 let examples: Awaited<ReturnType<typeof getDocsExamplePages>> = [];

@@ -1,4 +1,4 @@
-import { getGifStillImageFiles } from '@features/docs/utils/pageData';
+import { getGifStillImageFiles } from '@components/docs/utils/pageData';
 import { getDocsGifs } from '@utils/pages';
 import type { APIContext } from 'astro';
 import gifFrames from 'gif-frames';

@@ -1,10 +1,10 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import Layout from '@layouts/Layout.astro';
-import { Header } from '@features/docs/components/Header';
+import { Header } from '@components/docs/components/Header';
 import { getFrameworkDisplayText } from '@utils/framework';
 import type { Framework } from '@ag-grid-types';
-import { getDocsPages } from '@features/docs/utils/pageData';
+import { getDocsPages } from '@components/docs/utils/pageData';
 import { SideNavigation } from '@components/pages-navigation/components/SideNavigation';
 import { getFirstParagraphText } from '@utils/markdoc/getFirstParagraphText';
 import { DOCS_TAB_ITEM_ID_PREFIX } from '@ag-website-shared/constants';

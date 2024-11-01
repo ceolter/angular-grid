@@ -69,7 +69,7 @@ export default defineMarkdocConfig({
             render: component('./src/components/license-setup/LicenseSetup.astro'),
         },
         gridExampleRunner: {
-            render: component('./src/features/docs/components/DocsExampleRunner.astro'),
+            render: component('./src/components/docs/components/DocsExampleRunner.astro'),
             attributes: {
                 title: { type: String, required: true },
                 name: { type: String, required: true },
@@ -213,7 +213,7 @@ export default defineMarkdocConfig({
             render: component('./src/components/figma-community-button/FigmaCommunityButton.astro'),
         },
         metaTag: {
-            render: component('./src/features/docs/components/MetaTagComponent.astro'),
+            render: component('./src/components/docs/components/MetaTagComponent.astro'),
             attributes: {
                 tags: { type: Array, required: true },
             },
