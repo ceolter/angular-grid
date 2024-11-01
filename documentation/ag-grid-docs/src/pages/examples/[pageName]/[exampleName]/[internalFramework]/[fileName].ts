@@ -1,6 +1,6 @@
 import type { InternalFramework } from '@ag-grid-types';
 import { getDocExampleFiles } from '@components/docs/utils/pageData';
-import { getGeneratedContents } from '@features/example-generator';
+import { getGeneratedContents } from '@components/example-generator';
 import { getIsDev } from '@utils/env';
 import { fileNameToMimeType } from '@utils/mimeType';
 import { getContentRootFileUrl } from '@utils/pages';

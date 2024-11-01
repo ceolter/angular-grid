@@ -3,8 +3,8 @@ import { FRAMEWORKS, QUICK_BUILD_PAGES, SHOW_DEBUG_LOGS } from '@constants';
 import { type DocsPage, getContentRootFileUrl } from '@utils/pages';
 import { pathJoin } from '@utils/pathJoin';
 
-import { getGeneratedContentsFileList } from '../../../features/example-generator';
 import { getIsDev } from '../../../utils/env';
+import { getGeneratedContentsFileList } from '../../example-generator';
 import { getInternalFrameworkExamples, getPagesList } from './filesData';
 
 interface Example {

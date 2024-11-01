@@ -1,7 +1,7 @@
 import type { InternalFramework } from '@ag-grid-types';
 import Code from '@ag-website-shared/components/code/Code';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import type { FileContents } from '@features/example-generator/types';
+import type { FileContents } from '@components/example-generator/types';
 import { doOnEnter } from '@utils/doOnEnter';
 import classnames from 'classnames';
 import { useEffect, useState } from 'react';

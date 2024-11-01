@@ -1,6 +1,6 @@
 import type { InternalFramework } from '@ag-grid-types';
 import { getDocsExamplePages } from '@components/docs/utils/pageData';
-import { getGeneratedContents } from '@features/example-generator';
+import { getGeneratedContents } from '@components/example-generator';
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 

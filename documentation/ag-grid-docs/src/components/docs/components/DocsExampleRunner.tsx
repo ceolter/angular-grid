@@ -1,5 +1,5 @@
 import type { Framework, InternalFramework } from '@ag-grid-types';
-import type { GeneratedContents } from '@features/example-generator/types';
+import type { GeneratedContents } from '@components/example-generator/types';
 import { ExampleRunner } from '@features/example-runner/components/ExampleRunner';
 import { ExternalLinks } from '@features/example-runner/components/ExternalLinks';
 import { getLoadingIFrameId } from '@features/example-runner/utils/getLoadingLogoId';
