@@ -1,8 +1,8 @@
 import type { Framework, InternalFramework } from '@ag-grid-types';
 import type { GeneratedContents } from '@components/example-generator/types';
-import { ExampleRunner } from '@features/example-runner/components/ExampleRunner';
-import { ExternalLinks } from '@features/example-runner/components/ExternalLinks';
-import { getLoadingIFrameId } from '@features/example-runner/utils/getLoadingLogoId';
+import { ExampleRunner } from '@components/example-runner/components/ExampleRunner';
+import { ExternalLinks } from '@components/example-runner/components/ExternalLinks';
+import { getLoadingIFrameId } from '@components/example-runner/utils/getLoadingLogoId';
 import { useStore } from '@nanostores/react';
 import { $internalFramework, $internalFrameworkState } from '@stores/frameworkStore';
 import { $queryClient, defaultQueryOptions } from '@stores/queryClientStore';
