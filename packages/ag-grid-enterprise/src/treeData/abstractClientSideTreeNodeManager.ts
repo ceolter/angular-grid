@@ -291,6 +291,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 this.setGroupData(row, key);
             }
         } else {
+            row.groupData = null;
             row.parent = details.rootNode;
         }
     }
@@ -494,6 +495,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         // this is important for transition, see rowComp removeFirstPassFuncs. when doing animation and
         // remove, if rowTop is still present, the rowComp thinks it's just moved position.
         row.clearRowTopAndRowIndex();
+
+        row.groupData = null;
     }
 
     /**
