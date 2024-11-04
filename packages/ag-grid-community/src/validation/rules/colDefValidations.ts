@@ -54,13 +54,13 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
         const enterpriseMenuTabs: ColumnMenuTab[] = ['columnsMenuTab', 'generalMenuTab'];
         if (options.menuTabs?.some((tab) => enterpriseMenuTabs.includes(tab))) {
             return {
-                module: 'MenuModule',
+                module: 'ColumnMenuModule',
             };
         }
         return null;
     },
     columnChooserParams: {
-        module: 'MenuModule',
+        module: 'ColumnChooserModule',
     },
 
     headerCheckboxSelection: {

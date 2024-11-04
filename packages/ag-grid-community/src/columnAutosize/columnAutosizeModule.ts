@@ -5,12 +5,19 @@ import { AutoWidthModule } from '../rendering/autoWidthModule';
 import { autoSizeAllColumns, autoSizeColumns, sizeColumnsToFit } from './columnAutosizeApi';
 import { ColumnAutosizeService } from './columnAutosizeService';
 
+/**
+ * @feature Columns -> Column Sizing
+ * @gridOption autoSizeStrategy
+ */
 export const ColumnAutosizeCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnAutosizeCoreModule'),
     beans: [ColumnAutosizeService],
     dependsOn: [AutoWidthModule],
 };
 
+/**
+ * @feature Columns -> Column Sizing
+ */
 export const ColumnAutosizeApiModule: _ModuleWithApi<_ColumnAutosizeApi> = {
     ...baseCommunityModule('ColumnAutosizeApiModule'),
     apiFunctions: {
@@ -21,6 +28,9 @@ export const ColumnAutosizeApiModule: _ModuleWithApi<_ColumnAutosizeApi> = {
     dependsOn: [ColumnAutosizeCoreModule],
 };
 
+/**
+ * @feature Columns -> Column Sizing
+ */
 export const ColumnAutosizeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnAutosizeModule'),
     dependsOn: [ColumnAutosizeApiModule],

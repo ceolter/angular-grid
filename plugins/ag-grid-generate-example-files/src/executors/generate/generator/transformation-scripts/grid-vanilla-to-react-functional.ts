@@ -45,9 +45,13 @@ function getModuleImports(
 
     addRelativeImports(bindings, imports, 'jsx');
 
-    if (bindings.moduleRegistration) {
-        const moduleImports = bindings.imports.filter((i) => i.imports.find((m) => m.includes('Module')));
+    const moduleImports = bindings.imports.filter((i) => i.imports.find((m) => m.includes('Module')));
+    if (moduleImports.length > 0) {
         addBindingImports(moduleImports, imports, false, true);
+    }
+    const cssImports = bindings.imports.filter((i) => i.module.includes('.css'));
+    if (cssImports.length > 0) {
+        addBindingImports(cssImports, imports, false, true);
     }
 
     if (bindings.moduleRegistration) {

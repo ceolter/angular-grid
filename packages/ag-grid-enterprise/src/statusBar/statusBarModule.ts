@@ -12,6 +12,10 @@ import { TotalRowsComp } from './providedPanels/totalRowsComp';
 import { getStatusPanel } from './statusBarApi';
 import { StatusBarService } from './statusBarService';
 
+/**
+ * @feature Accessories -> Status Bar
+ * @gridOption statusBar
+ */
 export const StatusBarCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('StatusBarCoreModule'),
     beans: [StatusBarService],
@@ -25,12 +29,18 @@ export const StatusBarCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule],
 };
 
+/**
+ * @feature Accessories -> Status Bar
+ */
 export const StatusBarSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('StatusBarSelectionModule'),
     userComponents: { agSelectedRowCountComponent: SelectedRowsComp },
     dependsOn: [StatusBarCoreModule],
 };
 
+/**
+ * @feature Accessories -> Status Bar
+ */
 export const StatusBarApiModule: _ModuleWithApi<_StatusBarGridApi> = {
     ...baseEnterpriseModule('StatusBarApiModule'),
     apiFunctions: {
@@ -39,6 +49,9 @@ export const StatusBarApiModule: _ModuleWithApi<_StatusBarGridApi> = {
     dependsOn: [StatusBarCoreModule],
 };
 
+/**
+ * @feature Accessories -> Status Bar
+ */
 export const StatusBarModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('StatusBarModule'),
     dependsOn: [StatusBarCoreModule, StatusBarApiModule, StatusBarSelectionModule],

@@ -16,6 +16,10 @@ import {
 import { PaginationAutoPageSizeService } from './paginationAutoPageSizeService';
 import { PaginationService } from './paginationService';
 
+/**
+ * @feature Rows -> Row Pagination
+ * @gridOption pagination
+ */
 export const PaginationCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('PaginationCoreModule'),
     beans: [PaginationService, PaginationAutoPageSizeService],
@@ -31,6 +35,9 @@ export const PaginationCoreModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @feature Rows -> Row Pagination
+ */
 export const PaginationApiModule: _ModuleWithApi<_PaginationGridApi> = {
     ...baseCommunityModule('PaginationApiModule'),
     dependsOn: [PaginationCoreModule],
@@ -48,6 +55,9 @@ export const PaginationApiModule: _ModuleWithApi<_PaginationGridApi> = {
     },
 };
 
+/**
+ * @feature Rows -> Row Pagination
+ */
 export const PaginationModule: _ModuleWithoutApi = {
     ...baseCommunityModule('PaginationModule'),
     dependsOn: [PaginationCoreModule, PaginationApiModule],

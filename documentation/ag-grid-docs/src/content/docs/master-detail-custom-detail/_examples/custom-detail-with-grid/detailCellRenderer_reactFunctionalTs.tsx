@@ -53,7 +53,6 @@ const DetailCellRenderer = ({ data, node, api }: CustomCellRendererProps) => {
                 </div>
             </div>
             <AgGridReact
-                data-id="detailGrid"
                 className="full-width-grid"
                 columnDefs={colDefs}
                 defaultColDef={defaultColDef}

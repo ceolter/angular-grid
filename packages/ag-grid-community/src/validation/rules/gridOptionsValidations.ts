@@ -110,16 +110,16 @@ function toConstrainedNum(
  */
 const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
-        sideBar: { module: 'SideBarModule' },
-        statusBar: { module: 'StatusBarModule' },
-        enableCharts: { module: 'GridChartsModule' },
-        getMainMenuItems: { module: 'MenuModule' },
-        getContextMenuItems: { module: 'MenuModule' },
-        allowContextMenuWithControlKey: { module: 'MenuModule' },
-        enableAdvancedFilter: { module: 'AdvancedFilterModule' },
+        sideBar: { module: 'SideBarCoreModule' },
+        statusBar: { module: 'StatusBarCoreModule' },
+        enableCharts: { module: 'GridChartsCoreModule' },
+        getMainMenuItems: { module: 'ColumnMenuModule' },
+        getContextMenuItems: { module: 'ContextMenuModule' },
+        allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
+        enableAdvancedFilter: { module: 'AdvancedFilterCoreModule' },
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
-            module: 'TreeDataModule',
+            module: 'TreeDataCoreModule',
             validate: (options) => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
@@ -154,10 +154,10 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 },
             },
         },
-        masterDetail: { module: 'MasterDetailModule' },
+        masterDetail: { module: 'MasterDetailCoreModule' },
 
         enableRangeSelection: {
-            module: 'RangeSelectionModule',
+            module: 'CellSelectionCoreModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
@@ -210,15 +210,15 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
 
         treeDataChildrenField: {
-            module: 'TreeDataModule',
+            module: 'TreeDataCoreModule',
         },
         viewportDatasource: {
             supportedRowModels: ['viewport'],
-            module: 'ViewportRowModelModule',
+            module: 'ViewportRowModelCoreModule',
         },
         serverSideDatasource: {
             supportedRowModels: ['serverSide'],
-            module: 'ServerSideRowModelModule',
+            module: 'ServerSideRowModelCoreModule',
         },
         cacheBlockSize: {
             supportedRowModels: ['serverSide', 'infinite'],
@@ -228,11 +228,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         datasource: {
             supportedRowModels: ['infinite'],
-            module: 'InfiniteRowModelModule',
+            module: 'InfiniteRowModelCoreModule',
         },
         rowData: {
             supportedRowModels: ['clientSide'],
-            module: 'ClientSideRowModelModule',
+            module: 'ClientSideRowModelCoreModule',
         },
         paginationPageSizeSelector: {
             validate: (options) => {
@@ -260,7 +260,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         cellSelection: {
-            module: 'RangeSelectionModule',
+            module: 'CellSelectionCoreModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },

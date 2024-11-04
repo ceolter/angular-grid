@@ -45,7 +45,7 @@ describe('ag-grid tree data without tree module', () => {
         const api = gridsManager.createGrid('myGrid', gridOptions);
 
         expect(consoleWarnSpy).toHaveBeenCalledWith(
-            'AG Grid: treeData is only available when TreeDataModule is loaded.'
+            'AG Grid: treeData is only available when TreeDataCoreModule is loaded.'
         );
 
         expect(consoleErrorSpy).toHaveBeenCalled();

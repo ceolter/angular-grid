@@ -9,11 +9,18 @@ import { DragService } from './dragService';
 import { HorizontalResizeService } from './horizontalResizeService';
 import { RowDragService } from './rowDragService';
 
+/**
+ * @internal
+ */
 export const DragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DragModule'),
     beans: [DragService],
 };
 
+/**
+ * @feature Import & Export -> Drag & Drop
+ * @colDef dndSource, dndSourceOnRowDrag
+ */
 export const NativeDragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('NativeDragModule'),
     dynamicBeans: {
@@ -25,6 +32,9 @@ export const NativeDragModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @internal
+ */
 export const DragAndDropModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DragAndDropModule'),
     beans: [DragAndDropService],
@@ -57,12 +67,19 @@ export const DragAndDropModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ * @colDef rowDrag
+ */
 export const RowDragCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowDragCoreModule'),
     beans: [RowDragService],
     dependsOn: [DragAndDropModule],
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ */
 export const RowDragApiModule: _ModuleWithApi<_DragGridApi> = {
     ...baseCommunityModule('RowDragApiModule'),
     apiFunctions: {
@@ -73,11 +90,17 @@ export const RowDragApiModule: _ModuleWithApi<_DragGridApi> = {
     dependsOn: [RowDragCoreModule],
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ */
 export const RowDragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowDragModule'),
     dependsOn: [RowDragApiModule],
 };
 
+/**
+ * @internal
+ */
 export const HorizontalResizeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('HorizontalResizeModule'),
     beans: [HorizontalResizeService],

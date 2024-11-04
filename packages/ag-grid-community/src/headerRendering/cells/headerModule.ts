@@ -3,6 +3,10 @@ import type { _ModuleWithoutApi } from '../../interfaces/iModule';
 import { HeaderComp } from './column/headerComp';
 import { HeaderGroupComp } from './columnGroup/headerGroupComp';
 
+/**
+ * @feature Columns -> Column Header
+ * @colDef headerComponent
+ */
 export const ColumnHeaderCompModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnHeaderCompModule'),
     userComponents: {
@@ -16,6 +20,10 @@ export const ColumnHeaderCompModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @feature Columns -> Column Groups
+ * @colGroupDef headerGroupComponent
+ */
 export const ColumnGroupHeaderCompModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnGroupHeaderCompModule'),
     userComponents: {

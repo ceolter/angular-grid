@@ -6,6 +6,9 @@ import { baseEnterpriseModule } from '../moduleUtils';
 import { SetFilter } from './setFilter';
 import { SetFloatingFilterComp } from './setFloatingFilter';
 
+/**
+ * @feature Filtering -> Set Filter
+ */
 export const SetFilterCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SetFilterCoreModule'),
     userComponents: { agSetColumnFilter: SetFilter },
@@ -21,12 +24,18 @@ export const SetFilterCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule, ColumnFilterModule],
 };
 
+/**
+ * @feature Filtering -> Set Filter
+ */
 export const SetFloatingFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SetFloatingFilterModule'),
     userComponents: { agSetColumnFloatingFilter: SetFloatingFilterComp },
     dependsOn: [SetFilterCoreModule, FloatingFilterModule],
 };
 
+/**
+ * @feature Filtering -> Set Filter
+ */
 export const SetFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SetFilterModule'),
     dependsOn: [SetFilterCoreModule, SetFloatingFilterModule],

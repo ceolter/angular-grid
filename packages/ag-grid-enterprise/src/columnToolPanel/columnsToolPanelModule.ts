@@ -11,6 +11,9 @@ import { ColumnToolPanel } from './columnToolPanel';
 import { ColumnToolPanelFactory } from './columnToolPanelFactory';
 import { ModelItemUtils } from './modelItemUtils';
 
+/**
+ * @feature Accessories -> Columns Tool Panel
+ */
 export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnsToolPanelCoreModule'),
     beans: [ModelItemUtils],
@@ -47,12 +50,18 @@ export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
     ],
 };
 
+/**
+ * @feature Accessories -> Columns Tool Panel
+ */
 export const ColumnsToolPanelRowGroupingModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnsToolPanelRowGroupingModule'),
     beans: [ColumnToolPanelFactory],
     dependsOn: [ColumnsToolPanelCoreModule, RowGroupingCoreModule],
 };
 
+/**
+ * @feature Accessories -> Columns Tool Panel
+ */
 export const ColumnsToolPanelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnsToolPanelModule'),
     dependsOn: [ColumnsToolPanelCoreModule, ColumnsToolPanelRowGroupingModule, RowGroupingModule],

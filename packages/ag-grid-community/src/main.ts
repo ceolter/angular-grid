@@ -594,7 +594,7 @@ export {
     _RowGroupingGridApi,
     _AggregationGridApi,
     _PivotGridApi,
-    _RangeSelectionGridApi,
+    _CellSelectionGridApi,
     _MenuGridApi,
     _ServerSideRowModelGridApi,
     _ExcelExportGridApi,

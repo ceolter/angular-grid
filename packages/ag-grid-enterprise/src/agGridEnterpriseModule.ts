@@ -5,6 +5,9 @@ import { baseEnterpriseModule } from './moduleUtils';
 
 export { AgWatermark } from './license/watermark';
 
+/**
+ * @internal
+ */
 export const EnterpriseCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('EnterpriseCoreModule'),
     beans: [LicenseManager],

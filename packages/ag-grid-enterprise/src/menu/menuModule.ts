@@ -15,6 +15,9 @@ import { hideColumnChooser, showColumnChooser, showContextMenu } from './menuApi
 import { MenuItemMapper } from './menuItemMapper';
 import { MenuUtils } from './menuUtils';
 
+/**
+ * @internal
+ */
 export const MenuCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MenuCoreModule'),
     beans: [MenuItemMapper, ChartMenuItemMapper, MenuUtils],
@@ -64,6 +67,9 @@ const COLUMN_SELECT_ICONS = {
     columnSelectIndeterminate: 'tree-indeterminate',
 } as const;
 
+/**
+ * @feature Accessories -> Column Menu
+ */
 export const ColumnMenuModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnMenuModule'),
     beans: [EnterpriseMenuFactory, ColumnMenuFactory],
@@ -77,6 +83,9 @@ export const ColumnMenuModule: _ModuleWithoutApi = {
     dependsOn: [MenuCoreModule],
 };
 
+/**
+ * @feature Accessories -> Column Menu
+ */
 export const ColumnChooserModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnChooserModule'),
     beans: [ColumnChooserFactory, ToolPanelColDefService],
@@ -84,12 +93,18 @@ export const ColumnChooserModule: _ModuleWithoutApi = {
     dependsOn: [MenuCoreModule],
 };
 
+/**
+ * @feature Accessories -> Context Menu
+ */
 export const ContextMenuModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ContextMenuModule'),
     beans: [ContextMenuService],
     dependsOn: [MenuCoreModule],
 };
 
+/**
+ * @feature Accessories -> Column Menu
+ */
 export const MenuApiModule: _ModuleWithApi<_MenuGridApi> = {
     ...baseEnterpriseModule('MenuApiModule'),
     apiFunctions: {
@@ -100,6 +115,9 @@ export const MenuApiModule: _ModuleWithApi<_MenuGridApi> = {
     dependsOn: [ColumnChooserModule, ContextMenuModule, CommunityMenuApiModule],
 };
 
+/**
+ * @feature Accessories -> Column Menu
+ */
 export const MenuModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MenuModule'),
     dependsOn: [ColumnMenuModule, ColumnChooserModule, ContextMenuModule, MenuApiModule],

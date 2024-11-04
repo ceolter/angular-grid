@@ -12,12 +12,18 @@ import {
     getSheetDataForExcel,
 } from './excelExportApi';
 
+/**
+ * @feature Import & Export -> Excel
+ */
 export const ExcelExportCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ExcelExportCoreModule'),
     beans: [ExcelCreator],
     dependsOn: [CsvExportCoreModule, EnterpriseCoreModule],
 };
 
+/**
+ * @feature Import & Export -> Excel
+ */
 export const ExcelExportApiModule: _ModuleWithApi<_ExcelExportGridApi> = {
     ...baseEnterpriseModule('ExcelExportApiModule'),
     apiFunctions: {
@@ -30,6 +36,9 @@ export const ExcelExportApiModule: _ModuleWithApi<_ExcelExportGridApi> = {
     dependsOn: [ExcelExportCoreModule],
 };
 
+/**
+ * @feature Import & Export -> Excel
+ */
 export const ExcelExportModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ExcelExportModule'),
     dependsOn: [ExcelExportCoreModule, ExcelExportApiModule],

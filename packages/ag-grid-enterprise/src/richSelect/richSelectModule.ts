@@ -5,6 +5,9 @@ import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { RichSelectCellEditor } from './richSelectCellEditor';
 
+/**
+ * @feature Editing -> Rich Select Editor
+ */
 export const RichSelectModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RichSelectModule'),
     beans: [],
