@@ -9,10 +9,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class ZoomPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private readonly zoomScrollingStepInput: AgSlider = RefPlaceholder;
@@ -26,7 +26,7 @@ export class ZoomPanel extends Component {
             cssIdentifier: 'charts-advanced-settings-top-level',
             direction: 'vertical',
             suppressOpenCloseIcons: true,
-            title: this.chartTranslationService.translate('zoom'),
+            title: this.chartTranslation.translate('zoom'),
             suppressEnabledCheckbox: true,
             useToggle: true,
         });

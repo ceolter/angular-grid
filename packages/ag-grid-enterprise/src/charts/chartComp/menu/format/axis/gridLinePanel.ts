@@ -14,10 +14,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../../../serv
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class GridLinePanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly chartOptions: ChartOptionsProxy;
 
@@ -31,7 +31,7 @@ export class GridLinePanel extends Component {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
             suppressOpenCloseIcons: true,
-            title: this.chartTranslationService.translate('gridLines'),
+            title: this.chartTranslation.translate('gridLines'),
             suppressEnabledCheckbox: true,
             useToggle: true,
         });

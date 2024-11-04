@@ -34,10 +34,10 @@ const shadow = 'shadow';
 export class SeriesPanel extends Component {
     private readonly seriesGroup: AgGroupComponent = RefPlaceholder;
 
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private chartMenuUtils: ChartMenuParamsFactory;
 
@@ -287,11 +287,7 @@ export class SeriesPanel extends Component {
 
     private initShape(): AgSelect {
         return new AgSelect(
-            this.chartMenuUtils.getDefaultSelectParams(
-                'shape',
-                'shape',
-                getShapeSelectOptions(this.chartTranslationService)
-            )
+            this.chartMenuUtils.getDefaultSelectParams('shape', 'shape', getShapeSelectOptions(this.chartTranslation))
         );
     }
 
@@ -319,7 +315,7 @@ export class SeriesPanel extends Component {
     }
 
     private translate(key: ChartTranslationKey) {
-        return this.chartTranslationService.translate(key);
+        return this.chartTranslation.translate(key);
     }
 
     private destroyActivePanels(): void {

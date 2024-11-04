@@ -27,9 +27,9 @@ export function showContextMenu(beans: BeanCollection, params?: IContextMenuPara
 }
 
 export function showColumnChooser(beans: BeanCollection, params?: ColumnChooserParams): void {
-    (beans.columnChooserFactory as ColumnChooserFactory)?.showColumnChooser({ chooserParams: params });
+    (beans.colChooserFactory as ColumnChooserFactory)?.showColumnChooser({ chooserParams: params });
 }
 
 export function hideColumnChooser(beans: BeanCollection): void {
-    (beans.columnChooserFactory as ColumnChooserFactory)?.hideActiveColumnChooser();
+    (beans.colChooserFactory as ColumnChooserFactory)?.hideActiveColumnChooser();
 }

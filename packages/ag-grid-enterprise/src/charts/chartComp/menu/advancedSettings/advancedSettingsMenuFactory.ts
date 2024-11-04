@@ -7,14 +7,14 @@ import type { ChartMenuContext } from '../chartMenuContext';
 import { AdvancedSettingsPanel } from './advancedSettingsPanel';
 
 export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
-    beanName = 'advancedSettingsMenuFactory' as const;
+    beanName = 'advSettingsMenuFactory' as const;
 
     private focusSvc: FocusService;
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.focusSvc = beans.focusSvc;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private activeMenu?: AdvancedSettingsMenu;
@@ -27,7 +27,7 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
 
         this.activeDialog = this.createBean(
             new AgDialog({
-                title: this.chartTranslationService.translate('advancedSettings'),
+                title: this.chartTranslation.translate('advancedSettings'),
                 component: menu,
                 width: 300,
                 height: 400,

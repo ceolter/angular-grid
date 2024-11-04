@@ -8,10 +8,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class CapsPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -21,7 +21,7 @@ export class CapsPanel extends Component {
         const capsGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('cap'),
+            title: this.chartTranslation.translate('cap'),
             enabled: true,
             suppressOpenCloseIcons: true,
             suppressEnabledCheckbox: true,

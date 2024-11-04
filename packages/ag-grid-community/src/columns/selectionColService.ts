@@ -24,7 +24,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
     beanName = 'selectionColSvc' as const;
 
     private context: Context;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
     private autoColSvc?: IAutoColService;
     private colModel: ColumnModel;
 
@@ -33,7 +33,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
 
     public wireBeans(beans: BeanCollection): void {
         this.context = beans.context;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
         this.autoColSvc = beans.autoColSvc;
         this.colModel = beans.colModel;
     }
@@ -79,7 +79,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
 
         destroyCollection();
-        const treeDepth = this.columnGroupSvc?.findDepth(cols.tree) ?? 0;
+        const treeDepth = this.colGroupSvc?.findDepth(cols.tree) ?? 0;
         const tree = this.autoColSvc?.balanceTreeForAutoCols(list, treeDepth) ?? [];
         this.selectionCols = {
             list,

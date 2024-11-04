@@ -10,10 +10,10 @@ interface ChartToolbarButton {
 }
 
 export class ChartToolbar extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private readonly eMenu: HTMLButtonElement = RefPlaceholder;
@@ -40,7 +40,7 @@ export class ChartToolbar extends Component {
             const { buttonName, iconName, callback } = buttonConfig;
             const buttonEl = this.createButton(iconName);
 
-            const tooltipTitle = this.chartTranslationService.translate(
+            const tooltipTitle = this.chartTranslation.translate(
                 (buttonName + 'ToolbarTooltip') as ChartTranslationKey
             );
             if (tooltipTitle && buttonEl instanceof HTMLElement) {

@@ -34,10 +34,10 @@ export class CartesianAxisPanel extends Component {
     private readonly axisPositionSelect: AgSelect = RefPlaceholder;
     private readonly axisTimeFormatSelect: AgSelect = RefPlaceholder;
 
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly chartOptionsSeriesProxy: ChartOptionsProxy;
 
@@ -422,7 +422,7 @@ export class CartesianAxisPanel extends Component {
 
         const degreesSymbol = String.fromCharCode(176);
 
-        const label = `${this.chartTranslationService.translate(labelKey)} ${degreesSymbol}`;
+        const label = `${this.chartTranslation.translate(labelKey)} ${degreesSymbol}`;
         const angleSelect = new AgAngleSelect({
             label,
             labelWidth: 'flex',
@@ -447,7 +447,7 @@ export class CartesianAxisPanel extends Component {
     }
 
     private translate(key: ChartTranslationKey) {
-        return this.chartTranslationService.translate(key);
+        return this.chartTranslation.translate(key);
     }
 
     private removeTemplateComponent(component: Component<any>): void {

@@ -8,10 +8,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class CalloutPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -21,7 +21,7 @@ export class CalloutPanel extends Component {
         const calloutGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('callout'),
+            title: this.chartTranslation.translate('callout'),
             enabled: true,
             suppressOpenCloseIcons: true,
             suppressEnabledCheckbox: true,

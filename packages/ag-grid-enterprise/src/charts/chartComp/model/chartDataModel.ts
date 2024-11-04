@@ -47,11 +47,11 @@ export const DEFAULT_CHART_CATEGORY = 'AG-GRID-DEFAULT-CATEGORY';
 
 export class ChartDataModel extends BeanStub {
     private rangeSvc: IRangeService;
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rangeSvc = beans.rangeSvc!;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     public readonly params: ChartModelParams;
@@ -78,7 +78,7 @@ export class ChartDataModel extends BeanStub {
     public dimensionCellRange?: CellRange;
 
     public comboChartModel: ComboChartModel;
-    private chartColumnService: ChartColumnService;
+    private chartColSvc: ChartColumnService;
     private datasource: ChartDatasource;
 
     public referenceCellRange: PartialCellRange;
@@ -126,7 +126,7 @@ export class ChartDataModel extends BeanStub {
 
     public postConstruct(): void {
         this.datasource = this.createManagedBean(new ChartDatasource());
-        this.chartColumnService = this.createManagedBean(new ChartColumnService());
+        this.chartColSvc = this.createManagedBean(new ChartColumnService());
         this.comboChartModel = this.createManagedBean(new ComboChartModel(this));
         this.updateCellRanges({ setColsFromRange: true });
         this.updateData();
@@ -166,7 +166,7 @@ export class ChartDataModel extends BeanStub {
             this.referenceCellRange = this.valueCellRange;
         }
 
-        const { dimensionCols, valueCols } = this.chartColumnService.getChartColumns();
+        const { dimensionCols, valueCols } = this.chartColSvc.getChartColumns();
         const allColsFromRanges = this.getAllColumnsFromRanges();
 
         if (updatedColState) {
@@ -216,12 +216,12 @@ export class ChartDataModel extends BeanStub {
 
     public isGrouping(): boolean {
         const usingTreeData = this.gos.get('treeData');
-        const groupedCols = usingTreeData ? null : this.chartColumnService.getRowGroupColumns();
+        const groupedCols = usingTreeData ? null : this.chartColSvc.getRowGroupColumns();
         const isGroupActive = usingTreeData || (groupedCols && groupedCols.length > 0);
 
         // charts only group when the selected category is a group column
         const colIds = this.getSelectedDimensions().map(({ colId }) => colId);
-        const displayedGroupCols = this.chartColumnService.getGroupDisplayColumns();
+        const displayedGroupCols = this.chartColSvc.getGroupDisplayColumns();
         const groupDimensionSelected = displayedGroupCols
             .map((col) => col.getColId())
             .some((id) => colIds.includes(id));
@@ -237,20 +237,20 @@ export class ChartDataModel extends BeanStub {
     }
 
     public getColDisplayName(col: AgColumn, includePath?: boolean): string | null {
-        return this.chartColumnService.getColDisplayName(col, includePath);
+        return this.chartColSvc.getColDisplayName(col, includePath);
     }
 
     public isPivotMode(): boolean {
-        return this.chartColumnService.isPivotMode();
+        return this.chartColSvc.isPivotMode();
     }
 
     public getChartDataType(colId: string): string | undefined {
-        const column = this.chartColumnService.getColumn(colId);
+        const column = this.chartColSvc.getColumn(colId);
         return column ? column.getColDef().chartDataType : undefined;
     }
 
     private isPivotActive(): boolean {
-        return this.chartColumnService.isPivotActive();
+        return this.chartColSvc.isPivotActive();
     }
 
     private createCellRange(type: CellRangeType, ...columns: AgColumn[]): CellRange {
@@ -269,7 +269,7 @@ export class ChartDataModel extends BeanStub {
 
     private getAllColumnsFromRanges(): Set<AgColumn> {
         if (this.pivotChart) {
-            return new Set(this.chartColumnService.getAllDisplayedColumns());
+            return new Set(this.chartColSvc.getAllDisplayedColumns());
         }
 
         const columns = this.dimensionCellRange || this.valueCellRange ? [] : this.referenceCellRange.columns;
@@ -307,7 +307,7 @@ export class ChartDataModel extends BeanStub {
     }
 
     private resetColumnState(): void {
-        const { dimensionCols, valueCols } = this.chartColumnService.getChartColumns();
+        const { dimensionCols, valueCols } = this.chartColSvc.getChartColumns();
         const allCols = this.getAllColumnsFromRanges();
         const isInitialising = this.valueColState.length < 1;
 
@@ -349,7 +349,7 @@ export class ChartDataModel extends BeanStub {
 
         const defaultCategory = {
             colId: DEFAULT_CHART_CATEGORY,
-            displayName: this.chartTranslationService.translate('defaultCategory'),
+            displayName: this.chartTranslation.translate('defaultCategory'),
             selected: !hasSelectedDimension, // if no dimensions in range select the default
             order: 0,
         };
@@ -525,7 +525,7 @@ export class ChartDataModel extends BeanStub {
         if (!dimension && !value) {
             return;
         }
-        const { dimensionCols, valueCols } = this.chartColumnService.getChartColumns();
+        const { dimensionCols, valueCols } = this.chartColSvc.getChartColumns();
         const allColsFromRanges = this.getAllColumnsFromRanges();
         if (dimension) {
             this.setDimensionCellRange(dimensionCols, allColsFromRanges);

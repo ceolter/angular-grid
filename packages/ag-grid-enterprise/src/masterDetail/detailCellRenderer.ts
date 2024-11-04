@@ -97,17 +97,17 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
             return;
         }
 
-        // when we create detail grid, the detail grid needs frameworkComponentWrapper so that
+        // when we create detail grid, the detail grid needs frameworkCompWrapper so that
         // it created child components correctly, ie  Angular detail grid can have Angular cell renderer.
         // this is only used by Angular and Vue, as React uses native React AG Grid detail grids
-        const parentFrameworkComponentWrapper = this.context.getBean('frameworkComponentWrapper');
-        const frameworkComponentWrapper = new DetailFrameworkComponentWrapper(parentFrameworkComponentWrapper);
+        const parentFrameworkComponentWrapper = this.context.getBean('frameworkCompWrapper');
+        const frameworkCompWrapper = new DetailFrameworkComponentWrapper(parentFrameworkComponentWrapper);
         const { frameworkOverrides } = this.beans;
 
         const api = createGrid(this.eDetailGrid, gridOptions, {
             frameworkOverrides,
             providedBeanInstances: {
-                frameworkComponentWrapper: frameworkComponentWrapper,
+                frameworkCompWrapper: frameworkCompWrapper,
             },
             modules: _getGridRegisteredModules(this.params.api.getGridId(), gridOptions.rowModelType ?? 'clientSide'),
         } as GridParams);

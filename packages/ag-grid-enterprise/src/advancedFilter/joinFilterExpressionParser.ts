@@ -77,16 +77,12 @@ class OperatorParser {
                 operatorEndPosition == null ? this.params.expression.length : operatorEndPosition + 1
             );
         }
-        let entries = this.params.advancedFilterExpressionService.getJoinOperatorAutocompleteEntries();
+        let entries = this.params.advFilterExpSvc.getJoinOperatorAutocompleteEntries();
         if (operatorIndex || (operatorIndex == null && this.activeOperator)) {
             // if operator already chosen, don't allow other operators
             entries = entries.filter(({ key }) => key === this.parsedOperator);
         }
-        return this.params.advancedFilterExpressionService.generateAutocompleteListParams(
-            entries,
-            'join',
-            searchString
-        );
+        return this.params.advFilterExpSvc.generateAutocompleteListParams(entries, 'join', searchString);
     }
 
     public updateExpression(
@@ -130,7 +126,7 @@ class OperatorParser {
 
     private parseOperator(endPosition: number): boolean {
         const operator = this.operators.length > this.activeOperator ? this.operators[this.activeOperator] : '';
-        const joinOperators = this.params.advancedFilterExpressionService.getExpressionJoinOperators();
+        const joinOperators = this.params.advFilterExpSvc.getExpressionJoinOperators();
         const parsedValue = findMatch(operator, joinOperators, (v) => v) as 'AND' | 'OR';
         if (parsedValue) {
             // exact match
@@ -140,7 +136,7 @@ class OperatorParser {
                 if (parsedValue !== this.parsedOperator) {
                     if (!this.validationError) {
                         this.validationError = {
-                            message: this.params.advancedFilterExpressionService.translate(
+                            message: this.params.advFilterExpSvc.translate(
                                 'advancedFilterValidationJoinOperatorMismatch'
                             ),
                             startPosition: endPosition - operator.length + 1,
@@ -164,9 +160,7 @@ class OperatorParser {
             // no match
             if (!this.validationError) {
                 this.validationError = {
-                    message: this.params.advancedFilterExpressionService.translate(
-                        'advancedFilterValidationInvalidJoinOperator'
-                    ),
+                    message: this.params.advFilterExpSvc.translate('advancedFilterValidationInvalidJoinOperator'),
                     startPosition: endPosition - operator.length + 1,
                     endPosition,
                 };
@@ -254,9 +248,7 @@ export class JoinFilterExpressionParser {
         }
         if (this.extraEndBracket) {
             return {
-                message: this.params.advancedFilterExpressionService.translate(
-                    'advancedFilterValidationExtraEndBracket'
-                ),
+                message: this.params.advFilterExpSvc.translate('advancedFilterValidationExtraEndBracket'),
                 startPosition: this.endPosition + 1,
                 endPosition: this.endPosition + 1,
             };
@@ -269,7 +261,7 @@ export class JoinFilterExpressionParser {
         }
         if (translateKey) {
             return {
-                message: this.params.advancedFilterExpressionService.translate(translateKey),
+                message: this.params.advFilterExpSvc.translate(translateKey),
                 startPosition: this.params.expression.length,
                 endPosition: this.params.expression.length,
             };
@@ -348,7 +340,7 @@ export class JoinFilterExpressionParser {
             // positioned before the expression
             const updatedValuePart =
                 type === 'column'
-                    ? this.params.advancedFilterExpressionService.getColumnValue(updateEntry)
+                    ? this.params.advFilterExpSvc.getColumnValue(updateEntry)
                     : updateEntry.displayValue ?? updateEntry.key;
             return updateExpression(expression, this.startPosition, this.startPosition, updatedValuePart, true);
         }
@@ -364,7 +356,7 @@ export class JoinFilterExpressionParser {
                     expression,
                     position,
                     expression.length - 1,
-                    this.params.advancedFilterExpressionService.getColumnValue(updateEntry),
+                    this.params.advFilterExpSvc.getColumnValue(updateEntry),
                     true
                 );
             } else if (this.endPosition != null && position > this.endPosition + 1) {
@@ -389,8 +381,8 @@ export class JoinFilterExpressionParser {
     }
 
     private getColumnAutocompleteListParams(): AutocompleteListParams {
-        return this.params.advancedFilterExpressionService.generateAutocompleteListParams(
-            this.params.advancedFilterExpressionService.getColumnAutocompleteEntries(),
+        return this.params.advFilterExpSvc.generateAutocompleteListParams(
+            this.params.advFilterExpSvc.getColumnAutocompleteEntries(),
             'column',
             ''
         );

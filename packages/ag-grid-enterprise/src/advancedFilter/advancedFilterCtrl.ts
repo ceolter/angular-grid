@@ -11,13 +11,13 @@ export type AdvancedFilterCtrlEvent = 'advancedFilterBuilderClosed';
 export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implements IAdvancedFilterCtrl {
     private ctrlsSvc: CtrlsService;
     private popupSvc: PopupService;
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
         this.ctrlsSvc = beans.ctrlsSvc;
         this.popupSvc = beans.popupSvc!;
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.environment = beans.environment;
     }
 
@@ -109,7 +109,7 @@ export class AdvancedFilterCtrl extends BeanStub<AdvancedFilterCtrlEvent> implem
         this.eBuilderComp = this.createBean(new AdvancedFilterBuilderComp());
         this.eBuilderDialog = this.createBean(
             new AgDialog({
-                title: this.advancedFilterExpressionService.translate('advancedFilterBuilderTitle'),
+                title: this.advFilterExpSvc.translate('advancedFilterBuilderTitle'),
                 component: this.eBuilderComp,
                 width,
                 height,
