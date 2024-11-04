@@ -27,9 +27,11 @@ export type ColumnExtractors = {
 export interface IColsService {
     columns: AgColumn[];
     eventName: ColumnChangedEventType;
+
     columnProcessors?: ColumnProcessors;
     columnOrdering?: ColumnOrdering;
     columnExtractors?: ColumnExtractors;
+
     setColumns(colKeys: ColKey[] | undefined, source: ColumnEventType): void;
     addColumns(keys: Maybe<ColKey>[] | undefined, source: ColumnEventType): void;
     removeColumns(keys: Maybe<ColKey>[] | undefined, source: ColumnEventType): void;
@@ -43,15 +45,12 @@ export interface IColsService {
         ) => { value1: ColumnStateParams[U] | undefined; value2: ColumnStateParams[S] | undefined },
         rowIndex?: { [key: string]: number } | null
     ): void;
+
     sortColumns(compareFn?: (a: AgColumn, b: AgColumn) => number): void;
-    orderColumns(
+    restoreColumnOrder(
         columnStateAccumulator: { [colId: string]: ColumnState },
         incomingColumnState: { [colId: string]: ColumnState }
     ): { [colId: string]: ColumnState };
-
-    // RowGroup
-    isRowGroupEmpty?(): boolean;
-    isRowGroupColLocked?(column: AgColumn): boolean;
 
     // Value
     setColumnAggFunc?(

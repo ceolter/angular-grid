@@ -101,18 +101,4 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
             this.colModel.setColsVisible([column], !active, source);
         }
     }
-
-    isRowGroupColLocked(column: AgColumn): boolean {
-        const groupLockGroupColumns = this.gos.get('groupLockGroupColumns');
-        if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
-            return false;
-        }
-
-        if (groupLockGroupColumns === -1) {
-            return true;
-        }
-
-        const colIndex = this.columns.findIndex((groupCol) => groupCol.getColId() === column.getColId());
-        return groupLockGroupColumns > colIndex;
-    }
 }

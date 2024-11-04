@@ -151,6 +151,23 @@
       "options": {
         "commands": ["npx tsc -p {projectRoot}/tsconfig.examples.json"]
       }
+    },
+    "update-algolia": {
+      "command": "npm run updateLocal",
+      "options": {
+        "cwd": "{workspaceRoot}/documentation/update-algolia-indices"
+      },
+      "configurations": {
+        "staging": {
+          "command": "npm run updateDev"
+        },
+        "archive": {
+          "command": "npm run updateDev"
+        },
+        "production": {
+          "command": "npm run updateProd"
+        }
+      }
     }
   },
   "implicitDependencies": ["packages/ag-grid-community", "packages/ag-grid-enterprise"],

@@ -2,6 +2,7 @@ import type {
     ChangedPath,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
+    RefreshModelParams,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { AbstractClientSideNodeManager, RowNode, _ROW_ID_PREFIX_ROW_GROUP, _warn } from 'ag-grid-community';
@@ -85,9 +86,9 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         super.destroy();
 
         // Forcefully deallocate memory
-        this.treeRoot = null!;
-        this.oldGroupDisplayColIds = null!;
-        this.rowsPendingDestruction = null!;
+        this.treeRoot = null;
+        this.rowsPendingDestruction = null;
+        this.oldGroupDisplayColIds = '';
     }
 
     public override deactivate(): void {
@@ -103,45 +104,15 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         this.commitDestroyedRows();
 
         super.deactivate();
-    }
-
-    /** Called by ClientSideRowModel if group data need to be recomputed due to group columns change */
-    public afterColumnsChanged(): void {
-        const rootNode = this.rootNode;
-        if (rootNode && this.gos.get('treeData')) {
-            const newGroupDisplayColIds =
-                this.beans.showRowGroupCols
-                    ?.getShowRowGroupCols()
-                    ?.map((c) => c.getId())
-                    .join('-') ?? '';
-
-            // if the group display cols have changed, then we need to update rowNode.groupData
-            // (regardless of tree data or row grouping)
-            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
-                this.oldGroupDisplayColIds = newGroupDisplayColIds;
-
-                this.checkAllGroupDataAfterColsChanged(rootNode.childrenAfterGroup);
-            }
-        } else {
-            this.oldGroupDisplayColIds = '';
-        }
-    }
-
-    private checkAllGroupDataAfterColsChanged(rowNodes: RowNode[] | null | undefined) {
-        if (rowNodes) {
-            for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
-                const rowNode = rowNodes[i];
-                this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
-                this.checkAllGroupDataAfterColsChanged(rowNode.childrenAfterGroup);
-            }
-        }
+        this.treeRoot = null;
+        this.oldGroupDisplayColIds = '';
     }
 
     /** Add or updates the row to a non-root node, preparing the tree correctly for the commit. */
-    protected treeSetRow(node: TreeNode, newRow: RowNode, update: boolean): void {
+    protected treeSetRow(node: TreeNode, newRow: RowNode, update: boolean): boolean {
         const { level, row: oldRow } = node;
         if (level < 0) {
-            return; // Cannot overwrite the root row
+            return false; // Cannot overwrite the root row
         }
 
         let invalidate = false;
@@ -180,6 +151,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         this.rowsPendingDestruction?.delete(newRow); // This row is not deleted.
+
+        return invalidate;
     }
 
     /**
@@ -544,6 +517,37 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             for (const row of rowsPendingDestruction) {
                 this.treeDestroyRow(row, true);
             }
+        }
+    }
+
+    public refreshModel(params: RefreshModelParams<TData>): void {
+        if (!params.afterColumnsChanged) {
+            return; // nothing to do
+        }
+
+        // Check if group data need to be recomputed due to group columns change
+
+        if (this.gos.get('treeData')) {
+            const newGroupDisplayColIds =
+                this.beans.showRowGroupCols
+                    ?.getShowRowGroupCols()
+                    ?.map((c) => c.getId())
+                    .join('-') ?? '';
+
+            // if the group display cols have changed, then we need to update rowNode.groupData
+            // (regardless of tree data or row grouping)
+            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
+                this.oldGroupDisplayColIds = newGroupDisplayColIds;
+                const rowNodes = this.rootNode?.childrenAfterGroup;
+                if (rowNodes) {
+                    for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
+                        const rowNode = rowNodes[i];
+                        this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
+                    }
+                }
+            }
+        } else {
+            this.oldGroupDisplayColIds = '';
         }
     }
 }

@@ -1,6 +1,7 @@
 import type {
     AgColumn,
     BeanCollection,
+    CheckboxSelectionComponent,
     ColumnModel,
     ComponentType,
     CtrlsService,
@@ -26,6 +27,8 @@ import {
     KeyCode,
     _createIconNoSpan,
     _getCellRendererDetails,
+    _getCheckboxLocation,
+    _getCheckboxes,
     _getGrandTotalRow,
     _isElementInEventPath,
     _isStopPropagationForAgGrid,
@@ -102,6 +105,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
 
     private comp: IGroupCellRenderer;
     private compClass: any;
+    private cbComp?: CheckboxSelectionComponent;
 
     public init(
         comp: IGroupCellRenderer,
@@ -133,8 +137,8 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
             // this footer should only be non-top level.
             // as we won't have footer rows in that instance.
             if (node.footer && this.gos.get('groupHideOpenParents')) {
-                const showRowGroup = colDef && colDef.showRowGroup;
-                const rowGroupColumnId = node.rowGroupColumn && node.rowGroupColumn.getColId();
+                const showRowGroup = colDef?.showRowGroup;
+                const rowGroupColumnId = node.rowGroupColumn?.getColId();
 
                 // if the groupCellRenderer is inside of a footer and groupHideOpenParents is true
                 // we should only display the groupCellRenderer if the current column is the rowGroupedColumn
@@ -150,9 +154,9 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         if (!topLevelFooter) {
             const showingFooterTotal =
                 this.rowGroupColsSvc &&
-                params.node.footer &&
-                params.node.rowGroupIndex ===
-                    this.rowGroupColsSvc.columns.findIndex((c) => c.getColId() === params.colDef?.showRowGroup);
+                node.footer &&
+                node.rowGroupIndex ===
+                    this.rowGroupColsSvc.columns.findIndex((c) => c.getColId() === colDef?.showRowGroup);
             // if we're always showing a group value
             const isAlwaysShowing = this.gos.get('groupDisplayType') != 'multipleColumns' || this.gos.get('treeData');
             // if the cell is populated with a parent value due to `showOpenedGroup`
@@ -160,22 +164,22 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
                 isAlwaysShowing ||
                 (this.gos.get('showOpenedGroup') &&
                     this.rowGroupColsSvc &&
-                    !params.node.footer &&
-                    (!params.node.group ||
-                        (params.node.rowGroupIndex != null &&
-                            params.node.rowGroupIndex >
+                    !node.footer &&
+                    (!node.group ||
+                        (node.rowGroupIndex != null &&
+                            node.rowGroupIndex >
                                 this.rowGroupColsSvc?.columns.findIndex(
-                                    (c) => c.getColId() === params.colDef?.showRowGroup
+                                    (c) => c.getColId() === colDef?.showRowGroup
                                 ))));
             // not showing a leaf value (field/valueGetter)
-            const leafWithValues = !node.group && (this.params.colDef?.field || this.params.colDef?.valueGetter);
+            const leafWithValues = !node.group && (colDef?.field || colDef?.valueGetter);
             // doesn't have expand/collapse chevron
             const isExpandable = this.isExpandable();
             // is showing pivot leaf cell
             const showPivotModeLeafValue =
                 this.colModel.isPivotMode() &&
                 node.leafGroup &&
-                node.rowGroupColumn?.getColId() === params.column?.getColDef().showRowGroup;
+                node.rowGroupColumn?.getColId() === colDef?.showRowGroup;
 
             // if not showing any values or chevron, skip cell.
             const canSkipRenderingCell =
@@ -196,6 +200,15 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         this.addValueElement();
         this.setupIndent();
         this.refreshAriaExpanded();
+
+        this.addManagedPropertyListener('rowSelection', ({ currentValue, previousValue }) => {
+            const curr = typeof currentValue === 'object' ? currentValue : undefined;
+            const prev = typeof previousValue === 'object' ? previousValue : undefined;
+
+            if (curr?.checkboxLocation !== prev?.checkboxLocation) {
+                this.refreshCheckbox();
+            }
+        });
     }
 
     public getCellAriaRole(): string {
@@ -208,6 +221,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         super.destroy();
         // property cleanup to avoid memory leaks
         this.expandListener = null;
+        this.destroyCheckbox();
     }
 
     private refreshAriaExpanded(): void {
@@ -251,7 +265,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
             return true;
         }
 
-        if (colDef!.showRowGroup === true) {
+        if (colDef.showRowGroup === true) {
             return true;
         }
 
@@ -261,9 +275,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
             return true;
         }
 
-        const firstRowGroupCol = rowGroupCols[0];
-
-        return firstRowGroupCol.getId() === colDef!.showRowGroup;
+        return rowGroupCols[0].getId() === colDef.showRowGroup;
     }
 
     // if we are doing embedded full width rows, we only show the renderer when
@@ -450,7 +462,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         }
 
         const relatedColumn = this.displayedGroupNode.rowGroupColumn;
-        const relatedColDef = relatedColumn ? relatedColumn.getColDef() : undefined;
+        const relatedColDef = relatedColumn?.getColDef();
 
         if (!relatedColDef) {
             return;
@@ -471,8 +483,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         ) {
             // edge case - this comes from a column which has been grouped dynamically, that has a renderer 'group'
             // and has an inner cell renderer
-            const res = getInnerRendererDetails(this.userCompFactory, relatedColDef.cellRendererParams, params);
-            return res;
+            return getInnerRendererDetails(this.userCompFactory, relatedColDef.cellRendererParams, params);
         }
     }
 
@@ -704,17 +715,18 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         this.eGui.insertAdjacentElement('afterbegin', rowDragComp.getGui());
     }
 
-    private isUserWantsSelected(): boolean {
-        const paramsCheckbox = this.params.checkbox;
-
-        // if a function, we always return true as change detection can show or hide the checkbox.
-        return typeof paramsCheckbox === 'function' || paramsCheckbox === true;
-    }
-
     private addCheckboxIfNeeded(): void {
         const rowNode = this.displayedGroupNode;
+        const rowSelection = this.gos.get('rowSelection');
+        const checkboxLocation = _getCheckboxLocation(rowSelection);
+        const checkboxes =
+            typeof rowSelection === 'object'
+                ? checkboxLocation === 'autoGroupColumn' && _getCheckboxes(rowSelection)
+                : this.params.checkbox;
+        const userWantsSelected = typeof checkboxes === 'function' || checkboxes === true;
+
         const checkboxNeeded =
-            this.isUserWantsSelected() &&
+            userWantsSelected &&
             // footers cannot be selected
             !rowNode.footer &&
             // pinned rows cannot be selected
@@ -725,25 +737,32 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
 
         if (checkboxNeeded) {
             const cbSelectionComponent = this.selectionSvc!.createCheckboxSelectionComponent();
+            this.cbComp = cbSelectionComponent;
             this.createBean(cbSelectionComponent);
 
             cbSelectionComponent.init({
                 rowNode: this.params.node as RowNode, // when groupHideOpenParents = true and group expanded, we want the checkbox to refer to leaf node state (not group node state)
                 column: this.params.column as AgColumn,
                 overrides: {
-                    isVisible: this.params.checkbox,
+                    isVisible: checkboxes,
                     callbackParams: this.params,
                     removeHidden: true,
                 },
             });
             this.eCheckbox.appendChild(cbSelectionComponent.getGui());
-            this.addDestroyFunc(() => {
-                this.eCheckbox.removeChild(cbSelectionComponent.getGui());
-                this.destroyBean(cbSelectionComponent);
-            });
         }
 
         this.comp.setCheckboxVisible(checkboxNeeded);
+    }
+
+    private destroyCheckbox(): void {
+        this.cbComp && this.eCheckbox.removeChild(this.cbComp.getGui());
+        this.cbComp = this.destroyBean(this.cbComp);
+    }
+
+    private refreshCheckbox(): void {
+        this.destroyCheckbox();
+        this.addCheckboxIfNeeded();
     }
 
     private onKeyDown(event: KeyboardEvent): void {

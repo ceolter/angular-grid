@@ -49,7 +49,7 @@ export class SortService extends BeanStub implements NamedBean {
         let columnsToUpdate = [column];
         if (isColumnsSortingCoupledToGroup) {
             if (column.getColDef().showRowGroup) {
-                const rowGroupColumns = this.showRowGroupCols?.getSourceColumnsForGroupColumn!(column);
+                const rowGroupColumns = this.showRowGroupCols?.getSourceColumnsForGroupColumn?.(column);
                 const sortableRowGroupColumns = rowGroupColumns?.filter((col) => col.isSortable());
 
                 if (sortableRowGroupColumns) {

@@ -67,7 +67,7 @@ const ToolsExtensions = ({ limit = -1 }) => {
                                 onClick={() => filterFrameworks(framework)}
                             >
                                 <img
-                                    className={framework === 'Rust' && styles.invert}
+                                    className={framework === 'Rust' ? styles.invert : ''}
                                     src={urlWithBaseUrl(`/community/frameworks/${framework.toLowerCase()}.svg`)}
                                     alt={`${framework}`}
                                 />

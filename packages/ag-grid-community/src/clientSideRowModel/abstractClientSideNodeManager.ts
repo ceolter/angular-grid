@@ -6,6 +6,7 @@ import type {
     ClientSideNodeManagerUpdateRowDataResult,
     IClientSideNodeManager,
 } from '../interfaces/iClientSideNodeManager';
+import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
@@ -72,7 +73,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
     public deactivate(): void {
         if (this.rootNode) {
-            this.setNewRowData([]);
+            this.allNodesMap = {};
             this.rootNode = null!;
         }
     }
@@ -123,7 +124,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.rootNode!.allLeafChildren = rowData?.map((dataItem, index) => this.createRowNode(dataItem, index)) ?? [];
     }
 
-    public setImmutableRowData(rowData: TData[]): ClientSideNodeManagerUpdateRowDataResult<TData> {
+    public setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
         // convert the setRowData data into a transaction object by working out adds, removes and updates
 
         const rowDataTransaction = this.createTransactionForRowData(rowData);
@@ -131,14 +132,21 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         // Apply the transaction
         const result = this.updateRowData(rowDataTransaction);
 
+        let rowsOrderChanged = false;
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
-        const suppressSortOrder = this.gos.get('suppressMaintainUnsortedOrder');
-        if (!suppressSortOrder) {
+        if (!this.gos.get('suppressMaintainUnsortedOrder')) {
             // we need to reorder the nodes to match the new data order
-            result.rowsOrderChanged = this.updateRowOrderFromRowData(rowData);
+            rowsOrderChanged = this.updateRowOrderFromRowData(rowData);
         }
 
-        return result;
+        const { rowNodeTransaction, rowsInserted } = result;
+        const { add, remove, update } = rowNodeTransaction;
+        if (rowsInserted || rowsOrderChanged || add.length || remove.length || update.length) {
+            params.step = 'group';
+            params.rowDataUpdated = true;
+            params.rowNodeTransactions = [rowNodeTransaction];
+            params.rowNodesOrderChanged = rowsInserted || rowsOrderChanged;
+        }
     }
 
     public updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData> {
@@ -147,7 +155,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const updateRowDataResult: ClientSideNodeManagerUpdateRowDataResult<TData> = {
             rowNodeTransaction: { remove: [], update: [], add: [] },
             rowsInserted: false,
-            rowsOrderChanged: false,
         };
 
         const nodesToUnselect: RowNode[] = [];

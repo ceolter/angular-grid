@@ -309,7 +309,7 @@ export abstract class BaseColsService extends BeanStub implements IColsService {
         rowIndex: { [key: string]: number } | null
     ): void;
 
-    public orderColumns(
+    public restoreColumnOrder(
         columnStateAccumulator: { [colId: string]: ColumnState },
         incomingColumnState: { [colId: string]: ColumnState }
     ): { [colId: string]: ColumnState } {

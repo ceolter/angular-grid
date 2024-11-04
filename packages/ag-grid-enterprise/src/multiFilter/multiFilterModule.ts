@@ -13,7 +13,7 @@ export const MultiFilterCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule, ColumnFilterModule, MenuItemModule],
 };
 
-const MultiFloatingFilterModule: _ModuleWithoutApi = {
+export const MultiFloatingFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MultiFloatingFilterModule'),
     userComponents: { agMultiColumnFloatingFilter: MultiFloatingFilterComp },
     dependsOn: [MultiFilterCoreModule, ReadOnlyFloatingFilterModule],
