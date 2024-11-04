@@ -328,8 +328,7 @@ export const AG_GRID_ERRORS = {
     144: ({ type }: { type: string }) => `Invalid charts data panel group name supplied: '${type}'` as const,
     145: ({ group }: { group: string }) =>
         `As of v32, only one charts customize panel group can be expanded at a time. '${group}' will not be expanded.` as const,
-    146: () =>
-        `'navigator' is now displayed in the charts advanced settings instead of the customize panel, and this setting will be ignored.` as const,
+    // 146: () => '' as const,
     147: ({ group }: { group: string }) => `Invalid charts customize panel group name supplied: '${group}'` as const,
     148: ({ group }: { group: string }) => `invalid chartGroupsDef config '${group}'` as const,
     149: ({ group, chartType }: { group: string; chartType: string }) =>
