@@ -9,11 +9,17 @@ import { baseEnterpriseModule } from '../moduleUtils';
 import { ClientSideChildrenTreeNodeManager } from './clientSideChildrenTreeNodeManager';
 import { ClientSidePathTreeNodeManager } from './clientSidePathTreeNodeManager';
 
+/**
+ * @feature Tree Data
+ * @gridOption treeData
+ */
 export const TreeDataCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('TreeDataCoreModule'),
     dependsOn: [EnterpriseCoreModule, AggregationModule, GroupColumnModule],
 };
-
+/**
+ * @feature Tree Data
+ */
 export const TreeDataModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('TreeDataModule'),
     beans: [ClientSidePathTreeNodeManager, ClientSideChildrenTreeNodeManager],

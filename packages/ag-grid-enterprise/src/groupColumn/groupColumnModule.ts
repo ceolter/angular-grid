@@ -1,5 +1,6 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
+import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { PivotColsSvc } from '../pivot/pivotColsSvc';
 import { ValueColsSvc } from '../pivot/valueColsSvc';
@@ -9,6 +10,9 @@ import { GroupCellRenderer } from './rendering/groupCellRenderer';
 import { GroupCellRendererCtrl } from './rendering/groupCellRendererCtrl';
 import { ShowRowGroupColsService } from './showRowGroupColsService';
 
+/**
+ * @feature Row Grouping -> Provided Component
+ */
 export const GroupCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupCellRendererModule'),
     userComponents: {
@@ -22,11 +26,15 @@ export const GroupCellRendererModule: _ModuleWithoutApi = {
         // shown on row group when expanded (click to contract)
         groupExpanded: 'tree-open',
     },
+    dependsOn: [EnterpriseCoreModule],
 };
 
-/** Shared between row grouping and tree data */
+/**
+ * Shared between row grouping and tree data
+ * @internal
+ */
 export const GroupColumnModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupColumnModule'),
     beans: [AutoColService, ShowRowGroupColsService, RowGroupColsSvc, PivotColsSvc, ValueColsSvc],
-    dependsOn: [GroupCellRendererModule],
+    dependsOn: [EnterpriseCoreModule, GroupCellRendererModule],
 };

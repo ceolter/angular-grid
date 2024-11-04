@@ -17,12 +17,19 @@ import {
 } from './columnGroupApi';
 import { ColumnGroupService } from './columnGroupService';
 
+/**
+ * @feature Columns -> Column Groups
+ * @colGroupDef
+ */
 export const ColumnGroupCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnGroupCoreModule'),
     dynamicBeans: { headerGroupCellCtrl: HeaderGroupCellCtrl as any },
     beans: [ColumnGroupService],
 };
 
+/**
+ * @feature Columns -> Column Groups
+ */
 export const ColumnGroupApiModule: _ModuleWithApi<_ColumnGroupGridApi> = {
     ...baseCommunityModule('ColumnGroupApiModule'),
     apiFunctions: {
@@ -41,6 +48,9 @@ export const ColumnGroupApiModule: _ModuleWithApi<_ColumnGroupGridApi> = {
     dependsOn: [ColumnGroupCoreModule],
 };
 
+/**
+ * @feature Columns -> Column Groups
+ */
 export const ColumnGroupModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnGroupModule'),
     dependsOn: [ColumnGroupApiModule],

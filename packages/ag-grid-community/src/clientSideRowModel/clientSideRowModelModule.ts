@@ -24,12 +24,19 @@ import { FilterStage } from './filterStage';
 import { FlattenStage } from './flattenStage';
 import { SortStage } from './sortStage';
 
+/**
+ * @feature Client-Side Row Model
+ */
 export const ClientSideRowModelCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ClientSideRowModelCoreModule'),
     rowModels: ['clientSide'],
     beans: [ClientSideNodeManager, ClientSideRowModel, FlattenStage],
 };
 
+/**
+ * @feature Rows -> Row Sorting
+ * @colDef sortable, sort, sortIndex
+ */
 export const ClientSideRowModelSortModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ClientSideRowModelSortModule'),
     rowModels: ['clientSide'],
@@ -37,6 +44,11 @@ export const ClientSideRowModelSortModule: _ModuleWithoutApi = {
     dependsOn: [ClientSideRowModelCoreModule, SortModule],
 };
 
+/**
+ * @feature Filtering
+ * @gridOption quickFilterText, enableAdvancedFilter, doesExternalFilterPass
+ * @colDef filter
+ */
 export const ClientSideRowModelFilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ClientSideRowModelFilterModule'),
     rowModels: ['clientSide'],
@@ -44,6 +56,9 @@ export const ClientSideRowModelFilterModule: _ModuleWithoutApi = {
     dependsOn: [FilterCoreModule],
 };
 
+/**
+ * @feature Client-Side Row Model
+ */
 export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGridApi<any>> = {
     ...baseCommunityModule('ClientSideRowModelApiModule'),
     rowModels: ['clientSide'],
@@ -63,6 +78,9 @@ export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGrid
     dependsOn: [ClientSideRowModelCoreModule, CsrmSsrmSharedApiModule],
 };
 
+/**
+ * @feature Client-Side Row Model
+ */
 export const ClientSideRowModelModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ClientSideRowModelModule'),
     rowModels: ['clientSide'],

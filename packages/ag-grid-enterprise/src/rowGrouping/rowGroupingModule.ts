@@ -19,12 +19,19 @@ import {
     setRowGroupColumns,
 } from './rowGroupingApi';
 
+/**
+ * @feature Row Grouping
+ * @colDef enableRowGroup, rowGroup, rowGroupIndex
+ */
 export const RowGroupingCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingCoreModule'),
     beans: [GroupStage, GroupHideOpenParentsService],
     dependsOn: [EnterpriseCoreModule, AggregationModule, GroupColumnModule],
 };
 
+/**
+ * @feature Row Grouping -> Row Group Panel
+ */
 export const RowGroupingPanelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingPanelModule'),
     selectors: [AgGridHeaderDropZonesSelector],
@@ -41,6 +48,9 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
     dependsOn: [RowGroupingCoreModule, PopupModule],
 };
 
+/**
+ * @feature Row Grouping
+ */
 export const RowGroupingApiModule: _ModuleWithApi<_RowGroupingGridApi> = {
     ...baseEnterpriseModule('RowGroupingApiModule'),
     apiFunctions: {
@@ -53,18 +63,27 @@ export const RowGroupingApiModule: _ModuleWithApi<_RowGroupingGridApi> = {
     dependsOn: [RowGroupingCoreModule],
 };
 
+/**
+ * @feature Row Grouping -> Filtering
+ */
 export const GroupFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupFilterModule'),
     userComponents: { agGroupColumnFilter: GroupFilter },
     dependsOn: [RowGroupingCoreModule, ColumnFilterModule],
 };
 
+/**
+ * @feature Row Grouping -> Filtering
+ */
 export const GroupFloatingFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupFloatingFilterModule'),
     userComponents: { agGroupColumnFloatingFilter: GroupFloatingFilterComp },
     dependsOn: [GroupFilterModule, FloatingFilterModule],
 };
 
+/**
+ * @feature Row Grouping
+ */
 export const RowGroupingNoPivotModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingNoPivotModule'),
     dependsOn: [

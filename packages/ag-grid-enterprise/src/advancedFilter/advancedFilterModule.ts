@@ -13,6 +13,10 @@ import {
 import { AdvancedFilterExpressionService } from './advancedFilterExpressionService';
 import { AdvancedFilterService } from './advancedFilterService';
 
+/**
+ * @feature Filtering -> Advanced Filter
+ * @gridOption enableAdvanced Filter
+ */
 export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('AdvancedFilterCoreModule'),
     beans: [AdvancedFilterService, AdvancedFilterExpressionService],
@@ -40,6 +44,9 @@ export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
     css: [advancedFilterCSS],
 };
 
+/**
+ * @feature Filtering -> Advanced Filter
+ */
 export const AdvancedFilterApiModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
     ...baseEnterpriseModule('AdvancedFilterApiModule'),
     apiFunctions: {
@@ -51,6 +58,9 @@ export const AdvancedFilterApiModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
     dependsOn: [AdvancedFilterCoreModule],
 };
 
+/**
+ * @feature Filtering -> Advanced Filter
+ */
 export const AdvancedFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('AdvancedFilterModule'),
     dependsOn: [AdvancedFilterCoreModule, AdvancedFilterApiModule],

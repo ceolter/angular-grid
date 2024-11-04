@@ -5,7 +5,7 @@ import { DragAndDropModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
-import { RangeSelectionModule } from '../rangeSelection/rangeSelectionModule';
+import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
 import { VERSION as GRID_VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { EnterpriseChartProxyFactory } from './chartComp/chartProxies/enterpriseChartProxyFactory';
@@ -31,6 +31,10 @@ import {
 import { gridChartsModuleCSS } from './gridChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
+/**
+ * @feature Integrated Charts
+ * @gridOption enableCharts
+ */
 export const GridChartsCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GridChartsCoreModule'),
     validate: () => {
@@ -62,10 +66,13 @@ export const GridChartsCoreModule: _ModuleWithoutApi = {
         // next in Integrated Charts settings tool panel theme switcher
         chartsThemeNext: 'next',
     },
-    dependsOn: [RangeSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
+    dependsOn: [CellSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
     css: [gridChartsModuleCSS],
 };
 
+/**
+ * @feature Integrated Charts
+ */
 export const GridChartsApiModule: _ModuleWithApi<_GridChartsGridApi> = {
     ...baseEnterpriseModule('GridChartsApiModule'),
     apiFunctions: {
@@ -84,11 +91,17 @@ export const GridChartsApiModule: _ModuleWithApi<_GridChartsGridApi> = {
     dependsOn: [GridChartsCoreModule],
 };
 
+/**
+ * @feature Integrated Charts
+ */
 export const GridChartsEnterpriseFeaturesModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GridChartsEnterpriseFeaturesModule'),
     beans: [EnterpriseChartProxyFactory, AdvancedSettingsMenuFactory],
 };
 
+/**
+ * @feature Integrated Charts
+ */
 export const GridChartsModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GridChartsModule'),
     dependsOn: [GridChartsCoreModule, GridChartsApiModule, GridChartsEnterpriseFeaturesModule],
