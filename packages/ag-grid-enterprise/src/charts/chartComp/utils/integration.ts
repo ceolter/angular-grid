@@ -18,7 +18,7 @@ export interface AgChartActual extends AgChartInstance {
     height: number;
     series: {
         type: string;
-        toggleSeriesItem(itemId: string, enabled: boolean): void;
+        setLegendState(state: boolean[]): void;
         properties: {
             [key: string]: any;
             toJson(): any;
@@ -28,9 +28,7 @@ export interface AgChartActual extends AgChartInstance {
         type: AgCartesianAxisType | AgPolarAxisOptions['type'];
         direction: 'x' | 'y';
     }[];
-    canvasElement: HTMLCanvasElement;
     getCanvasDataURL(type?: string): string;
-    addEventListener(type: 'click', cb: (even: any) => void): void;
     waitForUpdate(): Promise<void>;
 }
 

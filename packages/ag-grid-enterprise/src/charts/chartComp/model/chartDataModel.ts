@@ -13,6 +13,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, CellRangeType } from 'ag-grid-community';
 
+import type { CrossFilteringContext } from '../crossfilter/crossFilteringContext';
 import type { ChartDatasourceParams } from '../datasource/chartDatasource';
 import { ChartDatasource } from '../datasource/chartDatasource';
 import { ChartColumnService } from '../services/chartColumnService';
@@ -39,9 +40,16 @@ export interface ChartModelParams {
     suppressChartRanges?: boolean;
     unlinkChart?: boolean;
     crossFiltering?: boolean;
+    crossFilteringContext: CrossFilteringContext;
     seriesChartTypes?: SeriesChartType[];
     seriesGroupType?: SeriesGroupType;
 }
+
+export const CROSS_FILTERING_ZERO_VALUE_CHART_TYPES: ChartType[] = ['pie', 'donut', 'doughnut', 'bubble', 'scatter'];
+
+export const CROSS_FILTER_IS_HIGHLIGHT: ChartType[] = ['line', 'area'];
+
+export const SHOW_FILTERED_DATA_ONLY_CHART_TYPES = ['bubble', 'scatter'];
 
 export const DEFAULT_CHART_CATEGORY = 'AG-GRID-DEFAULT-CATEGORY';
 
@@ -89,6 +97,9 @@ export class ChartDataModel extends BeanStub {
     private grouping = false;
 
     public seriesGroupType?: SeriesGroupType;
+
+    private showFilteredDataOnly: boolean;
+    public lastClickedChartId?: string;
 
     public constructor(params: ChartModelParams) {
         super();
@@ -194,13 +205,18 @@ export class ChartDataModel extends BeanStub {
 
         this.grouping = this.isGrouping();
 
+        const isSourceChart = this.chartId === this.params.crossFilteringContext?.lastSelectedChartId;
+
         const params: ChartDatasourceParams = {
             aggFunc: this.aggFunc,
             dimensionCols: this.getSelectedDimensions(),
             grouping: this.grouping,
             pivoting: this.isPivotActive(),
             crossFiltering: this.crossFiltering,
+            crossFilteringZeroValue: CROSS_FILTERING_ZERO_VALUE_CHART_TYPES.includes(this.chartType) ? 0 : undefined,
+            crossFilteringIsHighlight: isSourceChart && CROSS_FILTER_IS_HIGHLIGHT.includes(this.chartType),
             valueCols: this.getSelectedValueCols(),
+            showFilteredDataOnly: !isSourceChart && SHOW_FILTERED_DATA_ONLY_CHART_TYPES.includes(this.chartType),
             startRow,
             endRow,
             isScatter: ['scatter', 'bubble'].includes(this.chartType),

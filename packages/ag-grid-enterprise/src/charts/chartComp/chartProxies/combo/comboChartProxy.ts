@@ -53,7 +53,7 @@ export class ComboChartProxy extends CartesianChartProxy<'line' | 'bar' | 'area'
         return axes;
     }
 
-    public getSeries(params: UpdateParams): any {
+    public override getSeries(params: UpdateParams): any {
         const { fields, seriesChartTypes } = params;
         const [category] = params.categories;
 
@@ -68,7 +68,6 @@ export class ComboChartProxy extends CartesianChartProxy<'line' | 'bar' | 'area'
                     xKey: category.id,
                     yKey: field.colId,
                     yName: field.displayName,
-                    stacked: ['stackedArea', 'stackedColumn'].includes(chartType),
                     ...groupedOpts,
                 };
             }

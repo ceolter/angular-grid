@@ -30,15 +30,13 @@ import type {
 import { BeanStub, _warn } from 'ag-grid-community';
 
 import { VERSION as GRID_VERSION } from '../version';
+import { CrossFilteringContext } from './chartComp/crossfilter/crossFilteringContext';
 import type { GridChartParams } from './chartComp/gridChartComp';
 import { GridChartComp } from './chartComp/gridChartComp';
+import type { ChartCrossFilterService } from './chartComp/services/chartCrossFilterService';
 import { ChartParamsValidator } from './chartComp/utils/chartParamsValidator';
 import { getCanonicalChartType } from './chartComp/utils/seriesTypeMapper';
 import { upgradeChartModel } from './chartModelMigration';
-
-export interface CrossFilteringContext {
-    lastSelectedChartId: string;
-}
 
 export interface CommonCreateChartParams extends BaseCreateChartParams {
     cellRange: PartialCellRange;
@@ -61,12 +59,16 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     private rangeSvc?: IRangeService;
     private environment: Environment;
     private focusSvc: FocusService;
+    private crossFilteringContext: CrossFilteringContext;
+    private crossFilterService: ChartCrossFilterService;
 
     public wireBeans(beans: BeanCollection): void {
         this.visibleCols = beans.visibleCols;
         this.rangeSvc = beans.rangeSvc;
         this.environment = beans.environment;
         this.focusSvc = beans.focusSvc;
+        this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
+        this.crossFilteringContext = new CrossFilteringContext(this.crossFilterService);
     }
 
     // we destroy all charts bound to this grid when grid is destroyed. activeCharts contains all charts, including
@@ -75,9 +77,6 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     private activeChartComps = new Set<GridChartComp>();
 
     // this shared (singleton) context is used by cross filtering in line and area charts
-    private crossFilteringContext: CrossFilteringContext = {
-        lastSelectedChartId: '',
-    };
 
     public isEnterprise = () => _ModuleSupport.enterpriseModule.isEnterprise;
 
@@ -267,13 +266,14 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
 
         const createChartContainerFunc = this.gos.getCallback('createChartContainer');
 
+        const chartId = this.generateId();
+
         const gridChartParams: GridChartParams = {
             ...params,
-            chartId: this.generateId(),
+            chartId,
             chartType: getCanonicalChartType(chartType),
             insideDialog: !(chartContainer || createChartContainerFunc),
             crossFilteringContext: this.crossFilteringContext,
-            crossFilteringResetCallback: () => this.activeChartComps.forEach((c) => c.crossFilteringReset()),
         };
 
         const chartComp = new GridChartComp(gridChartParams);
@@ -294,6 +294,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
             chartComp.addEventListener('destroyed', () => {
                 this.activeChartComps.delete(chartComp);
                 this.activeCharts.delete(chartRef);
+                this.crossFilteringContext.deleteChartSelectionModel(chartId);
             });
         }
 
