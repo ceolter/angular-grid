@@ -1,7 +1,6 @@
 import type { _MasterDetailGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { ClientSideRowModelExpansionModule } from '../expansion/expansionModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { ClientSideRowModelHierarchyModule, GroupCellRendererModule } from '../rowHierarchy/rowHierarchyModule';
 import { DetailCellRenderer } from './detailCellRenderer';
@@ -32,10 +31,5 @@ export const MasterDetailApiModule: _ModuleWithApi<_MasterDetailGridApi> = {
 
 export const MasterDetailModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MasterDetailModule'),
-    dependsOn: [
-        MasterDetailCoreModule,
-        MasterDetailApiModule,
-        ClientSideRowModelExpansionModule,
-        ClientSideRowModelHierarchyModule,
-    ],
+    dependsOn: [MasterDetailCoreModule, MasterDetailApiModule, ClientSideRowModelHierarchyModule],
 };

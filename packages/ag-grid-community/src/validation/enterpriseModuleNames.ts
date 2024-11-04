@@ -5,7 +5,6 @@ export const ENTERPRISE_MODULE_NAMES: Record<EnterpriseModuleName, 1> = {
     AdvancedFilterCoreModule: 1,
     AdvancedFilterModule: 1,
     AggregationModule: 1,
-    ClientSideRowModelExpansionModule: 1,
     ClientSideRowModelHierarchyModule: 1,
     ClipboardApiModule: 1,
     ClipboardCoreModule: 1,

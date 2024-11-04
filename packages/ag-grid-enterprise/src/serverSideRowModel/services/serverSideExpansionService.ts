@@ -8,7 +8,7 @@ import type {
     WithoutGridCommon,
 } from 'ag-grid-community';
 
-import { BaseExpansionService } from '../../expansion/baseExpansionService';
+import { BaseExpansionService } from '../../rowHierarchy/baseExpansionService';
 import type { ServerSideRowModel } from '../serverSideRowModel';
 
 export class ServerSideExpansionService extends BaseExpansionService implements NamedBean, IExpansionService {
