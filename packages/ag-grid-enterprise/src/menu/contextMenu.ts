@@ -76,7 +76,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     private getMenuItems(
         node: RowNode | null,
         column: AgColumn | null,
-        value: any
+        value: any,
+        mouseEvent: MouseEvent | Touch
     ): (string | MenuItemDef<any, any>)[] | Promise<(string | MenuItemDef<any, any>)[]> | undefined {
         const defaultMenuOptions: string[] = [];
 
@@ -127,6 +128,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
                     node,
                     value,
                     defaultItems,
+                    event: mouseEvent,
                 })
             );
         }
@@ -134,7 +136,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         const userFunc = this.gos.getCallback('getContextMenuItems');
 
         if (userFunc) {
-            return userFunc({ column, node, value, defaultItems });
+            return userFunc({ column, node, value, defaultItems, event: mouseEvent });
         }
 
         return defaultMenuOptions;
@@ -232,7 +234,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         mouseEvent: MouseEvent | Touch,
         anchorToElement: HTMLElement
     ): boolean {
-        const menuItems = this.getMenuItems(node, column, value);
+        const menuItems = this.getMenuItems(node, column, value, mouseEvent);
 
         if (_isPromise<(string | MenuItemDef)[]>(menuItems)) {
             this.promiseCount++;
