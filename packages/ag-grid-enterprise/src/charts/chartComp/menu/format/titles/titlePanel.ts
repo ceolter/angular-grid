@@ -10,10 +10,10 @@ import type { FontPanelParams } from '../fontPanel';
 import { FontPanel } from '../fontPanel';
 
 export class TitlePanel extends Component {
-    protected chartTranslationService: ChartTranslationService;
+    protected chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     protected readonly chartOptions: ChartOptionsProxy;
@@ -42,7 +42,7 @@ export class TitlePanel extends Component {
         const hasTitle = this.hasTitle();
 
         const fontPanelParams: FontPanelParams = {
-            name: this.chartTranslationService.translate(this.name),
+            name: this.chartTranslation.translate(this.name),
             enabled: hasTitle,
             suppressEnabledCheckbox: false,
             chartMenuParamsFactory: this.chartMenuUtils,
@@ -60,7 +60,7 @@ export class TitlePanel extends Component {
 
     protected getTextInputParams(): AgInputTextFieldParams {
         return this.chartMenuUtils.addValueParams(`${this.key}.text`, {
-            label: this.chartTranslationService.translate('title'),
+            label: this.chartTranslation.translate('title'),
             labelAlignment: 'top',
         });
     }

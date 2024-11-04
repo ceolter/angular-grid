@@ -231,7 +231,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
         elementDef: ElementRef,
         private _viewContainerRef: ViewContainerRef,
         private _angularFrameworkOverrides: AngularFrameworkOverrides,
-        private _frameworkComponentWrapper: AngularFrameworkComponentWrapper
+        private _frameworkCompWrapper: AngularFrameworkComponentWrapper
     ) {
         this._nativeElement = elementDef.nativeElement;
         this._fullyReady.then(() => {
@@ -244,10 +244,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
     ngAfterViewInit(): void {
         // Run the setup outside of angular so all the event handlers that are created do not trigger change detection
         this._angularFrameworkOverrides.runOutsideAngular(() => {
-            this._frameworkComponentWrapper.setViewContainerRef(
-                this._viewContainerRef,
-                this._angularFrameworkOverrides
-            );
+            this._frameworkCompWrapper.setViewContainerRef(this._viewContainerRef, this._angularFrameworkOverrides);
 
             // Get all the inputs that are valid GridOptions
             const gridOptionKeys = Object.entries(this)
@@ -265,10 +262,10 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
             const mergedGridOps = _combineAttributesAndGridOptions(this.gridOptions, this, gridOptionKeys);
 
             const gridParams: GridParams = {
-                globalEventListener: this.globalEventListener.bind(this),
+                globalListener: this.globalListener.bind(this),
                 frameworkOverrides: this._angularFrameworkOverrides,
                 providedBeanInstances: {
-                    frameworkComponentWrapper: this._frameworkComponentWrapper,
+                    frameworkCompWrapper: this._frameworkCompWrapper,
                 },
                 modules: (this.modules || []) as any,
                 setThemeOnGridDiv: true,
@@ -326,7 +323,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
         return hasEmitter || hasGridOptionListener;
     }
 
-    private globalEventListener(eventType: string, event: any): void {
+    private globalListener(eventType: string, event: any): void {
         // if we are tearing down, don't emit angular events, as this causes
         // problems with the angular router
         if (this._destroyed) {

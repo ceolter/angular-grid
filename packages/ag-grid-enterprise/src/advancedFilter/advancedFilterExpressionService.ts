@@ -28,7 +28,7 @@ import {
 } from './filterExpressionOperators';
 
 export class AdvancedFilterExpressionService extends BeanStub implements NamedBean {
-    beanName = 'advancedFilterExpressionService' as const;
+    beanName = 'advFilterExpSvc' as const;
 
     private valueSvc: ValueService;
     private colModel: ColumnModel;

@@ -93,7 +93,7 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
             return;
         }
 
-        const eMenuIcon = _createIconNoSpan('filter', this.gos, this.column);
+        const eMenuIcon = _createIconNoSpan('filter', this.beans, this.column);
 
         if (eMenuIcon) {
             this.iconCreated = true;

@@ -249,11 +249,11 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
 
         const eGui = maximizeButtonComp.getGui();
 
-        this.maximizeIcon = _createIconNoSpan('maximize', this.gos)!;
+        this.maximizeIcon = _createIconNoSpan('maximize', this.beans)!;
         eGui.appendChild(this.maximizeIcon);
         this.maximizeIcon.classList.add('ag-panel-title-bar-button-icon');
 
-        this.minimizeIcon = _createIconNoSpan('minimize', this.gos)!;
+        this.minimizeIcon = _createIconNoSpan('minimize', this.beans)!;
         eGui.appendChild(this.minimizeIcon);
         this.minimizeIcon.classList.add('ag-panel-title-bar-button-icon');
 

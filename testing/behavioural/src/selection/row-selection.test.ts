@@ -1059,6 +1059,13 @@ describe('Row Selection Grid Options', () => {
                 expect(isColumnSelectionCol(colState3[0].colId)).toBeTruthy();
             });
 
+            test('clicking checkbox does nothing if row selection not enabled', async () => {
+                const api = await createGridAndWait(groupGridOptions);
+
+                toggleCheckboxByIndex(0);
+                assertSelectedRowsByIndex([], api);
+            });
+
             test('clicking group row selects only that row', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,

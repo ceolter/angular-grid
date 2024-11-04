@@ -521,9 +521,9 @@ export class FocusService extends BeanStub implements NamedBean {
             return false;
         }
 
-        const { columnGroupSvc } = this.beans;
-        if (columnGroupSvc && firstColumn.getParent()) {
-            firstColumn = columnGroupSvc.getColGroupAtLevel(firstColumn, 0)!;
+        const { colGroupSvc } = this.beans;
+        if (colGroupSvc && firstColumn.getParent()) {
+            firstColumn = colGroupSvc.getColGroupAtLevel(firstColumn, 0)!;
         }
 
         const headerPosition = getHeaderIndexToFocus(firstColumn, 0);

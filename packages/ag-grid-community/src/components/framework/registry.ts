@@ -2,6 +2,7 @@ import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection, DynamicBeanName, UserComponentName } from '../../context/context';
 import type { Module } from '../../interfaces/iModule';
+import type { IconName, IconValue } from '../../utils/icon';
 import type { ValidationService } from '../../validation/validationService';
 import type { AgComponentSelector, ComponentSelector } from '../../widgets/component';
 
@@ -20,6 +21,8 @@ export class Registry extends BeanStub implements NamedBean {
 
     private selectors: { [name in AgComponentSelector]?: ComponentSelector } = {};
 
+    private icons: { [K in IconName]?: IconValue } = {};
+
     public wireBeans(beans: BeanCollection): void {
         this.validation = beans.validation;
     }
@@ -27,20 +30,28 @@ export class Registry extends BeanStub implements NamedBean {
     public postConstruct(): void {
         const comps = this.gos.get('components');
         if (comps != null) {
-            Object.entries(comps).forEach(([key, component]) => this.registerJsComponent(key, component));
+            Object.entries(comps).forEach(([key, component]) => {
+                this.jsComps[key] = component;
+            });
         }
     }
 
     public registerModule(module: Module): void {
-        const { userComponents, dynamicBeans, selectors } = module;
+        const { icons, userComponents, dynamicBeans, selectors } = module;
 
         if (userComponents) {
+            const registerUserComponent = (name: UserComponentName, component: any, params?: any) => {
+                this.agGridDefaults[name] = component;
+                if (params) {
+                    this.agGridDefaultParams[name] = params;
+                }
+            };
             for (const name of Object.keys(userComponents) as UserComponentName[]) {
                 const comp = userComponents[name];
                 if (typeof comp === 'object') {
-                    this.registerUserComponent(name, comp.classImp, comp.params);
+                    registerUserComponent(name, comp.classImp, comp.params);
                 } else {
-                    this.registerUserComponent(name, comp);
+                    registerUserComponent(name, comp);
                 }
             }
         }
@@ -54,17 +65,12 @@ export class Registry extends BeanStub implements NamedBean {
         selectors?.forEach((selector) => {
             this.selectors[selector.selector] = selector;
         });
-    }
 
-    private registerUserComponent(name: UserComponentName, component: any, params?: any) {
-        this.agGridDefaults[name] = component;
-        if (params) {
-            this.agGridDefaultParams[name] = params;
+        if (icons) {
+            for (const name of Object.keys(icons) as IconName[]) {
+                this.icons[name] = icons[name];
+            }
         }
-    }
-
-    private registerJsComponent(name: string, component: any) {
-        this.jsComps[name] = component;
     }
 
     public getUserComponent(
@@ -116,5 +122,9 @@ export class Registry extends BeanStub implements NamedBean {
 
     public getSelector(name: AgComponentSelector): ComponentSelector | undefined {
         return this.selectors[name];
+    }
+
+    public getIcon(name: IconName): IconValue | undefined {
+        return this.icons[name];
     }
 }

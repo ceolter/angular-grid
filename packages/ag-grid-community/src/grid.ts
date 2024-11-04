@@ -23,9 +23,9 @@ import { VanillaFrameworkOverrides } from './vanillaFrameworkOverrides';
 
 export interface GridParams {
     // INTERNAL - used by Web Components
-    globalEventListener?: (...args: any[]) => any;
+    globalListener?: (...args: any[]) => any;
     // INTERNAL - Always sync - for events such as gridPreDestroyed
-    globalSyncEventListener?: (...args: any[]) => any;
+    globalSyncListener?: (...args: any[]) => any;
     // INTERNAL - this allows the base frameworks (React, Angular, etc) to provide alternative cellRenderers and cellEditors
     frameworkOverrides?: IFrameworkOverrides;
     // INTERNAL - bean instances to add to the context
@@ -244,8 +244,8 @@ export class GridCoreCreator {
         const seed = {
             gridOptions: gridOptions,
             eGridDiv: eGridDiv,
-            globalEventListener: params ? params.globalEventListener : null,
-            globalSyncEventListener: params ? params.globalSyncEventListener : null,
+            globalListener: params ? params.globalListener : null,
+            globalSyncListener: params ? params.globalSyncListener : null,
             frameworkOverrides: frameworkOverrides,
         };
         if (params && params.providedBeanInstances) {

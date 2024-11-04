@@ -34,7 +34,7 @@ export const parseDocPage = async (item: FlattenedMenuItem) => {
     const dom = await JSDOM.fromFile(filePath, { virtualConsole });
 
     const titleTag = dom.window.document.querySelector('h1');
-    const pageTitle = extractTitle(titleTag);
+    const pageTitle = extractTitle({ dom, titleTag });
     if (pageTitle !== title) {
         logWarning({ pageTitle, title, filePath, message: 'Title mismatched to navbar.' });
     }
@@ -200,6 +200,14 @@ const cleanContents = (contents: string): string => {
         .trim();
 };
 
-const extractTitle = (titleTag: HTMLElement | null) => {
-    return titleTag?.textContent;
+const extractTitle = ({ dom, titleTag }: { dom: JSDOM; titleTag: HTMLElement | null }) => {
+    let extractedText = '';
+
+    // Only extract text node
+    titleTag?.childNodes.forEach((node) => {
+        if (node.nodeType === dom.window.Node.TEXT_NODE) {
+            extractedText += node?.textContent?.trim();
+        }
+    });
+    return extractedText;
 };

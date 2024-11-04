@@ -595,7 +595,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         if (this.horizontal) {
             // for RTL it's a left arrow, otherwise it's a right arrow
             const enableRtl = this.gos.get('enableRtl');
-            const icon = _createIconNoSpan(enableRtl ? 'smallLeft' : 'smallRight', this.gos)!;
+            const icon = _createIconNoSpan(enableRtl ? 'panelDelimiterRtl' : 'panelDelimiter', this.beans)!;
             this.addElementClasses(icon, 'cell-separator');
             eParent.appendChild(icon);
         }

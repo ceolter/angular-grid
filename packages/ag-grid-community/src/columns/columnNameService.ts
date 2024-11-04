@@ -33,11 +33,11 @@ export class ColumnNameService extends BeanStub implements NamedBean {
     beanName = 'colNames' as const;
 
     private expressionSvc?: ExpressionService;
-    private aggColumnNameSvc?: IAggColumnNameService;
+    private aggColNameSvc?: IAggColumnNameService;
 
     public wireBeans(beans: BeanCollection) {
         this.expressionSvc = beans.expressionSvc;
-        this.aggColumnNameSvc = beans.aggColumnNameSvc;
+        this.aggColNameSvc = beans.aggColNameSvc;
     }
 
     public getDisplayNameForColumn(
@@ -51,8 +51,8 @@ export class ColumnNameService extends BeanStub implements NamedBean {
 
         const headerName: string | null = this.getHeaderName(column.getColDef(), column, null, null, location);
 
-        if (includeAggFunc && this.aggColumnNameSvc) {
-            return this.aggColumnNameSvc.getHeaderName(column, headerName);
+        if (includeAggFunc && this.aggColNameSvc) {
+            return this.aggColNameSvc.getHeaderName(column, headerName);
         }
 
         return headerName;

@@ -1,6 +1,7 @@
 import type { GridApi } from '../api/gridApi';
 import type { ApiFunction, ApiFunctionName } from '../api/iApiFunction';
 import type { ClassImp, ComponentMeta, DynamicBeanName, SingletonBean, UserComponentName } from '../context/context';
+import type { IconName, IconValue } from '../utils/icon';
 import { VERSION } from '../version';
 import type { ComponentSelector } from '../widgets/component';
 import type { RowModelType } from './iRowModel';
@@ -35,6 +36,12 @@ export interface Module {
     userComponents?: Partial<Record<UserComponentName, ComponentMeta>>;
     /** selectors for grid components that can be defined in templates and created by AG stack */
     selectors?: ComponentSelector[];
+    /**
+     * icon mappings
+     * *** IMPORTANT NOTE! ***
+     * If you change the icons, copy/paste the new content into the docs page custom-icons
+     */
+    icons?: Partial<Record<IconName, IconValue>>;
     rowModels?: RowModelType[];
     dependsOn?: Module[];
     css?: string[];
@@ -183,6 +190,11 @@ export type EnterpriseModuleName =
     | 'AdvancedFilterCoreModule'
     | 'AdvancedFilterModule'
     | 'AggregationModule'
+    | 'CellSelectionApiModule'
+    | 'CellSelectionCoreModule'
+    | 'CellSelectionFillHandleModule'
+    | 'CellSelectionModule'
+    | 'CellSelectionRangeHandleModule'
     | 'ClientSideRowModelExpansionModule'
     | 'ClipboardApiModule'
     | 'ClipboardCoreModule'
@@ -220,11 +232,7 @@ export type EnterpriseModuleName =
     | 'PivotApiModule'
     | 'PivotCoreModule'
     | 'PivotModule'
-    | 'RangeSelectionApiModule'
-    | 'RangeSelectionCoreModule'
-    | 'RangeSelectionFillHandleModule'
     | 'RangeSelectionModule'
-    | 'RangeSelectionRangeHandleModule'
     | 'RichSelectModule'
     | 'RowGroupingApiModule'
     | 'RowGroupingCoreModule'

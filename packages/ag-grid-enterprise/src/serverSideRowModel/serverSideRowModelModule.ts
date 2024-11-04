@@ -35,6 +35,9 @@ import { StoreFactory } from './stores/storeFactory';
 import { StoreUtils } from './stores/storeUtils';
 import { TransactionManager } from './transactionManager';
 
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelCoreModule'),
     rowModels: ['serverSide'],
@@ -55,6 +58,10 @@ export const ServerSideRowModelCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule],
 };
 
+/**
+ * @feature Selection -> Row Selection
+ * @gridOption rowSelection
+ */
 export const ServerSideRowModelRowSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelRowSelectionModule'),
     rowModels: ['serverSide'],
@@ -62,6 +69,10 @@ export const ServerSideRowModelRowSelectionModule: _ModuleWithoutApi = {
     dependsOn: [ServerSideRowModelCoreModule],
 };
 
+/**
+ * @feature Row Grouping
+ * @colDef enableRowGroup, rowGroup, rowGroupIndex
+ */
 export const ServerSideRowModelRowGroupingModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelRowGroupingModule'),
     rowModels: ['serverSide'],
@@ -69,6 +80,10 @@ export const ServerSideRowModelRowGroupingModule: _ModuleWithoutApi = {
     dependsOn: [ServerSideRowModelCoreModule],
 };
 
+/**
+ * @feature Rows -> Row Sorting
+ * @colDef sortable, sort, sortIndex
+ */
 export const ServerSideRowModelSortModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelSortModule'),
     rowModels: ['serverSide'],
@@ -76,6 +91,9 @@ export const ServerSideRowModelSortModule: _ModuleWithoutApi = {
     dependsOn: [ServerSideRowModelCoreModule, SortModule],
 };
 
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGridApi<any>> = {
     ...baseEnterpriseModule('ServerSideRowModelApiModule'),
     rowModels: ['serverSide'],
@@ -93,6 +111,9 @@ export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGrid
     dependsOn: [ServerSideRowModelCoreModule, _CsrmSsrmSharedApiModule, _SsrmInfiniteSharedApiModule],
 };
 
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelModule'),
     rowModels: ['serverSide'],

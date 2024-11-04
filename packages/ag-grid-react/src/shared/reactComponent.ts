@@ -82,7 +82,7 @@ export class ReactComponent implements IComponent<any>, WrappableInterface {
     }
 
     public statelessComponentRendered(): boolean {
-        // fixed fragmentsFuncRendererCreateDestroy funcRendererWithNan (changeDetectionService too for NaN)
+        // fixed fragmentsFuncRendererCreateDestroy funcRendererWithNan (changeDetectionSvc too for NaN)
         return this.eParentElement.childElementCount > 0 || this.eParentElement.childNodes.length > 0;
     }
 

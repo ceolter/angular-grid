@@ -137,10 +137,10 @@ const DEFAULT_CHART_GROUPS: ChartGroupsDef = {
 };
 
 export class MiniChartsContainer extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private readonly fills: string[];
@@ -223,7 +223,7 @@ export class MiniChartsContainer extends Component {
                 if (menuItems.length === 0) return null; // don't render empty chart groups
 
                 return {
-                    label: this.chartTranslationService.translate(group),
+                    label: this.chartTranslation.translate(group),
                     items: menuItems,
                 };
             })
@@ -291,9 +291,9 @@ export class MiniChartsContainer extends Component {
             const selected = miniChartType === selectedChartType;
             miniChart.classList.toggle('ag-selected', selected);
 
-            const chartName = this.chartTranslationService.translate(getFullChartNameTranslationKey(miniChartType));
+            const chartName = this.chartTranslation.translate(getFullChartNameTranslationKey(miniChartType));
             const ariaLabel = selected
-                ? `${chartName}. ${this.chartTranslationService.translate('ariaChartSelected')}`
+                ? `${chartName}. ${this.chartTranslation.translate('ariaChartSelected')}`
                 : chartName;
             _setAriaLabel(miniChart, ariaLabel);
         });

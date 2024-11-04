@@ -164,7 +164,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             enableSorting: this.column.isSortable(),
             enableMenu: this.menuEnabled,
             enableFilterButton: this.openFilterEnabled && !!this.menuSvc?.isHeaderFilterButtonEnabled(this.column),
-            enableFilterIcon: !this.openFilterEnabled || _isLegacyMenuEnabled(this.gos),
+            enableFilterIcon: !!this.beans.colFilter && (!this.openFilterEnabled || _isLegacyMenuEnabled(this.gos)),
             showColumnMenu: (buttonElement: HTMLElement) => {
                 this.menuSvc?.showColumnMenu({
                     column: this.column,

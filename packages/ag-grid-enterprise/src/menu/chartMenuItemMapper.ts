@@ -2,7 +2,6 @@ import type {
     BeanCollection,
     ChartGroupsDef,
     ChartType,
-    GridOptionsService,
     IChartService,
     LocaleTextFunc,
     MenuItemDef,
@@ -28,8 +27,8 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
 
         const getLocaleTextFunc = this.getLocaleTextFunc.bind(this);
         const builder = isPivot
-            ? new PivotMenuItemMapper(this.gos, this.chartSvc, getLocaleTextFunc)
-            : new RangeMenuItemMapper(this.gos, this.chartSvc, getLocaleTextFunc);
+            ? new PivotMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc)
+            : new RangeMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc);
 
         const isEnterprise = this.chartSvc.isEnterprise();
 
@@ -190,7 +189,7 @@ export type PivotMenuOptionName =
 
 class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
     constructor(
-        private gos: GridOptionsService,
+        private beans: BeanCollection,
         private chartSvc: IChartService,
         private getLocaleTextFunc: () => LocaleTextFunc
     ) {}
@@ -296,7 +295,7 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
                     ],
                 },
             ],
-            icon: _createIconNoSpan('chart', this.gos, undefined),
+            icon: _createIconNoSpan('chart', this.beans, undefined),
         };
     }
 
@@ -410,7 +409,7 @@ export type RangeMenuOptionName =
 
 class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
     constructor(
-        private gos: GridOptionsService,
+        private beans: BeanCollection,
         private chartSvc: IChartService,
         private getLocaleTextFunc: () => LocaleTextFunc
     ) {}
@@ -543,7 +542,7 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                     _key: 'rangeCombinationChart',
                 },
             ],
-            icon: _createIconNoSpan('chart', this.gos, undefined),
+            icon: _createIconNoSpan('chart', this.beans, undefined),
         };
     }
 

@@ -9,10 +9,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../../../serv
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class TileSpacingPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -39,8 +39,8 @@ export class TileSpacingPanel extends Component {
         </div>`,
             [AgGroupComponentSelector, AgSliderSelector],
             {
-                groupSpacing: { ...groupParams, title: this.chartTranslationService.translate('group') },
-                tileSpacing: { ...groupParams, title: this.chartTranslationService.translate('tile') },
+                groupSpacing: { ...groupParams, title: this.chartTranslation.translate('group') },
+                tileSpacing: { ...groupParams, title: this.chartTranslation.translate('tile') },
                 groupPaddingSlider: this.getSliderParams('padding', 'group.padding'),
                 groupSpacingSlider: this.getSliderParams('spacing', 'group.gap'),
                 tilePaddingSlider: this.getSliderParams('padding', 'tile.padding'),

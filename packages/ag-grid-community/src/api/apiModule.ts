@@ -22,6 +22,10 @@ import {
     getVerticalPixelRange,
 } from './scrollApi';
 
+/**
+ * Included by default
+ * @internal
+ */
 export const CoreApiModule: _ModuleWithApi<_CoreGridApi> = {
     ...baseCommunityModule('CoreApiModule'),
     apiFunctions: {
@@ -34,6 +38,9 @@ export const CoreApiModule: _ModuleWithApi<_CoreGridApi> = {
     },
 };
 
+/**
+ * @feature Rows
+ */
 export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
     ...baseCommunityModule('RowApiModule'),
     apiFunctions: {
@@ -50,6 +57,9 @@ export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
     },
 };
 
+/**
+ * @feature Scrolling
+ */
 export const ScrollApiModule: _ModuleWithApi<_ScrollGridApi<any>> = {
     ...baseCommunityModule('ScrollApiModule'),
     apiFunctions: {

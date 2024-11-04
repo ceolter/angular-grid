@@ -38,7 +38,7 @@ export class LazyCache extends BeanStub {
     private serverSideRowModel: ServerSideRowModel;
     private rowNodeSorter?: RowNodeSorter;
     private sortSvc?: SortService;
-    private lazyBlockLoadingService: LazyBlockLoadingService;
+    private lazyBlockLoadingSvc: LazyBlockLoadingService;
     private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
@@ -49,7 +49,7 @@ export class LazyCache extends BeanStub {
         this.serverSideRowModel = beans.rowModel as ServerSideRowModel;
         this.rowNodeSorter = beans.rowNodeSorter;
         this.sortSvc = beans.sortSvc;
-        this.lazyBlockLoadingService = beans.lazyBlockLoadingService as LazyBlockLoadingService;
+        this.lazyBlockLoadingSvc = beans.lazyBlockLoadingSvc as LazyBlockLoadingService;
         this.colModel = beans.colModel;
     }
 
@@ -117,7 +117,7 @@ export class LazyCache extends BeanStub {
     }
 
     public postConstruct() {
-        this.lazyBlockLoadingService.subscribe(this);
+        this.lazyBlockLoadingSvc.subscribe(this);
         // initiate the node map to be indexed at 'index', 'id' and 'node' for quick look-up.
         // it's important id isn't first, as stub nodes overwrite each-other, and the first index is
         // used for iteration.
@@ -132,7 +132,7 @@ export class LazyCache extends BeanStub {
     }
 
     public override destroy() {
-        this.lazyBlockLoadingService.unsubscribe(this);
+        this.lazyBlockLoadingSvc.unsubscribe(this);
         this.numberOfRows = 0;
         this.nodeMap.forEach((node) => this.blockUtils.destroyRowNode(node.node));
         this.nodeMap.clear();
@@ -158,7 +158,7 @@ export class LazyCache extends BeanStub {
         if (node) {
             // if we have the node, check if it needs refreshed when rendered
             if (node.stub || node.__needsRefreshWhenVisible) {
-                this.lazyBlockLoadingService.queueLoadCheck();
+                this.lazyBlockLoadingSvc.queueLoadCheck();
             }
             return node;
         }
@@ -258,7 +258,7 @@ export class LazyCache extends BeanStub {
                 }
             }
         }
-        this.lazyBlockLoadingService.queueLoadCheck();
+        this.lazyBlockLoadingSvc.queueLoadCheck();
         return newNode;
     }
 
@@ -574,7 +574,7 @@ export class LazyCache extends BeanStub {
             let rowState = 'loaded';
             if (node.failedLoad) {
                 rowState = 'failed';
-            } else if (this.lazyBlockLoadingService.isRowLoading(this, blockStart)) {
+            } else if (this.lazyBlockLoadingSvc.isRowLoading(this, blockStart)) {
                 rowState = 'loading';
             } else if (this.nodesToRefresh.has(node) || node.stub) {
                 rowState = 'needsLoading';
@@ -680,7 +680,7 @@ export class LazyCache extends BeanStub {
 
         this.nodeMap.forEach((lazyNode) => {
             // failed loads are still useful, so we don't purge them
-            if (this.lazyBlockLoadingService.isRowLoading(this, lazyNode.index) || lazyNode.node.failedLoad) {
+            if (this.lazyBlockLoadingSvc.isRowLoading(this, lazyNode.index) || lazyNode.node.failedLoad) {
                 return;
             }
             if (lazyNode.node.stub && (lazyNode.index < firstRowBlockStart || lazyNode.index > lastRowBlockEnd)) {
@@ -992,7 +992,7 @@ export class LazyCache extends BeanStub {
             }
             this.nodesToRefresh.add(lazyNode.node);
         });
-        this.lazyBlockLoadingService.queueLoadCheck();
+        this.lazyBlockLoadingSvc.queueLoadCheck();
 
         if (this.isLastRowKnown && this.numberOfRows === 0) {
             this.numberOfRows = 1;
@@ -1196,7 +1196,7 @@ export class LazyCache extends BeanStub {
 
         if (remainingIdsToRemove.length > 0 && nodesToVerify.length > 0) {
             nodesToVerify.forEach((node) => (node.__needsRefreshWhenVisible = true));
-            this.lazyBlockLoadingService.queueLoadCheck();
+            this.lazyBlockLoadingSvc.queueLoadCheck();
         }
 
         return removedNodes;

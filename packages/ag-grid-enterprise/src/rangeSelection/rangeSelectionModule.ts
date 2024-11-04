@@ -1,4 +1,4 @@
-import type { _ModuleWithApi, _ModuleWithoutApi, _RangeSelectionGridApi } from 'ag-grid-community';
+import type { _CellSelectionGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
 import { KeyboardNavigationCoreModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -9,40 +9,65 @@ import { rangeSelectionCSS } from './rangeSelection.css-GENERATED';
 import { addCellRange, clearRangeSelection, getCellRanges } from './rangeSelectionApi';
 import { RangeService } from './rangeService';
 
-export const RangeSelectionCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RangeSelectionCoreModule'),
+/**
+ * @feature Selection -> Cell Selection
+ * @gridOption cellSelection
+ */
+export const CellSelectionCoreModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('CellSelectionCoreModule'),
     beans: [RangeService],
     dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule],
     css: [rangeSelectionCSS],
 };
 
-export const RangeSelectionApiModule: _ModuleWithApi<_RangeSelectionGridApi> = {
-    ...baseEnterpriseModule('RangeSelectionApiModule'),
+/**
+ * @feature Selection -> Cell Selection
+ */
+export const CellSelectionApiModule: _ModuleWithApi<_CellSelectionGridApi> = {
+    ...baseEnterpriseModule('CellSelectionApiModule'),
     apiFunctions: {
         getCellRanges,
         addCellRange,
         clearRangeSelection,
         clearCellSelection: clearRangeSelection,
     },
-    dependsOn: [RangeSelectionCoreModule],
+    dependsOn: [CellSelectionCoreModule],
 };
 
-export const RangeSelectionFillHandleModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RangeSelectionFillHandleModule'),
+/**
+ * @feature Selection -> Fill Handle
+ */
+export const CellSelectionFillHandleModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('CellSelectionFillHandleModule'),
     dynamicBeans: { fillHandle: AgFillHandle },
 };
 
-export const RangeSelectionRangeHandleModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RangeSelectionRangeHandleModule'),
+/**
+ * @feature Selection -> Range Handle
+ */
+export const CellSelectionRangeHandleModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('CellSelectionRangeHandleModule'),
     dynamicBeans: { rangeHandle: AgRangeHandle },
 };
 
+/**
+ * @feature Selection -> Cell Selection
+ */
+export const CellSelectionModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('CellSelectionModule'),
+    dependsOn: [
+        CellSelectionCoreModule,
+        CellSelectionApiModule,
+        CellSelectionFillHandleModule,
+        CellSelectionRangeHandleModule,
+    ],
+};
+
+// legacy name
+/**
+ * @feature Selection -> Cell Selection
+ */
 export const RangeSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RangeSelectionModule'),
-    dependsOn: [
-        RangeSelectionCoreModule,
-        RangeSelectionApiModule,
-        RangeSelectionFillHandleModule,
-        RangeSelectionRangeHandleModule,
-    ],
+    dependsOn: [CellSelectionModule],
 };

@@ -80,7 +80,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             pickerAriaLabelValue: 'Rich Select Field',
             pickerType: 'ag-list',
             className: 'ag-rich-select',
-            pickerIcon: 'smallDown',
+            pickerIcon: 'richSelectOpen',
             ariaRole: 'combobox',
             template:
                 config?.template ??
@@ -127,7 +127,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         );
         super.postConstruct();
         this.createListComponent();
-        this.eDeselect.appendChild(_createIconNoSpan('cancel', this.gos)!);
+        this.eDeselect.appendChild(_createIconNoSpan('richSelectRemove', this.beans)!);
 
         const { allowTyping, placeholder, suppressDeselectAll } = this.config;
 

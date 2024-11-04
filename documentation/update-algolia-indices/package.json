@@ -7,8 +7,7 @@
   "scripts": {
     "updateLocal": "tsx src/index.ts",
     "updateDev": "tsx src/index.ts -d false",
-    "updateProd": "tsx src/index.ts -d false -i ag-grid",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "updateProd": "tsx src/index.ts -d false -i ag-grid"
   },
   "license": "MIT",
   "devDependencies": {

@@ -10,10 +10,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../../../serv
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class ShadowPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(
         private readonly chartMenuUtils: ChartMenuParamsFactory,
@@ -31,7 +31,7 @@ export class ShadowPanel extends Component {
                 cssIdentifier: 'charts-format-sub-level',
                 direction: 'vertical',
                 suppressOpenCloseIcons: true,
-                title: this.chartTranslationService.translate('shadow'),
+                title: this.chartTranslation.translate('shadow'),
                 suppressEnabledCheckbox: true,
                 useToggle: true,
             }

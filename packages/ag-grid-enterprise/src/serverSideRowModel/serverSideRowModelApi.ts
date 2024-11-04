@@ -30,7 +30,7 @@ export function applyServerSideTransaction<TData = any>(
     beans: BeanCollection,
     transaction: ServerSideTransaction<TData>
 ): ServerSideTransactionResult<TData> | undefined {
-    return beans.ssrmTransactionManager?.applyTransaction(transaction);
+    return beans.ssrmTxnManager?.applyTransaction(transaction);
 }
 
 export function applyServerSideRowData<TData = any>(
@@ -52,7 +52,7 @@ export function applyServerSideTransactionAsync<TData = any>(
     transaction: ServerSideTransaction<TData>,
     callback?: (res: ServerSideTransactionResult<TData>) => void
 ): void {
-    return beans.ssrmTransactionManager?.applyTransactionAsync(transaction, callback);
+    return beans.ssrmTxnManager?.applyTransactionAsync(transaction, callback);
 }
 
 export function retryServerSideLoads(beans: BeanCollection): void {
@@ -60,7 +60,7 @@ export function retryServerSideLoads(beans: BeanCollection): void {
 }
 
 export function flushServerSideAsyncTransactions(beans: BeanCollection): void {
-    return beans.ssrmTransactionManager?.flushAsyncTransactions();
+    return beans.ssrmTxnManager?.flushAsyncTransactions();
 }
 
 export function refreshServerSide(beans: BeanCollection, params?: RefreshServerSideParams): void {

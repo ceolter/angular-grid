@@ -91,7 +91,7 @@ export class ToolPanelColumnGroupComp extends Component {
             [AgCheckboxSelector]
         );
 
-        this.eDragHandle = _createIconNoSpan('columnDrag', this.gos)!;
+        this.eDragHandle = _createIconNoSpan('columnDrag', this.beans)!;
         this.eDragHandle.classList.add('ag-drag-handle', 'ag-column-select-column-group-drag-handle');
 
         const checkboxGui = this.cbSelect.getGui();
@@ -278,8 +278,8 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private setupExpandContract(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.gos, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.gos, null));
+        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.beans, null));
+        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.beans, null));
 
         const listener = this.onExpandOrContractClicked.bind(this);
         this.addManagedElementListeners(this.eGroupClosedIcon, { click: listener });

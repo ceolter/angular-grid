@@ -15,10 +15,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../services/c
 import type { FontPanelParams } from './format/fontPanel';
 
 export class ChartMenuParamsFactory extends BeanStub {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     constructor(private readonly chartOptionsProxy: ChartOptionsProxy) {
@@ -36,7 +36,7 @@ export class ChartMenuParamsFactory extends BeanStub {
         return this.addValueParams(
             expression,
             {
-                label: this.chartTranslationService.translate(labelKey ?? 'color'),
+                label: this.chartTranslation.translate(labelKey ?? 'color'),
                 labelWidth: 'flex',
                 inputWidth: 'flex',
                 labelAlignment: 'top',
@@ -59,7 +59,7 @@ export class ChartMenuParamsFactory extends BeanStub {
         return this.addValueParams<AgInputNumberFieldParams>(
             expression,
             {
-                label: this.chartTranslationService.translate(labelKey),
+                label: this.chartTranslation.translate(labelKey),
                 labelAlignment: 'top',
                 labelWidth: 'flex',
                 inputWidth: 'flex',
@@ -101,7 +101,7 @@ export class ChartMenuParamsFactory extends BeanStub {
         defaultMaxValue: number
     ): AgSliderParams {
         return {
-            label: this.chartTranslationService.translate(labelKey),
+            label: this.chartTranslation.translate(labelKey),
             minValue: 0,
             maxValue: Math.max(value, defaultMaxValue),
             textFieldWidth: 45,
@@ -119,7 +119,7 @@ export class ChartMenuParamsFactory extends BeanStub {
     ): AgCheckboxParams {
         const value = this.chartOptionsProxy.getValue<boolean>(expression);
         const params: AgCheckboxParams = {
-            label: this.chartTranslationService.translate(labelKey),
+            label: this.chartTranslation.translate(labelKey),
             value,
             readOnly: options?.readOnly,
             passive: options?.passive,
@@ -152,7 +152,7 @@ export class ChartMenuParamsFactory extends BeanStub {
         onValueChange: (value: any) => void
     ): AgSelectParams {
         return {
-            label: this.chartTranslationService.translate(labelKey),
+            label: this.chartTranslation.translate(labelKey),
             labelAlignment: 'top',
             options,
             pickerGap: 6,
@@ -164,7 +164,7 @@ export class ChartMenuParamsFactory extends BeanStub {
     public getDefaultFontPanelParams(expression: string, labelKey: ChartTranslationKey): FontPanelParams {
         const keyMapper = (key: string) => `${expression}.${key}`;
         return this.addEnableParams<FontPanelParams>(keyMapper('enabled'), {
-            name: this.chartTranslationService.translate(labelKey),
+            name: this.chartTranslation.translate(labelKey),
             suppressEnabledCheckbox: false,
             chartMenuParamsFactory: this,
             keyMapper,

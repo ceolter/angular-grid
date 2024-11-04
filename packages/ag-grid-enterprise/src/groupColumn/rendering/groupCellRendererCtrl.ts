@@ -532,7 +532,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         const params = this.params;
 
         const setupIcon = (iconName: 'groupExpanded' | 'groupContracted', element: HTMLElement) => {
-            const icon = _createIconNoSpan(iconName, this.gos, null);
+            const icon = _createIconNoSpan(iconName, this.beans, null);
             if (icon) {
                 element.appendChild(icon);
                 this.addDestroyFunc(() => element.removeChild(icon));

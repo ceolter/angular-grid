@@ -31,10 +31,10 @@ function _capitalise(str: string): string {
 }
 
 export class FontPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private readonly fontGroup: AgGroupComponent = RefPlaceholder;
@@ -203,7 +203,7 @@ export class FontPanel extends Component {
 
         const options = weightStyles.map((ws) => ({
             value: ws.name,
-            text: this.chartTranslationService.translate(ws.name),
+            text: this.chartTranslation.translate(ws.name),
         }));
 
         return this.params.chartMenuParamsFactory.getDefaultSelectParamsWithoutValueParams(

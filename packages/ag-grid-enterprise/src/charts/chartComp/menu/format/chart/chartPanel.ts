@@ -9,10 +9,10 @@ import { BackgroundPanel } from './backgroundPanel';
 import { PaddingPanel } from './paddingPanel';
 
 export class ChartPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly chartGroup: AgGroupComponent = RefPlaceholder;
 
@@ -31,7 +31,7 @@ export class ChartPanel extends Component {
         const chartGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-top-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('chartStyle'),
+            title: this.chartTranslation.translate('chartStyle'),
             expanded,
             suppressEnabledCheckbox: true,
             items: [

@@ -10,6 +10,10 @@ import { DetailGridApiService } from './detailGridApiService';
 import { addDetailGridInfo, forEachDetailGridInfo, getDetailGridInfo, removeDetailGridInfo } from './masterDetailApi';
 import { MasterDetailService } from './masterDetailService';
 
+/**
+ * @feature Master Detail
+ * @gridOption masterDetail
+ */
 export const MasterDetailCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MasterDetailCoreModule'),
     beans: [MasterDetailService],
@@ -18,6 +22,9 @@ export const MasterDetailCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule, GroupCellRendererModule],
 };
 
+/**
+ * @feature Master Detail
+ */
 export const MasterDetailApiModule: _ModuleWithApi<_MasterDetailGridApi> = {
     ...baseEnterpriseModule('MasterDetailApiModule'),
     beans: [DetailGridApiService],
@@ -30,6 +37,9 @@ export const MasterDetailApiModule: _ModuleWithApi<_MasterDetailGridApi> = {
     dependsOn: [MasterDetailCoreModule],
 };
 
+/**
+ * @feature Master Detail
+ */
 export const MasterDetailModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MasterDetailModule'),
     dependsOn: [MasterDetailCoreModule, MasterDetailApiModule, ClientSideRowModelExpansionModule],

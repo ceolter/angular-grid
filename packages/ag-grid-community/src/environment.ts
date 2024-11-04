@@ -220,8 +220,9 @@ export class Environment extends BeanStub implements NamedBean {
             newGridTheme = undefined;
         } else {
             newGridTheme = themeGridOption || themeQuartz;
-            if (!newGridTheme?.getCssClass) {
+            if (!isValidTheme(newGridTheme)) {
                 _error(240, { theme: newGridTheme });
+                newGridTheme = themeQuartz;
             }
             newThemeClass = newGridTheme.getCssClass();
         }
@@ -239,11 +240,11 @@ export class Environment extends BeanStub implements NamedBean {
                 loadThemeGoogleFonts: gos.get('loadThemeGoogleFonts'),
                 container: eGridDiv,
             });
-            this.fireGridStylesChangedEvent('themeChanged');
         }
         if (newThemeClass !== oldThemeClass) {
             this.themeClass = newThemeClass;
             this.applyThemeClasses(eGridDiv);
+            this.fireGridStylesChangedEvent('themeChanged');
         }
         // --ag-legacy-styles-loaded is defined by the Sass themes which
         // shouldn't be used at the same time as Theming API
@@ -261,6 +262,11 @@ export class Environment extends BeanStub implements NamedBean {
         this.gridTheme = undefined;
     }
 }
+
+const isValidTheme = (theme: GridTheme): boolean => {
+    const isFunction = (f: unknown) => typeof f === 'function';
+    return isFunction(theme.getCssClass) && isFunction(theme.startUse) && isFunction(theme.stopUse);
+};
 
 type Variable = {
     cssName: string;

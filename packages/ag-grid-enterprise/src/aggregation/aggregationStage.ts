@@ -32,7 +32,7 @@ interface AggregationDetails {
 }
 
 export class AggregationStage extends BeanStub implements NamedBean, IRowNodeStage {
-    beanName = 'aggregationStage' as const;
+    beanName = 'aggStage' as const;
 
     public refreshProps: Set<keyof GridOptions<any>> = new Set([
         'getGroupRowAgg',

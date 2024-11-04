@@ -5,6 +5,7 @@ import type {
     ChartModel,
     ChartToolPanelName,
     ChartType,
+    Environment,
     FocusService,
     IAggFunc,
     PartialCellRange,
@@ -70,19 +71,21 @@ export interface GridChartParams {
 
 export class GridChartComp extends Component {
     private crossFilterService: ChartCrossFilterService;
-    private chartTranslationService: ChartTranslationService;
-    private chartMenuService: ChartMenuService;
+    private chartTranslation: ChartTranslationService;
+    private chartMenuSvc: ChartMenuService;
     private focusSvc: FocusService;
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
+    private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
-        this.crossFilterService = beans.chartCrossFilterService as ChartCrossFilterService;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
+        this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
         this.focusSvc = beans.focusSvc;
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
+        this.environment = beans.environment;
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
@@ -156,6 +159,23 @@ export class GridChartComp extends Component {
         this.raiseChartCreatedEvent();
     }
 
+    private themeEl?: HTMLElement;
+    public setThemeEl(el: HTMLElement): void {
+        if (!this.themeEl) {
+            this.addManagedEventListeners({
+                gridStylesChanged: this.updateTheme.bind(this),
+            });
+        }
+        this.themeEl = el;
+        this.updateTheme();
+    }
+
+    private updateTheme() {
+        if (this.themeEl) {
+            this.environment.applyThemeClasses(this.themeEl);
+        }
+    }
+
     private createChart(): void {
         // if chart already exists, destroy it and remove it from DOM
         let chartInstance: AgChartInstance | undefined = undefined;
@@ -190,7 +210,7 @@ export class GridChartComp extends Component {
             chartOptionsToRestore: this.params.chartOptionsToRestore,
             chartPaletteToRestore: this.params.chartPaletteToRestore,
             seriesChartTypes: this.chartController.getSeriesChartTypes(),
-            translate: (toTranslate: ChartTranslationKey) => this.chartTranslationService.translate(toTranslate),
+            translate: (toTranslate: ChartTranslationKey) => this.chartTranslation.translate(toTranslate),
         };
 
         // ensure 'restoring' options are not reused when switching chart types
@@ -278,9 +298,7 @@ export class GridChartComp extends Component {
     }
 
     private addDialog(): void {
-        const title = this.chartTranslationService.translate(
-            this.params.pivotChart ? 'pivotChartTitle' : 'rangeChartTitle'
-        );
+        const title = this.chartTranslation.translate(this.params.pivotChart ? 'pivotChartTitle' : 'rangeChartTitle');
 
         const { width, height } = this.getBestDialogSize();
 
@@ -308,7 +326,7 @@ export class GridChartComp extends Component {
 
         this.chartDialog.addEventListener('destroyed', () => {
             this.destroy();
-            this.chartMenuService.hideAdvancedSettings();
+            this.chartMenuSvc.hideAdvancedSettings();
             const lastFocusedCell = this.focusSvc.getFocusedCell();
             setTimeout(() => {
                 if (this.focusSvc.isAlive()) {
@@ -472,12 +490,12 @@ export class GridChartComp extends Component {
         }
 
         if (pivotModeDisabled) {
-            this.eEmpty.innerText = this.chartTranslationService.translate('pivotChartRequiresPivotMode');
+            this.eEmpty.innerText = this.chartTranslation.translate('pivotChartRequiresPivotMode');
             return true;
         }
 
         if (isEmptyChart) {
-            this.eEmpty.innerText = this.chartTranslationService.translate('noDataToChart');
+            this.eEmpty.innerText = this.chartTranslation.translate('noDataToChart');
             return true;
         }
 

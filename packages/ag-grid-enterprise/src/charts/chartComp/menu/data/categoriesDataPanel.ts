@@ -64,7 +64,7 @@ export class CategoriesDataPanel extends DragDataPanel {
         this.groupComp.addItem(
             (this.aggFuncToggle = this.createBean(
                 new AgToggleButton({
-                    label: this.chartTranslationService.translate('aggregate'),
+                    label: this.chartTranslation.translate('aggregate'),
                     labelAlignment: 'left',
                     labelWidth: 'flex',
                     inputWidth: 'flex',
@@ -82,13 +82,13 @@ export class CategoriesDataPanel extends DragDataPanel {
             (this.aggFuncSelect = this.createBean(
                 new AgSelect<AggFuncPreset>({
                     options: [
-                        { value: 'sum', text: this.chartTranslationService.translate('sum') },
-                        { value: 'first', text: this.chartTranslationService.translate('first') },
-                        { value: 'last', text: this.chartTranslationService.translate('last') },
-                        { value: 'min', text: this.chartTranslationService.translate('min') },
-                        { value: 'max', text: this.chartTranslationService.translate('max') },
-                        { value: 'count', text: this.chartTranslationService.translate('count') },
-                        { value: 'avg', text: this.chartTranslationService.translate('avg') },
+                        { value: 'sum', text: this.chartTranslation.translate('sum') },
+                        { value: 'first', text: this.chartTranslation.translate('first') },
+                        { value: 'last', text: this.chartTranslation.translate('last') },
+                        { value: 'min', text: this.chartTranslation.translate('min') },
+                        { value: 'max', text: this.chartTranslation.translate('max') },
+                        { value: 'count', text: this.chartTranslation.translate('count') },
+                        { value: 'avg', text: this.chartTranslation.translate('avg') },
                     ],
                     value: typeof aggFunc === 'string' ? aggFunc : undefined,
                     onValueChange: (value) => {
