@@ -155,14 +155,14 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     private createParams(): IHeaderParams {
-        const { menuSvc, sortSvc } = this.beans;
+        const { menuSvc, sortSvc, colFilter } = this.beans;
         const params: IHeaderParams = this.gos.addGridCommonParams({
             column: this.column,
             displayName: this.displayName!,
             enableSorting: this.column.isSortable(),
             enableMenu: this.menuEnabled,
             enableFilterButton: this.openFilterEnabled && !!menuSvc?.isHeaderFilterButtonEnabled(this.column),
-            enableFilterIcon: !this.openFilterEnabled || _isLegacyMenuEnabled(this.gos),
+            enableFilterIcon: !!colFilter && (!this.openFilterEnabled || _isLegacyMenuEnabled(this.gos)),
             showColumnMenu: (buttonElement: HTMLElement) => {
                 menuSvc?.showColumnMenu({
                     column: this.column,
