@@ -301,7 +301,7 @@ export interface CoreBeanCollection {
     cellFlashSvc?: CellFlashService;
     masterDetailSvc?: IMasterDetailService;
     tooltipSvc?: TooltipService;
-    columnGroupSvc?: ColumnGroupService;
+    colGroupSvc?: ColumnGroupService;
     rowAutoHeight?: RowAutoHeightService;
     rowChildrenSvc?: IRowChildrenService;
 }
@@ -352,36 +352,32 @@ export type BeanName =
     | 'cellFlashSvc'
     | 'cellNavigation'
     | 'cellRendererFactory'
-    | 'cellRendererService'
     | 'cellStyles'
-    | 'changeDetectionService'
-    | 'chartColumnService'
-    | 'chartCrossFilterService'
+    | 'changeDetectionSvc'
+    | 'chartColSvc'
+    | 'chartCrossFilterSvc'
     | 'chartMenuItemMapper'
     | 'chartMenuListFactory'
-    | 'chartMenuService'
+    | 'chartMenuSvc'
     | 'chartTranslation'
     | 'chartSvc'
     | 'clipboardSvc'
     | 'colAnimation'
     | 'colAutosize'
-    | 'columnChooserFactory'
-    | 'columnController'
+    | 'colChooserFactory'
     | 'colDefFactory'
-    | 'columnEditorFactory'
     | 'colFactory'
     | 'colFilter'
     | 'colFlex'
-    | 'columnGroupSvc'
+    | 'colGroupSvc'
     | 'colHover'
-    | 'columnMenuFactory'
+    | 'colMenuFactory'
     | 'colModel'
     | 'colMoves'
     | 'colNames'
     | 'colResize'
     | 'colState'
-    | 'columnToolPanelFactory'
-    | 'columnUtils'
+    | 'colToolPanelFactory'
     | 'colViewport'
     | 'pivotResultCols'
     | 'context'

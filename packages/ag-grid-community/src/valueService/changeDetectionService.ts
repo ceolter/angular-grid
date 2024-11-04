@@ -13,7 +13,7 @@ import { ChangedPath } from '../utils/changedPath';
 // Matches value in clipboard module
 const SOURCE_PASTE = 'paste';
 export class ChangeDetectionService extends BeanStub implements NamedBean {
-    beanName = 'changeDetectionService' as const;
+    beanName = 'changeDetectionSvc' as const;
 
     private rowModel: IRowModel;
     private rowRenderer: RowRenderer;

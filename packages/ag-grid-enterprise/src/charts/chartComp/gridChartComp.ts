@@ -71,15 +71,15 @@ export interface GridChartParams {
 export class GridChartComp extends Component {
     private crossFilterService: ChartCrossFilterService;
     private chartTranslation: ChartTranslationService;
-    private chartMenuService: ChartMenuService;
+    private chartMenuSvc: ChartMenuService;
     private focusSvc: FocusService;
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
 
     public wireBeans(beans: BeanCollection): void {
-        this.crossFilterService = beans.chartCrossFilterService as ChartCrossFilterService;
+        this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
         this.focusSvc = beans.focusSvc;
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
@@ -306,7 +306,7 @@ export class GridChartComp extends Component {
 
         this.chartDialog.addEventListener('destroyed', () => {
             this.destroy();
-            this.chartMenuService.hideAdvancedSettings();
+            this.chartMenuSvc.hideAdvancedSettings();
             const lastFocusedCell = this.focusSvc.getFocusedCell();
             setTimeout(() => {
                 if (this.focusSvc.isAlive()) {

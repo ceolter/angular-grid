@@ -64,7 +64,7 @@ export class StateService extends BeanStub implements NamedBean {
     private sideBar?: ISideBarService;
     private rangeSvc?: IRangeService;
     private rowModel: IRowModel;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
     private updateRowGroupExpansionStateTimer: ReturnType<typeof setTimeout> | number = 0;
 
     public wireBeans(beans: BeanCollection): void {
@@ -82,7 +82,7 @@ export class StateService extends BeanStub implements NamedBean {
         this.sideBar = beans.sideBar;
         this.rangeSvc = beans.rangeSvc;
         this.rowModel = beans.rowModel;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     private isClientSideRowModel: boolean;
@@ -525,15 +525,15 @@ export class StateService extends BeanStub implements NamedBean {
 
         if (columnGroupStates) {
             // no easy/performant way of knowing which column groups are pivot column groups
-            this.columnGroupSvc?.setColumnGroupState(columnGroupStates, 'gridInitializing');
+            this.colGroupSvc?.setColumnGroupState(columnGroupStates, 'gridInitializing');
         }
     }
 
     private getColumnGroupState(): ColumnGroupState | undefined {
-        if (!this.columnGroupSvc) {
+        if (!this.colGroupSvc) {
             return undefined;
         }
-        const columnGroupState = this.columnGroupSvc.getColumnGroupState();
+        const columnGroupState = this.colGroupSvc.getColumnGroupState();
         const openColumnGroups: string[] = [];
         columnGroupState.forEach(({ groupId, open }) => {
             if (open) {
@@ -544,12 +544,12 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setColumnGroupState(initialState: GridState): void {
-        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.columnGroupSvc) {
+        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.colGroupSvc) {
             return;
         }
 
         const openColumnGroups = new Set(initialState.columnGroup?.openColumnGroupIds);
-        const existingColumnGroupState = this.columnGroupSvc.getColumnGroupState();
+        const existingColumnGroupState = this.colGroupSvc.getColumnGroupState();
         const stateItems = existingColumnGroupState.map(({ groupId }) => {
             const open = openColumnGroups.has(groupId);
             if (open) {
@@ -570,7 +570,7 @@ export class StateService extends BeanStub implements NamedBean {
         if (stateItems.length) {
             this.columnGroupStates = stateItems;
         }
-        this.columnGroupSvc.setColumnGroupState(stateItems, 'gridInitializing');
+        this.colGroupSvc.setColumnGroupState(stateItems, 'gridInitializing');
     }
 
     private getFilterState(): FilterState | undefined {

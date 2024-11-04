@@ -32,7 +32,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
     private expansionSvc?: IExpansionService;
     private clipboardSvc?: IClipboardService;
     private aggFuncSvc?: IAggFuncService;
-    private columnChooserFactory?: ColumnChooserFactory;
+    private colChooserFactory?: ColumnChooserFactory;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
@@ -45,7 +45,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
         this.expansionSvc = beans.expansionSvc;
         this.clipboardSvc = beans.clipboardSvc;
         this.aggFuncSvc = beans.aggFuncSvc;
-        this.columnChooserFactory = beans.columnChooserFactory as ColumnChooserFactory;
+        this.colChooserFactory = beans.colChooserFactory as ColumnChooserFactory;
     }
 
     public mapWithStockItems(
@@ -361,8 +361,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                 return {
                     name: localeTextFunc('columnChooser', 'Choose Columns'),
                     icon: _createIconNoSpan('columns', this.gos, null),
-                    action: () =>
-                        this.columnChooserFactory?.showColumnChooser({ column, eventSource: sourceElement() }),
+                    action: () => this.colChooserFactory?.showColumnChooser({ column, eventSource: sourceElement() }),
                 };
             case 'sortAscending':
                 return {

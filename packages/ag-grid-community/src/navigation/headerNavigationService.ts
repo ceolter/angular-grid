@@ -55,14 +55,14 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
     private ctrlsSvc: CtrlsService;
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.focusSvc = beans.focusSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
         this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     private gridBodyCon: GridBodyCtrl;
@@ -86,7 +86,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         if (typeof colKey === 'string') {
             column = this.colModel.getCol(colKey);
             if (!column) {
-                column = this.columnGroupSvc?.getColumnGroup(colKey) ?? null;
+                column = this.colGroupSvc?.getColumnGroup(colKey) ?? null;
             }
         } else {
             column = colKey as AgColumn | AgColumnGroup;
@@ -301,7 +301,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         let getColMethod: 'getColBefore' | 'getColAfter';
 
         if (isColumnGroup(focusedHeader.column)) {
-            nextColumn = this.columnGroupSvc?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
+            nextColumn = this.colGroupSvc?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
         } else {
             getColMethod = `getCol${direction}` as any;
             nextColumn = this.visibleCols[getColMethod](focusedHeader.column as AgColumn)!;
@@ -424,7 +424,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         const type = childContainer?.getRowType(level);
 
         if (type == 'group') {
-            const columnGroup = this.columnGroupSvc?.getColGroupAtLevel(column, level);
+            const columnGroup = this.colGroupSvc?.getColGroupAtLevel(column, level);
             return {
                 headerRowIndex: level,
                 column: columnGroup!,

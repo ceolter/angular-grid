@@ -500,9 +500,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
             }
             const { filterModel } = item;
             const { colId } = filterModel;
-            const hasColumn = this.advancedFilterExpressionService
-                .getColumnAutocompleteEntries()
-                .find(({ key }) => key === colId);
+            const hasColumn = this.advFilterExpSvc.getColumnAutocompleteEntries().find(({ key }) => key === colId);
             const columnDetails = this.advFilterExpSvc.getColumnDetails(filterModel.colId);
             if (!hasColumn || !columnDetails.column) {
                 item.valid = false;

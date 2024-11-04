@@ -333,7 +333,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         }
 
         // clipboardSvc has to do changeDetection itself, to prevent repeat logic in favour of batching.
-        // changeDetectionService is disabled for this action.
+        // changeDetectionSvc is disabled for this action.
         this.beans.rowRenderer.refreshCells({ rowNodes: nodesToRefresh });
 
         this.dispatchFlashCells(cellsToFlash);

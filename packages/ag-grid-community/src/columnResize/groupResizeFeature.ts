@@ -23,14 +23,14 @@ interface ColumnSizeAndRatios {
 export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature {
     private horizontalResizeSvc: HorizontalResizeService;
     private autoWidthCalc: AutoWidthCalculator;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
     private colResize?: ColumnResizeService;
     private colAutosize?: ColumnAutosizeService;
 
     public wireBeans(beans: BeanCollection) {
         this.horizontalResizeSvc = beans.horizontalResizeSvc!;
         this.autoWidthCalc = beans.autoWidthCalc!;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
         this.colResize = beans.colResize;
         this.colAutosize = beans.colAutosize;
     }
@@ -113,7 +113,7 @@ export class GroupResizeFeature extends BeanStub implements IHeaderResizeFeature
         let groupAfter: AgColumnGroup | null = null;
 
         if (shiftKey) {
-            groupAfter = this.columnGroupSvc?.getGroupAtDirection(this.columnGroup, 'After') ?? null;
+            groupAfter = this.colGroupSvc?.getGroupAtDirection(this.columnGroup, 'After') ?? null;
         }
 
         if (groupAfter) {

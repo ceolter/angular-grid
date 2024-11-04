@@ -35,13 +35,13 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private colFlex?: ColumnFlexService;
     private colViewport: ColumnViewportService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colFlex = beans.colFlex;
         this.colViewport = beans.colViewport;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     // tree of columns to be displayed for each section
@@ -76,7 +76,7 @@ export class VisibleColsService extends BeanStub implements NamedBean {
             this.buildTrees();
         }
 
-        this.columnGroupSvc?.updateOpenClosedVisibility();
+        this.colGroupSvc?.updateOpenClosedVisibility();
 
         this.leftCols = pickDisplayedCols(this.treeLeft);
         this.centerCols = pickDisplayedCols(this.treeCenter);
@@ -497,7 +497,7 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     }
 
     public createGroups(params: CreateGroupsParams): (AgColumn | AgColumnGroup)[] {
-        return this.columnGroupSvc ? this.columnGroupSvc.createColumnGroups(params) : params.columns;
+        return this.colGroupSvc ? this.colGroupSvc.createColumnGroups(params) : params.columns;
     }
 }
 

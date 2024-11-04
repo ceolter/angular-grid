@@ -5,11 +5,11 @@ import type { ChartMenuService } from '../../../services/chartMenuService';
 import { TitlePanel } from './titlePanel';
 
 export class ChartTitlePanel extends TitlePanel {
-    private chartMenuService: ChartMenuService;
+    private chartMenuSvc: ChartMenuService;
 
     public override wireBeans(beans: BeanCollection): void {
         super.wireBeans(beans);
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
     }
 
     private titlePlaceholder: string;
@@ -41,7 +41,7 @@ export class ChartTitlePanel extends TitlePanel {
     }
 
     protected override onEnableChange(enabled: boolean): void {
-        if (this.chartMenuService.doesChartToolbarExist()) {
+        if (this.chartMenuSvc.doesChartToolbarExist()) {
             // extra padding is only included when the toolbar is present
             const topPadding: number = this.chartOptions.getValue('padding.top');
             this.chartOptions.setValue('padding.top', enabled ? topPadding - 20 : topPadding + 20);

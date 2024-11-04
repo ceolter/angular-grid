@@ -18,12 +18,12 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     beanName = 'chartMenuListFactory' as const;
 
     private popupSvc: PopupService;
-    private chartMenuService: ChartMenuService;
+    private chartMenuSvc: ChartMenuService;
     private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
@@ -35,9 +35,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
         chartMenuContext: ChartMenuContext;
     }): void {
         const { eventSource, showMenu, chartMenuContext } = params;
-        const areChartToolPanelsEnabled = this.chartMenuService.doChartToolPanelsExist(
-            chartMenuContext.chartController
-        );
+        const areChartToolPanelsEnabled = this.chartMenuSvc.doChartToolPanelsExist(chartMenuContext.chartController);
         const menuItems = this.mapWithStockItems(
             this.getMenuItems(chartMenuContext.chartController, areChartToolPanelsEnabled),
             chartMenuContext,
@@ -177,23 +175,23 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
                 return this.createMenuItem(
                     this.chartTranslation.translate('chartAdvancedSettings'),
                     'chartsMenuAdvancedSettings',
-                    () => this.chartMenuService.openAdvancedSettings(chartMenuContext, eventSource)
+                    () => this.chartMenuSvc.openAdvancedSettings(chartMenuContext, eventSource)
                 );
             case 'chartUnlink':
                 return chartMenuContext.chartController.isChartLinked()
                     ? this.createMenuItem(this.chartTranslation.translate('chartUnlink'), 'unlinked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartLink':
                 return !chartMenuContext.chartController.isChartLinked()
                     ? this.createMenuItem(this.chartTranslation.translate('chartLink'), 'linked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartDownload':
                 return this.createMenuItem(this.chartTranslation.translate('chartDownload'), 'save', () =>
-                    this.chartMenuService.downloadChart(chartMenuContext)
+                    this.chartMenuSvc.downloadChart(chartMenuContext)
                 );
         }
         return null;

@@ -210,7 +210,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             displayName: this.displayName!,
             columnGroup: this.column,
             setExpanded: (expanded: boolean) => {
-                this.beans.columnGroupSvc!.setColumnGroupOpened(
+                this.beans.colGroupSvc!.setColumnGroupOpened(
                     this.column.getProvidedColumnGroup(),
                     expanded,
                     'gridInitializing'
@@ -353,7 +353,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             const column = this.column;
             const newExpandedValue = !column.isExpanded();
 
-            this.beans.columnGroupSvc!.setColumnGroupOpened(
+            this.beans.colGroupSvc!.setColumnGroupOpened(
                 column.getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'

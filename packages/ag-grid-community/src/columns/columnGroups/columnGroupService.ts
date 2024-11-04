@@ -34,7 +34,7 @@ export interface CreateGroupsParams {
 }
 
 export class ColumnGroupService extends BeanStub implements NamedBean {
-    beanName = 'columnGroupSvc' as const;
+    beanName = 'colGroupSvc' as const;
 
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
