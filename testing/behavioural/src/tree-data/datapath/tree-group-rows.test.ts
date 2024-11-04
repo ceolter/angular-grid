@@ -1,9 +1,9 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
-import { GridRows, TestGridsManager } from '../../test-utils';
+import { GridRows, TestGridsManager, getRowsSnapshot } from '../../test-utils';
 import type { GridRowsOptions } from '../../test-utils';
-import { getRowsSnapshot, simpleHierarchyRowSnapshot } from '../row-snapshot-test-utils';
+import { simpleHierarchyRowsSnapshot } from './simpleHierarchyRowsSnapshot';
 
 describe('ag-grid grouping tree data with groupRows', () => {
     const gridsManager = new TestGridsManager({
@@ -76,7 +76,7 @@ describe('ag-grid grouping tree data with groupRows', () => {
         expect(rows[7].data).toEqual(rowData[3]);
 
         expect(rowsSnapshot).toMatchObject(
-            simpleHierarchyRowSnapshot().map((row) => {
+            simpleHierarchyRowsSnapshot().map((row) => {
                 return {
                     ...row,
                     groupData: {},

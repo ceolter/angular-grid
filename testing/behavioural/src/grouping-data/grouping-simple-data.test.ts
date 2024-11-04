@@ -2,9 +2,8 @@ import type { GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-import { GridRows, TestGridsManager } from '../../test-utils';
-import { getRowsSnapshot } from '../row-snapshot-test-utils';
-import type { RowSnapshot } from '../row-snapshot-test-utils';
+import type { RowSnapshot } from '../test-utils';
+import { GridRows, TestGridsManager, getRowsSnapshot } from '../test-utils';
 
 describe('ag-grid grouping simple data', () => {
     const gridsManager = new TestGridsManager({

@@ -2,10 +2,8 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridOptions } from 'ag-grid-community';
 import { RowGroupingModule, TreeDataModule } from 'ag-grid-enterprise';
 
-import type { GridRowsOptions } from '../../test-utils';
-import { GridRows, TestGridsManager } from '../../test-utils';
-import type { RowSnapshot } from '../row-snapshot-test-utils';
-import { getRowsSnapshot } from '../row-snapshot-test-utils';
+import type { GridRowsOptions, RowSnapshot } from '../../test-utils';
+import { GridRows, TestGridsManager, getRowsSnapshot } from '../../test-utils';
 
 describe('ag-grid grouping treeData is reactive', () => {
     const gridsManager = new TestGridsManager({
@@ -39,8 +37,10 @@ describe('ag-grid grouping treeData is reactive', () => {
                 { field: 'v' },
             ],
             autoGroupColumnDef: {
-                headerName: 'Organisation Hierarchy',
-                cellRendererParams: { suppressCount: true },
+                headerName: 'group column',
+                valueGetter: (params) => {
+                    return 'X-' + params.node?.id;
+                },
             },
             treeData: false,
             animateRows: false,
@@ -52,7 +52,8 @@ describe('ag-grid grouping treeData is reactive', () => {
         const api = gridsManager.createGrid('myGrid', gridOptions);
 
         const gridRowsOptions: GridRowsOptions = {
-            columns: ['groupType', 'g', 'v'],
+            columns: true,
+            checkDom: true,
         };
 
         for (let repeat = 0; repeat < 2; repeat++) {
@@ -60,12 +61,12 @@ describe('ag-grid grouping treeData is reactive', () => {
 
             let gridRows = new GridRows(api, 'data 1 ' + repeat, gridRowsOptions);
             await gridRows.check(`
-                ROOT id:ROOT_NODE_ID groupType:"Filler"
-                ├─┬ filler id:row-group-g-0 groupType:"Filler"
-                │ ├── LEAF id:0 groupType:"Provided" g:0 v:0
-                │ └── LEAF id:2 groupType:"Provided" g:0 v:2
-                └─┬ filler id:row-group-g-1 groupType:"Filler"
-                · └── LEAF id:1 groupType:"Provided" g:1 v:1
+                ROOT id:ROOT_NODE_ID ag-Grid-AutoColumn:"X-ROOT_NODE_ID" groupType:"Filler"
+                ├─┬ filler id:row-group-g-0 ag-Grid-AutoColumn:0 groupType:"Filler"
+                │ ├── LEAF id:0 ag-Grid-AutoColumn:"X-0" groupType:"Provided" g:0 v:0
+                │ └── LEAF id:2 ag-Grid-AutoColumn:"X-2" groupType:"Provided" g:0 v:2
+                └─┬ filler id:row-group-g-1 ag-Grid-AutoColumn:1 groupType:"Filler"
+                · └── LEAF id:1 ag-Grid-AutoColumn:"X-1" groupType:"Provided" g:1 v:1
             `);
 
             const groupRows = gridRows.rowNodes;
@@ -229,12 +230,12 @@ describe('ag-grid grouping treeData is reactive', () => {
 
             gridRows = new GridRows(api, 'data 2 ' + repeat, gridRowsOptions);
             await gridRows.check(`
-                ROOT id:ROOT_NODE_ID groupType:"Filler"
-                ├─┬ A GROUP id:0 groupType:"Provided" g:0 v:0
-                │ └─┬ B filler id:row-group-0-A-1-B groupType:"Filler"
-                │ · └── C LEAF id:1 groupType:"Provided" g:1 v:1
-                └─┬ D filler id:row-group-0-D groupType:"Filler"
-                · └── E LEAF id:2 groupType:"Provided" g:0 v:2
+                ROOT id:ROOT_NODE_ID ag-Grid-AutoColumn:"X-ROOT_NODE_ID" groupType:"Filler"
+                ├─┬ A GROUP id:0 ag-Grid-AutoColumn:"X-0" groupType:"Provided" g:0 v:0
+                │ └─┬ B filler id:row-group-0-A-1-B ag-Grid-AutoColumn:"X-row-group-0-A-1-B" groupType:"Filler"
+                │ · └── C LEAF id:1 ag-Grid-AutoColumn:"X-1" groupType:"Provided" g:1 v:1
+                └─┬ D filler id:row-group-0-D ag-Grid-AutoColumn:"X-row-group-0-D" groupType:"Filler"
+                · └── E LEAF id:2 ag-Grid-AutoColumn:"X-2" groupType:"Provided" g:0 v:2
             `);
 
             const treeRows = gridRows.rowNodes;

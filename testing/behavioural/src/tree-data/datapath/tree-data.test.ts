@@ -4,10 +4,9 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridOptions } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
-import { GridRows, TestGridsManager, asyncSetTimeout } from '../../test-utils';
-import type { GridRowsOptions } from '../../test-utils';
-import { getRowsSnapshot, simpleHierarchyRowSnapshot } from '../row-snapshot-test-utils';
-import type { RowSnapshot } from '../row-snapshot-test-utils';
+import { GridRows, TestGridsManager, asyncSetTimeout, getRowsSnapshot } from '../../test-utils';
+import type { GridRowsOptions, RowSnapshot } from '../../test-utils';
+import { simpleHierarchyRowsSnapshot } from './simpleHierarchyRowsSnapshot';
 
 const getDataPath = (data: any) => data.orgHierarchy;
 
@@ -139,7 +138,7 @@ describe('ag-grid tree data', () => {
         expect(rows[7].data).toEqual(rowData[3]);
 
         const rowsSnapshot = getRowsSnapshot(rows);
-        expect(rowsSnapshot).toMatchObject(simpleHierarchyRowSnapshot());
+        expect(rowsSnapshot).toMatchObject(simpleHierarchyRowsSnapshot());
     });
 
     test('ag-grid tree data with inverted order', async () => {

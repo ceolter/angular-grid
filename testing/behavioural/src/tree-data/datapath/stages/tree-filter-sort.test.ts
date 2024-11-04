@@ -4,7 +4,7 @@ import { TreeDataModule } from 'ag-grid-enterprise';
 import type { GridRowsOptions } from '../../../test-utils';
 import { GridRows, TestGridsManager, cachedJSONObjects } from '../../../test-utils';
 
-describe('ag-grid tree filter', () => {
+describe('ag-grid tree filter sort', () => {
     const gridsManager = new TestGridsManager({
         modules: [ClientSideRowModelModule, TreeDataModule],
     });

@@ -4,8 +4,8 @@ import type { GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
-import type { GridRowsOptions } from '../test-utils';
-import { GridRows, TestGridsManager, cachedJSONObjects } from '../test-utils';
+import type { GridRowsOptions } from '../../test-utils';
+import { GridRows, TestGridsManager, cachedJSONObjects } from '../../test-utils';
 
 describe('ag-grid hierarchical immutable tree data', () => {
     const gridsManager = new TestGridsManager({

@@ -13,7 +13,7 @@ const defaultGridRowsOptions: GridRowsOptions = {
 
 const getDataPath = (data: any) => data.orgHierarchy;
 
-describe('ag-grid tree data', () => {
+describe('ag-grid tree data reset', () => {
     const gridsManager = new TestGridsManager({
         modules: [ClientSideRowModelModule, TreeDataModule],
     });
