@@ -52,7 +52,7 @@ export class ColumnFactory extends BeanStub implements NamedBean {
             source
         );
         const treeDept = this.colGroupSvc?.findMaxDepth(unbalancedTree, 0) ?? 0;
-        const columnTree = this.columnGroupSvc
+        const columnTree = this.colGroupSvc
             ? this.colGroupSvc.balanceColumnTree(unbalancedTree, 0, treeDept, columnKeyCreator)
             : unbalancedTree;
 
