@@ -430,8 +430,7 @@ describe('ag-grid hierarchical tree data reset', () => {
         `);
     });
 
-    // TODO: tree data with children bug: selection is not cleared with setImmutableData for deleted nodes yet
-    test.skip('tree data setRowData with id maintains selection and expanded state, and follows order', async () => {
+    test('tree data setRowData with id maintains selection and expanded state, and follows order', async () => {
         const rowData1 = [
             {
                 id: 'g0',
@@ -557,24 +556,24 @@ describe('ag-grid hierarchical tree data reset', () => {
 
         await new GridRows(api, 'update 1', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
-            ├── N LEAF selected id:7 label:"7-v2"
-            ├─┬ R filler selected collapsed id:row-group-0-R
-            │ └── S LEAF selected hidden id:5 label:"5-v2"
-            ├─┬ X filler id:row-group-0-X
-            │ └─┬ Y GROUP id:2 label:"2-v2"
-            │ · └── Z LEAF selected id:1 label:"1-v2"
-            ├─┬ P filler selected collapsed id:row-group-0-P
-            │ └── Q LEAF selected hidden id:4 label:"4-v2"
-            └── M LEAF selected id:6 label:"6-v2"
+            ├── 7 LEAF selected id:7 label:"7-v2" x:"N"
+            ├─┬ g0 GROUP selected id:g0 label:"g-R" x:"R"
+            │ └── 5 LEAF selected id:5 label:"5-v2" x:"S"
+            ├─┬ g1 GROUP selected id:g1 label:"g-X" x:"X"
+            │ └─┬ 2 GROUP id:2 label:"2-v2" x:"Y"
+            │ · └── 1 LEAF selected id:1 label:"1-v2" x:"Z"
+            ├─┬ g2 GROUP selected collapsed id:g2 label:"g-P" x:"P"
+            │ └── 4 LEAF selected hidden id:4 label:"4-v2" x:"Q"
+            └── 6 LEAF selected id:6 label:"6-v2" x:"M"
         `);
 
         api.setGridOption('rowData', rowData3);
 
         await new GridRows(api, 'update 2', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
-            ├── a LEAF id:100 label:"100-v3"
-            └─┬ C filler id:row-group-0-C
-            · └── D LEAF id:3 label:"3-v3"
+            ├── 100 LEAF id:100 label:"100-v3" x:"a"
+            └─┬ g0 GROUP selected id:g0 label:"g-C" x:"C"
+            · └── 3 LEAF id:3 label:"3-v3" x:"D"
         `);
 
         api.setGridOption('rowData', []);
