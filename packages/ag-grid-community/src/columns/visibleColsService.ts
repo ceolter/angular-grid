@@ -60,13 +60,13 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     private ariaOrderColumns: AgColumn[];
 
     public refresh(source: ColumnEventType, skipTreeBuild = false): void {
-        const { colModel, columnGroupSvc, colViewport } = this.beans;
+        const { colModel, colGroupSvc, colViewport } = this.beans;
         // when we open/close col group, skipTreeBuild=false, as we know liveCols haven't changed
         if (!skipTreeBuild) {
-            this.buildTrees(colModel, columnGroupSvc);
+            this.buildTrees(colModel, colGroupSvc);
         }
 
-        columnGroupSvc?.updateOpenClosedVisibility();
+        colGroupSvc?.updateOpenClosedVisibility();
 
         const leftCols = pickDisplayedCols(this.treeLeft);
         this.leftCols = leftCols;

@@ -21,11 +21,11 @@ const DefaultDataPanelDef: ChartDataPanelType = {
 };
 
 export class ChartDataPanel extends Component {
-    protected chartTranslationService: ChartTranslationService;
+    protected chartTranslation: ChartTranslationService;
     private chartSvc: IChartService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
         this.chartSvc = beans.chartSvc!;
     }
 
@@ -198,8 +198,8 @@ export class ChartDataPanel extends Component {
     }
 
     private getCategoryGroupTitle(isCategorySeriesSwitched: boolean): string {
-        if (isCategorySeriesSwitched) return this.chartTranslationService.translate('seriesLabels');
-        return this.chartTranslationService.translate(this.chartController.isActiveXYChart() ? 'labels' : 'categories');
+        if (isCategorySeriesSwitched) return this.chartTranslation.translate('seriesLabels');
+        return this.chartTranslation.translate(this.chartController.isActiveXYChart() ? 'labels' : 'categories');
     }
 
     private getCategoryGroupMultipleSelect(chartType: ChartType, isCategorySeriesSwitched: boolean): boolean {
@@ -208,8 +208,8 @@ export class ChartDataPanel extends Component {
     }
 
     private getSeriesGroupTitle(isCategorySeriesSwitched: boolean): string {
-        if (isCategorySeriesSwitched) return this.chartTranslationService.translate('categoryValues');
-        return this.chartTranslationService.translate(this.chartController.isActiveXYChart() ? 'xyValues' : 'series');
+        if (isCategorySeriesSwitched) return this.chartTranslation.translate('categoryValues');
+        return this.chartTranslation.translate(this.chartController.isActiveXYChart() ? 'xyValues' : 'series');
     }
 
     private getSeriesGroupMultipleSelect(chartType: ChartType, isCategorySeriesSwitched: boolean): boolean {
@@ -224,7 +224,7 @@ export class ChartDataPanel extends Component {
     private createSwitchCategorySeriesToggle(): void {
         this.switchCategorySeriesToggle = this.createManagedBean(
             new AgToggleButton({
-                label: this.chartTranslationService.translate('switchCategorySeries'),
+                label: this.chartTranslation.translate('switchCategorySeries'),
                 labelAlignment: 'left',
                 labelWidth: 'flex',
                 inputWidth: 'flex',

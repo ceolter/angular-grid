@@ -10,6 +10,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, _isClientSideRowModel, _isLegacyMenuEnabled } from 'ag-grid-community';
 
+import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
 import type { MenuItemMapper } from './menuItemMapper';
 
@@ -31,7 +32,7 @@ function _removeRepeatsFromArray<T>(array: T[], object: T) {
 }
 
 export class ColumnMenuFactory extends BeanStub implements NamedBean {
-    beanName = 'columnMenuFactory' as const;
+    beanName = 'colMenuFactory' as const;
 
     private menuItemMapper: MenuItemMapper;
     private colModel: ColumnModel;
@@ -71,27 +72,30 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return menuList;
     }
 
-    // columnGroup to be added
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getMenuItems(column?: AgColumn, columnGroup?: AgProvidedColumnGroup): (string | MenuItemDef)[] {
+    public getMenuItems(
+        column: AgColumn | null = null,
+        columnGroup: AgProvidedColumnGroup | null = null
+    ): (string | MenuItemDef)[] {
         const defaultItems = this.getDefaultMenuOptions(column);
         let result: (string | MenuItemDef)[];
 
-        const columnMainMenuItems = column?.getColDef().mainMenuItems;
+        const columnMainMenuItems = (column?.getColDef() ?? columnGroup?.getColGroupDef())?.mainMenuItems;
         if (Array.isArray(columnMainMenuItems)) {
             result = columnMainMenuItems;
         } else if (typeof columnMainMenuItems === 'function') {
             result = columnMainMenuItems(
                 this.gos.addGridCommonParams({
-                    column: column!,
+                    column,
+                    columnGroup,
                     defaultItems,
                 })
             );
         } else {
             const userFunc = this.gos.getCallback('getMainMenuItems');
-            if (userFunc && column) {
+            if (userFunc) {
                 result = userFunc({
                     column,
+                    columnGroup,
                     defaultItems,
                 });
             } else {
@@ -106,7 +110,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return result;
     }
 
-    private getDefaultMenuOptions(column?: AgColumn): string[] {
+    private getDefaultMenuOptions(column: AgColumn | null): string[] {
         const result: string[] = [];
 
         const isLegacyMenuEnabled = _isLegacyMenuEnabled(this.gos);
@@ -179,7 +183,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push('rowUnGroup');
         } else if (allowRowGroup && column.isPrimary()) {
             if (column.isRowGroupActive()) {
-                const groupLocked = !!this.rowGroupColsSvc?.isRowGroupColLocked!(column);
+                const groupLocked = isRowGroupColLocked(column, this.beans);
                 if (!groupLocked) {
                     result.push('rowUnGroup');
                 }

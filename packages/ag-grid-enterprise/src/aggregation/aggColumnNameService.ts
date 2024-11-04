@@ -10,7 +10,7 @@ import type {
 import { BeanStub, _exists } from 'ag-grid-community';
 
 export class AggColumnNameService extends BeanStub implements NamedBean, IAggColumnNameService {
-    beanName = 'aggColumnNameSvc' as const;
+    beanName = 'aggColNameSvc' as const;
 
     private valueColsSvc?: IColsService;
     private rowGroupColsSvc?: IColsService;
@@ -46,7 +46,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
             aggFuncFound = true;
         } else {
             const measureActive = column.isValueActive();
-            const aggregationPresent = this.colModel.isPivotMode() || !this.rowGroupColsSvc?.isRowGroupEmpty!();
+            const aggregationPresent = this.colModel.isPivotMode() || this.rowGroupColsSvc?.columns.length !== 0;
 
             if (measureActive && aggregationPresent) {
                 aggFunc = column.getAggFunc();

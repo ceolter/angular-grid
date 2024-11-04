@@ -11,10 +11,10 @@ import { ChartTitlePanel } from './chartTitlePanel';
 import { TitlePanel } from './titlePanel';
 
 export class TitlesPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly titleGroup: AgGroupComponent = RefPlaceholder;
 
@@ -51,7 +51,7 @@ export class TitlesPanel extends Component {
         const titleGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-top-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('chartTitles'),
+            title: this.chartTranslation.translate('chartTitles'),
             expanded,
             suppressEnabledCheckbox: true,
             items: [

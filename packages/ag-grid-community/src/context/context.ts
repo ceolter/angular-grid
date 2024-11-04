@@ -238,8 +238,8 @@ export interface CoreBeanCollection {
     quickFilter?: QuickFilterService;
     showRowGroupCols?: IShowRowGroupColsService;
     dataTypeSvc?: DataTypeService;
-    globalEventListener: AgGlobalEventListener;
-    globalSyncEventListener: AgGlobalEventListener;
+    globalListener: AgGlobalEventListener;
+    globalSyncListener: AgGlobalEventListener;
     stateSvc?: StateService;
     overlays?: OverlayService;
     pinnedRowModel?: PinnedRowModel;
@@ -254,9 +254,9 @@ export interface CoreBeanCollection {
     scrollVisibleSvc: ScrollVisibleService;
     pinnedCols?: PinnedColumnService;
     expressionSvc?: ExpressionService;
-    autoWidthCalculator?: AutoWidthCalculator;
-    agComponentUtils?: AgComponentUtils;
-    frameworkComponentWrapper: FrameworkComponentWrapper;
+    autoWidthCalc?: AutoWidthCalculator;
+    agCompUtils?: AgComponentUtils;
+    frameworkCompWrapper: FrameworkComponentWrapper;
     horizontalResizeSvc?: HorizontalResizeService;
     filterMenuFactory?: IMenuFactory;
     enterpriseMenuFactory?: IMenuFactory;
@@ -272,20 +272,20 @@ export interface CoreBeanCollection {
     gridDestroySvc: GridDestroyService;
     expansionSvc?: IExpansionService;
     sideBar?: ISideBarService;
-    ssrmTransactionManager?: IServerSideTransactionManager;
+    ssrmTxnManager?: IServerSideTransactionManager;
     aggFuncSvc?: IAggFuncService;
     advancedFilter: IAdvancedFilterService;
     filterStage?: IRowNodeStage;
     sortStage?: IRowNodeStage;
     flattenStage?: IRowNodeStage;
     groupStage?: IRowNodeStage;
-    aggregationStage?: IRowNodeStage;
+    aggStage?: IRowNodeStage;
     pivotStage?: IRowNodeStage;
-    filterAggregatesStage?: IRowNodeStage;
+    filterAggStage?: IRowNodeStage;
     rowNodeSorter?: RowNodeSorter;
     pivotColDefSvc?: IPivotColDefService;
     chartSvc?: IChartService;
-    aggColumnNameSvc?: IAggColumnNameService;
+    aggColNameSvc?: IAggColumnNameService;
     renderStatus?: IRenderStatusService;
     rowDragSvc?: RowDragService;
     stickyRowSvc?: StickyRowService;
@@ -297,7 +297,7 @@ export interface CoreBeanCollection {
     cellFlashSvc?: CellFlashService;
     masterDetailSvc?: IMasterDetailService;
     tooltipSvc?: TooltipService;
-    columnGroupSvc?: ColumnGroupService;
+    colGroupSvc?: ColumnGroupService;
     rowAutoHeight?: RowAutoHeightService;
     rowChildrenSvc?: IRowChildrenService;
     footerSvc?: IFooterService;
@@ -331,54 +331,47 @@ export class Context extends GenericContext<BeanName, BeanCollection> {
 }
 
 export type BeanName =
-    | 'advancedFilterExpressionService'
+    | 'advFilterExpSvc'
     | 'advancedFilter'
-    | 'advancedSettingsMenuFactory'
+    | 'advSettingsMenuFactory'
     | 'aggFuncSvc'
-    | 'agComponentUtils'
-    | 'aggColumnNameSvc'
-    | 'aggregationStage'
+    | 'agCompUtils'
+    | 'aggColNameSvc'
+    | 'aggStage'
     | 'alignedGridsSvc'
     | 'animationFrameSvc'
     | 'apiFunctionSvc'
     | 'ariaAnnounce'
     | 'apiEventSvc'
     | 'autoColSvc'
-    | 'autoWidthCalculator'
+    | 'autoWidthCalc'
     | 'beans'
-    | 'cellEditorFactory'
     | 'cellFlashSvc'
     | 'cellNavigation'
-    | 'cellRendererFactory'
-    | 'cellRendererService'
     | 'cellStyles'
-    | 'changeDetectionService'
-    | 'chartColumnService'
-    | 'chartCrossFilterService'
+    | 'changeDetectionSvc'
+    | 'chartColSvc'
+    | 'chartCrossFilterSvc'
     | 'chartMenuItemMapper'
     | 'chartMenuListFactory'
-    | 'chartMenuService'
-    | 'chartTranslationService'
+    | 'chartMenuSvc'
+    | 'chartTranslation'
     | 'chartSvc'
     | 'clipboardSvc'
     | 'colAnimation'
     | 'colAutosize'
-    | 'columnChooserFactory'
-    | 'columnController'
+    | 'colChooserFactory'
     | 'colDefFactory'
-    | 'columnEditorFactory'
     | 'colFilter'
     | 'colFlex'
-    | 'columnGroupSvc'
+    | 'colGroupSvc'
     | 'colHover'
-    | 'columnMenuFactory'
+    | 'colMenuFactory'
     | 'colModel'
     | 'colMoves'
     | 'colNames'
-    | 'columnPositionService'
     | 'colResize'
-    | 'columnToolPanelFactory'
-    | 'columnUtils'
+    | 'colToolPanelFactory'
     | 'colViewport'
     | 'pivotResultCols'
     | 'context'
@@ -400,12 +393,12 @@ export type BeanName =
     | 'enterpriseChartProxyFactory'
     | 'expansionSvc'
     | 'expressionSvc'
-    | 'filterAggregatesStage'
+    | 'filterAggStage'
     | 'filterManager'
     | 'filterMenuFactory'
     | 'filterStage'
     | 'filterValueSvc'
-    | 'flashCellService'
+    | 'flashCellSvc'
     | 'flattenStage'
     | 'focusSvc'
     | 'footerSvc'
@@ -413,10 +406,10 @@ export type BeanName =
     | 'pivotColsSvc'
     | 'rowGroupColsSvc'
     | 'valueColsSvc'
-    | 'frameworkComponentWrapper'
+    | 'frameworkCompWrapper'
     | 'frameworkOverrides'
-    | 'globalEventListener'
-    | 'globalSyncEventListener'
+    | 'globalListener'
+    | 'globalSyncListener'
     | 'gridApi'
     | 'gridDestroySvc'
     | 'gridOptions'
@@ -427,10 +420,9 @@ export type BeanName =
     | 'groupStage'
     | 'headerNavigation'
     | 'horizontalResizeSvc'
-    | 'lazyBlockLoadingService'
+    | 'lazyBlockLoadingSvc'
     | 'licenseManager'
     | 'localeSvc'
-    | 'loggerFactory'
     | 'masterDetailSvc'
     | 'menuItemMapper'
     | 'menuSvc'
@@ -474,16 +466,15 @@ export type BeanName =
     | 'ssrmFilterListener'
     | 'ssrmListenerUtils'
     | 'ssrmNodeManager'
-    | 'ssrmSortService'
+    | 'ssrmSortSvc'
     | 'ssrmStoreFactory'
     | 'ssrmStoreUtils'
-    | 'ssrmTransactionManager'
+    | 'ssrmTxnManager'
     | 'stateSvc'
-    | 'statusBarService'
+    | 'statusBarSvc'
     | 'stickyRowSvc'
     | 'syncSvc'
-    | 'templateService'
-    | 'toolPanelColDefService'
+    | 'toolPanelColDefSvc'
     | 'tooltipSvc'
     | 'touchSvc'
     | 'undoRedo'

@@ -33,6 +33,8 @@ export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
         advancedFilterBuilderRemove: 'minus',
         // shown on Advanced Filter Builder selection pills
         advancedFilterBuilderSelectOpen: 'small-down',
+        // remove for rich select editor pills
+        richSelectRemove: 'cancel',
     },
     dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
     css: [advancedFilterCSS],

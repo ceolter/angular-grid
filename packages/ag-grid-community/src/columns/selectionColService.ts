@@ -5,7 +5,7 @@ import { AgColumn } from '../entities/agColumn';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
-import { _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
+import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
 import type { ColumnGroupService } from './columnGroups/columnGroupService';
 import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
@@ -23,7 +23,7 @@ export const CONTROLS_COLUMN_ID_PREFIX = 'ag-Grid-SelectionColumn' as const;
 export class SelectionColService extends BeanStub implements NamedBean {
     beanName = 'selectionColSvc' as const;
 
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
     private autoColSvc?: IAutoColService;
     private colModel: ColumnModel;
 
@@ -31,7 +31,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
     public selectionCols: ColumnCollections | null;
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
         this.autoColSvc = beans.autoColSvc;
         this.colModel = beans.colModel;
     }
@@ -77,7 +77,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
 
         destroyCollection();
-        const treeDepth = this.columnGroupSvc?.findDepth(cols.tree) ?? 0;
+        const treeDepth = this.colGroupSvc?.findDepth(cols.tree) ?? 0;
         const tree = this.autoColSvc?.balanceTreeForAutoCols(list, treeDepth) ?? [];
         this.selectionCols = {
             list,
@@ -100,13 +100,13 @@ export class SelectionColService extends BeanStub implements NamedBean {
 
     private generateSelectionCols(): AgColumn[] {
         const { gos } = this;
-        const so = gos.get('rowSelection');
-        if (!so || typeof so !== 'object') {
+        const rowSelection = gos.get('rowSelection');
+        if (typeof rowSelection !== 'object' || rowSelection.checkboxLocation === 'autoGroupColumn') {
             return [];
         }
 
-        const checkboxes = _getCheckboxes(so);
-        const headerCheckbox = _getHeaderCheckbox(so);
+        const checkboxes = _getCheckboxes(rowSelection);
+        const headerCheckbox = _getHeaderCheckbox(rowSelection);
 
         if (checkboxes || headerCheckbox) {
             const selectionColumnDef = gos.get('selectionColumnDef');
@@ -169,7 +169,11 @@ export class SelectionColService extends BeanStub implements NamedBean {
         const currHeaderCheckbox = current && typeof current !== 'string' ? _getHeaderCheckbox(current) : undefined;
         const headerCheckboxHasChanged = prevHeaderCheckbox !== currHeaderCheckbox;
 
-        if (checkboxHasChanged || headerCheckboxHasChanged) {
+        const currLocation = _getCheckboxLocation(current);
+        const prevLocation = _getCheckboxLocation(prev);
+        const locationChanged = currLocation !== prevLocation;
+
+        if (checkboxHasChanged || headerCheckboxHasChanged || locationChanged) {
             this.colModel.refreshAll(source);
         }
     }

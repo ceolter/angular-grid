@@ -126,6 +126,14 @@ export class CheckboxSelectionComponent extends Component {
             selectableChanged: this.onSelectableChanged.bind(this),
         });
 
+        this.addManagedPropertyListener('rowSelection', ({ currentValue, previousValue }) => {
+            const curr = typeof currentValue === 'object' ? _getHideDisabledCheckboxes(currentValue) : undefined;
+            const prev = typeof previousValue === 'object' ? _getHideDisabledCheckboxes(previousValue) : undefined;
+            if (curr !== prev) {
+                this.onSelectableChanged();
+            }
+        });
+
         const isRowSelectableFunc = _getIsRowSelectable(this.gos);
         const checkboxVisibleIsDynamic = isRowSelectableFunc || typeof this.getIsVisible() === 'function';
 

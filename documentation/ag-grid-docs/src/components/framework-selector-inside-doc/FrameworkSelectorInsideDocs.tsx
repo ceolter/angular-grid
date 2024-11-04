@@ -1,9 +1,9 @@
 import type { Framework, MenuItem } from '@ag-grid-types';
 import { Select } from '@ag-website-shared/components/select/Select';
 import fwLogos from '@ag-website-shared/images/fw-logos';
+import { DOCS_FRAMEWORK_REDIRECT_PAGE } from '@components/docs/constants';
+import { getPageNameFromPath } from '@components/docs/utils/urlPaths';
 import { FRAMEWORKS } from '@constants';
-import { DOCS_FRAMEWORK_REDIRECT_PAGE } from '@features/docs/constants';
-import { getPageNameFromPath } from '@features/docs/utils/urlPaths';
 import { getFrameworkDisplayText } from '@utils/framework';
 import { getNewFrameworkPath } from '@utils/framework';
 import { getMenuItemFromPageName } from '@utils/getMenuItemFromPageName';

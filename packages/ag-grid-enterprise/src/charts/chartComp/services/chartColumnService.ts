@@ -11,7 +11,7 @@ import type {
 import { BeanStub, _getRowNode, _warn } from 'ag-grid-community';
 
 export class ChartColumnService extends BeanStub implements NamedBean {
-    beanName = 'chartColumnService' as const;
+    beanName = 'chartColSvc' as const;
 
     private colModel: ColumnModel;
     private colNames: ColumnNameService;

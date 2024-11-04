@@ -103,20 +103,6 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
         }
     }
 
-    isRowGroupColLocked(column: AgColumn): boolean {
-        const groupLockGroupColumns = this.gos.get('groupLockGroupColumns');
-        if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
-            return false;
-        }
-
-        if (groupLockGroupColumns === -1) {
-            return true;
-        }
-
-        const colIndex = this.columns.findIndex((groupCol) => groupCol.getColId() === column.getColId());
-        return groupLockGroupColumns > colIndex;
-    }
-
     private setColRowGroupActive(column: AgColumn, rowGroup: boolean, source: ColumnEventType): void {
         if (column.rowGroupActive !== rowGroup) {
             column.rowGroupActive = rowGroup;

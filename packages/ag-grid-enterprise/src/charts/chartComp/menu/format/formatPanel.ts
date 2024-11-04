@@ -98,9 +98,6 @@ export class FormatPanel extends Component {
                 case 'series':
                     this.chartPanelFeature.addComponent(new SeriesPanel(opts));
                     break;
-                case 'navigator':
-                    _warn(146);
-                    break;
                 default:
                     _warn(147, { group });
             }

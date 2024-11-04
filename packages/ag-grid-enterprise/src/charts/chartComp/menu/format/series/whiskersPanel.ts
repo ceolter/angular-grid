@@ -9,10 +9,10 @@ import type { ChartTranslationService } from '../../../services/chartTranslation
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class WhiskersPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -22,7 +22,7 @@ export class WhiskersPanel extends Component {
         const whiskersGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('whisker'),
+            title: this.chartTranslation.translate('whisker'),
             enabled: true,
             suppressOpenCloseIcons: true,
             suppressEnabledCheckbox: true,

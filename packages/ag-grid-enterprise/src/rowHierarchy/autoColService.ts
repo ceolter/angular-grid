@@ -38,7 +38,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private rowGroupColsSvc?: IColsService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     // group auto columns
     public autoCols: _ColumnCollections | null;
@@ -47,7 +47,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     public postConstruct(): void {
@@ -111,7 +111,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         }
 
         destroyPrevious();
-        const treeDepth = this.columnGroupSvc?.findDepth(cols.tree) ?? 0;
+        const treeDepth = this.colGroupSvc?.findDepth(cols.tree) ?? 0;
         const tree = this.balanceTreeForAutoCols(list, treeDepth);
         this.autoCols = {
             list,

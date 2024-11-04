@@ -76,6 +76,10 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         state: string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState,
         source: SelectionEventSourceType
     ): void {
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return;
+        }
         if (Array.isArray(state)) {
             return;
         }
@@ -86,15 +90,20 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return 0;
+        }
+
         const { nodes, ...otherParams } = params;
 
         if (nodes.length > 1 && this.selectionMode !== 'multiRow') {
-            _warn(191);
+            _warn(130);
             return 0;
         }
 
         if (nodes.length > 1 && params.rangeSelect) {
-            _warn(192);
+            _warn(131);
             return 0;
         }
 
@@ -190,10 +199,14 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void {
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return;
+        }
+
         validateSelectionParameters(params);
         if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
-            _warn(193);
-            return;
+            return _warn(130);
         }
 
         this.selectionStrategy.selectAllRowNodes(params);
@@ -243,11 +256,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
      *  - after grouping / treeData
      */
     protected override updateSelectable(): void {
-        const { gos } = this;
-
-        const isRowSelecting = _isRowSelection(gos);
-
-        if (!isRowSelecting) {
+        if (!_isRowSelection(this.gos)) {
             return;
         }
 

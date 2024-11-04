@@ -67,7 +67,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
     private visibleCols: VisibleColsService;
     private filterManager?: FilterManager;
     private menuUtils: MenuUtils;
-    private columnMenuFactory: ColumnMenuFactory;
+    private colMenuFactory: ColumnMenuFactory;
 
     public wireBeans(beans: BeanCollection) {
         this.popupSvc = beans.popupSvc!;
@@ -76,7 +76,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         this.visibleCols = beans.visibleCols;
         this.filterManager = beans.filterManager;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
+        this.colMenuFactory = beans.colMenuFactory as ColumnMenuFactory;
     }
 
     private lastSelectedTab: string;
@@ -318,7 +318,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
                 new TabbedColumnMenu(column, restoreFocusParams, this.lastSelectedTab, restrictToTabs, eventSource)
             );
         } else {
-            const menuItems = this.columnMenuFactory.getMenuItems(column, columnGroup);
+            const menuItems = this.colMenuFactory.getMenuItems(column, columnGroup);
             return menuItems.length
                 ? this.createBean(new ColumnContextMenu(menuItems, column, restoreFocusParams, eventSource))
                 : undefined;
@@ -370,14 +370,14 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
 type TabbedColumnMenuEvent = 'tabSelected' | 'and';
 class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements EnterpriseColumnMenu {
     private filterManager?: FilterManager;
-    private columnChooserFactory: ColumnChooserFactory;
-    private columnMenuFactory: ColumnMenuFactory;
+    private colChooserFactory: ColumnChooserFactory;
+    private colMenuFactory: ColumnMenuFactory;
     private menuUtils: MenuUtils;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.columnChooserFactory = beans.columnChooserFactory as ColumnChooserFactory;
-        this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
+        this.colChooserFactory = beans.colChooserFactory as ColumnChooserFactory;
+        this.colMenuFactory = beans.colMenuFactory as ColumnMenuFactory;
         this.menuUtils = beans.menuUtils as MenuUtils;
     }
 
@@ -512,9 +512,9 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
     }
 
     private createMainPanel(): TabbedItem {
-        this.mainMenuList = this.columnMenuFactory.createMenu(
+        this.mainMenuList = this.colMenuFactory.createMenu(
             this,
-            this.columnMenuFactory.getMenuItems(this.column),
+            this.colMenuFactory.getMenuItems(this.column),
             this.column,
             () => this.sourceElement ?? this.getGui()
         );
@@ -561,7 +561,7 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
         const eWrapperDiv = document.createElement('div');
         eWrapperDiv.classList.add('ag-menu-column-select-wrapper');
 
-        const columnSelectPanel = this.columnChooserFactory.createColumnSelectPanel(this, this.column);
+        const columnSelectPanel = this.colChooserFactory.createColumnSelectPanel(this, this.column);
 
         const columnSelectPanelGui = columnSelectPanel.getGui();
         columnSelectPanelGui.classList.add('ag-menu-column-select');
@@ -600,11 +600,11 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
 }
 
 class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
-    private columnMenuFactory: ColumnMenuFactory;
+    private colMenuFactory: ColumnMenuFactory;
     private menuUtils: MenuUtils;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnMenuFactory = beans.columnMenuFactory as ColumnMenuFactory;
+        this.colMenuFactory = beans.colMenuFactory as ColumnMenuFactory;
         this.menuUtils = beans.menuUtils as MenuUtils;
     }
 
@@ -625,7 +625,7 @@ class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
     }
 
     public postConstruct(): void {
-        this.mainMenuList = this.columnMenuFactory.createMenu(
+        this.mainMenuList = this.colMenuFactory.createMenu(
             this,
             this.menuItems,
             this.column,

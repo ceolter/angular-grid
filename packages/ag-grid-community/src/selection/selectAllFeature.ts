@@ -1,4 +1,4 @@
-import { isColumnSelectionCol } from '../columns/columnUtils';
+import { isColumnGroupAutoCol, isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
@@ -6,7 +6,9 @@ import type { SelectAllMode } from '../entities/gridOptions';
 import type { SelectionEventSourceType } from '../events';
 import {
     _getActiveDomElement,
+    _getCheckboxLocation,
     _getHeaderCheckbox,
+    _getSelectAll,
     _isClientSideRowModel,
     _isMultiRowSelection,
     _isServerSideRowModel,
@@ -198,35 +200,40 @@ export class SelectAllFeature extends BeanStub {
      * or `headerCheckboxSelection` is enabled in the legacy API.
      */
     private isCheckboxSelection(): boolean {
-        const so = this.gos.get('rowSelection');
-        const newHeaderCheckbox = typeof so === 'object' && _getHeaderCheckbox(so) && isColumnSelectionCol(this.column);
-        const headerCheckboxSelection = this.column.getColDef().headerCheckboxSelection;
+        const { column, gos } = this;
+        const rowSelection = gos.get('rowSelection');
+        const colDef = column.getColDef();
+        const { headerCheckboxSelection } = colDef;
 
         let result = false;
+        const newHeaderCheckbox = typeof rowSelection === 'object';
         if (newHeaderCheckbox) {
-            result = true;
-        } else if (typeof headerCheckboxSelection === 'function') {
-            result = headerCheckboxSelection(
-                this.gos.addGridCommonParams({
-                    column: this.column,
-                    colDef: this.column.getColDef(),
-                })
-            );
+            // new selection config
+            const isSelectionCol = isColumnSelectionCol(column);
+            const isAutoCol = isColumnGroupAutoCol(column);
+            // default to displaying header checkbox in the selection column
+            const location = _getCheckboxLocation(rowSelection);
+            if ((location === 'autoGroupColumn' && isAutoCol) || (location === 'selectionColumn' && isSelectionCol)) {
+                result = _getHeaderCheckbox(rowSelection);
+            }
         } else {
-            result = !!headerCheckboxSelection;
+            // legacy selection config
+            if (typeof headerCheckboxSelection === 'function') {
+                result = headerCheckboxSelection(this.gos.addGridCommonParams({ column, colDef }));
+            } else {
+                result = !!headerCheckboxSelection;
+            }
         }
 
-        return (
-            result &&
-            this.checkRightRowModelType(newHeaderCheckbox ? 'headerCheckbox' : 'headerCheckboxSelection') &&
-            this.checkSelectionType(newHeaderCheckbox ? 'headerCheckbox' : 'headerCheckboxSelection')
-        );
+        const featureName = newHeaderCheckbox ? 'headerCheckbox' : 'headerCheckboxSelection';
+
+        return result && this.checkRightRowModelType(featureName) && this.checkSelectionType(featureName);
     }
 
     private getSelectAllMode(): SelectAllMode {
-        const so = this.gos.get('rowSelection');
-        if (typeof so === 'object') {
-            return (so.mode === 'multiRow' && so.selectAll) || 'all';
+        const selectAll = _getSelectAll(this.gos, false);
+        if (selectAll) {
+            return selectAll;
         }
         const { headerCheckboxSelectionCurrentPageOnly, headerCheckboxSelectionFilteredOnly } = this.column.getColDef();
         if (headerCheckboxSelectionCurrentPageOnly) {

@@ -1,5 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type { ChangedPath, NamedBean, RowNode, RowNodeTransaction } from 'ag-grid-community';
+import type { ChangedPath, NamedBean, RefreshModelParams, RowNode, RowNodeTransaction } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -24,11 +24,16 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public commitTransactions(
-        transactions: RowNodeTransaction<TData>[],
-        changedPath: ChangedPath | undefined,
-        rowNodesOrderChanged: boolean
-    ): void {
+    public override refreshModel(params: RefreshModelParams<TData>): void {
+        const transactions = params.rowNodeTransactions;
+        if (transactions?.length) {
+            this.executeTransactions(transactions, params.changedPath);
+        }
+
+        super.refreshModel(params);
+    }
+
+    private executeTransactions(transactions: RowNodeTransaction<TData>[], changedPath: ChangedPath | undefined): void {
         this.treeRoot?.setRow(this.rootNode);
 
         for (const { remove, update, add } of transactions) {
@@ -39,7 +44,7 @@ export class ClientSidePathTreeNodeManager<TData>
             this.addOrUpdateRows(add as RowNode[] | null, false);
         }
 
-        if (rowNodesOrderChanged) {
+        if (transactions) {
             const rows = this.treeRoot?.row?.allLeafChildren;
             if (rows) {
                 for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {

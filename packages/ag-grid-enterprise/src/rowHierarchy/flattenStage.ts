@@ -28,6 +28,7 @@ export class FlattenStage extends BeanStub implements IRowNodeStage<RowNode[]>, 
         'groupRemoveSingleChildren',
         'groupRemoveLowestSingleChildren',
         'groupTotalRow',
+        'masterDetail',
     ]);
     public step: ClientSideRowModelStage = 'map';
 

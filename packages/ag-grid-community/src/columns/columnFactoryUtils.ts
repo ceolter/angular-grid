@@ -37,10 +37,10 @@ export function _createColumnTree(
         existingGroups,
         source
     );
-    const { columnGroupSvc } = beans;
-    const treeDept = columnGroupSvc?.findMaxDepth(unbalancedTree, 0) ?? 0;
-    const columnTree = columnGroupSvc
-        ? columnGroupSvc.balanceColumnTree(unbalancedTree, 0, treeDept, columnKeyCreator)
+    const { colGroupSvc } = beans;
+    const treeDept = colGroupSvc?.findMaxDepth(unbalancedTree, 0) ?? 0;
+    const columnTree = colGroupSvc
+        ? colGroupSvc.balanceColumnTree(unbalancedTree, 0, treeDept, columnKeyCreator)
         : unbalancedTree;
 
     const deptFirstCallback = (child: AgColumn | AgProvidedColumnGroup, parent: AgProvidedColumnGroup) => {
@@ -97,12 +97,12 @@ export function _recursivelyCreateColumns(
 ): (AgColumn | AgProvidedColumnGroup)[] {
     if (!defs) return [];
 
-    const { columnGroupSvc } = beans;
+    const { colGroupSvc } = beans;
     const result = new Array(defs.length);
     for (let i = 0; i < result.length; i++) {
         const def = defs[i];
-        if (columnGroupSvc && isColumnGroup(def)) {
-            result[i] = columnGroupSvc.createProvidedColumnGroup(
+        if (colGroupSvc && isColumnGroup(def)) {
+            result[i] = colGroupSvc.createProvidedColumnGroup(
                 primaryColumns,
                 def as ColGroupDef,
                 level,

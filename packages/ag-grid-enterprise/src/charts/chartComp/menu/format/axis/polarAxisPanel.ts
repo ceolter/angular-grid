@@ -14,10 +14,10 @@ import type { FormatPanelOptions } from '../formatPanel';
 export class PolarAxisPanel extends Component {
     private readonly axisGroup: AgGroupComponent = RefPlaceholder;
 
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly options: FormatPanelOptions) {
         super();
@@ -180,6 +180,6 @@ export class PolarAxisPanel extends Component {
     }
 
     private translate(key: ChartTranslationKey) {
-        return this.chartTranslationService.translate(key);
+        return this.chartTranslation.translate(key);
     }
 }

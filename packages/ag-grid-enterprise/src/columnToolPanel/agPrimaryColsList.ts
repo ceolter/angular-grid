@@ -51,7 +51,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.colDefService = beans.toolPanelColDefService as ToolPanelColDefService;
+        this.colDefService = beans.toolPanelColDefSvc as ToolPanelColDefService;
         this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
     }
 

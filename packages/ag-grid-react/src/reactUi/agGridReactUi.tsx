@@ -133,7 +133,7 @@ export const AgGridReactUi = <TData,>(props: AgGridReactProps<TData>) => {
         const renderStatus = new RenderStatusService();
         const gridParams: GridParams = {
             providedBeanInstances: {
-                frameworkComponentWrapper: new ReactFrameworkComponentWrapper(
+                frameworkCompWrapper: new ReactFrameworkComponentWrapper(
                     portalManager.current,
                     mergedGridOps.reactiveCustomComponents ?? _getGlobalGridOption('reactiveCustomComponents') ?? true
                 ),

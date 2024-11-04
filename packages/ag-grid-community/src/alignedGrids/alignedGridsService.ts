@@ -28,13 +28,13 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private colResize?: ColumnResizeService;
     private ctrlsSvc: CtrlsService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colResize = beans.colResize;
         this.ctrlsSvc = beans.ctrlsSvc;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     // flag to mark if we are consuming. to avoid cyclic events (ie other grid firing back to master
@@ -185,8 +185,8 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     }
 
     private processGroupOpenedEvent(groupOpenedEvent: ColumnGroupOpenedEvent): void {
-        const { columnGroupSvc } = this;
-        if (!columnGroupSvc) {
+        const { colGroupSvc } = this;
+        if (!colGroupSvc) {
             return;
         }
         groupOpenedEvent.columnGroups.forEach((masterGroup) => {
@@ -194,14 +194,14 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
             let otherColumnGroup: AgProvidedColumnGroup | null = null;
 
             if (masterGroup) {
-                otherColumnGroup = columnGroupSvc.getProvidedColGroup(masterGroup.getGroupId());
+                otherColumnGroup = colGroupSvc.getProvidedColGroup(masterGroup.getGroupId());
             }
 
             if (masterGroup && !otherColumnGroup) {
                 return;
             }
 
-            columnGroupSvc.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
+            colGroupSvc.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
         });
     }
 

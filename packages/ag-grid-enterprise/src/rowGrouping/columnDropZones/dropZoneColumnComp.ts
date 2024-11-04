@@ -15,6 +15,7 @@ import { Component, DragSourceType, KeyCode, RefPlaceholder, _loadTemplate } fro
 
 import { PillDragComp } from '../../widgets/pillDragComp';
 import { VirtualList } from '../../widgets/virtualList';
+import { isRowGroupColLocked } from '../rowGroupingUtils';
 import type { TDropZone } from './baseDropZonePanel';
 
 export class DropZoneColumnComp extends PillDragComp<AgColumn> {
@@ -331,7 +332,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         const itemSelected = () => {
             hidePopup();
             this.getGui().focus();
-            this.valueColsSvc?.setColumnAggFunc!(this.column, value, 'toolPanelDragAndDrop');
+            this.valueColsSvc?.setColumnAggFunc?.(this.column, value, 'toolPanelDragAndDrop');
         };
 
         const localeTextFunc = this.getLocaleTextFunc();
@@ -343,7 +344,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     }
 
     private isGroupingAndLocked(): boolean {
-        return this.isGroupingZone() && !!this.rowGroupColsSvc?.isRowGroupColLocked!(this.column);
+        return this.isGroupingZone() && isRowGroupColLocked(this.column, this.beans);
     }
 
     private isAggregationZone() {

@@ -10,10 +10,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../../../serv
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class ConnectorLinePanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -23,7 +23,7 @@ export class ConnectorLinePanel extends Component {
         const lineGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('connectorLine'),
+            title: this.chartTranslation.translate('connectorLine'),
             enabled: true,
             suppressOpenCloseIcons: true,
             suppressEnabledCheckbox: true,

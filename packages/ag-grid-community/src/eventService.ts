@@ -11,13 +11,13 @@ export class EventService extends BeanStub<AgEventType> implements NamedBean, IE
     private readonly globalEventService: LocalEventService<AgEventType> = new LocalEventService();
 
     public postConstruct(): void {
-        const { globalEventListener, globalSyncEventListener } = this.beans;
-        if (globalEventListener) {
-            this.addGlobalListener(globalEventListener, true);
+        const { globalListener, globalSyncListener } = this.beans;
+        if (globalListener) {
+            this.addGlobalListener(globalListener, true);
         }
 
-        if (globalSyncEventListener) {
-            this.addGlobalListener(globalSyncEventListener, false);
+        if (globalSyncListener) {
+            this.addGlobalListener(globalSyncListener, false);
         }
     }
 

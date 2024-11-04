@@ -213,8 +213,9 @@ export class Environment extends BeanStub implements NamedBean {
             newGridTheme = undefined;
         } else {
             newGridTheme = themeGridOption || themeQuartz;
-            if (!newGridTheme?.getCssClass) {
+            if (!isValidTheme(newGridTheme)) {
                 _error(240, { theme: newGridTheme });
+                newGridTheme = themeQuartz;
             }
             newThemeClass = newGridTheme.getCssClass();
         }
@@ -254,6 +255,11 @@ export class Environment extends BeanStub implements NamedBean {
         this.gridTheme = undefined;
     }
 }
+
+const isValidTheme = (theme: GridTheme): boolean => {
+    const isFunction = (f: unknown) => typeof f === 'function';
+    return isFunction(theme.getCssClass) && isFunction(theme.startUse) && isFunction(theme.stopUse);
+};
 
 type Variable = {
     cssName: string;

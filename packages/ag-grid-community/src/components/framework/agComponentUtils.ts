@@ -6,7 +6,7 @@ import type { ICellRendererComp, ICellRendererParams } from '../../rendering/cel
 import { _loadTemplate } from '../../utils/dom';
 
 export class AgComponentUtils extends BeanStub implements NamedBean {
-    beanName = 'agComponentUtils' as const;
+    beanName = 'agCompUtils' as const;
 
     public adaptFunction(type: ComponentType, jsCompFunc: any): any {
         return type.cellRenderer ? this.adaptCellRendererFunction(jsCompFunc) : null;

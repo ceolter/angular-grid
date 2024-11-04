@@ -188,16 +188,12 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     }
 
     private setupUserComp(): void {
-        const { columnGroupSvc, userCompFactory, gos } = this.beans;
+        const { colGroupSvc, userCompFactory, gos } = this.beans;
         const params: IHeaderGroupParams = gos.addGridCommonParams({
             displayName: this.displayName!,
             columnGroup: this.column,
             setExpanded: (expanded: boolean) => {
-                columnGroupSvc!.setColumnGroupOpened(
-                    this.column.getProvidedColumnGroup(),
-                    expanded,
-                    'gridInitializing'
-                );
+                colGroupSvc!.setColumnGroupOpened(this.column.getProvidedColumnGroup(), expanded, 'gridInitializing');
             },
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
                 this.setupTooltip(value, shouldDisplayTooltip);
@@ -330,7 +326,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             const column = this.column;
             const newExpandedValue = !column.isExpanded();
 
-            this.beans.columnGroupSvc!.setColumnGroupOpened(
+            this.beans.colGroupSvc!.setColumnGroupOpened(
                 column.getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'

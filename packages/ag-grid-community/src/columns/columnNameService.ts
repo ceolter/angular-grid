@@ -40,9 +40,9 @@ export class ColumnNameService extends BeanStub implements NamedBean {
 
         const headerName: string | null = this.getHeaderName(column.getColDef(), column, null, null, location);
 
-        const { aggColumnNameSvc } = this.beans;
-        if (includeAggFunc && aggColumnNameSvc) {
-            return aggColumnNameSvc.getHeaderName(column, headerName);
+        const { aggColNameSvc } = this.beans;
+        if (includeAggFunc && aggColNameSvc) {
+            return aggColNameSvc.getHeaderName(column, headerName);
         }
 
         return headerName;

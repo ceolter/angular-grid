@@ -13,10 +13,10 @@ type SeriesItemType = 'positive' | 'negative';
 export class SeriesItemsPanel extends Component {
     private readonly seriesItemsGroup: AgGroupComponent = RefPlaceholder;
 
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private activePanels: Component<any>[] = [];
 
@@ -28,7 +28,7 @@ export class SeriesItemsPanel extends Component {
         const seriesItemsGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('seriesItems'),
+            title: this.chartTranslation.translate('seriesItems'),
             enabled: true,
             suppressOpenCloseIcons: true,
             suppressEnabledCheckbox: true,
@@ -51,8 +51,8 @@ export class SeriesItemsPanel extends Component {
 
     private getSeriesItemsParams(): AgSelectParams {
         const options: ListOption<SeriesItemType>[] = [
-            { value: 'positive', text: this.chartTranslationService.translate('seriesItemPositive') },
-            { value: 'negative', text: this.chartTranslationService.translate('seriesItemNegative') },
+            { value: 'positive', text: this.chartTranslation.translate('seriesItemPositive') },
+            { value: 'negative', text: this.chartTranslation.translate('seriesItemNegative') },
         ];
 
         const seriesItemChangedCallback = (newValue: SeriesItemType) => {

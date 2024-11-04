@@ -1,0 +1,37 @@
+---
+import { getPageNameFromPath } from '@components/docs/utils/urlPaths';
+import ExampleRunnerContainer from '@components/example-runner/components/ExampleRunnerContainer.astro';
+import { getIsDev } from '@utils/env';
+import { DocsExampleRunner } from './DocsExampleRunner';
+import { DISABLE_EXAMPLE_RUNNER } from '@constants';
+
+interface Props {
+    title: string;
+    name: string;
+    exampleHeight?: number;
+    suppressDarkMode?: boolean;
+    typescriptOnly?: boolean;
+}
+
+const { title, name, exampleHeight, typescriptOnly, suppressDarkMode } = Astro.props as Props;
+
+const pageName = getPageNameFromPath(Astro.url.pathname);
+const isDev = getIsDev();
+---
+
+{
+    !DISABLE_EXAMPLE_RUNNER && (
+        <ExampleRunnerContainer exampleHeight={exampleHeight} pageName={pageName} exampleName={name}>
+            <DocsExampleRunner
+                client:only="react"
+                title={title}
+                name={name}
+                exampleHeight={exampleHeight}
+                typescriptOnly={typescriptOnly}
+                suppressDarkMode={suppressDarkMode}
+                pageName={pageName}
+                isDev={isDev}
+            />
+        </ExampleRunnerContainer>
+    )
+}

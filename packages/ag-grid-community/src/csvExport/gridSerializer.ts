@@ -167,9 +167,9 @@ export class GridSerializer extends BeanStub implements NamedBean {
         return (gridSerializingSession) => {
             if (!params.skipColumnGroupHeaders) {
                 const idCreator: GroupInstanceIdCreator = new GroupInstanceIdCreator();
-                const { columnGroupSvc } = this.beans;
-                const displayedGroups: (AgColumn | AgColumnGroup)[] = columnGroupSvc
-                    ? columnGroupSvc.createColumnGroups({
+                const { colGroupSvc } = this.beans;
+                const displayedGroups: (AgColumn | AgColumnGroup)[] = colGroupSvc
+                    ? colGroupSvc.createColumnGroups({
                           columns: columnsToExport,
                           idCreator,
                           pinned: null,

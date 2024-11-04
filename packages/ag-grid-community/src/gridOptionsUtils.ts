@@ -1,6 +1,7 @@
 import type { GridApi } from './api/gridApi';
 import type { BeanCollection } from './context/context';
 import type {
+    CheckboxLocation,
     DomLayoutType,
     FillHandleOptions,
     GetRowIdFunc,
@@ -364,6 +365,13 @@ export function _getHeaderCheckbox(selection: RowSelectionOptions): boolean {
     return selection?.mode === 'multiRow' && (selection.headerCheckbox ?? true);
 }
 
+export function _getCheckboxLocation(rowSelection: GridOptions['rowSelection']): CheckboxLocation | undefined {
+    if (typeof rowSelection !== 'object') {
+        return undefined;
+    }
+    return rowSelection.checkboxLocation ?? 'selectionColumn';
+}
+
 /** Get the display configuration for disabled checkboxes. Defaults to displaying disabled checkboxes. */
 export function _getHideDisabledCheckboxes(selection: RowSelectionOptions): boolean {
     return selection?.hideDisabledCheckboxes ?? false;
@@ -506,12 +514,14 @@ export function _getGroupSelection(gos: GridOptionsService): GroupSelectionMode 
     return selection?.mode === 'multiRow' ? selection.groupSelects : undefined;
 }
 
-export function _getSelectAll(gos: GridOptionsService): SelectAllMode {
+export function _getSelectAll(gos: GridOptionsService, defaultValue: boolean): SelectAllMode | undefined;
+export function _getSelectAll(gos: GridOptionsService): SelectAllMode;
+export function _getSelectAll(gos: GridOptionsService, defaultValue = true): SelectAllMode | undefined {
     const rowSelection = gos.get('rowSelection');
     if (typeof rowSelection !== 'object') {
-        return 'all';
+        return defaultValue ? 'all' : undefined;
     }
-    return (rowSelection.mode === 'multiRow' && rowSelection.selectAll) || 'all';
+    return rowSelection.mode === 'multiRow' ? rowSelection.selectAll : 'all';
 }
 
 export function _getGroupSelectsDescendants(gos: GridOptionsService): boolean {
