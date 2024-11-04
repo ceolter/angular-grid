@@ -456,7 +456,9 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             return;
         }
 
-        const noAnimation = suppressAnimationFrame || this.gos.get('suppressAnimationFrame') || this.printLayout;
+        const { animationFrameSvc } = this.beans;
+        const noAnimation =
+            !animationFrameSvc || suppressAnimationFrame || this.gos.get('suppressAnimationFrame') || this.printLayout;
 
         if (noAnimation) {
             this.updateColumnListsImpl(useFlushSync);
@@ -466,7 +468,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         if (this.updateColumnListsPending) {
             return;
         }
-        this.beans.animationFrameSvc!.createTask(
+        animationFrameSvc.createTask(
             () => {
                 if (!this.active) {
                     return;
