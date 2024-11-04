@@ -21,7 +21,7 @@ import type { IAbstractHeaderCellComp } from '../abstractCell/abstractHeaderCell
 import { AbstractHeaderCellCtrl } from '../abstractCell/abstractHeaderCellCtrl';
 import { _getHeaderClassesFromColDef } from '../cssClassApplier';
 import type { IHeader, IHeaderParams } from './headerComp';
-import { HeaderComp } from './headerComp';
+import type { HeaderComp } from './headerComp';
 
 export interface IHeaderCellComp extends IAbstractHeaderCellComp {
     setWidth(width: string): void;
@@ -237,7 +237,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private showMenuOnKeyPress(e: KeyboardEvent, isFilterShortcut: boolean): void {
         const headerComp = this.comp.getUserCompInstance();
-        if (!headerComp || !(headerComp instanceof HeaderComp)) {
+        if (!isHeaderComp(headerComp)) {
             return;
         }
 
@@ -617,7 +617,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     public getAnchorElementForMenu(isFilter?: boolean): HTMLElement {
         const headerComp = this.comp.getUserCompInstance();
-        if (headerComp instanceof HeaderComp) {
+        if (isHeaderComp(headerComp)) {
             return headerComp.getAnchorElementForMenu(isFilter);
         }
         return this.eGui;
@@ -627,4 +627,11 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.tooltipFeature = this.destroyBean(this.tooltipFeature);
         super.destroy();
     }
+}
+
+function isHeaderComp(headerComp: IHeader | undefined): headerComp is HeaderComp {
+    return (
+        typeof (headerComp as HeaderComp).getAnchorElementForMenu === 'function' &&
+        typeof (headerComp as HeaderComp).onMenuKeyboardShortcut === 'function'
+    );
 }
