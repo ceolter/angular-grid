@@ -9,10 +9,11 @@ import type {
 
 import { _warn } from 'ag-grid-community';
 
+import { isMultiSelection } from '../crossfilter/crossFilterApi';
 import { ALL_AXIS_TYPES } from '../utils/axisTypeMapper';
 import { get } from '../utils/object';
 import type { ChartSeriesType } from '../utils/seriesTypeMapper';
-import { getSeriesType } from '../utils/seriesTypeMapper';
+import { getSeriesType, isPieChartSeries } from '../utils/seriesTypeMapper';
 import type { ChartProxy, ChartProxyParams } from './chartProxy';
 
 export function createAgChartTheme(
@@ -106,17 +107,38 @@ function createCrossFilterThemeOverrides(
     chartProxyParams: ChartProxyParams,
     seriesType: ChartSeriesType
 ): AgChartThemeOverrides {
-    const legend = {
-        listeners: {
-            legendItemClick: (e: AgChartLegendClickEvent) => {
-                const chart = proxy.getChart();
-                chart.series.forEach((s) => {
-                    s.toggleSeriesItem(e.itemId, e.enabled);
-                    s.toggleSeriesItem(`${e.itemId}-filtered-out`, e.enabled);
-                });
-            },
-        },
-    };
+    const isPieOrDonut = isPieChartSeries(seriesType);
+
+    const legend = isPieOrDonut
+        ? {
+              listeners: {
+                  legendItemClick: (e: AgChartLegendClickEvent) => {
+                      e.preventDefault();
+
+                      const chart = proxy.getChart();
+
+                      const series: any = chart.series.find((s: any) => s.id === e.seriesId);
+                      const nodeData: any[] = series?.nodeData;
+                      const item = nodeData?.find((i: any) => i.itemId === e.itemId);
+                      const datum = item?.datum;
+
+                      const categoryKey = proxy.getCategoryKey();
+                      const category = series.properties[categoryKey];
+                      const value = datum[category];
+
+                      const selectionModel = chartProxyParams.crossFilteringContext.getChartSelectionModel(
+                          chartProxyParams.chartId
+                      );
+
+                      if (isMultiSelection(e.event)) {
+                          selectionModel.toggleSelection(true, category, value);
+                      } else {
+                          selectionModel.setSelection([{ category, value }]);
+                      }
+                  },
+              },
+          }
+        : {};
 
     return {
         [seriesType]: {
@@ -125,7 +147,10 @@ function createCrossFilterThemeOverrides(
             },
             legend,
             listeners: {
-                click: (e: any) => chartProxyParams.crossFilterCallback(e, true),
+                click: (e: any) => {
+                    // clear selection if chart background clicked
+                    chartProxyParams.crossFilterCallback(e, true);
+                },
             },
         },
     };

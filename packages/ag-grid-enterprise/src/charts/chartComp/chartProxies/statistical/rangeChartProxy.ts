@@ -8,7 +8,7 @@ export class RangeChartProxy extends StatisticalChartProxy<'range-bar' | 'range-
         super(params);
     }
 
-    public getSeries(params: UpdateParams): AgRangeAreaSeriesOptions<any>[] {
+    public override getSeries(params: UpdateParams): AgRangeAreaSeriesOptions<any>[] {
         const [category] = params.categories;
         return params.fields.map((field, seriesIndex) => ({
             type: this.standaloneChartType as AgRangeAreaSeriesOptions['type'],

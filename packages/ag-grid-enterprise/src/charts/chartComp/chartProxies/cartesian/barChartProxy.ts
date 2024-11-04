@@ -1,7 +1,6 @@
 import type { AgBarSeriesOptions, AgCartesianAxisOptions } from 'ag-charts-types';
 
-import { hexToRGBA } from '../../utils/color';
-import { isStacked } from '../../utils/seriesTypeMapper';
+import { CROSS_FILTER_FIELD_POSTFIX } from '../../crossfilter/crossFilterApi';
 import type { ChartProxyParams, UpdateParams } from '../chartProxy';
 import { CartesianChartProxy } from './cartesianChartProxy';
 
@@ -23,11 +22,6 @@ export class BarChartProxy extends CartesianChartProxy<'bar'> {
                 position: this.isHorizontal() ? 'bottom' : 'left',
             },
         ];
-        // Add a default label formatter to show '%' for normalized charts if none is provided
-        if (this.isNormalised()) {
-            const numberAxis = axes[1];
-            numberAxis.label = { ...numberAxis.label, formatter: (params) => Math.round(params.value) + '%' };
-        }
 
         return axes;
     }
@@ -35,63 +29,21 @@ export class BarChartProxy extends CartesianChartProxy<'bar'> {
     protected override getSeries(params: UpdateParams): AgBarSeriesOptions[] {
         const [category] = params.categories;
         const series: AgBarSeriesOptions[] = params.fields.map(
-            (f) =>
+            (field) =>
                 ({
                     type: this.standaloneChartType,
                     direction: this.isHorizontal() ? 'horizontal' : 'vertical',
-                    stacked: this.crossFiltering || isStacked(this.chartType),
-                    normalizedTo: this.isNormalised() ? 100 : undefined,
                     xKey: category.id,
                     xName: category.name,
-                    yKey: f.colId,
-                    yName: f.displayName,
+                    yKey: field.colId,
+                    yName: field.displayName,
+                    ...(this.crossFiltering && {
+                        yFilterKey: `${field.colId}${CROSS_FILTER_FIELD_POSTFIX}`,
+                    }),
                 }) as AgBarSeriesOptions
         );
 
-        return this.crossFiltering ? this.extractCrossFilterSeries(series) : series;
-    }
-
-    private extractCrossFilterSeries(series: AgBarSeriesOptions[]): AgBarSeriesOptions[] {
-        const palette = this.getChartPalette();
-
-        const updatePrimarySeries = (seriesOptions: AgBarSeriesOptions, index: number) => {
-            return {
-                ...seriesOptions,
-                highlightStyle: { item: { fill: undefined } },
-                fill: palette?.fills?.[index],
-                stroke: palette?.strokes?.[index],
-                listeners: {
-                    nodeClick: this.crossFilterCallback,
-                },
-            };
-        };
-
-        const updateFilteredOutSeries = (seriesOptions: AgBarSeriesOptions): AgBarSeriesOptions => {
-            const yKey = seriesOptions.yKey + '-filtered-out';
-            return {
-                ...seriesOptions,
-                yKey,
-                fill: hexToRGBA(seriesOptions.fill!, '0.3'),
-                stroke: hexToRGBA(seriesOptions.stroke!, '0.3'),
-                showInLegend: false,
-            };
-        };
-
-        const allSeries: AgBarSeriesOptions[] = [];
-        for (let i = 0; i < series.length; i++) {
-            const originalSeries = series[i];
-            // update primary series
-            allSeries.push(updatePrimarySeries(originalSeries, i));
-
-            // add 'filtered-out' series
-            allSeries.push(updateFilteredOutSeries(updatePrimarySeries(originalSeries, i)));
-        }
-        return allSeries;
-    }
-
-    private isNormalised() {
-        const normalisedCharts = ['normalizedColumn', 'normalizedBar'];
-        return !this.crossFiltering && normalisedCharts.includes(this.chartType);
+        return series;
     }
 
     protected override isHorizontal(): boolean {

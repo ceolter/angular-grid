@@ -130,7 +130,18 @@ export function isEnterpriseChartType(chartType: ChartType): boolean {
     return doesSeriesHaveProperty(getSeriesType(chartType), 'isEnterprise');
 }
 
-const stackedChartTypes = new Set(['stackedColumn', 'normalizedColumn', 'stackedBar', 'normalizedBar']);
+const normalizedChartTypes = new Set(['normalizedLine', 'normalizedArea', 'normalizedColumn', 'normalizedBar']);
+export function isNormalized(chartType: ChartType): boolean {
+    return normalizedChartTypes.has(chartType);
+}
+
+const stackedChartTypes = new Set([
+    'stackedLine',
+    'stackedArea',
+    'stackedColumn',
+    'stackedBar',
+    ...normalizedChartTypes,
+]);
 export function isStacked(chartType: ChartType): boolean {
     return stackedChartTypes.has(chartType);
 }

@@ -40,3 +40,10 @@ export function set(target: any, expression: string, value: any) {
 
     objectToUpdate[keys[keys.length - 1]] = value;
 }
+
+export function _mapValues(obj: any, fn: (key: string, value: any) => any): any {
+    return Object.entries(obj).reduce((acc: { [key: string]: any }, [key, value]) => {
+        acc[key] = fn(key, value);
+        return acc;
+    }, {});
+}

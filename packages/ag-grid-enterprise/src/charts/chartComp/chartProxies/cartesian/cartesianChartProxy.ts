@@ -1,34 +1,33 @@
 import type {
-    AgAreaSeriesOptions,
     AgCartesianAxisOptions,
     AgCartesianAxisType,
     AgCartesianChartOptions,
     AgCartesianSeriesOptions,
     AgChartTheme,
     AgChartThemeName,
-    AgLineSeriesOptions,
     AgRangeBarSeriesThemeableOptions,
 } from 'ag-charts-types';
 
+import { isNormalized, isStacked } from '../../utils/seriesTypeMapper';
 import type { ChartProxyParams, UpdateParams } from '../chartProxy';
 import { ChartProxy } from '../chartProxy';
 
-export abstract class CartesianChartProxy<
-    TSeries extends
-        | 'area'
-        | 'bar'
-        | 'histogram'
-        | 'line'
-        | 'scatter'
-        | 'bubble'
-        | 'waterfall'
-        | 'box-plot'
-        | 'range-area'
-        | 'range-bar',
-> extends ChartProxy<AgCartesianChartOptions, TSeries> {
-    protected crossFilteringAllPoints = new Set<string>();
-    protected crossFilteringSelectedPoints: string[] = [];
+export type CartesianChartTypes =
+    | 'area'
+    | 'bar'
+    | 'histogram'
+    | 'line'
+    | 'scatter'
+    | 'bubble'
+    | 'waterfall'
+    | 'box-plot'
+    | 'range-area'
+    | 'range-bar';
 
+export abstract class CartesianChartProxy<TSeries extends CartesianChartTypes> extends ChartProxy<
+    AgCartesianChartOptions,
+    TSeries
+> {
     protected constructor(params: ChartProxyParams) {
         super(params);
     }
@@ -37,27 +36,59 @@ export abstract class CartesianChartProxy<
         params: UpdateParams,
         commonChartOptions: AgCartesianChartOptions
     ): AgCartesianAxisOptions[];
-    protected abstract getSeries(params: UpdateParams): AgCartesianSeriesOptions[];
+
+    protected getSeries(_params: UpdateParams): AgCartesianSeriesOptions[] {
+        return [];
+    }
 
     protected getUpdateOptions(
         params: UpdateParams,
         commonChartOptions: AgCartesianChartOptions
     ): AgCartesianChartOptions {
-        const axes = this.getAxes(params, commonChartOptions);
+        const axes = this.getLocalAxes(params, commonChartOptions);
+        const data = this.getData(params, axes);
+        const series = this.getLocalSeries(params);
 
         return {
             ...commonChartOptions,
-            data: this.getData(params, axes),
+            data,
             axes,
-            series: this.getSeries(params),
+            series,
         };
+    }
+
+    private getLocalAxes(params: UpdateParams, commonChartOptions: AgCartesianChartOptions): AgCartesianAxisOptions[] {
+        const axes = this.getAxes(params, commonChartOptions);
+        const numberAxis = axes[1];
+
+        // Add a default label formatter to show '%' for normalized charts if none is provided
+        if (this.isNormalized() && !numberAxis.label?.formatter) {
+            numberAxis.label = { ...numberAxis.label, formatter: (params) => Math.round(params.value) + '%' };
+        }
+
+        return axes;
+    }
+
+    private getLocalSeries(params: UpdateParams): AgCartesianSeriesOptions[] {
+        const series = this.getSeries(params);
+
+        return series.map((s) => ({
+            ...(this.isStacked() && { stacked: true }),
+            ...(this.isNormalized() && {
+                normalizedTo: 100,
+            }),
+            ...(this.crossFiltering && {
+                listeners: {
+                    nodeClick: this.crossFilterCallback,
+                },
+            }),
+            ...s,
+        })) as unknown as AgCartesianSeriesOptions[];
     }
 
     protected getData(params: UpdateParams, axes: AgCartesianAxisOptions[]): any[] {
         const supportsCrossFiltering = ['area', 'line'].includes(this.standaloneChartType);
-        return this.crossFiltering && supportsCrossFiltering
-            ? this.getCrossFilterData(params)
-            : this.getDataTransformedData(params, axes);
+        return this.crossFiltering && supportsCrossFiltering ? params.data : this.getDataTransformedData(params, axes);
     }
 
     private getDataTransformedData(params: UpdateParams, axes: AgCartesianAxisOptions[]) {
@@ -84,6 +115,14 @@ export abstract class CartesianChartProxy<
             return 'number';
         }
         return 'category';
+    }
+
+    protected isNormalized() {
+        return isNormalized(this.chartType);
+    }
+
+    protected isStacked() {
+        return isStacked(this.chartType);
     }
 
     private isXAxisOfType<T>(
@@ -122,91 +161,16 @@ export abstract class CartesianChartProxy<
         });
     }
 
-    public override crossFilteringReset(): void {
-        this.crossFilteringSelectedPoints = [];
-        this.crossFilteringAllPoints.clear();
-    }
-
-    protected crossFilteringPointSelected(point: string): boolean {
-        return this.crossFilteringSelectedPoints.length == 0 || this.crossFilteringSelectedPoints.includes(point);
+    protected crossFilteringPointSelected(category: string, value: string): boolean {
+        return this.selectionModel.isSelected(category, value);
     }
 
     protected crossFilteringDeselectedPoints(): boolean {
-        return (
-            this.crossFilteringSelectedPoints.length > 0 &&
-            this.crossFilteringAllPoints.size !== this.crossFilteringSelectedPoints.length
-        );
+        return this.selectionModel.hasSelection();
     }
 
-    protected extractLineAreaCrossFilterSeries(
-        series: (AgLineSeriesOptions | AgAreaSeriesOptions)[],
-        params: UpdateParams
-    ) {
-        const [category] = params.categories;
-
-        const getYKey = (yKey: string) => {
-            if (this.standaloneChartType === 'area') {
-                const lastSelectedChartId = params.getCrossFilteringContext().lastSelectedChartId;
-                return lastSelectedChartId === params.chartId ? yKey + '-total' : yKey;
-            }
-            return yKey + '-total';
-        };
-
-        return series.map((s) => {
-            s.yKey = getYKey(s.yKey!);
-            s.listeners = {
-                nodeClick: (e: any) => {
-                    const value = e.datum![s.xKey!];
-                    const multiSelection = e.event.metaKey || e.event.ctrlKey;
-                    this.crossFilteringAddSelectedPoint(multiSelection, value);
-                    this.crossFilterCallback(e);
-                },
-            };
-            s.marker = {
-                itemStyler: (p) => {
-                    const value = p.datum[category.id];
-                    return {
-                        fill: p.highlighted ? 'yellow' : p.fill,
-                        size: p.highlighted ? 14 : this.crossFilteringPointSelected(value) ? 8 : 0,
-                    };
-                },
-            };
-            if (this.standaloneChartType === 'area') {
-                (s as AgAreaSeriesOptions).fillOpacity = this.crossFilteringDeselectedPoints() ? 0.3 : 1;
-            }
-            if (this.standaloneChartType === 'line') {
-                (s as AgLineSeriesOptions).strokeOpacity = this.crossFilteringDeselectedPoints() ? 0.3 : 1;
-            }
-
-            return s;
-        });
-    }
-
-    private getCrossFilterData(params: UpdateParams): any[] {
-        this.crossFilteringAllPoints.clear();
-        const [category] = params.categories;
-        const colId = params.fields[0].colId;
-        const filteredOutColId = `${colId}-filtered-out`;
-        const lastSelectedChartId = params.getCrossFilteringContext().lastSelectedChartId;
-
-        return params.data.map((d) => {
-            const value = d[category.id];
-            this.crossFilteringAllPoints.add(value);
-
-            const pointSelected = this.crossFilteringPointSelected(value);
-            if (this.standaloneChartType === 'area' && lastSelectedChartId === params.chartId) {
-                d[`${colId}-total`] = pointSelected ? d[colId] : d[colId] + d[filteredOutColId];
-            }
-            if (this.standaloneChartType === 'line') {
-                d[`${colId}-total`] = pointSelected ? d[colId] : d[colId] + d[filteredOutColId];
-            }
-
-            return d;
-        });
-    }
-
-    private crossFilteringAddSelectedPoint(multiSelection: boolean, value: string): void {
-        multiSelection ? this.crossFilteringSelectedPoints.push(value) : (this.crossFilteringSelectedPoints = [value]);
+    protected crossFilteringAddSelectedPoint(multiSelection: boolean, category: string, value: string): void {
+        this.selectionModel.toggleSelection(multiSelection, category, value);
     }
 
     protected isHorizontal(commonChartOptions: AgCartesianChartOptions): boolean {

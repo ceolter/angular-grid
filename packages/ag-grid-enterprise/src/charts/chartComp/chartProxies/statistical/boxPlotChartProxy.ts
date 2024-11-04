@@ -8,7 +8,7 @@ export class BoxPlotChartProxy extends StatisticalChartProxy<'box-plot'> {
         super(params);
     }
 
-    public getSeries(params: UpdateParams): AgBoxPlotSeriesOptions<any>[] {
+    public override getSeries(params: UpdateParams): AgBoxPlotSeriesOptions<any>[] {
         const [category] = params.categories;
         return params.fields.map((field, seriesIndex) => ({
             type: this.standaloneChartType as AgBoxPlotSeriesOptions['type'],
