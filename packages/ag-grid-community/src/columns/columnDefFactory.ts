@@ -1,3 +1,5 @@
+import type { IColsService } from 'ag-grid-community';
+
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -5,7 +7,6 @@ import type { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import type { ColDef, ColGroupDef } from '../entities/colDef';
 import { SKIP_JS_BUILTINS } from '../utils/object';
-import type { FuncColsService } from './funcColsService';
 
 // returns copy of an object, doing a deep clone of any objects with that object.
 // this is used for eg creating copies of Column Definitions, where we want to
@@ -45,10 +46,12 @@ export function _deepCloneDefinition<T>(object: T, keysToSkip?: string[]): T | u
 export class ColumnDefFactory extends BeanStub implements NamedBean {
     beanName = 'colDefFactory' as const;
 
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
     }
 
     public getColumnDefs(
@@ -65,16 +68,16 @@ export class ColumnDefFactory extends BeanStub implements NamedBean {
             cols.sort((a, b) => colsList.indexOf(a) - colsList.indexOf(b));
         }
 
-        const rowGroupColumns = this.funcColsSvc.rowGroupCols;
-        const pivotColumns = this.funcColsSvc.pivotCols;
+        const rowGroupColumns = this.rowGroupColsSvc?.columns;
+        const pivotColumns = this.pivotColsSvc?.columns;
 
         return this.buildColumnDefs(cols, rowGroupColumns, pivotColumns);
     }
 
     private buildColumnDefs(
         cols: AgColumn[],
-        rowGroupColumns: AgColumn[],
-        pivotColumns: AgColumn[]
+        rowGroupColumns: AgColumn[] = [],
+        pivotColumns: AgColumn[] = []
     ): (ColDef | ColGroupDef)[] {
         const res: (ColDef | ColGroupDef)[] = [];
 

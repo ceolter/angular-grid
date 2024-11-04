@@ -5,7 +5,7 @@ import type {
     ColumnModel,
     ColumnNameService,
     FocusService,
-    FuncColsService,
+    IColsService,
     MenuItemDef,
     PopupService,
 } from 'ag-grid-community';
@@ -30,16 +30,20 @@ type MenuItemProperty = {
 export class ToolPanelContextMenu extends Component {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private funcColsSvc: FuncColsService;
     private popupSvc: PopupService;
     private focusSvc: FocusService;
+    private rowGroupColsSvc?: IColsService;
+    private pivotColsSvc?: IColsService;
+    private valueColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.funcColsSvc = beans.funcColsSvc;
         this.popupSvc = beans.popupSvc!;
         this.focusSvc = beans.focusSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
+        this.pivotColsSvc = beans.pivotColsSvc;
+        this.valueColsSvc = beans.valueColsSvc;
     }
 
     private columns: AgColumn[];
@@ -93,22 +97,18 @@ export class ToolPanelContextMenu extends Component {
 
     private buildMenuItemMap(): void {
         const localeTextFunc = this.getLocaleTextFunc();
+        const { rowGroupColsSvc, valueColsSvc, pivotColsSvc } = this;
 
         this.menuItemMap = new Map<MenuItemName, MenuItemProperty>();
         this.menuItemMap.set('rowGroup', {
-            allowedFunction: (col) =>
-                col.isPrimary() && col.isAllowRowGroup() && !isRowGroupColLocked(this.funcColsSvc, this.gos, col),
+            allowedFunction: (col) => col.isPrimary() && col.isAllowRowGroup() && !isRowGroupColLocked(col, this.beans),
             activeFunction: (col) => col.isRowGroupActive(),
             activateLabel: () => `${localeTextFunc('groupBy', 'Group by')} ${this.displayName}`,
             deactivateLabel: () => `${localeTextFunc('ungroupBy', 'Un-Group by')} ${this.displayName}`,
-            activateFunction: () => {
-                const groupedColumns = this.funcColsSvc.rowGroupCols;
-                this.funcColsSvc.setRowGroupColumns(this.addColumnsToList(groupedColumns), 'toolPanelUi');
-            },
-            deActivateFunction: () => {
-                const groupedColumns = this.funcColsSvc.rowGroupCols;
-                this.funcColsSvc.setRowGroupColumns(this.removeColumnsFromList(groupedColumns), 'toolPanelUi');
-            },
+            activateFunction: () =>
+                rowGroupColsSvc?.setColumns(this.addColumnsToList(rowGroupColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                rowGroupColsSvc?.setColumns(this.removeColumnsFromList(rowGroupColsSvc.columns), 'toolPanelUi'),
             addIcon: 'menuAddRowGroup',
             removeIcon: 'menuRemoveRowGroup',
         });
@@ -120,14 +120,10 @@ export class ToolPanelContextMenu extends Component {
                 localeTextFunc('addToValues', `Add ${this.displayName} to values`, [this.displayName!]),
             deactivateLabel: () =>
                 localeTextFunc('removeFromValues', `Remove ${this.displayName} from values`, [this.displayName!]),
-            activateFunction: () => {
-                const valueColumns = this.funcColsSvc.valueCols;
-                this.funcColsSvc.setValueColumns(this.addColumnsToList(valueColumns), 'toolPanelUi');
-            },
-            deActivateFunction: () => {
-                const valueColumns = this.funcColsSvc.valueCols;
-                this.funcColsSvc.setValueColumns(this.removeColumnsFromList(valueColumns), 'toolPanelUi');
-            },
+            activateFunction: () =>
+                valueColsSvc?.setColumns(this.addColumnsToList(valueColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                valueColsSvc?.setColumns(this.removeColumnsFromList(valueColsSvc.columns), 'toolPanelUi'),
             addIcon: 'valuePanel',
             removeIcon: 'valuePanel',
         });
@@ -139,14 +135,10 @@ export class ToolPanelContextMenu extends Component {
                 localeTextFunc('addToLabels', `Add ${this.displayName} to labels`, [this.displayName!]),
             deactivateLabel: () =>
                 localeTextFunc('removeFromLabels', `Remove ${this.displayName} from labels`, [this.displayName!]),
-            activateFunction: () => {
-                const pivotColumns = this.funcColsSvc.pivotCols;
-                this.funcColsSvc.setPivotColumns(this.addColumnsToList(pivotColumns), 'toolPanelUi');
-            },
-            deActivateFunction: () => {
-                const pivotColumns = this.funcColsSvc.pivotCols;
-                this.funcColsSvc.setPivotColumns(this.removeColumnsFromList(pivotColumns), 'toolPanelUi');
-            },
+            activateFunction: () =>
+                pivotColsSvc?.setColumns(this.addColumnsToList(pivotColsSvc.columns), 'toolPanelUi'),
+            deActivateFunction: () =>
+                pivotColsSvc?.setColumns(this.removeColumnsFromList(pivotColsSvc.columns), 'toolPanelUi'),
             addIcon: 'pivotPanel',
             removeIcon: 'pivotPanel',
         });

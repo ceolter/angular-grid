@@ -45,7 +45,7 @@ export class DefaultDateComponent extends Component implements IDateComp {
                 if (this.eDateInput.isDisabled() || this.usingSafariDatePicker) {
                     return;
                 }
-                inputElement.focus();
+                inputElement.focus({ preventScroll: true });
             },
             input: this.handleInput.bind(this, false),
             change: this.handleInput.bind(this, true),
@@ -170,7 +170,7 @@ export class DefaultDateComponent extends Component implements IDateComp {
 
     public afterGuiAttached(params?: IAfterGuiAttachedParams): void {
         if (!params || !params.suppressFocus) {
-            this.eDateInput.getInputElement().focus();
+            this.eDateInput.getInputElement().focus({ preventScroll: true });
         }
     }
 

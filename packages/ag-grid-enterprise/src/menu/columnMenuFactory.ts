@@ -3,7 +3,7 @@ import type {
     AgProvidedColumnGroup,
     BeanCollection,
     ColumnModel,
-    FuncColsService,
+    IColsService,
     MenuItemDef,
     MenuService,
     NamedBean,
@@ -36,14 +36,14 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
     private menuItemMapper: MenuItemMapper;
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
     private menuSvc: MenuService;
+    private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
         this.menuSvc = beans.menuSvc!;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     public createMenu(
@@ -72,27 +72,30 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return menuList;
     }
 
-    // columnGroup to be added
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public getMenuItems(column?: AgColumn, columnGroup?: AgProvidedColumnGroup): (string | MenuItemDef)[] {
+    public getMenuItems(
+        column: AgColumn | null = null,
+        columnGroup: AgProvidedColumnGroup | null = null
+    ): (string | MenuItemDef)[] {
         const defaultItems = this.getDefaultMenuOptions(column);
         let result: (string | MenuItemDef)[];
 
-        const columnMainMenuItems = column?.getColDef().mainMenuItems;
+        const columnMainMenuItems = (column?.getColDef() ?? columnGroup?.getColGroupDef())?.mainMenuItems;
         if (Array.isArray(columnMainMenuItems)) {
             result = columnMainMenuItems;
         } else if (typeof columnMainMenuItems === 'function') {
             result = columnMainMenuItems(
                 this.gos.addGridCommonParams({
-                    column: column!,
+                    column,
+                    columnGroup,
                     defaultItems,
                 })
             );
         } else {
             const userFunc = this.gos.getCallback('getMainMenuItems');
-            if (userFunc && column) {
+            if (userFunc) {
                 result = userFunc({
                     column,
+                    columnGroup,
                     defaultItems,
                 });
             } else {
@@ -107,7 +110,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
         return result;
     }
 
-    private getDefaultMenuOptions(column?: AgColumn): string[] {
+    private getDefaultMenuOptions(column: AgColumn | null): string[] {
         const result: string[] = [];
 
         const isLegacyMenuEnabled = _isLegacyMenuEnabled(this.gos);
@@ -122,7 +125,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
 
         const allowPinning = !column.getColDef().lockPinned;
 
-        const rowGroupCount = this.funcColsSvc.rowGroupCols.length;
+        const rowGroupCount = this.rowGroupColsSvc?.columns.length ?? 0;
         const doingGrouping = rowGroupCount > 0;
 
         const allowValue = column.isAllowValue();
@@ -180,7 +183,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push('rowUnGroup');
         } else if (allowRowGroup && column.isPrimary()) {
             if (column.isRowGroupActive()) {
-                const groupLocked = isRowGroupColLocked(this.funcColsSvc, this.gos, column);
+                const groupLocked = isRowGroupColLocked(column, this.beans);
                 if (!groupLocked) {
                     result.push('rowUnGroup');
                 }

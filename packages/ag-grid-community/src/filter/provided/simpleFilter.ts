@@ -580,7 +580,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         if (!params?.suppressFocus) {
             if (this.isReadOnly()) {
                 // something needs focus otherwise keyboard navigation breaks, so focus the filter body
-                this.eFilterBody.focus();
+                this.eFilterBody.focus({ preventScroll: true });
             } else {
                 const firstInput = this.getInputs(0)[0];
                 if (!firstInput) {
@@ -588,7 +588,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
                 }
 
                 if (firstInput instanceof AgAbstractInputField) {
-                    firstInput.getInputElement().focus();
+                    firstInput.getInputElement().focus({ preventScroll: true });
                 }
             }
         }

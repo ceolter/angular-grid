@@ -146,7 +146,7 @@ export class MenuService extends BeanStub implements NamedBean {
     }
 
     public isFloatingFilterButtonEnabled(column: AgColumn): boolean {
-        return !!column.getColDef().suppressFloatingFilterButton;
+        return !column.getColDef().suppressFloatingFilterButton;
     }
 
     private isFloatingFilterButtonDisplayed(column: AgColumn): boolean {

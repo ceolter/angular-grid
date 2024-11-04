@@ -1,6 +1,6 @@
 import type { CellPosition } from './iCellPosition';
 import type { ChartToolbarMenuItemOptions } from './iChartOptions';
-import type { Column } from './iColumn';
+import type { Column, ProvidedColumnGroup } from './iColumn';
 import type { AgGridCommon } from './iCommon';
 import type { HeaderPosition } from './iHeaderPosition';
 import type { IRowNode, RowPinnedType } from './iRowNode';
@@ -18,8 +18,10 @@ export interface GetContextMenuItemsParams<TData = any, TContext = any> extends 
 }
 
 export interface GetMainMenuItemsParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
-    /** The column that was clicked */
-    column: Column;
+    /** The column that was clicked. Will be `null` if clicking on a column group or empty header space. */
+    column: Column | null;
+    /** The column group that was clicked. Will be `null` if clicking on a column or empty header space. */
+    columnGroup: ProvidedColumnGroup | null;
     /** List of the items that would be displayed by default */
     defaultItems: string[];
 }

@@ -1,26 +1,4 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnModel,
-    FuncColsService,
-    GridOptionsService,
-    RowNode,
-} from 'ag-grid-community';
-
-export function isRowGroupColLocked(funcColsSvc: FuncColsService, gos: GridOptionsService, column: AgColumn): boolean {
-    const groupLockGroupColumns = gos.get('groupLockGroupColumns');
-    if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
-        return false;
-    }
-
-    if (groupLockGroupColumns === -1) {
-        return true;
-    }
-
-    const rowGroupCols = funcColsSvc.rowGroupCols;
-    const colIndex = rowGroupCols.findIndex((groupCol) => groupCol.getColId() === column.getColId());
-    return groupLockGroupColumns > colIndex;
-}
+import type { AgColumn, BeanCollection, ColumnModel, RowNode } from 'ag-grid-community';
 
 export function setRowNodeGroupValue(
     rowNode: RowNode,
@@ -59,4 +37,24 @@ export function setRowNodeGroup(rowNode: RowNode, beans: BeanCollection, group: 
     rowNode.updateHasChildren();
     beans.selectionSvc?.checkRowSelectable(rowNode);
     rowNode.dispatchRowEvent('groupChanged');
+}
+
+export function isRowGroupColLocked(column: AgColumn | undefined | null, beans: BeanCollection): boolean {
+    const { gos, rowGroupColsSvc } = beans;
+
+    if (!rowGroupColsSvc || !column) {
+        return false;
+    }
+
+    const groupLockGroupColumns = gos.get('groupLockGroupColumns');
+    if (!column.isRowGroupActive() || groupLockGroupColumns === 0) {
+        return false;
+    }
+
+    if (groupLockGroupColumns === -1) {
+        return true;
+    }
+
+    const colIndex = rowGroupColsSvc.columns.findIndex((groupCol) => groupCol.getColId() === column.getColId());
+    return groupLockGroupColumns > colIndex;
 }

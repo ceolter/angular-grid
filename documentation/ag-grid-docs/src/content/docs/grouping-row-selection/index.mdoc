@@ -20,7 +20,7 @@ To enable hierarchical selection, set the `selection.groupSelects` option to one
 The example above demonstrates the following configuration:
 ```{% frameworkTransform=true %}
 const gridOptions = {
-    selection: {
+    rowSelection: {
         mode: 'multiple',
         groupSelects: 'descendants',
     },
@@ -32,28 +32,17 @@ const gridOptions = {
 When using [Row Selection](./row-selection/) with grouping, the grid can be configured to render checkboxes in the group cell, to
 the right of the expand/collapse chevron.
 
-This can be configured on the group cell renderer, by setting the `cellRendererParams.checkbox` option to `true`.
-
-{% note %}
-If using `groupDisplayType` set to `"groupRows"`, this is instead configured via `groupRowRendererParams.checkbox`.
-{% /note %}
+This can be configured on by setting the `rowSelection.checkboxLocation` option to `'autoGroupColumn'`.
 
 {% gridExampleRunner title="Group Cell Checkboxes" name="group-cell-checkboxes" /%}
 
-The example above demonstrates the following configuration to render checkboxes in the group cell, and [Removes the Default Checkboxes](./row-selection-single-row/#removing-selection-checkboxes):
+The example above demonstrates the following configuration to render checkboxes in the group cell:
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
-    autoGroupColumnDef: {
-        cellRendererParams: {
-            checkbox: true,
-        },
-    },
-    
-    selection: {
+    rowSelection: {
         mode: 'multiRow',
-        checkboxes: false,
-        headerCheckbox: false,
+        checkboxLocation: 'autoGroupColumn',
     },
 }
 ```

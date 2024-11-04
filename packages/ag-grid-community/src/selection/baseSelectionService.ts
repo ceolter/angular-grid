@@ -36,15 +36,16 @@ export abstract class BaseSelectionService extends BeanStub {
     }
 
     public postConstruct(): void {
+        const { gos } = this;
         this.addManagedPropertyListeners(['isRowSelectable', 'rowSelection'], () => {
-            const callback = _getIsRowSelectable(this.gos);
+            const callback = _getIsRowSelectable(gos);
             if (callback !== this.isRowSelectable) {
                 this.isRowSelectable = callback;
                 this.updateSelectable();
             }
         });
 
-        this.isRowSelectable = _getIsRowSelectable(this.gos);
+        this.isRowSelectable = _getIsRowSelectable(gos);
     }
 
     public createCheckboxSelectionComponent(): CheckboxSelectionComponent {

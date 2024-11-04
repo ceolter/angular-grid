@@ -417,7 +417,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                         if (filterGui) {
                             if (!this.focusSvc.focusInto(filterGui)) {
                                 // menu item contains no focusable elements but is focusable itself
-                                filterGui.focus();
+                                filterGui.focus({ preventScroll: true });
                             }
                             hasFocused = true;
                         }

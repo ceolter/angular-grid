@@ -63,7 +63,7 @@ export class ChartColumnService extends BeanStub implements NamedBean {
     }
 
     public getRowGroupColumns(): AgColumn[] {
-        return this.beans.funcColsSvc.rowGroupCols;
+        return this.beans.rowGroupColsSvc?.columns ?? [];
     }
 
     public getGroupDisplayColumns(): AgColumn[] {

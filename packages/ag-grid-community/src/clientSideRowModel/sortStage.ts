@@ -1,5 +1,4 @@
 import type { ColumnModel } from '../columns/columnModel';
-import type { FuncColsService } from '../columns/funcColsService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -8,6 +7,7 @@ import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
+import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IRowNode } from '../interfaces/iRowNode';
@@ -57,14 +57,14 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private sortSvc: SortService;
     private colModel: ColumnModel;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
     private rowNodeSorter: RowNodeSorter;
     private groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.sortSvc = beans.sortSvc!;
         this.colModel = beans.colModel;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.rowNodeSorter = beans.rowNodeSorter!;
         this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
     }
@@ -131,7 +131,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             const skipSortingGroups =
                 groupMaintainOrder && groupColumnsPresent && !rowNode.leafGroup && !sortContainsGroupColumns;
             if (skipSortingGroups) {
-                const nextGroup = this.funcColsSvc.rowGroupCols?.[rowNode.level + 1];
+                const nextGroup = this.rowGroupColsSvc?.columns?.[rowNode.level + 1];
                 // if the sort is null, then sort was explicitly removed, so remove sort from this group.
                 const wasSortExplicitlyRemoved = nextGroup?.getSort() === null;
 

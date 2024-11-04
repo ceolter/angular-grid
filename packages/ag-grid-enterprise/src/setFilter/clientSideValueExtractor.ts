@@ -1,9 +1,9 @@
 import type {
     AgColumn,
     AgEventType,
-    FuncColsService,
     GetDataPath,
     IClientSideRowModel,
+    IColsService,
     RowNode,
     SetFilterParams,
     ValueService,
@@ -19,7 +19,6 @@ export class ClientSideValuesExtractor<V> {
         private readonly filterParams: SetFilterParams<any, V>,
         private readonly createKey: (value: V | null | undefined, node?: RowNode) => string | null,
         private readonly caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat,
-        private readonly funcColsSvc: FuncColsService,
         private readonly valueSvc: ValueService,
         private readonly treeDataOrGrouping: boolean,
         private readonly treeData: boolean,
@@ -27,7 +26,8 @@ export class ClientSideValuesExtractor<V> {
         private readonly groupAllowUnbalanced: boolean,
         private readonly addManagedEventListeners: (
             handlers: Partial<Record<AgEventType, (event?: any) => void>>
-        ) => (() => null)[]
+        ) => (() => null)[],
+        private readonly rowGroupColsSvc?: IColsService
     ) {}
 
     public extractUniqueValuesAsync(
@@ -56,7 +56,7 @@ export class ClientSideValuesExtractor<V> {
         const existingFormattedKeys = this.extractExistingFormattedKeys(existingValues);
         const formattedKeys: Set<string | null> = new Set();
         const treeData = this.treeData && !!this.getDataPath;
-        const groupedCols = this.funcColsSvc.rowGroupCols;
+        const groupedCols = this.rowGroupColsSvc?.columns;
 
         const addValue = (unformattedKey: string | null, value: V | null | undefined) => {
             const formattedKey = this.caseFormat(unformattedKey);
@@ -105,7 +105,7 @@ export class ClientSideValuesExtractor<V> {
     private addValueForTreeDataOrGrouping(
         node: RowNode,
         treeData: boolean,
-        groupedCols: AgColumn[],
+        groupedCols: AgColumn[] = [],
         addValue: (unformattedKey: string | null, value: V | null) => void
     ): void {
         let dataPath: string[] | null;

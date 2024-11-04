@@ -1,5 +1,4 @@
 import { AutoScrollService } from '../autoScrollService';
-import type { FuncColsService } from '../columns/funcColsService';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
@@ -18,6 +17,7 @@ import type { FocusService } from '../focusService';
 import type { MouseEventService } from '../gridBodyComp/mouseEventService';
 import { _getRowIdCallback, _isClientSideRowModel } from '../gridOptionsUtils';
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
+import type { IColsService } from '../interfaces/iColsService';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { ISelectionService } from '../interfaces/iSelectionService';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
@@ -85,7 +85,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     private selectionSvc?: ISelectionService;
     private mouseEventSvc: MouseEventService;
     private ctrlsSvc: CtrlsService;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.dragAndDrop = beans.dragAndDrop!;
@@ -97,7 +97,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
         this.selectionSvc = beans.selectionSvc;
         this.mouseEventSvc = beans.mouseEventSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
 
     private clientSideRowModel: IClientSideRowModel;
@@ -148,7 +148,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     }
 
     public shouldPreventRowMove(): boolean {
-        const rowGroupCols = this.funcColsSvc.rowGroupCols;
+        const rowGroupCols = this.rowGroupColsSvc?.columns ?? [];
         if (rowGroupCols.length) {
             return true;
         }

@@ -1,12 +1,12 @@
 import type {
     BeanCollection,
     BeanName,
-    FuncColsService,
+    BeforeRefreshModelEvent,
+    IColsService,
     IMasterDetailService,
     IRowModel,
     NamedBean,
     RowCtrl,
-    RowDataUpdatedEvent,
     RowNodeTransaction,
 } from 'ag-grid-community';
 import { RowNode, _exists } from 'ag-grid-community';
@@ -23,7 +23,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
 
     private enabled: boolean;
     private rowModel: IRowModel;
-    private funcColsSvc: FuncColsService;
+    private rowGroupColsSvc?: IColsService;
 
     private isEnabled(): boolean {
         const gos = this.gos;
@@ -35,39 +35,38 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     }
 
     public wireBeans(beans: BeanCollection): void {
-        this.funcColsSvc = beans.funcColsSvc;
+        this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.rowModel = beans.rowModel;
     }
 
     public postConstruct(): void {
         if (_isClientSideRowModel(this.gos)) {
             this.enabled = this.isEnabled();
-            this.addManagedPropertyListeners(['treeData', 'masterDetail'], this.enabledUpdated.bind(this));
-            this.addManagedEventListeners({ rowDataUpdated: this.rowDataUpdated.bind(this) });
+            this.addManagedEventListeners({ beforeRefreshModel: this.beforeRefreshModel.bind(this) });
         }
     }
 
-    private enabledUpdated() {
-        const enabled = this.isEnabled();
-        if (this.enabled !== enabled) {
-            if (this.setMasters(null)) {
-                _getClientSideRowModel(this.beans)?.refreshModel({ step: 'map' });
+    private beforeRefreshModel({ params }: BeforeRefreshModelEvent) {
+        if (params.changedProps) {
+            const enabled = this.isEnabled();
+            if (this.enabled !== enabled) {
+                this.setMasters(null);
+                return;
             }
         }
+
+        if (params.rowDataUpdated) {
+            this.setMasters(params.rowNodeTransactions);
+        }
     }
 
-    private rowDataUpdated({ transactions }: RowDataUpdatedEvent) {
-        this.setMasters(transactions);
-    }
-
-    private setMasters(transactions: RowNodeTransaction[] | null | undefined): boolean {
+    private setMasters(transactions: RowNodeTransaction[] | null | undefined): void {
         const enabled = this.isEnabled();
         this.enabled = enabled;
 
         const gos = this.gos;
         const isRowMaster = gos.get('isRowMaster');
         const groupDefaultExpanded = gos.get('groupDefaultExpanded');
-        let rowsChanged = false;
 
         const setMaster = (row: RowNode, created: boolean, updated: boolean) => {
             const oldMaster = row.master;
@@ -92,7 +91,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                     row.expanded = true;
                 } else {
                     // need to take row group into account when determining level
-                    const masterRowLevel = this.funcColsSvc.rowGroupCols?.length ?? 0;
+                    const masterRowLevel = this.rowGroupColsSvc?.columns.length ?? 0;
                     row.expanded = masterRowLevel < groupDefaultExpanded;
                 }
             } else if (!newMaster && oldMaster) {
@@ -101,7 +100,6 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
 
             if (newMaster !== oldMaster) {
                 row.master = newMaster;
-                rowsChanged ||= !newMaster !== !oldMaster;
 
                 row.dispatchRowEvent('masterChanged');
             }
@@ -125,8 +123,6 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                 }
             }
         }
-
-        return rowsChanged;
     }
 
     /** Used by flatten stage to get or create a detail node from a master node */
