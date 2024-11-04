@@ -76,7 +76,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     // enterprise stages
     private groupStage?: IRowNodeStage;
-    private aggregationStage?: IRowNodeStage;
+    private aggStage?: IRowNodeStage;
     private pivotStage?: IRowNodeStage;
     private filterAggStage?: IRowNodeStage;
 
@@ -92,7 +92,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.flattenStage = beans.flattenStage!;
 
         this.groupStage = beans.groupStage;
-        this.aggregationStage = beans.aggregationStage;
+        this.aggStage = beans.aggStage;
         this.pivotStage = beans.pivotStage;
         this.filterAggStage = beans.filterAggStage;
     }
@@ -127,7 +127,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             this.groupStage,
             this.filterStage,
             this.pivotStage,
-            this.aggregationStage,
+            this.aggStage,
             this.sortStage,
             this.filterAggStage,
             this.flattenStage,
@@ -1087,7 +1087,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public doAggregate(changedPath?: ChangedPath): void {
         const rootNode = this.rootNode;
         if (rootNode) {
-            this.aggregationStage?.execute({ rowNode: rootNode, changedPath: changedPath });
+            this.aggStage?.execute({ rowNode: rootNode, changedPath: changedPath });
         }
     }
 

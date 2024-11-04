@@ -47,7 +47,6 @@ const orderedCoreBeans: BeanName[] = [
     'navigation',
     'valueCache',
     'valueSvc',
-    'loggerFactory',
     'autoWidthCalc',
     'filterMenuFactory',
     'dragAndDrop',

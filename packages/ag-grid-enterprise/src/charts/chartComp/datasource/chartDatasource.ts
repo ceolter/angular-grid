@@ -46,7 +46,7 @@ export class ChartDatasource extends BeanStub {
     private colModel: ColumnModel;
     private rowNodeSorter?: RowNodeSorter;
     private sortSvc?: SortService;
-    private aggregationStage?: IRowNodeStage & IAggregationStage;
+    private aggStage?: IRowNodeStage & IAggregationStage;
 
     public wireBeans(beans: BeanCollection): void {
         this.sortSvc = beans.sortSvc;
@@ -55,7 +55,7 @@ export class ChartDatasource extends BeanStub {
         this.valueSvc = beans.valueSvc;
         this.pivotResultCols = beans.pivotResultCols;
         this.rowNodeSorter = beans.rowNodeSorter;
-        this.aggregationStage = beans.aggregationStage as (IRowNodeStage & IAggregationStage) | undefined;
+        this.aggStage = beans.aggStage as (IRowNodeStage & IAggregationStage) | undefined;
     }
 
     public getData(params: ChartDatasourceParams): IData {
@@ -294,7 +294,7 @@ export class ChartDatasource extends BeanStub {
         });
 
         if (this.gos.assertModuleRegistered('RowGroupingCoreModule', 1)) {
-            const aggStage = this.aggregationStage!;
+            const aggStage = this.aggStage!;
             dataAggregated.forEach((groupItem) =>
                 params.valueCols.forEach((col) => {
                     if (params.crossFiltering) {

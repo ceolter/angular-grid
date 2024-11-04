@@ -283,7 +283,7 @@ export interface CoreBeanCollection {
     sortStage?: IRowNodeStage;
     flattenStage?: IRowNodeStage;
     groupStage?: IRowNodeStage;
-    aggregationStage?: IRowNodeStage;
+    aggStage?: IRowNodeStage;
     pivotStage?: IRowNodeStage;
     filterAggStage?: IRowNodeStage;
     rowNodeSorter?: RowNodeSorter;
@@ -339,7 +339,7 @@ export type BeanName =
     | 'aggFuncSvc'
     | 'agCompUtils'
     | 'aggColNameSvc'
-    | 'aggregationStage'
+    | 'aggStage'
     | 'alignedGridsSvc'
     | 'animationFrameSvc'
     | 'apiFunctionSvc'
@@ -348,10 +348,8 @@ export type BeanName =
     | 'autoColSvc'
     | 'autoWidthCalc'
     | 'beans'
-    | 'cellEditorFactory'
     | 'cellFlashSvc'
     | 'cellNavigation'
-    | 'cellRendererFactory'
     | 'cellStyles'
     | 'changeDetectionSvc'
     | 'chartColSvc'
@@ -428,7 +426,6 @@ export type BeanName =
     | 'lazyBlockLoadingSvc'
     | 'licenseManager'
     | 'localeSvc'
-    | 'loggerFactory'
     | 'masterDetailSvc'
     | 'menuItemMapper'
     | 'menuSvc'
