@@ -122,19 +122,6 @@ describe('ag-grid hierarchical tree selection', () => {
             └── 9 LEAF selected id:9 k:"J" name:"E. Dijkstra"
         `);
 
-        // api.setGridOption(
-        //     'rowData',
-        //     cachedJSONObjects.array([
-        //         { id: '6', name: 'Linus Torvalds', orgHierarchy: ['A', 'Y', 'F'] },
-        //         { id: '7', name: 'Brian Kernighan', orgHierarchy: ['A', 'X', 'G'] },
-        //         { id: '2', name: 'Alan Turing', orgHierarchy: ['A', 'B'] },
-        //         { id: '3', name: 'A. Church', orgHierarchy: ['A', 'X'] },
-        //         { id: '1', name: 'John Von Neumann', orgHierarchy: ['A'] },
-        //         { id: '5', name: 'Grace Hopper', orgHierarchy: ['A', 'Y', 'E'] },
-        //         { id: '9', name: 'E. Dijkstra', orgHierarchy: ['J'] },
-        //     ])
-        // );
-
         api.setGridOption(
             'rowData',
             cachedJSONObjects.array([
