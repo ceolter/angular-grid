@@ -381,7 +381,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         return [this.fullWidthGui?.rowComp?.getFullWidthCellRenderer()];
     }
 
-    // use by autoWidthCalculator, as it clones the elements
+    // use by autoWidthCalc, as it clones the elements
     public getCellElement(column: AgColumn): HTMLElement | null {
         const cellCtrl = this.getCellCtrl(column);
         return cellCtrl ? cellCtrl.getGui() : null;

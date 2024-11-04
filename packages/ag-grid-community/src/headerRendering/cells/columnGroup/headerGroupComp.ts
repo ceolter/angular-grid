@@ -36,10 +36,10 @@ export interface IHeaderGroup {}
 export interface IHeaderGroupComp extends IHeaderGroup, IComponent<IHeaderGroupParams> {}
 
 export class HeaderGroupComp extends Component implements IHeaderGroupComp {
-    private columnGroupSvc: ColumnGroupService;
+    private colGroupSvc: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnGroupSvc = beans.columnGroupSvc!;
+        this.colGroupSvc = beans.colGroupSvc!;
     }
 
     private params: IHeaderGroupParams;
@@ -90,7 +90,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
             }
 
             const newExpandedValue = !this.params.columnGroup.isExpanded();
-            this.columnGroupSvc.setColumnGroupOpened(
+            this.colGroupSvc.setColumnGroupOpened(
                 (this.params.columnGroup as AgColumnGroup).getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'

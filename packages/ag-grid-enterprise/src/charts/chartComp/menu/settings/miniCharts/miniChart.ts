@@ -8,10 +8,10 @@ import type { ChartTranslationKey, ChartTranslationService } from '../../../serv
 const CANVAS_CLASS = 'ag-chart-mini-thumbnail-canvas';
 
 export abstract class MiniChart extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     protected readonly size: number = 58;
@@ -38,7 +38,7 @@ export abstract class MiniChart extends Component {
     }
 
     public postConstruct(): void {
-        this.scene.canvas.element.title = this.chartTranslationService.translate(this.tooltipName);
+        this.scene.canvas.element.title = this.chartTranslation.translate(this.tooltipName);
 
         // Necessary to force scene graph render as we are not using the standalone factory.
         this.scene.render().catch((e: Error) => {

@@ -19,7 +19,7 @@ interface ShowColumnChooserParams {
 }
 
 export class ColumnChooserFactory extends BeanStub implements NamedBean {
-    beanName = 'columnChooserFactory' as const;
+    beanName = 'colChooserFactory' as const;
 
     private focusSvc: FocusService;
     private menuUtils: MenuUtils;

@@ -11,10 +11,10 @@ import { FontPanel } from '../fontPanel';
 import type { FormatPanelOptions } from '../formatPanel';
 
 export class LegendPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly legendGroup: AgGroupComponent = RefPlaceholder;
 
@@ -37,7 +37,7 @@ export class LegendPanel extends Component {
                     'position',
                     ['top', 'right', 'bottom', 'left'].map((position: ChartTranslationKey) => ({
                         value: position,
-                        text: this.chartTranslationService.translate(position),
+                        text: this.chartTranslation.translate(position),
                     }))
                 )
             )
@@ -48,7 +48,7 @@ export class LegendPanel extends Component {
                     cssIdentifier: 'charts-format-sub-level',
                     direction: 'vertical',
                     suppressOpenCloseIcons: true,
-                    title: this.chartTranslationService.translate('legendEnabled'),
+                    title: this.chartTranslation.translate('legendEnabled'),
                     suppressEnabledCheckbox: true,
                     useToggle: true,
                     items: [
@@ -62,7 +62,7 @@ export class LegendPanel extends Component {
         const legendGroupParams: AgGroupComponentParams = {
             cssIdentifier: 'charts-format-top-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('legend'),
+            title: this.chartTranslation.translate('legend'),
             suppressEnabledCheckbox: true,
             expanded,
             items: [enabledGroup],
@@ -96,7 +96,7 @@ export class LegendPanel extends Component {
                 this.createManagedBean(
                     new AgCheckbox(
                         chartMenuParamsFactory.addValueParams('gradientLegend.reverseOrder', {
-                            label: this.chartTranslationService.translate('reverseDirection'),
+                            label: this.chartTranslation.translate('reverseDirection'),
                             labelWidth: 'flex',
                         })
                     )

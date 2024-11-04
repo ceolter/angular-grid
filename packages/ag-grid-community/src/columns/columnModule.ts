@@ -1,6 +1,4 @@
 import type { _ColumnGridApi, _GetColumnDefsApi } from '../api/gridApi';
-import { HeaderGroupCellCtrl } from '../headerRendering/cells/columnGroup/headerGroupCellCtrl';
-import { ColumnGroupHeaderCompModule } from '../headerRendering/cells/headerModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { CheckboxCellRendererModule } from '../rendering/cellRenderers/cellRendererModule';
@@ -80,10 +78,4 @@ export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
         getAllDisplayedColumns,
         getAllDisplayedVirtualColumns,
     },
-};
-
-export const ColumnGroupModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnGroupModule'),
-    dynamicBeans: { headerGroupCellCtrl: HeaderGroupCellCtrl as any },
-    dependsOn: [ColumnGroupHeaderCompModule],
 };

@@ -46,7 +46,7 @@ export function _getUserCompKeys<TDefinition>(
     // there are two types of js comps, class based and func based. we can only check for
     // class based, by checking if getGui() exists. no way to differentiate js func based vs eg react func based
     // const isJsClassComp = (comp: any) => doesImplementIComponent(comp);
-    // const fwActive = this.frameworkComponentWrapper != null;
+    // const fwActive = this.frameworkCompWrapper != null;
 
     // pull from defObject if available
     if (defObject) {
@@ -87,14 +87,14 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
     beanName = 'userCompFactory' as const;
 
     private gridOptions: GridOptions;
-    private agComponentUtils?: AgComponentUtils;
+    private agCompUtils?: AgComponentUtils;
     private registry: Registry;
-    private frameworkComponentWrapper?: FrameworkComponentWrapper;
+    private frameworkCompWrapper?: FrameworkComponentWrapper;
 
     public wireBeans(beans: BeanCollection): void {
-        this.agComponentUtils = beans.agComponentUtils;
+        this.agCompUtils = beans.agCompUtils;
         this.registry = beans.registry;
-        this.frameworkComponentWrapper = beans.frameworkComponentWrapper;
+        this.frameworkCompWrapper = beans.frameworkCompWrapper;
         this.gridOptions = beans.gridOptions;
     }
 
@@ -144,7 +144,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
 
         // if we have a comp option, and it's a function, replace it with an object equivalent adaptor
         if (jsComp && cellRenderer && !doesImplementIComponent(jsComp)) {
-            jsComp = this.agComponentUtils?.adaptFunction(type, jsComp);
+            jsComp = this.agCompUtils?.adaptFunction(type, jsComp);
         }
 
         if (!jsComp && !fwComp) {
@@ -191,7 +191,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
             instance = new ComponentClass();
         } else {
             // Using framework component
-            instance = this.frameworkComponentWrapper!.wrap(
+            instance = this.frameworkCompWrapper!.wrap(
                 ComponentClass,
                 type.mandatoryMethods,
                 type.optionalMethods,

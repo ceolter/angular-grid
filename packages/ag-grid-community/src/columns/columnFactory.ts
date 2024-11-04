@@ -20,11 +20,11 @@ export class ColumnFactory extends BeanStub implements NamedBean {
     beanName = 'colFactory' as const;
 
     private dataTypeSvc?: DataTypeService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.dataTypeSvc = beans.dataTypeSvc;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     public createColumnTree(
@@ -51,9 +51,9 @@ export class ColumnFactory extends BeanStub implements NamedBean {
             existingGroups,
             source
         );
-        const treeDept = this.columnGroupSvc?.findMaxDepth(unbalancedTree, 0) ?? 0;
-        const columnTree = this.columnGroupSvc
-            ? this.columnGroupSvc.balanceColumnTree(unbalancedTree, 0, treeDept, columnKeyCreator)
+        const treeDept = this.colGroupSvc?.findMaxDepth(unbalancedTree, 0) ?? 0;
+        const columnTree = this.colGroupSvc
+            ? this.colGroupSvc.balanceColumnTree(unbalancedTree, 0, treeDept, columnKeyCreator)
             : unbalancedTree;
 
         const deptFirstCallback = (child: AgColumn | AgProvidedColumnGroup, parent: AgProvidedColumnGroup) => {
@@ -112,8 +112,8 @@ export class ColumnFactory extends BeanStub implements NamedBean {
         const result = new Array(defs.length);
         for (let i = 0; i < result.length; i++) {
             const def = defs[i];
-            if (this.columnGroupSvc && this.isColumnGroup(def)) {
-                result[i] = this.columnGroupSvc.createProvidedColumnGroup(
+            if (this.colGroupSvc && this.isColumnGroup(def)) {
+                result[i] = this.colGroupSvc.createProvidedColumnGroup(
                     primaryColumns,
                     def as ColGroupDef,
                     level,

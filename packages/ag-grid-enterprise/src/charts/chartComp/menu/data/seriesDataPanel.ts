@@ -33,7 +33,7 @@ export class SeriesDataPanel extends DragDataPanel {
         if (this.chartController.isActiveXYChart()) {
             const pairedModeToggle = this.groupComp.createManagedBean(
                 new AgToggleButton({
-                    label: this.chartTranslationService.translate('paired'),
+                    label: this.chartTranslation.translate('paired'),
                     labelAlignment: 'left',
                     labelWidth: 'flex',
                     inputWidth: 'flex',

@@ -282,7 +282,7 @@ export const DEFAULT_CHART_TRANSLATIONS = {
 };
 
 export class ChartTranslationService extends BeanStub implements NamedBean {
-    beanName = 'chartTranslationService' as const;
+    beanName = 'chartTranslation' as const;
 
     public translate(toTranslate: ChartTranslationKey): string {
         const translate = this.getLocaleTextFunc();

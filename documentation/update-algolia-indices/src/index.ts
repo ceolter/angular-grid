@@ -1,5 +1,6 @@
 import { program } from 'commander';
 import dotenv from 'dotenv';
+import assert from 'node:assert/strict';
 
 import { getApiPageData, parseApiPageData } from './generators/api-refs';
 import { getAllDocPages, parseDocPage } from './generators/docs-pages';
@@ -64,6 +65,7 @@ apiPages.forEach((page) => {
  * Then scrape the docs for the content pages and generate Algolia records
  */
 const docPages = getAllDocPages();
+assert(docPages.length > 0, 'Doc pages should not be empty');
 writeResults('docs/menu.json', docPages);
 
 for (let i = 0; i < SUPPORTED_FRAMEWORKS.length; i++) {

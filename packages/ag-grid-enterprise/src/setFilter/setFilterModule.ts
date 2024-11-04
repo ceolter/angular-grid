@@ -12,7 +12,7 @@ export const SetFilterCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule, ColumnFilterModule],
 };
 
-const SetFloatingFilterModule: _ModuleWithoutApi = {
+export const SetFloatingFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SetFloatingFilterModule'),
     userComponents: { agSetColumnFloatingFilter: SetFloatingFilterComp },
     dependsOn: [SetFilterCoreModule, FloatingFilterModule],

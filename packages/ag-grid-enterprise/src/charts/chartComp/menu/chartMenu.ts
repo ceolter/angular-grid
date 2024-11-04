@@ -23,12 +23,12 @@ type ChartToolbarButtons = {
 };
 
 export class ChartMenu extends Component {
-    private chartMenuService: ChartMenuService;
+    private chartMenuSvc: ChartMenuService;
     private chartMenuListFactory: ChartMenuListFactory;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection) {
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
         this.chartMenuListFactory = beans.chartMenuListFactory as ChartMenuListFactory;
         this.environment = beans.environment;
     }
@@ -36,12 +36,12 @@ export class ChartMenu extends Component {
     private readonly chartController: ChartController;
 
     private buttons: ChartToolbarButtons = {
-        chartLink: { iconName: 'linked', callback: () => this.chartMenuService.toggleLinked(this.chartMenuContext) },
+        chartLink: { iconName: 'linked', callback: () => this.chartMenuSvc.toggleLinked(this.chartMenuContext) },
         chartUnlink: {
             iconName: 'unlinked',
-            callback: () => this.chartMenuService.toggleLinked(this.chartMenuContext),
+            callback: () => this.chartMenuSvc.toggleLinked(this.chartMenuContext),
         },
-        chartDownload: { iconName: 'save', callback: () => this.chartMenuService.downloadChart(this.chartMenuContext) },
+        chartDownload: { iconName: 'save', callback: () => this.chartMenuSvc.downloadChart(this.chartMenuContext) },
         chartMenu: { iconName: 'menuAlt', callback: (eventSource: HTMLElement) => this.showMenuList(eventSource) },
     };
 
@@ -106,10 +106,10 @@ export class ChartMenu extends Component {
     }
 
     private initToolbarOptionsAndPanels(): void {
-        const { panels, defaultPanel } = this.chartMenuService.getChartToolPanels(this.chartController);
+        const { panels, defaultPanel } = this.chartMenuSvc.getChartToolPanels(this.chartController);
         this.panels = panels;
         this.defaultPanel = defaultPanel;
-        this.chartToolbarOptions = this.chartMenuService.getChartToolbarOptions();
+        this.chartToolbarOptions = this.chartMenuSvc.getChartToolbarOptions();
     }
 
     private updateToolbar(): void {

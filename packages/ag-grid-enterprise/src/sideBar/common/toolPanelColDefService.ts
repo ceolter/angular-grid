@@ -4,7 +4,7 @@ import { AgProvidedColumnGroup, BeanStub, _warn, isProvidedColumnGroup } from 'a
 import { isColGroupDef, mergeLeafPathTrees } from './sideBarUtils';
 
 export class ToolPanelColDefService extends BeanStub implements NamedBean {
-    beanName = 'toolPanelColDefService' as const;
+    beanName = 'toolPanelColDefSvc' as const;
 
     private colModel: ColumnModel;
 

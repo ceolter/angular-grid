@@ -33,7 +33,7 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
     private rowGroupDropZonePanel?: RowGroupDropZonePanel;
     private valuesDropZonePanel?: ValuesDropZonePanel;
     private pivotDropZonePanel?: PivotDropZonePanel;
-    private columnToolPanelFactory?: ColumnToolPanelFactory;
+    private colToolPanelFactory?: ColumnToolPanelFactory;
 
     constructor() {
         super(/* html */ `<div class="ag-column-panel"></div>`);
@@ -41,7 +41,7 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
     }
 
     public wireBeans(beans: BeanCollection): void {
-        this.columnToolPanelFactory = beans.columnToolPanelFactory as ColumnToolPanelFactory;
+        this.colToolPanelFactory = beans.colToolPanelFactory as ColumnToolPanelFactory;
     }
 
     // lazy initialise the panel
@@ -70,8 +70,8 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
             ...params,
         };
 
-        if (!this.params.suppressPivotMode && this.columnToolPanelFactory) {
-            this.pivotModePanel = this.columnToolPanelFactory.createPivotModePanel(this, this.childDestroyFuncs);
+        if (!this.params.suppressPivotMode && this.colToolPanelFactory) {
+            this.pivotModePanel = this.colToolPanelFactory.createPivotModePanel(this, this.childDestroyFuncs);
         }
 
         // DO NOT CHANGE TO createManagedBean
@@ -82,20 +82,17 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
         this.primaryColsPanel.addCssClass('ag-column-panel-column-select');
         this.appendChild(this.primaryColsPanel);
 
-        if (this.columnToolPanelFactory) {
+        if (this.colToolPanelFactory) {
             if (!this.params.suppressRowGroups) {
-                this.rowGroupDropZonePanel = this.columnToolPanelFactory.createRowGroupPanel(
-                    this,
-                    this.childDestroyFuncs
-                );
+                this.rowGroupDropZonePanel = this.colToolPanelFactory.createRowGroupPanel(this, this.childDestroyFuncs);
             }
 
             if (!this.params.suppressValues) {
-                this.valuesDropZonePanel = this.columnToolPanelFactory.createValuesPanel(this, this.childDestroyFuncs);
+                this.valuesDropZonePanel = this.colToolPanelFactory.createValuesPanel(this, this.childDestroyFuncs);
             }
 
             if (!this.params.suppressPivots) {
-                this.pivotDropZonePanel = this.columnToolPanelFactory.createPivotPanel(this, this.childDestroyFuncs);
+                this.pivotDropZonePanel = this.colToolPanelFactory.createPivotPanel(this, this.childDestroyFuncs);
             }
 
             this.setLastVisible();
@@ -112,53 +109,53 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
     }
 
     public setPivotModeSectionVisible(visible: boolean): void {
-        if (!this.columnToolPanelFactory) {
+        if (!this.colToolPanelFactory) {
             return;
         }
 
-        this.pivotModePanel = this.columnToolPanelFactory.setPanelVisible(
+        this.pivotModePanel = this.colToolPanelFactory.setPanelVisible(
             this.pivotModePanel,
             visible,
-            this.columnToolPanelFactory.createPivotModePanel.bind(this, this, this.childDestroyFuncs, true)
+            this.colToolPanelFactory.createPivotModePanel.bind(this, this, this.childDestroyFuncs, true)
         );
         this.setLastVisible();
     }
 
     public setRowGroupsSectionVisible(visible: boolean): void {
-        if (!this.columnToolPanelFactory) {
+        if (!this.colToolPanelFactory) {
             return;
         }
 
-        this.rowGroupDropZonePanel = this.columnToolPanelFactory.setPanelVisible(
+        this.rowGroupDropZonePanel = this.colToolPanelFactory.setPanelVisible(
             this.rowGroupDropZonePanel,
             visible,
-            this.columnToolPanelFactory.createRowGroupPanel.bind(this, this, this.childDestroyFuncs)
+            this.colToolPanelFactory.createRowGroupPanel.bind(this, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }
 
     public setValuesSectionVisible(visible: boolean): void {
-        if (!this.columnToolPanelFactory) {
+        if (!this.colToolPanelFactory) {
             return;
         }
 
-        this.valuesDropZonePanel = this.columnToolPanelFactory.setPanelVisible(
+        this.valuesDropZonePanel = this.colToolPanelFactory.setPanelVisible(
             this.valuesDropZonePanel,
             visible,
-            this.columnToolPanelFactory.createValuesPanel.bind(this, this, this.childDestroyFuncs)
+            this.colToolPanelFactory.createValuesPanel.bind(this, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }
 
     public setPivotSectionVisible(visible: boolean): void {
-        if (!this.columnToolPanelFactory) {
+        if (!this.colToolPanelFactory) {
             return;
         }
 
-        this.pivotDropZonePanel = this.columnToolPanelFactory.setPanelVisible(
+        this.pivotDropZonePanel = this.colToolPanelFactory.setPanelVisible(
             this.pivotDropZonePanel,
             visible,
-            this.columnToolPanelFactory.createPivotPanel.bind(this, this, this.childDestroyFuncs)
+            this.colToolPanelFactory.createPivotPanel.bind(this, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }

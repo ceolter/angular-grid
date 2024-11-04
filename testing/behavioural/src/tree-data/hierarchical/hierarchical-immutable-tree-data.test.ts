@@ -478,4 +478,157 @@ describe('ag-grid hierarchical immutable tree data', () => {
             expect(rows8[i] === rows9[i]).toBe(true);
         }
     });
+
+    test('suppressMaintainUnsortedOrder is respected', async () => {
+        const rowData1 = cachedJSONObjects.array([
+            {
+                id: 'A',
+                v: 0,
+                children: [
+                    { id: 'B', v: 1 },
+                    { id: 'C', v: 2 },
+                    { id: 'D', v: 3 },
+                ],
+            },
+            {
+                id: 'E',
+                v: 4,
+                children: [
+                    {
+                        id: 'F',
+                        v: 5,
+                        children: [
+                            {
+                                id: 'G',
+                                v: 6,
+                                children: [
+                                    { id: 'H', v: 7 },
+                                    { id: 'I', v: 8 },
+                                ],
+                            },
+                            { id: 'J', v: 9 },
+                        ],
+                    },
+                ],
+            },
+            { id: 'K', v: 10 },
+            { id: 'L', v: 11 },
+            { id: 'M', v: 12 },
+        ]);
+
+        const gridOptions: GridOptions = {
+            columnDefs: [{ field: 'v' }],
+            treeData: true,
+            treeDataChildrenField: 'children',
+            suppressMaintainUnsortedOrder: true,
+            animateRows: false,
+            groupDefaultExpanded: -1,
+            rowData: rowData1,
+            getRowId: ({ data }) => data.id,
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: true,
+        };
+
+        const gridRows1 = new GridRows(api, 'data', gridRowsOptions);
+
+        await gridRows1.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ A GROUP id:A ag-Grid-AutoColumn:"A" v:0
+            │ ├── B LEAF id:B ag-Grid-AutoColumn:"B" v:1
+            │ ├── C LEAF id:C ag-Grid-AutoColumn:"C" v:2
+            │ └── D LEAF id:D ag-Grid-AutoColumn:"D" v:3
+            ├─┬ E GROUP id:E ag-Grid-AutoColumn:"E" v:4
+            │ └─┬ F GROUP id:F ag-Grid-AutoColumn:"F" v:5
+            │ · ├─┬ G GROUP id:G ag-Grid-AutoColumn:"G" v:6
+            │ · │ ├── H LEAF id:H ag-Grid-AutoColumn:"H" v:7
+            │ · │ └── I LEAF id:I ag-Grid-AutoColumn:"I" v:8
+            │ · └── J LEAF id:J ag-Grid-AutoColumn:"J" v:9
+            ├── K LEAF id:K ag-Grid-AutoColumn:"K" v:10
+            ├── L LEAF id:L ag-Grid-AutoColumn:"L" v:11
+            └── M LEAF id:M ag-Grid-AutoColumn:"M" v:12
+        `);
+
+        // Change the order, insert some nodes, the order should not change and new nodes appended
+
+        const rowData2 = cachedJSONObjects.array([
+            { id: 'M', v: 12 },
+            { id: 'L', v: 11 },
+            {
+                id: 'E',
+                v: 4,
+                children: [
+                    {
+                        id: 'F',
+                        v: 5,
+                        children: [
+                            { id: 'X', v: 100 },
+                            { id: 'J', v: 9 },
+                            { id: 'Y', v: 101 },
+                            {
+                                id: 'G',
+                                v: 6,
+                                children: [
+                                    { id: 'I', v: 8 },
+                                    { id: 'H', v: 7 },
+                                    { id: 'Z', v: 102 },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            { id: 'K', v: 10 },
+            { id: 'W', v: 103 },
+            {
+                id: 'A',
+                v: 0,
+                children: [
+                    { id: 'D', v: 333 },
+                    { id: 'B', v: 1 },
+                ],
+            },
+        ]);
+
+        api.setGridOption('rowData', rowData2);
+
+        const gridRows2 = new GridRows(api, 'change the order, insert some nodes', gridRowsOptions);
+
+        await gridRows2.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ A GROUP id:A ag-Grid-AutoColumn:"A" v:0
+            │ ├── B LEAF id:B ag-Grid-AutoColumn:"B" v:1
+            │ └── D LEAF id:D ag-Grid-AutoColumn:"D" v:333
+            ├─┬ E GROUP id:E ag-Grid-AutoColumn:"E" v:4
+            │ └─┬ F GROUP id:F ag-Grid-AutoColumn:"F" v:5
+            │ · ├─┬ G GROUP id:G ag-Grid-AutoColumn:"G" v:6
+            │ · │ ├── H LEAF id:H ag-Grid-AutoColumn:"H" v:7
+            │ · │ ├── I LEAF id:I ag-Grid-AutoColumn:"I" v:8
+            │ · │ └── Z LEAF id:Z ag-Grid-AutoColumn:"Z" v:102
+            │ · ├── J LEAF id:J ag-Grid-AutoColumn:"J" v:9
+            │ · ├── X LEAF id:X ag-Grid-AutoColumn:"X" v:100
+            │ · └── Y LEAF id:Y ag-Grid-AutoColumn:"Y" v:101
+            ├── K LEAF id:K ag-Grid-AutoColumn:"K" v:10
+            ├── L LEAF id:L ag-Grid-AutoColumn:"L" v:11
+            ├── M LEAF id:M ag-Grid-AutoColumn:"M" v:12
+            └── W LEAF id:W ag-Grid-AutoColumn:"W" v:103
+        `);
+
+        expect(gridRows1.getById('A') === gridRows2.getById('A')).toBe(true);
+        expect(gridRows1.getById('B') === gridRows2.getById('B')).toBe(true);
+        expect(gridRows1.getById('D') === gridRows2.getById('D')).toBe(true);
+        expect(gridRows1.getById('E') === gridRows2.getById('E')).toBe(true);
+        expect(gridRows1.getById('F') === gridRows2.getById('F')).toBe(true);
+        expect(gridRows1.getById('G') === gridRows2.getById('G')).toBe(true);
+        expect(gridRows1.getById('H') === gridRows2.getById('H')).toBe(true);
+        expect(gridRows1.getById('I') === gridRows2.getById('I')).toBe(true);
+        expect(gridRows1.getById('J') === gridRows2.getById('J')).toBe(true);
+        expect(gridRows1.getById('K') === gridRows2.getById('K')).toBe(true);
+        expect(gridRows1.getById('L') === gridRows2.getById('L')).toBe(true);
+        expect(gridRows1.getById('M') === gridRows2.getById('M')).toBe(true);
+    });
 });

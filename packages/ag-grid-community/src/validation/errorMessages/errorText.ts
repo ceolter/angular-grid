@@ -309,7 +309,7 @@ export const AG_GRID_ERRORS = {
         `${feature} is only available if using 'clientSide' or 'serverSide' rowModelType, you are using ${rowModel}.` as const,
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
     131: () => 'cannot range select while selecting multiple rows' as const,
-    132: () => `cannot multi select unless selection mode is 'multiRow'` as const,
+    132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
     133: () => 'iconRenderer should return back a string or a dom object' as const,
     134: ({ iconName }: { iconName: string }) => `Did not find icon ${iconName}` as const,
     135: () => `Data type of the new value does not match the cell data type of the column` as const,
@@ -328,8 +328,7 @@ export const AG_GRID_ERRORS = {
     144: ({ type }: { type: string }) => `Invalid charts data panel group name supplied: '${type}'` as const,
     145: ({ group }: { group: string }) =>
         `As of v32, only one charts customize panel group can be expanded at a time. '${group}' will not be expanded.` as const,
-    146: () =>
-        `'navigator' is now displayed in the charts advanced settings instead of the customize panel, and this setting will be ignored.` as const,
+    // 146: () => '' as const,
     147: ({ group }: { group: string }) => `Invalid charts customize panel group name supplied: '${group}'` as const,
     148: ({ group }: { group: string }) => `invalid chartGroupsDef config '${group}'` as const,
     149: ({ group, chartType }: { group: string; chartType: string }) =>

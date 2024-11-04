@@ -9,7 +9,7 @@
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    z-index: 1;
+    z-index: 10;
 
     #{$selector-darkmode} & {
         background: rgba(12, 17, 26, 0.4);

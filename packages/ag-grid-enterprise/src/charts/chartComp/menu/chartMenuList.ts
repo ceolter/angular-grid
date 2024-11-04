@@ -18,13 +18,13 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     beanName = 'chartMenuListFactory' as const;
 
     private popupSvc: PopupService;
-    private chartMenuService: ChartMenuService;
-    private chartTranslationService: ChartTranslationService;
+    private chartMenuSvc: ChartMenuService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private activeChartMenuList?: ChartMenuList;
@@ -35,9 +35,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
         chartMenuContext: ChartMenuContext;
     }): void {
         const { eventSource, showMenu, chartMenuContext } = params;
-        const areChartToolPanelsEnabled = this.chartMenuService.doChartToolPanelsExist(
-            chartMenuContext.chartController
-        );
+        const areChartToolPanelsEnabled = this.chartMenuSvc.doChartToolPanelsExist(chartMenuContext.chartController);
         const menuItems = this.mapWithStockItems(
             this.getMenuItems(chartMenuContext.chartController, areChartToolPanelsEnabled),
             chartMenuContext,
@@ -171,33 +169,29 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
         switch (key) {
             case 'chartEdit':
                 return areChartToolPanelsEnabled
-                    ? this.createMenuItem(
-                          this.chartTranslationService.translate('chartEdit'),
-                          'chartsMenuEdit',
-                          showMenu
-                      )
+                    ? this.createMenuItem(this.chartTranslation.translate('chartEdit'), 'chartsMenuEdit', showMenu)
                     : null;
             case 'chartAdvancedSettings':
                 return this.createMenuItem(
-                    this.chartTranslationService.translate('chartAdvancedSettings'),
+                    this.chartTranslation.translate('chartAdvancedSettings'),
                     'chartsMenuAdvancedSettings',
-                    () => this.chartMenuService.openAdvancedSettings(chartMenuContext, eventSource)
+                    () => this.chartMenuSvc.openAdvancedSettings(chartMenuContext, eventSource)
                 );
             case 'chartUnlink':
                 return chartMenuContext.chartController.isChartLinked()
-                    ? this.createMenuItem(this.chartTranslationService.translate('chartUnlink'), 'unlinked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                    ? this.createMenuItem(this.chartTranslation.translate('chartUnlink'), 'unlinked', () =>
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartLink':
                 return !chartMenuContext.chartController.isChartLinked()
-                    ? this.createMenuItem(this.chartTranslationService.translate('chartLink'), 'linked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                    ? this.createMenuItem(this.chartTranslation.translate('chartLink'), 'linked', () =>
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartDownload':
-                return this.createMenuItem(this.chartTranslationService.translate('chartDownload'), 'save', () =>
-                    this.chartMenuService.downloadChart(chartMenuContext)
+                return this.createMenuItem(this.chartTranslation.translate('chartDownload'), 'save', () =>
+                    this.chartMenuSvc.downloadChart(chartMenuContext)
                 );
         }
         return null;

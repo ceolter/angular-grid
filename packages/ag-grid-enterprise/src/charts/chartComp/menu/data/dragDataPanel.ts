@@ -10,10 +10,10 @@ import { DEFAULT_CHART_CATEGORY } from '../../model/chartDataModel';
 import type { ChartTranslationKey, ChartTranslationService } from '../../services/chartTranslationService';
 
 export abstract class DragDataPanel extends Component {
-    protected chartTranslationService: ChartTranslationService;
+    protected chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     protected groupComp: AgGroupComponent;
@@ -47,7 +47,7 @@ export abstract class DragDataPanel extends Component {
                     valueList: columns,
                     selectedValueList,
                     valueFormatter,
-                    selectPlaceholder: this.chartTranslationService.translate(selectLabelKey),
+                    selectPlaceholder: this.chartTranslation.translate(selectLabelKey),
                     dragSourceId,
                     onValuesChange: (params) => this.onValueChange(params),
                     maxSelection: this.maxSelection,
