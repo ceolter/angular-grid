@@ -1,6 +1,6 @@
 export const CROSS_FILTER_FIELD_POSTFIX = '$$Filter$$';
 
-const ADDITIVE_EVENTS_ENABLED = false;
+const ADDITIVE_EVENTS_ENABLED = true;
 
 export const isMultiSelection = (event: Event) => {
     if (ADDITIVE_EVENTS_ENABLED) {
