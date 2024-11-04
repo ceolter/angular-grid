@@ -140,17 +140,7 @@ export const AgGridVue = defineComponent({
         },
         getProvides() {
             let instance = getCurrentInstance() as any;
-            let provides = {};
-
-            while (instance) {
-                if (instance && instance.provides) {
-                    provides = { ...provides, ...instance.provides };
-                }
-
-                instance = instance.parent;
-            }
-
-            return provides;
+            return Object.create(instance.provides);
         },
         /*
          * Prevents an infinite loop when using v-model for the rowData
