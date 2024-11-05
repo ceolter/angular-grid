@@ -485,10 +485,10 @@
     flex: 1 1 auto;
     align-self: stretch;
     align-items: center;
+    overflow: hidden;
   }
 
   .ag-header-cell-label {
-    overflow: hidden;
     text-overflow: ellipsis;
   }
 
@@ -496,6 +496,7 @@
     position: sticky;
     flex: none;
     max-width: 100%;
+    overflow: visible;
   }
 
   .ag-header-group-text {
@@ -526,6 +527,10 @@
   // wrap header height for Headers and Group Headers
   .ag-header-cell-wrap-text .ag-header-cell-comp-wrapper {
     white-space: normal;
+  }
+
+  .ag-header-cell-comp-wrapper-limited-height > div {
+    overflow: hidden;
   }
 
   .ag-right-aligned-header .ag-header-cell-label {
@@ -1554,7 +1559,7 @@
     position: absolute;
   }
 
-  .ag-header-group-cell-no-group.ag-header-span-height .ag-header-cell-resize {
+  .ag-header-group-cell-no-group.ag-header-span-height {
     display: none;
   }
 

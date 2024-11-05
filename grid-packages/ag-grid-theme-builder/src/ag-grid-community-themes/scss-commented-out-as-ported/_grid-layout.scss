@@ -90,11 +90,7 @@
   }
 
   .ag-row-highlight-above::after {
-    top: -1px;
-  }
-
-  .ag-row-highlight-above.ag-row-first::after {
-    top: 0;
+    top: 0px;
   }
 
   .ag-row-highlight-below::after {

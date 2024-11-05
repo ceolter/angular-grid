@@ -79,7 +79,7 @@
   }
 
   .ag-header-row:not(:first-child) {
-    .ag-header-cell:not(.ag-header-span-height.ag-header-span-total),
+    .ag-header-cell:not(.ag-header-span-height.ag-header-span-total, .ag-header-parent-hidden),
     .ag-header-group-cell.ag-header-group-cell-with-group {
       border-top: var(--ag-borders-critical) var(--ag-border-color);
     }
