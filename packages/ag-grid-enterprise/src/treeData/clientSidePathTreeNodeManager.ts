@@ -24,6 +24,11 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit();
     }
 
+    public override get treeData(): boolean {
+        const gos = this.gos;
+        return gos.get('treeData') && !!gos.get('getDataPath');
+    }
+
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const transactions = params.rowNodeTransactions;
         if (transactions?.length) {
@@ -76,6 +81,17 @@ export class ClientSidePathTreeNodeManager<TData>
         if (!treeRoot) {
             return;
         }
+
+        if (!this.treeData) {
+            // We assume that the data is flat and we use id as the key for the tree nodes.
+            // This happens when treeData is false and getDataPath is undefined/null.
+            for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
+                const row = rows![i];
+                this.treeSetRow(treeRoot.upsertKey(row.id!), row, update);
+            }
+            return;
+        }
+
         const getDataPath = this.gos.get('getDataPath');
         for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
             const row = rows![i];

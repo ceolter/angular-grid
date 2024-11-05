@@ -73,10 +73,6 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     /** The root node of the tree. */
     public treeRoot: TreeNode | null = null;
 
-    public override get treeData(): boolean {
-        return this.gos.get('treeData');
-    }
-
     public override activate(rootNode: RowNode<TData>): void {
         super.activate(rootNode);
         (this.treeRoot ??= new TreeNode(null, '', -1)).setRow(rootNode);
@@ -188,7 +184,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             return;
         }
 
-        const treeData = this.gos.get('treeData');
+        const treeData = this.treeData;
 
         const details: TreeCommitDetails<TData> = {
             rootNode,
@@ -540,7 +536,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         // Check if group data need to be recomputed due to group columns change
 
-        if (this.gos.get('treeData')) {
+        if (this.treeData) {
             const newGroupDisplayColIds =
                 this.beans.showRowGroupCols
                     ?.getShowRowGroupCols()
