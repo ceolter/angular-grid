@@ -1799,6 +1799,7 @@ export interface GridOptions<TData = any> {
     processPivotResultColGroupDef?: (colGroupDef: ColGroupDef<TData>) => void;
     /**
      * Callback to be used when working with Tree Data when `treeData = true`.
+     * @initial
      */
     getDataPath?: GetDataPath<TData>;
 

@@ -57,6 +57,9 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
 }
 
 export interface RefreshModelParams<TData = any> {
+    // True if a full reload was caused by a property change that might have changed the node manager (full reload)
+    reset?: boolean;
+
     // how much of the pipeline to execute
     step: ClientSideRowModelStage;
 

@@ -295,7 +295,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const treeDataChanged = changedProps.has('treeData');
         const treeDataChildrenFieldChanged = changedProps.has('treeDataChildrenField');
 
-        const needFullReload = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField'));
+        const reset = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField'));
+        params.reset = reset;
 
         let newRowData: any[] | null | undefined;
 
@@ -303,7 +304,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             params.step = 'group';
         }
 
-        if (needFullReload || rowDataChanged) {
+        if (reset || rowDataChanged) {
             newRowData = gos.get('rowData');
 
             if (newRowData != null && !Array.isArray(newRowData)) {
@@ -312,7 +313,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (needFullReload) {
+        if (reset) {
             // If we are here, it means that the row manager need to be changed or fully reloaded
             if (!rowDataChanged) {
                 // No new rowData was passed, so to include user executed transaction we need to extract
@@ -324,7 +325,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         if (newRowData) {
             const immutable =
-                !needFullReload &&
+                !reset &&
                 this.started &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&

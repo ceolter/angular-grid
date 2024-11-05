@@ -2,6 +2,7 @@ import type {
     AgColumn,
     AgInputTextField,
     BeanCollection,
+    BeforeRefreshModelEvent,
     ComponentSelector,
     DataTypeService,
     IAfterGuiAttachedParams,
@@ -449,9 +450,10 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
                     this.syncAfterDataChange();
                 }
             },
+            beforeRefreshModel: this.onBeforeRefreshModel.bind(this),
         });
 
-        this.addManagedPropertyListeners(['treeData', 'getDataPath', 'groupAllowUnbalanced'], () => {
+        this.addManagedPropertyListeners(['groupAllowUnbalanced'], () => {
             this.syncAfterDataChange();
         });
     }
@@ -845,9 +847,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             return false;
         }
 
-        const { node, data } = params;
+        const { node } = params;
         if (this.treeDataTreeList) {
-            return this.doesFilterPassForTreeData(node, data);
+            return this.doesFilterPassForTreeData(node);
         }
         if (this.groupingTreeList) {
             return this.doesFilterPassForGrouping(node);
@@ -865,7 +867,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         return this.isInAppliedModel(this.createKey(value, node));
     }
 
-    private doesFilterPassForTreeData(node: IRowNode, data: any): boolean {
+    private doesFilterPassForTreeData(node: IRowNode): boolean {
         if (node.childrenAfterGroup?.length) {
             // only perform checking on leaves. The core filtering logic for tree data won't work properly otherwise
             return false;
@@ -912,11 +914,16 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         };
     }
 
-    public override onNewRowsLoaded(): void {
-        if (!this.isValuesTakenFromGrid()) {
-            return;
+    private onBeforeRefreshModel({ params }: BeforeRefreshModelEvent): void {
+        if (params.rowDataUpdated || params.reset) {
+            if (this.isValuesTakenFromGrid()) {
+                this.syncAfterDataChange();
+            }
         }
-        this.syncAfterDataChange();
+    }
+
+    public override onNewRowsLoaded(): void {
+        // No need to do this, onBeforeRefreshModel does the same thing
     }
 
     private isValuesTakenFromGrid(): boolean {
