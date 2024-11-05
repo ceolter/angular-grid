@@ -8,10 +8,10 @@ import type { ChartTranslationService } from '../../services/chartTranslationSer
 import { getFullChartNameTranslationKey } from '../../utils/seriesTypeMapper';
 
 export class SeriesChartTypePanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private seriesChartTypeGroupComp: AgGroupComponent;
@@ -60,7 +60,7 @@ export class SeriesChartTypePanel extends Component {
     private createSeriesChartTypeGroup(columns: ColState[]): void {
         this.seriesChartTypeGroupComp = this.createBean(
             new AgGroupComponent({
-                title: this.chartTranslationService.translate('seriesChartType'),
+                title: this.chartTranslation.translate('seriesChartType'),
                 enabled: true,
                 suppressEnabledCheckbox: true,
                 suppressOpenCloseIcons: false,
@@ -98,7 +98,7 @@ export class SeriesChartTypePanel extends Component {
 
             const secondaryAxisComp = this.seriesChartTypeGroupComp.createManagedBean(
                 new AgCheckbox({
-                    label: this.chartTranslationService.translate('secondaryAxis'),
+                    label: this.chartTranslation.translate('secondaryAxis'),
                     labelWidth: 'flex',
                     disabled: isSecondaryAxisDisabled(seriesChartType.chartType),
                     value: !!seriesChartType.secondaryAxis,
@@ -112,7 +112,7 @@ export class SeriesChartTypePanel extends Component {
             const options = (['line', 'area', 'stackedArea', 'groupedColumn', 'stackedColumn'] as const).map(
                 (value) => ({
                     value,
-                    text: this.chartTranslationService.translate(getFullChartNameTranslationKey(value)),
+                    text: this.chartTranslation.translate(getFullChartNameTranslationKey(value)),
                 })
             );
 

@@ -1,0 +1,38 @@
+---
+import LoadingLogo from '@ag-website-shared/images/inline-svgs/ag-grid-logomark-loading.svg?react';
+import RemoveLogoOnInitScript from './RemoveLogoOnInitScript.astro';
+import { getLoadingLogoId } from '@components/example-runner/utils/getLoadingLogoId';
+
+interface Props {
+    exampleHeight?: number;
+    pageName: string;
+    exampleName: string;
+}
+
+const DEFAULT_HEIGHT = 500;
+const FRAME_WRAPPER_HEIGHT = 48 + 26;
+
+const { exampleHeight = DEFAULT_HEIGHT, pageName, exampleName } = Astro.props as Props;
+const minHeight = exampleHeight + FRAME_WRAPPER_HEIGHT;
+const loadingLogoId = getLoadingLogoId({ pageName, exampleName });
+---
+
+<div class="container example-runner-outer" style={{ minHeight: `${minHeight}px` }}>
+    <LoadingLogo id={loadingLogoId} />
+    <slot />
+</div>
+
+<style lang="scss">
+    .container {
+        position: relative;
+
+        :global(.logomark) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(2);
+        }
+    }
+</style>
+
+<RemoveLogoOnInitScript pageName={pageName} exampleName={exampleName} />

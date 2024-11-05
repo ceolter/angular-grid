@@ -17,10 +17,10 @@ import type { AdvancedFilterExpressionService } from '../advancedFilterExpressio
 
 export type InputPillCompEvent = 'fieldValueChanged';
 export class InputPillComp extends Component<InputPillCompEvent> {
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
     }
 
     private readonly ePill: HTMLElement = RefPlaceholder;
@@ -150,7 +150,7 @@ export class InputPillComp extends Component<InputPillCompEvent> {
             'ag-advanced-filter-builder-value-text'
         );
         if (!_exists(this.value)) {
-            value = this.advancedFilterExpressionService.translate('advancedFilterBuilderEnterValue');
+            value = this.advFilterExpSvc.translate('advancedFilterBuilderEnterValue');
             this.eLabel.classList.add('ag-advanced-filter-builder-value-empty');
         } else if (this.params.type === 'number') {
             value = this.value;

@@ -48,7 +48,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     AgRichSelectList<TValue, AgRichSelectEvent>
 > {
     private userCompFactory: UserComponentFactory;
-    private ariaAnnounce: AriaAnnouncementService;
+    private ariaAnnounce?: AriaAnnouncementService;
     private registry: Registry;
 
     public override wireBeans(beans: BeanCollection) {
@@ -80,7 +80,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             pickerAriaLabelValue: 'Rich Select Field',
             pickerType: 'ag-list',
             className: 'ag-rich-select',
-            pickerIcon: 'smallDown',
+            pickerIcon: 'richSelectOpen',
             ariaRole: 'combobox',
             template:
                 config?.template ??
@@ -127,7 +127,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         );
         super.postConstruct();
         this.createListComponent();
-        this.eDeselect.appendChild(_createIconNoSpan('cancel', this.gos)!);
+        this.eDeselect.appendChild(_createIconNoSpan('richSelectRemove', this.beans)!);
 
         const { allowTyping, placeholder, suppressDeselectAll } = this.config;
 
@@ -623,8 +623,8 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     }
 
     private onDeleteKeyDown(e: KeyboardEvent): void {
-        const { eWrapper, gos } = this;
-        const activeEl = _getActiveDomElement(gos);
+        const { eWrapper, beans } = this;
+        const activeEl = _getActiveDomElement(beans);
 
         if (activeEl === eWrapper) {
             e.preventDefault();
@@ -787,7 +787,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     }
 
     private announceAriaValue(value: string): void {
-        this.ariaAnnounce.announceValue(value, 'richSelect');
+        this.ariaAnnounce?.announceValue(value, 'richSelect');
     }
 
     public override destroy(): void {

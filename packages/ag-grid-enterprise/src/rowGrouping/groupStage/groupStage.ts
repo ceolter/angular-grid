@@ -249,7 +249,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         childNodes.forEach((childNode) => {
             // we add node, even if parent has not changed, as the data could have
             // changed, hence aggregations will be wrong
-            if (details.changedPath.isActive()) {
+            if (details.changedPath.active) {
                 details.changedPath.addParentNode(childNode.parent);
             }
 
@@ -278,7 +278,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
 
         // we add both old and new parents to changed path, as both will need to be refreshed.
         // we already added the old parent (in calling method), so just add the new parent here
-        if (details.changedPath.isActive()) {
+        if (details.changedPath.active) {
             const newParent = childNode.parent;
             details.changedPath.addParentNode(newParent);
         }
@@ -290,7 +290,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         batchRemover: BatchRemover | undefined
     ): void {
         this.removeNodesFromParents(leafRowNodes, details, batchRemover);
-        if (details.changedPath.isActive()) {
+        if (details.changedPath.active) {
             leafRowNodes.forEach((rowNode) => details.changedPath.addParentNode(rowNode.parent));
         }
     }
@@ -498,7 +498,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private insertNodes(newRowNodes: RowNode[], details: GroupingDetails): void {
         newRowNodes.forEach((rowNode) => {
             this.insertOneNode(rowNode, details);
-            if (details.changedPath.isActive()) {
+            if (details.changedPath.active) {
                 details.changedPath.addParentNode(rowNode.parent);
             }
         });

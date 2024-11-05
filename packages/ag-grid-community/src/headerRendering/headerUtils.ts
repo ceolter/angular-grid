@@ -8,6 +8,10 @@ export function getHeaderRowCount(colModel: ColumnModel): number {
     return colModel.cols ? colModel.cols.treeDepth + 1 : -1;
 }
 
+export function getFocusHeaderRowCount(beans: BeanCollection): number {
+    return beans.ctrlsSvc.getHeaderRowContainerCtrl()?.getRowCount() ?? 0;
+}
+
 export function getGroupRowsHeight(beans: BeanCollection): number[] {
     const heights: number[] = [];
     const headerRowContainerCtrls = beans.ctrlsSvc.getHeaderRowContainerCtrls();
@@ -43,7 +47,7 @@ function getColumnGroupHeaderRowHeight(beans: BeanCollection, headerRowCtrl: Hea
     let displayedHeights = 0;
     const headerRowCellCtrls = headerRowCtrl.getHeaderCtrls() as HeaderGroupCellCtrl[];
     for (const headerCellCtrl of headerRowCellCtrls) {
-        const column = headerCellCtrl.getColumn();
+        const { column } = headerCellCtrl;
         if (column.isAutoHeaderHeight()) {
             const height = column.getAutoHeaderHeight();
             if (height != null && height > displayedHeights) {

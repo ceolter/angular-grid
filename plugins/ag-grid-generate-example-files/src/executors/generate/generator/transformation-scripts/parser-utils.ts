@@ -470,7 +470,7 @@ export function addBindingImports(
 
     bindingImports
         .filter((i: BindingImport) => {
-            return !i.module.includes('@ag-grid-community/locale') && !i.module.includes('.css');
+            return !i.module.includes('@ag-grid-community/locale');
         })
         .forEach((i: BindingImport) => {
             const path = stripTypescriptSuffix(i.module);

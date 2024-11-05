@@ -1,4 +1,5 @@
 import util from 'util';
+import { expect } from 'vitest';
 
 import type { Column, GridApi, IRowNode } from 'ag-grid-community';
 import type { RowNode } from 'ag-grid-community';

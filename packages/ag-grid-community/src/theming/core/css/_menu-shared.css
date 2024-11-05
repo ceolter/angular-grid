@@ -1,0 +1,16 @@
+/* .ag-menu can't be put with the rest of the menu styles in the menu module
+   because community column filters use it too */
+.ag-menu {
+    max-height: 100%;
+    overflow-y: auto;
+    position: absolute;
+    user-select: none;
+    border: var(--ag-menu-border);
+    border-radius: var(--ag-border-radius);
+    box-shadow: var(--ag-menu-shadow);
+    background-color: var(--ag-menu-background-color);
+    color: var(--ag-menu-text-color);
+    /* Add a minimum width to avoid having zero width when the content tries to
+    size itself to the menu */
+    min-width: 180px;
+}

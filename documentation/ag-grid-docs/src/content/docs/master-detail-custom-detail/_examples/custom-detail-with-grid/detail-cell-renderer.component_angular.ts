@@ -15,7 +15,6 @@ import type { ColDef, GridApi, GridReadyEvent, ICellRendererParams } from 'ag-gr
         <ag-grid-angular
             #agGrid
             style="height: 100%;"
-            id="detailGrid"
             class="full-width-grid"
             [columnDefs]="colDefs"
             [defaultColDef]="defaultColDef"

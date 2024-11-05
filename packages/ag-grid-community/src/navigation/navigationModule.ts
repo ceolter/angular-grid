@@ -13,11 +13,17 @@ import {
 } from './navigationApi';
 import { NavigationService } from './navigationService';
 
+/**
+ * @feature Interactivity -> Keyboard Navigation
+ */
 export const KeyboardNavigationCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('KeyboardNavigationCoreModule'),
     beans: [NavigationService, CellNavigationService, HeaderNavigationService],
 };
 
+/**
+ * @feature Interactivity -> Keyboard Navigation
+ */
 export const KeyboardNavigationApiModule: _ModuleWithApi<_KeyboardNavigationGridApi> = {
     ...baseCommunityModule('KeyboardNavigationApiModule'),
     apiFunctions: {
@@ -31,6 +37,9 @@ export const KeyboardNavigationApiModule: _ModuleWithApi<_KeyboardNavigationGrid
     dependsOn: [KeyboardNavigationCoreModule],
 };
 
+/**
+ * @feature Interactivity -> Keyboard Navigation
+ */
 export const KeyboardNavigationModule: _ModuleWithoutApi = {
     ...baseCommunityModule('KeyboardNavigationModule'),
     dependsOn: [KeyboardNavigationApiModule, KeyboardNavigationCoreModule],

@@ -124,47 +124,8 @@ export type ChartType =
     | 'areaColumnCombo'
     | 'customCombo';
 
-export type ChartTypeExCombo = Exclude<ChartType, 'columnLineCombo' | 'areaColumnCombo' | 'customCombo'>;
+export type ComboChartType = 'columnLineCombo' | 'areaColumnCombo' | 'customCombo';
 
-export class ChartMappings {
-    public static readonly CHART_TYPE_TO_SERIES_TYPE: Record<ChartTypeExCombo, string> = {
-        column: 'bar',
-        groupedColumn: 'bar',
-        stackedColumn: 'bar',
-        normalizedColumn: 'bar',
-        bar: 'bar',
-        groupedBar: 'bar',
-        stackedBar: 'bar',
-        normalizedBar: 'bar',
-        line: 'line',
-        stackedLine: 'line',
-        normalizedLine: 'line',
-        scatter: 'scatter',
-        bubble: 'bubble',
-        pie: 'pie',
-        donut: 'donut',
-        doughnut: 'donut',
-        area: 'area',
-        stackedArea: 'area',
-        normalizedArea: 'area',
-        histogram: 'histogram',
-        radarLine: 'radar-line',
-        radarArea: 'radar-area',
-        nightingale: 'nightingale',
-        radialColumn: 'radial-column',
-        radialBar: 'radial-bar',
-        sunburst: 'sunburst',
-        rangeBar: 'range-bar',
-        rangeArea: 'range-area',
-        boxPlot: 'box-plot',
-        treemap: 'treemap',
-        heatmap: 'heatmap',
-        waterfall: 'waterfall',
-    } as const;
+export type ChartTypeExCombo = Exclude<ChartType, ComboChartType>;
 
-    public static readonly COMBO_CHART_TYPES = ['columnLineCombo', 'areaColumnCombo', 'customCombo'] as const;
-
-    public static readonly SERIES_GROUP_TYPES = ['grouped', 'stacked', 'normalized'] as const;
-}
-
-export type SeriesGroupType = (typeof ChartMappings.SERIES_GROUP_TYPES)[number];
+export type SeriesGroupType = 'grouped' | 'stacked' | 'normalized';

@@ -2,7 +2,7 @@ import type { GridApi } from '../api/gridApi';
 import type { ColumnResizeService } from '../columnResize/columnResizeService';
 import type { ColumnGroupService } from '../columns/columnGroups/columnGroupService';
 import type { ColumnModel } from '../columns/columnModel';
-import type { ColumnStateService } from '../columns/columnStateService';
+import { _applyColumnState } from '../columns/columnStateUtils';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -28,15 +28,13 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private colResize?: ColumnResizeService;
     private ctrlsSvc: CtrlsService;
-    private colState: ColumnStateService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colResize = beans.colResize;
         this.ctrlsSvc = beans.ctrlsSvc;
-        this.colState = beans.colState;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     // flag to mark if we are consuming. to avoid cyclic events (ie other grid firing back to master
@@ -139,8 +137,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
 
     private onScrollEvent(event: BodyScrollEvent): void {
         this.onEvent(() => {
-            const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-            gridBodyCon.getScrollFeature().setHorizontalScrollPosition(event.left, true);
+            this.ctrlsSvc.getScrollFeature().setHorizontalScrollPosition(event.left, true);
         });
     }
 
@@ -188,8 +185,8 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     }
 
     private processGroupOpenedEvent(groupOpenedEvent: ColumnGroupOpenedEvent): void {
-        const { columnGroupSvc } = this;
-        if (!columnGroupSvc) {
+        const { colGroupSvc } = this;
+        if (!colGroupSvc) {
             return;
         }
         groupOpenedEvent.columnGroups.forEach((masterGroup) => {
@@ -197,14 +194,14 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
             let otherColumnGroup: AgProvidedColumnGroup | null = null;
 
             if (masterGroup) {
-                otherColumnGroup = columnGroupSvc.getProvidedColGroup(masterGroup.getGroupId());
+                otherColumnGroup = colGroupSvc.getProvidedColGroup(masterGroup.getGroupId());
             }
 
             if (masterGroup && !otherColumnGroup) {
                 return;
             }
 
-            columnGroupSvc.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
+            colGroupSvc.setColumnGroupOpened(otherColumnGroup, masterGroup.isExpanded(), 'alignedGridChanged');
         });
     }
 
@@ -226,7 +223,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
         // in time, all the methods below should use the column ids, it's a more generic way
         // of handling columns, and also allows for single or multi column events
         const masterColumns = this.getMasterColumns(colEvent);
-        const { colState, colResize, ctrlsSvc } = this;
+        const { colResize, ctrlsSvc, beans } = this;
         switch (colEvent.type) {
             case 'columnMoved':
                 // when the user moves columns via applyColumnState, we can't depend on moving specific columns
@@ -235,7 +232,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId }));
-                    colState.applyColumnState({ state: destColState, applyOrder: true }, 'alignedGridChanged');
+                    _applyColumnState(beans, { state: destColState, applyOrder: true }, 'alignedGridChanged');
                 }
                 break;
             case 'columnVisible':
@@ -245,14 +242,14 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId, hide: s.hide }));
-                    colState.applyColumnState({ state: destColState }, 'alignedGridChanged');
+                    _applyColumnState(beans, { state: destColState }, 'alignedGridChanged');
                 }
                 break;
             case 'columnPinned':
                 {
                     const srcColState = colEvent.api.getColumnState();
                     const destColState = srcColState.map((s) => ({ colId: s.colId, pinned: s.pinned }));
-                    colState.applyColumnState({ state: destColState }, 'alignedGridChanged');
+                    _applyColumnState(beans, { state: destColState }, 'alignedGridChanged');
                 }
                 break;
             case 'columnResized': {

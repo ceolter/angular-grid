@@ -18,11 +18,11 @@ import type {
 } from './iAdvancedFilterBuilder';
 
 export class AdvancedFilterBuilderItemAddComp extends Component<AdvancedFilterBuilderEvents> {
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.registry = beans.registry;
     }
 
@@ -47,7 +47,7 @@ export class AdvancedFilterBuilderItemAddComp extends Component<AdvancedFilterBu
         _setAriaLevel(this.focusWrapper, 2);
 
         const addButtonParams = getAdvancedFilterBuilderAddButtonParams(
-            (key) => this.advancedFilterExpressionService.translate(key),
+            (key) => this.advFilterExpSvc.translate(key),
             this.gos.get('advancedFilterBuilderParams')?.addSelectWidth
         );
         const eAddButton = this.createManagedBean(new AddDropdownComp(addButtonParams));
@@ -66,8 +66,7 @@ export class AdvancedFilterBuilderItemAddComp extends Component<AdvancedFilterBu
             this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
                 getGui: () => eAddButton.getGui(),
                 getLocation: () => 'advancedFilter',
-                getTooltipValue: () =>
-                    this.advancedFilterExpressionService.translate('advancedFilterBuilderAddButtonTooltip'),
+                getTooltipValue: () => this.advFilterExpSvc.translate('advancedFilterBuilderAddButtonTooltip'),
             } as ITooltipCtrl)
         );
 
@@ -77,8 +76,8 @@ export class AdvancedFilterBuilderItemAddComp extends Component<AdvancedFilterBu
 
         _setAriaLabel(
             this.focusWrapper,
-            this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderItem', [
-                this.advancedFilterExpressionService.translate('advancedFilterBuilderAddButtonTooltip'),
+            this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderItem', [
+                this.advFilterExpSvc.translate('advancedFilterBuilderAddButtonTooltip'),
                 `${this.item.level + 1}`,
             ])
         );

@@ -12,16 +12,13 @@ to be overridden.
 
 {% gridExampleRunner title="Group Column Configuration" name="group-column" /%}
 
-The example above sets different header text, a minimum width, and adds checkboxes to each Group Column cell the following configuration:
+The example above sets different header text and a minimum width to each Group Column cell the following configuration:
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
     autoGroupColumnDef: {
         headerName: 'My Group',
         minWidth: 220,
-        cellRendererParams: {
-            checkbox: true,
-        }
     },
 }
 ```

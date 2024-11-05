@@ -97,14 +97,17 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             parentSelected: boolean
         ): SelectionState => {
             if (typeof normalisedState !== 'object') {
-                throw new Error('Each provided state object must be an object.');
+                _error(243);
+                throw new Error();
             }
             if ('selectAllChildren' in normalisedState && typeof normalisedState.selectAllChildren !== 'boolean') {
-                throw new Error('`selectAllChildren` must be a boolean value or undefined.');
+                _error(244);
+                throw new Error();
             }
             if ('toggledNodes' in normalisedState) {
                 if (!Array.isArray(normalisedState.toggledNodes)) {
-                    throw new Error('`toggledNodes` must be an array.');
+                    _error(245);
+                    throw new Error();
                 }
                 const allHaveIds = normalisedState.toggledNodes.every(
                     (innerState) =>
@@ -113,7 +116,8 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
                         typeof innerState.nodeId === 'string'
                 );
                 if (!allHaveIds) {
-                    throw new Error('Every `toggledNode` requires an associated string id.');
+                    _error(246);
+                    throw new Error();
                 }
             }
             const isThisNodeSelected = normalisedState.selectAllChildren ?? !parentSelected;
@@ -126,10 +130,8 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
                     isThisNodeSelected === innerState.selectAllChildren && innerState.toggledNodes.size === 0
             );
             if (doesRedundantStateExist) {
-                throw new Error(`
-                    Row selection state could not be parsed due to invalid data. Ensure all child state has toggledNodes or does not conform with the parent rule.
-                    Please rebuild the selection state and reapply it.
-                `);
+                _error(247);
+                throw new Error();
             }
             return {
                 selectAllChildren: isThisNodeSelected,
@@ -140,7 +142,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         try {
             this.selectedState = recursivelyDeserializeState(state, !!state.selectAllChildren);
         } catch (e) {
-            _error(238, { message: e.message });
+            // do nothing - error already logged
         }
     }
 
@@ -243,7 +245,8 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
-                throw new Error("AG Grid: cannot select multiple rows when rowSelection.mode is set to 'singleRow'");
+                _error(241);
+                return 0;
             }
             this.deselectAllRowNodes();
         }

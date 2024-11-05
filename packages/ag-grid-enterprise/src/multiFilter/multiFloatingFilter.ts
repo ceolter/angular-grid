@@ -16,6 +16,7 @@ import {
     AgPromise,
     Component,
     _clearElement,
+    _error,
     _getDefaultFloatingFilterType,
     _getFloatingFilterCompDetails,
     _mergeDeep,
@@ -186,7 +187,7 @@ export class MultiFloatingFilterComp extends Component implements IFloatingFilte
     private parentMultiFilterInstance(cb: (instance: MultiFilter) => void): void {
         this.params.parentFilterInstance((parent) => {
             if (!(parent instanceof MultiFilter)) {
-                throw new Error('AG Grid - MultiFloatingFilterComp expects MultiFilter as its parent');
+                _error(120);
             }
 
             cb(parent);

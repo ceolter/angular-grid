@@ -1,7 +1,7 @@
 import type { Framework } from '@ag-grid-types';
 import { isExternalLink } from '@ag-website-shared/utils/isExternalLink';
+import { getFrameworkPath } from '@components/docs/utils/urlPaths';
 import { SITE_BASE_URL } from '@constants';
-import { getFrameworkPath } from '@features/docs/utils/urlPaths';
 import { getIsDev } from '@utils/env';
 import { pathJoin } from '@utils/pathJoin';
 

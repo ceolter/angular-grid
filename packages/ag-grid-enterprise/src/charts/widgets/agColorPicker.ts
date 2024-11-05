@@ -24,13 +24,13 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
             pickerAriaLabelValue: 'Color Picker',
             pickerType: 'ag-list',
             className: 'ag-color-picker',
-            pickerIcon: 'smallDown',
+            pickerIcon: 'chartsColorPicker',
             ...config,
         });
     }
 
     public override postConstruct() {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         this.eDisplayFieldColor = eDocument.createElement('span');
         this.eDisplayFieldColor.classList.add('ag-color-picker-color');
         this.eDisplayFieldText = eDocument.createElement('span');

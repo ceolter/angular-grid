@@ -5,10 +5,17 @@ import type {
     CellRange,
     CtrlsService,
     DragService,
-    MouseEventService,
     RowPosition,
 } from 'ag-grid-community';
-import { Component, _areCellsEqual, _isRowBefore, _isVisible, _last, _setDisplayed } from 'ag-grid-community';
+import {
+    Component,
+    _areCellsEqual,
+    _getCellPositionForEvent,
+    _isRowBefore,
+    _isVisible,
+    _last,
+    _setDisplayed,
+} from 'ag-grid-community';
 
 import type { RangeService } from './rangeService';
 
@@ -20,13 +27,11 @@ export enum SelectionHandleType {
 export abstract class AbstractSelectionHandle extends Component {
     protected dragSvc: DragService;
     protected rangeSvc: RangeService;
-    protected mouseEventSvc: MouseEventService;
     protected ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection) {
         this.dragSvc = beans.dragSvc!;
         this.rangeSvc = beans.rangeSvc as RangeService;
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
     }
 
@@ -125,6 +130,7 @@ export abstract class AbstractSelectionHandle extends Component {
         e.stopPropagation();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected onDragStart(_: MouseEvent) {
         [this.cellHoverListener] = this.addManagedElementListeners(this.ctrlsSvc.get('gridCtrl').getGui(), {
             mousemove: this.updateValuesOnMove.bind(this),
@@ -138,7 +144,7 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     protected updateValuesOnMove(e: MouseEvent) {
-        const cell = this.mouseEventSvc.getCellPositionForEvent(e);
+        const cell = _getCellPositionForEvent(this.gos, e);
 
         if (!cell || (this.lastCellHovered && _areCellsEqual(cell, this.lastCellHovered))) {
             return;
@@ -184,7 +190,7 @@ export abstract class AbstractSelectionHandle extends Component {
 
         if (oldCellComp !== cellCtrl || !_isVisible(eGui)) {
             this.setCellCtrl(cellCtrl);
-            const eParentOfValue = cellCtrl.getComp().getParentOfValue();
+            const eParentOfValue = cellCtrl.comp.getParentOfValue();
             if (eParentOfValue) {
                 eParentOfValue.appendChild(eGui);
             }

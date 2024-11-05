@@ -27,7 +27,7 @@ export class HeaderGroupCellComp extends AbstractHeaderCellComp<HeaderGroupCellC
         const setAttribute = (key: string, value: string | undefined) =>
             value != undefined ? eGui.setAttribute(key, value) : eGui.removeAttribute(key);
 
-        eGui.setAttribute('col-id', this.ctrl.getColId());
+        eGui.setAttribute('col-id', this.ctrl.column.getUniqueId());
 
         const compProxy: IHeaderGroupCellComp = {
             addOrRemoveCssClass: (cssClassName, on) => this.addOrRemoveCssClass(cssClassName, on),

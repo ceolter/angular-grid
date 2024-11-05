@@ -173,7 +173,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
         if (!sourceColumns) {
             this.filterColumnPairs = undefined;
             this.selectedFilter = undefined;
-            this.groupColumn.setFilterActive(false, 'columnRowGroupChanged');
+            this.beans.colFilter?.setColFilterActive(this.groupColumn, false, 'columnRowGroupChanged');
             return AgPromise.resolve();
         }
         const filterPromises: AgPromise<IFilterComp>[] = [];
@@ -199,7 +199,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
         });
         return AgPromise.all(filterPromises).then(() => {
             this.filterColumnPairs = filterColumnPairs;
-            this.groupColumn.setFilterActive(this.isFilterActive(), 'columnRowGroupChanged');
+            this.beans.colFilter?.setColFilterActive(this.groupColumn, this.isFilterActive(), 'columnRowGroupChanged');
         });
     }
 

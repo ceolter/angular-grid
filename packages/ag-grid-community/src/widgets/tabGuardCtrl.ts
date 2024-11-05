@@ -1,7 +1,6 @@
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { FocusService } from '../focusService';
 import { _getDocument } from '../gridOptionsUtils';
+import { _findFocusableElements, _findNextFocusableElement } from '../utils/focus';
 import { ManagedFocusFeature } from './managedFocusFeature';
 
 export const TabGuardClassNames = {
@@ -15,12 +14,6 @@ export interface ITabGuard {
 }
 
 export class TabGuardCtrl extends BeanStub {
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-    }
-
     private readonly comp: ITabGuard;
     private readonly eTopGuard: HTMLElement;
     private readonly eBottomGuard: HTMLElement;
@@ -160,7 +153,7 @@ export class TabGuardCtrl extends BeanStub {
         // in the TabGuard itself and has nowhere to go, so we need to manually find
         // the closest element to focus by calling `forceFocusOutWhenTabGuardAreEmpty`.
         if (this.forceFocusOutWhenTabGuardsAreEmpty) {
-            const isEmpty = this.focusSvc.findFocusableElements(this.eFocusableElement, '.ag-tab-guard').length === 0;
+            const isEmpty = _findFocusableElements(this.eFocusableElement, '.ag-tab-guard').length === 0;
             if (isEmpty) {
                 this.findNextElementOutsideAndFocus(e.target === this.eBottomGuard);
                 return;
@@ -181,8 +174,8 @@ export class TabGuardCtrl extends BeanStub {
     }
 
     private findNextElementOutsideAndFocus(up: boolean) {
-        const eDocument = _getDocument(this.gos);
-        const focusableEls = this.focusSvc.findFocusableElements(eDocument.body, null, true);
+        const eDocument = _getDocument(this.beans);
+        const focusableEls = _findFocusableElements(eDocument.body, null, true);
         const index = focusableEls.indexOf(up ? this.eTopGuard : this.eBottomGuard);
 
         if (index === -1) {
@@ -288,7 +281,7 @@ export class TabGuardCtrl extends BeanStub {
     }
 
     public focusInnerElement(fromBottom = false): void {
-        const focusable = this.focusSvc.findFocusableElements(this.eFocusableElement);
+        const focusable = _findFocusableElements(this.eFocusableElement);
 
         if (this.tabGuardsAreActive()) {
             // remove tab guards from this component from list of focusable elements
@@ -304,7 +297,7 @@ export class TabGuardCtrl extends BeanStub {
     }
 
     public getNextFocusableElement(backwards?: boolean): HTMLElement | null {
-        return this.focusSvc.findNextFocusableElement(this.eFocusableElement, false, backwards);
+        return _findNextFocusableElement(this.beans, this.eFocusableElement, false, backwards);
     }
 
     public forceFocusOutOfContainer(up: boolean = false): void {

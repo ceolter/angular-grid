@@ -2,7 +2,7 @@ import type { IStatusPanelComp, NamedBean } from 'ag-grid-community';
 import { BeanStub } from 'ag-grid-community';
 
 export class StatusBarService extends BeanStub implements NamedBean {
-    beanName = 'statusBarService' as const;
+    beanName = 'statusBarSvc' as const;
 
     private allComponents: Map<string, IStatusPanelComp> = new Map();
 

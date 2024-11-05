@@ -1,19 +1,19 @@
-import type { BeanCollection, ChartToolbarMenuItemOptions } from 'ag-grid-community';
+import type { BeanCollection, ChartToolbarMenuItemOptions, IconName } from 'ag-grid-community';
 import { Component, RefPlaceholder, _clearElement, _createIconNoSpan, _getDocument } from 'ag-grid-community';
 
 import type { ChartTranslationKey, ChartTranslationService } from '../services/chartTranslationService';
 
 interface ChartToolbarButton {
     buttonName: ChartToolbarMenuItemOptions;
-    iconName: string;
+    iconName: IconName;
     callback: (eventSource: HTMLElement) => void;
 }
 
 export class ChartToolbar extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private readonly eMenu: HTMLButtonElement = RefPlaceholder;
@@ -40,7 +40,7 @@ export class ChartToolbar extends Component {
             const { buttonName, iconName, callback } = buttonConfig;
             const buttonEl = this.createButton(iconName);
 
-            const tooltipTitle = this.chartTranslationService.translate(
+            const tooltipTitle = this.chartTranslation.translate(
                 (buttonName + 'ToolbarTooltip') as ChartTranslationKey
             );
             if (tooltipTitle && buttonEl instanceof HTMLElement) {
@@ -57,11 +57,11 @@ export class ChartToolbar extends Component {
         });
     }
 
-    private createButton(iconName: string): Element {
-        const buttonEl = _createIconNoSpan(iconName, this.gos, undefined, true)!;
+    private createButton(iconName: IconName): Element {
+        const buttonEl = _createIconNoSpan(iconName, this.beans)!;
         buttonEl.classList.add('ag-chart-menu-icon');
 
-        const wrapperEl = _getDocument(this.gos).createElement('button');
+        const wrapperEl = _getDocument(this.beans).createElement('button');
         wrapperEl.appendChild(buttonEl);
         wrapperEl.classList.add('ag-chart-menu-toolbar-button');
         return wrapperEl;

@@ -1,3 +1,4 @@
+import { isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
@@ -7,12 +8,14 @@ import { _createGlobalRowEvent } from '../entities/rowNodeUtils';
 import type { SelectionEventSourceType } from '../events';
 import {
     _getActiveDomElement,
+    _getCheckboxes,
     _getEnableDeselection,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
     _isRowSelection,
 } from '../gridOptionsUtils';
 import type { IRowModel } from '../interfaces/iRowModel';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { ISetNodesSelectedParams, SetSelectedParams } from '../interfaces/iSelectionService';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
@@ -24,7 +27,7 @@ import { SelectAllFeature } from './selectAllFeature';
 
 export abstract class BaseSelectionService extends BeanStub {
     protected rowModel: IRowModel;
-    private ariaAnnounce: AriaAnnouncementService;
+    private ariaAnnounce?: AriaAnnouncementService;
 
     protected isRowSelectable?: IsRowSelectable;
 
@@ -63,12 +66,12 @@ export abstract class BaseSelectionService extends BeanStub {
     public onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void {
         // Treat undefined as false, if we pass undefined down it gets treated as toggle class, rather than explicitly
         // setting the required value
-        const selected = !!rowCtrl.getRowNode().isSelected();
+        const selected = !!rowCtrl.rowNode.isSelected();
         rowCtrl.forEachGui(gui, (gui) => {
             gui.rowComp.addOrRemoveCssClass('ag-row-selected', selected);
             _setAriaSelected(gui.element, selected);
 
-            const hasFocus = gui.element.contains(_getActiveDomElement(this.gos));
+            const hasFocus = gui.element.contains(_getActiveDomElement(this.beans));
             if (hasFocus) {
                 hasFocusFunc(gui);
             }
@@ -91,7 +94,7 @@ export abstract class BaseSelectionService extends BeanStub {
             `Press SPACE to ${selected ? 'deselect' : 'select'} this row.`
         );
 
-        this.ariaAnnounce.announceValue(label, 'rowSelection');
+        this.ariaAnnounce?.announceValue(label, 'rowSelection');
     }
 
     protected dispatchSelectionChanged(source: SelectionEventSourceType): void {
@@ -247,5 +250,16 @@ export abstract class BaseSelectionService extends BeanStub {
         }
 
         return this.setNodesSelected({ ...params, nodes: [rowNode.footer ? rowNode.sibling : rowNode] });
+    }
+
+    public isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean {
+        const so = this.gos.get('rowSelection');
+
+        if (so && typeof so !== 'string') {
+            const checkbox = isColumnSelectionCol(column) && _getCheckboxes(so);
+            return column.isColumnFunc(rowNode, checkbox);
+        } else {
+            return column.isColumnFunc(rowNode, column.colDef.checkboxSelection);
+        }
     }
 }

@@ -6,7 +6,7 @@ import type {
     NamedBean,
     VisibleColsService,
 } from 'ag-grid-community';
-import { BeanStub } from 'ag-grid-community';
+import { BeanStub, _findNextFocusableElement } from 'ag-grid-community';
 
 import { AgPrimaryCols } from '../columnToolPanel/agPrimaryCols';
 import { AgDialog } from '../widgets/agDialog';
@@ -19,7 +19,7 @@ interface ShowColumnChooserParams {
 }
 
 export class ColumnChooserFactory extends BeanStub implements NamedBean {
-    beanName = 'columnChooserFactory' as const;
+    beanName = 'colChooserFactory' as const;
 
     private focusSvc: FocusService;
     private menuUtils: MenuUtils;
@@ -97,7 +97,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
                 centered: true,
                 closable: true,
                 afterGuiAttached: () => {
-                    this.focusSvc.findNextFocusableElement(columnSelectPanel.getGui())?.focus({
+                    _findNextFocusableElement(this.beans, columnSelectPanel.getGui())?.focus({
                         preventScroll: true,
                     });
                     this.dispatchVisibleChangedEvent(true, column);

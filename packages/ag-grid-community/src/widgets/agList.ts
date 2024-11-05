@@ -152,7 +152,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
     }
 
     private renderOption(value: TValue, text: string): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const itemEl = eDocument.createElement('div');
 
         _setAriaRole(itemEl, 'option');

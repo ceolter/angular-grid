@@ -26,7 +26,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
     private animationFrameSvc?: AnimationFrameService;
-    private autoWidthCalculator: AutoWidthCalculator;
+    private autoWidthCalc: AutoWidthCalculator;
     private ctrlsSvc: CtrlsService;
     private renderStatus?: IRenderStatusService;
     private scrollVisibleSvc: ScrollVisibleService;
@@ -41,7 +41,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
         this.animationFrameSvc = beans.animationFrameSvc;
-        this.autoWidthCalculator = beans.autoWidthCalculator!;
+        this.autoWidthCalc = beans.autoWidthCalc!;
         this.ctrlsSvc = beans.ctrlsSvc;
         this.renderStatus = beans.renderStatus;
         this.scrollVisibleSvc = beans.scrollVisibleSvc;
@@ -118,7 +118,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                 }
 
                 // get how wide this col should be
-                const preferredWidth = this.autoWidthCalculator.getPreferredWidthForColumn(column, shouldSkipHeader);
+                const preferredWidth = this.autoWidthCalc.getPreferredWidthForColumn(column, shouldSkipHeader);
 
                 // preferredWidth = -1 if this col is not on the screen
                 if (preferredWidth > 0) {
@@ -262,7 +262,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         const scrollWidthToRemove = removeScrollWidth ? this.scrollVisibleSvc.getScrollbarWidth() : 0;
         // bodyViewportWidth should be calculated from eGridBody, not eBodyViewport
         // because we change the width of the bodyViewport to hide the real browser scrollbar
-        const bodyViewportWidth = _getInnerWidth(gridBodyCtrl.getGridBodyElement());
+        const bodyViewportWidth = _getInnerWidth(gridBodyCtrl.eGridBody);
         const availableWidth = bodyViewportWidth - scrollWidthToRemove;
 
         if (availableWidth > 0) {
@@ -369,7 +369,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                         column.setActualWidth(widthOverride, source, true);
                         return;
                     }
-                    column.setMinimum(source);
+                    column.setActualWidth(column.minWidth, source);
                 });
             } else {
                 const scale = availablePixels / getWidthOfColsInList(colsToSpread);

@@ -14,7 +14,7 @@ import type {
 } from '../events';
 import type { FilterManager } from '../filter/filterManager';
 import type { FocusService } from '../focusService';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
+import { _getNormalisedMousePosition } from '../gridBodyComp/mouseEventUtils';
 import { _getRowIdCallback, _isClientSideRowModel } from '../gridOptionsUtils';
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { IColsService } from '../interfaces/iColsService';
@@ -83,7 +83,6 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     private sortSvc?: SortService;
     private filterManager?: FilterManager;
     private selectionSvc?: ISelectionService;
-    private mouseEventSvc: MouseEventService;
     private ctrlsSvc: CtrlsService;
     private rowGroupColsSvc?: IColsService;
 
@@ -95,7 +94,6 @@ export class RowDragFeature extends BeanStub implements DropTarget {
         this.sortSvc = beans.sortSvc;
         this.filterManager = beans.filterManager;
         this.selectionSvc = beans.selectionSvc;
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
     }
@@ -118,10 +116,10 @@ export class RowDragFeature extends BeanStub implements DropTarget {
         this.ctrlsSvc.whenReady(this, (p) => {
             const gridBodyCon = p.gridBodyCtrl;
             this.autoScrollService = new AutoScrollService({
-                scrollContainer: gridBodyCon.getBodyViewportElement(),
+                scrollContainer: gridBodyCon.eBodyViewport,
                 scrollAxis: 'y',
-                getVerticalPosition: () => gridBodyCon.getScrollFeature().getVScrollPosition().top,
-                setVerticalPosition: (position) => gridBodyCon.getScrollFeature().setVerticalScrollPosition(position),
+                getVerticalPosition: () => gridBodyCon.scrollFeature.getVScrollPosition().top,
+                setVerticalPosition: (position) => gridBodyCon.scrollFeature.setVerticalScrollPosition(position),
                 onScrollCallback: () => {
                     this.onDragging(this.lastDraggingEvent);
                 },
@@ -217,7 +215,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
 
         this.lastDraggingEvent = draggingEvent;
 
-        const pixel = this.mouseEventSvc.getNormalisedPosition(draggingEvent).y;
+        const pixel = _getNormalisedMousePosition(this.beans, draggingEvent).y;
         const managedDrag = this.gos.get('rowDragManaged');
 
         if (managedDrag) {
@@ -254,7 +252,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     private moveRowAndClearHighlight(draggingEvent: DraggingEvent): void {
         const lastHighlightedRowNode = this.clientSideRowModel.getLastHighlightedRowNode();
         const isBelow = lastHighlightedRowNode && lastHighlightedRowNode.highlighted === 'Below';
-        const pixel = this.mouseEventSvc.getNormalisedPosition(draggingEvent).y;
+        const pixel = _getNormalisedMousePosition(this.beans, draggingEvent).y;
         const rowNodes = draggingEvent.dragItem.rowNodes as RowNode[];
 
         let increment = isBelow ? 1 : 0;
@@ -425,7 +423,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
     }
 
     private draggingToRowDragEvent<T extends RowDragEventType>(type: T, draggingEvent: DraggingEvent): RowDragEvent<T> {
-        const yNormalised = this.mouseEventSvc.getNormalisedPosition(draggingEvent).y;
+        const yNormalised = _getNormalisedMousePosition(this.beans, draggingEvent).y;
         const mouseIsPastLastRow = yNormalised > this.pageBounds.getCurrentPageHeight();
 
         let overIndex = -1;

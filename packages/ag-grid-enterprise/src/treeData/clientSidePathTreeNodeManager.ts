@@ -24,6 +24,11 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit();
     }
 
+    public override get treeData(): boolean {
+        const gos = this.gos;
+        return gos.get('treeData') && !!gos.get('getDataPath');
+    }
+
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const transactions = params.rowNodeTransactions;
         if (transactions?.length) {
@@ -34,7 +39,12 @@ export class ClientSidePathTreeNodeManager<TData>
     }
 
     private executeTransactions(transactions: RowNodeTransaction<TData>[], changedPath: ChangedPath | undefined): void {
-        this.treeRoot?.setRow(this.rootNode);
+        const treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            return; // Destroyed or not active
+        }
+
+        treeRoot.setRow(this.rootNode);
 
         for (const { remove, update, add } of transactions) {
             // the order of [add, remove, update] is the same as in ClientSideNodeManager.
@@ -49,7 +59,7 @@ export class ClientSidePathTreeNodeManager<TData>
             if (rows) {
                 for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
                     const node = rows[rowIdx].treeNode as TreeNode | null;
-                    if (node && node.oldSourceRowIndex !== rowIdx) {
+                    if (node && node.sourceIdx !== rowIdx) {
                         node.invalidateOrder(); // Order might have changed
                     }
                 }
@@ -72,10 +82,17 @@ export class ClientSidePathTreeNodeManager<TData>
 
     /** Transactional add/update */
     private addOrUpdateRows(rows: RowNode[] | null, update: boolean): void {
-        const treeRoot = this.treeRoot;
-        if (!treeRoot) {
+        const treeRoot = this.treeRoot!;
+        if (!this.treeData) {
+            // We assume that the data is flat and we use id as the key for the tree nodes.
+            // This happens when treeData is false and getDataPath is undefined/null.
+            for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
+                const row = rows![i];
+                this.treeSetRow(treeRoot.upsertKey(row.id!), row, update);
+            }
             return;
         }
+
         const getDataPath = this.gos.get('getDataPath');
         for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
             const row = rows![i];

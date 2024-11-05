@@ -27,7 +27,7 @@ option.
 {% gridExampleRunner title="Multiple Group Column Configuration" name="multiple-group-column-configuration" /%}
 
 The example above uses the configuration demonstrated below to change the column's header name and apply a minimum width.
-It also [Configures the Group Cell Component](./group-cell-renderer/) using the `cellRendererParams` option to add checkboxes and remove
+It also [Configures the Group Cell Component](./group-cell-renderer/) using the `cellRendererParams` option to remove
 the count from each row group.
 
 ```{% frameworkTransform=true %}
@@ -37,9 +37,12 @@ const gridOptions = {
         minWidth: 220,
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
         }
     },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
+    }
 }
 ```
 
@@ -79,9 +82,12 @@ const gridOptions = {
     autoGroupColumnDef: {
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
         }
     },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
+    }
 }
 ```
 

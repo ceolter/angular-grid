@@ -11,10 +11,10 @@ import type { InputPillComp } from './inputPillComp';
 import type { SelectPillComp } from './selectPillComp';
 
 export class JoinPillWrapperComp extends Component<AdvancedFilterBuilderEvents> {
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
     }
 
     private filterModel: JoinAdvancedFilterModel;
@@ -36,27 +36,27 @@ export class JoinPillWrapperComp extends Component<AdvancedFilterBuilderEvents> 
 
         this.ePill = createPill({
             key: filterModel.type,
-            displayValue: this.advancedFilterExpressionService.parseJoinOperator(filterModel),
+            displayValue: this.advFilterExpSvc.parseJoinOperator(filterModel),
             cssClass: 'ag-advanced-filter-builder-join-pill',
             isSelect: true,
             getEditorParams: () => ({
-                values: this.advancedFilterExpressionService.getJoinOperatorAutocompleteEntries(),
+                values: this.advFilterExpSvc.getJoinOperatorAutocompleteEntries(),
             }),
             update: (key) => (filterModel.type = key as any),
             pickerAriaLabelKey: 'ariaLabelAdvancedFilterBuilderJoinSelectField',
             pickerAriaLabelValue: 'Advanced Filter Builder Join Operator Select Field',
-            ariaLabel: this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderJoinOperator'),
+            ariaLabel: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderJoinOperator'),
         });
         this.getGui().appendChild(this.ePill.getGui());
         this.addDestroyFunc(() => this.destroyBean(this.ePill));
     }
 
     public getDragName(): string {
-        return this.advancedFilterExpressionService.parseJoinOperator(this.filterModel);
+        return this.advFilterExpSvc.parseJoinOperator(this.filterModel);
     }
 
     public getAriaLabel(): string {
-        return `${this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderGroupItem')} ${this.getDragName()}`;
+        return `${this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderGroupItem')} ${this.getDragName()}`;
     }
 
     public getValidationMessage(): string | null {

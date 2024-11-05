@@ -165,10 +165,6 @@
 }
 
 .ag-row-highlight-above::after {
-    top: -1px;
-}
-
-.ag-row-highlight-above.ag-row-first::after {
     top: 0;
 }
 

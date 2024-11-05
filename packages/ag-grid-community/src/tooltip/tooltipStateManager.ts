@@ -383,7 +383,7 @@ export class TooltipStateManager extends BeanStub {
                 mouseleave: this.onTooltipMouseLeave.bind(this),
             });
 
-            [this.onDocumentKeyDownCallback] = this.addManagedElementListeners(_getDocument(this.gos), {
+            [this.onDocumentKeyDownCallback] = this.addManagedElementListeners(_getDocument(this.beans), {
                 keydown: (e) => {
                     if (!eGui.contains(e?.target as HTMLElement)) {
                         this.onKeyDown();
@@ -427,7 +427,7 @@ export class TooltipStateManager extends BeanStub {
 
     private isTooltipFocused(): boolean {
         const tooltipGui = this.tooltipComp?.getGui();
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
 
         return !!tooltipGui && tooltipGui.contains(activeEl);
     }

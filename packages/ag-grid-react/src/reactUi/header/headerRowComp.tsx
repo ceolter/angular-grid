@@ -21,7 +21,7 @@ const HeaderRowComp = ({ ctrl }: { ctrl: HeaderRowCtrl }) => {
 
     const { topOffset, rowHeight } = useMemo(() => ctrl.getTopAndHeight(), []);
     const ariaRowIndex = ctrl.getAriaRowIndex();
-    const className = ctrl.getHeaderRowClass();
+    const className = ctrl.headerRowClass;
 
     const [height, setHeight] = useState<string>(() => rowHeight + 'px');
     const [top, setTop] = useState<string>(() => topOffset + 'px');
@@ -71,7 +71,7 @@ const HeaderRowComp = ({ ctrl }: { ctrl: HeaderRowCtrl }) => {
     );
 
     const createCellJsx = useCallback((cellCtrl: AbstractHeaderCellCtrl) => {
-        switch (ctrl.getType()) {
+        switch (ctrl.type) {
             case 'group':
                 return <HeaderGroupCellComp ctrl={cellCtrl as HeaderGroupCellCtrl} key={cellCtrl.instanceId} />;
 

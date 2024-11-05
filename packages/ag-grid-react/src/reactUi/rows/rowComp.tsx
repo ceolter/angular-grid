@@ -25,12 +25,14 @@ const RowComp = ({ rowCtrl, containerType }: { rowCtrl: RowCtrl; containerType: 
 
     // Flag used to avoid problematic initialState setter funcs being called on a dead / non displayed row.
     // Due to async rendering its possible for the row to be destroyed before React has had a chance to render it.
-    const isDisplayed = rowCtrl.getRowNode().displayed;
-    const [rowIndex, setRowIndex] = useState<string | null>(() => (isDisplayed ? rowCtrl.getRowIndex() : null));
-    const [rowId, setRowId] = useState<string | null>(() => rowCtrl.getRowId());
-    const [rowBusinessKey, setRowBusinessKey] = useState<string | null>(() => rowCtrl.getBusinessKey());
+    const isDisplayed = rowCtrl.rowNode.displayed;
+    const [rowIndex, setRowIndex] = useState<string | null>(() =>
+        isDisplayed ? rowCtrl.rowNode.getRowIndexString() : null
+    );
+    const [rowId, setRowId] = useState<string | null>(() => rowCtrl.rowId);
+    const [rowBusinessKey, setRowBusinessKey] = useState<string | null>(() => rowCtrl.businessKey);
 
-    const [userStyles, setUserStyles] = useState<RowStyle | undefined>(() => rowCtrl.getRowStyles());
+    const [userStyles, setUserStyles] = useState<RowStyle | undefined>(() => rowCtrl.rowStyles);
     const cellCtrlsRef = useRef<CellCtrl[] | null>(null);
     const prevCellCtrlsRef = useRef<CellCtrl[] | null>(null);
     const [cellCtrls, setCellCtrls] = useState<CellCtrl[] | null>(() => null);
@@ -169,8 +171,8 @@ const RowComp = ({ rowCtrl, containerType }: { rowCtrl: RowCtrl; containerType: 
         cellCtrls?.map((cellCtrl) => (
             <CellComp
                 cellCtrl={cellCtrl}
-                editingRow={rowCtrl.isEditing()}
-                printLayout={rowCtrl.isPrintLayout()}
+                editingRow={rowCtrl.editing}
+                printLayout={rowCtrl.printLayout}
                 key={cellCtrl.instanceId}
             />
         ));

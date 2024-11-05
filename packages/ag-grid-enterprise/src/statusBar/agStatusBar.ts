@@ -29,13 +29,13 @@ const StatusPanelComponent: ComponentType = {
 
 export class AgStatusBar extends Component {
     private userCompFactory: UserComponentFactory;
-    private statusBarService: StatusBarService;
+    private statusBarSvc: StatusBarService;
     private updateQueued: boolean = false;
     private panelsPromise: AgPromise<(void | null)[]> = AgPromise.resolve();
 
     public wireBeans(beans: BeanCollection) {
         this.userCompFactory = beans.userCompFactory;
-        this.statusBarService = beans.statusBarService as StatusBarService;
+        this.statusBarSvc = beans.statusBarSvc as StatusBarService;
     }
 
     private readonly eStatusBarLeft: HTMLElement = RefPlaceholder;
@@ -113,7 +113,7 @@ export class AgStatusBar extends Component {
         if (validStatusBarPanelsProvided) {
             statusPanels.forEach((statusPanelConfig) => {
                 const key = statusPanelConfig.key ?? statusPanelConfig.statusPanel;
-                const existingStatusPanel = this.statusBarService.getStatusPanel(key);
+                const existingStatusPanel = this.statusBarSvc.getStatusPanel(key);
                 if (existingStatusPanel?.refresh) {
                     const newParams = this.gos.addGridCommonParams(statusPanelConfig.statusPanelParams ?? {});
                     const hasRefreshed = existingStatusPanel.refresh(newParams);
@@ -138,7 +138,7 @@ export class AgStatusBar extends Component {
         this.eStatusBarRight.innerHTML = '';
 
         this.destroyComponents();
-        this.statusBarService.unregisterAllComponents();
+        this.statusBarSvc.unregisterAllComponents();
     }
 
     public override destroy(): void {
@@ -190,7 +190,7 @@ export class AgStatusBar extends Component {
                     };
 
                     if (this.isAlive()) {
-                        this.statusBarService.registerStatusPanel(componentDetail.key, component);
+                        this.statusBarSvc.registerStatusPanel(componentDetail.key, component);
                         ePanelComponent.appendChild(component.getGui());
                         this.compDestroyFunctions[componentDetail.key] = destroyFunc;
                     } else {

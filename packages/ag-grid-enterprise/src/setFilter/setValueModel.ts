@@ -350,9 +350,6 @@ export class SetValueModel<V> implements IEventEmitter<SetValueModelEvent> {
 
                     break;
                 }
-
-                default:
-                    throw new Error('Unrecognised valuesType');
             }
         });
 

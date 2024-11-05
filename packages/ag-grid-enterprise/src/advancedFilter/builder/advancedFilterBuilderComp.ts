@@ -28,13 +28,13 @@ import type {
 export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEvents> {
     private filterManager?: FilterManager;
     private advancedFilter: AdvancedFilterService;
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
         this.advancedFilter = beans.advancedFilter as AdvancedFilterService;
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.registry = beans.registry;
     }
 
@@ -115,7 +115,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
             new VirtualList({
                 cssIdentifier: 'advanced-filter-builder',
                 ariaRole: 'tree',
-                listName: this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderList'),
+                listName: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderList'),
             })
         );
         this.virtualList.setComponentCreator(this.createItemComponent.bind(this));
@@ -133,8 +133,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     }
 
     private setupButtons(): void {
-        this.eApplyFilterButton.innerText =
-            this.advancedFilterExpressionService.translate('advancedFilterBuilderApply');
+        this.eApplyFilterButton.innerText = this.advFilterExpSvc.translate('advancedFilterBuilderApply');
         this.activateTabIndex([this.eApplyFilterButton]);
         this.addManagedElementListeners(this.eApplyFilterButton, {
             click: () => {
@@ -161,8 +160,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
             mouseleave: () => mouseListener(false),
         });
 
-        this.eCancelFilterButton.innerText =
-            this.advancedFilterExpressionService.translate('advancedFilterBuilderCancel');
+        this.eCancelFilterButton.innerText = this.advFilterExpSvc.translate('advancedFilterBuilderCancel');
         this.activateTabIndex([this.eCancelFilterButton]);
         this.addManagedElementListeners(this.eCancelFilterButton, { click: () => this.close() });
     }
@@ -476,16 +474,14 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
         if (!disableApply) {
             disableApply = JSON.stringify(this.filterModel) === this.stringifiedModel;
             if (disableApply) {
-                this.validationMessage = this.advancedFilterExpressionService.translate(
+                this.validationMessage = this.advFilterExpSvc.translate(
                     'advancedFilterBuilderValidationAlreadyApplied'
                 );
             } else {
                 this.validationMessage = null;
             }
         } else {
-            this.validationMessage = this.advancedFilterExpressionService.translate(
-                'advancedFilterBuilderValidationIncomplete'
-            );
+            this.validationMessage = this.advFilterExpSvc.translate('advancedFilterBuilderValidationIncomplete');
         }
         _setDisabled(this.eApplyFilterButton, disableApply);
         this.validationTooltipFeature?.refreshTooltip();
@@ -504,10 +500,8 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
             }
             const { filterModel } = item;
             const { colId } = filterModel;
-            const hasColumn = this.advancedFilterExpressionService
-                .getColumnAutocompleteEntries()
-                .find(({ key }) => key === colId);
-            const columnDetails = this.advancedFilterExpressionService.getColumnDetails(filterModel.colId);
+            const hasColumn = this.advFilterExpSvc.getColumnAutocompleteEntries().find(({ key }) => key === colId);
+            const columnDetails = this.advFilterExpSvc.getColumnDetails(filterModel.colId);
             if (!hasColumn || !columnDetails.column) {
                 item.valid = false;
                 filterModel.colId = undefined as any;
@@ -515,9 +509,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
                 clearOperand(filterModel);
                 return;
             }
-            const operatorForType = this.advancedFilterExpressionService.getDataTypeExpressionOperator(
-                columnDetails.baseCellDataType
-            )!;
+            const operatorForType = this.advFilterExpSvc.getDataTypeExpressionOperator(columnDetails.baseCellDataType)!;
             const operator = operatorForType.operators[filterModel.type];
             if (!operator) {
                 item.valid = false;

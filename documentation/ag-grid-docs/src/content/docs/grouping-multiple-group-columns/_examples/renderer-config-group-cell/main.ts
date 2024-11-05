@@ -26,10 +26,13 @@ const gridOptions: GridOptions<IOlympicData> = {
         minWidth: 240,
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
         },
     },
     groupDisplayType: 'multipleColumns',
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
+    },
 };
 
 // setup the grid after the page has finished loading

@@ -72,7 +72,7 @@ export class AgRichSelectList<TValue, TEventType extends string = AgRichSelectLi
         const newIndex = super.navigateToPage(key, this.lastRowHovered);
 
         if (newIndex != null) {
-            _requestAnimationFrame(this.gos, () => {
+            _requestAnimationFrame(this.beans, () => {
                 if (!this.isAlive()) {
                     return null;
                 }
@@ -96,7 +96,7 @@ export class AgRichSelectList<TValue, TEventType extends string = AgRichSelectLi
     }
 
     public onNavigationKeyDown(key: string, announceItem: () => void): void {
-        _requestAnimationFrame(this.gos, () => {
+        _requestAnimationFrame(this.beans, () => {
             if (!this.currentList || !this.isAlive()) {
                 return;
             }
@@ -258,7 +258,7 @@ export class AgRichSelectList<TValue, TEventType extends string = AgRichSelectLi
     }
 
     private createLoadingElement(): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const translate = this.getLocaleTextFunc();
         const el = eDocument.createElement('div');
 
