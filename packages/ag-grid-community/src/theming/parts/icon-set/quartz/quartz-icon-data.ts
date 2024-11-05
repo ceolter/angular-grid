@@ -48,10 +48,8 @@ const iconNameToSvgFragment: Record<string, string | undefined> = {
     previous: '<path d="m15 18-6-6 6-6"/>',
     right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     save: '<path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/>',
-    'small-down': '<path d="m6 9 6 6 6-6"/>',
     'small-left': '<path d="m15 18-6-6 6-6"/>',
     'small-right': '<path d="m9 18 6-6-6-6"/>',
-    'small-up': '<path d="m18 15-6-6-6 6"/>',
     tick: '<path d="M20 6 9 17l-5-5"/>',
     'tree-closed': '<path d="m9 18 6-6-6-6"/>',
     'tree-indeterminate': '<path d="M5 12h14"/>',
@@ -65,9 +63,16 @@ const iconNameToSvgFragment: Record<string, string | undefined> = {
     settings: '<path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>',
 };
 
+const iconNameToFullSvg: Record<string, string | undefined> = {
+    'small-down':
+        '<svg xmlns="http://www.w3.org/2000/svg" class="ag-icon" fill="black" stroke="none" viewBox="0 0 32 32"><path d="M7.334 10.667 16 21.334l8.667-10.667H7.334Z"/></svg>',
+    'small-up':
+        '<svg xmlns="http://www.w3.org/2000/svg" class="ag-icon" fill="black" stroke="none" viewBox="0 0 32 32"><path d="M7.334 21.333 16 10.666l8.667 10.667H7.334Z"/></svg>',
+};
+
 export const getQuartzIconsCss = (args: { strokeWidth?: number } = {}) => {
     let result = iconSetQuartzCSS;
-    for (const iconName of Object.keys(iconNameToSvgFragment)) {
+    for (const iconName of [...Object.keys(iconNameToSvgFragment), ...Object.keys(iconNameToFullSvg)]) {
         const iconSvg = quartzIconSvg(iconName, args.strokeWidth || 1.5);
         result += `.ag-icon-${iconName}::before { mask-image: url('data:image/svg+xml,${encodeURIComponent(iconSvg)}'); }\n`;
     }
@@ -75,10 +80,12 @@ export const getQuartzIconsCss = (args: { strokeWidth?: number } = {}) => {
 };
 
 const quartzIconSvg = (name: string, strokeWidth: number): string => {
+    const fullSVG = iconNameToFullSvg[name];
+    if (fullSVG) return fullSVG;
     const svgFragment = iconNameToSvgFragment[name];
     if (!svgFragment) throw new Error(`Missing icon data for ${name}`);
     return (
-        `<svg xmlns="http://www.w3.org/2000/svg" class="ag-icon ag-icon-${name}" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="black" stroke-width="${strokeWidth}" viewBox="0 0 24 24">` +
+        `<svg xmlns="http://www.w3.org/2000/svg" class="ag-icon" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="black" stroke-width="${strokeWidth}" viewBox="0 0 24 24">` +
         '<style>* { vector-effect: non-scaling-stroke; }</style>' +
         svgFragment +
         '</svg>'

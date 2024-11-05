@@ -1,5 +1,5 @@
 import type { _MenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { CommunityMenuApiModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import { CommunityMenuApiModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -90,7 +90,7 @@ export const ColumnChooserModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnChooserModule'),
     beans: [ColumnChooserFactory, ToolPanelColDefService],
     icons: COLUMN_SELECT_ICONS,
-    dependsOn: [MenuCoreModule],
+    dependsOn: [MenuCoreModule, DragAndDropModule],
 };
 
 /**

@@ -8,6 +8,7 @@ import type { IconName } from '../utils/icon';
 import { _createIconNoSpan } from '../utils/icon';
 import type { AgAbstractFieldEvent } from './agAbstractField';
 import { AgAbstractField } from './agAbstractField';
+import { agPickerFieldCSS } from './agPickerField.css-GENERATED';
 import type { Component } from './component';
 import { RefPlaceholder } from './component';
 import type { AddPopupParams, PopupService } from './popupService';
@@ -63,6 +64,7 @@ export abstract class AgPickerField<
             config?.agComponents || [],
             config?.className
         );
+        this.registerCSS(agPickerFieldCSS);
 
         this.ariaRole = config?.ariaRole;
         this.onPickerFocusIn = this.onPickerFocusIn.bind(this);

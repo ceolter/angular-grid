@@ -1,23 +1,17 @@
-import type { ColumnModel } from '../../columns/columnModel';
-import type { ColumnNameService } from '../../columns/columnNameService';
-import type { AgColumn } from '../../entities/agColumn';
-import type { RowNode } from '../../entities/rowNode';
-import type { GridOptionsService } from '../../gridOptionsService';
+import type { ColumnModel } from '../columns/columnModel';
+import type { ColumnNameService } from '../columns/columnNameService';
+import type { AgColumn } from '../entities/agColumn';
+import type { RowNode } from '../entities/rowNode';
+import type { GridOptionsService } from '../gridOptionsService';
 import type {
     ProcessCellForExportParams,
     ProcessGroupHeaderForExportParams,
     ProcessHeaderForExportParams,
     ProcessRowGroupForExportParams,
-} from '../../interfaces/exportParams';
-import type { IColsService } from '../../interfaces/iColsService';
-import type { ColumnGroup } from '../../interfaces/iColumn';
-import type { ValueService } from '../../valueService/valueService';
-import type { GridSerializer } from '../gridSerializer';
-
-export interface BaseCreatorBeans {
-    gridSerializer: GridSerializer;
-    gos: GridOptionsService;
-}
+} from '../interfaces/exportParams';
+import type { IColsService } from '../interfaces/iColsService';
+import type { ColumnGroup } from '../interfaces/iColumn';
+import type { ValueService } from '../valueService/valueService';
 
 export interface RowAccumulator {
     onColumn(column: AgColumn, index: number, node?: RowNode): void;
@@ -43,11 +37,6 @@ export interface GridSerializingParams {
     processHeaderCallback?: (params: ProcessHeaderForExportParams) => string;
     processGroupHeaderCallback?: (params: ProcessGroupHeaderForExportParams) => string;
     processRowGroupCallback?: (params: ProcessRowGroupForExportParams) => string;
-}
-
-export interface CsvSerializingParams extends GridSerializingParams {
-    suppressQuotes: boolean;
-    columnSeparator: string;
 }
 
 export interface GridSerializingSession<T> {

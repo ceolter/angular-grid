@@ -1,8 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { themeQuartz } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 

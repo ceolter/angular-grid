@@ -1,7 +1,7 @@
 import { BeanStub } from '../context/beanStub';
 import type { ExportParams } from '../interfaces/exportParams';
 import type { GridSerializer } from './gridSerializer';
-import type { GridSerializingSession } from './interfaces';
+import type { GridSerializingSession } from './iGridSerializer';
 
 export abstract class BaseCreator<T, S extends GridSerializingSession<T>, P extends ExportParams<T>> extends BeanStub {
     protected abstract export(userParams?: P, compress?: boolean): void;
