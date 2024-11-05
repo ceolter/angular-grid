@@ -577,7 +577,6 @@ describe('ag-grid hierarchical tree data reset', () => {
             └── 6 LEAF selected id:6 label:"6-v2" x:"M"
         `);
 
-        console.log('BEGIN\n\n');
         api.setGridOption('rowData', rowData3);
 
         await new GridRows(api, 'update 2', gridRowsOptions).check(`

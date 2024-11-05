@@ -221,7 +221,9 @@ export class ClientSideChildrenTreeNodeManager<TData>
             const allLeafChildren = rootNode?.allLeafChildren;
             if (allLeafChildren) {
                 for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
-                    allLeafChildren[i].treeNode?.invalidate();
+                    const row = allLeafChildren[i];
+                    row.groupData = null;
+                    row.treeNode?.invalidate();
                 }
             }
             this.treeCommit();

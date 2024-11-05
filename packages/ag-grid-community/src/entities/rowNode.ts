@@ -39,7 +39,7 @@ export interface ITreeNode {
     readonly key: string;
 
     /** Updated during commit to be the same as row.sourceRowIndex */
-    readonly oldSourceRowIndex: number;
+    readonly sourceIdx: number;
 
     invalidate(): void;
 }
