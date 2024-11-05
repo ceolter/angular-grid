@@ -22,7 +22,7 @@ import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import type { RowNodeSorter } from '../sort/rowNodeSorter';
 import type { SortService } from '../sort/sortService';
 import { _last } from '../utils/array';
-import type { GridSerializingSession, RowAccumulator, RowSpanningAccumulator } from './interfaces';
+import type { GridSerializingSession, RowAccumulator, RowSpanningAccumulator } from './iGridSerializer';
 
 type ProcessGroupHeaderCallback = (params: ProcessGroupHeaderForExportParams) => string;
 

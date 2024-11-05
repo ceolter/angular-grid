@@ -105,7 +105,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
     ): MenuItemDef | string | null {
         const localeTextFunc = this.getLocaleTextFunc();
         const skipHeaderOnAutoSize = this.gos.get('skipHeaderOnAutoSize');
-        const { pinnedCols } = this.beans;
+        const { pinnedCols, colAutosize } = this.beans;
 
         switch (key) {
             case 'pinSubMenu':
@@ -156,15 +156,19 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return null;
                 }
             case 'autoSizeThis':
-                return {
-                    name: localeTextFunc('autosizeThisColumn', 'Autosize This Column'),
-                    action: () => this.colAutosize?.autoSizeColumn(column, source, skipHeaderOnAutoSize),
-                };
+                return colAutosize
+                    ? {
+                          name: localeTextFunc('autosizeThisColumn', 'Autosize This Column'),
+                          action: () => this.colAutosize?.autoSizeColumn(column, source, skipHeaderOnAutoSize),
+                      }
+                    : null;
             case 'autoSizeAll':
-                return {
-                    name: localeTextFunc('autosizeAllColumns', 'Autosize All Columns'),
-                    action: () => this.colAutosize?.autoSizeAllColumns(source, skipHeaderOnAutoSize),
-                };
+                return colAutosize
+                    ? {
+                          name: localeTextFunc('autosizeAllColumns', 'Autosize All Columns'),
+                          action: () => this.colAutosize?.autoSizeAllColumns(source, skipHeaderOnAutoSize),
+                      }
+                    : null;
             case 'rowGroup':
                 return {
                     name:

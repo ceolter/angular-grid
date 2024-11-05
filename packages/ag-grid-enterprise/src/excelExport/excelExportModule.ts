@@ -1,5 +1,5 @@
 import type { _ExcelExportGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { CsvExportCoreModule } from 'ag-grid-community';
+import { SharedExportModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -18,7 +18,7 @@ import {
 export const ExcelExportCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ExcelExportCoreModule'),
     beans: [ExcelCreator],
-    dependsOn: [CsvExportCoreModule, EnterpriseCoreModule],
+    dependsOn: [SharedExportModule, EnterpriseCoreModule],
 };
 
 /**

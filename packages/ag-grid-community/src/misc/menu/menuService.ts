@@ -48,21 +48,21 @@ export type ShowFilterMenuParams = (MouseShowMenuParams | ButtonShowMenuParams |
 export class MenuService extends BeanStub implements NamedBean {
     beanName = 'menuSvc' as const;
 
-    private filterMenuFactory: IMenuFactory;
+    private filterMenuFactory?: IMenuFactory;
     private ctrlsSvc: CtrlsService;
     private filterManager?: FilterManager;
     private contextMenuSvc?: IContextMenuService;
     private enterpriseMenuFactory?: IMenuFactory;
 
     public wireBeans(beans: BeanCollection): void {
-        this.filterMenuFactory = beans.filterMenuFactory!;
+        this.filterMenuFactory = beans.filterMenuFactory;
         this.ctrlsSvc = beans.ctrlsSvc;
         this.filterManager = beans.filterManager;
         this.contextMenuSvc = beans.contextMenuSvc;
         this.enterpriseMenuFactory = beans.enterpriseMenuFactory;
     }
 
-    private activeMenuFactory: IMenuFactory;
+    private activeMenuFactory?: IMenuFactory;
 
     public postConstruct(): void {
         this.activeMenuFactory = this.enterpriseMenuFactory ?? this.filterMenuFactory;
@@ -73,7 +73,7 @@ export class MenuService extends BeanStub implements NamedBean {
     }
 
     public showFilterMenu(params: ShowFilterMenuParams): void {
-        const menuFactory: IMenuFactory =
+        const menuFactory =
             this.enterpriseMenuFactory && _isLegacyMenuEnabled(this.gos)
                 ? this.enterpriseMenuFactory
                 : this.filterMenuFactory;
@@ -85,21 +85,21 @@ export class MenuService extends BeanStub implements NamedBean {
         mouseEvent?: MouseEvent,
         touchEvent?: TouchEvent
     ): void {
-        this.activeMenuFactory.showMenuAfterContextMenuEvent(column, mouseEvent, touchEvent);
+        this.activeMenuFactory?.showMenuAfterContextMenuEvent(column, mouseEvent, touchEvent);
     }
 
     public hidePopupMenu(): void {
         // hide the context menu if in enterprise
         this.contextMenuSvc?.hideActiveMenu();
         // and hide the column menu always
-        this.activeMenuFactory.hideActiveMenu();
+        this.activeMenuFactory?.hideActiveMenu();
     }
 
     public isColumnMenuInHeaderEnabled(column: AgColumn): boolean {
         const { suppressHeaderMenuButton } = column.getColDef();
         return (
             !suppressHeaderMenuButton &&
-            this.activeMenuFactory.isMenuEnabled(column) &&
+            !!this.activeMenuFactory?.isMenuEnabled(column) &&
             (_isLegacyMenuEnabled(this.gos) || !!this.enterpriseMenuFactory)
         );
     }
@@ -164,7 +164,7 @@ export class MenuService extends BeanStub implements NamedBean {
     }
 
     private showColumnMenuCommon(
-        menuFactory: IMenuFactory,
+        menuFactory: IMenuFactory | undefined,
         params: ShowColumnMenuParams,
         containerType: ContainerType,
         filtersOnly?: boolean
@@ -173,10 +173,10 @@ export class MenuService extends BeanStub implements NamedBean {
         const column = params.column as AgColumn | undefined;
         if (positionBy === 'button') {
             const { buttonElement } = params;
-            menuFactory.showMenuAfterButtonClick(column, buttonElement, containerType, filtersOnly);
+            menuFactory?.showMenuAfterButtonClick(column, buttonElement, containerType, filtersOnly);
         } else if (positionBy === 'mouse') {
             const { mouseEvent } = params;
-            menuFactory.showMenuAfterMouseEvent(column, mouseEvent, containerType, filtersOnly);
+            menuFactory?.showMenuAfterMouseEvent(column, mouseEvent, containerType, filtersOnly);
         } else if (column) {
             // auto
             this.ctrlsSvc.getScrollFeature().ensureColumnVisible(column, 'auto');
@@ -187,7 +187,7 @@ export class MenuService extends BeanStub implements NamedBean {
                     ?.getHeaderCtrlForColumn(column) as HeaderCellCtrl | undefined;
 
                 if (headerCellCtrl) {
-                    menuFactory.showMenuAfterButtonClick(
+                    menuFactory?.showMenuAfterButtonClick(
                         column,
                         headerCellCtrl.getAnchorElementForMenu(filtersOnly),
                         containerType,
