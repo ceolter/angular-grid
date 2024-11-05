@@ -1,5 +1,5 @@
 import { AgCharts, _Util } from 'ag-charts-community';
-import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-community';
+import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
