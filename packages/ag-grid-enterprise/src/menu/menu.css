@@ -1,18 +1,3 @@
-.ag-menu {
-    max-height: 100%;
-    overflow-y: auto;
-    position: absolute;
-    user-select: none;
-    border: var(--ag-menu-border);
-    border-radius: var(--ag-border-radius);
-    box-shadow: var(--ag-menu-shadow);
-    background-color: var(--ag-menu-background-color);
-    color: var(--ag-menu-text-color);
-    /* Add a minimum width to avoid having zero width when the content tries to
-    size itself to the menu */
-    min-width: 180px;
-}
-
 .ag-menu-list {
     display: table;
     width: 100%;
@@ -29,6 +14,15 @@
 .ag-menu-separator-part {
     display: table-cell;
     vertical-align: middle;
+}
+
+.ag-menu-option {
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ag-menu-option-popup-pointer .ag-icon {
+    text-align: right;
 }
 
 .ag-menu-option-text {
