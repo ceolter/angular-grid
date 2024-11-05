@@ -18,6 +18,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     public init(params: ISparklineCellRendererParams): void {
         let firstTimeIn = true;
         const options = (this.sparklineOptions = {
+            background: { visible: false },
             ...params.sparklineOptions,
         } as AgSparklineOptions);
 
@@ -34,7 +35,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
                 options.height = height;
 
                 if (!options?.xKey || !options?.yKey || _Util.isNumber(!options?.data?.[0])) {
-                    // XXX: required until AgCharts supports more data
+                    // XXX: required until AgCharts supports more data shapes
                     options.data = params.value.map((y: number, x: number) => ({ x, y }));
                     options.xKey = 'x';
                     options.yKey = 'y';
