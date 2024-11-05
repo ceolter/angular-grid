@@ -296,7 +296,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const treeDataChildrenFieldChanged = changedProps.has('treeDataChildrenField');
 
         const reset = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField'));
-        params.reset = reset;
 
         let newRowData: any[] | null | undefined;
 

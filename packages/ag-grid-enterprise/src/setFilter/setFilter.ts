@@ -453,13 +453,6 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
                     this.syncAfterDataChange();
                 }
             },
-            beforeRefreshModel: ({ params }) => {
-                if (params.rowDataUpdated || params.reset) {
-                    if (this.isValuesTakenFromGrid()) {
-                        this.syncAfterDataChange();
-                    }
-                }
-            },
         });
     }
 
@@ -917,6 +910,12 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             api,
             context,
         };
+    }
+
+    public override onNewRowsLoaded(): void {
+        if (this.isValuesTakenFromGrid()) {
+            this.syncAfterDataChange();
+        }
     }
 
     private isValuesTakenFromGrid(): boolean {
