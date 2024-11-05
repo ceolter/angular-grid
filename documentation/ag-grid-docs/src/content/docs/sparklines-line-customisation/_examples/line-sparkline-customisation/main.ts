@@ -1,5 +1,5 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import type { GridApi, GridOptions, LineSparklineOptions } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { ModuleRegistry } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
@@ -20,20 +20,30 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'line',
-                    line: {
-                        stroke: 'rgb(124, 255, 178)',
-                        strokeWidth: 2,
+                    theme: {
+                        overrides: {
+                            line: {
+                                series: {
+                                    stroke: 'rgb(124, 255, 178)',
+                                    strokeWidth: 2,
+                                },
+                            },
+                            padding: {
+                                series: {
+                                    top: 5,
+                                    bottom: 5,
+                                },
+                            },
+                            highlightStyle: {
+                                series: {
+                                    size: 7,
+                                    fill: 'rgb(124, 255, 178)',
+                                    strokeWidth: 0,
+                                },
+                            },
+                        },
                     },
-                    padding: {
-                        top: 5,
-                        bottom: 5,
-                    },
-                    highlightStyle: {
-                        size: 7,
-                        fill: 'rgb(124, 255, 178)',
-                        strokeWidth: 0,
-                    },
-                } as LineSparklineOptions,
+                },
             },
         },
         {
