@@ -293,7 +293,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 this.setGroupData(row, key);
             }
         } else {
-            row.groupData = null;
+            row.key = node.key;
             row.parent = details.rootNode;
         }
     }
@@ -551,7 +551,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 if (rowNodes) {
                     for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
                         const rowNode = rowNodes[i];
-                        this.setGroupData(rowNode, rowNode.treeNode?.key ?? rowNode.key ?? rowNode.id!);
+                        const treeNode = rowNode.treeNode;
+                        if (treeNode) {
+                            this.setGroupData(rowNode, treeNode.key);
+                        }
                     }
                 }
             }

@@ -169,7 +169,6 @@ export class SetValueModel<V> implements IEventEmitter<SetValueModelEvent> {
         }
         this.keyComparator = (keyComparator as any) ?? _defaultComparator;
         this.caseSensitive = !!caseSensitive;
-        const getDataPath = gos.get('getDataPath');
         const groupAllowUnbalanced = gos.get('groupAllowUnbalanced');
 
         if (_isClientSideRowModel(gos, rowModel)) {
@@ -181,7 +180,6 @@ export class SetValueModel<V> implements IEventEmitter<SetValueModelEvent> {
                 valueSvc,
                 treeDataOrGrouping,
                 !!treeDataTreeList,
-                getDataPath,
                 groupAllowUnbalanced,
                 addManagedEventListeners,
                 rowGroupColsSvc
