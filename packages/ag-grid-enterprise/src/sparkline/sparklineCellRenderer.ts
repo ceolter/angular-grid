@@ -1,8 +1,10 @@
-import { AgCharts, _Util } from 'ag-charts-community';
+import { AgCharts } from 'ag-charts-community';
 import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
+
+import { needsResize, sizeValid, transformData } from './sparklineUtil';
 
 export class SparklineCellRenderer extends Component implements ICellRenderer {
     private readonly eSparkline: HTMLElement = RefPlaceholder;
@@ -16,61 +18,50 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     public init(params: ISparklineCellRendererParams): void {
-        let firstTimeIn = true;
-        const options = (this.sparklineOptions = {
-            background: { visible: false },
-            ...params.sparklineOptions,
-        } as AgSparklineOptions);
-
-        const updateSparkline = () => {
-            const { clientWidth: width, clientHeight: height } = this.getGui();
-            if (width === 0 || height === 0 || !params.sparklineOptions) {
-                return;
-            }
-
-            if (firstTimeIn) {
-                firstTimeIn = false;
-                options.container = this.eSparkline;
-                options.width = width;
-                options.height = height;
-
-                if (!options?.xKey || !options?.yKey || _Util.isNumber(!options?.data?.[0])) {
-                    // XXX: required until AgCharts supports more data shapes
-                    options.data = params.value.map((y: number, x: number) => ({ x, y }));
-                    options.xKey = 'x';
-                    options.yKey = 'y';
-                }
-
-                // create new sparkline
-                this.sparklineInstance = AgCharts.__createSparkline(this.sparklineOptions as AgSparklineOptions);
-                return;
-            }
-
-            if (this.sparklineOptions.width === width && this.sparklineOptions.height === height) {
-                return;
-            }
-
-            this.sparklineOptions.width = width;
-            this.sparklineOptions.height = height;
-            this.update();
-        };
-
-        const unsubscribeFromResize = _observeResize(this.gos, this.getGui(), updateSparkline);
+        const unsubscribeFromResize = _observeResize(this.gos, this.getGui(), () => {
+            this.updateSparkline(params);
+        });
         this.addDestroyFunc(() => unsubscribeFromResize());
     }
 
-    public refresh(params: ISparklineCellRendererParams): boolean {
-        if (this.sparklineInstance) {
-            this.sparklineOptions = Object.assign(this.sparklineOptions, params.sparklineOptions as AgSparklineOptions);
+    private updateSparkline(params?: ISparklineCellRendererParams): boolean {
+        const { clientWidth: width, clientHeight: height } = this.getGui();
 
-            this.update();
-            return true;
+        if (sizeValid(width, height)) {
+            if (!this.sparklineInstance && params) {
+                const options = {
+                    background: { visible: false },
+                    container: this.eSparkline,
+                    width,
+                    height,
+                    ...params.sparklineOptions,
+                } as AgSparklineOptions;
+
+                transformData((this.sparklineOptions = options), params);
+
+                // create new sparkline
+                this.sparklineInstance = AgCharts.__createSparkline(options);
+                return true;
+            } else if (this.sparklineInstance && needsResize(width, height, this.sparklineOptions)) {
+                this.sparklineOptions.width = width;
+                this.sparklineOptions.height = height;
+
+                transformData(this.sparklineOptions, params);
+
+                this.sparklineInstance?.updateDelta({ width, height, data: this.sparklineOptions.data });
+                return true;
+            }
         }
         return false;
     }
 
-    public update(): void {
-        this.sparklineInstance?.update(this.sparklineOptions);
+    public refresh(params: ISparklineCellRendererParams): boolean {
+        if (this.sparklineInstance) {
+            transformData(this.sparklineOptions, params);
+
+            return this.updateSparkline(params);
+        }
+        return false;
     }
 
     public override destroy() {
