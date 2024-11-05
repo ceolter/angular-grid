@@ -2,7 +2,6 @@ import type {
     AgColumn,
     AgInputTextField,
     BeanCollection,
-    BeforeRefreshModelEvent,
     ComponentSelector,
     DataTypeService,
     IAfterGuiAttachedParams,
@@ -443,6 +442,10 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             return;
         }
 
+        this.addManagedPropertyListeners(['groupAllowUnbalanced'], () => {
+            this.syncAfterDataChange();
+        });
+
         this.addManagedEventListeners({
             cellValueChanged: (event) => {
                 // only interested in changes to do with this column
@@ -450,11 +453,13 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
                     this.syncAfterDataChange();
                 }
             },
-            beforeRefreshModel: this.onBeforeRefreshModel.bind(this),
-        });
-
-        this.addManagedPropertyListeners(['groupAllowUnbalanced'], () => {
-            this.syncAfterDataChange();
+            beforeRefreshModel: ({ params }) => {
+                if (params.rowDataUpdated || params.reset) {
+                    if (this.isValuesTakenFromGrid()) {
+                        this.syncAfterDataChange();
+                    }
+                }
+            },
         });
     }
 
@@ -914,17 +919,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         };
     }
 
-    private onBeforeRefreshModel({ params }: BeforeRefreshModelEvent): void {
-        if (params.rowDataUpdated || params.reset) {
-            if (this.isValuesTakenFromGrid()) {
-                this.syncAfterDataChange();
-            }
-        }
-    }
-
-    public override onNewRowsLoaded(): void {
-        // No need to do this, onBeforeRefreshModel does the same thing
-    }
+    public override onNewRowsLoaded(): void {}
 
     private isValuesTakenFromGrid(): boolean {
         const valuesType = this.valueModel.getValuesType();
