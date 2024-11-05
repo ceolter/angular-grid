@@ -61,7 +61,7 @@ export class ChartToolbar extends Component {
         const buttonEl = _createIconNoSpan(iconName, this.beans)!;
         buttonEl.classList.add('ag-chart-menu-icon');
 
-        const wrapperEl = _getDocument(this.gos).createElement('button');
+        const wrapperEl = _getDocument(this.beans).createElement('button');
         wrapperEl.appendChild(buttonEl);
         wrapperEl.classList.add('ag-chart-menu-toolbar-button');
         return wrapperEl;

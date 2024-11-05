@@ -45,8 +45,6 @@ const gridOptions = {
                 suppressCount: true,
                 // turn off double click for expand
                 suppressDoubleClickExpand: true,
-                // enable checkbox selection
-                checkbox: true,
                 // provide an inner renderer
                 innerRenderer: myInnerRenderer,
                 // provide an inner renderer
@@ -81,7 +79,7 @@ The example is built up as follows:
 
   * `suppressCount=true`: Suppresses the row count.
   * `suppressDoubleClickExpand=true`: Suppress double click for expanding.
-  * `checkbox=true`: Adds a selection checkbox.
+  * `rowSelection.checkboxLocation='autoGroupColumn'`: Renders a selection checkbox in group cells.
   * `innerRenderer=SimpleCellRenderer`: Puts custom rendering for displaying the value. The provided Group Cell Component will take care of all the expand / collapse, selection etc, but then allow you to customise the display of the value. In this example we add a border when the value is a group, and we set the colour based on whether the cell is a leaf node or not.
 
 {% gridExampleRunner title="Group Cell Renderer Configuration" name="group-renderer" /%}

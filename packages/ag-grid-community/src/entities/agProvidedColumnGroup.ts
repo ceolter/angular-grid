@@ -12,17 +12,12 @@ export type AgProvidedColumnGroupEvent = 'expandedChanged' | 'expandableChanged'
 export class AgProvidedColumnGroup extends BeanStub<AgProvidedColumnGroupEvent> implements ProvidedColumnGroup {
     public readonly isColumn = false as const;
 
-    private colGroupDef: ColGroupDef | null;
-    private originalParent: AgProvidedColumnGroup | null;
+    public originalParent: AgProvidedColumnGroup | null;
 
     private children: (AgColumn | AgProvidedColumnGroup)[];
-    private groupId: string;
     private expandable = false;
 
     private expanded: boolean;
-    private padding: boolean;
-
-    private level: number;
 
     // used by React (and possibly other frameworks) as key for rendering. also used to
     // identify old vs new columns for destroying cols when no longer used.
@@ -30,13 +25,14 @@ export class AgProvidedColumnGroup extends BeanStub<AgProvidedColumnGroupEvent> 
 
     private expandableListenerRemoveCallback: (() => void) | null = null;
 
-    constructor(colGroupDef: ColGroupDef | null, groupId: string, padding: boolean, level: number) {
+    constructor(
+        private colGroupDef: ColGroupDef | null,
+        private readonly groupId: string,
+        private padding: boolean,
+        private level: number
+    ) {
         super();
-        this.colGroupDef = colGroupDef;
-        this.groupId = groupId;
-        this.expanded = !!colGroupDef && !!colGroupDef.openByDefault;
-        this.padding = padding;
-        this.level = level;
+        this.expanded = !!colGroupDef?.openByDefault;
     }
 
     public override destroy() {
@@ -64,10 +60,6 @@ export class AgProvidedColumnGroup extends BeanStub<AgProvidedColumnGroupEvent> 
 
     public getInstanceId(): ColumnInstanceId {
         return this.instanceId;
-    }
-
-    public setOriginalParent(originalParent: AgProvidedColumnGroup | null): void {
-        this.originalParent = originalParent;
     }
 
     public getOriginalParent(): AgProvidedColumnGroup | null {

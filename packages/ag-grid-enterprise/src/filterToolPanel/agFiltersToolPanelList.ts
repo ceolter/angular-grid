@@ -123,7 +123,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     private recreateFilters(columnTree: (AgColumn | AgProvidedColumnGroup)[]): void {
         // Underlying filter comp/element won't get recreated if the column still exists (the element just gets detached/re-attached).
         // We can therefore restore focus if an element in the filter tool panel was focused.
-        const activeElement = _getActiveDomElement(this.gos) as HTMLElement;
+        const activeElement = _getActiveDomElement(this.beans) as HTMLElement;
 
         if (!this.hasLoadedInitialState) {
             this.hasLoadedInitialState = true;

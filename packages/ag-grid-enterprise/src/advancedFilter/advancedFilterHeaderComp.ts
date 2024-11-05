@@ -3,6 +3,8 @@ import {
     Component,
     KeyCode,
     _clearElement,
+    _findNextFocusableElement,
+    _focusInto,
     _getActiveDomElement,
     _getFloatingFiltersHeight,
     _setAriaColIndex,
@@ -139,7 +141,7 @@ export class AdvancedFilterHeaderComp extends Component {
         switch (event.key) {
             case KeyCode.ENTER: {
                 if (this.hasFocus()) {
-                    if (this.focusSvc.focusInto(this.getFocusableElement())) {
+                    if (_focusInto(this.getFocusableElement())) {
                         event.preventDefault();
                     }
                 }
@@ -160,7 +162,8 @@ export class AdvancedFilterHeaderComp extends Component {
                 if (this.hasFocus()) {
                     this.navigateLeftRight(event);
                 } else {
-                    const nextFocusableEl = this.focusSvc.findNextFocusableElement(
+                    const nextFocusableEl = _findNextFocusableElement(
+                        this.beans,
                         this.getFocusableElement(),
                         null,
                         event.shiftKey
@@ -191,6 +194,6 @@ export class AdvancedFilterHeaderComp extends Component {
     }
 
     private hasFocus(): boolean {
-        return _getActiveDomElement(this.gos) === this.getFocusableElement();
+        return _getActiveDomElement(this.beans) === this.getFocusableElement();
     }
 }

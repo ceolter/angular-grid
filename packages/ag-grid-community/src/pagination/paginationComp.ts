@@ -1,13 +1,12 @@
 import { KeyCode } from '../constants/keyCode';
 import type { BeanCollection } from '../context/context';
-import type { FocusService } from '../focusService';
 import type { PaginationNumberFormatterParams } from '../interfaces/iCallbackParams';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { FocusableContainer } from '../interfaces/iFocusableContainer';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import { _setAriaDisabled } from '../utils/aria';
-import { _addFocusableContainerListener } from '../utils/focus';
+import { _addFocusableContainerListener, _focusGridInnerElement } from '../utils/focus';
 import { _createIconNoSpan } from '../utils/icon';
 import { _formatNumberCommas } from '../utils/number';
 import type { ComponentSelector } from '../widgets/component';
@@ -21,13 +20,11 @@ import type { PaginationService } from './paginationService';
 export class PaginationComp extends TabGuardComp implements FocusableContainer {
     private rowModel: IRowModel;
     private pagination: PaginationService;
-    private focusSvc: FocusService;
-    private ariaAnnounce: AriaAnnouncementService;
+    private ariaAnnounce?: AriaAnnouncementService;
 
     public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel;
         this.pagination = beans.pagination!;
-        this.focusSvc = beans.focusSvc;
         this.ariaAnnounce = beans.ariaAnnounce;
     }
 
@@ -86,7 +83,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
                 if (this.allowFocusInnerElement) {
                     this.tabGuardFeature.getTabGuardCtrl().focusInnerElement(fromBottom);
                 } else {
-                    this.focusSvc.focusGridInnerElement(fromBottom);
+                    _focusGridInnerElement(this.beans, fromBottom);
                 }
             },
             forceFocusOutWhenTabGuardsAreEmpty: true,
@@ -141,7 +138,7 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
                 });
             });
 
-            _addFocusableContainerListener(this, this.getGui(), this.focusSvc);
+            _addFocusableContainerListener(this.beans, this, this.getGui());
 
             this.areListenersSetup = true;
         }
@@ -335,11 +332,11 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
 
         if (ariaRowStatus !== this.ariaRowStatus) {
             this.ariaRowStatus = ariaRowStatus;
-            this.ariaAnnounce.announceValue(ariaRowStatus, 'paginationRow');
+            this.ariaAnnounce?.announceValue(ariaRowStatus, 'paginationRow');
         }
         if (ariaPageStatus !== this.ariaPageStatus) {
             this.ariaPageStatus = ariaPageStatus;
-            this.ariaAnnounce.announceValue(ariaPageStatus, 'paginationPage');
+            this.ariaAnnounce?.announceValue(ariaPageStatus, 'paginationPage');
         }
     }
 

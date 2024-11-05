@@ -3,11 +3,9 @@ import type {
     ColDef,
     ColKey,
     ColumnEventType,
-    ColumnFactory,
     ColumnGroupService,
     ColumnModel,
     ColumnNameService,
-    Context,
     IAutoColService,
     IColsService,
     NamedBean,
@@ -18,6 +16,7 @@ import {
     AgProvidedColumnGroup,
     BeanStub,
     GROUP_AUTO_COLUMN_ID,
+    _addColumnDefaultAndTypes,
     _areColIdsEqual,
     _columnsMatch,
     _convertColumnEventSourceType,
@@ -28,6 +27,7 @@ import {
     _mergeDeep,
     _missing,
     _updateColsMap,
+    _updateColumnState,
     _warn,
     isColumnGroupAutoCol,
 } from 'ag-grid-community';
@@ -37,9 +37,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
 
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private colFactory: ColumnFactory;
     private rowGroupColsSvc?: IColsService;
-    private context: Context;
     private colGroupSvc?: ColumnGroupService;
 
     // group auto columns
@@ -48,9 +46,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.colFactory = beans.colFactory;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.context = beans.context;
         this.colGroupSvc = beans.colGroupSvc;
     }
 
@@ -91,7 +87,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
 
         const destroyPrevious = () => {
             if (this.autoCols) {
-                _destroyColumnTree(this.context, this.autoCols.tree);
+                _destroyColumnTree(this.beans, this.autoCols.tree);
                 this.autoCols = null;
             }
         };
@@ -152,12 +148,12 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
                 const autoGroup = new AgProvidedColumnGroup(null, `FAKE_PATH_${col.getId()}}_${i}`, true, i);
                 this.createBean(autoGroup);
                 autoGroup.setChildren([nextChild]);
-                nextChild.setOriginalParent(autoGroup);
+                nextChild.originalParent = autoGroup;
                 nextChild = autoGroup;
             }
 
             if (depth === 0) {
-                col.setOriginalParent(null);
+                col.originalParent = null;
             }
 
             // at this point, the nextChild is the top most item in the tree
@@ -244,7 +240,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const colDef = this.createAutoColDef(colToUpdate.getId(), underlyingColumn ?? undefined, index);
 
         colToUpdate.setColDef(colDef, null, source);
-        this.colFactory.applyColumnState(colToUpdate, colDef, source);
+        _updateColumnState(this.beans, colToUpdate, colDef, source);
     }
 
     private createAutoColDef(colId: string, underlyingColumn?: AgColumn, index?: number): ColDef {
@@ -254,7 +250,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const autoGroupColumnDef = this.gos.get('autoGroupColumnDef');
         _mergeDeep(res, autoGroupColumnDef);
 
-        res = this.colFactory.addColumnDefaultAndTypes(res, colId);
+        res = _addColumnDefaultAndTypes(this.beans, res, colId);
 
         // For tree data the filter is always allowed
         if (!this.gos.get('treeData')) {
@@ -330,7 +326,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
     }
 
     public override destroy(): void {
-        _destroyColumnTree(this.context, this.autoCols?.tree);
+        _destroyColumnTree(this.beans, this.autoCols?.tree);
         super.destroy();
     }
 }

@@ -1,0 +1,16 @@
+.ag-picker-field-display {
+    flex: 1 1 auto;
+}
+
+.ag-picker-field {
+    display: flex;
+    align-items: center;
+}
+
+.ag-picker-field-icon {
+    display: flex;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}

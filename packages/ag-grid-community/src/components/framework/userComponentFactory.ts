@@ -154,13 +154,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
             return;
         }
 
-        const paramsMerged = this.mergeParamsWithApplicationProvidedParams(
-            defObject,
-            type,
-            params,
-            paramsFromSelector,
-            defaultCompParams
-        );
+        const paramsMerged = this.mergeParams(defObject, type, params, paramsFromSelector, defaultCompParams);
 
         const componentFromFramework = jsComp == null;
         const componentClass = jsComp ? jsComp : fwComp;
@@ -199,16 +193,20 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
             );
         }
 
-        const deferredInit = this.initComponent(instance, params);
-
+        this.createBean(instance);
+        const deferredInit = instance.init?.(params);
         if (deferredInit == null) {
             return AgPromise.resolve(instance);
         }
+
         return deferredInit.then(() => instance);
     }
 
-    // used by Floating Filter
-    public mergeParamsWithApplicationProvidedParams<TDefinition>(
+    /**
+     * merges params with application provided params
+     * used by Floating Filter
+     */
+    public mergeParams<TDefinition>(
         defObject: TDefinition,
         type: ComponentType,
         paramsFromGrid: any,
@@ -238,13 +236,5 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         _mergeDeep(params, paramsFromSelector);
 
         return params;
-    }
-
-    private initComponent(component: any, params: any): AgPromise<void> | void {
-        this.createBean(component);
-        if (component.init == null) {
-            return;
-        }
-        return component.init(params);
     }
 }

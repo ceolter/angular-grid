@@ -24,7 +24,7 @@ The group rows use the `agGroupCellRenderer` component to display the group info
 for expanding and collapsing rows.
 
 This can be configured with several [Group Renderer Properties](./grouping-group-rows/#configurable-options) using
-the `groupRowRendererParams` grid option. The example below removes the row count and enables checkboxes for row selection.
+the `groupRowRendererParams` grid option. The example below removes the row count. Checkboxes are enabled for row selection with the `checkboxLocation` property.
 
 {% gridExampleRunner title="Group Cell Renderer Configuration" name="renderer-config-group-cell" /%}
 
@@ -37,7 +37,10 @@ const gridOptions = {
     ],
     groupRowRendererParams: {
         suppressCount: true,
-        checkbox: true,
+    },
+    rowSelection: { 
+        mode: 'singleRow', 
+        checkboxLocation: 'autoGroupColumn',
     }
 }
 ```

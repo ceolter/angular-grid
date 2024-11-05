@@ -1,16 +1,16 @@
-import type { ColumnModel } from '../columns/columnModel';
-import type { NamedBean } from '../context/bean';
-import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { GridOptions } from '../entities/gridOptions';
-import type { RowNode } from '../entities/rowNode';
-import { _createRowNodeFooter, _destroyRowNodeFooter } from '../entities/rowNodeUtils';
-import { _getGrandTotalRow, _getGroupTotalRowCallback, _isGroupMultiAutoColumn } from '../gridOptionsUtils';
-import type { GetGroupIncludeFooterParams } from '../interfaces/iCallbackParams';
-import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
-import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
-import type { IMasterDetailService } from '../interfaces/masterDetail';
+import type {
+    ClientSideRowModelStage,
+    GetGroupIncludeFooterParams,
+    GridOptions,
+    IRowNodeStage,
+    NamedBean,
+    RowNode,
+    StageExecuteParams,
+    WithoutGridCommon,
+} from 'ag-grid-community';
+import { BeanStub, _getGrandTotalRow, _getGroupTotalRowCallback, _isGroupMultiAutoColumn } from 'ag-grid-community';
+
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../aggregation/footerUtils';
 
 interface FlattenDetails {
     hideOpenParents: boolean;
@@ -20,7 +20,7 @@ interface FlattenDetails {
     groupTotalRow: (params: WithoutGridCommon<GetGroupIncludeFooterParams<any, any>>) => 'top' | 'bottom' | undefined;
 }
 
-export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
+export class FlattenStage extends BeanStub implements IRowNodeStage<RowNode[]>, NamedBean {
     beanName = 'flattenStage' as const;
 
     public refreshProps: Set<keyof GridOptions<any>> = new Set([
@@ -32,21 +32,13 @@ export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
     ]);
     public step: ClientSideRowModelStage = 'map';
 
-    private colModel: ColumnModel;
-    private masterDetailSvc: IMasterDetailService | undefined;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.masterDetailSvc = beans.masterDetailSvc;
-    }
-
     public execute(params: StageExecuteParams): RowNode[] {
         const rootNode = params.rowNode;
 
         // even if not doing grouping, we do the mapping, as the client might
         // of passed in data that already has a grouping in it somewhere
         const result: RowNode[] = [];
-        const skipLeafNodes = this.colModel.isPivotMode();
+        const skipLeafNodes = this.beans.colModel.isPivotMode();
         // if we are reducing, and not grouping, then we want to show the root node, as that
         // is where the pivot values are
         const showRootNode = skipLeafNodes && rootNode.leafGroup;
@@ -174,7 +166,7 @@ export class FlattenStage extends BeanStub implements IRowNodeStage, NamedBean {
                     }
                 }
             } else {
-                const detailNode = this.masterDetailSvc?.getDetail(rowNode);
+                const detailNode = this.beans.masterDetailSvc?.getDetail(rowNode);
                 if (detailNode) {
                     this.addRowNodeToRowsToDisplay(details, detailNode, result, uiLevel);
                 }

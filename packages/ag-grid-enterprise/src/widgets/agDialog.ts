@@ -1,13 +1,19 @@
 import type {
     AgColumn,
     BeanCollection,
-    FocusService,
     FocusableContainer,
     IRowNode,
     PopupService,
     ResizableStructure,
 } from 'ag-grid-community';
-import { Component, TabGuardFeature, _createIconNoSpan, _setDisplayed } from 'ag-grid-community';
+import {
+    Component,
+    TabGuardFeature,
+    _createIconNoSpan,
+    _findNextFocusableElement,
+    _focusNextGridCoreContainer,
+    _setDisplayed,
+} from 'ag-grid-community';
 
 import type { PanelOptions } from './agPanel';
 import { AgPanel } from './agPanel';
@@ -43,11 +49,9 @@ export interface DialogOptions extends PanelOptions {
 
 export class AgDialog extends AgPanel<DialogOptions> implements FocusableContainer {
     private popupSvc?: PopupService;
-    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.popupSvc = beans.popupSvc;
-        this.focusSvc = beans.focusSvc;
     }
 
     private tabGuardFeature: TabGuardFeature;
@@ -94,9 +98,9 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
                     return;
                 }
                 const backwards = e.shiftKey;
-                const nextFocusableElement = this.focusSvc.findNextFocusableElement(eGui, false, backwards);
+                const nextFocusableElement = _findNextFocusableElement(this.beans, eGui, false, backwards);
                 if (!nextFocusableElement || this.tabGuardFeature.getTabGuardCtrl().isTabGuard(nextFocusableElement)) {
-                    if (this.focusSvc.focusNextGridCoreContainer(backwards)) {
+                    if (_focusNextGridCoreContainer(this.beans, backwards)) {
                         e.preventDefault();
                     }
                 }
@@ -114,9 +118,9 @@ export class AgDialog extends AgPanel<DialogOptions> implements FocusableContain
         }
 
         if (!this.config.modal) {
-            const { focusSvc } = this;
-            focusSvc.addFocusableContainer(this);
-            this.addDestroyFunc(() => focusSvc.removeFocusableContainer(this));
+            const gridCtrl = this.beans.ctrlsSvc.get('gridCtrl');
+            gridCtrl.addFocusableContainer(this);
+            this.addDestroyFunc(() => gridCtrl.removeFocusableContainer(this));
         }
     }
 

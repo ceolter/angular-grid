@@ -26,8 +26,10 @@ import {
     _areCellsEqual,
     _createIconNoSpan,
     _exists,
+    _focusInto,
     _getPageBody,
     _isIOSUserAgent,
+    _isKeyboardMode,
     _isNothingFocused,
     _isPromise,
     _warn,
@@ -190,8 +192,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         rowComp: RowCtrl | null,
         cellCtrl: CellCtrl
     ): void {
-        const rowNode = rowComp ? rowComp.getRowNode() : null;
-        const column = cellCtrl ? cellCtrl.getColumn() : null;
+        const rowNode = rowComp?.rowNode ?? null;
+        const column = cellCtrl?.column ?? null;
         let value = null;
 
         if (column) {
@@ -202,7 +204,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         // if user clicked on a cell, anchor to that cell, otherwise anchor to the grid panel
         const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-        const anchorToElement = cellCtrl ? cellCtrl.getGui() : gridBodyCon.getGridBodyElement();
+        const anchorToElement = cellCtrl ? cellCtrl.eGui : gridBodyCon.eGridBody;
 
         this.showContextMenu({
             mouseEvent,
@@ -288,7 +290,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             positionCallback: () => positionWrapper(e),
         }).hideFunc;
 
-        const targetEl = _getPageBody(this.gos);
+        const targetEl = _getPageBody(this.beans);
         let listener: (() => void) | null = null;
 
         if (!targetEl) {
@@ -321,7 +323,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }): void {
         const { menuItems, node, column, value, mouseEvent, anchorToElement } = params;
 
-        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().getGui();
+        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().eGridBody;
         const menu = new ContextMenu(menuItems, column, node, value);
         this.createBean(menu);
 
@@ -432,11 +434,11 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const cellCtrl = rowCtrl.getCellCtrl(column);
 
-        return cellCtrl?.getGui() || undefined;
+        return cellCtrl?.eGui || undefined;
     }
 
     private getContextMenuAnchorElement(rowNode?: RowNode | null, column?: AgColumn | null): HTMLElement {
-        const gridBodyEl = this.ctrlsSvc.getGridBodyCtrl().getGridBodyElement();
+        const gridBodyEl = this.ctrlsSvc.getGridBodyCtrl().eGridBody;
         const rowCtrl = this.getRowCtrl(rowNode);
 
         if (!rowCtrl) {
@@ -519,7 +521,7 @@ class ContextMenu extends Component<ContextMenuEvent> {
         this.focusedCell = this.focusSvc.getFocusedCell();
 
         if (this.menuList) {
-            this.focusSvc.focusInto(this.menuList.getGui());
+            _focusInto(this.menuList.getGui());
         }
     }
 
@@ -529,13 +531,13 @@ class ContextMenu extends Component<ContextMenuEvent> {
         if (currentFocusedCell && this.focusedCell && _areCellsEqual(currentFocusedCell, this.focusedCell)) {
             const { rowIndex, rowPinned, column } = this.focusedCell;
 
-            if (_isNothingFocused(this.gos)) {
+            if (_isNothingFocused(this.beans)) {
                 this.focusSvc.setFocusedCell({
                     rowIndex,
                     column,
                     rowPinned,
                     forceBrowserFocus: true,
-                    preventScrollOnBrowserFocus: !this.focusSvc.isKeyboardMode(),
+                    preventScrollOnBrowserFocus: !_isKeyboardMode(),
                 });
             }
         }

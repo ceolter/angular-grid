@@ -9,8 +9,6 @@ import type {
 import {
     BeanStub,
     RowNode,
-    _createRowNodeFooter,
-    _destroyRowNodeFooter,
     _doOnce,
     _exists,
     _getGroupTotalRowCallback,
@@ -19,6 +17,7 @@ import {
     _warn,
 } from 'ag-grid-community';
 
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../../aggregation/footerUtils';
 import type { NodeManager } from '../nodeManager';
 import type { ServerSideRowModel } from '../serverSideRowModel';
 import type { ServerSideExpansionService } from '../services/serverSideExpansionService';
@@ -57,7 +56,7 @@ export class BlockUtils extends BeanStub implements NamedBean {
     }): RowNode {
         const rowNode = new RowNode(this.beans);
 
-        const rowHeight = params.rowHeight != null ? params.rowHeight : _getRowHeightAsNumber(this.gos);
+        const rowHeight = params.rowHeight != null ? params.rowHeight : _getRowHeightAsNumber(this.beans);
         rowNode.setRowHeight(rowHeight);
 
         rowNode.group = params.group;
@@ -209,9 +208,9 @@ export class BlockUtils extends BeanStub implements NamedBean {
         // this needs to be done AFTER setGroupDataIntoRowNode(), as the height can depend on the group data
         // getting set, if it's a group node and colDef.autoHeight=true
         if (_exists(data)) {
-            rowNode.setRowHeight(_getRowHeightForNode(this.gos, rowNode, false, cachedRowHeight).height);
+            rowNode.setRowHeight(_getRowHeightForNode(this.beans, rowNode, false, cachedRowHeight).height);
             rowNode.sibling?.setRowHeight(
-                _getRowHeightForNode(this.gos, rowNode.sibling, false, cachedRowHeight).height
+                _getRowHeightForNode(this.beans, rowNode.sibling, false, cachedRowHeight).height
             );
         }
     }

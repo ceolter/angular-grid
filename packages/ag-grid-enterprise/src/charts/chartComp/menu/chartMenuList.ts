@@ -1,13 +1,19 @@
 import type {
     BeanCollection,
-    FocusService,
     IAfterGuiAttachedParams,
     IconName,
     MenuItemDef,
     NamedBean,
     PopupService,
 } from 'ag-grid-community';
-import { BeanStub, Component, RefPlaceholder, _createIconNoSpan, _isNothingFocused } from 'ag-grid-community';
+import {
+    BeanStub,
+    Component,
+    RefPlaceholder,
+    _createIconNoSpan,
+    _focusInto,
+    _isNothingFocused,
+} from 'ag-grid-community';
 
 import { AgMenuList } from '../../../widgets/agMenuList';
 import type { ChartController } from '../chartController';
@@ -67,7 +73,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
             closedCallback: () => {
                 this.destroyBean(chartMenuList);
                 this.activeChartMenuList = undefined;
-                if (_isNothingFocused(this.gos)) {
+                if (_isNothingFocused(this.beans)) {
                     eventSource.focus({ preventScroll: true });
                 }
             },
@@ -213,12 +219,6 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
 }
 
 class ChartMenuList extends Component {
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-    }
-
     private readonly eChartsMenu: HTMLElement = RefPlaceholder;
 
     private hidePopupFunc: () => void;
@@ -246,6 +246,6 @@ class ChartMenuList extends Component {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusSvc.focusInto(this.mainMenuList.getGui());
+        _focusInto(this.mainMenuList.getGui());
     }
 }

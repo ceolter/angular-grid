@@ -1,5 +1,3 @@
-import type { AgColumn } from '../../../entities/agColumn';
-import type { ColumnPinnedType } from '../../../interfaces/iColumn';
 import type { UserCompDetails } from '../../../interfaces/iUserCompDetails';
 import { _removeAriaSort, _setAriaSort } from '../../../utils/aria';
 import { RefPlaceholder } from '../../../widgets/component';
@@ -10,9 +8,6 @@ import type { IHeaderComp } from './headerComp';
 export class HeaderCellComp extends AbstractHeaderCellComp<HeaderCellCtrl> {
     private readonly eResize: HTMLElement = RefPlaceholder;
     private readonly eHeaderCompWrapper: HTMLElement = RefPlaceholder;
-
-    protected readonly column: AgColumn;
-    protected readonly pinned: ColumnPinnedType;
 
     private headerComp: IHeaderComp | undefined;
     private headerCompGui: HTMLElement | undefined;
@@ -26,8 +21,6 @@ export class HeaderCellComp extends AbstractHeaderCellComp<HeaderCellCtrl> {
         </div>`,
             ctrl
         );
-        this.column = ctrl.getColumnGroupChild() as AgColumn;
-        this.pinned = ctrl.getPinned();
     }
 
     public postConstruct(): void {
@@ -41,7 +34,7 @@ export class HeaderCellComp extends AbstractHeaderCellComp<HeaderCellCtrl> {
             }
         };
 
-        setAttribute('col-id', this.column.getColId());
+        setAttribute('col-id', this.ctrl.column.getColId());
 
         const compProxy: IHeaderCellComp = {
             setWidth: (width) => (eGui.style.width = width),

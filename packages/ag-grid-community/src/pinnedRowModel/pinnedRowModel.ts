@@ -45,7 +45,7 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
         let rowTop = 0;
         const updateRowHeight = (rowNode: RowNode) => {
             if (rowNode.rowHeightEstimated) {
-                const rowHeight = _getRowHeightForNode(this.gos, rowNode);
+                const rowHeight = _getRowHeightForNode(this.beans, rowNode);
                 rowNode.setRowTop(rowTop);
                 rowNode.setRowHeight(rowHeight.height);
                 rowTop += rowHeight.height;
@@ -139,7 +139,7 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
 
     private setRowTopAndRowIndex(rowNode: RowNode, rowTop: number, rowIndex: number): number {
         rowNode.setRowTop(rowTop);
-        rowNode.setRowHeight(_getRowHeightForNode(this.gos, rowNode).height);
+        rowNode.setRowHeight(_getRowHeightForNode(this.beans, rowNode).height);
         rowNode.setRowIndex(rowIndex);
         return rowNode.rowHeight!;
     }

@@ -17,8 +17,8 @@ export interface StageExecuteParams<TData = any> {
     afterColumnsChanged?: boolean;
 }
 
-export interface IRowNodeStage<TData = any> {
+export interface IRowNodeStage<TResult = any, TData = any> {
     step: ClientSideRowModelStage;
     refreshProps: Set<keyof GridOptions>;
-    execute(params: StageExecuteParams<TData>): any;
+    execute(params: StageExecuteParams<TData>): TResult;
 }

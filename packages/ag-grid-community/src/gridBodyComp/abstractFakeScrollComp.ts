@@ -6,7 +6,7 @@ import { Component, RefPlaceholder } from '../widgets/component';
 import type { ScrollPartner } from './gridBodyScrollFeature';
 
 export abstract class AbstractFakeScrollComp extends Component implements ScrollPartner {
-    protected readonly eViewport: HTMLElement = RefPlaceholder;
+    public readonly eViewport: HTMLElement = RefPlaceholder;
     protected readonly eContainer: HTMLElement = RefPlaceholder;
 
     protected invisibleScrollbar: boolean;
@@ -72,7 +72,7 @@ export abstract class AbstractFakeScrollComp extends Component implements Scroll
             this.initialiseInvisibleScrollbar();
         }
 
-        _requestAnimationFrame(this.gos, () => this.setScrollVisible());
+        _requestAnimationFrame(this.beans, () => this.setScrollVisible());
     }
 
     protected hideAndShowInvisibleScrollAsNeeded(): void {
@@ -96,7 +96,7 @@ export abstract class AbstractFakeScrollComp extends Component implements Scroll
     }
 
     protected attemptSettingScrollPosition(value: number) {
-        const viewport = this.getViewportElement();
+        const viewport = this.eViewport;
         _waitUntil(
             () => _isVisible(viewport),
             () => this.setScrollPosition(value),
@@ -104,15 +104,7 @@ export abstract class AbstractFakeScrollComp extends Component implements Scroll
         );
     }
 
-    public getViewportElement(): HTMLElement {
-        return this.eViewport;
-    }
-
-    public getContainer(): HTMLElement {
-        return this.eContainer;
-    }
-
     public onScrollCallback(fn: () => void): void {
-        this.addManagedElementListeners(this.getViewportElement(), { scroll: fn });
+        this.addManagedElementListeners(this.eViewport, { scroll: fn });
     }
 }

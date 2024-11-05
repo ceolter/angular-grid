@@ -22,7 +22,8 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
     } as const;
 
     override columnExtractors = {
-        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) => col.setValueActive(flag, source),
+        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) =>
+            this.setColValueActive(col, flag, source),
         getIndexFunc: () => undefined,
         getInitialIndexFunc: () => undefined,
         getValueFunc: (colDef: ColDef) => {
@@ -56,11 +57,11 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
             const colDef = col.getColDef();
             // if aggFunc provided, we always override, as reactive property
             if (colDef.aggFunc != null && colDef.aggFunc != '') {
-                col.setAggFunc(colDef.aggFunc);
+                this.setColAggFunc(col, colDef.aggFunc);
             } else {
                 // otherwise we use initialAggFunc only if no agg func set - which happens when new column only
                 if (!col.getAggFunc()) {
-                    col.setAggFunc(colDef.initialAggFunc);
+                    this.setColAggFunc(col, colDef.initialAggFunc);
                 }
             }
         });
@@ -82,7 +83,7 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
             return;
         }
 
-        column.setAggFunc(aggFunc);
+        this.setColAggFunc(column, aggFunc);
 
         this.dispatchColumnChangedEvent(this.eventSvc, this.eventName, [column], source);
     }
@@ -99,9 +100,9 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
         const aggFunc = getValue('aggFunc').value1;
         if (aggFunc !== undefined) {
             if (typeof aggFunc === 'string') {
-                column.setAggFunc(aggFunc);
+                this.setColAggFunc(column, aggFunc);
                 if (!column.isValueActive()) {
-                    column.setValueActive(true, source);
+                    this.setColValueActive(column, true, source);
                     this.modifyColumnsNoEventsCallbacks.addCol(column);
                 }
             } else {
@@ -114,7 +115,7 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
                 // default to the last aggregation function.
 
                 if (column.isValueActive()) {
-                    column.setValueActive(false, source);
+                    this.setColValueActive(column, false, source);
                     this.modifyColumnsNoEventsCallbacks.removeCol(column);
                 }
             }
@@ -126,11 +127,23 @@ export class ValueColsSvc extends BaseColsService implements NamedBean, IColsSer
             return;
         }
 
-        column.setValueActive(active, source);
+        this.setColValueActive(column, active, source);
 
         if (active && !column.getAggFunc() && this.aggFuncSvc) {
             const initialAggFunc = this.aggFuncSvc.getDefaultAggFunc(column);
-            column.setAggFunc(initialAggFunc);
+            this.setColAggFunc(column, initialAggFunc);
+        }
+    }
+
+    private setColAggFunc(column: AgColumn, aggFunc: string | IAggFunc | null | undefined): void {
+        column.aggFunc = aggFunc;
+        column.dispatchStateUpdatedEvent('aggFunc');
+    }
+
+    private setColValueActive(column: AgColumn, value: boolean, source: ColumnEventType): void {
+        if (column.aggregationActive !== value) {
+            column.aggregationActive = value;
+            column.dispatchColEvent('columnValueChanged', source);
         }
     }
 }

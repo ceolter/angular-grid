@@ -1165,8 +1165,8 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
     private copyDataToClipboardLegacy(data: string): void {
         // method 3 - if all else fails, the old school hack
         this.executeOnTempElement((element) => {
-            const eDocument = _getDocument(this.gos);
-            const focusedElementBefore = _getActiveDomElement(this.gos) as HTMLElement;
+            const eDocument = _getDocument(this.beans);
+            const focusedElementBefore = _getActiveDomElement(this.beans) as HTMLElement;
 
             element.value = data || ' '; // has to be non-empty value or execCommand will not do anything
             element.select();
@@ -1192,7 +1192,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
             return;
         }
 
-        const eDoc = _getDocument(this.gos);
+        const eDoc = _getDocument(this.beans);
         const eTempInput = eDoc.createElement('textarea');
         eTempInput.style.width = '1px';
         eTempInput.style.height = '1px';

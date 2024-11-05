@@ -108,7 +108,7 @@ export class AgAngleSelect extends AgAbstractLabel<AgAngleSelectParams, AgAngleS
 
         this.addManagedListeners(this, {
             fieldValueChanged: () => {
-                if (this.eAngleValue.getInputElement().contains(_getActiveDomElement(this.gos))) {
+                if (this.eAngleValue.getInputElement().contains(_getActiveDomElement(this.beans))) {
                     return;
                 }
                 this.updateNumberInput();

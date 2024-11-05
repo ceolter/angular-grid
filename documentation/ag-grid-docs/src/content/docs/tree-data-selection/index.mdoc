@@ -29,26 +29,19 @@ const gridOptions = {
 
 ## Checkboxes in Group Cells
 
-When using [Row Selection](./row-selection/) with Tree Data, the grid can be configured to render checkboxes in the group cell, to
-the right of the expand/collapse chevron.
+When using [Row Selection](./row-selection/) with Tree Data, the grid can be configured to render checkboxes in the group cell, to the right of the expand/collapse chevron.
 
-This can be configured on the [Group Column Definition](./tree-data-group-column/#group-column-configuration) by setting the `cellRendererParams.checkbox` option to `true`.
+This can be configured by setting the `rowSelection.checkboxLocation` to `'autoGroupColumn'`.
 
 {% gridExampleRunner title="Group Cell Checkboxes" name="group-cell-checkboxes" /%}
 
-The example above demonstrates the following configuration to render checkboxes in the group cell, and [Removes the Default Checkboxes](./row-selection-single-row/#removing-selection-checkboxes):
+The example above demonstrates the following configuration to render checkboxes in the group cell:
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
-    autoGroupColumnDef: {
-        cellRendererParams: {
-            checkbox: true,
-        },
-    },
-    
     rowSelection: {
         mode: 'multiRow',
-        checkboxes: false,
+        checkboxeLocation: 'autoGroupColumn',
         headerCheckbox: false,
     },
 }

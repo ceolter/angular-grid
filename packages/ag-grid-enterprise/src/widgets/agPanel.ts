@@ -100,7 +100,7 @@ export class AgPanel<TConfig extends PanelOptions = PanelOptions> extends Compon
             mousedown: (e: MouseEvent) => {
                 if (
                     eGui.contains(e.relatedTarget as HTMLElement) ||
-                    eGui.contains(_getActiveDomElement(this.gos)) ||
+                    eGui.contains(_getActiveDomElement(this.beans)) ||
                     this.eTitleBarButtons.contains(e.target as HTMLElement)
                 ) {
                     e.preventDefault();

@@ -11,7 +11,7 @@ export function destroy(beans: BeanCollection): void {
 }
 
 export function isDestroyed(beans: BeanCollection): boolean {
-    return beans.gridDestroySvc.isDestroyCalled();
+    return beans.gridDestroySvc.destroyCalled;
 }
 
 export function getGridOption<Key extends keyof GridOptions<TData>, TData = any>(

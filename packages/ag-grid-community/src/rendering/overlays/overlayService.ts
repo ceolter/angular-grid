@@ -221,7 +221,7 @@ export class OverlayService extends BeanStub implements NamedBean {
 
         if (this.state === OverlayServiceState.NoRows) {
             const headerCtrl = this.ctrlsSvc.get('gridHeaderCtrl');
-            const headerHeight = headerCtrl?.getHeaderHeight() || 0;
+            const headerHeight = headerCtrl?.headerHeight || 0;
 
             newPadding = headerHeight;
         } else if (this.wrapperPadding !== 0) {

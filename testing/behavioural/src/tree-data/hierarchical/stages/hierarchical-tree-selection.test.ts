@@ -18,8 +18,7 @@ describe('ag-grid hierarchical tree selection', () => {
         gridsManager.reset();
     });
 
-    // TODO: tree data with children bug: selection is not cleared with setImmutableData for deleted nodes yet
-    test.skip('tree selection and update', async () => {
+    test('tree selection and update', async () => {
         const rowData = cachedJSONObjects.array([
             {
                 id: '1',

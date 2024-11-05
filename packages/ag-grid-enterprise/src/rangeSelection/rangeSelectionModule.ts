@@ -1,5 +1,5 @@
 import type { _CellSelectionGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { KeyboardNavigationCoreModule } from 'ag-grid-community';
+import { DragModule, KeyboardNavigationCoreModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -16,7 +16,7 @@ import { RangeService } from './rangeService';
 export const CellSelectionCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('CellSelectionCoreModule'),
     beans: [RangeService],
-    dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule],
+    dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule, DragModule],
     css: [rangeSelectionCSS],
 };
 

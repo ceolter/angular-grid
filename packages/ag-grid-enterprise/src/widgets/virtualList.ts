@@ -103,8 +103,8 @@ export class VirtualList<
 
     private addResizeObserver(): void {
         // do this in an animation frame to prevent loops
-        const listener = () => _requestAnimationFrame(this.gos, () => this.drawVirtualRows());
-        const destroyObserver = _observeResize(this.gos, this.getGui(), listener);
+        const listener = () => _requestAnimationFrame(this.beans, () => this.drawVirtualRows());
+        const destroyObserver = _observeResize(this.beans, this.getGui(), listener);
         this.addDestroyFunc(destroyObserver);
     }
 
@@ -213,7 +213,7 @@ export class VirtualList<
 
         this.ensureIndexVisible(rowNumber);
 
-        _requestAnimationFrame(this.gos, () => {
+        _requestAnimationFrame(this.beans, () => {
             this.isScrolling = false;
             if (!this.isAlive()) {
                 return;
@@ -336,6 +336,9 @@ export class VirtualList<
         _waitUntil(
             () => this.eContainer.clientHeight >= rowCount * this.rowHeight,
             () => {
+                if (!this.isAlive()) {
+                    return;
+                }
                 const callbacks = this.awaitStableCallbacks;
                 this.awaitStableCallbacks = [];
                 callbacks.forEach((c) => c());

@@ -1,6 +1,6 @@
 import { BeanStub } from '../context/beanStub';
+import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
-import type { SelectionEventSourceType } from '../events';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type {
     ClientSideNodeManagerUpdateRowDataResult,
@@ -164,7 +164,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.executeUpdate(getRowIdFunc, rowDataTran, updateRowDataResult, nodesToUnselect);
         this.executeAdd(rowDataTran, updateRowDataResult);
 
-        this.updateSelection(nodesToUnselect, 'rowDataChanged');
+        this.deselectNodes(nodesToUnselect);
 
         return updateRowDataResult;
     }
@@ -322,7 +322,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected executeRemove(
-        getRowIdFunc: ((data: any) => string) | undefined,
+        getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
         { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
@@ -376,7 +376,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected executeUpdate(
-        getRowIdFunc: ((data: any) => string) | undefined,
+        getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
         { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
@@ -409,7 +409,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         });
     }
 
-    protected updateSelection(nodesToUnselect: RowNode<TData>[], source: SelectionEventSourceType): void {
+    protected deselectNodes(nodesToUnselect: RowNode<TData>[]): void {
+        const source = 'rowDataChanged';
         const selectionSvc = this.beans.selectionSvc;
         const selectionChanged = nodesToUnselect.length > 0;
         if (selectionChanged) {

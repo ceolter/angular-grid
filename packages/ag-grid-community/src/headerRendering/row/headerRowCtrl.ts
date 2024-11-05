@@ -26,21 +26,19 @@ export class HeaderRowCtrl extends BeanStub {
     public readonly instanceId: HeaderRowCtrlInstanceId = instanceIdSequence++ as HeaderRowCtrlInstanceId;
 
     private comp: IHeaderRowComp;
-    private rowIndex: number;
-    private pinned: ColumnPinnedType;
-    private type: HeaderRowType;
-    private headerRowClass: string;
+    public headerRowClass: string;
 
     private headerCellCtrls: Map<HeaderColumnId, AbstractHeaderCellCtrl> | undefined;
 
     private isPrintLayout: boolean;
     private isEnsureDomOrder: boolean;
 
-    constructor(rowIndex: number, pinned: ColumnPinnedType, type: HeaderRowType) {
+    constructor(
+        public readonly rowIndex: number,
+        public readonly pinned: ColumnPinnedType,
+        public readonly type: HeaderRowType
+    ) {
         super();
-        this.rowIndex = rowIndex;
-        this.pinned = pinned;
-        this.type = type;
 
         const typeClass =
             type == 'group'
@@ -63,7 +61,7 @@ export class HeaderRowCtrl extends BeanStub {
         if (!this.comp) {
             return false;
         }
-        return this.getHeaderCellCtrls().every((ctrl) => ctrl.getGui() != null);
+        return this.getHeaderCellCtrls().every((ctrl) => ctrl.eGui != null);
     }
 
     /**
@@ -85,9 +83,6 @@ export class HeaderRowCtrl extends BeanStub {
         this.addEventListeners(compBean);
     }
 
-    public getHeaderRowClass(): string {
-        return this.headerRowClass;
-    }
     public getAriaRowIndex(): number {
         return this.rowIndex + 1;
     }
@@ -95,7 +90,7 @@ export class HeaderRowCtrl extends BeanStub {
     private addEventListeners(compBean: BeanStub): void {
         const onHeightChanged = this.onRowHeightChanged.bind(this);
         compBean.addManagedEventListeners({
-            columnResized: this.onColumnResized.bind(this),
+            columnResized: this.setWidth.bind(this),
             displayedColumnsChanged: this.onDisplayedColumnsChanged.bind(this),
             virtualColumnsChanged: (params) => this.onVirtualColumnsChanged(params.afterScroll),
             columnGroupHeaderHeightChanged: onHeightChanged,
@@ -125,7 +120,7 @@ export class HeaderRowCtrl extends BeanStub {
             return;
         }
         for (const cellCtrl of this.headerCellCtrls.values()) {
-            if (cellCtrl.getColumnGroupChild() === column) {
+            if (cellCtrl.column === column) {
                 return cellCtrl;
             }
         }
@@ -137,14 +132,6 @@ export class HeaderRowCtrl extends BeanStub {
         this.onVirtualColumnsChanged();
         this.setWidth();
         this.onRowHeightChanged();
-    }
-
-    public getType(): HeaderRowType {
-        return this.type;
-    }
-
-    private onColumnResized(): void {
-        this.setWidth();
     }
 
     private setWidth(): void {
@@ -203,14 +190,6 @@ export class HeaderRowCtrl extends BeanStub {
         return { topOffset, rowHeight };
     }
 
-    public getPinned(): ColumnPinnedType {
-        return this.pinned;
-    }
-
-    public getRowIndex(): number {
-        return this.rowIndex;
-    }
-
     private onVirtualColumnsChanged(afterScroll: boolean = false): void {
         const ctrlsToDisplay = this.getHeaderCtrls();
         const forceOrder = this.isEnsureDomOrder || this.isPrintLayout;
@@ -228,13 +207,13 @@ export class HeaderRowCtrl extends BeanStub {
 
         // we want to keep columns that are focused, otherwise keyboard navigation breaks
         const isFocusedAndDisplayed = (ctrl: HeaderCellCtrl) => {
-            const { focusSvc, visibleCols: visibleCols } = this.beans;
+            const { focusSvc, visibleCols } = this.beans;
 
             const isFocused = focusSvc.isHeaderWrapperFocused(ctrl);
             if (!isFocused) {
                 return false;
             }
-            const isDisplayed = visibleCols.isVisible(ctrl.getColumnGroupChild());
+            const isDisplayed = visibleCols.isVisible(ctrl.column);
             return isDisplayed;
         };
 
@@ -284,7 +263,7 @@ export class HeaderRowCtrl extends BeanStub {
         // this is common with pivoting, where the pivot cols change, but the id's are still pivot_0,
         // pivot_1 etc. so if new col but same ID, need to remove the old col here first as we are
         // about to replace it in the this.headerComps map.
-        const forOldColumn = headerCtrl && headerCtrl.getColumnGroupChild() != headerColumn;
+        const forOldColumn = headerCtrl && headerCtrl.column != headerColumn;
         if (forOldColumn) {
             this.destroyBean(headerCtrl);
             headerCtrl = undefined;
@@ -364,7 +343,7 @@ export class HeaderRowCtrl extends BeanStub {
         if (typeof column === 'function') {
             ctrl = allCtrls.find(column);
         } else {
-            ctrl = allCtrls.find((ctrl) => ctrl.getColumnGroupChild() == column);
+            ctrl = allCtrls.find((ctrl) => ctrl.column == column);
         }
 
         return ctrl;

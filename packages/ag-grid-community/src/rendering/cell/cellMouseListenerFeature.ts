@@ -2,22 +2,21 @@ import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { AgColumn } from '../../entities/agColumn';
 import type { CellClickedEvent, CellDoubleClickedEvent } from '../../events';
-import { _isBrowserSafari, _isIOSUserAgent } from '../../utils/browser';
+import { _isBrowserSafari } from '../../utils/browser';
 import { _isElementChildOfClass, _isFocusableFormField } from '../../utils/dom';
-import { _isEventSupported, _isStopPropagationForAgGrid } from '../../utils/event';
+import { _isStopPropagationForAgGrid } from '../../utils/event';
 import type { CellCtrl } from './cellCtrl';
 
 export class CellMouseListenerFeature extends BeanStub {
-    private readonly cellCtrl: CellCtrl;
-    private readonly column: AgColumn;
+    public lastIPadMouseClickEvent: number;
 
-    private lastIPadMouseClickEvent: number;
-
-    constructor(ctrl: CellCtrl, beans: BeanCollection, column: AgColumn) {
+    constructor(
+        private readonly cellCtrl: CellCtrl,
+        beans: BeanCollection,
+        private readonly column: AgColumn
+    ) {
         super();
-        this.cellCtrl = ctrl;
         this.beans = beans;
-        this.column = column;
     }
 
     public onMouseEvent(eventName: string, mouseEvent: MouseEvent): void {
@@ -47,20 +46,17 @@ export class CellMouseListenerFeature extends BeanStub {
 
     private onCellClicked(mouseEvent: MouseEvent): void {
         // iPad doesn't have double click - so we need to mimic it to enable editing for iPad.
-        if (this.isDoubleClickOnIPad()) {
-            this.onCellDoubleClicked(mouseEvent);
-            mouseEvent.preventDefault(); // if we don't do this, then iPad zooms in
-
+        if (this.beans.touchSvc?.handleCellDoubleClickOnIPad(this, mouseEvent)) {
             return;
         }
 
-        const { eventSvc, rangeSvc, gos } = this.beans;
+        const { eventSvc, rangeSvc, gos, editSvc } = this.beans;
         const isMultiKey = mouseEvent.ctrlKey || mouseEvent.metaKey;
 
         if (rangeSvc && isMultiKey) {
             // the mousedown event has created the range already, so we only intersect if there is more than one
             // range on this cell
-            if (rangeSvc.getCellRangeCount(this.cellCtrl.getCellPosition()) > 1) {
+            if (rangeSvc.getCellRangeCount(this.cellCtrl.cellPosition) > 1) {
                 rangeSvc.intersectLastRange(true);
             }
         }
@@ -84,26 +80,13 @@ export class CellMouseListenerFeature extends BeanStub {
 
         // edit on single click, but not if extending a range
         if (editOnSingleClick && !(mouseEvent.shiftKey && rangeSvc?.getCellRanges().length != 0)) {
-            this.cellCtrl.startRowOrCellEdit();
+            editSvc?.startRowOrCellEdit(this.cellCtrl);
         }
     }
 
-    // returns true if on iPad and this is second 'click' event in 200ms
-    private isDoubleClickOnIPad(): boolean {
-        if (!_isIOSUserAgent() || _isEventSupported('dblclick')) {
-            return false;
-        }
-
-        const nowMillis = new Date().getTime();
-        const res = nowMillis - this.lastIPadMouseClickEvent < 200;
-        this.lastIPadMouseClickEvent = nowMillis;
-
-        return res;
-    }
-
-    private onCellDoubleClicked(mouseEvent: MouseEvent) {
+    public onCellDoubleClicked(mouseEvent: MouseEvent) {
         const { column, beans, cellCtrl } = this;
-        const { eventSvc, frameworkOverrides, gos } = beans;
+        const { eventSvc, frameworkOverrides, gos, editSvc } = beans;
 
         const colDef = column.getColDef();
         // always dispatch event to eventService
@@ -122,7 +105,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         const editOnDoubleClick = !gos.get('singleClickEdit') && !gos.get('suppressClickEdit');
         if (editOnDoubleClick) {
-            cellCtrl.startRowOrCellEdit(null, mouseEvent);
+            editSvc?.startRowOrCellEdit(cellCtrl, null, mouseEvent);
         }
     }
 
@@ -139,7 +122,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         const hasRanges = rangeSvc && !rangeSvc.isEmpty();
         const containsWidget = this.containsWidget(target);
-        const cellPosition = cellCtrl.getCellPosition();
+        const { cellPosition } = cellCtrl;
 
         if (!shiftKey || !hasRanges) {
             const isEnableCellTextSelection = gos.get('enableCellTextSelection');
@@ -152,7 +135,7 @@ export class CellMouseListenerFeature extends BeanStub {
             // an editor would be blocked.
             const forceBrowserFocus =
                 (_isBrowserSafari() || shouldFocus) &&
-                !cellCtrl.isEditing() &&
+                !cellCtrl.editing &&
                 !_isFocusableFormField(target) &&
                 !containsWidget;
 
@@ -172,7 +155,7 @@ export class CellMouseListenerFeature extends BeanStub {
                 const focusedCellCtrl = focusedRowCtrl?.getCellCtrl(column as AgColumn);
 
                 // if the focused cell is editing, need to stop editing first
-                if (focusedCellCtrl?.isEditing()) {
+                if (focusedCellCtrl?.editing) {
                     focusedCellCtrl.stopEditing();
                 }
 
@@ -209,7 +192,7 @@ export class CellMouseListenerFeature extends BeanStub {
         const { rangeSvc } = this.beans;
 
         if (rangeSvc) {
-            const cellInRange = rangeSvc.isCellInAnyRange(this.cellCtrl.getCellPosition());
+            const cellInRange = rangeSvc.isCellInAnyRange(this.cellCtrl.cellPosition);
             const isRightClick =
                 mouseEvent.button === 2 || (mouseEvent.ctrlKey && this.beans.gos.get('allowContextMenuWithControlKey'));
 
@@ -232,23 +215,25 @@ export class CellMouseListenerFeature extends BeanStub {
         if (this.mouseStayingInsideCell(mouseEvent)) {
             return;
         }
-        this.beans.eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOut'));
-        this.beans.colHover?.clearMouseOver();
+        const { eventSvc, colHover } = this.beans;
+        eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOut'));
+        colHover?.clearMouseOver();
     }
 
     private onMouseOver(mouseEvent: MouseEvent): void {
         if (this.mouseStayingInsideCell(mouseEvent)) {
             return;
         }
-        this.beans.eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOver'));
-        this.beans.colHover?.setMouseOver([this.column]);
+        const { eventSvc, colHover } = this.beans;
+        eventSvc.dispatchEvent(this.cellCtrl.createEvent(mouseEvent, 'cellMouseOver'));
+        colHover?.setMouseOver([this.column]);
     }
 
     private mouseStayingInsideCell(e: MouseEvent): boolean {
         if (!e.target || !e.relatedTarget) {
             return false;
         }
-        const eGui = this.cellCtrl.getGui();
+        const { eGui } = this.cellCtrl;
         const cellContainsTarget = eGui.contains(e.target as Node);
         const cellContainsRelatedTarget = eGui.contains(e.relatedTarget as Node);
         return cellContainsTarget && cellContainsRelatedTarget;

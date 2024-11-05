@@ -1,26 +1,12 @@
-import type { ColumnModel } from './columns/columnModel';
 import { _convertColumnEventSourceType } from './columns/columnUtils';
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
-import type { BeanCollection } from './context/context';
-import type { CtrlsService } from './ctrlsService';
 import type { ColDef, ColGroupDef } from './entities/colDef';
 import type { PropertyValueChangedEvent } from './gridOptionsService';
-import type { IRowModel } from './interfaces/iRowModel';
 import { _logIfDebug } from './utils/function';
 
 export class SyncService extends BeanStub implements NamedBean {
     beanName = 'syncSvc' as const;
-
-    private ctrlsSvc: CtrlsService;
-    private colModel: ColumnModel;
-    private rowModel: IRowModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.colModel = beans.colModel;
-        this.rowModel = beans.rowModel;
-    }
 
     private waitingForColumns: boolean = false;
 
@@ -30,7 +16,7 @@ export class SyncService extends BeanStub implements NamedBean {
 
     public start(): void {
         // we wait until the UI has finished initialising before setting in columns and rows
-        this.ctrlsSvc.whenReady(this, () => {
+        this.beans.ctrlsSvc.whenReady(this, () => {
             const columnDefs = this.gos.get('columnDefs');
             if (columnDefs) {
                 this.setColumnsAndData(columnDefs);
@@ -42,18 +28,17 @@ export class SyncService extends BeanStub implements NamedBean {
     }
 
     private setColumnsAndData(columnDefs: (ColDef | ColGroupDef)[]): void {
-        this.colModel.setColumnDefs(columnDefs ?? [], 'gridInitializing');
-        this.rowModel.start();
+        const { colModel, rowModel } = this.beans;
+        colModel.setColumnDefs(columnDefs ?? [], 'gridInitializing');
+        rowModel.start();
     }
 
     private gridReady(): void {
-        this.eventSvc.dispatchEvent({
+        const { eventSvc, gos } = this;
+        eventSvc.dispatchEvent({
             type: 'gridReady',
         });
-        _logIfDebug(
-            this.gos,
-            `initialised successfully, enterprise = ${this.gos.isModuleRegistered('EnterpriseCoreModule')}`
-        );
+        _logIfDebug(gos, `initialised successfully, enterprise = ${gos.isModuleRegistered('EnterpriseCoreModule')}`);
     }
 
     private setColumnDefs(event: PropertyValueChangedEvent<'columnDefs'>): void {
@@ -68,6 +53,6 @@ export class SyncService extends BeanStub implements NamedBean {
             return;
         }
 
-        this.colModel.setColumnDefs(columnDefs, _convertColumnEventSourceType(event.source));
+        this.beans.colModel.setColumnDefs(columnDefs, _convertColumnEventSourceType(event.source));
     }
 }

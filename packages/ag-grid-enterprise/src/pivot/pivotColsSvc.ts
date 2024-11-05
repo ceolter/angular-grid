@@ -5,9 +5,12 @@ export class PivotColsSvc extends BaseColsService implements NamedBean, IColsSer
     beanName = 'pivotColsSvc' as const;
     eventName = 'columnPivotChanged' as const;
     override columnProcessors = {
-        set: (column: AgColumn, added: boolean, source: ColumnEventType) => column.setPivotActive(true, source),
-        add: (column: AgColumn, added: boolean, source: ColumnEventType) => column.setPivotActive(true, source),
-        remove: (column: AgColumn, added: boolean, source: ColumnEventType) => column.setPivotActive(false, source),
+        set: (column: AgColumn, added: boolean, source: ColumnEventType) =>
+            this.setColPivotActive(column, true, source),
+        add: (column: AgColumn, added: boolean, source: ColumnEventType) =>
+            this.setColPivotActive(column, true, source),
+        remove: (column: AgColumn, added: boolean, source: ColumnEventType) =>
+            this.setColPivotActive(column, false, source),
     } as const;
 
     override columnOrdering = {
@@ -18,7 +21,8 @@ export class PivotColsSvc extends BaseColsService implements NamedBean, IColsSer
     } as const;
 
     override columnExtractors = {
-        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) => col.setPivotActive(flag, source),
+        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) =>
+            this.setColPivotActive(col, flag, source),
         getIndexFunc: (colDef: ColDef) => colDef.pivotIndex,
         getInitialIndexFunc: (colDef: ColDef) => colDef.initialPivotIndex,
         getValueFunc: (colDef: ColDef) => colDef.pivot,
@@ -43,7 +47,7 @@ export class PivotColsSvc extends BaseColsService implements NamedBean, IColsSer
         if (pivot !== undefined || pivotIndex !== undefined) {
             if (typeof pivotIndex === 'number' || pivot) {
                 if (!column.isPivotActive()) {
-                    column.setPivotActive(true, source);
+                    this.setColPivotActive(column, true, source);
                     this.modifyColumnsNoEventsCallbacks.addCol(column);
                 }
                 if (rowIndex && typeof pivotIndex === 'number') {
@@ -51,10 +55,18 @@ export class PivotColsSvc extends BaseColsService implements NamedBean, IColsSer
                 }
             } else {
                 if (column.isPivotActive()) {
-                    column.setPivotActive(false, source);
+                    this.setColPivotActive(column, false, source);
                     this.modifyColumnsNoEventsCallbacks.removeCol(column);
                 }
             }
         }
+    }
+
+    private setColPivotActive(column: AgColumn, pivot: boolean, source: ColumnEventType): void {
+        if (column.pivotActive !== pivot) {
+            column.pivotActive = pivot;
+            column.dispatchColEvent('columnPivotChanged', source);
+        }
+        column.dispatchStateUpdatedEvent('pivot');
     }
 }

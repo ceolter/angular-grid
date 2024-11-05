@@ -1,8 +1,7 @@
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
+import { _isEventFromThisGrid } from '../gridBodyComp/mouseEventUtils';
 import { _getDocument, _getRootNode } from '../gridOptionsUtils';
 import { _removeFromArray } from '../utils/array';
 import { _isBrowserSafari } from '../utils/browser';
@@ -14,12 +13,6 @@ import { _areEventsNear } from '../utils/mouse';
  * second is moving the columns and column groups around (ie the 'drag' part of Drag and Drop. */
 export class DragService extends BeanStub implements NamedBean {
     beanName = 'dragSvc' as const;
-
-    private mouseEventSvc: MouseEventService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.mouseEventSvc = beans.mouseEventSvc;
-    }
 
     private currentDragParams: DragListenerParams | null;
     private dragging: boolean;
@@ -125,7 +118,7 @@ export class DragService extends BeanStub implements NamedBean {
             // preventDefault needs to be called in the touchmove listener and never inside the
             // touchstart, because using touchstart causes the click event to be cancelled on touch devices.
             {
-                target: _getRootNode(this.gos),
+                target: _getRootNode(this.beans),
                 type: 'touchmove',
                 listener: documentTouchMove,
                 options: { passive: false },
@@ -184,7 +177,7 @@ export class DragService extends BeanStub implements NamedBean {
             }
         };
 
-        const target = _getRootNode(this.gos);
+        const target = _getRootNode(this.beans);
         const events = [
             { target, type: 'mousemove', listener: mouseMoveEvent },
             { target, type: 'mouseup', listener: mouseUpEvent },
@@ -287,7 +280,7 @@ export class DragService extends BeanStub implements NamedBean {
     // and is removed when mouseUp happens
     private onMouseMove(mouseEvent: MouseEvent, el: Element): void {
         if (_isBrowserSafari()) {
-            const eDocument = _getDocument(this.gos);
+            const eDocument = _getDocument(this.beans);
             eDocument.getSelection()?.removeAllRanges();
         }
 
@@ -308,7 +301,7 @@ export class DragService extends BeanStub implements NamedBean {
             isEnableCellTextSelect &&
             isMouseMove &&
             mouseEvent.cancelable &&
-            this.mouseEventSvc.isEventFromThisGrid(mouseEvent) &&
+            _isEventFromThisGrid(this.gos, mouseEvent) &&
             !this.isOverFormFieldElement(mouseEvent)
         );
     }

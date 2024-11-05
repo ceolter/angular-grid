@@ -213,12 +213,3 @@
     padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);
     gap: var(--ag-widget-vertical-spacing);
 }
-
-.ag-menu-option {
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.ag-menu-option-popup-pointer .ag-icon {
-    text-align: right;
-}

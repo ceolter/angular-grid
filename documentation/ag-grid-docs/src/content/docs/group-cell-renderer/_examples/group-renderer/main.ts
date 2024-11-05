@@ -46,7 +46,6 @@ const columnDefs: ColDef[] = [
         cellRenderer: 'agGroupCellRenderer',
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
             innerRenderer: SimpleCellRenderer,
             suppressDoubleClickExpand: true,
             suppressEnterExpand: true,
@@ -74,7 +73,7 @@ const gridOptions: GridOptions = {
         mode: 'multiRow',
         groupSelects: 'descendants',
         headerCheckbox: false,
-        checkboxes: false,
+        checkboxLocation: 'autoGroupColumn',
     },
 };
 

@@ -1,10 +1,15 @@
 import type { BeanCollection, IChartService } from 'ag-grid-community';
-import { AgSelect, ChartMappings, Component, RefPlaceholder } from 'ag-grid-community';
+import { AgSelect, Component, RefPlaceholder } from 'ag-grid-community';
 
 import type { AgGroupComponent, AgGroupComponentParams } from '../../../../widgets/agGroupComponent';
 import { AgGroupComponentSelector } from '../../../../widgets/agGroupComponent';
 import type { ChartTranslationService } from '../../services/chartTranslationService';
-import { canSwitchDirection, getFullChartNameTranslationKey, getSeriesType } from '../../utils/seriesTypeMapper';
+import {
+    SERIES_GROUP_TYPES,
+    canSwitchDirection,
+    getFullChartNameTranslationKey,
+    getSeriesType,
+} from '../../utils/seriesTypeMapper';
 import type { ChartMenuContext } from '../chartMenuContext';
 import { ChartMenuParamsFactory } from '../chartMenuParamsFactory';
 
@@ -105,7 +110,7 @@ export class ChartSpecificDataPanel extends Component {
             new AgSelect(
                 chartMenuParamsFactory.getDefaultSelectParamsWithoutValueParams(
                     'seriesGroupType',
-                    ChartMappings.SERIES_GROUP_TYPES.map((value) => ({
+                    SERIES_GROUP_TYPES.map((value) => ({
                         value,
                         text: this.chartTranslation.translate(`${value}SeriesGroupType`),
                     })),

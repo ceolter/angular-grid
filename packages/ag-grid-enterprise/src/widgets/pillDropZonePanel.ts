@@ -6,7 +6,6 @@ import type {
     DragSourceType,
     DraggingEvent,
     DropTarget,
-    FocusService,
 } from 'ag-grid-community';
 import {
     Component,
@@ -16,7 +15,10 @@ import {
     _areEqual,
     _clearElement,
     _createIconNoSpan,
+    _findFocusableElements,
+    _findNextFocusableElement,
     _getActiveDomElement,
+    _isKeyboardMode,
     _last,
     _setAriaHidden,
     _setAriaLabel,
@@ -45,11 +47,9 @@ function _insertArrayIntoArray<T>(dest: T[], src: T[], toIndex: number) {
 }
 
 export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem> extends Component {
-    private focusSvc: FocusService;
     private dragAndDrop?: DragAndDropService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
         this.dragAndDrop = beans.dragAndDrop;
     }
 
@@ -147,7 +147,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
     }
 
     private onTabKeyDown(e: KeyboardEvent): void {
-        const focusableElements = this.focusSvc.findFocusableElements(this.getFocusableElement(), null, true);
+        const focusableElements = _findFocusableElements(this.getFocusableElement(), null, true);
         const len = focusableElements.length;
 
         if (len === 0) {
@@ -155,7 +155,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         }
 
         const { shiftKey } = e;
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
 
         const isFirstFocused = activeEl === focusableElements[0];
         const isLastFocused = activeEl === _last(focusableElements);
@@ -183,7 +183,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
             return;
         }
 
-        const el = this.focusSvc.findNextFocusableElement(this.getFocusableElement(), false, isPrevious);
+        const el = _findNextFocusableElement(this.beans, this.getFocusableElement(), false, isPrevious);
 
         if (el) {
             e.preventDefault();
@@ -300,6 +300,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected handleDragEnterEnd(_: DraggingEvent): void {}
 
     private onDragEnter(draggingEvent: DraggingEvent): void {
@@ -333,6 +334,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         return !!this.potentialDndItems?.length;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected handleDragLeaveEnd(_: DraggingEvent): void {}
 
     private onDragLeave(draggingEvent: DraggingEvent): void {
@@ -426,10 +428,11 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         const resizeEnabled = this.resizeEnabled;
         const focusedIndex = this.getFocusedItem();
 
-        let alternateElement = this.focusSvc.findNextFocusableElement();
+        const { eGridDiv } = this.beans;
+        let alternateElement = _findNextFocusableElement(this.beans, eGridDiv);
 
         if (!alternateElement) {
-            alternateElement = this.focusSvc.findNextFocusableElement(undefined, false, true);
+            alternateElement = _findNextFocusableElement(this.beans, eGridDiv, false, true);
         }
 
         this.toggleResizable(false);
@@ -450,14 +453,14 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         // focus should only be restored when keyboard mode
         // otherwise mouse clicks will cause containers to scroll
         // without no apparent reason.
-        if (this.focusSvc.isKeyboardMode()) {
+        if (_isKeyboardMode()) {
             this.restoreFocus(focusedIndex, alternateElement!);
         }
     }
 
     private getFocusedItem(): number {
         const eGui = this.getGui();
-        const activeElement = _getActiveDomElement(this.gos);
+        const activeElement = _getActiveDomElement(this.beans);
 
         if (!eGui.contains(activeElement)) {
             return -1;

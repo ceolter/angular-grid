@@ -148,7 +148,7 @@ describe('ag-grid tree transactions', () => {
             autoGroupColumnDef: {
                 headerName: 'Files',
                 minWidth: 330,
-                cellRendererParams: { checkbox: true, suppressCount: true },
+                cellRendererParams: { suppressCount: true },
             },
             rowData,
             treeData: true,
@@ -156,7 +156,7 @@ describe('ag-grid tree transactions', () => {
             getDataPath: (data) => data.filePath,
             getRowId: (params) => '' + params.data.id,
             animateRows: false,
-            rowSelection: { mode: 'singleRow' },
+            rowSelection: { mode: 'singleRow', checkboxLocation: 'autoGroupColumn' },
         };
     }
 });

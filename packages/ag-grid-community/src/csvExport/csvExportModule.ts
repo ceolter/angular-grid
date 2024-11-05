@@ -1,16 +1,17 @@
 import type { _CsvExportGridApi } from '../api/gridApi';
+import { SharedExportModule } from '../export/exportModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { CsvCreator } from './csvCreator';
 import { exportDataAsCsv, getDataAsCsv } from './csvExportApi';
-import { GridSerializer } from './gridSerializer';
 
 /**
  * @feature Import & Export -> CSV Export
  */
 export const CsvExportCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CsvExportCoreModule'),
-    beans: [CsvCreator, GridSerializer],
+    beans: [CsvCreator],
+    dependsOn: [SharedExportModule],
 };
 
 /**

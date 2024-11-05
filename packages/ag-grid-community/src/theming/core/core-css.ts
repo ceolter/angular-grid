@@ -143,6 +143,16 @@ export type CoreParams = {
     dialogShadow: ShadowValue;
 
     /**
+     * Border around cells being edited
+     */
+    cellEditingBorder: BorderValue;
+
+    /**
+     * Shadow for cells being edited
+     */
+    cellEditingShadow: ShadowValue;
+
+    /**
      * Background color of the drag and drop image component element when dragging columns
      */
     dragAndDropImageBackgroundColor: ColorValue;
@@ -843,6 +853,16 @@ export const coreDefaults = (): CoreParams => ({
     },
     dialogShadow: {
         ref: 'popupShadow',
+    },
+    cellEditingBorder: {
+        color: { ref: 'accentColor' },
+        width: 2,
+    },
+    cellEditingShadow: {
+        radius: 4,
+        spread: 1,
+        offsetY: 1,
+        color: '#babfc766',
     },
     dialogBorder: {
         color: {

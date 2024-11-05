@@ -22,7 +22,7 @@ export class HeaderRowComp extends Component {
         super();
 
         this.ctrl = ctrl;
-        this.setTemplate(/* html */ `<div class="${this.ctrl.getHeaderRowClass()}" role="row"></div>`);
+        this.setTemplate(/* html */ `<div class="${this.ctrl.headerRowClass}" role="row"></div>`);
     }
 
     public postConstruct(): void {
@@ -77,8 +77,8 @@ export class HeaderRowComp extends Component {
                     a: AbstractHeaderCellComp<AbstractHeaderCellCtrl>,
                     b: AbstractHeaderCellComp<AbstractHeaderCellCtrl>
                 ) => {
-                    const leftA = a.getCtrl().getColumnGroupChild().getLeft()!;
-                    const leftB = b.getCtrl().getColumnGroupChild().getLeft()!;
+                    const leftA = a.getCtrl().column.getLeft()!;
+                    const leftB = b.getCtrl().column.getLeft()!;
                     return leftA - leftB;
                 }
             );
@@ -90,7 +90,7 @@ export class HeaderRowComp extends Component {
     private createHeaderComp(headerCtrl: AbstractHeaderCellCtrl): AbstractHeaderCellComp<AbstractHeaderCellCtrl> {
         let result: AbstractHeaderCellComp<AbstractHeaderCellCtrl>;
 
-        switch (this.ctrl.getType()) {
+        switch (this.ctrl.type) {
             case 'group':
                 result = new HeaderGroupCellComp(headerCtrl as HeaderGroupCellCtrl);
                 break;

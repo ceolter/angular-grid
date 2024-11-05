@@ -1,8 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
 import type { ColDef, GridOptions, GridTheme } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    themeAlpine,
+    themeBalham,
+    themeQuartz,
+} from 'ag-grid-community';
 
 import './style.css';
 
@@ -20,19 +24,17 @@ const rowData: any[] = (() => {
     return rowData;
 })();
 
-const defaultColDef = {
-    editable: true,
-    flex: 1,
-    minWidth: 100,
-    filter: true,
-};
-
 const createThemedGrid = (theme: GridTheme, selector: string) => {
     const gridOptions: GridOptions<IOlympicData> = {
         theme,
         columnDefs,
         rowData,
-        defaultColDef,
+        defaultColDef: {
+            editable: true,
+            flex: 1,
+            minWidth: 100,
+            filter: true,
+        },
     };
     createGrid(document.querySelector<HTMLElement>(selector)!, gridOptions);
 };

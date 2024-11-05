@@ -1,23 +1,19 @@
-import type { ColumnModel } from '../../columns/columnModel';
-import type { ColumnNameService } from '../../columns/columnNameService';
-import type { AgColumn } from '../../entities/agColumn';
-import type { RowNode } from '../../entities/rowNode';
-import type { GridOptionsService } from '../../gridOptionsService';
-import { _isGroupMultiAutoColumn, _isGroupUseEntireRow, _isServerSideRowModel } from '../../gridOptionsUtils';
+import type { ColumnModel } from '../columns/columnModel';
+import type { ColumnNameService } from '../columns/columnNameService';
+import type { AgColumn } from '../entities/agColumn';
+import type { RowNode } from '../entities/rowNode';
+import type { GridOptionsService } from '../gridOptionsService';
+import { _isGroupMultiAutoColumn, _isGroupUseEntireRow, _isServerSideRowModel } from '../gridOptionsUtils';
 import type {
     ProcessCellForExportParams,
     ProcessGroupHeaderForExportParams,
     ProcessHeaderForExportParams,
     ProcessRowGroupForExportParams,
-} from '../../interfaces/exportParams';
-import type { IColsService } from '../../interfaces/iColsService';
-import type { ValueService } from '../../valueService/valueService';
-import type {
-    GridSerializingParams,
-    GridSerializingSession,
-    RowAccumulator,
-    RowSpanningAccumulator,
-} from '../interfaces';
+} from '../interfaces/exportParams';
+import type { IColsService } from '../interfaces/iColsService';
+import type { ValueService } from '../valueService/valueService';
+import type { RowAccumulator, RowSpanningAccumulator } from './iGridSerializer';
+import type { GridSerializingParams, GridSerializingSession } from './iGridSerializer';
 
 export abstract class BaseGridSerializingSession<T> implements GridSerializingSession<T> {
     public colModel: ColumnModel;
