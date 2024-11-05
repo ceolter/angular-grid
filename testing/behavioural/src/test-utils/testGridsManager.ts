@@ -104,14 +104,9 @@ export class TestGridsManager {
             return originalConsoleError.apply(console, args);
         }
 
-        function uniq<T>(xs: T[]): T[] {
-            const set = new Set(xs);
-            return Array.from(set);
-        }
-
         console.error = consoleErrorImpl;
         try {
-            const modules = uniq(this.modulesToRegister ?? []).concat(params?.modules ?? []);
+            const modules = unique(this.modulesToRegister ?? []).concat(params?.modules ?? []);
             api = createGrid(
                 element,
                 { ...TestGridsManager.defaultGridOptions, ...gridOptions },
@@ -154,4 +149,9 @@ export class TestGridsManager {
     public static registerHTMLElement(api: GridApi, element: HTMLElement) {
         gridApiHtmlElementsMap.set(api, element);
     }
+}
+
+function unique<T>(xs: T[]): T[] {
+    const set = new Set(xs);
+    return Array.from(set);
 }
