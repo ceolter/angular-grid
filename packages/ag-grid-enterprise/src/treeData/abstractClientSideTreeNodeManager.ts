@@ -198,7 +198,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             isGroupOpenByDefault: this.gos.getCallback('isGroupOpenByDefault'),
         };
 
-        this.treeCommitChildren(details, treeRoot);
+        this.treeCommitChildren(details, treeRoot, false);
 
         const rootRow = treeRoot.row;
         if (rootRow) {
@@ -229,14 +229,14 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */
-    private treeCommitChildren(details: TreeCommitDetails, parent: TreeNode): void {
+    private treeCommitChildren(details: TreeCommitDetails, parent: TreeNode, collapsed: boolean): void {
         while (true) {
             const child = parent.dequeueInvalidated();
             if (child === null) {
                 break;
             }
             if (child.parent === parent) {
-                this.treeCommitChild(details, parent, child);
+                this.treeCommitChild(details, child, collapsed || !parent.row!.expanded);
             }
         }
 
@@ -245,18 +245,18 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Commit the changes performed to a node and its children */
-    private treeCommitChild(details: TreeCommitDetails, parent: TreeNode, node: TreeNode): void {
+    private treeCommitChild(details: TreeCommitDetails, node: TreeNode, collapsed: boolean): void {
         if (node.isEmptyFillerNode()) {
             this.treeClear(node);
             return; // Removed. No need to process children.
         }
 
-        this.treeCommitPreOrder(details, parent, node);
-        this.treeCommitChildren(details, node);
-        this.treeCommitPostOrder(details, parent, node);
+        this.treeCommitPreOrder(details, node);
+        this.treeCommitChildren(details, node, collapsed);
+        this.treeCommitPostOrder(details, node, collapsed);
     }
 
-    private treeCommitPreOrder(details: TreeCommitDetails, parent: TreeNode, node: TreeNode): void {
+    private treeCommitPreOrder(details: TreeCommitDetails, node: TreeNode): void {
         let row = node.row;
 
         if (row === null) {
@@ -271,7 +271,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         if (details.treeData) {
-            row.parent = parent.row;
+            row.parent = node.parent!.row;
             if (node.oldRow !== row) {
                 // We need to update children rows parents, as the row changed
                 for (const child of node.enumChildren()) {
@@ -296,7 +296,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
-    private treeCommitPostOrder(details: TreeCommitDetails, parent: TreeNode, node: TreeNode): void {
+    private treeCommitPostOrder(details: TreeCommitDetails, node: TreeNode, collapsed: boolean): void {
+        const parent = node.parent!;
         const row = node.row!;
         const oldRow = node.oldRow;
         const treeData = details.treeData;
@@ -381,6 +382,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 rowData: row.data,
                 duplicateRowsData: Array.from(node.duplicateRows).map((r) => r.data),
             });
+        }
+
+        if (collapsed && row.rowIndex !== null) {
+            row.clearRowTopAndRowIndex(); // Hidden.
         }
     }
 
