@@ -459,10 +459,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     public override destroy(): void {
-        if (this.destroyLoadingSpinner) {
-            this.destroyLoadingSpinner();
-        }
-
+        this.destroyLoadingSpinner?.();
         super.destroy();
     }
 }

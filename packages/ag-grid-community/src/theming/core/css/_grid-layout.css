@@ -144,11 +144,6 @@
     }
 }
 
-.ag-context-menu-loading-icon {
-    position: absolute;
-    pointer-events: none;
-}
-
 .ag-row-drag,
 .ag-selection-checkbox,
 .ag-group-expanded,
