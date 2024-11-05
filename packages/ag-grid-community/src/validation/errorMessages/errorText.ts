@@ -2,7 +2,7 @@ import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
 import type { ModuleName } from '../../interfaces/iModule';
-import type { IRowModel } from '../../interfaces/iRowModel';
+import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { getErrorLink } from '../logging';
@@ -245,8 +245,8 @@ export const AG_GRID_ERRORS = {
         'popup cellEditor does not work with fullRowEdit - you cannot use them both - either turn off fullRowEdit, or stop using popup editors.' as const,
     99: () =>
         'Since v32, `api.hideOverlay()` does not hide the loading overlay when `loading=true`. Set `loading=false` instead.' as const,
-    100: ({ rowModel }: { rowModel: IRowModel }) =>
-        `selectAll only available when rowModelType='clientSide', ie not ${rowModel.getType()}` as const,
+    100: ({ rowModelType }: { rowModelType: RowModelType }) =>
+        `selectAll only available when rowModelType='clientSide', ie not ${rowModelType}` as const,
     101: ({
         propertyName,
         componentName,

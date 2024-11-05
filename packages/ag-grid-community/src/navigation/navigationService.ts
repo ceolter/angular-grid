@@ -16,6 +16,7 @@ import type { NavigateToNextCellParams, TabToNextCellParams } from '../interface
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IRowModel } from '../interfaces/iRowModel';
+import type { VerticalScrollPosition } from '../interfaces/iRowNode';
 import type { RowPosition } from '../interfaces/iRowPosition';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
 import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
@@ -182,7 +183,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     // this method is throttled, see the `constructor`
     private onPageDown(gridCell: CellPosition): void {
-        const scrollPosition = this.ctrlsSvc.getScrollFeature().getVScrollPosition();
+        const scrollPosition = this.getVScroll();
         const pixelsInOnePage = this.getViewportHeight();
 
         const pagingPixelOffset = this.pageBounds.getPixelOffset();
@@ -199,7 +200,7 @@ export class NavigationService extends BeanStub implements NamedBean {
 
     // this method is throttled, see the `constructor`
     private onPageUp(gridCell: CellPosition): void {
-        const scrollPosition = this.ctrlsSvc.getScrollFeature().getVScrollPosition();
+        const scrollPosition = this.getVScroll();
 
         const pagingPixelOffset = this.pageBounds.getPixelOffset();
 
@@ -325,7 +326,7 @@ export class NavigationService extends BeanStub implements NamedBean {
     }
 
     private getViewportHeight(): number {
-        const scrollPosition = this.ctrlsSvc.getScrollFeature().getVScrollPosition();
+        const scrollPosition = this.getVScroll();
         const scrollbarWidth = this.beans.scrollVisibleSvc.getScrollbarWidth();
         let pixelsInOnePage = scrollPosition.bottom - scrollPosition.top;
 
@@ -929,5 +930,9 @@ export class NavigationService extends BeanStub implements NamedBean {
         if (!gridCell.column.isPinned()) {
             scrollFeature.ensureColumnVisible(gridCell.column);
         }
+    }
+
+    private getVScroll(): VerticalScrollPosition {
+        return this.ctrlsSvc.getScrollFeature().getVScrollPosition();
     }
 }

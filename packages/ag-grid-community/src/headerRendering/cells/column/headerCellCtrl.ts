@@ -630,6 +630,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 }
 
 function isHeaderComp(headerComp: IHeader | undefined): headerComp is HeaderComp {
+    // can't use `instanceof` here as it prevents tree shaking of `HeaderComp`
     return (
         typeof (headerComp as HeaderComp).getAnchorElementForMenu === 'function' &&
         typeof (headerComp as HeaderComp).onMenuKeyboardShortcut === 'function'

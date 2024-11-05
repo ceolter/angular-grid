@@ -669,10 +669,9 @@ export class LazyCache extends BeanStub {
      * Deletes any stub nodes not within the given range
      */
     public purgeStubsOutsideOfViewport() {
-        const firstRow = this.rowRenderer.firstRenderedRow;
-        const lastRow = this.rowRenderer.lastRenderedRow;
-        const firstRowBlockStart = this.getBlockStartIndex(firstRow);
-        const [, lastRowBlockEnd] = this.getBlockBounds(lastRow);
+        const { firstRenderedRow, lastRenderedRow } = this.rowRenderer;
+        const firstRowBlockStart = this.getBlockStartIndex(firstRenderedRow);
+        const [, lastRowBlockEnd] = this.getBlockBounds(lastRenderedRow);
 
         this.nodeMap.forEach((lazyNode) => {
             // failed loads are still useful, so we don't purge them
@@ -713,8 +712,7 @@ export class LazyCache extends BeanStub {
             return;
         }
 
-        const firstRowInViewport = this.rowRenderer.firstRenderedRow;
-        const lastRowInViewport = this.rowRenderer.lastRenderedRow;
+        const { firstRenderedRow, lastRenderedRow } = this.rowRenderer;
 
         // the start storeIndex of every block in this store
         const allLoadedBlocks: Set<number> = new Set();
@@ -724,7 +722,7 @@ export class LazyCache extends BeanStub {
             const blockStart = this.getBlockStartIndex(index);
             allLoadedBlocks.add(blockStart);
 
-            const isInViewport = node.rowIndex! >= firstRowInViewport && node.rowIndex! <= lastRowInViewport;
+            const isInViewport = node.rowIndex! >= firstRenderedRow && node.rowIndex! <= lastRenderedRow;
             if (isInViewport) {
                 blocksInViewport.add(blockStart);
             }
@@ -765,7 +763,7 @@ export class LazyCache extends BeanStub {
             return;
         }
 
-        const midViewportRow = firstRowInViewport + (lastRowInViewport - firstRowInViewport) / 2;
+        const midViewportRow = firstRenderedRow + (lastRenderedRow - firstRenderedRow) / 2;
         const blockDistanceArray = this.getBlocksDistanceFromRow(disposableNodes, midViewportRow);
         const blockSize = this.getBlockSize();
 

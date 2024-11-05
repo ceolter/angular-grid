@@ -1286,10 +1286,10 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
         // ensure sticky rows heights are all updated
         const stickyHeightsChanged = this.stickyRowFeature?.ensureRowHeightsValid();
-        const { pageBounds } = this;
+        const { pageBounds, rowModel } = this;
         // ensureRowHeightsVisible only works with CSRM, as it's the only row model that allows lazy row height calcs.
         // all the other row models just hard code so the method just returns back false
-        const rowModelHeightsChanged = this.rowModel.ensureRowHeightsValid(
+        const rowModelHeightsChanged = rowModel.ensureRowHeightsValid(
             topPixel,
             bottomPixel,
             pageBounds.getFirstRow(),

@@ -680,7 +680,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     private canSelectAll(): boolean {
         if (!_isClientSideRowModel(this.gos)) {
-            _error(100, { rowModel: this.rowModel });
+            _error(100, { rowModelType: this.rowModel.getType() });
             return false;
         }
         return true;

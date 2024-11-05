@@ -150,9 +150,9 @@ export class CellKeyboardListenerFeature extends BeanStub {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private onEscapeKeyDown(event: KeyboardEvent): void {
-        const { cellCtrl } = this;
+        const { cellCtrl, beans } = this;
         if (cellCtrl.editing) {
-            this.beans.editSvc?.stopRowOrCellEdit(cellCtrl, true);
+            beans.editSvc?.stopRowOrCellEdit(cellCtrl, true);
             cellCtrl.focusCell(true);
         }
     }

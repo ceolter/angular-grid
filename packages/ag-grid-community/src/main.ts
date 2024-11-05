@@ -1,9 +1,5 @@
 // columns
-export {
-    _updateColumnState as _updateColumnState,
-    _addColumnDefaultAndTypes,
-    _createColumnTree,
-} from './columns/columnFactoryUtils';
+export { _updateColumnState, _addColumnDefaultAndTypes, _createColumnTree } from './columns/columnFactoryUtils';
 export type { ColumnGroupService } from './columns/columnGroups/columnGroupService';
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';

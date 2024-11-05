@@ -560,8 +560,8 @@ export class CellCtrl extends BeanStub {
     }
 
     private refreshFirstAndLastStyles(): void {
-        const { comp: cellComp, column, beans } = this;
-        refreshFirstAndLastStyles(cellComp, column, beans.visibleCols);
+        const { comp, column, beans } = this;
+        refreshFirstAndLastStyles(comp, column, beans.visibleCols);
     }
 
     private refreshAriaColIndex(): void {
