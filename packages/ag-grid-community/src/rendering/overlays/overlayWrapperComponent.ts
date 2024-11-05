@@ -9,6 +9,7 @@ import { LayoutCssClasses, LayoutFeature } from '../../styling/layoutFeature';
 import { _last } from '../../utils/array';
 import { _clearElement } from '../../utils/dom';
 import { _isStopPropagationForAgGrid } from '../../utils/event';
+import { _findNextFocusableElement, _focusInto, _focusNextGridCoreContainer } from '../../utils/focus';
 import type { AgPromise } from '../../utils/promise';
 import type { ComponentSelector } from '../../widgets/component';
 import { Component, RefPlaceholder } from '../../widgets/component';
@@ -51,7 +52,7 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
             return;
         }
 
-        const nextEl = this.focusSvc.findNextFocusableElement(this.eOverlayWrapper, false, e.shiftKey);
+        const nextEl = _findNextFocusableElement(this.beans, this.eOverlayWrapper, false, e.shiftKey);
         if (nextEl) {
             return;
         }
@@ -60,7 +61,7 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
         if (e.shiftKey) {
             isFocused = this.focusSvc.focusGridView(_last(this.visibleCols.allCols), true, false);
         } else {
-            isFocused = this.focusSvc.focusNextGridCoreContainer(false);
+            isFocused = _focusNextGridCoreContainer(this.beans, false);
         }
 
         if (isFocused) {
@@ -110,9 +111,9 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
 
         this.setDisplayed(true, { skipAriaHidden: true });
 
-        if (exclusive && this.focusSvc.isGridFocused()) {
-            const activeElement = _getActiveDomElement(this.gos);
-            if (activeElement && !_isNothingFocused(this.gos)) {
+        if (exclusive && this.isGridFocused()) {
+            const activeElement = _getActiveDomElement(this.beans);
+            if (activeElement && !_isNothingFocused(this.beans)) {
                 this.elToFocusAfter = activeElement as HTMLElement;
             }
         }
@@ -146,9 +147,8 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
                 }
             }
 
-            const focusSvc = this.focusSvc;
-            if (exclusive && focusSvc.isGridFocused()) {
-                focusSvc.focusInto(this.eOverlayWrapper);
+            if (exclusive && this.isGridFocused()) {
+                _focusInto(this.eOverlayWrapper);
             }
         });
     }
@@ -169,7 +169,7 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
         this.activeOverlay = null;
         this.elToFocusAfter = null;
 
-        if (elementToFocus && !this.focusSvc.isGridFocused()) {
+        if (elementToFocus && !this.isGridFocused()) {
             elementToFocus = null;
         }
 
@@ -190,6 +190,11 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
     public hideOverlay(): void {
         this.destroyActiveOverlay();
         this.setDisplayed(false, { skipAriaHidden: true });
+    }
+
+    private isGridFocused(): boolean {
+        const activeEl = _getActiveDomElement(this.beans);
+        return !!activeEl && this.beans.eGridDiv.contains(activeEl);
     }
 
     public override destroy(): void {

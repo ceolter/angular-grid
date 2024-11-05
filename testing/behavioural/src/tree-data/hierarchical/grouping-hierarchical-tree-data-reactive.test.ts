@@ -18,8 +18,7 @@ describe('ag-grid grouping hierarchical treeData is reactive', () => {
         gridsManager.reset();
     });
 
-    // TODO: tree data with children bug: toggling grouping and tree data does not refresh properly the row grouping columns
-    test.skip('ag-grid grouping treeData is reactive', async () => {
+    test('ag-grid grouping treeData is reactive', async () => {
         const rowData = [
             { id: 'A', g: 0, v: 0, children: [{ id: 'B', g: 1, v: 1, children: [{ id: 'C', g: 1, v: 1 }] }] },
             {

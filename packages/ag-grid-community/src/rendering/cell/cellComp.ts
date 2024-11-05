@@ -17,15 +17,14 @@ import { _warn } from '../../validation/logging';
 import { Component } from '../../widgets/component';
 import type { ICellRendererComp } from './../cellRenderers/iCellRenderer';
 import type { DndSourceComp } from './../dndSourceComp';
-import type { RowCtrl } from './../row/rowCtrl';
 import type { CellCtrl, ICellComp } from './cellCtrl';
 
 export class CellComp extends Component {
     private eCellWrapper: HTMLElement | undefined;
     private eCellValue: HTMLElement | undefined;
 
-    private column: AgColumn;
-    private rowNode: RowNode;
+    private readonly column: AgColumn;
+    private readonly rowNode: RowNode;
     private eRow: HTMLElement;
 
     private includeSelection: boolean;
@@ -47,10 +46,6 @@ export class CellComp extends Component {
     private cellRendererGui: HTMLElement | null;
     private cellRendererClass: any;
 
-    private rowCtrl: RowCtrl | null;
-
-    private cellCtrl: CellCtrl;
-
     private firstRender: boolean;
 
     // every time we go into edit mode, or back again, this gets incremented.
@@ -64,18 +59,16 @@ export class CellComp extends Component {
 
     constructor(
         beans: BeanCollection,
-        cellCtrl: CellCtrl,
+        public readonly cellCtrl: CellCtrl,
         printLayout: boolean,
         eRow: HTMLElement,
         editingRow: boolean
     ) {
         super();
         this.beans = beans;
-        this.column = cellCtrl.getColumn();
-        this.rowNode = cellCtrl.getRowNode();
-        this.rowCtrl = cellCtrl.getRowCtrl();
+        this.column = cellCtrl.column;
+        this.rowNode = cellCtrl.rowNode;
         this.eRow = eRow;
-        this.cellCtrl = cellCtrl;
 
         const cellDiv = document.createElement('div');
         cellDiv.setAttribute('comp-id', `${this.getCompId()}`);
@@ -374,22 +367,6 @@ export class CellComp extends Component {
         }
     }
 
-    public getCtrl(): CellCtrl {
-        return this.cellCtrl;
-    }
-
-    public getRowCtrl(): RowCtrl | null {
-        return this.rowCtrl;
-    }
-
-    public getCellRenderer(): ICellRendererComp | null | undefined {
-        return this.cellRenderer;
-    }
-
-    public getCellEditor(): ICellEditorComp | null | undefined {
-        return this.cellEditor;
-    }
-
     private afterCellRendererCreated(
         cellRendererVersion: number,
         cellRendererClass: any,
@@ -475,7 +452,7 @@ export class CellComp extends Component {
 
         // if focus is inside the cell, we move focus to the cell itself
         // before removing it's contents, otherwise errors could be thrown.
-        if (eGui.contains(_getActiveDomElement(this.beans.gos))) {
+        if (eGui.contains(_getActiveDomElement(this.beans))) {
             eGui.focus();
         }
 
@@ -569,7 +546,7 @@ export class CellComp extends Component {
 
         // if focus is inside the cell, we move focus to the cell itself
         // before removing it's contents, otherwise errors could be thrown.
-        if (eGui.contains(_getActiveDomElement(this.beans.gos))) {
+        if (eGui.contains(_getActiveDomElement(this.beans))) {
             eGui.focus({ preventScroll: true });
         }
 

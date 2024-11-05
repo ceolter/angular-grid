@@ -61,7 +61,7 @@ export class LazyCache extends BeanStub {
     /**
      * A node map indexed by the node's id, index, and node.
      */
-    private nodeMap: MultiIndexMap<LazyStoreNode>;
+    private nodeMap: MultiIndexMap<LazyStoreNode, 'index' | 'id' | 'node'>;
 
     /**
      * A map of nodes indexed by the display index.
@@ -284,7 +284,7 @@ export class LazyCache extends BeanStub {
         if (numberOfRowsToSkip === 0) {
             return;
         }
-        const defaultRowHeight = _getRowHeightAsNumber(this.gos);
+        const defaultRowHeight = _getRowHeightAsNumber(this.beans);
 
         displayIndexSeq.value += numberOfRowsToSkip;
         nextRowTop.value += numberOfRowsToSkip * defaultRowHeight;
@@ -350,10 +350,6 @@ export class LazyCache extends BeanStub {
     }
 
     setRowCount(rowCount: number, isLastRowIndexKnown?: boolean): void {
-        if (rowCount < 0) {
-            throw new Error('AG Grid: setRowCount can only accept a positive row count.');
-        }
-
         this.numberOfRows = rowCount;
 
         if (isLastRowIndexKnown != null) {
@@ -673,10 +669,9 @@ export class LazyCache extends BeanStub {
      * Deletes any stub nodes not within the given range
      */
     public purgeStubsOutsideOfViewport() {
-        const firstRow = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRow = this.rowRenderer.getLastVirtualRenderedRow();
-        const firstRowBlockStart = this.getBlockStartIndex(firstRow);
-        const [, lastRowBlockEnd] = this.getBlockBounds(lastRow);
+        const { firstRenderedRow, lastRenderedRow } = this.rowRenderer;
+        const firstRowBlockStart = this.getBlockStartIndex(firstRenderedRow);
+        const [, lastRowBlockEnd] = this.getBlockBounds(lastRenderedRow);
 
         this.nodeMap.forEach((lazyNode) => {
             // failed loads are still useful, so we don't purge them
@@ -717,8 +712,7 @@ export class LazyCache extends BeanStub {
             return;
         }
 
-        const firstRowInViewport = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRowInViewport = this.rowRenderer.getLastVirtualRenderedRow();
+        const { firstRenderedRow, lastRenderedRow } = this.rowRenderer;
 
         // the start storeIndex of every block in this store
         const allLoadedBlocks: Set<number> = new Set();
@@ -728,7 +722,7 @@ export class LazyCache extends BeanStub {
             const blockStart = this.getBlockStartIndex(index);
             allLoadedBlocks.add(blockStart);
 
-            const isInViewport = node.rowIndex! >= firstRowInViewport && node.rowIndex! <= lastRowInViewport;
+            const isInViewport = node.rowIndex! >= firstRenderedRow && node.rowIndex! <= lastRenderedRow;
             if (isInViewport) {
                 blocksInViewport.add(blockStart);
             }
@@ -769,7 +763,7 @@ export class LazyCache extends BeanStub {
             return;
         }
 
-        const midViewportRow = firstRowInViewport + (lastRowInViewport - firstRowInViewport) / 2;
+        const midViewportRow = firstRenderedRow + (lastRenderedRow - firstRenderedRow) / 2;
         const blockDistanceArray = this.getBlocksDistanceFromRow(disposableNodes, midViewportRow);
         const blockSize = this.getBlockSize();
 
@@ -1068,11 +1062,6 @@ export class LazyCache extends BeanStub {
      * Transaction Support here
      */
     public updateRowNodes(updates: any[]): RowNode[] {
-        if (this.getRowIdFunc == null) {
-            // throw error, as this is type checked in the store. User likely abusing internal apis if here.
-            throw new Error('AG Grid: Transactions can only be applied when row ids are supplied.');
-        }
-
         const updatedNodes: RowNode[] = [];
         updates.forEach((data) => {
             const id = this.getRowId(data);
@@ -1095,11 +1084,6 @@ export class LazyCache extends BeanStub {
         // can't insert nodes past the end of the store
         if (addIndex == null || realRowCount < addIndex) {
             return [];
-        }
-
-        if (this.getRowIdFunc == null) {
-            // throw error, as this is type checked in the store. User likely abusing internal apis if here.
-            throw new Error('AG Grid: Transactions can only be applied when row ids are supplied.');
         }
 
         const uniqueInsertsMap: { [id: string]: any } = {};
@@ -1142,11 +1126,6 @@ export class LazyCache extends BeanStub {
     }
 
     public removeRowNodes(idsToRemove: string[]): RowNode[] {
-        if (this.getRowIdFunc == null) {
-            // throw error, as this is type checked in the store. User likely abusing internal apis if here.
-            throw new Error('AG Grid: Transactions can only be applied when row ids are supplied.');
-        }
-
         const removedNodes: RowNode[] = [];
         const nodesToVerify: RowNode[] = [];
 

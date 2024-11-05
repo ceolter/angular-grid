@@ -1,7 +1,6 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _PivotGridApi } from 'ag-grid-community';
 import { ColumnGroupCoreModule, StickyRowModule } from 'ag-grid-community';
 
-import { ClientSideRowModelExpansionModule } from '../expansion/expansionModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import {
     GroupFilterModule,
@@ -9,6 +8,7 @@ import {
     RowGroupingCoreModule,
     RowGroupingPanelModule,
 } from '../rowGrouping/rowGroupingModule';
+import { ClientSideRowModelHierarchyModule } from '../rowHierarchy/rowHierarchyModule';
 import {
     addPivotColumns,
     addValueColumns,
@@ -61,7 +61,7 @@ export const PivotModule: _ModuleWithoutApi = {
         PivotApiModule,
         StickyRowModule,
         RowGroupingPanelModule,
-        ClientSideRowModelExpansionModule,
+        ClientSideRowModelHierarchyModule,
         GroupFilterModule,
         GroupFloatingFilterModule,
     ],

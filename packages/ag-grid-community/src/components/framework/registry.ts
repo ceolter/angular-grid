@@ -1,15 +1,12 @@
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection, DynamicBeanName, UserComponentName } from '../../context/context';
+import type { DynamicBeanName, UserComponentName } from '../../context/context';
 import type { Module } from '../../interfaces/iModule';
 import type { IconName, IconValue } from '../../utils/icon';
-import type { ValidationService } from '../../validation/validationService';
 import type { AgComponentSelector, ComponentSelector } from '../../widgets/component';
 
 export class Registry extends BeanStub implements NamedBean {
     beanName = 'registry' as const;
-
-    private validation?: ValidationService;
 
     private agGridDefaults: { [key in UserComponentName]?: any } = {};
 
@@ -22,10 +19,6 @@ export class Registry extends BeanStub implements NamedBean {
     private selectors: { [name in AgComponentSelector]?: ComponentSelector } = {};
 
     private icons: { [K in IconName]?: IconValue } = {};
-
-    public wireBeans(beans: BeanCollection): void {
-        this.validation = beans.validation;
-    }
 
     public postConstruct(): void {
         const comps = this.gos.get('components');
@@ -83,20 +76,19 @@ export class Registry extends BeanStub implements NamedBean {
             params,
         });
 
+        const { frameworkOverrides } = this.beans;
+
         // FrameworkOverrides.frameworkComponent() is used in two locations:
         // 1) for Vue, user provided components get registered via a framework specific way.
         // 2) for React, it's how the React UI provides alternative default components (eg GroupCellRenderer and DetailCellRenderer)
-        const registeredViaFrameworkComp = this.beans.frameworkOverrides.frameworkComponent(
-            name,
-            this.gos.get('components')
-        );
+        const registeredViaFrameworkComp = frameworkOverrides.frameworkComponent(name, this.gos.get('components'));
         if (registeredViaFrameworkComp != null) {
             return createResult(registeredViaFrameworkComp, true);
         }
 
         const jsComponent = this.jsComps[name];
         if (jsComponent) {
-            const isFwkComp = this.beans.frameworkOverrides.isFrameworkComponent(jsComponent);
+            const isFwkComp = frameworkOverrides.isFrameworkComponent(jsComponent);
             return createResult(jsComponent, isFwkComp);
         }
 
@@ -105,7 +97,7 @@ export class Registry extends BeanStub implements NamedBean {
             return createResult(defaultComponent, false, this.agGridDefaultParams[name as UserComponentName]);
         }
 
-        this.validation?.missingUserComponent(propertyName, name, this.agGridDefaults, this.jsComps);
+        this.beans.validation?.missingUserComponent(propertyName, name, this.agGridDefaults, this.jsComps);
 
         return null;
     }

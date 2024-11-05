@@ -13,7 +13,6 @@ import type {
     IAfterGuiAttachedParams,
     IMenuFactory,
     MenuItemDef,
-    MenuService,
     NamedBean,
     PopupEventParams,
     PopupService,
@@ -26,8 +25,11 @@ import {
     FilterWrapperComp,
     RefPlaceholder,
     _createIconNoSpan,
+    _error,
+    _focusInto,
     _isColumnMenuAnchoringEnabled,
     _isLegacyMenuEnabled,
+    _setColMenuVisible,
     _warn,
     isColumn,
 } from 'ag-grid-community';
@@ -65,7 +67,6 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
     private visibleCols: VisibleColsService;
     private filterManager?: FilterManager;
     private menuUtils: MenuUtils;
-    private menuSvc: MenuService;
     private colMenuFactory: ColumnMenuFactory;
 
     public wireBeans(beans: BeanCollection) {
@@ -75,7 +76,6 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         this.visibleCols = beans.visibleCols;
         this.filterManager = beans.filterManager;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.menuSvc = beans.menuSvc!;
         this.colMenuFactory = beans.colMenuFactory as ColumnMenuFactory;
     }
 
@@ -203,7 +203,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             const eComp = menu.getGui();
             this.destroyBean(menu);
             if (column) {
-                column.setMenuVisible(false, 'contextMenu');
+                _setColMenuVisible(column, false, 'contextMenu');
                 // if we don't have a column, then the menu wasn't launched via keyboard navigation
                 this.menuUtils.restoreFocusOnClose(restoreFocusParams, eComp, e);
             }
@@ -254,7 +254,9 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             this.dispatchVisibleChangedEvent(true, true, column);
         });
 
-        column?.setMenuVisible(true, 'contextMenu');
+        if (column) {
+            _setColMenuVisible(column, true, 'contextMenu');
+        }
 
         this.activeMenu = menu;
 
@@ -298,7 +300,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             ? {
                   menu,
                   eMenuGui: menu.getGui(),
-                  anchorToElement: eventSource || this.ctrlsSvc.getGridBodyCtrl().getGui(),
+                  anchorToElement: eventSource || this.ctrlsSvc.getGridBodyCtrl().eGridBody,
                   restoreFocusParams,
               }
             : undefined;
@@ -536,12 +538,12 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
         const comp = this.column ? this.createBean(new FilterWrapperComp(this.column, 'COLUMN_MENU')) : null;
         this.filterComp = comp;
         if (!comp?.hasFilter()) {
-            throw new Error('AG Grid - Unable to instantiate filter');
+            _error(119);
         }
 
-        const afterAttachedCallback = (params: IAfterGuiAttachedParams) => comp.afterGuiAttached(params);
+        const afterAttachedCallback = (params: IAfterGuiAttachedParams) => comp?.afterGuiAttached(params);
 
-        const afterDetachedCallback = () => comp.afterGuiDetached();
+        const afterDetachedCallback = () => comp?.afterGuiDetached();
 
         this.tabItemFilter = {
             title: _createIconNoSpan('filterTab', this.beans, this.column)!,
@@ -600,12 +602,10 @@ class TabbedColumnMenu extends BeanStub<TabbedColumnMenuEvent> implements Enterp
 class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
     private colMenuFactory: ColumnMenuFactory;
     private menuUtils: MenuUtils;
-    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.colMenuFactory = beans.colMenuFactory as ColumnMenuFactory;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.focusSvc = beans.focusSvc;
     }
 
     private readonly eColumnMenu: HTMLElement = RefPlaceholder;
@@ -644,6 +644,6 @@ class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusSvc.focusInto(this.mainMenuList.getGui());
+        _focusInto(this.mainMenuList.getGui());
     }
 }

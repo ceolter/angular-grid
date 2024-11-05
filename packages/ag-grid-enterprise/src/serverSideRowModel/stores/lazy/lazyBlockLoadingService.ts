@@ -175,8 +175,8 @@ export class LazyBlockLoadingService extends BeanStub implements NamedBean {
     }
 
     private getBlockToLoad() {
-        const firstRowInViewport = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRowInViewport = this.rowRenderer.getLastVirtualRenderedRow();
+        const firstRowInViewport = this.rowRenderer.firstRenderedRow;
+        const lastRowInViewport = this.rowRenderer.lastRenderedRow;
 
         // quick look-up for priority rows needing loading in viewport.
         for (let i = firstRowInViewport; i <= lastRowInViewport; i++) {

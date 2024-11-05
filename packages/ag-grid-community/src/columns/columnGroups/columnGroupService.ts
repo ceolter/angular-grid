@@ -6,13 +6,13 @@ import { createUniqueColumnGroupId, isColumnGroup } from '../../entities/agColum
 import { AgColumnGroup } from '../../entities/agColumnGroup';
 import { AgProvidedColumnGroup } from '../../entities/agProvidedColumnGroup';
 import { isProvidedColumnGroup } from '../../entities/agProvidedColumnGroup';
-import type { ColDef, ColGroupDef } from '../../entities/colDef';
+import type { ColGroupDef } from '../../entities/colDef';
 import type { ColumnEventType } from '../../events';
 import type { ColumnPinnedType, HeaderColumnId } from '../../interfaces/iColumn';
 import type { ColumnAnimationService } from '../../rendering/columnAnimationService';
 import { _last } from '../../utils/array';
 import { _exists } from '../../utils/generic';
-import { depthFirstOriginalTreeSearch } from '../columnFactory';
+import { _recursivelyCreateColumns, depthFirstOriginalTreeSearch } from '../columnFactoryUtils';
 import type { ColumnKeyCreator } from '../columnKeyCreator';
 import type { ColumnModel } from '../columnModel';
 import type { GroupInstanceIdCreator } from '../groupInstanceIdCreator';
@@ -338,16 +338,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         existingColumns: AgColumn[],
         columnKeyCreator: ColumnKeyCreator,
         existingGroups: AgProvidedColumnGroup[],
-        source: ColumnEventType,
-        recursivelyCreateColumns: (
-            defs: (ColDef | ColGroupDef)[] | null,
-            level: number,
-            primaryColumns: boolean,
-            existingColsCopy: AgColumn[],
-            columnKeyCreator: ColumnKeyCreator,
-            existingGroups: AgProvidedColumnGroup[],
-            source: ColumnEventType
-        ) => (AgColumn | AgProvidedColumnGroup)[]
+        source: ColumnEventType
     ): AgProvidedColumnGroup {
         const colGroupDefMerged = this.createMergedColGroupDef(colGroupDef);
         const groupId = columnKeyCreator.getUniqueKey(colGroupDefMerged.groupId || null, null);
@@ -365,7 +356,8 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
             providedGroup.setExpanded(existingGroup.isExpanded());
         }
 
-        const children = recursivelyCreateColumns(
+        const children = _recursivelyCreateColumns(
+            this.beans,
             colGroupDefMerged.children,
             level + 1,
             primaryColumns,
@@ -568,7 +560,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         parent: AgColumnGroup | null
     ): void {
         columnsOrGroups!.forEach((columnsOrGroup) => {
-            columnsOrGroup.setParent(parent);
+            columnsOrGroup.parent = parent;
             if (isColumnGroup(columnsOrGroup)) {
                 const columnGroup = columnsOrGroup;
                 this.setupParentsIntoCols(columnGroup.getChildren(), columnGroup);

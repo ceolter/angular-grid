@@ -54,7 +54,7 @@ export class DefaultDateComponent extends Component implements IDateComp {
     }
 
     private handleInput(isChange: boolean, e: InputEvent): void {
-        if (e.target !== _getActiveDomElement(this.gos)) {
+        if (e.target !== _getActiveDomElement(this.beans)) {
             return;
         }
         if (this.eDateInput.isDisabled()) {

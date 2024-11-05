@@ -4,12 +4,11 @@ import type {
     ColumnEventType,
     ColumnModel,
     ColumnState,
-    ColumnStateService,
     IAggFunc,
     IAggFuncService,
     NamedBean,
 } from 'ag-grid-community';
-import { BeanStub } from 'ag-grid-community';
+import { BeanStub, _applyColumnState } from 'ag-grid-community';
 
 import type { ColumnModelItem } from './columnModelItem';
 
@@ -18,12 +17,10 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
 
     private aggFuncSvc?: IAggFuncService;
     private colModel: ColumnModel;
-    private colState: ColumnStateService;
 
     public wireBeans(beans: BeanCollection) {
         this.aggFuncSvc = beans.aggFuncSvc;
         this.colModel = beans.colModel;
-        this.colState = beans.colState;
     }
 
     public selectAllChildren(colTree: ColumnModelItem[], selectAllChecked: boolean, eventType: ColumnEventType): void {
@@ -80,7 +77,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         });
 
         if (colStateItems.length > 0) {
-            this.colState.applyColumnState({ state: colStateItems }, eventType);
+            _applyColumnState(this.beans, { state: colStateItems }, eventType);
         }
     }
 
@@ -134,7 +131,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
         columns.forEach(action);
 
         if (colStateItems.length > 0) {
-            this.colState.applyColumnState({ state: colStateItems }, eventType);
+            _applyColumnState(this.beans, { state: colStateItems }, eventType);
         }
     }
 
@@ -168,7 +165,7 @@ export class ModelItemUtils extends BeanStub implements NamedBean {
                 };
             }
         });
-        this.colState.applyColumnState({ state }, eventType);
+        _applyColumnState(this.beans, { state }, eventType);
     }
 
     public createPivotState(column: AgColumn): {

@@ -15,6 +15,8 @@ export interface GetContextMenuItemsParams<TData = any, TContext = any> extends 
     node: IRowNode<TData> | null;
     /** The value, if a cell was clicked, otherwise null.  */
     value: any;
+    /** The ContextMenu event that triggered the creation of the Context Menu */
+    event: MouseEvent | Touch;
 }
 
 export interface GetMainMenuItemsParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {

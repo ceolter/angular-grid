@@ -46,6 +46,7 @@ export type IconName =
     | 'groupLoading'
     | 'menu'
     | 'legacyMenu'
+    | 'loadingMenuItems'
     | 'menuAlt'
     | 'filter'
     | 'filterActive'

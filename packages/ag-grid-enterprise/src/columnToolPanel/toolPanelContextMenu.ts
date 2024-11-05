@@ -4,13 +4,12 @@ import type {
     BeanCollection,
     ColumnModel,
     ColumnNameService,
-    FocusService,
     IColsService,
     IconName,
     MenuItemDef,
     PopupService,
 } from 'ag-grid-community';
-import { Component, _createIconNoSpan, isColumn, isProvidedColumnGroup } from 'ag-grid-community';
+import { Component, _createIconNoSpan, _focusInto, isColumn, isProvidedColumnGroup } from 'ag-grid-community';
 
 import { isRowGroupColLocked } from '../rowGrouping/rowGroupingUtils';
 import { AgMenuList } from '../widgets/agMenuList';
@@ -32,7 +31,6 @@ export class ToolPanelContextMenu extends Component {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
     private popupSvc: PopupService;
-    private focusSvc: FocusService;
     private rowGroupColsSvc?: IColsService;
     private pivotColsSvc?: IColsService;
     private valueColsSvc?: IColsService;
@@ -41,7 +39,6 @@ export class ToolPanelContextMenu extends Component {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
         this.popupSvc = beans.popupSvc!;
-        this.focusSvc = beans.focusSvc;
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.pivotColsSvc = beans.pivotColsSvc;
         this.valueColsSvc = beans.valueColsSvc;
@@ -173,7 +170,7 @@ export class ToolPanelContextMenu extends Component {
             modal: true,
             eChild: eGui,
             closeOnEsc: true,
-            afterGuiAttached: () => this.focusSvc.focusInto(menuList.getGui()),
+            afterGuiAttached: () => _focusInto(menuList.getGui()),
             ariaLabel: localeTextFunc('ariaLabelContextMenu', 'Context Menu'),
             closedCallback: (e: KeyboardEvent) => {
                 if (e instanceof KeyboardEvent) {

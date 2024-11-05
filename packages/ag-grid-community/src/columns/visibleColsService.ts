@@ -1,6 +1,5 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import { isColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
@@ -9,11 +8,9 @@ import type { RowNode } from '../entities/rowNode';
 import type { ColumnEventType } from '../events';
 import type { ColumnPinnedType, HeaderColumnId } from '../interfaces/iColumn';
 import { _last } from '../utils/array';
-import type { ColumnFlexService } from './columnFlexService';
 import type { ColumnGroupService, CreateGroupsParams } from './columnGroups/columnGroupService';
 import type { ColumnModel } from './columnModel';
 import { getWidthOfColsInList } from './columnUtils';
-import type { ColumnViewportService } from './columnViewportService';
 import { GroupInstanceIdCreator } from './groupInstanceIdCreator';
 
 function _removeAllFromUnorderedArray<T>(array: T[], toRemove: T[]) {
@@ -32,18 +29,6 @@ function _removeAllFromUnorderedArray<T>(array: T[], toRemove: T[]) {
 export class VisibleColsService extends BeanStub implements NamedBean {
     beanName = 'visibleCols' as const;
 
-    private colModel: ColumnModel;
-    private colFlex?: ColumnFlexService;
-    private colViewport: ColumnViewportService;
-    private colGroupSvc?: ColumnGroupService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.colFlex = beans.colFlex;
-        this.colViewport = beans.colViewport;
-        this.colGroupSvc = beans.colGroupSvc;
-    }
-
     // tree of columns to be displayed for each section
     public treeLeft: (AgColumn | AgColumnGroup)[];
     public treeRight: (AgColumn | AgColumnGroup)[];
@@ -61,7 +46,11 @@ export class VisibleColsService extends BeanStub implements NamedBean {
 
     public autoHeightCols: AgColumn[];
 
-    private bodyWidth = 0;
+    // used by:
+    // + angularGrid -> for setting body width
+    // + rowController -> setting main row widths (when inserting and resizing)
+    // need to cache this
+    public bodyWidth = 0;
     private leftWidth = 0;
     private rightWidth = 0;
 
@@ -71,25 +60,28 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     private ariaOrderColumns: AgColumn[];
 
     public refresh(source: ColumnEventType, skipTreeBuild = false): void {
+        const { colModel, colGroupSvc, colViewport } = this.beans;
         // when we open/close col group, skipTreeBuild=false, as we know liveCols haven't changed
         if (!skipTreeBuild) {
-            this.buildTrees();
+            this.buildTrees(colModel, colGroupSvc);
         }
 
-        this.colGroupSvc?.updateOpenClosedVisibility();
+        colGroupSvc?.updateOpenClosedVisibility();
 
-        this.leftCols = pickDisplayedCols(this.treeLeft);
+        const leftCols = pickDisplayedCols(this.treeLeft);
+        this.leftCols = leftCols;
         this.centerCols = pickDisplayedCols(this.treeCenter);
-        this.rightCols = pickDisplayedCols(this.treeRight);
+        const rightCols = pickDisplayedCols(this.treeRight);
+        this.rightCols = rightCols;
 
-        this.joinColsAriaOrder();
+        this.joinColsAriaOrder(colModel);
         this.joinCols();
         this.setLeftValues(source);
         this.autoHeightCols = this.allCols.filter((col) => col.isAutoHeight());
-        this.colFlex?.refreshFlexedColumns();
+        this.beans.colFlex?.refreshFlexedColumns();
         this.updateBodyWidths();
-        this.colViewport.checkViewportColumns(false);
-        this.setFirstRightAndLastLeftPinned(source);
+        colViewport.checkViewportColumns(false);
+        this.setFirstRightAndLastLeftPinned(colModel, leftCols, rightCols, source);
 
         this.eventSvc.dispatchEvent({
             type: 'displayedColumnsChanged',
@@ -135,26 +127,31 @@ export class VisibleColsService extends BeanStub implements NamedBean {
         this.setLeftValuesOfGroups();
     }
 
-    private setFirstRightAndLastLeftPinned(source: ColumnEventType): void {
+    private setFirstRightAndLastLeftPinned(
+        colModel: ColumnModel,
+        leftCols: AgColumn[],
+        rightCols: AgColumn[],
+        source: ColumnEventType
+    ): void {
         let lastLeft: AgColumn | null;
         let firstRight: AgColumn | null;
 
         if (this.gos.get('enableRtl')) {
-            lastLeft = this.leftCols ? this.leftCols[0] : null;
-            firstRight = this.rightCols ? _last(this.rightCols) : null;
+            lastLeft = leftCols ? leftCols[0] : null;
+            firstRight = rightCols ? _last(rightCols) : null;
         } else {
-            lastLeft = this.leftCols ? _last(this.leftCols) : null;
-            firstRight = this.rightCols ? this.rightCols[0] : null;
+            lastLeft = leftCols ? _last(leftCols) : null;
+            firstRight = rightCols ? rightCols[0] : null;
         }
 
-        this.colModel.getCols().forEach((col) => {
+        colModel.getCols().forEach((col) => {
             col.setLastLeftPinned(col === lastLeft, source);
             col.setFirstRightPinned(col === firstRight, source);
         });
     }
 
-    private buildTrees() {
-        const cols = this.colModel.getColsToShow();
+    private buildTrees(colModel: ColumnModel, columnGroupSvc: ColumnGroupService | undefined) {
+        const cols = colModel.getColsToShow();
 
         const leftCols = cols.filter((col) => col.getPinned() == 'left');
         const rightCols = cols.filter((col) => col.getPinned() == 'right');
@@ -162,19 +159,22 @@ export class VisibleColsService extends BeanStub implements NamedBean {
 
         const idCreator = new GroupInstanceIdCreator();
 
-        this.treeLeft = this.createGroups({
+        const createGroups = (params: CreateGroupsParams): (AgColumn | AgColumnGroup)[] => {
+            return columnGroupSvc ? columnGroupSvc.createColumnGroups(params) : params.columns;
+        };
+        this.treeLeft = createGroups({
             columns: leftCols,
             idCreator,
             pinned: 'left',
             oldDisplayedGroups: this.treeLeft,
         });
-        this.treeRight = this.createGroups({
+        this.treeRight = createGroups({
             columns: rightCols,
             idCreator,
             pinned: 'right',
             oldDisplayedGroups: this.treeRight,
         });
-        this.treeCenter = this.createGroups({
+        this.treeCenter = createGroups({
             columns: centerCols,
             idCreator,
             pinned: null,
@@ -192,8 +192,8 @@ export class VisibleColsService extends BeanStub implements NamedBean {
         this.ariaOrderColumns = [];
     }
 
-    private joinColsAriaOrder(): void {
-        const allColumns = this.colModel.getCols();
+    private joinColsAriaOrder(colModel: ColumnModel): void {
+        const allColumns = colModel.getCols();
         const pinnedLeft: AgColumn[] = [];
         const center: AgColumn[] = [];
         const pinnedRight: AgColumn[] = [];
@@ -237,13 +237,14 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     }
 
     private setLeftValuesOfCols(source: ColumnEventType): void {
-        const primaryCols = this.colModel.getColDefCols();
+        const { colModel } = this.beans;
+        const primaryCols = colModel.getColDefCols();
         if (!primaryCols) {
             return;
         }
 
         // go through each list of displayed columns
-        const allColumns = this.colModel.getCols().slice(0);
+        const allColumns = colModel.getCols().slice(0);
 
         // let totalColumnWidth = this.getWidthOfColsInList()
         const doingRtl = this.gos.get('enableRtl');
@@ -297,21 +298,29 @@ export class VisibleColsService extends BeanStub implements NamedBean {
     }
 
     public getLeftColsForRow(rowNode: RowNode): AgColumn[] {
-        const colSpanActive = this.colModel.colSpanActive;
+        const {
+            leftCols,
+            beans: { colModel },
+        } = this;
+        const colSpanActive = colModel.colSpanActive;
         if (!colSpanActive) {
-            return this.leftCols;
+            return leftCols;
         }
 
-        return this.getColsForRow(rowNode, this.leftCols);
+        return this.getColsForRow(rowNode, leftCols);
     }
 
     public getRightColsForRow(rowNode: RowNode): AgColumn[] {
-        const colSpanActive = this.colModel.colSpanActive;
+        const {
+            rightCols,
+            beans: { colModel },
+        } = this;
+        const colSpanActive = colModel.colSpanActive;
         if (!colSpanActive) {
-            return this.rightCols;
+            return rightCols;
         }
 
-        return this.getColsForRow(rowNode, this.rightCols);
+        return this.getColsForRow(rowNode, rightCols);
     }
 
     public getColsForRow(
@@ -372,14 +381,6 @@ export class VisibleColsService extends BeanStub implements NamedBean {
         }
 
         return result;
-    }
-
-    // used by:
-    // + angularGrid -> for setting body width
-    // + rowController -> setting main row widths (when inserting and resizing)
-    // need to cache this
-    public getBodyContainerWidth(): number {
-        return this.bodyWidth;
     }
 
     public getContainerWidth(pinned: ColumnPinnedType): number {
@@ -494,10 +495,6 @@ export class VisibleColsService extends BeanStub implements NamedBean {
         }
 
         return (isFirst ? allColumns[0] : _last(allColumns)) === columnToCompare;
-    }
-
-    public createGroups(params: CreateGroupsParams): (AgColumn | AgColumnGroup)[] {
-        return this.colGroupSvc ? this.colGroupSvc.createColumnGroups(params) : params.columns;
     }
 }
 

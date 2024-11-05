@@ -11,7 +11,7 @@ const HeaderCellComp = ({ ctrl }: { ctrl: HeaderCellCtrl }) => {
     const isAlive = ctrl.isAlive();
 
     const { context } = useContext(BeansContext);
-    const colId = isAlive ? ctrl.getColId() : undefined;
+    const colId = isAlive ? ctrl.column.getColId() : undefined;
     const [userCompDetails, setUserCompDetails] = useState<UserCompDetails>();
 
     const compBean = useRef<_EmptyBean>();

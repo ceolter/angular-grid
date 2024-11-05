@@ -70,4 +70,16 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
         const column = this.colModel.getColDefCol(sourceColumnId as string);
         return column ? [column] : null;
     }
+
+    public isRowGroupDisplayed(column: AgColumn, colId: string): boolean {
+        const { colDef } = column;
+        if (colDef?.showRowGroup == null) {
+            return false;
+        }
+
+        const showingAllGroups = colDef.showRowGroup === true;
+        const showingThisGroup = colDef.showRowGroup === colId;
+
+        return showingAllGroups || showingThisGroup;
+    }
 }

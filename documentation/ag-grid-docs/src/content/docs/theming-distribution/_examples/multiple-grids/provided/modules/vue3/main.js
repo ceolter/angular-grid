@@ -1,8 +1,6 @@
-import { createApp, onBeforeMount } from 'vue';
+import { createApp } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';

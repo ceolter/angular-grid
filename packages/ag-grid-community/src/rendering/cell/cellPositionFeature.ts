@@ -14,7 +14,6 @@ import type { CellCtrl } from './cellCtrl';
  *  #) Cell Left (the horizontal positioning of the cell, the vertical positioning is on the row)
  */
 export class CellPositionFeature extends BeanStub {
-    private cellCtrl: CellCtrl;
     private eGui: HTMLElement;
 
     private readonly column: AgColumn;
@@ -23,14 +22,16 @@ export class CellPositionFeature extends BeanStub {
     private colsSpanning: AgColumn[];
     private rowSpan: number;
 
-    constructor(ctrl: CellCtrl, beans: BeanCollection) {
+    constructor(
+        private readonly cellCtrl: CellCtrl,
+        beans: BeanCollection
+    ) {
         super();
 
-        this.cellCtrl = ctrl;
         this.beans = beans;
 
-        this.column = ctrl.getColumn();
-        this.rowNode = ctrl.getRowNode();
+        this.column = cellCtrl.column;
+        this.rowNode = cellCtrl.rowNode;
     }
 
     private setupRowSpan(): void {
@@ -108,15 +109,16 @@ export class CellPositionFeature extends BeanStub {
     }
 
     public getColSpanningList(): AgColumn[] {
-        const colSpan = this.column.getColSpan(this.rowNode);
+        const { column, rowNode } = this;
+        const colSpan = column.getColSpan(rowNode);
         const colsSpanning: AgColumn[] = [];
 
         // if just one col, the col span is just the column we are in
         if (colSpan === 1) {
-            colsSpanning.push(this.column);
+            colsSpanning.push(column);
         } else {
-            let pointer: AgColumn | null = this.column;
-            const pinned = this.column.getPinned();
+            let pointer: AgColumn | null = column;
+            const pinned = column.getPinned();
             for (let i = 0; pointer && i < colSpan; i++) {
                 colsSpanning.push(pointer);
                 pointer = this.beans.visibleCols.getColAfter(pointer);
@@ -154,14 +156,15 @@ export class CellPositionFeature extends BeanStub {
     }
 
     private modifyLeftForPrintLayout(leftPosition: number | null): number | null {
-        if (!this.cellCtrl.isPrintLayout() || this.column.getPinned() === 'left') {
+        if (!this.cellCtrl.printLayout || this.column.getPinned() === 'left') {
             return leftPosition;
         }
 
-        const leftWidth = this.beans.visibleCols.getColsLeftWidth();
+        const { visibleCols } = this.beans;
+        const leftWidth = visibleCols.getColsLeftWidth();
 
         if (this.column.getPinned() === 'right') {
-            const bodyWidth = this.beans.visibleCols.getBodyContainerWidth();
+            const bodyWidth = visibleCols.bodyWidth;
             return leftWidth + bodyWidth + (leftPosition || 0);
         }
 
@@ -174,7 +177,7 @@ export class CellPositionFeature extends BeanStub {
             return;
         }
 
-        const singleRowHeight = _getRowHeightAsNumber(this.beans.gos);
+        const singleRowHeight = _getRowHeightAsNumber(this.beans);
         const totalRowHeight = singleRowHeight * this.rowSpan;
 
         this.eGui.style.height = `${totalRowHeight}px`;

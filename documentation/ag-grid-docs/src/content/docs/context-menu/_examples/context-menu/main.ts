@@ -45,7 +45,9 @@ function createFlagImg(flag: string) {
     return '<img border="0" width="15" height="10" src="https://flags.fmcdn.net/data/flags/mini/' + flag + '.png"/>';
 }
 
-function getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuItemDef)[] {
+function getContextMenuItems(
+    params: GetContextMenuItemsParams
+): (string | MenuItemDef)[] | Promise<(string | MenuItemDef)[]> {
     const result: (string | MenuItemDef)[] = [
         {
             // custom item
@@ -180,6 +182,9 @@ function getContextMenuItems(params: GetContextMenuItemsParams): (string | MenuI
         'chartRange',
     ];
 
+    if (params.column?.getColId() === 'country') {
+        return new Promise((res) => setTimeout(() => res(result), 150));
+    }
     return result;
 }
 

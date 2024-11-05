@@ -1,7 +1,6 @@
 import type {
     AgColumn,
     AgEventType,
-    GetDataPath,
     IClientSideRowModel,
     IColsService,
     RowNode,
@@ -22,7 +21,6 @@ export class ClientSideValuesExtractor<V> {
         private readonly valueSvc: ValueService,
         private readonly treeDataOrGrouping: boolean,
         private readonly treeData: boolean,
-        private readonly getDataPath: GetDataPath | undefined,
         private readonly groupAllowUnbalanced: boolean,
         private readonly addManagedEventListeners: (
             handlers: Partial<Record<AgEventType, (event?: any) => void>>
@@ -55,7 +53,7 @@ export class ClientSideValuesExtractor<V> {
         const values: Map<string | null, V | null> = new Map();
         const existingFormattedKeys = this.extractExistingFormattedKeys(existingValues);
         const formattedKeys: Set<string | null> = new Set();
-        const treeData = this.treeData && !!this.getDataPath;
+        const treeData = this.treeData;
         const groupedCols = this.rowGroupColsSvc?.columns;
 
         const addValue = (unformattedKey: string | null, value: V | null | undefined) => {
@@ -113,7 +111,7 @@ export class ClientSideValuesExtractor<V> {
             if (node.childrenAfterGroup?.length) {
                 return;
             }
-            dataPath = this.getDataPath!(node.data);
+            dataPath = node.getRoute() ?? [node.key ?? node.id!];
         } else {
             dataPath = groupedCols.map((groupCol) => this.valueSvc.getKeyForNode(groupCol, node));
             dataPath.push(this.getValue(node) as any);

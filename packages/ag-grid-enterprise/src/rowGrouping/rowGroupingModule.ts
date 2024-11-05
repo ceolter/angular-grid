@@ -3,9 +3,8 @@ import { ColumnFilterModule, FloatingFilterModule, PopupModule, StickyRowModule 
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { AggregationModule } from '../aggregation/aggregationModule';
-import { ClientSideRowModelExpansionModule } from '../expansion/expansionModule';
-import { GroupColumnModule } from '../groupColumn/groupColumnModule';
 import { baseEnterpriseModule } from '../moduleUtils';
+import { ClientSideRowModelHierarchyModule, GroupColumnModule } from '../rowHierarchy/rowHierarchyModule';
 import { AgGridHeaderDropZonesSelector } from './columnDropZones/agGridHeaderDropZones';
 import { GroupFilter } from './groupFilter/groupFilter';
 import { GroupFloatingFilterComp } from './groupFilter/groupFloatingFilter';
@@ -91,7 +90,7 @@ export const RowGroupingNoPivotModule: _ModuleWithoutApi = {
         RowGroupingApiModule,
         StickyRowModule,
         RowGroupingPanelModule,
-        ClientSideRowModelExpansionModule,
+        ClientSideRowModelHierarchyModule,
         GroupFilterModule,
         GroupFloatingFilterModule,
     ],

@@ -60,7 +60,7 @@ export class ExpandListener extends BeanStub implements NamedBean {
         detailNode.level = masterNode.level + 1;
 
         const defaultDetailRowHeight = 200;
-        const rowHeight = _getRowHeightForNode(this.gos, detailNode).height;
+        const rowHeight = _getRowHeightForNode(this.beans, detailNode).height;
 
         detailNode.rowHeight = rowHeight ? rowHeight : defaultDetailRowHeight;
         masterNode.detailNode = detailNode;

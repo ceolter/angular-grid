@@ -1,5 +1,5 @@
 import type { _MenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { CommunityMenuApiModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import { CommunityMenuApiModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -26,6 +26,8 @@ export const MenuCoreModule: _ModuleWithoutApi = {
         chart: 'chart',
         // columns in menu (column chooser / columns tab)
         columns: 'columns',
+        // loading async menu items
+        loadingMenuItems: 'loading',
         // "Pin column" item in column header menu
         menuPin: 'pin',
         // "Value aggregation" column menu item (shown on numeric columns when grouping is active)"
@@ -90,7 +92,7 @@ export const ColumnChooserModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnChooserModule'),
     beans: [ColumnChooserFactory, ToolPanelColDefService],
     icons: COLUMN_SELECT_ICONS,
-    dependsOn: [MenuCoreModule],
+    dependsOn: [MenuCoreModule, DragAndDropModule],
 };
 
 /**

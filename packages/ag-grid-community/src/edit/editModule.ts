@@ -124,7 +124,7 @@ export const LargeTextEditorModule: _ModuleWithoutApi = {
 /**
  * @feature Editing
  */
-const AllCommunityEditorsModule: _ModuleWithoutApi = {
+export const AllCommunityEditorsModule: _ModuleWithoutApi = {
     ...baseCommunityModule('AllCommunityEditorsModule'),
     dependsOn: [DefaultEditorModule, DataTypeEditorsModule, SelectEditorModule, LargeTextEditorModule],
 };

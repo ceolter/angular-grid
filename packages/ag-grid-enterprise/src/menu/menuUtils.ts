@@ -8,7 +8,14 @@ import type {
     PopupEventParams,
     VisibleColsService,
 } from 'ag-grid-community';
-import { BeanStub, _getActiveDomElement, _isNothingFocused, _isVisible, _last } from 'ag-grid-community';
+import {
+    BeanStub,
+    _findTabbableParent,
+    _getActiveDomElement,
+    _isNothingFocused,
+    _isVisible,
+    _last,
+} from 'ag-grid-community';
 
 import type { CloseMenuEvent } from '../widgets/agMenuItemComponent';
 
@@ -44,12 +51,12 @@ export class MenuUtils extends BeanStub implements NamedBean {
             return;
         }
 
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
         if (
             // focus is outside of comp
             !eComp.contains(activeEl) &&
             // something else has focus
-            !_isNothingFocused(this.gos)
+            !_isNothingFocused(this.beans)
         ) {
             // don't return focus to the header
             return;
@@ -74,7 +81,7 @@ export class MenuUtils extends BeanStub implements NamedBean {
         // in this case we focus the cell that was previously focused, otherwise the header
         const focusedCell = this.focusSvc.getFocusedCell();
 
-        if (_isNothingFocused(this.gos)) {
+        if (_isNothingFocused(this.beans)) {
             if (focusedCell) {
                 const { rowIndex, rowPinned, column } = focusedCell;
                 this.focusSvc.setFocusedCell({
@@ -137,7 +144,7 @@ export class MenuUtils extends BeanStub implements NamedBean {
         }
 
         if (isColumnStillVisible && eventSource && _isVisible(eventSource)) {
-            const focusableEl = this.focusSvc.findTabbableParent(eventSource);
+            const focusableEl = _findTabbableParent(eventSource);
             if (focusableEl) {
                 if (column) {
                     this.headerNavigation?.scrollToColumn(column);

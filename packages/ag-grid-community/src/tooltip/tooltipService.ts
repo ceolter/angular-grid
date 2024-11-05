@@ -2,6 +2,7 @@ import type { Registry } from '../components/framework/registry';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
+import type { AgColumn } from '../entities/agColumn';
 import type { HeaderCellCtrl } from '../headerRendering/cells/column/headerCellCtrl';
 import type { HeaderGroupCellCtrl } from '../headerRendering/cells/columnGroup/headerGroupCellCtrl';
 import type { CellCtrl } from '../rendering/cell/cellCtrl';
@@ -31,8 +32,7 @@ export class TooltipService extends BeanStub implements NamedBean {
         }
 
         const isTooltipWhenTruncated = _isShowTooltipWhenTruncated(this.gos);
-        const eGui = ctrl.getGui();
-        const { column } = ctrl;
+        const { column, eGui } = ctrl;
         const colDef = column.getColDef();
 
         if (!shouldDisplayTooltip && isTooltipWhenTruncated && !colDef.headerComponent) {
@@ -76,8 +76,7 @@ export class TooltipService extends BeanStub implements NamedBean {
         }
 
         const isTooltipWhenTruncated = _isShowTooltipWhenTruncated(this.gos);
-        const eGui = ctrl.getGui();
-        const { column } = ctrl;
+        const { column, eGui } = ctrl;
         const colGroupDef = column.getColGroupDef();
 
         if (!shouldDisplayTooltip && isTooltipWhenTruncated && !colGroupDef?.headerGroupComponent) {
@@ -107,8 +106,7 @@ export class TooltipService extends BeanStub implements NamedBean {
         value?: string,
         shouldDisplayTooltip?: () => boolean
     ): TooltipFeature | undefined {
-        const column = ctrl.getColumn();
-        const rowNode = ctrl.getRowNode();
+        const { column, rowNode } = ctrl;
 
         const getTooltipValue = () => {
             const colDef = column.getColDef();
@@ -126,11 +124,11 @@ export class TooltipService extends BeanStub implements NamedBean {
                         location: 'cell',
                         colDef: column.getColDef(),
                         column: column,
-                        rowIndex: ctrl.getCellPosition().rowIndex,
+                        rowIndex: ctrl.cellPosition.rowIndex,
                         node: rowNode,
                         data: rowNode.data,
-                        value: ctrl.getValue(),
-                        valueFormatted: ctrl.getValueFormatted(),
+                        value: ctrl.value,
+                        valueFormatted: ctrl.valueFormatted,
                     })
                 );
             }
@@ -142,7 +140,7 @@ export class TooltipService extends BeanStub implements NamedBean {
 
         if (!shouldDisplayTooltip && isTooltipWhenTruncated && !ctrl.isCellRenderer()) {
             shouldDisplayTooltip = _shouldDisplayTooltip(() => {
-                const eGui = ctrl.getGui();
+                const { eGui } = ctrl;
                 return eGui.children.length === 0
                     ? eGui
                     : (eGui.querySelector('.ag-cell-value') as HTMLElement | undefined);
@@ -152,14 +150,14 @@ export class TooltipService extends BeanStub implements NamedBean {
         const tooltipCtrl: ITooltipCtrl = {
             getColumn: () => column,
             getColDef: () => column.getColDef(),
-            getRowIndex: () => ctrl.getCellPosition().rowIndex,
+            getRowIndex: () => ctrl.cellPosition.rowIndex,
             getRowNode: () => rowNode,
-            getGui: () => ctrl.getGui(),
+            getGui: () => ctrl.eGui,
             getLocation: () => 'cell',
             getTooltipValue: value != null ? () => value : getTooltipValue,
 
             // this makes no sense, why is the cell formatted value passed to the tooltip???
-            getValueFormatted: () => ctrl.getValueFormatted(),
+            getValueFormatted: () => ctrl.valueFormatted,
             shouldDisplayTooltip,
         };
 
@@ -190,5 +188,11 @@ export class TooltipService extends BeanStub implements NamedBean {
         );
 
         return ctrl.createBean(tooltipFeature, this.beans.context);
+    }
+
+    public initCol(column: AgColumn): void {
+        const { colDef } = column;
+        column.tooltipEnabled =
+            _exists(colDef.tooltipField) || _exists(colDef.tooltipValueGetter) || _exists(colDef.tooltipComponent);
     }
 }

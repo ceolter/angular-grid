@@ -1,6 +1,5 @@
 import type { GridApi, GridOptions, Module, Params } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
 
 export interface TestGridManagerOptions {
     /** The modules to register when a grid gets created */
@@ -40,19 +39,6 @@ export class TestGridsManager {
         return this.gridsMap.get(eGridDiv);
     }
 
-    /** Helper function to register modules */
-    public registerModules(modules?: Module[]): this {
-        if (this.modulesToRegister?.length) {
-            ModuleRegistry.registerModules(this.modulesToRegister);
-            this.modulesToRegister = null;
-        }
-        if (modules?.length) {
-            ModuleRegistry.registerModules(modules);
-        }
-
-        return this;
-    }
-
     /** Gets all the grids currently active */
     public getAllGrids(): GridApi[] {
         return Array.from(this.gridsMap.values());
@@ -78,8 +64,6 @@ export class TestGridsManager {
         gridOptions: GridOptions,
         params?: Params
     ): GridApi<TData> {
-        this.registerModules();
-
         let id: string | undefined;
         let elementCreated: HTMLElement | null = null;
         if (typeof eGridDiv === 'string' && eGridDiv !== '') {
@@ -122,7 +106,12 @@ export class TestGridsManager {
 
         console.error = consoleErrorImpl;
         try {
-            api = createGrid(element, { ...TestGridsManager.defaultGridOptions, ...gridOptions }, params);
+            const modules = unique(this.modulesToRegister ?? []).concat(params?.modules ?? []);
+            api = createGrid(
+                element,
+                { ...TestGridsManager.defaultGridOptions, ...gridOptions },
+                { ...params, modules }
+            );
         } finally {
             if (console.error === consoleErrorImpl) {
                 console.error = originalConsoleError;
@@ -160,4 +149,9 @@ export class TestGridsManager {
     public static registerHTMLElement(api: GridApi, element: HTMLElement) {
         gridApiHtmlElementsMap.set(api, element);
     }
+}
+
+function unique<T>(xs: T[]): T[] {
+    const set = new Set(xs);
+    return Array.from(set);
 }

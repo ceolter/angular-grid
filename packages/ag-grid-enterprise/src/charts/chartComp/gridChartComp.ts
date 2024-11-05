@@ -17,6 +17,9 @@ import {
     Component,
     RefPlaceholder,
     _clearElement,
+    _errMsg,
+    _focusGridInnerElement,
+    _focusInto,
     _getAbsoluteHeight,
     _getAbsoluteWidth,
     _mergeDeep,
@@ -260,7 +263,8 @@ export class GridChartComp extends Component {
     }
 
     private createChartProxy(chartProxyParams: ChartProxyParams): ChartProxy {
-        switch (chartProxyParams.chartType) {
+        const { chartType } = chartProxyParams;
+        switch (chartType) {
             case 'column':
             case 'bar':
             case 'groupedColumn':
@@ -292,7 +296,7 @@ export class GridChartComp extends Component {
         }
         const enterpriseChartProxy = this.enterpriseChartProxyFactory?.createChartProxy(chartProxyParams);
         if (!enterpriseChartProxy) {
-            throw `AG Grid: Unable to create chart as an invalid chartType = '${chartProxyParams.chartType}' was supplied.`;
+            throw _errMsg(251, { chartType });
         }
         return enterpriseChartProxy;
     }
@@ -303,7 +307,7 @@ export class GridChartComp extends Component {
         const { width, height } = this.getBestDialogSize();
 
         const afterGuiAttached = this.params.focusDialogOnOpen
-            ? () => setTimeout(() => this.focusSvc.focusInto(this.getGui()))
+            ? () => setTimeout(() => _focusInto(this.getGui()))
             : undefined;
 
         this.chartDialog = new AgDialog({
@@ -334,7 +338,7 @@ export class GridChartComp extends Component {
                     if (lastFocusedCell) {
                         this.focusSvc.setFocusedCell({ ...lastFocusedCell, forceBrowserFocus: true });
                     } else {
-                        this.focusSvc.focusGridInnerElement();
+                        _focusGridInnerElement(this.beans);
                     }
                 }
             });
@@ -540,7 +544,7 @@ export class GridChartComp extends Component {
         const availableChartThemes = this.gos.get('chartThemes') || DEFAULT_THEMES;
 
         if (availableChartThemes.length === 0) {
-            throw new Error('Cannot create chart: no chart themes available.');
+            throw new Error(_errMsg(254));
         }
 
         const { chartThemeName } = this.params;

@@ -1,11 +1,8 @@
-export class MultiIndexMap<K> {
-    private indexes: (keyof K)[];
-    private maps: Map<keyof K, Map<any, K>>;
+export class MultiIndexMap<K, I extends keyof K> {
+    private indexes: I[];
+    private maps: Map<I, Map<any, K>>;
 
-    constructor(...indexes: (keyof K)[]) {
-        if (indexes.length < 1) {
-            throw new Error('AG Grid: At least one index must be provided.');
-        }
+    constructor(...indexes: I[]) {
         this.indexes = indexes;
         this.maps = new Map(this.indexes.map((index) => [index, new Map()]));
     }
@@ -14,30 +11,21 @@ export class MultiIndexMap<K> {
         return this.maps.get(this.indexes[0])!.size;
     }
 
-    public getBy(index: keyof K, key: any): K | undefined {
-        const map = this.maps.get(index);
-        if (!map) {
-            throw new Error(`AG Grid: ${String(index)} not found`);
-        }
+    public getBy(index: I, key: any): K | undefined {
+        const map = this.maps.get(index)!;
         return map.get(key);
     }
 
     public set(item: K) {
         this.indexes.forEach((index) => {
-            const map = this.maps.get(index);
-            if (!map) {
-                throw new Error(`AG Grid: ${String(index)} not found`);
-            }
+            const map = this.maps.get(index)!;
             map.set(item[index], item);
         });
     }
 
     public delete(item: K) {
         this.indexes.forEach((index) => {
-            const map = this.maps.get(index);
-            if (!map) {
-                throw new Error(`AG Grid: ${String(index)} not found`);
-            }
+            const map = this.maps.get(index)!;
             map.delete(item[index]);
         });
     }
@@ -46,11 +34,8 @@ export class MultiIndexMap<K> {
         this.maps.forEach((map) => map.clear());
     }
 
-    private getIterator(index: keyof K) {
-        const map = this.maps.get(index);
-        if (!map) {
-            throw new Error(`AG Grid: ${String(index)} not found`);
-        }
+    private getIterator(index: I) {
+        const map = this.maps.get(index)!;
         return map.values();
     }
 

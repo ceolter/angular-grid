@@ -1,6 +1,5 @@
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
-import type { BeanCollection } from './context/context';
 import type { AgEventType } from './eventTypes';
 import type { AgEventListener, AgGlobalEventListener, AllEventsWithoutGridCommon } from './events';
 import type { IEventEmitter } from './interfaces/iEventEmitter';
@@ -9,23 +8,16 @@ import { LocalEventService } from './localEventService';
 export class EventService extends BeanStub<AgEventType> implements NamedBean, IEventEmitter<AgEventType> {
     beanName = 'eventSvc' as const;
 
-    private globalListener?: AgGlobalEventListener;
-    private globalSyncListener?: AgGlobalEventListener;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.globalListener = beans.globalListener;
-        this.globalSyncListener = beans.globalSyncListener;
-    }
-
     private readonly globalEventService: LocalEventService<AgEventType> = new LocalEventService();
 
     public postConstruct(): void {
-        if (this.globalListener) {
-            this.addGlobalListener(this.globalListener, true);
+        const { globalListener, globalSyncListener } = this.beans;
+        if (globalListener) {
+            this.addGlobalListener(globalListener, true);
         }
 
-        if (this.globalSyncListener) {
-            this.addGlobalListener(this.globalSyncListener, false);
+        if (globalSyncListener) {
+            this.addGlobalListener(globalSyncListener, false);
         }
     }
 

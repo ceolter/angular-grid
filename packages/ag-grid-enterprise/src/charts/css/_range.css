@@ -7,7 +7,7 @@
     }
 }
 
-input[class^='ag-'][type='range'] {
+.ag-range-field-input {
     padding: 0;
     -webkit-appearance: none;
     width: 100%;
@@ -22,7 +22,7 @@ input[class^='ag-'][type='range'] {
 
 /* IMPORTANT this block must contain ONLY -webkit styles, as any browsers that
    don't support the -webkit prefix will ignore the entire block */
-input[class^='ag-'][type='range'] {
+.ag-range-field-input {
     &::-webkit-slider-runnable-track {
         margin: 0;
         padding: 0;
@@ -60,7 +60,7 @@ input[class^='ag-'][type='range'] {
 
 /* IMPORTANT this block must contain ONLY -moz styles, as any browsers that
    don't support the -moz prefix will ignore the entire block */
-input[class^='ag-'][type='range'] {
+.ag-range-field-input {
     &::-moz-range-track {
         margin: 0;
         padding: 0;

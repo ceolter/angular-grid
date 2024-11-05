@@ -1,4 +1,4 @@
-import { depthFirstOriginalTreeSearch } from '../columns/columnFactory';
+import { depthFirstOriginalTreeSearch } from '../columns/columnFactoryUtils';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import { isProvidedColumnGroup } from '../entities/agProvidedColumnGroup';

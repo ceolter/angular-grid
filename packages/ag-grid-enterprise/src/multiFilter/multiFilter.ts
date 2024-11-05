@@ -3,7 +3,6 @@ import type {
     BeanCollection,
     ContainerType,
     FilterManager,
-    FocusService,
     IAfterGuiAttachedParams,
     IDoesFilterPassParams,
     IFilterComp,
@@ -22,6 +21,7 @@ import {
     KeyCode,
     ProvidedFilter,
     TabGuardComp,
+    _focusInto,
     _getActiveDomElement,
     _getFilterDetails,
     _isNothingFocused,
@@ -55,12 +55,10 @@ function _forEachReverse<T>(list: T[] | null | undefined, action: (value: T, ind
 export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilter {
     private filterManager?: FilterManager;
     private userCompFactory: UserComponentFactory;
-    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
         this.userCompFactory = beans.userCompFactory;
-        this.focusSvc = beans.focusSvc;
     }
 
     private params: MultiFilterParams;
@@ -415,7 +413,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                         // focus the first filter container instead (accordion/sub menu)
                         const filterGui = this.filterGuis[index];
                         if (filterGui) {
-                            if (!this.focusSvc.focusInto(filterGui)) {
+                            if (!_focusInto(filterGui)) {
                                 // menu item contains no focusable elements but is focusable itself
                                 filterGui.focus({ preventScroll: true });
                             }
@@ -425,14 +423,14 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                 });
             }
 
-            const activeEl = _getActiveDomElement(this.gos);
+            const activeEl = _getActiveDomElement(this.beans);
 
             // if we haven't focused the first item in the filter, we might run into two scenarios:
             // 1 - we are loading the filter for the first time and the component isn't ready,
             //     which means the document will have focus.
             // 2 - The focus will be somewhere inside the component due to auto focus
             // In both cases we need to force the focus somewhere valid but outside the filter.
-            if (!hasFocused && (_isNothingFocused(this.gos) || this.getGui().contains(activeEl))) {
+            if (!hasFocused && (_isNothingFocused(this.beans) || this.getGui().contains(activeEl))) {
                 // reset focus to the top of the container, and blur
                 this.forceFocusOutOfContainer(true);
             }

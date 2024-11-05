@@ -87,7 +87,7 @@ export class GenericContext<TBeanName extends string, TBeanCollection extends { 
         afterPreCreateCallback?: (bean: GenericBean<TBeanName, TBeanCollection>) => void
     ): T {
         if (!bean) {
-            throw Error(`Can't wire to bean since it is null`);
+            throw Error('null bean');
         }
         this.initBeans([bean], afterPreCreateCallback);
         return bean;

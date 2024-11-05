@@ -48,7 +48,8 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     }
 
     public setScrollPosition(scrollWidth: number, scrollPosition: number, afterScroll: boolean = false): void {
-        const bodyWidthDirty = this.visibleCols.isBodyWidthDirty;
+        const { visibleCols } = this;
+        const bodyWidthDirty = visibleCols.isBodyWidthDirty;
 
         const noChange = scrollWidth === this.scrollWidth && scrollPosition === this.scrollPosition && !bodyWidthDirty;
         if (noChange) {
@@ -60,15 +61,15 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         // we need to call setVirtualViewportLeftAndRight() at least once after the body width changes,
         // as the viewport can stay the same, but in RTL, if body width changes, we need to work out the
         // virtual columns again
-        this.visibleCols.isBodyWidthDirty = true;
+        visibleCols.isBodyWidthDirty = true;
 
         if (this.gos.get('enableRtl')) {
-            const bodyWidth = this.visibleCols.getBodyContainerWidth();
-            this.viewportLeft = bodyWidth - this.scrollPosition - this.scrollWidth;
-            this.viewportRight = bodyWidth - this.scrollPosition;
+            const bodyWidth = visibleCols.bodyWidth;
+            this.viewportLeft = bodyWidth - scrollPosition - scrollWidth;
+            this.viewportRight = bodyWidth - scrollPosition;
         } else {
-            this.viewportLeft = this.scrollPosition;
-            this.viewportRight = this.scrollWidth + this.scrollPosition;
+            this.viewportLeft = scrollPosition;
+            this.viewportRight = scrollWidth + scrollPosition;
         }
 
         if (this.colModel.ready) {
@@ -113,31 +114,22 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         return this.suppressColumnVirtualisation || this.viewportRight === 0;
     }
 
-    public clear(): void {
+    public clear(suppressHashClear?: boolean): void {
         this.rowsOfHeadersToRenderLeft = {};
         this.rowsOfHeadersToRenderRight = {};
         this.rowsOfHeadersToRenderCenter = {};
-        this.colsWithinViewportHash = '';
+        if (!suppressHashClear) {
+            this.colsWithinViewportHash = '';
+        }
     }
 
     private isColumnInHeaderViewport(col: AgColumn): boolean {
         // for headers, we never filter out autoHeaderHeight columns, if calculating
-        if (col.isAutoHeaderHeight() || this.isAnyParentAutoHeaderHeight(col)) {
+        if (col.isAutoHeaderHeight() || isAnyParentAutoHeaderHeight(col)) {
             return true;
         }
 
         return this.isColumnInRowViewport(col);
-    }
-
-    private isAnyParentAutoHeaderHeight(col: AgColumn | AgColumnGroup | null): boolean {
-        while (col) {
-            if (col.isAutoHeaderHeight()) {
-                return true;
-            }
-            col = col.getParent();
-        }
-
-        return false;
     }
 
     private isColumnInRowViewport(col: AgColumn): boolean {
@@ -164,8 +156,7 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
 
     // used by Grid API only
     public getViewportColumns(): AgColumn[] {
-        const leftCols = this.visibleCols.leftCols;
-        const rightCols = this.visibleCols.rightCols;
+        const { leftCols, rightCols } = this.visibleCols;
         const res = this.colsWithinViewport.concat(leftCols).concat(rightCols);
         return res;
     }
@@ -189,14 +180,10 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
         const inViewportCallback = this.isColumnVirtualisationSuppressed()
             ? undefined
             : this.isColumnInRowViewport.bind(this);
-        const displayedColumnsCenter = this.visibleCols.centerCols;
+        const { visibleCols } = this;
+        const displayedColumnsCenter = visibleCols.centerCols;
 
-        return this.visibleCols.getColsForRow(
-            rowNode,
-            displayedColumnsCenter,
-            inViewportCallback,
-            emptySpaceBeforeColumn
-        );
+        return visibleCols.getColsForRow(rowNode, displayedColumnsCenter, inViewportCallback, emptySpaceBeforeColumn);
     }
 
     // checks what columns are currently displayed due to column virtualisation. dispatches an event
@@ -215,16 +202,13 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
     private calculateHeaderRows(): void {
         // go through each group, see if any of it's cols are displayed, and if yes,
         // then this group is included
-        this.rowsOfHeadersToRenderLeft = {};
-        this.rowsOfHeadersToRenderRight = {};
-        this.rowsOfHeadersToRenderCenter = {};
+        this.clear(true);
 
         // for easy lookup when building the groups.
         const renderedColIds: { [key: string]: boolean } = {};
 
-        const renderedColsLeft = this.visibleCols.leftCols;
-        const renderedColsRight = this.visibleCols.rightCols;
-        const allRenderedCols = this.headerColsWithinViewport.concat(renderedColsLeft).concat(renderedColsRight);
+        const { leftCols, rightCols, treeLeft, treeRight, treeCenter } = this.visibleCols;
+        const allRenderedCols = this.headerColsWithinViewport.concat(leftCols).concat(rightCols);
 
         allRenderedCols.forEach((col) => (renderedColIds[col.getId()] = true));
 
@@ -264,9 +248,9 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
             return returnValue;
         };
 
-        testGroup(this.visibleCols.treeLeft, this.rowsOfHeadersToRenderLeft, 0);
-        testGroup(this.visibleCols.treeRight, this.rowsOfHeadersToRenderRight, 0);
-        testGroup(this.visibleCols.treeCenter, this.rowsOfHeadersToRenderCenter, 0);
+        testGroup(treeLeft, this.rowsOfHeadersToRenderLeft, 0);
+        testGroup(treeRight, this.rowsOfHeadersToRenderRight, 0);
+        testGroup(treeCenter, this.rowsOfHeadersToRenderCenter, 0);
     }
 
     private extractViewport(): boolean {
@@ -283,4 +267,15 @@ export class ColumnViewportService extends BeanStub implements NamedBean {
 
         return changed;
     }
+}
+
+function isAnyParentAutoHeaderHeight(col: AgColumn | AgColumnGroup | null): boolean {
+    while (col) {
+        if (col.isAutoHeaderHeight()) {
+            return true;
+        }
+        col = col.getParent();
+    }
+
+    return false;
 }

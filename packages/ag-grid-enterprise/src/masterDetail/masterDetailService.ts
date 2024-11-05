@@ -153,7 +153,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     }
 
     public setupDetailRowAutoHeight(rowCtrl: RowCtrl, eDetailGui: HTMLElement): void {
-        const { gos } = this;
+        const { gos, beans } = this;
         if (!gos.get('detailRowAutoHeight')) {
             return;
         }
@@ -170,7 +170,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                 // doing another update
                 const updateRowHeightFunc = () => {
                     const { rowModel } = this;
-                    const rowNode = rowCtrl.getRowNode();
+                    const { rowNode } = rowCtrl;
                     rowNode.setRowHeight(clientHeight);
                     if (_isClientSideRowModel(gos, rowModel) || _isServerSideRowModel(gos, rowModel)) {
                         rowModel.onRowHeightChanged();
@@ -180,7 +180,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         };
 
-        const resizeObserverDestroyFunc = _observeResize(gos, eDetailGui, checkRowSizeFunc);
+        const resizeObserverDestroyFunc = _observeResize(beans, eDetailGui, checkRowSizeFunc);
 
         rowCtrl.addDestroyFunc(resizeObserverDestroyFunc);
 

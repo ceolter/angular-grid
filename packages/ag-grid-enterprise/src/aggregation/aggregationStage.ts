@@ -68,8 +68,7 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
         // case we need to clean up agg data from before.
         const noValueColumns = !this.valueColsSvc?.columns?.length;
         const noUserAgg = !this.gos.getCallback('getGroupRowAgg');
-        const changedPathActive = params.changedPath && params.changedPath.isActive();
-        if (noValueColumns && noUserAgg && changedPathActive) {
+        if (noValueColumns && noUserAgg && params.changedPath?.active) {
             return;
         }
 
@@ -220,15 +219,17 @@ export class AggregationStage extends BeanStub implements NamedBean, IRowNodeSta
     private aggregateRowNodeUsingValuesOnly(rowNode: RowNode, aggDetails: AggregationDetails): any {
         const result: any = {};
 
-        const changedValueColumns = aggDetails.changedPath.isActive()
-            ? aggDetails.changedPath.getValueColumnsForNode(rowNode, aggDetails.valueColumns)
-            : aggDetails.valueColumns;
+        const { changedPath, valueColumns, filteredOnly } = aggDetails;
 
-        const notChangedValueColumns = aggDetails.changedPath.isActive()
-            ? aggDetails.changedPath.getNotValueColumnsForNode(rowNode, aggDetails.valueColumns)
+        const changedValueColumns = changedPath.active
+            ? changedPath.getValueColumnsForNode(rowNode, valueColumns)
+            : valueColumns;
+
+        const notChangedValueColumns = changedPath.active
+            ? changedPath.getNotValueColumnsForNode(rowNode, valueColumns)
             : null;
 
-        const values2d = this.getValuesNormal(rowNode, changedValueColumns, aggDetails.filteredOnly);
+        const values2d = this.getValuesNormal(rowNode, changedValueColumns, filteredOnly);
         const oldValues = rowNode.aggData;
 
         changedValueColumns.forEach((valueColumn, index) => {

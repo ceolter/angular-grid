@@ -2417,19 +2417,23 @@ export interface GridTheme {
     getCssClass(): string;
 }
 
+type MenuCallbackReturn<TData = any, TContext = any> = (string | MenuItemDef<TData, TContext>)[];
+
 export interface GetContextMenuItems<TData = any, TContext = any> {
-    (params: GetContextMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (
+        params: GetContextMenuItemsParams<TData, TContext>
+    ): MenuCallbackReturn<TData, TContext> | Promise<MenuCallbackReturn<TData, TContext>>;
 }
 export interface GetChartToolbarItems {
     (params: GetChartToolbarItemsParams): ChartToolbarMenuItemOptions[];
 }
 
 export interface GetMainMenuItems<TData = any, TContext = any> {
-    (params: GetMainMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (params: GetMainMenuItemsParams<TData, TContext>): MenuCallbackReturn<TData, TContext>;
 }
 
 export interface GetChartMenuItems<TData = any, TContext = any> {
-    (params: GetChartMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (params: GetChartMenuItemsParams<TData, TContext>): MenuCallbackReturn<TData, TContext>;
 }
 
 export interface GetRowNodeIdFunc<TData = any> {

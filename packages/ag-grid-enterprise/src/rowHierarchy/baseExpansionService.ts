@@ -30,7 +30,7 @@ export abstract class BaseExpansionService extends BeanStub {
         expandedChanged: () => void;
         hasChildrenChanged: () => void;
     } {
-        const rowNode = rowCtrl.getRowNode();
+        const { rowNode } = rowCtrl;
         const updateExpandedCss = this.updateExpandedCss.bind(this, rowCtrl, rowNode);
         return {
             expandedChanged: updateExpandedCss,

@@ -21,7 +21,6 @@ import {
     resetRowHeights,
 } from './clientSideRowModelApi';
 import { FilterStage } from './filterStage';
-import { FlattenStage } from './flattenStage';
 import { SortStage } from './sortStage';
 
 /**
@@ -30,7 +29,7 @@ import { SortStage } from './sortStage';
 export const ClientSideRowModelCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ClientSideRowModelCoreModule'),
     rowModels: ['clientSide'],
-    beans: [ClientSideNodeManager, ClientSideRowModel, FlattenStage],
+    beans: [ClientSideNodeManager, ClientSideRowModel],
 };
 
 /**

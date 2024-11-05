@@ -1,12 +1,17 @@
-import type { AgColumn } from '../../entities/agColumn';
-import type { AgColumnGroup } from '../../entities/agColumnGroup';
-import type { RowNode } from '../../entities/rowNode';
-import type { CsvCustomContent } from '../../interfaces/exportParams';
-import { _warn } from '../../validation/logging';
-import type { CsvSerializingParams, RowAccumulator, RowSpanningAccumulator } from '../interfaces';
-import { BaseGridSerializingSession } from './baseGridSerializingSession';
+import type { AgColumn } from '../entities/agColumn';
+import type { AgColumnGroup } from '../entities/agColumnGroup';
+import type { RowNode } from '../entities/rowNode';
+import { BaseGridSerializingSession } from '../export/baseGridSerializingSession';
+import type { GridSerializingParams, RowAccumulator, RowSpanningAccumulator } from '../export/iGridSerializer';
+import type { CsvCustomContent } from '../interfaces/exportParams';
+import { _warn } from '../validation/logging';
 
 const LINE_SEPARATOR = '\r\n';
+
+interface CsvSerializingParams extends GridSerializingParams {
+    suppressQuotes: boolean;
+    columnSeparator: string;
+}
 
 export class CsvSerializingSession extends BaseGridSerializingSession<CsvCustomContent> {
     private isFirstLine = true;

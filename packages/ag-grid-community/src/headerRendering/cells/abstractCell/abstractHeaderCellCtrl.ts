@@ -1,22 +1,16 @@
-import type { UserComponentFactory } from '../../../components/framework/userComponentFactory';
 import type { HorizontalDirection } from '../../../constants/direction';
 import { BeanStub } from '../../../context/beanStub';
-import type { BeanCollection } from '../../../context/context';
-import type { CtrlsService } from '../../../ctrlsService';
-import type { DragAndDropService, DragSource } from '../../../dragAndDrop/dragAndDropService';
+import type { DragSource } from '../../../dragAndDrop/dragAndDropService';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { AgColumnGroup } from '../../../entities/agColumnGroup';
 import type { AgProvidedColumnGroup } from '../../../entities/agProvidedColumnGroup';
 import type { SuppressHeaderKeyboardEventParams } from '../../../entities/colDef';
-import type { FocusService } from '../../../focusService';
 import { _getActiveDomElement, _getDocument, _setDomData } from '../../../gridOptionsUtils';
 import type { BrandedType } from '../../../interfaces/brandedType';
-import type { ColumnPinnedType } from '../../../interfaces/iColumn';
 import { _requestAnimationFrame } from '../../../misc/animationFrameService';
-import type { MenuService } from '../../../misc/menu/menuService';
-import type { PinnedColumnService } from '../../../pinnedColumns/pinnedColumnService';
 import { _setAriaColIndex } from '../../../utils/aria';
-import { _addOrRemoveAttribute, _getElementSize, _getInnerWidth, _observeResize } from '../../../utils/dom';
+import { _addOrRemoveAttribute, _getElementSize, _observeResize } from '../../../utils/dom';
+import { _isHeaderFocusSuppressed } from '../../../utils/focus';
 import { _exists } from '../../../utils/generic';
 import { KeyCode } from '../.././../constants/keyCode';
 import type { HeaderRowCtrl } from '../../row/headerRowCtrl';
@@ -43,33 +37,13 @@ export abstract class AbstractHeaderCellCtrl<
 > extends BeanStub {
     public readonly instanceId: HeaderCellCtrlInstanceId;
 
-    private pinnedCols?: PinnedColumnService;
-    protected focusSvc: FocusService;
-    protected userCompFactory: UserComponentFactory;
-    protected ctrlsSvc: CtrlsService;
-    protected dragAndDrop?: DragAndDropService;
-    protected menuSvc?: MenuService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.pinnedCols = beans.pinnedCols;
-        this.focusSvc = beans.focusSvc;
-        this.userCompFactory = beans.userCompFactory;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.dragAndDrop = beans.dragAndDrop;
-        this.menuSvc = beans.menuSvc;
-    }
-
-    private columnGroupChild: AgColumn | AgColumnGroup;
-    private parentRowCtrl: HeaderRowCtrl;
-
     private isResizing: boolean;
     private resizeToggleTimeout = 0;
     protected resizeMultiplier = 1;
 
-    protected eGui: HTMLElement;
+    public eGui: HTMLElement;
     protected resizeFeature: TFeature | null = null;
     protected comp: TComp;
-    public column: TColumn;
 
     public lastFocusEvent: KeyboardEvent | null = null;
 
@@ -77,14 +51,14 @@ export abstract class AbstractHeaderCellCtrl<
 
     protected abstract resizeHeader(delta: number, shiftKey: boolean): void;
 
-    constructor(columnGroupChild: AgColumn | AgColumnGroup, parentRowCtrl: HeaderRowCtrl) {
+    constructor(
+        public readonly column: TColumn,
+        public readonly rowCtrl: HeaderRowCtrl
+    ) {
         super();
 
-        this.columnGroupChild = columnGroupChild;
-        this.parentRowCtrl = parentRowCtrl;
-
         // unique id to this instance, including the column ID to help with debugging in React as it's used in 'key'
-        this.instanceId = (columnGroupChild.getUniqueId() + '-' + instanceIdSequence++) as HeaderCellCtrlInstanceId;
+        this.instanceId = (column.getUniqueId() + '-' + instanceIdSequence++) as HeaderCellCtrlInstanceId;
     }
 
     public postConstruct(): void {
@@ -96,7 +70,7 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected shouldStopEventPropagation(event: KeyboardEvent): boolean {
-        const { headerRowIndex, column } = this.focusSvc.getFocusedHeader()!;
+        const { headerRowIndex, column } = this.beans.focusSvc.getFocusedHeader()!;
 
         const colDef = column.getDefinition();
         const colDefFunc = colDef && colDef.suppressHeaderKeyboardEvent;
@@ -116,7 +90,7 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected getWrapperHasFocus(): boolean {
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
 
         return activeEl === this.eGui;
     }
@@ -149,13 +123,13 @@ export abstract class AbstractHeaderCellCtrl<
         compBean: BeanStub;
     }) {
         const { wrapperElement, checkMeasuringCallback, compBean } = params;
-        const { gos } = this.beans;
+        const { beans } = this;
         const measureHeight = (timesCalled: number) => {
             if (!this.isAlive() || !compBean.isAlive()) {
                 return;
             }
 
-            const { paddingTop, paddingBottom, borderBottomWidth, borderTopWidth } = _getElementSize(this.getGui());
+            const { paddingTop, paddingBottom, borderBottomWidth, borderTopWidth } = _getElementSize(this.eGui);
             const extraHeight = paddingTop + paddingBottom + borderBottomWidth + borderTopWidth;
 
             const wrapperHeight = wrapperElement.offsetHeight;
@@ -164,7 +138,7 @@ export abstract class AbstractHeaderCellCtrl<
             if (timesCalled < 5) {
                 // if not in doc yet, means framework not yet inserted, so wait for next VM turn,
                 // maybe it will be ready next VM turn
-                const doc = _getDocument(gos);
+                const doc = _getDocument(beans);
                 const notYetInDom = !doc || !doc.contains(wrapperElement);
 
                 // this happens in React, where React hasn't put any content in. we say 'possibly'
@@ -172,7 +146,7 @@ export abstract class AbstractHeaderCellCtrl<
                 const possiblyNoContentYet = autoHeight == 0;
 
                 if (notYetInDom || possiblyNoContentYet) {
-                    _requestAnimationFrame(gos, () => measureHeight(timesCalled + 1));
+                    _requestAnimationFrame(beans, () => measureHeight(timesCalled + 1));
                     return;
                 }
             }
@@ -198,7 +172,7 @@ export abstract class AbstractHeaderCellCtrl<
             isMeasuring = true;
             measureHeight(0);
             this.comp.addOrRemoveCssClass('ag-header-cell-auto-height', true);
-            stopResizeObserver = _observeResize(this.gos, wrapperElement, () => measureHeight(0));
+            stopResizeObserver = _observeResize(this.beans, wrapperElement, () => measureHeight(0));
         };
 
         const stopMeasuring = () => {
@@ -254,14 +228,14 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     private refreshTabIndex(): void {
-        const suppressHeaderFocus = this.focusSvc.isHeaderFocusSuppressed();
+        const suppressHeaderFocus = _isHeaderFocusSuppressed(this.beans);
         if (this.eGui) {
             _addOrRemoveAttribute(this.eGui, 'tabindex', suppressHeaderFocus ? null : '-1');
         }
     }
 
     private onGuiKeyDown(e: KeyboardEvent): void {
-        const activeEl = _getActiveDomElement(this.gos);
+        const activeEl = _getActiveDomElement(this.beans);
 
         const isLeftOrRight = e.key === KeyCode.LEFT || e.key === KeyCode.RIGHT;
 
@@ -303,29 +277,13 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected moveHeader(hDirection: HorizontalDirection): void {
-        this.beans.colMoves?.moveHeader(hDirection, this.eGui, this.column, this.getPinned(), this);
+        this.beans.colMoves?.moveHeader(hDirection, this.eGui, this.column, this.rowCtrl.pinned, this);
     }
 
     private getViewportAdjustedResizeDiff(e: KeyboardEvent): number {
-        let diff = this.getResizeDiff(e);
-
-        const pinned = this.column.getPinned();
-        if (pinned) {
-            const leftWidth = this.pinnedCols?.getPinnedLeftWidth() ?? 0;
-            const rightWidth = this.pinnedCols?.getPinnedRightWidth() ?? 0;
-            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().getBodyViewportElement()) - 50;
-
-            if (leftWidth + rightWidth + diff > bodyWidth) {
-                if (bodyWidth > leftWidth + rightWidth) {
-                    // allow body width to ignore resize multiplier and fill space for last tick
-                    diff = bodyWidth - leftWidth - rightWidth;
-                } else {
-                    return 0;
-                }
-            }
-        }
-
-        return diff;
+        const diff = this.getResizeDiff(e);
+        const { pinnedCols } = this.beans;
+        return pinnedCols ? pinnedCols.getHeaderResizeDiff(diff, this.column) : diff;
     }
 
     private getResizeDiff(e: KeyboardEvent): number {
@@ -379,10 +337,6 @@ export abstract class AbstractHeaderCellCtrl<
         compBean.addDestroyFunc(() => _setDomData(this.gos, this.eGui, key, null));
     }
 
-    public getGui(): HTMLElement {
-        return this.eGui;
-    }
-
     public focus(event?: KeyboardEvent): boolean {
         if (!this.eGui) {
             return false;
@@ -393,25 +347,13 @@ export abstract class AbstractHeaderCellCtrl<
         return true;
     }
 
-    public getRowIndex(): number {
-        return this.parentRowCtrl.getRowIndex();
-    }
-
-    public getParentRowCtrl(): HeaderRowCtrl {
-        return this.parentRowCtrl;
-    }
-
-    public getPinned(): ColumnPinnedType {
-        return this.parentRowCtrl.getPinned();
-    }
-
-    public getColumnGroupChild(): AgColumn | AgColumnGroup {
-        return this.columnGroupChild;
+    protected focusThis(): void {
+        this.beans.focusSvc.setFocusedHeader(this.rowCtrl.rowIndex, this.column);
     }
 
     protected removeDragSource(): void {
         if (this.dragSource) {
-            this.dragAndDrop?.removeDragSource(this.dragSource);
+            this.beans.dragAndDrop?.removeDragSource(this.dragSource);
             this.dragSource = null;
         }
     }
@@ -425,8 +367,9 @@ export abstract class AbstractHeaderCellCtrl<
         if (this.gos.get('preventDefaultOnContextMenu')) {
             event.preventDefault();
         }
-        if (this.menuSvc?.isHeaderContextMenuEnabled(column)) {
-            this.menuSvc.showHeaderContextMenu(column, mouseEvent, touchEvent);
+        const { menuSvc } = this.beans;
+        if (menuSvc?.isHeaderContextMenuEnabled(column)) {
+            menuSvc.showHeaderContextMenu(column, mouseEvent, touchEvent);
         }
 
         this.dispatchColumnMouseEvent('columnHeaderContextMenu', column);
@@ -474,7 +417,6 @@ export abstract class AbstractHeaderCellCtrl<
 
         (this.column as any) = null;
         (this.lastFocusEvent as any) = null;
-        (this.columnGroupChild as any) = null;
-        (this.parentRowCtrl as any) = null;
+        (this.rowCtrl as any) = null;
     }
 }

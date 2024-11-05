@@ -97,7 +97,7 @@ export class StickyRowFeature extends BeanStub {
      * Get the last pixel of the group, this pixel is used to push the sticky node up out of the viewport.
      */
     private getLastPixelOfGroup(row: RowNode): number {
-        return this.isClientSide ? this.getClientSideLastPixelOfGroup(row) : this.getServerSideLastPixelOfGroup(row);
+        return this.isClientSide ? getClientSideLastPixelOfGroup(row) : getServerSideLastPixelOfGroup(row);
     }
 
     /**
@@ -116,78 +116,6 @@ export class StickyRowFeature extends BeanStub {
         return 0;
     }
 
-    private getServerSideLastPixelOfGroup(row: RowNode): number {
-        if (this.isClientSide) {
-            throw new Error('This func should only be called in server side row model.');
-        }
-
-        if (row.isExpandable() || row.footer) {
-            if (row.master) {
-                return row.detailNode.rowTop! + row.detailNode.rowHeight!;
-            }
-
-            const noOrContiguousSiblings = !row.sibling || Math.abs(row.sibling.rowIndex! - row.rowIndex!) === 1;
-            if (noOrContiguousSiblings) {
-                let storeBounds = row.childStore?.getStoreBounds();
-                if (row.footer) {
-                    storeBounds = row.sibling.childStore?.getStoreBounds();
-                }
-                return (storeBounds?.heightPx ?? 0) + (storeBounds?.topPx ?? 0);
-            }
-
-            if (row.footer) {
-                return row.rowTop! + row.rowHeight!;
-            }
-
-            return row.sibling!.rowTop! + row.sibling!.rowHeight!;
-        }
-        // if not a group, then this row shouldn't be sticky currently.
-        return Number.MAX_SAFE_INTEGER;
-    }
-
-    private getClientSideLastPixelOfGroup(row: RowNode): number {
-        if (!this.isClientSide) {
-            throw new Error('This func should only be called in client side row model.');
-        }
-
-        if (row.isExpandable() || row.footer) {
-            // grand total row at top, nothing can push it out of sticky.
-            const grandTotalAtTop = row.footer && row.rowIndex === 0;
-            if (grandTotalAtTop) {
-                return Number.MAX_SAFE_INTEGER;
-            }
-
-            // if no siblings, we search the children for the last displayed row, to get last px.
-            // equally, if sibling but sibling is contiguous ('top') then sibling cannot be used
-            // to find last px
-            const noOrContiguousSiblings = !row.sibling || Math.abs(row.sibling.rowIndex! - row.rowIndex!) === 1;
-            if (noOrContiguousSiblings) {
-                let lastAncestor = row.footer ? row.sibling : row;
-                while (lastAncestor.isExpandable() && lastAncestor.expanded) {
-                    if (lastAncestor.master) {
-                        lastAncestor = lastAncestor.detailNode;
-                    } else if (lastAncestor.childrenAfterSort) {
-                        // Tree Data will have `childrenAfterSort` without any nodes, but
-                        // the current node will still be marked as expansible.
-                        if (lastAncestor.childrenAfterSort.length === 0) {
-                            break;
-                        }
-                        lastAncestor = _last(lastAncestor.childrenAfterSort);
-                    }
-                }
-                return lastAncestor.rowTop! + lastAncestor.rowHeight!;
-            }
-
-            // if siblings not contiguous, footer is last row and easiest way for last px
-            if (row.footer) {
-                return row.rowTop! + row.rowHeight!;
-            }
-            return row.sibling!.rowTop! + row.sibling!.rowHeight!;
-        }
-        // if not expandable, then this row shouldn't be sticky currently.
-        return Number.MAX_SAFE_INTEGER;
-    }
-
     private updateStickyRows(container: 'top' | 'bottom'): boolean {
         const isTop = container === 'top';
         let newStickyContainerHeight = 0;
@@ -197,8 +125,8 @@ export class StickyRowFeature extends BeanStub {
         }
 
         const pixelAtContainerBoundary = isTop
-            ? this.rowRenderer.getFirstVisibleVerticalPixel() - this.extraTopHeight
-            : this.rowRenderer.getLastVisibleVerticalPixel() - this.extraTopHeight;
+            ? this.rowRenderer.firstVisibleVPixel - this.extraTopHeight
+            : this.rowRenderer.lastVisibleVPixel - this.extraTopHeight;
         const newStickyRows = new Set<RowNode>();
 
         const addStickyRow = (stickyRow: RowNode) => {
@@ -385,9 +313,9 @@ export class StickyRowFeature extends BeanStub {
 
     public refreshStickyNode(stickRowNode: RowNode): void {
         const allStickyNodes = new Set<RowNode>();
-        if (this.stickyTopRowCtrls.some((ctrl) => ctrl.getRowNode() === stickRowNode)) {
+        if (this.stickyTopRowCtrls.some((ctrl) => ctrl.rowNode === stickRowNode)) {
             for (let i = 0; i < this.stickyTopRowCtrls.length; i++) {
-                const currentNode = this.stickyTopRowCtrls[i].getRowNode();
+                const currentNode = this.stickyTopRowCtrls[i].rowNode;
                 if (currentNode !== stickRowNode) {
                     allStickyNodes.add(currentNode);
                 }
@@ -400,7 +328,7 @@ export class StickyRowFeature extends BeanStub {
         }
 
         for (let i = 0; i < this.stickyBottomRowCtrls.length; i++) {
-            const currentNode = this.stickyBottomRowCtrls[i].getRowNode();
+            const currentNode = this.stickyBottomRowCtrls[i].rowNode;
             if (currentNode !== stickRowNode) {
                 allStickyNodes.add(currentNode);
             }
@@ -426,7 +354,7 @@ export class StickyRowFeature extends BeanStub {
         const removedCtrlsMap: RowCtrlByRowNodeIdMap = {};
         const remainingCtrls: RowCtrl[] = [];
         for (let i = 0; i < previousCtrls.length; i++) {
-            const node = previousCtrls[i].getRowNode();
+            const node = previousCtrls[i].rowNode;
             const hasBeenRemoved = !newStickyNodes.has(node);
             if (hasBeenRemoved) {
                 removedCtrlsMap[node.id!] = previousCtrls[i];
@@ -442,7 +370,7 @@ export class StickyRowFeature extends BeanStub {
         // get set of existing nodes for quick lookup
         const existingNodes = new Set<RowNode>();
         for (let i = 0; i < remainingCtrls.length; i++) {
-            existingNodes.add(remainingCtrls[i].getRowNode());
+            existingNodes.add(remainingCtrls[i].rowNode);
         }
 
         // find the new ctrls to add
@@ -477,11 +405,11 @@ export class StickyRowFeature extends BeanStub {
 
         // set up new ctrls list
         const newCtrlsList = [...remainingCtrls, ...newCtrls];
-        newCtrlsList.sort((a, b) => b.getRowNode().rowIndex! - a.getRowNode().rowIndex!);
+        newCtrlsList.sort((a, b) => b.rowNode.rowIndex! - a.rowNode.rowIndex!);
         if (!isTop) {
             newCtrlsList.reverse();
         }
-        newCtrlsList.forEach((ctrl) => ctrl.setRowTop(ctrl.getRowNode().stickyRowTop));
+        newCtrlsList.forEach((ctrl) => ctrl.setRowTop(ctrl.rowNode.stickyRowTop));
 
         let extraHeight = 0;
         if (isTop) {
@@ -522,9 +450,9 @@ export class StickyRowFeature extends BeanStub {
     public ensureRowHeightsValid(): boolean {
         let anyChange = false;
         const updateRowHeight = (ctrl: RowCtrl) => {
-            const rowNode = ctrl.getRowNode();
+            const rowNode = ctrl.rowNode;
             if (rowNode.rowHeightEstimated) {
-                const rowHeight = _getRowHeightForNode(this.gos, rowNode);
+                const rowHeight = _getRowHeightForNode(this.beans, rowNode);
                 rowNode.setRowHeight(rowHeight.height);
                 anyChange = true;
             }
@@ -533,4 +461,68 @@ export class StickyRowFeature extends BeanStub {
         this.stickyBottomRowCtrls.forEach(updateRowHeight);
         return anyChange;
     }
+}
+
+function getServerSideLastPixelOfGroup(row: RowNode): number {
+    if (row.isExpandable() || row.footer) {
+        if (row.master) {
+            return row.detailNode.rowTop! + row.detailNode.rowHeight!;
+        }
+
+        const noOrContiguousSiblings = !row.sibling || Math.abs(row.sibling.rowIndex! - row.rowIndex!) === 1;
+        if (noOrContiguousSiblings) {
+            let storeBounds = row.childStore?.getStoreBounds();
+            if (row.footer) {
+                storeBounds = row.sibling.childStore?.getStoreBounds();
+            }
+            return (storeBounds?.heightPx ?? 0) + (storeBounds?.topPx ?? 0);
+        }
+
+        if (row.footer) {
+            return row.rowTop! + row.rowHeight!;
+        }
+
+        return row.sibling!.rowTop! + row.sibling!.rowHeight!;
+    }
+    // if not a group, then this row shouldn't be sticky currently.
+    return Number.MAX_SAFE_INTEGER;
+}
+
+function getClientSideLastPixelOfGroup(row: RowNode): number {
+    if (row.isExpandable() || row.footer) {
+        // grand total row at top, nothing can push it out of sticky.
+        const grandTotalAtTop = row.footer && row.rowIndex === 0;
+        if (grandTotalAtTop) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+
+        // if no siblings, we search the children for the last displayed row, to get last px.
+        // equally, if sibling but sibling is contiguous ('top') then sibling cannot be used
+        // to find last px
+        const noOrContiguousSiblings = !row.sibling || Math.abs(row.sibling.rowIndex! - row.rowIndex!) === 1;
+        if (noOrContiguousSiblings) {
+            let lastAncestor = row.footer ? row.sibling : row;
+            while (lastAncestor.isExpandable() && lastAncestor.expanded) {
+                if (lastAncestor.master) {
+                    lastAncestor = lastAncestor.detailNode;
+                } else if (lastAncestor.childrenAfterSort) {
+                    // Tree Data will have `childrenAfterSort` without any nodes, but
+                    // the current node will still be marked as expansible.
+                    if (lastAncestor.childrenAfterSort.length === 0) {
+                        break;
+                    }
+                    lastAncestor = _last(lastAncestor.childrenAfterSort);
+                }
+            }
+            return lastAncestor.rowTop! + lastAncestor.rowHeight!;
+        }
+
+        // if siblings not contiguous, footer is last row and easiest way for last px
+        if (row.footer) {
+            return row.rowTop! + row.rowHeight!;
+        }
+        return row.sibling!.rowTop! + row.sibling!.rowHeight!;
+    }
+    // if not expandable, then this row shouldn't be sticky currently.
+    return Number.MAX_SAFE_INTEGER;
 }

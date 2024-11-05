@@ -29,8 +29,7 @@ describe('ag-grid hierarchical tree data reset', () => {
         consoleWarnSpy?.mockRestore();
     });
 
-    // TODO: tree data with children bug: it seems the order is not maintained here, to investigate
-    test.skip('tree data with id is created in the right order, and order can be changed also if data references do not change', async () => {
+    test('tree data with id is created in the right order, and order can be changed also if data references do not change', async () => {
         const rowData = [
             { id: 'A', children: [{ id: 'B' }] },
             { id: 'C', children: [{ id: 'D' }, { id: 'E' }] },
@@ -431,8 +430,7 @@ describe('ag-grid hierarchical tree data reset', () => {
         `);
     });
 
-    // TODO: tree data with children bug: selection is not cleared with setImmutableData for deleted nodes yet
-    test.skip('tree data setRowData with id maintains selection and expanded state, and follows order', async () => {
+    test('tree data setRowData with id maintains selection and expanded state, and follows order', async () => {
         const rowData1 = [
             {
                 id: 'g0',
@@ -478,7 +476,7 @@ describe('ag-grid hierarchical tree data reset', () => {
                 children: [{ id: '5', x: 'S', label: '5-v2' }],
             },
             {
-                id: 'g1',
+                id: 'g4',
                 x: 'X',
                 label: 'g-X',
                 children: [
@@ -491,7 +489,7 @@ describe('ag-grid hierarchical tree data reset', () => {
                 ],
             },
             {
-                id: 'g2',
+                id: 'g5',
                 x: 'P',
                 label: 'g-P',
                 children: [{ id: '4', x: 'Q', label: '4-v2' }],
@@ -500,6 +498,16 @@ describe('ag-grid hierarchical tree data reset', () => {
         ];
 
         const rowData3 = [
+            { id: '100', x: 'a', label: '100-v3' },
+            {
+                id: 'g3',
+                x: 'C',
+                label: 'g-C',
+                children: [{ id: '3', x: 'D', label: '3-v3' }],
+            },
+        ];
+
+        const rowData4 = [
             { id: '100', x: 'a', label: '100-v3' },
             {
                 id: 'g0',
@@ -558,24 +566,34 @@ describe('ag-grid hierarchical tree data reset', () => {
 
         await new GridRows(api, 'update 1', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
-            ├── N LEAF selected id:7 label:"7-v2"
-            ├─┬ R filler selected collapsed id:row-group-0-R
-            │ └── S LEAF selected hidden id:5 label:"5-v2"
-            ├─┬ X filler id:row-group-0-X
-            │ └─┬ Y GROUP id:2 label:"2-v2"
-            │ · └── Z LEAF selected id:1 label:"1-v2"
-            ├─┬ P filler selected collapsed id:row-group-0-P
-            │ └── Q LEAF selected hidden id:4 label:"4-v2"
-            └── M LEAF selected id:6 label:"6-v2"
+            ├── 7 LEAF selected id:7 label:"7-v2" x:"N"
+            ├─┬ g0 GROUP selected id:g0 label:"g-R" x:"R"
+            │ └── 5 LEAF selected id:5 label:"5-v2" x:"S"
+            ├─┬ g4 GROUP id:g4 label:"g-X" x:"X"
+            │ └─┬ 2 GROUP id:2 label:"2-v2" x:"Y"
+            │ · └── 1 LEAF selected id:1 label:"1-v2" x:"Z"
+            ├─┬ g5 GROUP id:g5 label:"g-P" x:"P"
+            │ └── 4 LEAF selected id:4 label:"4-v2" x:"Q"
+            └── 6 LEAF selected id:6 label:"6-v2" x:"M"
         `);
 
+        console.log('BEGIN\n\n');
         api.setGridOption('rowData', rowData3);
 
         await new GridRows(api, 'update 2', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
-            ├── a LEAF id:100 label:"100-v3"
-            └─┬ C filler id:row-group-0-C
-            · └── D LEAF id:3 label:"3-v3"
+            ├── 100 LEAF id:100 label:"100-v3" x:"a"
+            └─┬ g3 GROUP collapsed id:g3 label:"g-C" x:"C"
+            · └── 3 LEAF hidden id:3 label:"3-v3" x:"D"
+        `);
+
+        api.setGridOption('rowData', rowData4);
+
+        await new GridRows(api, 'update 3', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── 100 LEAF id:100 label:"100-v3" x:"a"
+            └─┬ g0 GROUP id:g0 label:"g-C" x:"C"
+            · └── 3 LEAF id:3 label:"3-v3" x:"D"
         `);
 
         api.setGridOption('rowData', []);
