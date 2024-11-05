@@ -236,7 +236,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 break;
             }
             if (child.parent === parent) {
-                this.treeCommitChild(details, child, collapsed || !parent.row!.expanded);
+                this.treeCommitChild(details, child, collapsed || !(parent.row?.expanded ?? true));
             }
         }
 
