@@ -12,20 +12,32 @@ const missingModule = ({
     gridScoped,
     gridId,
     isEnterprise,
+    additionalText,
 }: {
     reason: string;
-    moduleName: ModuleName;
+    moduleName: ModuleName | ModuleName[];
     gridScoped: boolean;
     gridId: string;
     isEnterprise?: boolean;
-}) =>
-    `Unable to use ${reason} as ${moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+    additionalText?: string;
+}) => {
+    // TODO - update to list multiple
+    const singleModuleName = Array.isArray(moduleName) ? moduleName[0] : moduleName;
+    return (
+        `Unable to use ${reason} as ${singleModuleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
 import { ModuleRegistry } from 'ag-grid-community';
-import { ${moduleName} } from '${isEnterprise ? 'ag-grid-enterprise' : 'ag-grid-community'}';
+import { ${singleModuleName} } from '${isEnterprise ? 'ag-grid-enterprise' : 'ag-grid-community'}';
 
-ModuleRegistry.registerModules([ ${moduleName} ]);
+ModuleRegistry.registerModules([ ${singleModuleName} ]);
 
-For more info see: ${BASE_URL}/javascript-grid/modules/`;
+For more info see: ${BASE_URL}/javascript-grid/modules/` +
+        (additionalText
+            ? `
+
+${additionalText}`
+            : '')
+    );
+};
 
 const clipboardApiError = (method: string) =>
     `AG Grid: Unable to use the Clipboard API (navigator.clipboard.${method}()). ` +
@@ -116,14 +128,16 @@ export const AG_GRID_ERRORS = {
         `Column type definitions 'columnTypes' with a 'type' attribute are not supported because a column type cannot refer to another column type. Only column definitions 'columnDefs' can use the 'type' attribute to refer to a column type.` as const,
     36: ({ t }: { t: string }) => "colDef.type '" + t + "' does not correspond to defined gridOptions.columnTypes",
     37: () => `Changing the column pinning status is not allowed with domLayout='print'` as const,
-    // 38: () => '' as const,
+    38: ({ iconName }: { iconName: string }) =>
+        `provided icon '${iconName}' needs to be a string or a function` as const,
     39: () =>
         'Applying column order broke a group where columns should be married together. Applying new order has been discarded.' as const,
     40: ({ e, method }: { e: any; method: string }) => `${e}\n${clipboardApiError(method)}` as const,
     41: () =>
         "Browser did not allow document.execCommand('copy'). Ensure 'api.copySelectedRowsToClipboard() is invoked via a user event, i.e. button click, otherwise the browser will prevent it for security reasons." as const,
     42: () => "Browser does not support document.execCommand('copy') for clipboard operations" as const,
-    // 43: () => '' as const,
+    43: ({ iconName }: { iconName: string }) =>
+        `As of v33, icon '${iconName}' is deprecated. Use the icon CSS name instead.` as const,
     44: () =>
         'Data type definition hierarchies (via the "extendsDataType" property) cannot contain circular references.' as const,
     45: ({ parentCellDataType }: { parentCellDataType: string }) =>
@@ -310,8 +324,9 @@ export const AG_GRID_ERRORS = {
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
     131: () => 'cannot range select while selecting multiple rows' as const,
     132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
-    133: () => 'iconRenderer should return back a string or a dom object' as const,
-    134: ({ iconName }: { iconName: string }) => `Did not find icon ${iconName}` as const,
+    133: ({ iconName }: { iconName: string }) =>
+        `icon '${iconName}' function should return back a string or a dom object` as const,
+    134: ({ iconName }: { iconName: string }) => `Did not find icon '${iconName}'` as const,
     135: () => `Data type of the new value does not match the cell data type of the column` as const,
     136: () =>
         `Unable to update chart as the 'type' is missing. It must be either 'rangeChartUpdate', 'pivotChartUpdate', or 'crossFilterChartUpdate'.` as const,

@@ -6,6 +6,9 @@ import { columnMovingCSS } from './column-moving.css-GENERATED';
 import { moveColumnByIndex, moveColumns } from './columnMoveApi';
 import { ColumnMoveService } from './columnMoveService';
 
+/**
+ * @feature Columns -> Column Moving
+ */
 export const ColumnMoveCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnMoveCoreModule'),
     beans: [ColumnMoveService],
@@ -13,6 +16,9 @@ export const ColumnMoveCoreModule: _ModuleWithoutApi = {
     css: [columnMovingCSS],
 };
 
+/**
+ * @feature Columns -> Column Moving
+ */
 export const ColumnMoveApiModule: _ModuleWithApi<_ColumnMoveApi> = {
     ...baseCommunityModule('ColumnMoveApiModule'),
     apiFunctions: {
@@ -22,6 +28,9 @@ export const ColumnMoveApiModule: _ModuleWithApi<_ColumnMoveApi> = {
     dependsOn: [ColumnMoveCoreModule],
 };
 
+/**
+ * @feature Columns -> Column Moving
+ */
 export const ColumnMoveModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnMoveModule'),
     dependsOn: [ColumnMoveApiModule],

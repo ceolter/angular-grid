@@ -4,6 +4,10 @@ import { VERSION } from '../version';
 import type { ErrorId, ErrorMap, GetErrorParams } from './errorMessages/errorText';
 import type { ValidationService } from './validationService';
 
+const MAX_URL_LENGTH = 2000;
+const MIN_PARAM_LENGTH = 100;
+const VERSION_PARAM_NAME = '_version_';
+
 let validation: ValidationService | null = null;
 let suppressAllLogging = false;
 let baseDocLink = `${BASE_URL}/javascript-data-grid`;
@@ -65,15 +69,53 @@ export function toStringWithNullUndefined(str: string | null | undefined) {
     return str === undefined ? 'undefined' : str === null ? 'null' : str;
 }
 
+function getParamsUrl(baseUrl: string, params: URLSearchParams) {
+    return `${baseUrl}?${params.toString()}`;
+}
+
+function truncateUrl(baseUrl: string, params: URLSearchParams, maxLength: number) {
+    const sortedParams = Array.from(params.entries()).sort((a, b) => b[1].length - a[1].length);
+    let url = getParamsUrl(baseUrl, params);
+
+    for (const [key, value] of sortedParams) {
+        if (key === VERSION_PARAM_NAME) {
+            continue;
+        }
+        const excessLength = url.length - maxLength;
+        if (excessLength <= 0) {
+            break;
+        }
+
+        const ellipse = '...';
+        const truncateAmount = excessLength + ellipse.length;
+        // Truncate by `truncateAmount`, unless the result is shorter than the min param
+        // length. In which case, shorten to min param length, then continue shortening
+        // other params.
+        // Assume there isn't a lot of params that are all long.
+        const truncatedValue =
+            value.length - truncateAmount > MIN_PARAM_LENGTH
+                ? value.slice(0, value.length - truncateAmount) + ellipse
+                : value.slice(0, MIN_PARAM_LENGTH) + ellipse;
+
+        params.set(key, truncatedValue);
+        url = getParamsUrl(baseUrl, params);
+    }
+
+    return url;
+}
+
 export function getErrorLink(errorNum: ErrorId, args: GetErrorParams<any>) {
     const params = new URLSearchParams();
-    params.append('_version_', VERSION);
+    params.append(VERSION_PARAM_NAME, VERSION);
     if (args) {
         Object.entries(args).forEach(([key, value]) => {
             params.append(key, stringifyValue(value));
         });
     }
-    return `${baseDocLink}/errors/${errorNum}?${params.toString()}`;
+    const baseUrl = `${baseDocLink}/errors/${errorNum}`;
+    const url = getParamsUrl(baseUrl, params);
+
+    return url.length <= MAX_URL_LENGTH ? url : truncateUrl(baseUrl, params, MAX_URL_LENGTH);
 }
 
 const minifiedLog = (errorNum: ErrorId, args: GetErrorParams<any>, defaultMessage?: string) => {

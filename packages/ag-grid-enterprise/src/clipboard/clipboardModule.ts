@@ -14,12 +14,18 @@ import {
 } from './clipboardApi';
 import { ClipboardService } from './clipboardService';
 
+/**
+ * @feature Import & Export -> Clipboard
+ */
 export const ClipboardCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ClipboardCoreModule'),
     beans: [ClipboardService],
     dependsOn: [EnterpriseCoreModule, CsvExportModule, KeyboardNavigationCoreModule, CellFlashModule],
 };
 
+/**
+ * @feature Import & Export -> Clipboard
+ */
 export const ClipboardApiModule: _ModuleWithApi<_ClipboardGridApi> = {
     ...baseEnterpriseModule('ClipboardApiModule'),
     apiFunctions: {
@@ -33,6 +39,9 @@ export const ClipboardApiModule: _ModuleWithApi<_ClipboardGridApi> = {
     dependsOn: [ClipboardCoreModule],
 };
 
+/**
+ * @feature Import & Export -> Clipboard
+ */
 export const ClipboardModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ClipboardModule'),
     dependsOn: [ClipboardCoreModule, ClipboardApiModule],

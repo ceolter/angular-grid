@@ -5,6 +5,7 @@ import type {
     FilterManager,
     FilterOpenedEvent,
     IFilterComp,
+    IconName,
 } from 'ag-grid-community';
 import {
     Component,
@@ -59,8 +60,8 @@ export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
     }
 
     public postConstruct() {
-        this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.gos)!;
-        this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.gos)!;
+        this.eExpandChecked = _createIconNoSpan('accordionOpen', this.beans)!;
+        this.eExpandUnchecked = _createIconNoSpan('accordionClosed', this.beans)!;
         this.eExpand.appendChild(this.eExpandChecked);
         this.eExpand.appendChild(this.eExpandUnchecked);
     }
@@ -73,7 +74,7 @@ export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
             keydown: this.onKeyDown.bind(this),
         });
         this.addManagedEventListeners({ filterOpened: this.onFilterOpened.bind(this) });
-        this.addInIcon('filter', this.eFilterIcon, this.column);
+        this.addInIcon('filterActive', this.eFilterIcon, this.column);
 
         _setDisplayed(this.eFilterIcon, this.isFilterActive(), { skipAriaHidden: true });
         _setDisplayed(this.eExpandChecked, false);
@@ -119,12 +120,12 @@ export class ToolPanelFilterComp extends Component<ToolPanelFilterCompEvent> {
         this.eFilterToolPanelHeader.classList.add(cssClass);
     }
 
-    private addInIcon(iconName: string, eParent: Element, column: AgColumn): void {
+    private addInIcon(iconName: IconName, eParent: Element, column: AgColumn): void {
         if (eParent == null) {
             return;
         }
 
-        const eIcon = _createIconNoSpan(iconName, this.gos, column)!;
+        const eIcon = _createIconNoSpan(iconName, this.beans, column)!;
         eParent.appendChild(eIcon);
     }
 

@@ -580,7 +580,7 @@ export {
     _RowGroupingGridApi,
     _AggregationGridApi,
     _PivotGridApi,
-    _RangeSelectionGridApi,
+    _CellSelectionGridApi,
     _MenuGridApi,
     _ServerSideRowModelGridApi,
     _ExcelExportGridApi,
@@ -955,7 +955,7 @@ export {
 export { _stopPropagationForAgGrid, _isStopPropagationForAgGrid, _isElementInEventPath } from './utils/event';
 export { _warnOnce, _debounce, _doOnce, _waitUntil } from './utils/function';
 export { _warn, _error } from './validation/logging';
-export { _createIcon, _createIconNoSpan } from './utils/icon';
+export { _createIcon, _createIconNoSpan, IconName } from './utils/icon';
 export { _fuzzySuggestions } from './utils/fuzzyMatch';
 export { _exists, _missing, _jsonEquals, _toStringOrNull, _makeNull, _defaultComparator } from './utils/generic';
 export { _isEventFromPrintableCharacter } from './utils/keyboard';

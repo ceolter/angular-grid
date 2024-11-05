@@ -63,7 +63,6 @@ const VueExample = {
                     cellRenderer: 'agGroupCellRenderer',
                     cellRendererParams: {
                         suppressCount: true,
-                        checkbox: true,
                         innerRenderer: 'SimpleCellRenderer',
                         suppressDoubleClickExpand: true,
                         suppressEnterExpand: true,
@@ -101,7 +100,7 @@ const VueExample = {
         this.groupDefaultExpanded = 1;
         this.rowSelection = {
             mode: 'multiRow',
-            checkboxes: false,
+            checkboxLocation: 'autoGroupColumn',
             headerCheckbox: false,
             groupSelects: 'descendants',
         };

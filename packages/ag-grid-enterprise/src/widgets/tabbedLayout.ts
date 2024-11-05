@@ -92,7 +92,7 @@ export class TabbedLayout extends TabGuardComp {
         const eDocument = _getDocument(this.gos);
         const eCloseButton = eDocument.createElement('button');
         addCssClasses(eCloseButton, 'close-button');
-        const eIcon = _createIconNoSpan('close', this.gos, undefined, true)!;
+        const eIcon = _createIconNoSpan('close', this.beans)!;
         _setAriaLabel(eCloseButton, this.params.closeButtonAriaLabel);
         eCloseButton.appendChild(eIcon);
         this.addManagedElementListeners(eCloseButton, { click: () => this.params.onCloseClicked?.() });

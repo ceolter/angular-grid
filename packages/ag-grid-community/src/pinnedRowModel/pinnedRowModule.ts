@@ -4,11 +4,18 @@ import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { getPinnedBottomRow, getPinnedBottomRowCount, getPinnedTopRow, getPinnedTopRowCount } from './pinnedRowApi';
 import { PinnedRowModel } from './pinnedRowModel';
 
+/**
+ * @feature Rows -> Row Pinning
+ * @gridOption pinnedTopRowData, pinnedBottomRowData
+ */
 export const PinnedRowCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('PinnedRowCoreModule'),
     beans: [PinnedRowModel],
 };
 
+/**
+ * @feature Rows -> Row Pinning
+ */
 export const PinnedRowApiModule: _ModuleWithApi<_PinnedRowGridApi> = {
     ...baseCommunityModule('PinnedRowApiModule'),
     apiFunctions: {
@@ -20,6 +27,9 @@ export const PinnedRowApiModule: _ModuleWithApi<_PinnedRowGridApi> = {
     dependsOn: [PinnedRowCoreModule],
 };
 
+/**
+ * @feature Rows -> Row Pinning
+ */
 export const PinnedRowModule: _ModuleWithoutApi = {
     ...baseCommunityModule('PinnedRowModule'),
     dependsOn: [PinnedRowApiModule],

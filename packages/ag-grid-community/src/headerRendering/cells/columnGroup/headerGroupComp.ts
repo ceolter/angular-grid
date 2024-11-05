@@ -7,6 +7,7 @@ import type { IComponent } from '../../../interfaces/iComponent';
 import { _setDisplayed } from '../../../utils/dom';
 import { _isStopPropagationForAgGrid, _stopPropagationForAgGrid } from '../../../utils/event';
 import { _exists } from '../../../utils/generic';
+import type { IconName } from '../../../utils/icon';
 import { _createIconNoSpan } from '../../../utils/icon';
 import { _escapeString } from '../../../utils/string';
 import { _warn } from '../../../validation/logging';
@@ -144,8 +145,8 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         }
     }
 
-    private addInIcon(iconName: string, element: HTMLElement): void {
-        const eIcon = _createIconNoSpan(iconName, this.gos, null);
+    private addInIcon(iconName: IconName, element: HTMLElement): void {
+        const eIcon = _createIconNoSpan(iconName, this.beans, null);
         if (eIcon) {
             element.appendChild(eIcon);
         }

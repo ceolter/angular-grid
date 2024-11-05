@@ -1,6 +1,5 @@
 .ag-select {
     display: flex;
-    flex-direction: row;
     align-items: center;
 
     .ag-picker-field-wrapper {

@@ -74,7 +74,7 @@ export class ToolPanelColumnComp extends Component {
             </div>`,
             [AgCheckboxSelector]
         );
-        this.eDragHandle = _createIconNoSpan('columnDrag', this.gos)!;
+        this.eDragHandle = _createIconNoSpan('columnDrag', this.beans)!;
         this.eDragHandle.classList.add('ag-drag-handle', 'ag-column-select-column-drag-handle');
 
         const checkboxGui = this.cbSelect.getGui();

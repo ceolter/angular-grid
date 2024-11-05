@@ -12,6 +12,9 @@ import {
     setGridAriaProperty,
 } from './renderApi';
 
+/**
+ * @feature Rendering
+ */
 export const RenderApiModule: _ModuleWithApi<_RenderGridApi<any>> = {
     ...baseCommunityModule('RenderApiModule'),
     apiFunctions: {

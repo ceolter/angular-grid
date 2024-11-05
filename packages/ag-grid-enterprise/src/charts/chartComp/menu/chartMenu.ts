@@ -3,6 +3,7 @@ import type {
     ChartToolPanelMenuOptions,
     ChartToolbarMenuItemOptions,
     Environment,
+    IconName,
 } from 'ag-grid-community';
 import { AgPromise, Component, _warn } from 'ag-grid-community';
 
@@ -17,7 +18,7 @@ import { TabbedChartMenu } from './tabbedChartMenu';
 
 type ChartToolbarButtons = {
     [key in ChartToolbarMenuItemOptions]: {
-        iconName: string;
+        iconName: IconName;
         callback: (eventSource: HTMLElement) => void;
     };
 };
@@ -41,8 +42,11 @@ export class ChartMenu extends Component {
             iconName: 'unlinked',
             callback: () => this.chartMenuSvc.toggleLinked(this.chartMenuContext),
         },
-        chartDownload: { iconName: 'save', callback: () => this.chartMenuSvc.downloadChart(this.chartMenuContext) },
-        chartMenu: { iconName: 'menuAlt', callback: (eventSource: HTMLElement) => this.showMenuList(eventSource) },
+        chartDownload: {
+            iconName: 'chartsDownload',
+            callback: () => this.chartMenuSvc.downloadChart(this.chartMenuContext),
+        },
+        chartMenu: { iconName: 'chartsMenu', callback: (eventSource: HTMLElement) => this.showMenuList(eventSource) },
     };
 
     private panels: ChartToolPanelMenuOptions[] = [];

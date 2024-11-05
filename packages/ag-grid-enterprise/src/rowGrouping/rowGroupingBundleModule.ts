@@ -6,6 +6,9 @@ import { TreeDataModule } from '../treeData/treeDataModule';
 import { RowGroupingNoPivotModule } from './rowGroupingModule';
 
 // this is the original module that also includes pivoting and tree data
+/**
+ * @feature Row Grouping, Tree Data, Pivoting
+ */
 export const RowGroupingModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingModule'),
     dependsOn: [PivotModule, RowGroupingNoPivotModule, TreeDataModule],

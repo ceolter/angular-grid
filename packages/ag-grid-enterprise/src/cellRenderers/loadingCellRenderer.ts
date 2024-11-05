@@ -22,7 +22,7 @@ export class LoadingCellRenderer extends Component implements ILoadingCellRender
     }
 
     private setupLoading(): void {
-        const eLoadingIcon = _createIconNoSpan('groupLoading', this.gos, null);
+        const eLoadingIcon = _createIconNoSpan('groupLoading', this.beans, null);
         if (eLoadingIcon) {
             this.eLoadingIcon.appendChild(eLoadingIcon);
         }

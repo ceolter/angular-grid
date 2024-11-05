@@ -2,6 +2,7 @@ import type {
     BeanCollection,
     FocusService,
     IAfterGuiAttachedParams,
+    IconName,
     MenuItemDef,
     NamedBean,
     PopupService,
@@ -190,17 +191,17 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
                       )
                     : null;
             case 'chartDownload':
-                return this.createMenuItem(this.chartTranslation.translate('chartDownload'), 'save', () =>
+                return this.createMenuItem(this.chartTranslation.translate('chartDownload'), 'chartsDownload', () =>
                     this.chartMenuSvc.downloadChart(chartMenuContext)
                 );
         }
         return null;
     }
 
-    private createMenuItem(name: string, iconName: string, action: () => void): MenuItemDef {
+    private createMenuItem(name: string, iconName: IconName, action: () => void): MenuItemDef {
         return {
             name,
-            icon: _createIconNoSpan(iconName, this.gos, null),
+            icon: _createIconNoSpan(iconName, this.beans, null),
             action,
         };
     }

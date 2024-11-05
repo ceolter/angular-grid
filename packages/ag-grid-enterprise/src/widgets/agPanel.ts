@@ -165,7 +165,7 @@ export class AgPanel<TConfig extends PanelOptions = PanelOptions> extends Compon
             this.createBean(closeButtonComp);
 
             const eGui = closeButtonComp.getGui();
-            const child = _createIconNoSpan('close', this.gos)!;
+            const child = _createIconNoSpan('close', this.beans)!;
             child.classList.add('ag-panel-title-bar-button-icon');
             eGui.appendChild(child);
 

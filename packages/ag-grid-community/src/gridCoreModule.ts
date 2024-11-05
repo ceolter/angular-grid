@@ -54,5 +54,30 @@ export const CommunityCoreModule: _ModuleWithoutApi = {
         ColumnNameService,
         ColumnViewportService,
     ],
+    icons: {
+        // icon on select dropdowns (select cell editor, charts tool panels)
+        selectOpen: 'small-down',
+
+        /** @deprecated v33 */
+        smallDown: 'small-down',
+        /** @deprecated v33 */
+        colorPicker: 'color-picker',
+        /** @deprecated v33 */
+        smallUp: 'small-up',
+        /** @deprecated v33 */
+        checkboxChecked: 'small-up',
+        /** @deprecated v33 */
+        checkboxIndeterminate: 'checkbox-indeterminate',
+        /** @deprecated v33 */
+        checkboxUnchecked: 'checkbox-unchecked',
+        /** @deprecated v33 */
+        radioButtonOn: 'radio-button-on',
+        /** @deprecated v33 */
+        radioButtonOff: 'radio-button-off',
+        /** @deprecated v33 */
+        smallLeft: 'small-left',
+        /** @deprecated v33 */
+        smallRight: 'small-right',
+    },
     dependsOn: [CoreApiModule],
 };

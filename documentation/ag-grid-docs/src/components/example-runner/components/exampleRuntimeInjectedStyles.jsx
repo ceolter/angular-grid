@@ -129,8 +129,13 @@ html[data-color-scheme='dark'] textarea::placeholder {
     margin-top: 8px;
     margin-bottom: 8px;
     border-radius: 8px;
-    border: 1px solid var(--ag-border-color);
+    border: 1px solid color-mix(in srgb, transparent, #181d1f 15%);
+
+    [data-color-scheme='dark'] & {
+        border-color: color-mix(in srgb, transparent, #FFF 15%);
+    }
 }
+
 
 #myChart .ag-chart,
 .my-chart .ag-chart {

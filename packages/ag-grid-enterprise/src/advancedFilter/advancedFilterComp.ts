@@ -110,7 +110,7 @@ export class AdvancedFilterComp extends Component {
     }
 
     private setupBuilderButton(): void {
-        this.eBuilderFilterButtonIcon.appendChild(_createIconNoSpan('advancedFilterBuilder', this.gos)!);
+        this.eBuilderFilterButtonIcon.appendChild(_createIconNoSpan('advancedFilterBuilder', this.beans)!);
         this.eBuilderFilterButtonLabel.innerText = this.advFilterExpSvc.translate('advancedFilterBuilder');
         this.activateTabIndex([this.eBuilderFilterButton]);
         this.addManagedElementListeners(this.eBuilderFilterButton, { click: () => this.openBuilder() });

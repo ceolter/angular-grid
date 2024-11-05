@@ -37,7 +37,7 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
             pickerAriaLabelValue: 'Select Field',
             pickerType: 'ag-list',
             className: 'ag-select',
-            pickerIcon: 'smallDown',
+            pickerIcon: 'selectOpen',
             ariaRole: 'combobox',
             ...config,
         });

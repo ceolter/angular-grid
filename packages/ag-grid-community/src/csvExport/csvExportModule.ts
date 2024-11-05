@@ -5,11 +5,17 @@ import { CsvCreator } from './csvCreator';
 import { exportDataAsCsv, getDataAsCsv } from './csvExportApi';
 import { GridSerializer } from './gridSerializer';
 
+/**
+ * @feature Import & Export -> CSV Export
+ */
 export const CsvExportCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CsvExportCoreModule'),
     beans: [CsvCreator, GridSerializer],
 };
 
+/**
+ * @feature Import & Export -> CSV Export
+ */
 export const CsvExportApiModule: _ModuleWithApi<_CsvExportGridApi> = {
     ...baseCommunityModule('CsvExportApiModule'),
     apiFunctions: {
@@ -19,6 +25,9 @@ export const CsvExportApiModule: _ModuleWithApi<_CsvExportGridApi> = {
     dependsOn: [CsvExportCoreModule],
 };
 
+/**
+ * @feature Import & Export -> CSV Export
+ */
 export const CsvExportModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CsvExportModule'),
     dependsOn: [CsvExportCoreModule, CsvExportApiModule],

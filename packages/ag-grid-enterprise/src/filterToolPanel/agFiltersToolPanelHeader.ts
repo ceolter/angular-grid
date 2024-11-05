@@ -75,10 +75,10 @@ export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeader
     }
 
     private createExpandIcons() {
-        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.gos)!));
-        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.gos)!));
+        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('accordionOpen', this.beans)!));
+        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('accordionClosed', this.beans)!));
         this.eExpand.appendChild(
-            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.gos)!)
+            (this.eExpandIndeterminate = _createIconNoSpan('accordionIndeterminate', this.beans)!)
         );
     }
 

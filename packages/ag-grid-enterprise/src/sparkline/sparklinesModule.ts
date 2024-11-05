@@ -6,6 +6,9 @@ import { sparklineCSS } from './sparkline.css-GENERATED';
 import { SparklineCellRenderer } from './sparklineCellRenderer';
 import { SparklineTooltipSingleton } from './tooltip/sparklineTooltipSingleton';
 
+/**
+ * @feature Sparklines
+ */
 export const SparklinesModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SparklinesModule'),
     beans: [SparklineTooltipSingleton],

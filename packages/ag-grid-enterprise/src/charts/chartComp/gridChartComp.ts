@@ -5,6 +5,7 @@ import type {
     ChartModel,
     ChartToolPanelName,
     ChartType,
+    Environment,
     FocusService,
     IAggFunc,
     PartialCellRange,
@@ -75,6 +76,7 @@ export class GridChartComp extends Component {
     private focusSvc: FocusService;
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
+    private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
@@ -83,6 +85,7 @@ export class GridChartComp extends Component {
         this.focusSvc = beans.focusSvc;
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
+        this.environment = beans.environment;
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
@@ -154,6 +157,23 @@ export class GridChartComp extends Component {
 
         this.update();
         this.raiseChartCreatedEvent();
+    }
+
+    private themeEl?: HTMLElement;
+    public setThemeEl(el: HTMLElement): void {
+        if (!this.themeEl) {
+            this.addManagedEventListeners({
+                gridStylesChanged: this.updateTheme.bind(this),
+            });
+        }
+        this.themeEl = el;
+        this.updateTheme();
+    }
+
+    private updateTheme() {
+        if (this.themeEl) {
+            this.environment.applyThemeClasses(this.themeEl);
+        }
     }
 
     private createChart(): void {

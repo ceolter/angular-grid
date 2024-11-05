@@ -50,11 +50,12 @@ export { ClipboardModule, ClipboardApiModule, ClipboardCoreModule } from './clip
 export { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
 export { MasterDetailModule, MasterDetailApiModule, MasterDetailCoreModule } from './masterDetail/masterDetailModule';
 export {
+    CellSelectionModule,
+    CellSelectionApiModule,
+    CellSelectionCoreModule,
+    CellSelectionFillHandleModule,
+    CellSelectionRangeHandleModule,
     RangeSelectionModule,
-    RangeSelectionApiModule,
-    RangeSelectionCoreModule,
-    RangeSelectionFillHandleModule,
-    RangeSelectionRangeHandleModule,
 } from './rangeSelection/rangeSelectionModule';
 export {
     ServerSideRowModelModule,

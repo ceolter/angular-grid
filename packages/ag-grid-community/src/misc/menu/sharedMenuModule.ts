@@ -4,11 +4,17 @@ import type { _ModuleWithApi, _ModuleWithoutApi } from '../../interfaces/iModule
 import { hidePopupMenu, showColumnMenu } from './menuApi';
 import { MenuService } from './menuService';
 
+/**
+ * @internal
+ */
 export const SharedMenuModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SharedMenuModule'),
     beans: [MenuService],
 };
 
+/**
+ * @internal
+ */
 export const CommunityMenuApiModule: _ModuleWithApi<_CommunityMenuGridApi> = {
     ...baseCommunityModule('CommunityMenuApiModule'),
     apiFunctions: {

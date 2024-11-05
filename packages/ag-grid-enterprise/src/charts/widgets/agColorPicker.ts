@@ -24,7 +24,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
             pickerAriaLabelValue: 'Color Picker',
             pickerType: 'ag-list',
             className: 'ag-color-picker',
-            pickerIcon: 'smallDown',
+            pickerIcon: 'chartsColorPicker',
             ...config,
         });
     }

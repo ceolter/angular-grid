@@ -9,18 +9,32 @@ import { DragService } from './dragService';
 import { HorizontalResizeService } from './horizontalResizeService';
 import { RowDragService } from './rowDragService';
 
+/**
+ * @internal
+ */
 export const DragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DragModule'),
     beans: [DragService],
 };
 
+/**
+ * @feature Import & Export -> Drag & Drop
+ * @colDef dndSource, dndSourceOnRowDrag
+ */
 export const NativeDragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('NativeDragModule'),
     dynamicBeans: {
         dndSourceComp: DndSourceComp as any,
     },
+    icons: {
+        // drag handle used to pick up draggable rows
+        rowDrag: 'grip',
+    },
 };
 
+/**
+ * @internal
+ */
 export const DragAndDropModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DragAndDropModule'),
     beans: [DragAndDropService],
@@ -28,14 +42,44 @@ export const DragAndDropModule: _ModuleWithoutApi = {
     userComponents: {
         agDragAndDropImage: DragAndDropImageComponent,
     },
+    icons: {
+        // shown on drag and drop image component icon while dragging column to the side of the grid to pin
+        columnMovePin: 'pin',
+        // shown on drag and drop image component icon while dragging over part of the page that is not a drop zone
+        columnMoveHide: 'eye-slash',
+        // shown on drag and drop image component icon while dragging columns to reorder
+        columnMoveMove: 'arrows',
+        // animating icon shown when dragging a column to the right of the grid causes horizontal scrolling
+        columnMoveLeft: 'left',
+        // animating icon shown when dragging a column to the left of the grid causes horizontal scrolling
+        columnMoveRight: 'right',
+        // shown on drag and drop image component icon while dragging over Row Groups drop zone
+        columnMoveGroup: 'group',
+        // shown on drag and drop image component icon while dragging over Values drop zone
+        columnMoveValue: 'aggregation',
+        // shown on drag and drop image component icon while dragging over pivot drop zone
+        columnMovePivot: 'pivot',
+        // shown on drag and drop image component icon while dragging over drop zone that doesn't support it, e.g.
+        //     string column over aggregation drop zone
+        dropNotAllowed: 'not-allowed',
+        // drag handle used to pick up draggable rows
+        rowDrag: 'grip',
+    },
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ * @colDef rowDrag
+ */
 export const RowDragCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowDragCoreModule'),
     beans: [RowDragService],
     dependsOn: [DragAndDropModule],
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ */
 export const RowDragApiModule: _ModuleWithApi<_DragGridApi> = {
     ...baseCommunityModule('RowDragApiModule'),
     apiFunctions: {
@@ -46,11 +90,17 @@ export const RowDragApiModule: _ModuleWithApi<_DragGridApi> = {
     dependsOn: [RowDragCoreModule],
 };
 
+/**
+ * @feature Rows -> Row Dragging
+ */
 export const RowDragModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowDragModule'),
     dependsOn: [RowDragApiModule],
 };
 
+/**
+ * @internal
+ */
 export const HorizontalResizeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('HorizontalResizeModule'),
     beans: [HorizontalResizeService],

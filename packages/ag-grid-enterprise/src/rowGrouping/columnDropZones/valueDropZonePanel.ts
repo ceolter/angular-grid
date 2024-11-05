@@ -21,7 +21,7 @@ export class ValuesDropZonePanel extends BaseDropZonePanel {
         const title = localeTextFunc('values', 'Values');
 
         super.init({
-            icon: _createIconNoSpan('valuePanel', this.gos, null)!,
+            icon: _createIconNoSpan('valuePanel', this.beans, null)!,
             emptyMessage: emptyMessage,
             title: title,
         });

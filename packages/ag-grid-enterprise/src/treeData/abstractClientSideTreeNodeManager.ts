@@ -297,11 +297,12 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 this.setGroupData(row, key);
             }
         } else {
+            row.groupData = null;
             row.parent = details.rootNode;
         }
     }
 
-    protected treeCommitPostOrder(details: TreeCommitDetails, node: TreeNode, collapsed: boolean): void {
+    private treeCommitPostOrder(details: TreeCommitDetails, node: TreeNode, collapsed: boolean): void {
         const parent = node.parent!;
         const row = node.row!;
         const oldRow = node.oldRow;

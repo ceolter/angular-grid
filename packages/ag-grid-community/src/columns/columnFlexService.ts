@@ -31,6 +31,7 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
 
     public refreshFlexedColumns(
         params: {
+            resizingCols?: AgColumn[];
             skipSetLeft?: boolean;
             viewportWidth?: number;
             source?: ColumnEventType;
@@ -50,14 +51,27 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
             return [];
         }
 
+        const visibleCenterCols = this.visibleCols.centerCols;
+        let flexAfterDisplayIndex = -1;
+        if (params.resizingCols) {
+            const allResizingCols = new Set(params.resizingCols);
+            // find the last resizing col, as only cols after this one are affected by the resizing
+            for (let i = visibleCenterCols.length - 1; i >= 0; i--) {
+                if (allResizingCols.has(visibleCenterCols[i])) {
+                    flexAfterDisplayIndex = i;
+                    break;
+                }
+            }
+        }
+
         // NOTE this is an implementation of the "Resolve Flexible Lengths" part
         // of the flex spec, simplified because we only support flex growing not
         // shrinking, and don't support flex-basis.
         // https://www.w3.org/TR/css-flexbox-1/#resolve-flexible-lengths
         let hasFlexItems = false;
-        const items = this.visibleCols.centerCols.map((col): FlexItem => {
+        const items = visibleCenterCols.map((col, i): FlexItem => {
             const flex = col.getFlex();
-            const isFlex = flex != null;
+            const isFlex = flex != null && i > flexAfterDisplayIndex;
 
             hasFlexItems ||= isFlex;
 

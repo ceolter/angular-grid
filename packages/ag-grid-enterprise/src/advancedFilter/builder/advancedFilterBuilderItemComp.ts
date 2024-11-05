@@ -114,7 +114,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
         } else {
             this.setupTreeLines(level);
 
-            this.eDragHandle.appendChild(_createIconNoSpan('advancedFilterBuilderDrag', this.gos)!);
+            this.eDragHandle.appendChild(_createIconNoSpan('advancedFilterBuilderDrag', this.beans)!);
             this.setupValidation();
             this.setupMoveButtons(showMove);
             this.setupAddButton();
@@ -207,7 +207,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
     }
 
     private setupValidation(): void {
-        this.eValidation.appendChild(_createIconNoSpan('advancedFilterBuilderInvalid', this.gos)!);
+        this.eValidation.appendChild(_createIconNoSpan('advancedFilterBuilderInvalid', this.beans)!);
         this.validationTooltipFeature = this.createOptionalManagedBean(
             this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
                 getGui: () => this.eValidation,
@@ -245,7 +245,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
     }
 
     private setupRemoveButton(): void {
-        this.eRemoveButton.appendChild(_createIconNoSpan('advancedFilterBuilderRemove', this.gos)!);
+        this.eRemoveButton.appendChild(_createIconNoSpan('advancedFilterBuilderRemove', this.beans)!);
         this.addManagedListeners(this.eRemoveButton, {
             click: () => this.removeItem(),
             keydown: (event: KeyboardEvent) => {
@@ -273,7 +273,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
 
     private setupMoveButtons(showMove?: boolean): void {
         if (showMove) {
-            this.eMoveUpButton.appendChild(_createIconNoSpan('advancedFilterBuilderMoveUp', this.gos)!);
+            this.eMoveUpButton.appendChild(_createIconNoSpan('advancedFilterBuilderMoveUp', this.beans)!);
 
             this.addManagedListeners(this.eMoveUpButton, {
                 click: () => this.moveItem(true),
@@ -303,7 +303,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                 this.advFilterExpSvc.translate('advancedFilterBuilderMoveUpButtonTooltip')
             );
 
-            this.eMoveDownButton.appendChild(_createIconNoSpan('advancedFilterBuilderMoveDown', this.gos)!);
+            this.eMoveDownButton.appendChild(_createIconNoSpan('advancedFilterBuilderMoveDown', this.beans)!);
             this.addManagedListeners(this.eMoveDownButton, {
                 click: () => this.moveItem(false),
                 keydown: (event: KeyboardEvent) => {
@@ -378,6 +378,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                     getEditorParams,
                     wrapperClassName: cssClass,
                     ariaLabel,
+                    pickerIcon: 'advancedFilterBuilderSelectOpen',
                 })
             );
             this.addManagedListeners(comp, {

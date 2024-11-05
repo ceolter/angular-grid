@@ -1,11 +1,11 @@
-import type { BeanCollection, ChartToolbarMenuItemOptions } from 'ag-grid-community';
+import type { BeanCollection, ChartToolbarMenuItemOptions, IconName } from 'ag-grid-community';
 import { Component, RefPlaceholder, _clearElement, _createIconNoSpan, _getDocument } from 'ag-grid-community';
 
 import type { ChartTranslationKey, ChartTranslationService } from '../services/chartTranslationService';
 
 interface ChartToolbarButton {
     buttonName: ChartToolbarMenuItemOptions;
-    iconName: string;
+    iconName: IconName;
     callback: (eventSource: HTMLElement) => void;
 }
 
@@ -57,8 +57,8 @@ export class ChartToolbar extends Component {
         });
     }
 
-    private createButton(iconName: string): Element {
-        const buttonEl = _createIconNoSpan(iconName, this.gos, undefined, true)!;
+    private createButton(iconName: IconName): Element {
+        const buttonEl = _createIconNoSpan(iconName, this.beans)!;
         buttonEl.classList.add('ag-chart-menu-icon');
 
         const wrapperEl = _getDocument(this.gos).createElement('button');

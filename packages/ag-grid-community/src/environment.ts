@@ -240,11 +240,11 @@ export class Environment extends BeanStub implements NamedBean {
                 loadThemeGoogleFonts: gos.get('loadThemeGoogleFonts'),
                 container: eGridDiv,
             });
-            this.fireGridStylesChangedEvent('themeChanged');
         }
         if (newThemeClass !== oldThemeClass) {
             this.themeClass = newThemeClass;
             this.applyThemeClasses(eGridDiv);
+            this.fireGridStylesChangedEvent('themeChanged');
         }
         // --ag-legacy-styles-loaded is defined by the Sass themes which
         // shouldn't be used at the same time as Theming API

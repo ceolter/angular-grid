@@ -18,7 +18,7 @@ export class DndSourceComp extends Component {
 
     public postConstruct(): void {
         const eGui = this.getGui();
-        eGui.appendChild(_createIconNoSpan('rowDrag', this.gos, null)!);
+        eGui.appendChild(_createIconNoSpan('rowDrag', this.beans, null)!);
         // we need to stop the event propagation here to avoid starting a range selection while dragging
         this.addGuiEventListener('mousedown', (e: MouseEvent) => {
             e.stopPropagation();
