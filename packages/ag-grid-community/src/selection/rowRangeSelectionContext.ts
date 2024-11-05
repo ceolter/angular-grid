@@ -1,16 +1,16 @@
 import type { RowNode } from '../entities/rowNode';
 import type { IRowModel } from '../interfaces/iRowModel';
 
-interface RangePartition {
-    keep: readonly RowNode[];
-    discard: readonly RowNode[];
+interface RangePartition<TNode> {
+    keep: readonly TNode[];
+    discard: readonly TNode[];
 }
 
 export interface ISelectionContext<TNode> {
     reset(): void;
     setRoot(node: TNode): void;
     setEndRange(node: TNode): void;
-    getRange(): readonly RowNode[];
+    getRange(): readonly TNode[];
     getRoot(): TNode | null;
     isInRange(node: TNode): boolean;
     /**
@@ -20,7 +20,7 @@ export interface ISelectionContext<TNode> {
      * @param node - Node at which to truncate the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    truncate(node: TNode): RangePartition;
+    truncate(node: TNode): RangePartition<TNode>;
     /**
      * Extends the range to the given node. Returns nodes that remain in the current range
      * and those that should be removed.
@@ -28,7 +28,7 @@ export interface ISelectionContext<TNode> {
      * @param node - Node marking the new end of the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    extend(node: TNode, groupSelectsChildren?: boolean): RangePartition;
+    extend(node: TNode, groupSelectsChildren?: boolean): RangePartition<TNode>;
 }
 
 /**
@@ -110,7 +110,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         return this.end;
     }
 
-    public truncate(node: RowNode): RangePartition {
+    public truncate(node: RowNode): RangePartition<RowNode> {
         const range = this.getRange();
 
         if (range.length === 0) {
@@ -132,7 +132,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         }
     }
 
-    public extend(node: RowNode, groupSelectsChildren = false): RangePartition {
+    public extend(node: RowNode, groupSelectsChildren = false): RangePartition<RowNode> {
         const root = this.getRoot();
 
         // If the root node is null, we cannot iterate from the root to the given `node`.

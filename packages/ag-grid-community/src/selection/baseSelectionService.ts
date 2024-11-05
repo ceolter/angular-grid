@@ -111,7 +111,11 @@ export abstract class BaseSelectionService extends BeanStub {
     protected abstract updateSelectable(changedPath?: ChangedPath): void;
 
     protected isRowSelectionBlocked(rowNode: RowNode): boolean {
-        return !rowNode.selectable || !!rowNode.rowPinned || !_isRowSelection(this.gos);
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return false;
+        }
+        return !rowNode.selectable || !!rowNode.rowPinned;
     }
 
     public updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean {

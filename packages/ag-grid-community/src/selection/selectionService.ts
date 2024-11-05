@@ -110,13 +110,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         if (isRowClicked && !(enableClickSelection || enableDeselection)) return 0;
 
         if (event.shiftKey && isMeta && this.isMultiSelect()) {
-            // range deselection
             const root = selectionCtx.getRoot();
             if (root && !root.isSelected()) {
-                // deselection mode
+                // range deselection mode
                 const partition = selectionCtx.extend(node, groupSelectsDescendants);
                 return this.selectRange(partition.keep, false, source);
             } else {
+                // default to range selection
                 const partition = selectionCtx.isInRange(node)
                     ? selectionCtx.truncate(node)
                     : selectionCtx.extend(node, groupSelectsDescendants);
@@ -178,19 +178,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
-        if (!_isRowSelection(this.gos)) {
-            _warn(132);
-            return 0;
-        }
-
         const { newValue, clearSelection, suppressFinishActions, nodes, event, source } = params;
 
         if (nodes.length === 0) return 0;
-
-        if (nodes.length > 1 && !this.isMultiSelect()) {
-            _warn(130);
-            return 0;
-        }
 
         let updatedCount = 0;
         for (let i = 0; i < nodes.length; i++) {
@@ -224,8 +214,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             if (updatedCount > 0) {
                 this.updateGroupsFromChildrenSelections(source);
 
-                // this is the very end of the 'action node', so we are finished all the updates,
-                // include any parent / child changes that this method caused
+                // this is the very end of the 'action node', so we finished all the updates,
+                // including any parent / child changes that this method caused
                 this.dispatchSelectionChanged(source);
             }
         }

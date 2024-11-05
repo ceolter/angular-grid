@@ -1,4 +1,4 @@
-import type { IRowModel, ISelectionContext, RowNode } from 'ag-grid-community';
+import type { IRowModel, ISelectionContext } from 'ag-grid-community';
 
 /**
  * This is the same as RowRangeSelectionContext in core, except that we store RowNode IDs
@@ -13,7 +13,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
      * actual grid.
      */
     private end: string | null = null;
-    private cachedRange: RowNode[] = [];
+    private cachedRange: string[] = [];
 
     constructor(rowModel: IRowModel) {
         this.rowModel = rowModel;
@@ -40,7 +40,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
         return this.root;
     }
 
-    public getRange(): RowNode[] {
+    public getRange(): readonly string[] {
         if (this.cachedRange.length === 0) {
             const root = this.root ? this.rowModel.getRowNode(this.root) : undefined;
             const end = this.end ? this.rowModel.getRowNode(this.end) : undefined;
@@ -49,7 +49,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
                 return this.cachedRange;
             }
 
-            this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end);
+            this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end).map((n) => n.id!);
         }
 
         return this.cachedRange;
@@ -60,7 +60,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
             return false;
         }
 
-        return this.getRange().some((nodeInRange) => nodeInRange.id === node);
+        return this.getRange().some((nodeInRange) => nodeInRange === node);
     }
 
     /**
@@ -70,7 +70,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
      * @param node - Node at which to truncate the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    public truncate(node: string): { keep: RowNode[]; discard: RowNode[] } {
+    public truncate(node: string): { keep: readonly string[]; discard: readonly string[] } {
         const range = this.getRange();
 
         if (range.length === 0) {
@@ -79,9 +79,9 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
 
         // if root is first, then selection range goes "down" the table
         // so we should be unselecting the range _after_ the given `node`
-        const discardAfter = range[0].id === this.root!;
+        const discardAfter = range[0] === this.root!;
 
-        const idx = range.findIndex((rowNode) => rowNode.id === node);
+        const idx = range.findIndex((rowNode) => rowNode === node);
         if (idx > -1) {
             const above = range.slice(0, idx);
             const below = range.slice(idx + 1);
@@ -99,7 +99,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
      * @param node - Node marking the new end of the range
      * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
      */
-    public extend(node: string, groupSelectsChildren = false): { keep: RowNode[]; discard: RowNode[] } {
+    public extend(node: string, groupSelectsChildren = false): { keep: readonly string[]; discard: readonly string[] } {
         // If the root ID is null, this is the first selection.
         // That means we add the given `node` plus any leaf children to the selection
         if (this.root == null) {
@@ -107,9 +107,9 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
             const rowNode = this.rowModel.getRowNode(node);
             if (rowNode) {
                 if (groupSelectsChildren) {
-                    rowNode.depthFirstSearch((node) => !node.group && keep.push(node));
+                    rowNode.depthFirstSearch((node) => !node.group && keep.push(node.id!));
                 }
-                keep.push(rowNode);
+                keep.push(rowNode.id!);
             }
 
             // We now have a node we can use as the root of the selection
@@ -128,7 +128,7 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
         // If the root node is no longer retrievable, we cannot iterate from the root
         // to the given `node`. So we keep the existing selection, plus the given `node`
         if (rootNode == null) {
-            return { keep: this.getRange().concat(rowNode), discard: [] };
+            return { keep: this.getRange().concat(rowNode.id!), discard: [] };
         }
 
         const newRange = this.rowModel.getNodesInRangeForSelection(rootNode, rowNode);

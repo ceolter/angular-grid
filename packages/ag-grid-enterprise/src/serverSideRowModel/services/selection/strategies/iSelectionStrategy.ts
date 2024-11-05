@@ -22,4 +22,5 @@ export interface ISelectionStrategy extends Bean {
     deselectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void;
     getSelectAllState(selectAll?: SelectAllMode): boolean | null;
     deleteSelectionStateFromParent(parentRoute: string[], removedNodeIds: string[]): boolean;
+    handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
 }

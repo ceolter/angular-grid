@@ -324,34 +324,6 @@ export type SelectionEventSourceType =
     | 'uiSelectAllCurrentPage'
     | 'gridInitializing';
 
-/**
- * Determines whether the selection event was generated directly by a user interacting
- * with the UI
- */
-export const isSelectionUIEvent = (
-    source: SelectionEventSourceType
-): source is Exclude<
-    SelectionEventSourceType,
-    | 'api'
-    | 'apiSelectAll'
-    | 'apiSelectAllFiltered'
-    | 'apiSelectAllCurrentPage'
-    | 'rowDataChanged'
-    | 'rowGroupChanged'
-    | 'selectableChanged'
-    | 'gridInitializing'
-> => {
-    return (
-        source === 'checkboxSelected' ||
-        source === 'rowClicked' ||
-        source === 'spaceKey' ||
-        source === 'keyboardSelectAll' ||
-        source === 'uiSelectAll' ||
-        source === 'uiSelectAllFiltered' ||
-        source === 'uiSelectAllCurrentPage'
-    );
-};
-
 export interface SelectionChangedEvent<TData = any, TContext = any>
     extends AgGlobalEvent<'selectionChanged', TData, TContext> {
     source: SelectionEventSourceType;

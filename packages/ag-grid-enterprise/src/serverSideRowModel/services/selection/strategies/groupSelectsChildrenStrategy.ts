@@ -12,7 +12,16 @@ import type {
     RowNode,
     SelectionEventSourceType,
 } from 'ag-grid-community';
-import { BeanStub, _error, _isMultiRowSelection, _last, _warn, isSelectionUIEvent } from 'ag-grid-community';
+import {
+    BeanStub,
+    _error,
+    _getEnableDeselection,
+    _getEnableSelection,
+    _getEnableSelectionWithoutKeys,
+    _isMultiRowSelection,
+    _last,
+    _warn,
+} from 'ag-grid-community';
 
 import type { LazyStore } from '../../../stores/lazy/lazyStore';
 import { ServerSideRowRangeSelectionContext } from '../serverSideRowRangeSelectionContext';
@@ -160,55 +169,78 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         return anyStateChanged;
     }
 
-    private overrideSelectionValue(newValue: boolean, source: SelectionEventSourceType): boolean {
-        if (!isSelectionUIEvent(source)) {
-            return newValue;
-        }
+    public handleMouseEvent(event: MouseEvent, rowNode: RowNode<any>, source: SelectionEventSourceType): number {
+        const { gos, selectionCtx } = this;
+        const currentSelection = rowNode.isSelected();
+        const isMeta = event.metaKey || event.ctrlKey;
+        const isRowClicked = source === 'rowClicked';
+        const isMultiSelect = _isMultiRowSelection(gos);
+        const enableClickSelection = _getEnableSelection(gos);
+        const enableDeselection = _getEnableDeselection(gos);
+        const rowNodeId = rowNode.id!;
 
-        const root = this.selectionCtx.getRoot();
-        const node = root ? this.rowModel.getRowNode(root) : null;
+        if (isRowClicked && !(enableClickSelection || enableDeselection)) return 0;
 
-        return node ? node.isSelected() ?? false : true;
-    }
-
-    public setNodesSelected({ nodes, newValue, rangeSelect, clearSelection, source }: ISetNodesSelectedParams): number {
-        if (nodes.length === 0) return 0;
-
-        if (rangeSelect) {
-            if (nodes.length > 1) {
-                throw new Error('AG Grid: cannot select multiple rows when using rangeSelect');
-            }
-            const node = nodes[0];
-            const newSelectionValue = this.overrideSelectionValue(newValue, source);
-
-            if (this.selectionCtx.isInRange(node.id!)) {
-                const partition = this.selectionCtx.truncate(node.id!);
-
-                // When we are selecting a range, we may need to de-select part of the previously
-                // selected range (see AG-9620)
-                // When we are de-selecting a range, we can/should leave the other nodes unchanged
-                // (i.e. selected nodes outside the current range should remain selected - see AG-10215)
-                if (newSelectionValue) {
-                    this.selectRange(partition.discard, false);
-                }
-                this.selectRange(partition.keep, newSelectionValue);
-                return 1;
+        if (event.shiftKey && isMeta && isMultiSelect) {
+            const rootId = selectionCtx.getRoot();
+            const root = rootId && this.rowModel.getRowNode(rootId);
+            if (root && !root.isSelected()) {
+                const partition = selectionCtx.extend(rowNodeId, false);
+                this.selectRange(partition.keep, false);
             } else {
-                const fromNode = this.selectionCtx.getRoot();
-                const toNode = node;
-                if (fromNode !== toNode.id) {
-                    const partition = this.selectionCtx.extend(node.id!, true);
-                    if (newSelectionValue) {
-                        this.selectRange(partition.discard, false);
-                    }
-                    this.selectRange(partition.keep, newSelectionValue);
-                    return 1;
-                }
+                const partition = selectionCtx.isInRange(rowNodeId)
+                    ? selectionCtx.truncate(rowNodeId)
+                    : selectionCtx.extend(rowNodeId, false);
+                this.selectRange(partition.discard, false);
+                this.selectRange(partition.keep, true);
             }
             return 1;
-        }
+        } else if (event.shiftKey && isMultiSelect) {
+            const root = selectionCtx.getRoot();
+            const selectionRootNode = root ? this.rowModel.getRowNode(root) : null;
+            const partition = selectionCtx.isInRange(rowNodeId)
+                ? selectionCtx.truncate(rowNodeId)
+                : selectionCtx.extend(rowNodeId, false);
 
-        const onlyThisNode = clearSelection && newValue && !rangeSelect;
+            if (selectionRootNode && !selectionRootNode.isSelected()) {
+                this.selectedState = { selectAllChildren: false, toggledNodes: new Map() };
+            } else {
+                this.selectRange(partition.discard, false);
+            }
+            this.selectRange(partition.keep, true);
+            return 1;
+        } else if (isMeta) {
+            selectionCtx.setRoot(rowNode.id!);
+            const shouldClear = !isMultiSelect;
+            const newValue = currentSelection ? (isRowClicked ? !enableDeselection : false) : true;
+
+            if (shouldClear) {
+                this.deselectAllRowNodes();
+            }
+            const idPathToNode = this.getRouteToNode(rowNode);
+            this.recursivelySelectNode(idPathToNode, this.selectedState, newValue);
+            return 1;
+        } else {
+            selectionCtx.setRoot(rowNode.id!);
+            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+
+            const shouldClear = !isMultiSelect || (isRowClicked && !enableSelectionWithoutKeys);
+            const newValue = currentSelection ? (isRowClicked ? !enableDeselection : false) : true;
+
+            if (shouldClear) {
+                this.deselectAllRowNodes();
+            }
+            const idPathToNode = this.getRouteToNode(rowNode);
+            this.recursivelySelectNode(idPathToNode, this.selectedState, newValue);
+
+            return 1;
+        }
+    }
+
+    public setNodesSelected({ nodes, newValue, clearSelection }: ISetNodesSelectedParams): number {
+        if (nodes.length === 0) return 0;
+
+        const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
                 throw new Error("AG Grid: cannot select multiple rows when rowSelection.mode is set to 'singleRow'");
@@ -225,9 +257,14 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         return 1;
     }
 
-    private selectRange(nodes: readonly RowNode[], newValue: boolean) {
+    private selectRange(nodes: readonly string[], newValue: boolean) {
         // sort routes longest to shortest, meaning we can do the lowest level children first
-        const routes = nodes.map(this.getRouteToNode).sort((a, b) => b.length - a.length);
+        const routes = nodes
+            .map((id) => {
+                const node = this.rowModel.getRowNode(id);
+                return node ? this.getRouteToNode(node) : [];
+            })
+            .sort((a, b) => b.length - a.length);
 
         // keep track of nodes we've seen so we can skip branches we've visited already
         const seen = new Set<RowNode>();

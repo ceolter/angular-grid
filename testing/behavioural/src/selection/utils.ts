@@ -36,10 +36,16 @@ export function toggleHeaderCheckboxByIndex(index: number, opts?: MouseEventInit
     getHeaderCheckboxByIndex(index)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
 }
 
-export function expandGroupRowByIndex(index: number, opts?: MouseEventInit): void {
+export function clickExpandGroupRowByIndex(index: number, opts?: MouseEventInit): void {
     getRowByIndex(index)
         ?.querySelector<HTMLElement>('.ag-group-contracted')
         ?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+}
+
+export async function expandGroupRowByIndex(api: GridApi, index: number, opts?: MouseEventInit): Promise<void> {
+    const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
+    clickExpandGroupRowByIndex(index, opts);
+    await updated;
 }
 
 export function assertSelectedRowsByIndex(indices: number[], api: GridApi): void {

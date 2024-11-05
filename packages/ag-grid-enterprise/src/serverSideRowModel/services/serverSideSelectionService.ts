@@ -76,13 +76,14 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         if (this.isRowSelectionBlocked(rowNode)) return 0;
 
         if (event instanceof MouseEvent) {
-            return this.handleMouseEvent(event, rowNode, source);
+            const num = this.selectionStrategy.handleMouseEvent(event, rowNode, source);
+            this.shotgunResetNodeSelectionState();
+            this.dispatchSelectionChanged(source);
+            return num;
         } else {
             throw new Error('unimplemented');
         }
     }
-
-    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {}
 
     public getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null {
         return this.selectionStrategy.getSelectedState();
@@ -115,11 +116,6 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
         if (nodes.length > 1 && this.selectionMode !== 'multiRow') {
             _warn(130);
-            return 0;
-        }
-
-        if (nodes.length > 1 && params.rangeSelect) {
-            _warn(131);
             return 0;
         }
 

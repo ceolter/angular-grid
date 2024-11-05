@@ -12,11 +12,13 @@ import type {
 import {
     BeanStub,
     _error,
+    _getEnableDeselection,
+    _getEnableSelection,
+    _getEnableSelectionWithoutKeys,
     _isMultiRowSelection,
     _isUsingNewRowSelectionAPI,
     _last,
     _warn,
-    isSelectionUIEvent,
 } from 'ag-grid-community';
 
 import { ServerSideRowRangeSelectionContext } from '../serverSideRowRangeSelectionContext';
@@ -115,64 +117,115 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
         return anyNodesToggled;
     }
 
-    private overrideSelectionValue(newValue: boolean, source: SelectionEventSourceType): boolean {
-        if (!isSelectionUIEvent(source)) {
-            return newValue;
-        }
-
-        const root = this.selectionCtx.getRoot();
-        const node = root ? this.rowModel.getRowNode(root) : null;
-
-        return node ? node.isSelected() ?? false : true;
-    }
-
     public handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
+        const { gos, selectionCtx } = this;
         const currentSelection = rowNode.isSelected();
         const isMeta = event.metaKey || event.ctrlKey;
         const isRowClicked = source === 'rowClicked';
+        const isMultiSelect = _isMultiRowSelection(gos);
+        const enableClickSelection = _getEnableSelection(gos);
+        const enableDeselection = _getEnableDeselection(gos);
+        const rowNodeId = rowNode.id!;
 
-        if (event.shiftKey && isMeta) {
-            throw new Error('unimplemented');
-        } else if (event.shiftKey && _isMultiRowSelection(this.gos)) {
-            throw new Error('unimplemented');
+        if (isRowClicked && !(enableClickSelection || enableDeselection)) return 0;
+
+        const updateNode = (node: RowNode, val: boolean, shouldClear: boolean) => {
+            if (val) {
+                if (shouldClear) {
+                    this.selectedNodes = {};
+                }
+                this.selectedNodes[node.id!] = node;
+            } else {
+                delete this.selectedNodes[node.id!];
+            }
+
+            const state = this.selectedState;
+            const conformsToSelectAll = val === state.selectAll;
+            if (conformsToSelectAll) {
+                state.toggledNodes.delete(node.id!);
+            } else {
+                state.toggledNodes.add(node.id!);
+            }
+        };
+
+        if (event.shiftKey && isMeta && isMultiSelect) {
+            const rootId = selectionCtx.getRoot();
+            const root = rootId && this.rowModel.getRowNode(rootId);
+            if (root && !root.isSelected()) {
+                const partition = selectionCtx.extend(rowNodeId, false);
+                partition.keep.forEach((nodeId) => {
+                    const node = this.rowModel.getRowNode(nodeId);
+                    if (node) {
+                        updateNode(node, false, false);
+                    }
+                });
+            } else {
+                const partition = selectionCtx.isInRange(rowNodeId)
+                    ? selectionCtx.truncate(rowNodeId)
+                    : selectionCtx.extend(rowNodeId, false);
+                partition.discard.forEach((nodeId) => {
+                    const node = this.rowModel.getRowNode(nodeId);
+                    if (node) {
+                        updateNode(node, false, false);
+                    }
+                });
+                partition.keep.forEach((nodeId) => {
+                    const node = this.rowModel.getRowNode(nodeId);
+                    if (node) {
+                        updateNode(node, true, false);
+                    }
+                });
+            }
+            return 1;
+        } else if (event.shiftKey && isMultiSelect) {
+            const root = selectionCtx.getRoot();
+            const selectionRootNode = root ? this.rowModel.getRowNode(root) : null;
+            const partition = selectionCtx.isInRange(rowNodeId)
+                ? selectionCtx.truncate(rowNodeId)
+                : selectionCtx.extend(rowNodeId, false);
+            if (selectionRootNode && !selectionRootNode.isSelected()) {
+                this.selectedState = { selectAll: false, toggledNodes: new Set() };
+                this.selectedNodes = {};
+            } else {
+                partition.discard.forEach((nodeId) => {
+                    const node = this.rowModel.getRowNode(nodeId);
+                    if (node) {
+                        updateNode(node, false, false);
+                    }
+                });
+            }
+            partition.keep.forEach((nodeId) => {
+                const node = this.rowModel.getRowNode(nodeId);
+                if (node) {
+                    updateNode(node, true, false);
+                }
+            });
+            return 1;
         } else if (isMeta) {
-            throw new Error('unimplemented');
+            selectionCtx.setRoot(rowNode.id!);
+
+            const shouldClear = !isMultiSelect;
+            const newValue = currentSelection ? (isRowClicked ? !enableDeselection : false) : true;
+
+            updateNode(rowNode, newValue, shouldClear);
+            return 1;
         } else {
             if (!rowNode.selectable) return 0;
-            this.selectionCtx.setRoot(rowNode.id!);
+            selectionCtx.setRoot(rowNode.id!);
             const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
-            const shouldClear = isRowClicked && !enableSelectionWithoutKeys;
+            const shouldClear = !isMultiSelect || (isRowClicked && !enableSelectionWithoutKeys);
             const newValue = !currentSelection;
 
-            const updateNode = (node: RowNode, val: boolean) => {
-                if (val) {
-                    if (shouldClear) {
-                        this.selectedNodes = {};
-                    }
-                    this.selectedNodes[node.id!] = node;
-                } else {
-                    delete this.selectedNodes[node.id!];
-                }
-
-                const state = this.selectedState;
-                const conformsToSelectAll = val === state.selectAll;
-                if (conformsToSelectAll) {
-                    state.toggledNodes.delete(node.id!);
-                } else {
-                    state.toggledNodes.add(node.id!);
-                }
-            };
-
-            updateNode(rowNode, newValue);
+            updateNode(rowNode, newValue, shouldClear);
             return 1;
         }
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
-        const { nodes, clearSelection, newValue, rangeSelect, source } = params;
+        const { nodes, clearSelection, newValue } = params;
         if (nodes.length === 0) return 0;
 
-        const onlyThisNode = clearSelection && newValue && !rangeSelect;
+        const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
                 throw new Error("AG Grid: cannot select multiple rows when rowSelection.mode is set to 'singleRow'");
@@ -211,38 +264,6 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
                 this.selectedState.toggledNodes.add(node.id!);
             }
         };
-
-        if (rangeSelect) {
-            if (nodes.length > 1) {
-                throw new Error('AG Grid: cannot select multiple rows when using rangeSelect');
-            }
-            const node = nodes[0];
-            const newSelectionValue = this.overrideSelectionValue(newValue, source);
-
-            if (this.selectionCtx.isInRange(node.id!)) {
-                const partition = this.selectionCtx.truncate(node.id!);
-
-                // When we are selecting a range, we may need to de-select part of the previously
-                // selected range (see AG-9620)
-                // When we are de-selecting a range, we can/should leave the other nodes unchanged
-                // (i.e. selected nodes outside the current range should remain selected - see AG-10215)
-                if (newSelectionValue) {
-                    partition.discard.forEach((node) => updateNodeState(node, false));
-                }
-                partition.keep.forEach((node) => updateNodeState(node, newSelectionValue));
-            } else {
-                const fromNode = this.selectionCtx.getRoot();
-                const toNode = node;
-                if (fromNode !== toNode.id) {
-                    const partition = this.selectionCtx.extend(node.id!);
-                    if (newSelectionValue) {
-                        partition.discard.forEach((node) => updateNodeState(node, false));
-                    }
-                    partition.keep.forEach((node) => updateNodeState(node, newSelectionValue));
-                }
-            }
-            return 1;
-        }
 
         nodes.forEach((node) => updateNodeState(node));
         this.selectionCtx.setRoot(_last(nodes).id!);
