@@ -28,6 +28,10 @@ export function setValidationDocLink(docLink: string) {
 
 type LogFn = (message: string, ...args: any[]) => void;
 
+function getErrorParts<TId extends ErrorId>(id: TId, args: GetErrorParams<TId>, defaultMessage?: string): any[] {
+    return validation?.getConsoleMessage(id, args) ?? [minifiedLog(id, args, defaultMessage)];
+}
+
 function getMsgOrDefault<TId extends ErrorId>(
     logger: LogFn,
     id: TId,
@@ -35,7 +39,7 @@ function getMsgOrDefault<TId extends ErrorId>(
     defaultMessage?: string
 ) {
     if (suppressAllLogging) return;
-    logger(`error #${id}`, ...(validation?.getConsoleMessage(id, args) ?? [minifiedLog(id, args, defaultMessage)]));
+    logger(`error #${id}`, ...getErrorParts(id, args, defaultMessage));
 }
 
 /**
@@ -146,4 +150,13 @@ export function _logPreCreationError<
     TShowMessageAtCallLocation = ErrorMap[TId],
 >(id: TId, args: GetErrorParams<TId>, defaultMessage: string) {
     getMsgOrDefault(_errorOnce, id!, args as any, defaultMessage);
+}
+
+export function _errMsg<
+    TId extends ErrorId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TShowMessageAtCallLocation = ErrorMap[TId],
+>(...args: undefined extends GetErrorParams<TId> ? [id: TId] : [id: TId, params: GetErrorParams<TId>]): string {
+    const id = args[0];
+    return `error #${id} ` + getErrorParts(id, args[1] as any).join(' ');
 }

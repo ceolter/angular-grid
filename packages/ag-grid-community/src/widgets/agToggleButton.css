@@ -12,10 +12,14 @@
     height: var(--ag-toggle-button-height);
 
     & input {
+        cursor: pointer;
         appearance: none;
         opacity: 0;
-        height: 100%;
-        width: 100%;
+        margin: 0;
+        display: block;
+        min-width: var(--ag-toggle-button-width);
+        max-width: var(--ag-toggle-button-width);
+        height: var(--ag-toggle-button-height);
     }
 
     background-color: var(--ag-toggle-button-off-background-color);

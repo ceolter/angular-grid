@@ -594,10 +594,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
     }
 
     private scrollToStickyNode(rowNode: RowNode): void {
-        const gridBodyCtrl = this.ctrlsSvc.getGridBodyCtrl();
-        const scrollFeature = gridBodyCtrl.getScrollFeature();
-
-        scrollFeature.setVerticalScrollPosition(rowNode.rowTop! - rowNode.stickyRowTop);
+        this.ctrlsSvc.getScrollFeature().setVerticalScrollPosition(rowNode.rowTop! - rowNode.stickyRowTop);
     }
 
     private isExpandable(): boolean {

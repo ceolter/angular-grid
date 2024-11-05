@@ -11,7 +11,7 @@ export function setGridAriaProperty(beans: BeanCollection, property: string, val
     if (!property) {
         return;
     }
-    const eGrid = beans.ctrlsSvc.getGridBodyCtrl().getGui();
+    const eGrid = beans.ctrlsSvc.getGridBodyCtrl().eGridBody;
     const ariaProperty = `aria-${property}`;
 
     if (value === null) {
@@ -53,7 +53,7 @@ export function flushAllAnimationFrames(beans: BeanCollection): void {
 
 export function getSizesForCurrentTheme(beans: BeanCollection) {
     return {
-        rowHeight: _getRowHeightAsNumber(beans.gos),
+        rowHeight: _getRowHeightAsNumber(beans),
         headerHeight: getHeaderHeight(beans),
     };
 }
@@ -77,7 +77,7 @@ export function getCellRendererInstances<TData = any>(
     const rowIdMap = mapRowNodes(params.rowNodes);
 
     beans.rowRenderer.getAllRowCtrls().forEach((rowCtrl) => {
-        if (rowIdMap && !isRowInMap(rowCtrl.getRowNode(), rowIdMap)) {
+        if (rowIdMap && !isRowInMap(rowCtrl.rowNode, rowIdMap)) {
             return;
         }
 

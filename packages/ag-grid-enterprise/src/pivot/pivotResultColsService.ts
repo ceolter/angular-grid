@@ -7,28 +7,29 @@ import type {
     ColGroupDef,
     ColKey,
     ColumnEventType,
-    ColumnFactory,
     ColumnModel,
-    Context,
     IPivotResultColsService,
     NamedBean,
     VisibleColsService,
     _ColumnCollections,
 } from 'ag-grid-community';
-import { BeanStub, _areEqual, _destroyColumnTree, _exists, _getColumnsFromTree } from 'ag-grid-community';
+import {
+    BeanStub,
+    _areEqual,
+    _createColumnTree,
+    _destroyColumnTree,
+    _exists,
+    _getColumnsFromTree,
+} from 'ag-grid-community';
 
 export class PivotResultColsService extends BeanStub implements NamedBean, IPivotResultColsService {
     beanName = 'pivotResultCols' as const;
 
-    private context: Context;
     private colModel: ColumnModel;
-    private colFactory: ColumnFactory;
     private visibleCols: VisibleColsService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.context = beans.context;
         this.colModel = beans.colModel;
-        this.colFactory = beans.colFactory;
         this.visibleCols = beans.visibleCols;
     }
 
@@ -39,7 +40,7 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
     private previousPivotResultCols: (AgColumn | AgProvidedColumnGroup)[] | null;
 
     public override destroy(): void {
-        _destroyColumnTree(this.context, this.pivotResultCols?.tree);
+        _destroyColumnTree(this.beans, this.pivotResultCols?.tree);
         super.destroy();
     }
 
@@ -94,13 +95,14 @@ export class PivotResultColsService extends BeanStub implements NamedBean, IPivo
 
         if (colDefs) {
             this.processPivotResultColDef(colDefs);
-            const balancedTreeResult = this.colFactory.createColumnTree(
+            const balancedTreeResult = _createColumnTree(
+                this.beans,
                 colDefs,
                 false,
                 this.pivotResultCols?.tree || this.previousPivotResultCols || undefined,
                 source
             );
-            _destroyColumnTree(this.context, this.pivotResultCols?.tree, balancedTreeResult.columnTree);
+            _destroyColumnTree(this.beans, this.pivotResultCols?.tree, balancedTreeResult.columnTree);
 
             const tree = balancedTreeResult.columnTree;
             const treeDepth = balancedTreeResult.treeDept;

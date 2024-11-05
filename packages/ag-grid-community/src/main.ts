@@ -1,12 +1,17 @@
 // columns
-export type { ColumnFactory } from './columns/columnFactory';
+export { _updateColumnState, _addColumnDefaultAndTypes, _createColumnTree } from './columns/columnFactoryUtils';
 export type { ColumnGroupService } from './columns/columnGroups/columnGroupService';
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
 export type { ColumnAutosizeService } from './columnAutosize/columnAutosizeService';
 export { BaseColsService } from './columns/baseColsService';
-export type { ColumnStateService } from './columns/columnStateService';
-export { ColumnState, ColumnStateParams, ApplyColumnStateParams } from './columns/columnStateService';
+export {
+    ColumnState,
+    ColumnStateParams,
+    ApplyColumnStateParams,
+    _resetColumnState,
+    _applyColumnState,
+} from './columns/columnStateUtils';
 export type { ColumnMoveService } from './columnMove/columnMoveService';
 export type { ColumnNameService } from './columns/columnNameService';
 export { IAggColumnNameService } from './interfaces/iAggColumnNameService';
@@ -124,7 +129,7 @@ export { AgColumn, isColumn } from './entities/agColumn';
 export { AgColumnGroup, isColumnGroup } from './entities/agColumnGroup';
 export { AgProvidedColumnGroup, isProvidedColumnGroup } from './entities/agProvidedColumnGroup';
 export { type ITreeNode, RowNode, ROW_ID_PREFIX_ROW_GROUP as _ROW_ID_PREFIX_ROW_GROUP } from './entities/rowNode';
-export { _createRowNodeFooter, _destroyRowNodeFooter, _createGlobalRowEvent } from './entities/rowNodeUtils';
+export { _createGlobalRowEvent } from './entities/rowNodeUtils';
 export {
     RowPinnedType,
     IRowNode,
@@ -257,7 +262,7 @@ export { IAdvancedFilterService } from './interfaces/iAdvancedFilterService';
 // gridPanel
 export { GridBodyCtrl, IGridBodyComp, RowAnimationCssClasses } from './gridBodyComp/gridBodyCtrl';
 export type { ScrollVisibleService } from './gridBodyComp/scrollVisibleService';
-export type { MouseEventService } from './gridBodyComp/mouseEventService';
+export { _getCellPositionForEvent, _getNormalisedMousePosition } from './gridBodyComp/mouseEventUtils';
 export type { NavigationService } from './navigation/navigationService';
 export { FakeHScrollComp } from './gridBodyComp/fakeHScrollComp';
 export { FakeVScrollComp } from './gridBodyComp/fakeVScrollComp';
@@ -300,6 +305,7 @@ export { _requestAnimationFrame } from './misc/animationFrameService';
 export type { AnimationFrameService } from './misc/animationFrameService';
 export { AlignedGrid } from './interfaces/iAlignedGrid';
 export type { MenuService } from './misc/menu/menuService';
+export { _setColMenuVisible } from './misc/menu/menuService';
 export type { IColsService } from './interfaces/iColsService';
 
 // editing / cellEditors
@@ -483,7 +489,11 @@ export { AgInputDateField } from './widgets/agInputDateField';
 export { AgSelect, AgSelectParams, AgSelectSelector } from './widgets/agSelect';
 export { ListOption } from './widgets/agList';
 export { Component, VisibleChangedEvent } from './widgets/component';
-export { ManagedFocusFeature, ManagedFocusCallbacks } from './widgets/managedFocusFeature';
+export {
+    ManagedFocusFeature,
+    ManagedFocusCallbacks,
+    FOCUS_MANAGED_CLASS as _FOCUS_MANAGED_CLASS,
+} from './widgets/managedFocusFeature';
 export { TabGuardComp } from './widgets/tabGuardComp';
 export { TabGuardCtrl, ITabGuard, TabGuardClassNames } from './widgets/tabGuardCtrl';
 export { TabGuardFeature } from './widgets/tabGuardFeature';
@@ -889,6 +899,7 @@ export {
     _isShowTooltipWhenTruncated,
 } from './tooltip/tooltipFeature';
 export { IAggregationStage } from './interfaces/iAggregationStage';
+export { IFooterService } from './interfaces/iFooterService';
 export {
     MenuItemLeafDef,
     MenuItemDef,
@@ -954,7 +965,7 @@ export {
 } from './utils/dom';
 export { _stopPropagationForAgGrid, _isStopPropagationForAgGrid, _isElementInEventPath } from './utils/event';
 export { _warnOnce, _debounce, _doOnce, _waitUntil } from './utils/function';
-export { _warn, _error } from './validation/logging';
+export { _warn, _error, _errMsg } from './validation/logging';
 export { _createIcon, _createIconNoSpan, IconName } from './utils/icon';
 export { _fuzzySuggestions } from './utils/fuzzyMatch';
 export { _exists, _missing, _jsonEquals, _toStringOrNull, _makeNull, _defaultComparator } from './utils/generic';
@@ -963,7 +974,16 @@ export { _formatNumberCommas } from './utils/number';
 export { _mergeDeep } from './utils/object';
 export { _escapeString } from './utils/string';
 export { AgPromise } from './utils/promise';
-export { _addFocusableContainerListener } from './utils/focus';
+export {
+    _addFocusableContainerListener,
+    _findFocusableElements,
+    _focusInto,
+    _findNextFocusableElement,
+    _findTabbableParent,
+    _focusGridInnerElement,
+    _isKeyboardMode,
+    _focusNextGridCoreContainer,
+} from './utils/focus';
 
 // charts
 export * from './interfaces/iChartOptions';

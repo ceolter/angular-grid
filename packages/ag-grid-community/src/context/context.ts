@@ -5,13 +5,11 @@ import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeServ
 import type { ColumnMoveService } from '../columnMove/columnMoveService';
 import type { ColumnResizeService } from '../columnResize/columnResizeService';
 import type { ColumnDefFactory } from '../columns/columnDefFactory';
-import type { ColumnFactory } from '../columns/columnFactory';
 import type { ColumnFlexService } from '../columns/columnFlexService';
 import type { ColumnGroupService } from '../columns/columnGroups/columnGroupService';
 import type { ColumnHoverService } from '../columns/columnHover/columnHoverService';
 import type { ColumnModel } from '../columns/columnModel';
 import type { ColumnNameService } from '../columns/columnNameService';
-import type { ColumnStateService } from '../columns/columnStateService';
 import type { ColumnViewportService } from '../columns/columnViewportService';
 import type { DataTypeService } from '../columns/dataTypeService';
 import type { SelectionColService } from '../columns/selectionColService';
@@ -36,7 +34,6 @@ import type { FilterManager } from '../filter/filterManager';
 import type { FilterValueService } from '../filter/filterValueService';
 import type { QuickFilterService } from '../filter/quickFilterService';
 import type { FocusService } from '../focusService';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
 import type { ScrollVisibleService } from '../gridBodyComp/scrollVisibleService';
 import type { GridDestroyService } from '../gridDestroyService';
 import type { GridOptionsService } from '../gridOptionsService';
@@ -55,6 +52,7 @@ import type { ICsvCreator } from '../interfaces/iCsvCreator';
 import type { IDetailGridApiService } from '../interfaces/iDetailGridApiService';
 import type { IExcelCreator } from '../interfaces/iExcelCreator';
 import type { IExpansionService } from '../interfaces/iExpansionService';
+import type { IFooterService } from '../interfaces/iFooterService';
 import type { IFrameworkOverrides } from '../interfaces/iFrameworkOverrides';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IMenuFactory } from '../interfaces/iMenuFactory';
@@ -74,6 +72,7 @@ import type { ApiEventService } from '../misc/apiEvents/apiEventService';
 import type { LocaleService } from '../misc/locale/localeService';
 import type { MenuService } from '../misc/menu/menuService';
 import type { StateService } from '../misc/state/stateService';
+import type { TouchService } from '../misc/touchService';
 import { _unRegisterGridModules } from '../modules/moduleRegistry';
 import type { CellNavigationService } from '../navigation/cellNavigationService';
 import type { HeaderNavigationService } from '../navigation/headerNavigationService';
@@ -228,8 +227,6 @@ export interface CoreBeanCollection {
     gridApi: GridApi;
     gridOptions: GridOptions;
     eGridDiv: HTMLElement;
-    colState: ColumnStateService;
-    colFactory: ColumnFactory;
     pivotResultCols?: IPivotResultColsService;
     autoColSvc?: IAutoColService;
     selectionColSvc?: SelectionColService;
@@ -253,7 +250,6 @@ export interface CoreBeanCollection {
     csvCreator?: ICsvCreator;
     excelCreator?: IExcelCreator;
     clipboardSvc?: IClipboardService;
-    mouseEventSvc: MouseEventService;
     cellNavigation?: CellNavigationService;
     scrollVisibleSvc: ScrollVisibleService;
     pinnedCols?: PinnedColumnService;
@@ -304,6 +300,8 @@ export interface CoreBeanCollection {
     colGroupSvc?: ColumnGroupService;
     rowAutoHeight?: RowAutoHeightService;
     rowChildrenSvc?: IRowChildrenService;
+    footerSvc?: IFooterService;
+    touchSvc?: TouchService;
 }
 
 export type BeanCollection = CoreBeanCollection & {
@@ -364,7 +362,6 @@ export type BeanName =
     | 'colAutosize'
     | 'colChooserFactory'
     | 'colDefFactory'
-    | 'colFactory'
     | 'colFilter'
     | 'colFlex'
     | 'colGroupSvc'
@@ -374,7 +371,6 @@ export type BeanName =
     | 'colMoves'
     | 'colNames'
     | 'colResize'
-    | 'colState'
     | 'colToolPanelFactory'
     | 'colViewport'
     | 'pivotResultCols'
@@ -405,6 +401,7 @@ export type BeanName =
     | 'flashCellSvc'
     | 'flattenStage'
     | 'focusSvc'
+    | 'footerSvc'
     | 'funcColsSvc'
     | 'pivotColsSvc'
     | 'rowGroupColsSvc'
@@ -431,7 +428,6 @@ export type BeanName =
     | 'menuSvc'
     | 'menuUtils'
     | 'modelItemUtils'
-    | 'mouseEventSvc'
     | 'navigation'
     | 'overlays'
     | 'paginationAutoPageSizeSvc'
@@ -480,6 +476,7 @@ export type BeanName =
     | 'syncSvc'
     | 'toolPanelColDefSvc'
     | 'tooltipSvc'
+    | 'touchSvc'
     | 'undoRedo'
     | 'userCompFactory'
     | 'valueCache'

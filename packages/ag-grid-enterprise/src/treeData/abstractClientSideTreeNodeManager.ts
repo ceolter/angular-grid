@@ -209,7 +209,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             }
 
             if (isTreeRowPathChanged(rootRow)) {
-                if (details.changedPath?.isActive()) {
+                if (details.changedPath?.active) {
                     details.changedPath.addParentNode(rootRow);
                 }
             }
@@ -357,7 +357,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         if (isTreeRowPathChanged(row)) {
-            if (treeData && details.changedPath?.isActive()) {
+            if (treeData && details.changedPath?.active) {
                 details.changedPath.addParentNode(row);
             } else {
                 markTreeRowPathChanged(details.rootNode);

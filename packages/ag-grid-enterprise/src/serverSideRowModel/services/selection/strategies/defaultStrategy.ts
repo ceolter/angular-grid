@@ -136,7 +136,8 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
         const onlyThisNode = clearSelection && newValue && !rangeSelect;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
-                throw new Error("AG Grid: cannot select multiple rows when rowSelection.mode is set to 'singleRow'");
+                _error(241);
+                return 0;
             }
             const node = nodes[0];
             if (newValue && node.selectable) {
@@ -175,7 +176,8 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
 
         if (rangeSelect) {
             if (nodes.length > 1) {
-                throw new Error('AG Grid: cannot select multiple rows when using rangeSelect');
+                _error(242);
+                return 0;
             }
             const node = nodes[0];
             const newSelectionValue = this.overrideSelectionValue(newValue, source);

@@ -1,5 +1,6 @@
 import type { AgChartThemeName } from 'ag-charts-types';
 
+import { _errMsg } from 'ag-grid-community';
 import type { ChartModel } from 'ag-grid-community';
 
 import { VERSION } from '../version';
@@ -377,7 +378,7 @@ function versionParts(versionRaw: string): VersionParts {
     const version = versionRaw.includes('-beta') ? versionRaw.replace(/-beta.*/, '') : versionRaw;
     const split = typeof version === 'string' ? version.split('.').map((v) => Number(v)) : [];
     if (split.length !== 3 || split.some((v) => isNaN(v))) {
-        throw new Error('AG Grid - Illegal version string: ' + version);
+        throw new Error(_errMsg(253, { version }));
     }
 
     return {

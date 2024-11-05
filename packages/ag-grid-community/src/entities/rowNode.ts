@@ -19,18 +19,6 @@ import { _error, _warn } from '../validation/logging';
 import type { AgColumn } from './agColumn';
 
 /**
- * When creating sibling nodes (e.g. footers), we don't copy these properties as they
- * cause the sibling to have properties which should be unique to the row.
- *
- * Note that `keyof T` does not include private members of `T`, so these need to be
- * added explicitly to this list. Take care when adding or renaming private properties
- * of `RowNode`.
- */
-export const IGNORED_SIBLING_PROPERTIES = new Set<
-    keyof RowNode | '__localEventService' | '__autoHeights' | '__checkAutoHeightsDebounced'
->(['__localEventService', '__objectId', 'sticky', '__autoHeights', '__checkAutoHeightsDebounced']);
-
-/**
  * This is used only when using tree data.
  * Implementation in enterprise-modules/row-grouping/src/rowGrouping/groupStage/treeStrategy/treeNode.ts
  */
@@ -111,7 +99,10 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     /** The current row index. If the row is filtered out or in a collapsed group, this value will be `null`. */
     public rowIndex: number | null = null;
 
-    /** Either 'top' or 'bottom' if row pinned, otherwise `undefined` or `null`. */
+    /**
+     * Either 'top' or 'bottom' if row pinned, otherwise `undefined` or `null`.
+     * If re-naming this property, you must also update `IGNORED_SIBLING_PROPERTIES`
+     */
     public rowPinned: RowPinnedType;
 
     /** When true, this row will appear in the top */
@@ -251,8 +242,11 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     public __cacheData: { [colId: string]: any };
     public __cacheVersion: number;
 
-    /** Used by sorting service - to give deterministic sort to groups. Previously we
-     * just id for this, however id is a string and had slower sorting compared to numbers. */
+    /**
+     * Used by sorting service - to give deterministic sort to groups. Previously we
+     * just id for this, however id is a string and had slower sorting compared to numbers.
+     * If re-naming this property, you must also update `IGNORED_SIBLING_PROPERTIES`
+     */
     public __objectId: number = OBJECT_ID_SEQUENCE++;
 
     /** We cache the result of hasChildren() so that we can be aware of when it has changed, and hence
@@ -260,8 +254,11 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
      * method, however that would be a breaking change. */
     private __hasChildren: boolean;
 
-    /** When one or more Columns are using autoHeight, this keeps track of height of each autoHeight Cell,
-     * indexed by the Column ID. */
+    /**
+     * When one or more Columns are using autoHeight, this keeps track of height of each autoHeight Cell,
+     * indexed by the Column ID.
+     * If re-naming this property, you must also update `IGNORED_SIBLING_PROPERTIES`
+     */
     public __autoHeights?: { [id: string]: number | undefined };
 
     /** `true` when nodes with the same id are being removed and added as part of the same batch transaction */
@@ -278,6 +275,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
 
     private beans: BeanCollection;
 
+    /** If re-naming this property, you must also update `IGNORED_SIBLING_PROPERTIES` */
     public __checkAutoHeightsDebounced: () => void;
 
     constructor(beans: BeanCollection) {
@@ -468,29 +466,34 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
      * @returns `true` if the value was changed, otherwise `false`.
      */
     public setDataValue(colKey: string | AgColumn, newValue: any, eventSource?: string): boolean {
-        const getColumnFromKey = () => {
-            if (typeof colKey !== 'string') {
-                return colKey;
-            }
-            // if in pivot mode, grid columns wont include primary columns
-            return this.beans.colModel.getCol(colKey) ?? this.beans.colModel.getColDefCol(colKey);
-        };
         // When it is done via the editors, no 'cell changed' event gets fired, as it's assumed that
         // the cell knows about the change given it's in charge of the editing.
         // this method is for the client to call, so the cell listens for the change
         // event, and also flashes the cell when the change occurs.
-        const column = getColumnFromKey()!;
-        const oldValue = this.beans.valueSvc.getValueForDisplay(column, this);
+        const { colModel, valueSvc, gos, selectionSvc } = this.beans;
 
-        if (this.beans.gos.get('readOnlyEdit')) {
-            this.beans.eventSvc.dispatchEvent({
+        // if in pivot mode, grid columns wont include primary columns
+        const column = typeof colKey !== 'string' ? colKey : colModel.getCol(colKey) ?? colModel.getColDefCol(colKey);
+        if (!column) {
+            return false;
+        }
+        const oldValue = valueSvc.getValueForDisplay(column, this);
+
+        if (gos.get('readOnlyEdit')) {
+            const {
+                beans: { eventSvc },
+                data,
+                rowIndex,
+                rowPinned,
+            } = this;
+            eventSvc.dispatchEvent({
                 type: 'cellEditRequest',
                 event: null,
-                rowIndex: this.rowIndex!,
-                rowPinned: this.rowPinned,
-                column: column,
-                colDef: column.getColDef(),
-                data: this.data,
+                rowIndex,
+                rowPinned,
+                column,
+                colDef: column.colDef,
+                data,
                 node: this,
                 oldValue,
                 newValue,
@@ -500,10 +503,10 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
             return false;
         }
 
-        const valueChanged = this.beans.valueSvc.setValue(this, column, newValue, eventSource);
+        const valueChanged = valueSvc.setValue(this, column, newValue, eventSource);
 
         this.dispatchCellChangedEvent(column, newValue, oldValue);
-        this.beans.selectionSvc?.checkRowSelectable(this);
+        selectionSvc?.checkRowSelectable(this);
 
         return valueChanged;
     }
@@ -575,9 +578,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
 
     /** Perform a depth-first search of this node and its children. */
     public depthFirstSearch(callback: (rowNode: RowNode<TData>) => void): void {
-        if (this.childrenAfterGroup) {
-            this.childrenAfterGroup.forEach((child) => child.depthFirstSearch(callback));
-        }
+        this.childrenAfterGroup?.forEach((child) => child.depthFirstSearch(callback));
         callback(this);
     }
 

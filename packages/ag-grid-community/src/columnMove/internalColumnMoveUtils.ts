@@ -382,7 +382,7 @@ export function normaliseX(params: {
     ctrlsSvc: CtrlsService;
 }): number {
     const { pinned, fromKeyboard, gos, ctrlsSvc, useHeaderRow, skipScrollPadding } = params;
-    let eViewport = ctrlsSvc.getHeaderRowContainerCtrl(pinned)?.getViewportElement();
+    let eViewport = ctrlsSvc.getHeaderRowContainerCtrl(pinned)?.eViewport;
 
     let { x } = params;
 
@@ -412,6 +412,7 @@ export function normaliseX(params: {
 
 export function setColumnsMoving(columns: AgColumn[], isMoving: boolean): void {
     for (const column of columns) {
-        column.setMoving(isMoving, 'uiColumnMoved');
+        column.moving = isMoving;
+        column.dispatchColEvent('movingChanged', 'uiColumnMoved');
     }
 }

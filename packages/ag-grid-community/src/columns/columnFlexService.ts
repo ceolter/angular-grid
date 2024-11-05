@@ -206,4 +206,20 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
 
         return unconstrainedFlexColumns;
     }
+
+    public initCol(column: AgColumn): void {
+        const { flex, initialFlex } = column.colDef;
+        if (flex !== undefined) {
+            column.flex = flex;
+        } else if (initialFlex !== undefined) {
+            column.flex = initialFlex;
+        }
+    }
+
+    // this method should only be used by the colModel to
+    // change flex when required by the applyColumnState method.
+    public setColFlex(column: AgColumn, flex: number | null) {
+        column.flex = flex ?? null;
+        column.dispatchStateUpdatedEvent('flex');
+    }
 }

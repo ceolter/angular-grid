@@ -1,6 +1,6 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection, Context } from '../context/context';
+import type { BeanCollection } from '../context/context';
 import { AgColumn } from '../entities/agColumn';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
@@ -23,7 +23,6 @@ export const CONTROLS_COLUMN_ID_PREFIX = 'ag-Grid-SelectionColumn' as const;
 export class SelectionColService extends BeanStub implements NamedBean {
     beanName = 'selectionColSvc' as const;
 
-    private context: Context;
     private colGroupSvc?: ColumnGroupService;
     private autoColSvc?: IAutoColService;
     private colModel: ColumnModel;
@@ -32,7 +31,6 @@ export class SelectionColService extends BeanStub implements NamedBean {
     public selectionCols: ColumnCollections | null;
 
     public wireBeans(beans: BeanCollection): void {
-        this.context = beans.context;
         this.colGroupSvc = beans.colGroupSvc;
         this.autoColSvc = beans.autoColSvc;
         this.colModel = beans.colModel;
@@ -62,7 +60,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         updateOrders: (callback: (cols: AgColumn[] | null) => AgColumn[] | null) => void
     ): void {
         const destroyCollection = () => {
-            _destroyColumnTree(this.context, this.selectionCols?.tree);
+            _destroyColumnTree(this.beans, this.selectionCols?.tree);
             this.selectionCols = null;
         };
 
@@ -181,7 +179,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
     }
 
     public override destroy(): void {
-        _destroyColumnTree(this.context, this.selectionCols?.tree);
+        _destroyColumnTree(this.beans, this.selectionCols?.tree);
         super.destroy();
     }
 }

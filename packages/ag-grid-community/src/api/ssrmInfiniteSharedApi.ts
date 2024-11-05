@@ -8,6 +8,10 @@ export function setRowCount(beans: BeanCollection, rowCount: number, maxRowFound
     const serverSideRowModel = _getServerSideRowModel(beans);
     if (serverSideRowModel) {
         if (beans.rowGroupColsSvc?.columns.length === 0) {
+            if (rowCount < 0) {
+                _error(238);
+                return;
+            }
             serverSideRowModel.setRowCount(rowCount, maxRowFound);
             return;
         }

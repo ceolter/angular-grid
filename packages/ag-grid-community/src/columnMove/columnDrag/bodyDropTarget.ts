@@ -54,23 +54,23 @@ export class BodyDropTarget extends BeanStub implements DropTarget {
             switch (this.pinned) {
                 case 'left':
                     this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.getBodyViewportElement(), p.left.getContainerElement()],
-                        [p.bottomLeft.getContainerElement()],
-                        [p.topLeft.getContainerElement()],
+                        [p.gridBodyCtrl.eBodyViewport, p.left.eContainer],
+                        [p.bottomLeft.eContainer],
+                        [p.topLeft.eContainer],
                     ];
                     break;
                 case 'right':
                     this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.getBodyViewportElement(), p.right.getContainerElement()],
-                        [p.bottomRight.getContainerElement()],
-                        [p.topRight.getContainerElement()],
+                        [p.gridBodyCtrl.eBodyViewport, p.right.eContainer],
+                        [p.bottomRight.eContainer],
+                        [p.topRight.eContainer],
                     ];
                     break;
                 default:
                     this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.getBodyViewportElement(), p.center.getViewportElement()],
-                        [p.bottomCenter.getViewportElement()],
-                        [p.topCenter.getViewportElement()],
+                        [p.gridBodyCtrl.eBodyViewport, p.center.eViewport],
+                        [p.bottomCenter.eViewport],
+                        [p.topCenter.eViewport],
                     ];
                     break;
             }

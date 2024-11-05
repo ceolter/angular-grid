@@ -2,6 +2,7 @@ import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
 import type { ModuleName } from '../../interfaces/iModule';
+import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { getErrorLink } from '../logging';
@@ -157,7 +158,7 @@ export const AG_GRID_ERRORS = {
     55: () => 'addRowDropZone - A container target needs to be provided' as const,
     56: () =>
         'addRowDropZone - target already exists in the list of DropZones. Use `removeRowDropZone` before adding it again.' as const,
-    // 57: () => '' as const,
+    57: () => 'unable to show popup filter, filter instantiation failed' as const,
     58: () => 'no values found for select cellEditor' as const,
     59: () => 'cannot select pinned rows' as const,
     60: () => 'cannot select node until it has finished loading' as const,
@@ -207,7 +208,7 @@ export const AG_GRID_ERRORS = {
     89: () =>
         `A template was provided for Header Group Comp - templates are only supported for Header Comps (not groups)` as const,
     90: () => `datasource is missing getRows method` as const,
-    // 91: () => '' as const,
+    91: () => 'Filter is missing method doesFilterPass' as const,
     92: ({ methodName }: { methodName: string }) =>
         `AnimationFrameService.${methodName} called but animation frames are off` as const,
     93: () => 'cannot add multiple ranges when `cellSelection.suppressMultiRanges = true`' as const,
@@ -244,7 +245,8 @@ export const AG_GRID_ERRORS = {
         'popup cellEditor does not work with fullRowEdit - you cannot use them both - either turn off fullRowEdit, or stop using popup editors.' as const,
     99: () =>
         'Since v32, `api.hideOverlay()` does not hide the loading overlay when `loading=true`. Set `loading=false` instead.' as const,
-    // 100: () => '' as const,
+    100: ({ rowModelType }: { rowModelType: RowModelType }) =>
+        `selectAll only available when rowModelType='clientSide', ie not ${rowModelType}` as const,
     101: ({
         propertyName,
         componentName,
@@ -305,8 +307,8 @@ export const AG_GRID_ERRORS = {
     116: () => 'Invalid selection state. The state must conform to `IServerSideSelectionState`.' as const,
     117: () => 'selectAll must be of boolean type.' as const,
     118: () => 'Infinite scrolling must be enabled in order to set the row count.' as const,
-    // 119: () => '',
-    // 120: () => '',
+    119: () => 'Unable to instantiate filter',
+    120: () => 'MultiFloatingFilterComp expects MultiFilter as its parent',
     121: () =>
         'a column you are grouping or pivoting by has objects as values. If you want to group by complex objects then either a) use a colDef.keyCreator (see AG Grid docs) or b) to toString() on the object to return a key' as const,
     122: () => 'could not find the document, document is empty' as const,
@@ -505,11 +507,31 @@ export const AG_GRID_ERRORS = {
         'Group Column Filter does not work with the colDef property "filterParams". This property will be ignored.' as const,
     237: () =>
         'Group Column Filter does not work with Tree Data enabled. Please disable Tree Data, or use a different filter.' as const,
-    238: ({ message }: { message: string }) => ['Failed to deserialize state with error ', message] as const,
+    238: () => 'setRowCount can only accept a positive row count.' as const,
     239: () =>
         'Invalid mixing of Theming API and CSS File Themes in the same page. No value was provided to the `theme` grid option so it defaulted to themeQuartz, but the file (ag-grid.css) is also included and will cause styling issues. Pass the string "legacy" to the theme grid option to use v32 style themes, or remove ag-grid.css from the page.' as const,
     240: ({ theme }: { theme: any }) =>
         `theme grid option must be a Theming API theme object or the string "legacy", received: ${theme}` as const,
+    241: () => `cannot select multiple rows when rowSelection.mode is set to 'singleRow'` as const,
+    242: () => 'cannot select multiple rows when using rangeSelect' as const,
+    243: () => 'Failed to deserialize state - each provided state object must be an object.' as const,
+    244: () => 'Failed to deserialize state - `selectAllChildren` must be a boolean value or undefined.' as const,
+    245: () => 'Failed to deserialize state - `toggledNodes` must be an array.' as const,
+    246: () => 'Failed to deserialize state - Every `toggledNode` requires an associated string id.' as const,
+    247: () =>
+        `Row selection state could not be parsed due to invalid data. Ensure all child state has toggledNodes or does not conform with the parent rule. \nPlease rebuild the selection state and reapply it.` as const,
+    248: () => 'SetFloatingFilter expects SetFilter as its parent' as const,
+    249: () => 'Must supply a Value Formatter in Set Filter params when using a Key Creator' as const,
+    250: () =>
+        'Must supply a Key Creator in Set Filter params when `treeList = true` on a group column, and Tree Data or Row Grouping is enabled.' as const,
+    251: ({ chartType }: { chartType: string }) =>
+        `AG Grid: Unable to create chart as an invalid chartType = '${chartType}' was supplied.` as const,
+    252: () =>
+        'cannot get grid to draw rows when it is in the middle of drawing rows. \nYour code probably called a grid API method while the grid was in the render stage. \nTo overcome this, put the API call into a timeout, e.g. instead of api.redrawRows(), call setTimeout(function() { api.redrawRows(); }, 0). \nTo see what part of your code that caused the refresh check this stacktrace.' as const,
+    253: ({ version }: { version: string }) => ['Illegal version string: ', version] as const,
+    254: () => 'Cannot create chart: no chart themes available.' as const,
+    255: ({ point }: { point: number }) =>
+        `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
 } as const;
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

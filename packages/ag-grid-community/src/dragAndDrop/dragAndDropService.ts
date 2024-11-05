@@ -6,7 +6,7 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { Environment } from '../environment';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
+import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
 import { _getDocument, _getRootNode } from '../gridOptionsUtils';
 import type { AgGridCommon } from '../interfaces/iCommon';
 import type { DragItem } from '../interfaces/iDragItem';
@@ -148,14 +148,12 @@ export class DragAndDropService extends BeanStub implements NamedBean {
 
     private ctrlsSvc: CtrlsService;
     private dragSvc: DragService;
-    private mouseEventSvc: MouseEventService;
     private environment: Environment;
     private userCompFactory: UserComponentFactory;
 
     public wireBeans(beans: BeanCollection): void {
         this.ctrlsSvc = beans.ctrlsSvc;
         this.dragSvc = beans.dragSvc!;
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.environment = beans.environment;
         this.userCompFactory = beans.userCompFactory;
     }
@@ -363,7 +361,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             return validDropTargets[0];
         }
 
-        const rootNode = _getRootNode(this.gos);
+        const rootNode = _getRootNode(this.beans);
 
         // elementsFromPoint return a list of elements under
         // the mouseEvent sorted from topMost to bottomMost
@@ -457,7 +455,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
 
     public isDropZoneWithinThisGrid(draggingEvent: DraggingEvent): boolean {
         const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-        const gridGui = gridBodyCon.getGui();
+        const gridGui = gridBodyCon.eGridBody;
         const { dropZoneTarget } = draggingEvent;
 
         return gridGui.contains(dropZoneTarget);
@@ -539,7 +537,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         let top = clientY - offsetParentSize.top - height / 2;
         let left = clientX - offsetParentSize.left - 10;
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const win = eDocument.defaultView || window;
         const windowScrollY = win.pageYOffset || eDocument.documentElement.scrollTop;
         const windowScrollX = win.pageXOffset || eDocument.documentElement.scrollLeft;
@@ -607,7 +605,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     private processDragAndDropImageComponent(dragAndDropImageComponent: DragAndDropImageComponent): void {
-        const { dragSource, mouseEventSvc, environment } = this;
+        const { dragSource, environment } = this;
 
         if (!dragSource) {
             return;
@@ -617,7 +615,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.setProperty('position', 'absolute');
         eGui.style.setProperty('z-index', '9999');
 
-        mouseEventSvc.stampTopLevelGridCompWithGridInstance(eGui);
+        _stampTopLevelGridCompWithGridInstance(this.gos, eGui);
         environment.applyThemeClasses(eGui);
         dragAndDropImageComponent.setIcon(null);
 
@@ -632,7 +630,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.top = '20px';
         eGui.style.left = '20px';
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         let rootNode: Document | ShadowRoot | HTMLElement | null = null;
         let targetEl: HTMLElement | ShadowRoot | null = null;
 
@@ -643,7 +641,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             // simply by trying to read the fullscreenElement property
         } finally {
             if (!rootNode) {
-                rootNode = _getRootNode(this.gos);
+                rootNode = _getRootNode(this.beans);
             }
             const body = rootNode.querySelector('body');
             if (body) {

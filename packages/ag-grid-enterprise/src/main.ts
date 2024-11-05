@@ -69,8 +69,11 @@ export { SparklinesModule } from './sparkline/sparklinesModule';
 export { TreeDataModule, TreeDataCoreModule } from './treeData/treeDataModule';
 export { AggregationModule } from './aggregation/aggregationModule';
 export { LoadingCellRendererModule, SkeletonCellRendererModule } from './cellRenderers/enterpriseCellRendererModule';
-export { ClientSideRowModelExpansionModule } from './expansion/expansionModule';
-export { GroupCellRendererModule, GroupColumnModule } from './groupColumn/groupColumnModule';
+export {
+    GroupCellRendererModule,
+    GroupColumnModule,
+    ClientSideRowModelHierarchyModule,
+} from './rowHierarchy/rowHierarchyModule';
 
 // tbd - having these here means all charts will be enterprise
 // once we have independent module imports this issue will go away

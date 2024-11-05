@@ -1,5 +1,5 @@
-import type { BeanCollection, FocusService, NamedBean } from 'ag-grid-community';
-import { BeanStub, TabGuardComp } from 'ag-grid-community';
+import type { NamedBean } from 'ag-grid-community';
+import { BeanStub, TabGuardComp, _findFocusableElements, _findNextFocusableElement } from 'ag-grid-community';
 
 import { AgDialog } from '../../../../widgets/agDialog';
 import type { ChartTranslationService } from '../../services/chartTranslationService';
@@ -8,14 +8,6 @@ import { AdvancedSettingsPanel } from './advancedSettingsPanel';
 
 export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
     beanName = 'advSettingsMenuFactory' as const;
-
-    private focusSvc: FocusService;
-    private chartTranslation: ChartTranslationService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
-    }
 
     private activeMenu?: AdvancedSettingsMenu;
     private activeDialog?: AgDialog;
@@ -27,7 +19,7 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
 
         this.activeDialog = this.createBean(
             new AgDialog({
-                title: this.chartTranslation.translate('advancedSettings'),
+                title: (this.beans.chartTranslation as ChartTranslationService).translate('advancedSettings'),
                 component: menu,
                 width: 300,
                 height: 400,
@@ -36,7 +28,7 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
                 centered: true,
                 closable: true,
                 afterGuiAttached: () => {
-                    this.focusSvc.findFocusableElements(menu.getGui())[0]?.focus();
+                    _findFocusableElements(menu.getGui())[0]?.focus();
                 },
                 closedCallback: () => {
                     this.activeMenu = this.destroyBean(this.activeMenu);
@@ -63,12 +55,6 @@ export class AdvancedSettingsMenuFactory extends BeanStub implements NamedBean {
 }
 
 class AdvancedSettingsMenu extends TabGuardComp {
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-    }
-
     private advancedSettingsPanel: AdvancedSettingsPanel;
 
     constructor(private readonly chartMenuContext: ChartMenuContext) {
@@ -93,12 +79,12 @@ class AdvancedSettingsMenu extends TabGuardComp {
 
         const backwards = e.shiftKey;
         const panelGui = this.advancedSettingsPanel.getGui();
-        const nextEl = this.focusSvc.findNextFocusableElement(panelGui, false, backwards);
+        const nextEl = _findNextFocusableElement(this.beans, panelGui, false, backwards);
 
         if (nextEl) {
             nextEl.focus();
         } else {
-            const focusableElements = this.focusSvc.findFocusableElements(panelGui);
+            const focusableElements = _findFocusableElements(panelGui);
             if (focusableElements.length) {
                 focusableElements[backwards ? focusableElements.length - 1 : 0].focus();
             }

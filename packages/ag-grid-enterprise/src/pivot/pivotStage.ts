@@ -82,7 +82,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
         if (this.pivotResultCols.isPivotResultColsPresent()) {
             this.pivotResultCols.setPivotResultCols(null, 'rowModelUpdated');
             if (changedPath) {
-                changedPath.setInactive();
+                changedPath.active = false;
             }
         }
     }
@@ -161,7 +161,7 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
             // because the secondary columns have changed, then the aggregation needs to visit the whole
             // tree again, so we make the changedPath not active, to force aggregation to visit all paths.
             if (changedPath) {
-                changedPath.setInactive();
+                changedPath.active = false;
             }
         }
         this.lastTimeFailed = false;

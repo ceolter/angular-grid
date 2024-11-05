@@ -35,7 +35,7 @@ export class AdvancedFilterBuilderItemNavigationFeature extends BeanStub {
                         if (_isStopPropagationForAgGrid(event)) {
                             return;
                         }
-                        if (this.eGui.contains(_getActiveDomElement(this.gos))) {
+                        if (this.eGui.contains(_getActiveDomElement(this.beans))) {
                             event.preventDefault();
                             _stopPropagationForAgGrid(event);
                             this.focusWrapper.focus();
@@ -52,7 +52,7 @@ export class AdvancedFilterBuilderItemNavigationFeature extends BeanStub {
                         if (_isStopPropagationForAgGrid(event)) {
                             return;
                         }
-                        if (_getActiveDomElement(this.gos) === this.focusWrapper) {
+                        if (_getActiveDomElement(this.beans) === this.focusWrapper) {
                             event.preventDefault();
                             _stopPropagationForAgGrid(event);
                             this.eFocusableComp.getFocusableElement().focus();

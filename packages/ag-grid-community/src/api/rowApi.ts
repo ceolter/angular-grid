@@ -51,11 +51,11 @@ export function forEachNode<TData = any>(
 }
 
 export function getFirstDisplayedRowIndex(beans: BeanCollection): number {
-    return beans.rowRenderer.getFirstVirtualRenderedRow();
+    return beans.rowRenderer.firstRenderedRow;
 }
 
 export function getLastDisplayedRowIndex(beans: BeanCollection): number {
-    return beans.rowRenderer.getLastVirtualRenderedRow();
+    return beans.rowRenderer.lastRenderedRow;
 }
 
 export function getDisplayedRowAtIndex<TData = any>(beans: BeanCollection, index: number): IRowNode<TData> | undefined {

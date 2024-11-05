@@ -26,7 +26,7 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
     }
 
     public postConstruct(): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const div = (this.descriptionContainer = eDocument.createElement('div'));
         div.classList.add('ag-aria-description-container');
 

@@ -12,7 +12,6 @@ import { _createIconNoSpan } from '../../../utils/icon';
 import { _escapeString } from '../../../utils/string';
 import { _warn } from '../../../validation/logging';
 import { Component, RefPlaceholder } from '../../../widgets/component';
-import { TouchListener } from '../../../widgets/touchListener';
 
 export interface IHeaderGroupParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
     /** The column group the header is for. */
@@ -126,10 +125,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     }
 
     private addTouchAndClickListeners(eElement: HTMLElement, action: (event: MouseEvent) => void): void {
-        const touchListener = new TouchListener(eElement, true);
-
-        this.addManagedListeners(touchListener, { tap: action });
-        this.addDestroyFunc(() => touchListener.destroy());
+        this.beans.touchSvc?.setupForHeaderGroup(this, eElement, action);
         this.addManagedElementListeners(eElement, { click: action });
     }
 

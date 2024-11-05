@@ -6,6 +6,8 @@ import { PivotColsSvc } from '../pivot/pivotColsSvc';
 import { ValueColsSvc } from '../pivot/valueColsSvc';
 import { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
 import { AutoColService } from './autoColService';
+import { ClientSideExpansionService } from './clientSideExpansionService';
+import { FlattenStage } from './flattenStage';
 import { GroupCellRenderer } from './rendering/groupCellRenderer';
 import { GroupCellRendererCtrl } from './rendering/groupCellRendererCtrl';
 import { ShowRowGroupColsService } from './showRowGroupColsService';
@@ -37,4 +39,14 @@ export const GroupColumnModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupColumnModule'),
     beans: [AutoColService, ShowRowGroupColsService, RowGroupColsSvc, PivotColsSvc, ValueColsSvc],
     dependsOn: [EnterpriseCoreModule, GroupCellRendererModule],
+};
+
+/**
+ * @feature Row Grouping -> Opening Groups, Tree Data -> Expanding Groups, Master Detail
+ */
+export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ClientSideRowModelHierarchyModule'),
+    rowModels: ['clientSide'],
+    beans: [FlattenStage, ClientSideExpansionService],
+    dependsOn: [EnterpriseCoreModule],
 };

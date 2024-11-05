@@ -1,4 +1,5 @@
 import type { GridApi } from './api/gridApi';
+import type { BeanCollection } from './context/context';
 import type {
     CheckboxLocation,
     DomLayoutType,
@@ -65,13 +66,14 @@ export function _shouldMaintainColumnOrder(gos: GridOptionsService, isPivotColum
 }
 
 export function _getRowHeightForNode(
-    gos: GridOptionsService,
+    beans: BeanCollection,
     rowNode: IRowNode,
     allowEstimate = false,
     defaultRowHeight?: number
 ): { height: number; estimated: boolean } {
+    const { gos, environment } = beans;
     if (defaultRowHeight == null) {
-        defaultRowHeight = gos.environment.getDefaultRowHeight();
+        defaultRowHeight = environment.getDefaultRowHeight();
     }
 
     // check the function first, in case use set both function and
@@ -127,8 +129,8 @@ function getMasterDetailRowHeight(gos: GridOptionsService): { height: number; es
 }
 
 // we don't allow dynamic row height for virtual paging
-export function _getRowHeightAsNumber(gos: GridOptionsService): number {
-    const { environment } = gos;
+export function _getRowHeightAsNumber(beans: BeanCollection): number {
+    const { environment, gos } = beans;
     const gridOptionsRowHeight = gos.get('rowHeight');
     if (!gridOptionsRowHeight || _missing(gridOptionsRowHeight)) {
         return environment.getDefaultRowHeight();
@@ -166,15 +168,16 @@ export function _setDomData(gos: GridOptionsService, element: Element, key: stri
     domData[key] = value;
 }
 
-export function _getDocument(gos: GridOptionsService): Document {
+export function _getDocument(beans: BeanCollection): Document {
     // if user is providing document, we use the users one,
     // otherwise we use the document on the global namespace.
+    const { gos, eGridDiv } = beans;
     let result: Document | null = null;
     const gridOptionsGetDocument = gos.get('getDocument');
     if (gridOptionsGetDocument && _exists(gridOptionsGetDocument)) {
         result = gridOptionsGetDocument();
-    } else if (gos.eGridDiv) {
-        result = gos.eGridDiv.ownerDocument;
+    } else if (eGridDiv) {
+        result = eGridDiv.ownerDocument;
     }
 
     if (result && _exists(result)) {
@@ -184,22 +187,22 @@ export function _getDocument(gos: GridOptionsService): Document {
     return document;
 }
 
-export function _getWindow(gos: GridOptionsService) {
-    const eDocument = _getDocument(gos);
+export function _getWindow(beans: BeanCollection) {
+    const eDocument = _getDocument(beans);
     return eDocument.defaultView || window;
 }
 
-export function _getRootNode(gos: GridOptionsService): Document | ShadowRoot {
-    return gos.eGridDiv.getRootNode() as Document | ShadowRoot;
+export function _getRootNode(beans: BeanCollection): Document | ShadowRoot {
+    return beans.eGridDiv.getRootNode() as Document | ShadowRoot;
 }
 
-export function _getActiveDomElement(gos: GridOptionsService): Element | null {
-    return _getRootNode(gos).activeElement;
+export function _getActiveDomElement(beans: BeanCollection): Element | null {
+    return _getRootNode(beans).activeElement;
 }
 
-export function _isNothingFocused(gos: GridOptionsService): boolean {
-    const eDocument = _getDocument(gos);
-    const activeEl = _getActiveDomElement(gos);
+export function _isNothingFocused(beans: BeanCollection): boolean {
+    const eDocument = _getDocument(beans);
+    const activeEl = _getActiveDomElement(beans);
     return activeEl === null || activeEl === eDocument.body;
 }
 

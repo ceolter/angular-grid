@@ -54,7 +54,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             }
         };
 
-        const unsubscribeFromResize = _observeResize(this.gos, this.getGui(), updateSparkline);
+        const unsubscribeFromResize = _observeResize(this.beans, this.getGui(), updateSparkline);
         this.addDestroyFunc(() => unsubscribeFromResize());
     }
 

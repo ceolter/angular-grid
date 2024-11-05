@@ -110,7 +110,7 @@ export class RichSelectRow<TValue> extends Component {
     }
 
     private populateWithoutRenderer(value: any, valueFormatted: any) {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const eGui = this.getGui();
 
         const span = eDocument.createElement('span');

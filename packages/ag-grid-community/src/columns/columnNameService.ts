@@ -1,12 +1,9 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import type { AbstractColDef, ColDef, HeaderLocation, HeaderValueGetterParams } from '../entities/colDef';
-import type { IAggColumnNameService } from '../interfaces/iAggColumnNameService';
-import type { ExpressionService } from '../valueService/expressionService';
 
 /**
  * Converts a camelCase string into startCase
@@ -32,14 +29,6 @@ export function _camelCaseToHumanText(camelCase: string | undefined): string | n
 export class ColumnNameService extends BeanStub implements NamedBean {
     beanName = 'colNames' as const;
 
-    private expressionSvc?: ExpressionService;
-    private aggColNameSvc?: IAggColumnNameService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.expressionSvc = beans.expressionSvc;
-        this.aggColNameSvc = beans.aggColNameSvc;
-    }
-
     public getDisplayNameForColumn(
         column: AgColumn | null,
         location: HeaderLocation,
@@ -51,8 +40,9 @@ export class ColumnNameService extends BeanStub implements NamedBean {
 
         const headerName: string | null = this.getHeaderName(column.getColDef(), column, null, null, location);
 
-        if (includeAggFunc && this.aggColNameSvc) {
-            return this.aggColNameSvc.getHeaderName(column, headerName);
+        const { aggColNameSvc } = this.beans;
+        if (includeAggFunc && aggColNameSvc) {
+            return aggColNameSvc.getHeaderName(column, headerName);
         }
 
         return headerName;
@@ -63,7 +53,7 @@ export class ColumnNameService extends BeanStub implements NamedBean {
         providedColumnGroup: AgProvidedColumnGroup | null,
         location: HeaderLocation
     ): string | null {
-        const colGroupDef = providedColumnGroup ? providedColumnGroup.getColGroupDef() : null;
+        const colGroupDef = providedColumnGroup?.getColGroupDef();
 
         if (colGroupDef) {
             return this.getHeaderName(colGroupDef, null, columnGroup, providedColumnGroup, location);
@@ -100,7 +90,7 @@ export class ColumnNameService extends BeanStub implements NamedBean {
                 return headerValueGetter(params);
             } else if (typeof headerValueGetter === 'string') {
                 // valueGetter is an expression, so execute the expression
-                return this.expressionSvc?.evaluate(headerValueGetter, params) ?? null;
+                return this.beans.expressionSvc?.evaluate(headerValueGetter, params) ?? null;
             }
             return '';
         } else if (colDef.headerName != null) {

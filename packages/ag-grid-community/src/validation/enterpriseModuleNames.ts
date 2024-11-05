@@ -10,7 +10,7 @@ export const ENTERPRISE_MODULE_NAMES: Record<EnterpriseModuleName, 1> = {
     CellSelectionFillHandleModule: 1,
     CellSelectionModule: 1,
     CellSelectionRangeHandleModule: 1,
-    ClientSideRowModelExpansionModule: 1,
+    ClientSideRowModelHierarchyModule: 1,
     ClipboardApiModule: 1,
     ClipboardCoreModule: 1,
     ClipboardModule: 1,
