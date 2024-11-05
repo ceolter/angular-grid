@@ -919,8 +919,6 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         };
     }
 
-    public override onNewRowsLoaded(): void {}
-
     private isValuesTakenFromGrid(): boolean {
         const valuesType = this.valueModel.getValuesType();
         return valuesType === SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
