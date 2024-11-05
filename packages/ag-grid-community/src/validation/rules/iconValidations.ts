@@ -69,6 +69,7 @@ export const ICON_MODULES: Record<IconName, ModuleName | ModuleName[]> = {
     next: 'PaginationCoreModule',
     last: 'PaginationCoreModule',
     linked: 'GridChartsCoreModule',
+    loadingMenuItems: 'MenuCoreModule',
     unlinked: 'GridChartsCoreModule',
     menu: 'ColumnHeaderCompModule',
     legacyMenu: 'ColumnMenuModule',

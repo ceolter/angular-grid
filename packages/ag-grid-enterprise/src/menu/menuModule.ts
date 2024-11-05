@@ -26,6 +26,8 @@ export const MenuCoreModule: _ModuleWithoutApi = {
         chart: 'chart',
         // columns in menu (column chooser / columns tab)
         columns: 'columns',
+        // loading async menu items
+        loadingMenuItems: 'loading',
         // "Pin column" item in column header menu
         menuPin: 'pin',
         // "Value aggregation" column menu item (shown on numeric columns when grouping is active)"

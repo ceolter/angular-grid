@@ -266,7 +266,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     private createLoadingIcon(e: MouseEvent | Touch) {
         const translate = this.getLocaleTextFunc();
 
-        const loadingIcon = _createIconNoSpan('loading', this.gos) as HTMLElement;
+        const loadingIcon = _createIconNoSpan('loadingMenuItems', this.beans) as HTMLElement;
         const wrapperEl = document.createElement('div');
         wrapperEl.classList.add(CSS_CONTEXT_MENU_LOADING_ICON);
         wrapperEl.appendChild(loadingIcon);
