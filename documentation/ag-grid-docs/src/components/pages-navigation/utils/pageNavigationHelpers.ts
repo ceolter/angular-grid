@@ -1,6 +1,6 @@
 import type { MenuItem } from '@ag-grid-types';
 import type { Framework, MenuSection } from '@ag-grid-types';
-import { getExamplePageUrl } from '@features/docs/utils/urlPaths';
+import { getExamplePageUrl } from '@components/docs/utils/urlPaths';
 
 export function toElementId(str: string) {
     return 'menu-' + str.toLowerCase().replace('&', '').replace('/', '').replaceAll(' ', '-');

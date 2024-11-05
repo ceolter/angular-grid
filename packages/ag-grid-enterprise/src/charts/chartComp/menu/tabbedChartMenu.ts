@@ -14,10 +14,10 @@ const TAB_FORMAT = 'format';
 
 export type TabbedChartMenuEvent = 'closed';
 export class TabbedChartMenu extends Component<TabbedChartMenuEvent> {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private tabbedLayout: TabbedLayout;
@@ -48,7 +48,7 @@ export class TabbedChartMenu extends Component<TabbedChartMenuEvent> {
             suppressFocusBodyOnOpen: true,
             suppressTrapFocus: true,
             enableCloseButton: true,
-            closeButtonAriaLabel: this.chartTranslationService.translate('ariaChartMenuClose'),
+            closeButtonAriaLabel: this.chartTranslation.translate('ariaChartMenuClose'),
             onCloseClicked: () => {
                 this.eventSource?.focus({ preventScroll: true });
                 this.dispatchLocalEvent({ type: 'closed' });
@@ -66,7 +66,7 @@ export class TabbedChartMenu extends Component<TabbedChartMenuEvent> {
         eWrapperDiv.appendChild(panelComp.getGui());
 
         const titleEl = document.createElement('div');
-        const translatedTitle = this.chartTranslationService.translate(title);
+        const translatedTitle = this.chartTranslation.translate(title);
         titleEl.innerText = translatedTitle;
 
         return {

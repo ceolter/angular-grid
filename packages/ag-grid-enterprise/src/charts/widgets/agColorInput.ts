@@ -7,10 +7,10 @@ import type { ChartTranslationService } from '../chartComp/services/chartTransla
 
 export type AgColorInputEvent = 'colorChanged';
 export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgColorInputEvent> {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly eColor: HTMLElement = RefPlaceholder;
 
@@ -35,7 +35,7 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
 
     public override setValue(value?: string | null | undefined, silent?: boolean | undefined): this {
         const isValid = _Util.Color.validColorString(value ?? '');
-        this.eInput.setCustomValidity(isValid ? '' : this.chartTranslationService.translate('invalidColor'));
+        this.eInput.setCustomValidity(isValid ? '' : this.chartTranslation.translate('invalidColor'));
         super.setValue(value, silent);
         if (isValid && !silent) {
             this.dispatchLocalEvent({ type: 'colorChanged' });

@@ -32,7 +32,7 @@ function _removeRepeatsFromArray<T>(array: T[], object: T) {
 }
 
 export class ColumnMenuFactory extends BeanStub implements NamedBean {
-    beanName = 'columnMenuFactory' as const;
+    beanName = 'colMenuFactory' as const;
 
     private menuItemMapper: MenuItemMapper;
     private colModel: ColumnModel;

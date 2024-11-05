@@ -1,4 +1,4 @@
-import type { Context } from '../context/context';
+import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import { isColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
@@ -8,9 +8,9 @@ import type { PropertyChangedSource } from '../gridOptionsService';
 import type { ColumnInstanceId } from '../interfaces/iColumn';
 import { _areEqual } from '../utils/array';
 import { _exists } from '../utils/generic';
-import { depthFirstOriginalTreeSearch } from './columnFactory';
+import { depthFirstOriginalTreeSearch } from './columnFactoryUtils';
 import type { ColKey, ColumnCollections } from './columnModel';
-import type { ColumnState, ColumnStateParams } from './columnStateService';
+import type { ColumnState, ColumnStateParams } from './columnStateUtils';
 import { CONTROLS_COLUMN_ID_PREFIX } from './selectionColService';
 
 export const GROUP_AUTO_COLUMN_ID = 'ag-Grid-AutoColumn' as const;
@@ -40,7 +40,7 @@ export function getWidthOfColsInList(columnList: AgColumn[]) {
 }
 
 export function _destroyColumnTree(
-    context: Context,
+    beans: BeanCollection,
     oldTree: (AgColumn | AgProvidedColumnGroup)[] | null | undefined,
     newTree?: (AgColumn | AgProvidedColumnGroup)[] | null
 ): void {
@@ -64,7 +64,7 @@ export function _destroyColumnTree(
 
     // what's left can be destroyed
     const colsToDestroy = Object.values(oldObjectsById).filter((item) => item != null);
-    context.destroyBeans(colsToDestroy);
+    beans.context.destroyBeans(colsToDestroy);
 }
 
 export function isColumnGroupAutoCol(col: AgColumn): boolean {

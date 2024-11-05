@@ -3,11 +3,11 @@ import type { Column } from '../interfaces/iColumn';
 import type { IRowNode } from '../interfaces/iRowNode';
 
 export function getVerticalPixelRange(beans: BeanCollection): { top: number; bottom: number } {
-    return beans.ctrlsSvc.getGridBodyCtrl().getScrollFeature().getVScrollPosition();
+    return beans.ctrlsSvc.getScrollFeature().getVScrollPosition();
 }
 
 export function getHorizontalPixelRange(beans: BeanCollection): { left: number; right: number } {
-    return beans.ctrlsSvc.getGridBodyCtrl().getScrollFeature().getHScrollPosition();
+    return beans.ctrlsSvc.getScrollFeature().getHScrollPosition();
 }
 
 export function ensureColumnVisible(
@@ -16,7 +16,7 @@ export function ensureColumnVisible(
     position: 'auto' | 'start' | 'middle' | 'end' = 'auto'
 ) {
     beans.frameworkOverrides.wrapIncoming(
-        () => beans.ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureColumnVisible(key, position),
+        () => beans.ctrlsSvc.getScrollFeature().ensureColumnVisible(key, position),
         'ensureVisible'
     );
 }
@@ -27,7 +27,7 @@ export function ensureIndexVisible(
     position?: 'top' | 'bottom' | 'middle' | null
 ) {
     beans.frameworkOverrides.wrapIncoming(
-        () => beans.ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureIndexVisible(index, position),
+        () => beans.ctrlsSvc.getScrollFeature().ensureIndexVisible(index, position),
         'ensureVisible'
     );
 }
@@ -38,7 +38,7 @@ export function ensureNodeVisible<TData = any>(
     position: 'top' | 'bottom' | 'middle' | null = null
 ) {
     beans.frameworkOverrides.wrapIncoming(
-        () => beans.ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureNodeVisible(nodeSelector, position),
+        () => beans.ctrlsSvc.getScrollFeature().ensureNodeVisible(nodeSelector, position),
         'ensureVisible'
     );
 }

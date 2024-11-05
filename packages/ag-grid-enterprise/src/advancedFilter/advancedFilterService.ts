@@ -28,14 +28,14 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
     private valueSvc: ValueService;
     private colModel: ColumnModel;
     private dataTypeSvc?: DataTypeService;
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
     private filterValueSvc: FilterValueService;
 
     public wireBeans(beans: BeanCollection): void {
         this.valueSvc = beans.valueSvc;
         this.colModel = beans.colModel;
         this.dataTypeSvc = beans.dataTypeSvc;
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
         this.filterValueSvc = beans.filterValueSvc!;
     }
 
@@ -90,14 +90,14 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
     public setModel(model: AdvancedFilterModel | null): void {
         const parseModel = (model: AdvancedFilterModel, isFirstParent?: boolean): string | null => {
             if (model.filterType === 'join') {
-                const operator = this.advancedFilterExpressionService.parseJoinOperator(model);
+                const operator = this.advFilterExpSvc.parseJoinOperator(model);
                 const expression = model.conditions
                     .map((condition) => parseModel(condition))
                     .filter((condition) => _exists(condition))
                     .join(` ${operator} `);
                 return isFirstParent || model.conditions.length <= 1 ? expression : `(${expression})`;
             } else {
-                return this.advancedFilterExpressionService.parseColumnFilterModel(model);
+                return this.advFilterExpSvc.parseColumnFilterModel(model);
             }
         };
 
@@ -131,7 +131,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
             colModel: this.colModel,
             dataTypeSvc: this.dataTypeSvc,
             valueSvc: this.valueSvc,
-            advancedFilterExpressionService: this.advancedFilterExpressionService,
+            advFilterExpSvc: this.advFilterExpSvc,
         });
     }
 
@@ -139,7 +139,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
         updatedValue: string;
         updatedPosition: number;
     } {
-        const updatedValue = this.advancedFilterExpressionService.getColumnValue(updateEntry) + ' ';
+        const updatedValue = this.advFilterExpSvc.getColumnValue(updateEntry) + ' ';
         return {
             updatedValue,
             updatedPosition: updatedValue.length,
@@ -212,7 +212,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
     }
 
     public updateValidity(): boolean {
-        this.advancedFilterExpressionService.resetColumnCaches();
+        this.advFilterExpSvc.resetColumnCaches();
         const expressionParser = this.createExpressionParser(this.expression);
         expressionParser?.parseExpression();
         const isValid = !expressionParser || expressionParser.isValid();

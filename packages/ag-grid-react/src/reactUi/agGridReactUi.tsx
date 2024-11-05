@@ -133,7 +133,7 @@ export const AgGridReactUi = <TData,>(props: AgGridReactProps<TData>) => {
         const renderStatus = new RenderStatusService();
         const gridParams: GridParams = {
             providedBeanInstances: {
-                frameworkComponentWrapper: new ReactFrameworkComponentWrapper(
+                frameworkCompWrapper: new ReactFrameworkComponentWrapper(
                     portalManager.current,
                     mergedGridOps.reactiveCustomComponents ?? _getGlobalGridOption('reactiveCustomComponents') ?? true
                 ),
@@ -321,7 +321,8 @@ class ReactFrameworkComponentWrapper
 
 // Define DetailCellRenderer and ReactFrameworkOverrides here to avoid circular dependency
 const DetailCellRenderer = forwardRef((props: IDetailCellRendererParams, ref: any) => {
-    const { registry, context, gos, rowModel } = useContext(BeansContext);
+    const beans = useContext(BeansContext);
+    const { registry, context, gos, rowModel } = beans;
 
     const [cssClasses, setCssClasses] = useState<CssClasses>(() => new CssClasses());
     const [gridCssClasses, setGridCssClasses] = useState<CssClasses>(() => new CssClasses());
@@ -407,7 +408,7 @@ const DetailCellRenderer = forwardRef((props: IDetailCellRendererParams, ref: an
                 }
             };
 
-            resizeObserverDestroyFunc.current = _observeResize(gos, eRef, checkRowSizeFunc);
+            resizeObserverDestroyFunc.current = _observeResize(beans, eRef, checkRowSizeFunc);
             checkRowSizeFunc();
         }
     }, []);

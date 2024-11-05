@@ -1,4 +1,4 @@
-import type { IRowNode } from '../main';
+import type { IRowNode } from './iRowNode';
 
 export interface RedrawRowsParams<TData = any> {
     /** Row nodes to redraw */

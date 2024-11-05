@@ -13,16 +13,22 @@ export class RowEditService extends BeanStub implements NamedBean {
         sourceRenderedCell: CellCtrl | null = null,
         event: KeyboardEvent | null = null
     ): boolean {
+        // don't do it if already editing
+        if (rowCtrl.editing) {
+            return true;
+        }
+
         let preventDefault = true;
         let atLeastOneEditing = false;
+        const { editSvc } = this.beans;
         rowCtrl.getAllCellCtrls().forEach((cellCtrl: CellCtrl) => {
             const cellStartedEdit = cellCtrl === sourceRenderedCell;
             if (cellStartedEdit) {
-                preventDefault = cellCtrl.startEditing(key, cellStartedEdit, event);
+                preventDefault = editSvc?.startEditing(cellCtrl, key, cellStartedEdit, event) ?? true;
             } else {
-                cellCtrl.startEditing(null, cellStartedEdit, event);
+                editSvc?.startEditing(cellCtrl, null, cellStartedEdit, event);
             }
-            atLeastOneEditing ||= cellCtrl.isEditing();
+            atLeastOneEditing ||= cellCtrl.editing;
         });
 
         if (atLeastOneEditing) {
@@ -31,33 +37,8 @@ export class RowEditService extends BeanStub implements NamedBean {
         return preventDefault;
     }
 
-    public stopEditing(rowCtrl: RowCtrl, cancel = false): void {
-        const cellControls = rowCtrl.getAllCellCtrls();
-        const isRowEdit = rowCtrl.isEditing();
-
-        rowCtrl.setStoppingRowEdit(true);
-
-        let fireRowEditEvent = false;
-        for (const ctrl of cellControls) {
-            const valueChanged = ctrl.stopEditing(cancel);
-            if (isRowEdit && !cancel && !fireRowEditEvent && valueChanged) {
-                fireRowEditEvent = true;
-            }
-        }
-
-        if (fireRowEditEvent) {
-            this.eventSvc.dispatchEvent(rowCtrl.createRowEvent('rowValueChanged'));
-        }
-
-        if (isRowEdit) {
-            this.setEditing(rowCtrl, false);
-        }
-
-        rowCtrl.setStoppingRowEdit(false);
-    }
-
-    private setEditing(rowCtrl: RowCtrl, value: boolean): void {
-        rowCtrl.setEditingRow(value);
+    public setEditing(rowCtrl: RowCtrl, value: boolean): void {
+        rowCtrl.editing = value;
         rowCtrl.forEachGui(undefined, (gui) => gui.rowComp.addOrRemoveCssClass('ag-row-editing', value));
 
         const event: RowEditingStartedEvent | RowEditingStoppedEvent = value

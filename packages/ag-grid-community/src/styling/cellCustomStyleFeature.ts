@@ -1,30 +1,28 @@
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
-import type { CellClassParams, CellClassRules } from '../entities/colDef';
+import type { CellClassParams, CellClassRules, ColDef } from '../entities/colDef';
 import type { CellStyle, CellStyleFunc } from '../entities/colDef';
-import type { RowNode } from '../entities/rowNode';
 import type { CellCtrl, ICellComp } from '../rendering/cell/cellCtrl';
 import { processClassRules } from './stylingUtils';
 
 export class CellCustomStyleFeature extends BeanStub {
-    private readonly cellCtrl: CellCtrl;
     private readonly column: AgColumn;
-    private readonly rowNode: RowNode;
     private staticClasses: string[] = [];
 
     private cellComp: ICellComp;
 
     private cellClassRules?: CellClassRules;
 
-    constructor(ctrl: CellCtrl, beans: BeanCollection) {
+    constructor(
+        private readonly cellCtrl: CellCtrl,
+        beans: BeanCollection
+    ) {
         super();
 
-        this.cellCtrl = ctrl;
         this.beans = beans;
 
-        this.column = ctrl.getColumn();
-        this.rowNode = ctrl.getRowNode();
+        this.column = cellCtrl.column;
     }
 
     public setComp(comp: ICellComp): void {
@@ -38,14 +36,7 @@ export class CellCustomStyleFeature extends BeanStub {
     public applyCellClassRules(): void {
         const colDef = this.column.getColDef();
         const { cellClassRules } = colDef;
-        const cellClassParams: CellClassParams = this.beans.gos.addGridCommonParams({
-            value: this.cellCtrl.getValue(),
-            data: this.rowNode.data,
-            node: this.rowNode,
-            colDef: colDef,
-            column: this.column,
-            rowIndex: this.rowNode.rowIndex!,
-        });
+        const cellClassParams = this.getCellClassParams(colDef);
 
         processClassRules(
             this.beans.expressionSvc,
@@ -69,14 +60,7 @@ export class CellCustomStyleFeature extends BeanStub {
         let styles: CellStyle | null | undefined;
 
         if (typeof colDef.cellStyle === 'function') {
-            const cellStyleParams: CellClassParams = this.beans.gos.addGridCommonParams({
-                column: this.column,
-                value: this.cellCtrl.getValue(),
-                colDef: colDef,
-                data: this.rowNode.data,
-                node: this.rowNode,
-                rowIndex: this.rowNode.rowIndex!,
-            });
+            const cellStyleParams = this.getCellClassParams(colDef);
             const cellStyleFunc = colDef.cellStyle as CellStyleFunc;
             styles = cellStyleFunc(cellStyleParams);
         } else {
@@ -90,14 +74,7 @@ export class CellCustomStyleFeature extends BeanStub {
 
     public applyClassesFromColDef() {
         const colDef = this.column.getColDef();
-        const cellClassParams: CellClassParams = this.beans.gos.addGridCommonParams({
-            value: this.cellCtrl.getValue(),
-            data: this.rowNode.data,
-            node: this.rowNode,
-            column: this.column,
-            colDef: colDef,
-            rowIndex: this.rowNode.rowIndex!,
-        });
+        const cellClassParams = this.getCellClassParams(colDef);
 
         if (this.staticClasses.length) {
             this.staticClasses.forEach((className) => this.cellComp.addOrRemoveCssClass(className, false));
@@ -108,6 +85,21 @@ export class CellCustomStyleFeature extends BeanStub {
         if (this.staticClasses.length) {
             this.staticClasses.forEach((className) => this.cellComp.addOrRemoveCssClass(className, true));
         }
+    }
+
+    private getCellClassParams(colDef: ColDef): CellClassParams {
+        const {
+            cellCtrl: { value, rowNode },
+            column,
+        } = this;
+        return this.beans.gos.addGridCommonParams({
+            value,
+            data: rowNode.data,
+            node: rowNode,
+            colDef,
+            column,
+            rowIndex: rowNode.rowIndex!,
+        });
     }
 
     // overriding to make public, as we don't dispose this bean via context

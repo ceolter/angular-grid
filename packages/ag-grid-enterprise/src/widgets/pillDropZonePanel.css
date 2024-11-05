@@ -15,7 +15,6 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--ag-spacing);
 }
 
 .ag-column-drop-cell-text {
@@ -23,6 +22,7 @@
     flex: 1 1 auto;
     text-overflow: ellipsis;
     white-space: nowrap;
+    margin: 0 var(--ag-spacing);
 }
 
 .ag-column-drop-vertical {

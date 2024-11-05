@@ -104,12 +104,12 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
     }
 
     private createExpandIcons() {
-        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.gos)!));
+        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.beans)!));
 
-        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.gos)!));
+        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.beans)!));
 
         this.eExpand.appendChild(
-            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.gos)!)
+            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.beans)!)
         );
 
         this.setExpandState(ExpandState.EXPANDED);

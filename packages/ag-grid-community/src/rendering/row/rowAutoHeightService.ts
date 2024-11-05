@@ -114,7 +114,7 @@ export class RowAutoHeightService extends BeanStub implements NamedBean {
         // means more rows fit in) which looks crap. so best ignore small values and assume
         // we are still waiting for values to render.
         if (nonePresent || newRowHeight < 10) {
-            newRowHeight = _getRowHeightForNode(this.gos, rowNode).height;
+            newRowHeight = _getRowHeightForNode(this.beans, rowNode).height;
         }
 
         if (newRowHeight == rowNode.rowHeight) {
@@ -129,14 +129,13 @@ export class RowAutoHeightService extends BeanStub implements NamedBean {
 
     public setupCellAutoHeight(cellCtrl: CellCtrl, eCellWrapper: HTMLElement, compBean: BeanStub): void {
         const eParentCell = eCellWrapper.parentElement!;
-        const rowNode = cellCtrl.getRowNode();
-        const column = cellCtrl.getColumn();
+        const { rowNode, column } = cellCtrl;
         // taking minRowHeight from getRowHeightForNode means the getRowHeight() callback is used,
         // thus allowing different min heights for different rows.
-        const minRowHeight = _getRowHeightForNode(this.gos, rowNode).height;
+        const minRowHeight = _getRowHeightForNode(this.beans, rowNode).height;
 
         const measureHeight = (timesCalled: number) => {
-            if (cellCtrl.isEditing()) {
+            if (cellCtrl.editing) {
                 return;
             }
             // because of the retry's below, it's possible the retry's go beyond
@@ -154,7 +153,7 @@ export class RowAutoHeightService extends BeanStub implements NamedBean {
             if (timesCalled < 5) {
                 // if not in doc yet, means framework not yet inserted, so wait for next VM turn,
                 // maybe it will be ready next VM turn
-                const doc = _getDocument(this.gos);
+                const doc = _getDocument(this.beans);
                 const notYetInDom = !doc || !doc.contains(eCellWrapper);
 
                 // this happens in React, where React hasn't put any content in. we say 'possibly'
@@ -176,7 +175,7 @@ export class RowAutoHeightService extends BeanStub implements NamedBean {
         // do once to set size in case size doesn't change, common when cell is blank
         listener();
 
-        const destroyResizeObserver = _observeResize(this.gos, eCellWrapper, listener);
+        const destroyResizeObserver = _observeResize(this.beans, eCellWrapper, listener);
 
         compBean.addDestroyFunc(() => {
             destroyResizeObserver();

@@ -1,7 +1,5 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import { _getMaxDivHeight } from '../utils/browser';
 import { _logIfDebug } from '../utils/function';
 
@@ -13,25 +11,19 @@ import { _logIfDebug } from '../utils/function';
 export class RowContainerHeightService extends BeanStub implements NamedBean {
     beanName = 'rowContainerHeight' as const;
 
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
-
     private maxDivHeight: number;
 
     // if false, then stretching is not active, logic in this class is not used,
     // the pixel height of the row container matches what is actually needed,
     // no scaling applied.
-    private stretching: boolean;
+    public stretching: boolean;
 
     private modelHeight: number | null; // how many pixels the model needs
-    private uiContainerHeight: number | null; // how many pixels we actually have
+    public uiContainerHeight: number | null; // how many pixels we actually have
     private pixelsToShave: number; // the number of pixels we need to shave
 
     // the number of pixels we add to each rowTop - depends on the scroll position
-    private divStretchOffset: number;
+    public divStretchOffset: number;
 
     // the scrollY position
     private scrollY = 0;
@@ -47,21 +39,12 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
         _logIfDebug(this.gos, 'RowContainerHeightService - maxDivHeight = ' + this.maxDivHeight);
     }
 
-    public isStretching(): boolean {
-        return this.stretching;
-    }
-
-    public getDivStretchOffset(): number {
-        return this.divStretchOffset;
-    }
-
     public updateOffset(): void {
         if (!this.stretching) {
             return;
         }
 
-        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-        const newScrollY = gridBodyCon.getScrollFeature().getVScrollPosition().top;
+        const newScrollY = this.beans.ctrlsSvc.getScrollFeature().getVScrollPosition().top;
         const newBodyHeight = this.getUiBodyHeight();
 
         const atLeastOneChanged = newScrollY !== this.scrollY || newBodyHeight !== this.uiBodyHeight;
@@ -126,17 +109,12 @@ export class RowContainerHeightService extends BeanStub implements NamedBean {
         }
     }
 
-    public getUiContainerHeight(): number | null {
-        return this.uiContainerHeight;
-    }
-
     public getRealPixelPosition(modelPixel: number): number {
         return modelPixel - this.divStretchOffset;
     }
 
     private getUiBodyHeight(): number {
-        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-        const pos = gridBodyCon.getScrollFeature().getVScrollPosition();
+        const pos = this.beans.ctrlsSvc.getScrollFeature().getVScrollPosition();
         return pos.bottom - pos.top;
     }
 

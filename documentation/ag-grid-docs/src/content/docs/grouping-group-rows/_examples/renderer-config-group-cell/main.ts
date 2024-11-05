@@ -15,7 +15,10 @@ const gridOptions: GridOptions<IOlympicData> = {
     },
     groupRowRendererParams: {
         suppressCount: true,
-        checkbox: true,
+    },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
     },
     groupDisplayType: 'groupRows',
 };

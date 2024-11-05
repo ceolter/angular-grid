@@ -1,5 +1,6 @@
 import { setTimeout as __asyncSetTimeout } from 'timers/promises';
 import util from 'util';
+import { vitest } from 'vitest';
 
 const log = console.log;
 const info = console.info;
@@ -36,8 +37,24 @@ export const cachedJSONObjects = {
         if (found !== undefined) {
             return found;
         }
-        cachedJSONObjectsMap.set(key, obj);
-        return obj;
+
+        if (obj instanceof Date) {
+            return obj;
+        }
+
+        let newObj: any;
+
+        if (Array.isArray(obj)) {
+            newObj = obj.map(cachedJSONObjects.object);
+            cachedJSONObjectsMap.set(key, newObj);
+            return newObj;
+        }
+
+        newObj = {};
+        for (const key of Object.keys(obj)) {
+            newObj[key] = cachedJSONObjects.object(obj[key]);
+        }
+        return newObj;
     },
 
     /** return array.map(cachedJSONObjects.object) */

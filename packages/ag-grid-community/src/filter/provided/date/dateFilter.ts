@@ -168,7 +168,7 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     }
 
     protected createValueElement(): HTMLElement {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const eCondition = eDocument.createElement('div');
         eCondition.classList.add('ag-filter-body');
 
@@ -184,7 +184,7 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
         dateConditionComps: DateCompWrapper[],
         fromTo: string
     ): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const eConditionPanel = eDocument.createElement('div');
         eConditionPanel.classList.add(`ag-filter-${fromTo}`);
         eConditionPanel.classList.add(`ag-filter-date-${fromTo}`);

@@ -1,20 +1,10 @@
-import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import { _isVisible, _setFixedWidth } from '../utils/dom';
 import type { ComponentSelector } from '../widgets/component';
 import { AbstractFakeScrollComp } from './abstractFakeScrollComp';
 import { SetHeightFeature } from './rowContainer/setHeightFeature';
-import type { ScrollVisibleService } from './scrollVisibleService';
 
 export class FakeVScrollComp extends AbstractFakeScrollComp {
-    private ctrlsSvc: CtrlsService;
-    private scrollVisibleSvc: ScrollVisibleService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.scrollVisibleSvc = beans.scrollVisibleSvc;
-    }
-
     constructor() {
         super(
             /* html */ `<div class="ag-body-vertical-scroll" aria-hidden="true">
@@ -30,16 +20,20 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
         super.postConstruct();
 
         this.createManagedBean(new SetHeightFeature(this.eContainer));
-        this.ctrlsSvc.register('fakeVScrollComp', this);
+        const { ctrlsSvc } = this.beans;
+        ctrlsSvc.register('fakeVScrollComp', this);
 
-        this.addManagedEventListeners({ rowContainerHeightChanged: this.onRowContainerHeightChanged.bind(this) });
+        this.addManagedEventListeners({
+            rowContainerHeightChanged: this.onRowContainerHeightChanged.bind(this, ctrlsSvc),
+        });
     }
 
     protected setScrollVisible(): void {
-        const vScrollShowing = this.scrollVisibleSvc.isVerticalScrollShowing();
+        const { scrollVisibleSvc } = this.beans;
+        const vScrollShowing = scrollVisibleSvc.verticalScrollShowing;
         const invisibleScrollbar = this.invisibleScrollbar;
 
-        const scrollbarWidth = vScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
+        const scrollbarWidth = vScrollShowing ? scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
         const adjustedScrollbarWidth = scrollbarWidth === 0 && invisibleScrollbar ? 16 : scrollbarWidth;
 
         this.addOrRemoveCssClass('ag-scrollbar-invisible', invisibleScrollbar);
@@ -49,10 +43,9 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
         this.setDisplayed(vScrollShowing, { skipAriaHidden: true });
     }
 
-    private onRowContainerHeightChanged(): void {
-        const { ctrlsSvc } = this;
+    private onRowContainerHeightChanged(ctrlsSvc: CtrlsService): void {
         const gridBodyCtrl = ctrlsSvc.getGridBodyCtrl();
-        const gridBodyViewportEl = gridBodyCtrl.getBodyViewportElement();
+        const gridBodyViewportEl = gridBodyCtrl.eBodyViewport;
 
         const eViewportScrollTop = this.getScrollPosition();
         const gridBodyViewportScrollTop = gridBodyViewportEl.scrollTop;
@@ -63,14 +56,14 @@ export class FakeVScrollComp extends AbstractFakeScrollComp {
     }
 
     public getScrollPosition(): number {
-        return this.getViewportElement().scrollTop;
+        return this.eViewport.scrollTop;
     }
 
     public setScrollPosition(value: number, force?: boolean): void {
-        if (!force && !_isVisible(this.getViewportElement())) {
+        if (!force && !_isVisible(this.eViewport)) {
             this.attemptSettingScrollPosition(value);
         }
-        this.getViewportElement().scrollTop = value;
+        this.eViewport.scrollTop = value;
     }
 }
 

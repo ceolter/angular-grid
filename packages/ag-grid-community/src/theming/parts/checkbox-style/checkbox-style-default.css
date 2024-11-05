@@ -8,10 +8,13 @@
     border: solid var(--ag-checkbox-border-width) var(--ag-checkbox-unchecked-border-color);
 
     & input {
+        cursor: pointer;
         appearance: none;
         opacity: 0;
-        width: 100%;
-        height: 100%;
+        margin: 0;
+        display: block;
+        width: var(--ag-icon-size);
+        height: var(--ag-icon-size);
     }
 
     &::after {

@@ -9,10 +9,10 @@ import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 import { getShapeSelectOptions } from './seriesUtils';
 
 export class MarkersPanel extends Component {
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(private readonly chartMenuUtils: ChartMenuParamsFactory) {
         super();
@@ -22,7 +22,7 @@ export class MarkersPanel extends Component {
         const seriesMarkersGroupParams = this.chartMenuUtils.addEnableParams<AgGroupComponentParams>('marker.enabled', {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
-            title: this.chartTranslationService.translate('markers'),
+            title: this.chartTranslation.translate('markers'),
             suppressEnabledCheckbox: true,
             useToggle: true,
             suppressOpenCloseIcons: true,
@@ -42,7 +42,7 @@ export class MarkersPanel extends Component {
                 seriesMarkerShapeSelect: this.chartMenuUtils.getDefaultSelectParams(
                     'marker.shape',
                     'shape',
-                    getShapeSelectOptions(this.chartTranslationService)
+                    getShapeSelectOptions(this.chartTranslation)
                 ),
                 seriesMarkerSizeSlider: this.chartMenuUtils.getDefaultSliderParams('marker.size', 'size', 60),
                 seriesMarkerStrokeWidthSlider: this.chartMenuUtils.getDefaultSliderParams(

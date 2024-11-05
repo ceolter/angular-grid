@@ -1,22 +1,17 @@
-// to satisfy server side compilation
-declare let global: any;
-const globalObj = typeof global === 'undefined' ? {} : global;
-globalObj.HTMLElement = typeof HTMLElement === 'undefined' ? {} : HTMLElement;
-globalObj.HTMLButtonElement = typeof HTMLButtonElement === 'undefined' ? {} : HTMLButtonElement;
-globalObj.HTMLSelectElement = typeof HTMLSelectElement === 'undefined' ? {} : HTMLSelectElement;
-globalObj.HTMLInputElement = typeof HTMLInputElement === 'undefined' ? {} : HTMLInputElement;
-globalObj.Node = typeof Node === 'undefined' ? {} : Node;
-globalObj.MouseEvent = typeof MouseEvent === 'undefined' ? {} : MouseEvent;
-
 // columns
-export type { ColumnFactory } from './columns/columnFactory';
+export { _updateColumnState, _addColumnDefaultAndTypes, _createColumnTree } from './columns/columnFactoryUtils';
 export type { ColumnGroupService } from './columns/columnGroups/columnGroupService';
 export type { ColumnModel } from './columns/columnModel';
 export { ColumnCollections as _ColumnCollections, ColKey } from './columns/columnModel';
 export type { ColumnAutosizeService } from './columnAutosize/columnAutosizeService';
 export { BaseColsService } from './columns/baseColsService';
-export type { ColumnStateService } from './columns/columnStateService';
-export { ColumnState, ColumnStateParams, ApplyColumnStateParams } from './columns/columnStateService';
+export {
+    ColumnState,
+    ColumnStateParams,
+    ApplyColumnStateParams,
+    _resetColumnState,
+    _applyColumnState,
+} from './columns/columnStateUtils';
 export type { ColumnMoveService } from './columnMove/columnMoveService';
 export type { ColumnNameService } from './columns/columnNameService';
 export { IAggColumnNameService } from './interfaces/iAggColumnNameService';
@@ -134,7 +129,7 @@ export { AgColumn, isColumn } from './entities/agColumn';
 export { AgColumnGroup, isColumnGroup } from './entities/agColumnGroup';
 export { AgProvidedColumnGroup, isProvidedColumnGroup } from './entities/agProvidedColumnGroup';
 export { type ITreeNode, RowNode, ROW_ID_PREFIX_ROW_GROUP as _ROW_ID_PREFIX_ROW_GROUP } from './entities/rowNode';
-export { _createRowNodeFooter, _destroyRowNodeFooter, _createGlobalRowEvent } from './entities/rowNodeUtils';
+export { _createGlobalRowEvent } from './entities/rowNodeUtils';
 export {
     RowPinnedType,
     IRowNode,
@@ -267,7 +262,7 @@ export { IAdvancedFilterService } from './interfaces/iAdvancedFilterService';
 // gridPanel
 export { GridBodyCtrl, IGridBodyComp, RowAnimationCssClasses } from './gridBodyComp/gridBodyCtrl';
 export type { ScrollVisibleService } from './gridBodyComp/scrollVisibleService';
-export type { MouseEventService } from './gridBodyComp/mouseEventService';
+export { _getCellPositionForEvent, _getNormalisedMousePosition } from './gridBodyComp/mouseEventUtils';
 export type { NavigationService } from './navigation/navigationService';
 export { FakeHScrollComp } from './gridBodyComp/fakeHScrollComp';
 export { FakeVScrollComp } from './gridBodyComp/fakeVScrollComp';
@@ -310,6 +305,7 @@ export { _requestAnimationFrame } from './misc/animationFrameService';
 export type { AnimationFrameService } from './misc/animationFrameService';
 export { AlignedGrid } from './interfaces/iAlignedGrid';
 export type { MenuService } from './misc/menu/menuService';
+export { _setColMenuVisible } from './misc/menu/menuService';
 export type { IColsService } from './interfaces/iColsService';
 
 // editing / cellEditors
@@ -493,7 +489,11 @@ export { AgInputDateField } from './widgets/agInputDateField';
 export { AgSelect, AgSelectParams, AgSelectSelector } from './widgets/agSelect';
 export { ListOption } from './widgets/agList';
 export { Component, VisibleChangedEvent } from './widgets/component';
-export { ManagedFocusFeature, ManagedFocusCallbacks } from './widgets/managedFocusFeature';
+export {
+    ManagedFocusFeature,
+    ManagedFocusCallbacks,
+    FOCUS_MANAGED_CLASS as _FOCUS_MANAGED_CLASS,
+} from './widgets/managedFocusFeature';
 export { TabGuardComp } from './widgets/tabGuardComp';
 export { TabGuardCtrl, ITabGuard, TabGuardClassNames } from './widgets/tabGuardCtrl';
 export { TabGuardFeature } from './widgets/tabGuardFeature';
@@ -590,7 +590,7 @@ export {
     _RowGroupingGridApi,
     _AggregationGridApi,
     _PivotGridApi,
-    _RangeSelectionGridApi,
+    _CellSelectionGridApi,
     _MenuGridApi,
     _ServerSideRowModelGridApi,
     _ExcelExportGridApi,
@@ -823,6 +823,7 @@ export {
     UseGroupTotalRow,
     GetChartMenuItems,
 } from './entities/gridOptions';
+export type { ManagedGridOptionKey, ManagedGridOptions } from './gridOptionsInitial';
 
 export {
     FillOperationParams,
@@ -898,6 +899,7 @@ export {
     _isShowTooltipWhenTruncated,
 } from './tooltip/tooltipFeature';
 export { IAggregationStage } from './interfaces/iAggregationStage';
+export { IFooterService } from './interfaces/iFooterService';
 export {
     MenuItemLeafDef,
     MenuItemDef,
@@ -963,8 +965,8 @@ export {
 } from './utils/dom';
 export { _stopPropagationForAgGrid, _isStopPropagationForAgGrid, _isElementInEventPath } from './utils/event';
 export { _warnOnce, _debounce, _doOnce, _waitUntil } from './utils/function';
-export { _warn, _error } from './validation/logging';
-export { _createIcon, _createIconNoSpan } from './utils/icon';
+export { _warn, _error, _errMsg } from './validation/logging';
+export { _createIcon, _createIconNoSpan, IconName } from './utils/icon';
 export { _fuzzySuggestions } from './utils/fuzzyMatch';
 export { _exists, _missing, _jsonEquals, _toStringOrNull, _makeNull, _defaultComparator } from './utils/generic';
 export { _isEventFromPrintableCharacter } from './utils/keyboard';
@@ -972,7 +974,16 @@ export { _formatNumberCommas } from './utils/number';
 export { _mergeDeep } from './utils/object';
 export { _escapeString } from './utils/string';
 export { AgPromise } from './utils/promise';
-export { _addFocusableContainerListener } from './utils/focus';
+export {
+    _addFocusableContainerListener,
+    _findFocusableElements,
+    _focusInto,
+    _findNextFocusableElement,
+    _findTabbableParent,
+    _focusGridInnerElement,
+    _isKeyboardMode,
+    _focusNextGridCoreContainer,
+} from './utils/focus';
 
 // charts
 export * from './interfaces/iChartOptions';
@@ -991,36 +1002,121 @@ export { Module, ModuleValidationResult, _ModuleWithApi, _ModuleWithoutApi, Modu
 export { ModuleRegistry, _getGridRegisteredModules } from './modules/moduleRegistry';
 
 export { ValidationModule } from './validation/validationModule';
-
-export { ColumnMoveModule } from './columnMove/columnMoveModule';
-export { DragModule, HorizontalResizeModule, DragAndDropModule } from './dragAndDrop/dragModule';
+export { ColumnMoveModule, ColumnMoveApiModule, ColumnMoveCoreModule } from './columnMove/columnMoveModule';
+export {
+    DragModule,
+    HorizontalResizeModule,
+    DragAndDropModule,
+    NativeDragModule,
+    RowDragApiModule,
+    RowDragCoreModule,
+    RowDragModule,
+} from './dragAndDrop/dragModule';
 export {
     ColumnFilterModule,
     FilterCoreModule,
     FloatingFilterModule,
     ReadOnlyFloatingFilterModule,
     FilterValueModule,
+    ColumnFilterApiModule,
+    ColumnFilterMenuModule,
+    FilterApiModule,
+    FilterModule,
+    FloatingFilterCoreModule,
+    QuickFilterApiModule,
+    QuickFilterCoreModule,
+    QuickFilterModule,
+    SimpleFilterModule,
+    SimpleFloatingFilterModule,
 } from './filter/filterModule';
-export { EditCoreModule } from './edit/editModule';
+export {
+    EditModule,
+    EditCoreModule,
+    DataTypeEditorsModule,
+    DefaultEditorModule,
+    EditApiModule,
+    FullRowEditModule,
+    LargeTextEditorModule,
+    SelectEditorModule,
+    UndoRedoEditModule,
+} from './edit/editModule';
 export { StickyRowModule } from './rendering/features/stickyRowModule';
-export { RowSelectionCoreModule } from './selection/rowSelectionModule';
+export { RowSelectionCoreModule, RowSelectionApiModule, RowSelectionModule } from './selection/rowSelectionModule';
 export {
     CsrmSsrmSharedApiModule as _CsrmSsrmSharedApiModule,
     SsrmInfiniteSharedApiModule as _SsrmInfiniteSharedApiModule,
 } from './api/sharedApiModule';
-export { CommunityMenuApiModule } from './misc/menu/sharedMenuModule';
+export { CommunityMenuApiModule, SharedMenuModule } from './misc/menu/sharedMenuModule';
 export { CommunityFeaturesModule } from './communityFeaturesModule';
-export { SortModule } from './sort/sortModule';
+export { SortModule, SortApiModule, SortCoreModule, SortIndicatorCompModule } from './sort/sortModule';
 export { AlignedGridsModule } from './alignedGrids/alignedGridsModule';
-export { ClientSideRowModelModule, ClientSideRowModelCoreModule } from './clientSideRowModel/clientSideRowModelModule';
-export { CsvExportModule, CsvExportCoreModule } from './csvExport/csvExportModule';
-export { InfiniteRowModelModule } from './infiniteRowModel/infiniteRowModelModule';
+export {
+    ClientSideRowModelModule,
+    ClientSideRowModelCoreModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelFilterModule,
+    ClientSideRowModelSortModule,
+} from './clientSideRowModel/clientSideRowModelModule';
+export { CsvExportModule, CsvExportCoreModule, CsvExportApiModule } from './csvExport/csvExportModule';
+export {
+    InfiniteRowModelModule,
+    InfiniteRowModelApiModule,
+    InfiniteRowModelCoreModule,
+} from './infiniteRowModel/infiniteRowModelModule';
 export { PopupModule } from './widgets/popupModule';
-export { SharedMenuModule } from './misc/menu/sharedMenuModule';
-export { KeyboardNavigationCoreModule } from './navigation/navigationModule';
+export {
+    KeyboardNavigationCoreModule,
+    KeyboardNavigationApiModule,
+    KeyboardNavigationModule,
+} from './navigation/navigationModule';
 export { CellFlashModule } from './rendering/cell/cellFlashModule';
-export { ColumnGroupCoreModule } from './columns/columnGroups/columnGroupModule';
+export {
+    ColumnGroupCoreModule,
+    ColumnGroupApiModule,
+    ColumnGroupModule,
+} from './columns/columnGroups/columnGroupModule';
 export { ColumnGroupHeaderCompModule, ColumnHeaderCompModule } from './headerRendering/cells/headerModule';
+export { StateModule, StateApiModule, StateCoreModule } from './misc/state/stateModule';
+export {
+    DataTypeModule,
+    ColumnApiModule,
+    ColumnFlexModule,
+    GetColumnDefsApiModule,
+    SelectionColumnModule,
+} from './columns/columnModule';
+export { PaginationModule, PaginationApiModule, PaginationCoreModule } from './pagination/paginationModule';
+export { RowApiModule, ScrollApiModule } from './api/apiModule';
+export { RenderApiModule } from './rendering/renderModule';
+export {
+    ColumnAutosizeModule,
+    ColumnAutosizeApiModule,
+    ColumnAutosizeCoreModule,
+} from './columnAutosize/columnAutosizeModule';
+export { ColumnResizeModule, ColumnResizeApiModule, ColumnResizeCoreModule } from './columnResize/columnResizeModule';
+export { PinnedRowModule, PinnedRowApiModule, PinnedRowCoreModule } from './pinnedRowModel/pinnedRowModule';
+export { ValueCacheModule, CellApiModule, ChangeDetectionModule, ExpressionModule } from './valueService/valueModule';
+export {
+    AnimateShowChangeCellRendererModule,
+    AnimateSlideCellRendererModule,
+    CheckboxCellRendererModule,
+} from './rendering/cellRenderers/cellRendererModule';
+export {
+    OverlayModule,
+    LoadingOverlayModule,
+    NoRowsOverlayModule,
+    OverlayApiModule,
+    OverlayCoreModule,
+} from './rendering/overlays/overlayModule';
+export { CellRendererFunctionModule } from './components/framework/cellRendererFunctionModule';
+export { CellStyleModule, RowStyleModule } from './styling/stylingModule';
+export { ColumnHoverModule } from './columns/columnHover/columnHoverModule';
+export { ColumnAnimationModule } from './rendering/columnAnimationModule';
+export { AnimationFrameModule } from './misc/animationFrameModule';
+export { EventApiModule } from './misc/apiEvents/apiEventModule';
+export { TooltipModule, TooltipCompModule, TooltipCoreModule } from './tooltip/tooltipModule';
+export { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
+export { LocaleModule } from './misc/locale/localeModule';
+export { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
 
 //  events
 export * from './events';

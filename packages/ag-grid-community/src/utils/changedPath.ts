@@ -33,8 +33,11 @@ export class ChangedPath {
     // a CSRM refresh for other reasons (after sort or filter, or user calling
     // setRowData() without delta mode) then we are not active. we are also
     // marked as not active if secondary columns change in pivot (as this impacts
-    // aggregations)
-    private active = true;
+    // aggregations).
+    // can be set inactive by:
+    // a) ClientSideRowModel, if no transactions or
+    // b) PivotService, if secondary columns changed
+    public active = true;
 
     // for each node in the change path, we also store which columns need
     // to be re-aggregated.
@@ -51,17 +54,6 @@ export class ChangedPath {
             children: null,
         };
         this.mapToItems[rootNode.id!] = this.pathRoot;
-    }
-
-    // can be set inactive by:
-    // a) ClientSideRowModel, if no transactions or
-    // b) PivotService, if secondary columns changed
-    public setInactive(): void {
-        this.active = false;
-    }
-
-    public isActive(): boolean {
-        return this.active;
     }
 
     private depthFirstSearchChangedPath(pathItem: PathItem, callback: (rowNode: RowNode) => void): void {

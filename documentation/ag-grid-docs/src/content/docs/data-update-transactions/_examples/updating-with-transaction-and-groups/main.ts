@@ -43,17 +43,14 @@ const gridOptions: GridOptions = {
         field: 'model',
         rowGroupIndex: 1,
         cellRenderer: 'agGroupCellRenderer',
-        cellRendererParams: {
-            checkbox: true,
-        } as IGroupCellRendererParams,
     },
     groupDefaultExpanded: 1,
     rowData: getData(),
     rowSelection: {
         mode: 'multiRow',
         groupSelects: 'descendants',
-        checkboxes: false,
         headerCheckbox: false,
+        checkboxLocation: 'autoGroupColumn',
     },
     suppressAggFuncInHeader: true,
     // this allows the different colors per group, by assigning a different

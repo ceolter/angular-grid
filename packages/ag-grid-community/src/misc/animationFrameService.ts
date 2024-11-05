@@ -2,7 +2,6 @@ import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
-import type { GridOptionsService } from '../gridOptionsService';
 import { _getWindow } from '../gridOptionsUtils';
 import type { PaginationService } from '../pagination/paginationService';
 import { _warn } from '../validation/logging';
@@ -18,8 +17,8 @@ interface TaskList {
     sorted: boolean;
 }
 
-export function _requestAnimationFrame(gos: GridOptionsService, callback: any) {
-    const win = _getWindow(gos);
+export function _requestAnimationFrame(beans: BeanCollection, callback: any) {
+    const win = _getWindow(beans);
 
     if (win.requestAnimationFrame) {
         win.requestAnimationFrame(callback);
@@ -150,10 +149,10 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         // 16ms is 60 fps
         const noMaxMillis = millis <= 0;
 
-        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
+        const scrollFeature = this.ctrlsSvc.getScrollFeature();
 
         while (noMaxMillis || duration < millis) {
-            const gridBodyDidSomething = gridBodyCon.getScrollFeature().scrollGridIfNeeded();
+            const gridBodyDidSomething = scrollFeature.scrollGridIfNeeded();
 
             if (!gridBodyDidSomething) {
                 let task: () => void;
@@ -210,7 +209,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         // check for the existence of requestAnimationFrame, and if
         // it's missing, then we polyfill it with setTimeout()
         const callback = this.executeFrame.bind(this, 60);
-        _requestAnimationFrame(this.gos, callback);
+        _requestAnimationFrame(this.beans, callback);
     }
 
     public isQueueEmpty(): boolean {

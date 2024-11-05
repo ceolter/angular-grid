@@ -249,5 +249,5 @@ export function _mergeFilterParamsWithApplicationProvidedParams(
     defObject: ColDef,
     paramsFromGrid: IFilterParams
 ): IFilterParams {
-    return userCompFactory.mergeParamsWithApplicationProvidedParams(defObject, FilterComponent, paramsFromGrid);
+    return userCompFactory.mergeParams(defObject, FilterComponent, paramsFromGrid);
 }

@@ -380,7 +380,7 @@ export class PopupService extends BeanStub implements NamedBean {
         if (!skipObserver) {
             // Since rendering popup contents can be asynchronous, use a resize observer to
             // reposition the popup after initial updates to the size of the contents
-            const resizeObserverDestroyFunc = _observeResize(this.gos, ePopup, () => updatePopupPosition(true));
+            const resizeObserverDestroyFunc = _observeResize(this.beans, ePopup, () => updatePopupPosition(true));
             // Only need to reposition when first open, so can clean up after a bit of time
             setTimeout(() => resizeObserverDestroyFunc(), WAIT_FOR_POPUP_CONTENT_RESIZE);
         }
@@ -400,7 +400,7 @@ export class PopupService extends BeanStub implements NamedBean {
         // returns the rect outside the borders, but the 0,0 coordinate for absolute
         // positioning is inside the border, leading the popup to be off by the width
         // of the border
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         let popupParent = this.getPopupParent();
 
         if (popupParent === eDocument.body) {
@@ -419,7 +419,7 @@ export class PopupService extends BeanStub implements NamedBean {
         const offsetProperty = isVertical ? 'height' : 'width';
         const scrollPositionProperty = isVertical ? 'scrollTop' : 'scrollLeft';
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const docElement = eDocument.documentElement;
         const popupParent = this.getPopupParent();
         const popupRect = ePopup.getBoundingClientRect();
@@ -444,7 +444,7 @@ export class PopupService extends BeanStub implements NamedBean {
     }
 
     public addPopup(params: AddPopupParams): AddPopupResult {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const { eChild, ariaLabel, alwaysOnTop, positionCallback, anchorToElement } = params;
 
         if (!eDocument) {
@@ -527,7 +527,7 @@ export class PopupService extends BeanStub implements NamedBean {
     private addEventListenersToPopup(
         params: AddPopupParams & { wrapperEl: HTMLElement }
     ): (popupParams?: PopupEventParams) => void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const ePopupParent = this.getPopupParent();
 
         const { wrapperEl, eChild: popupEl, closedCallback, afterGuiAttached, closeOnEsc, modal } = params;
@@ -535,7 +535,7 @@ export class PopupService extends BeanStub implements NamedBean {
         let popupHidden = false;
 
         const hidePopupOnKeyboardEvent = (event: KeyboardEvent) => {
-            if (!wrapperEl.contains(_getActiveDomElement(this.gos))) {
+            if (!wrapperEl.contains(_getActiveDomElement(this.beans))) {
                 return;
             }
 
@@ -781,7 +781,7 @@ export class PopupService extends BeanStub implements NamedBean {
     }
 
     public isElementWithinCustomPopup(el: HTMLElement): boolean {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         while (el && el !== eDocument.body) {
             if (el.classList.contains('ag-custom-component-popup') || el.parentElement === null) {
                 return true;

@@ -82,7 +82,7 @@ export class RowContainerComp extends Component {
             } else {
                 // don't create new row comps for rows which are not displayed. still want the existing components
                 // as they may be animating out.
-                if (!rowCon.getRowNode().displayed) {
+                if (!rowCon.rowNode.displayed) {
                     return;
                 }
                 const rowComp = new RowComp(rowCon, this.beans, this.options.type);

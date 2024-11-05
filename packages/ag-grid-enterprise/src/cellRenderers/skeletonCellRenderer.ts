@@ -24,7 +24,7 @@ export class SkeletonCellRenderer extends Component implements ILoadingCellRende
     }
 
     private setupLoading(params: ILoadingCellRendererParams): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const skeletonEffect = eDocument.createElement('div');
         skeletonEffect.classList.add('ag-skeleton-effect');
 

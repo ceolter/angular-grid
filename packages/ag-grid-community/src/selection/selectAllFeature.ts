@@ -44,7 +44,7 @@ export class SelectAllFeature extends BeanStub {
     public onSpaceKeyDown(e: KeyboardEvent): void {
         const checkbox = this.cbSelectAll;
 
-        if (checkbox.isDisplayed() && !checkbox.getGui().contains(_getActiveDomElement(this.gos))) {
+        if (checkbox.isDisplayed() && !checkbox.getGui().contains(_getActiveDomElement(this.beans))) {
             e.preventDefault();
             checkbox.setValue(!checkbox.getValue());
         }

@@ -58,7 +58,7 @@ export class SortService extends BeanStub implements NamedBean {
             }
         }
 
-        columnsToUpdate.forEach((col) => col.setSort(sort, source));
+        columnsToUpdate.forEach((col) => this.setColSort(col, sort, source));
 
         const doingMultiSort = (multiSort || this.gos.get('alwaysMultiSort')) && !this.gos.get('suppressMultiSort');
 
@@ -84,7 +84,7 @@ export class SortService extends BeanStub implements NamedBean {
         const allSortedCols = this.getColumnsWithSortingOrdered();
 
         // reset sort index on everything
-        this.colModel.getAllCols().forEach((col) => col.setSortIndex(null));
+        this.colModel.getAllCols().forEach((col) => this.setColSortIndex(col, null));
         const allSortedColsWithoutChangesOrGroups = allSortedCols.filter((col) => {
             if (isCoupled && col.getColDef().showRowGroup) {
                 return false;
@@ -94,9 +94,7 @@ export class SortService extends BeanStub implements NamedBean {
         const sortedColsWithIndices = lastSortIndexCol.getSort()
             ? [...allSortedColsWithoutChangesOrGroups, lastSortIndexCol]
             : allSortedColsWithoutChangesOrGroups;
-        sortedColsWithIndices.forEach((col, idx) => {
-            col.setSortIndex(idx);
-        });
+        sortedColsWithIndices.forEach((col, idx) => this.setColSortIndex(col, idx));
     }
 
     // gets called by API, so if data changes, use can call this, which will end up
@@ -136,7 +134,7 @@ export class SortService extends BeanStub implements NamedBean {
 
                 // setting to 'undefined' as null means 'none' rather than cleared, otherwise issue will arise
                 // if sort order is: ['desc', null , 'asc'], as it will start at null rather than 'desc'.
-                columnToClear.setSort(undefined, source);
+                this.setColSort(columnToClear, undefined, source);
             }
         });
 
@@ -333,6 +331,53 @@ export class SortService extends BeanStub implements NamedBean {
             sortChanged: onSortingChanged,
             columnRowGroupChanged: onSortingChanged,
         });
+    }
+
+    public initCol(column: AgColumn): void {
+        const { sort, initialSort, sortIndex, initialSortIndex } = column.colDef;
+
+        if (sort !== undefined) {
+            if (sort === 'asc' || sort === 'desc') {
+                column.sort = sort;
+            }
+        } else {
+            if (initialSort === 'asc' || initialSort === 'desc') {
+                column.sort = initialSort;
+            }
+        }
+
+        if (sortIndex !== undefined) {
+            if (sortIndex !== null) {
+                column.sortIndex = sortIndex;
+            }
+        } else {
+            if (initialSortIndex !== null) {
+                column.sortIndex = initialSortIndex;
+            }
+        }
+    }
+
+    public updateColSort(column: AgColumn, sort: SortDirection | undefined, source: ColumnEventType): void {
+        if (sort !== undefined) {
+            if (sort === 'desc' || sort === 'asc') {
+                this.setColSort(column, sort, source);
+            } else {
+                this.setColSort(column, undefined, source);
+            }
+        }
+    }
+
+    private setColSort(column: AgColumn, sort: SortDirection | undefined, source: ColumnEventType): void {
+        if (column.sort !== sort) {
+            column.sort = sort;
+            column.dispatchColEvent('sortChanged', source);
+        }
+        column.dispatchStateUpdatedEvent('sort');
+    }
+
+    public setColSortIndex(column: AgColumn, sortOrder?: number | null): void {
+        column.sortIndex = sortOrder;
+        column.dispatchStateUpdatedEvent('sortIndex');
     }
 
     public createSortIndicator(skipTemplate?: boolean): SortIndicatorComp {

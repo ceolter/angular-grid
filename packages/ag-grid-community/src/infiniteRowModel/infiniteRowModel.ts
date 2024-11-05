@@ -53,7 +53,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
             return;
         }
 
-        this.rowHeight = _getRowHeightAsNumber(this.gos);
+        this.rowHeight = _getRowHeightAsNumber(this.beans);
 
         this.addEventListeners();
 
@@ -88,7 +88,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         this.addManagedPropertyListener('datasource', () => this.setDatasource(this.gos.get('datasource')));
         this.addManagedPropertyListener('cacheBlockSize', () => this.resetCache());
         this.addManagedPropertyListener('rowHeight', () => {
-            this.rowHeight = _getRowHeightAsNumber(this.gos);
+            this.rowHeight = _getRowHeightAsNumber(this.beans);
             this.cacheParams.rowHeight = this.rowHeight;
             this.updateRowHeights();
         });
@@ -200,7 +200,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
             // or a new datasource is set
             initialRowCount: this.gos.get('infiniteInitialRowCount'),
             maxBlocksInCache: this.gos.get('maxBlocksInCache'),
-            rowHeight: _getRowHeightAsNumber(this.gos),
+            rowHeight: _getRowHeightAsNumber(this.beans),
 
             // if user doesn't provide overflow, we use default overflow of 1, so user can scroll past
             // the current page and request first row of next page

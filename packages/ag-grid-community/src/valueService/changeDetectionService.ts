@@ -13,7 +13,7 @@ import { ChangedPath } from '../utils/changedPath';
 // Matches value in clipboard module
 const SOURCE_PASTE = 'paste';
 export class ChangeDetectionService extends BeanStub implements NamedBean {
-    beanName = 'changeDetectionService' as const;
+    beanName = 'changeDetectionSvc' as const;
 
     private rowModel: IRowModel;
     private rowRenderer: RowRenderer;
@@ -23,7 +23,7 @@ export class ChangeDetectionService extends BeanStub implements NamedBean {
         this.rowRenderer = beans.rowRenderer;
     }
 
-    private clientSideRowModel: IClientSideRowModel;
+    private clientSideRowModel: IClientSideRowModel | null = null;
 
     public postConstruct(): void {
         if (_isClientSideRowModel(this.gos, this.rowModel)) {
@@ -55,7 +55,7 @@ export class ChangeDetectionService extends BeanStub implements NamedBean {
         const nodesToRefresh: RowNode[] = [rowNode];
 
         const clientSideRowModel = this.clientSideRowModel;
-        const rootNode = clientSideRowModel.rootNode;
+        const rootNode = clientSideRowModel?.rootNode;
 
         // step 1 of change detection is to update the aggregated values
         if (rootNode && !rowNode.isRowPinned()) {

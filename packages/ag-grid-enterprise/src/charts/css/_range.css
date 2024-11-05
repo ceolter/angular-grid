@@ -7,7 +7,7 @@
     }
 }
 
-& input[class^='ag-'][type='range'] {
+input[class^='ag-'][type='range'] {
     padding: 0;
     -webkit-appearance: none;
     width: 100%;
@@ -15,16 +15,15 @@
     background: none;
     overflow: visible;
 
-    &::-webkit-slider-runnable-track {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 3px;
-        background-color: var(--ag-border-color);
-        border-radius: 1.5px;
+    &:disabled {
+        opacity: 0.5;
     }
+}
 
-    &::-moz-range-track {
+/* IMPORTANT this block must contain ONLY -webkit styles, as any browsers that
+   don't support the -webkit prefix will ignore the entire block */
+input[class^='ag-'][type='range'] {
+    &::-webkit-slider-runnable-track {
         margin: 0;
         padding: 0;
         width: 100%;
@@ -45,6 +44,32 @@
         transform: translateY(calc(var(--ag-icon-size) * -0.5 + 1.5px));
     }
 
+    &:focus {
+        &::-webkit-slider-thumb {
+            box-shadow: var(--ag-focus-shadow);
+            border-color: var(--ag-accent-color);
+        }
+    }
+
+    &:active {
+        &::-webkit-slider-runnable-track {
+            background-color: var(--ag-accent-color);
+        }
+    }
+}
+
+/* IMPORTANT this block must contain ONLY -moz styles, as any browsers that
+   don't support the -moz prefix will ignore the entire block */
+input[class^='ag-'][type='range'] {
+    &::-moz-range-track {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 3px;
+        background-color: var(--ag-border-color);
+        border-radius: 1.5px;
+    }
+
     &::-moz-ag-range-thumb {
         margin: 0;
         padding: 0;
@@ -58,11 +83,6 @@
     }
 
     &:focus {
-        &::-webkit-slider-thumb {
-            box-shadow: var(--ag-focus-shadow);
-            border-color: var(--ag-accent-color);
-        }
-
         &::-moz-ag-range-thumb {
             box-shadow: var(--ag-focus-shadow);
             border-color: var(--ag-accent-color);
@@ -70,15 +90,8 @@
     }
 
     &:active {
-        &::-webkit-slider-runnable-track {
-            background-color: var(--ag-accent-color);
-        }
         &::-moz-ag-range-track {
             background-color: var(--ag-accent-color);
         }
-    }
-
-    &:disabled {
-        opacity: 0.5;
     }
 }

@@ -3,8 +3,7 @@ import type { ITreeNode, RowNode } from 'ag-grid-community';
 
 import type { TreeRow } from './treeRow';
 
-const treeNodePositionComparer = (a: RowNode, b: RowNode): number =>
-    a.treeNode!.oldSourceRowIndex - b.treeNode!.oldSourceRowIndex;
+const treeNodePositionComparer = (a: RowNode, b: RowNode): number => a.treeNode!.sourceIdx - b.treeNode!.sourceIdx;
 
 /** An empty iterator, to avoid null checking when we iterate the children map */
 const EMPTY_CHILDREN = (_EmptyArray as TreeNode[]).values();
@@ -93,7 +92,7 @@ export class TreeNode implements ITreeNode {
     public duplicateRowsWarned?: boolean;
 
     /** The ordering this node had in the previous commit. */
-    public oldSourceRowIndex: number = -1;
+    public sourceIdx: number = -1;
 
     public constructor(
         /** The parent node of this node. Is null if destroyed or if is the root. */
@@ -348,13 +347,13 @@ export class TreeNode implements ITreeNode {
      * as it assumes children's childrenAfterGroup is already updated.
      * @returns the rowPosition the node should have.
      */
-    public getRowPosition(): number {
+    public getNewSourceIdx(): number {
         const row = this.row;
         if (row?.data) {
             return row.sourceRowIndex;
         }
         // This is a filler node, return the rowPosition of the first child
-        return this.childrenAfterGroup[0]?.treeNode?.oldSourceRowIndex ?? this.oldSourceRowIndex;
+        return this.childrenAfterGroup[0]?.treeNode?.sourceIdx ?? this.sourceIdx;
     }
 
     /**
@@ -400,12 +399,12 @@ export class TreeNode implements ITreeNode {
         let prevPosition = -1;
         let needSort = false;
         for (const child of this.enumChildren()) {
-            const nextPosition = child.getRowPosition();
+            const nextPosition = child.getNewSourceIdx();
             if (nextPosition < prevPosition) {
                 needSort = true;
             }
             prevPosition = nextPosition;
-            child.oldSourceRowIndex = nextPosition;
+            child.sourceIdx = nextPosition;
             const row = child.row;
             if (childrenAfterGroup[index] !== row) {
                 childrenAfterGroup[index] = row!;

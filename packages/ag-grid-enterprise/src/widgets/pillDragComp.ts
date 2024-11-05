@@ -73,9 +73,9 @@ export abstract class PillDragComp<TItem> extends Component<PillDragCompEvent> {
         this.addElementClasses(this.eText, 'text');
         this.addElementClasses(this.eButton, 'button');
 
-        this.eDragHandle.appendChild(_createIconNoSpan('columnDrag', this.gos)!);
+        this.eDragHandle.appendChild(_createIconNoSpan('columnDrag', this.beans)!);
 
-        this.eButton.appendChild(_createIconNoSpan('cancel', this.gos)!);
+        this.eButton.appendChild(_createIconNoSpan('cancel', this.beans)!);
 
         this.tooltipFeature = this.createOptionalManagedBean(
             this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {

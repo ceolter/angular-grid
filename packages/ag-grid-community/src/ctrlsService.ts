@@ -1,9 +1,9 @@
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
-import type { BeanCollection } from './context/context';
 import type { FakeHScrollComp } from './gridBodyComp/fakeHScrollComp';
 import type { FakeVScrollComp } from './gridBodyComp/fakeVScrollComp';
 import type { GridBodyCtrl } from './gridBodyComp/gridBodyCtrl';
+import type { GridBodyScrollFeature } from './gridBodyComp/gridBodyScrollFeature';
 import type { RowContainerCtrl } from './gridBodyComp/rowContainer/rowContainerCtrl';
 import type { GridCtrl } from './gridComp/gridCtrl';
 import type { GridHeaderCtrl } from './headerRendering/gridHeaderCtrl';
@@ -63,18 +63,12 @@ export class CtrlsService extends BeanStub<'ready'> implements NamedBean {
     private ready = false;
     private readyCallbacks: ((p: ReadyParams) => void)[] = [];
 
-    private runReadyCallbacksAsync = false;
-
-    public wireBeans(beans: BeanCollection) {
+    public postConstruct() {
         // With React 19 StrictMode, ctrlService can be ready twice.
         // The first time after the first render cycle, and the second time after the second render cycle which is only done in StrictMode.
         // By making the local events async, we effectively debounce the first ready event until after the second render cycle has completed.
         // This means that the ready logic across the grid will run against the currently rendered components and controllers.
         // We make this async only for React 19 as StrictMode in React 19 double fires ref callbacks whereas previous versions of React do not.
-        this.runReadyCallbacksAsync = beans.frameworkOverrides.runWhenReadyAsync?.() ?? false;
-    }
-
-    public postConstruct() {
         this.addEventListener(
             'ready',
             () => {
@@ -84,7 +78,7 @@ export class CtrlsService extends BeanStub<'ready'> implements NamedBean {
                     this.readyCallbacks.length = 0;
                 }
             },
-            this.runReadyCallbacksAsync
+            this.beans.frameworkOverrides.runWhenReadyAsync?.() ?? false
         );
     }
     private updateReady(): void {
@@ -150,5 +144,9 @@ export class CtrlsService extends BeanStub<'ready'> implements NamedBean {
             default:
                 return params.centerHeader;
         }
+    }
+
+    public getScrollFeature(): GridBodyScrollFeature {
+        return this.getGridBodyCtrl().scrollFeature;
     }
 }

@@ -164,7 +164,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.executeUpdate(getRowIdFunc, rowDataTran, updateRowDataResult, nodesToUnselect);
         this.executeAdd(rowDataTran, updateRowDataResult);
 
-        this.updateSelection(nodesToUnselect, 'rowDataChanged');
+        this.deselectNodes(nodesToUnselect, 'rowDataChanged');
 
         return updateRowDataResult;
     }
@@ -409,7 +409,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         });
     }
 
-    protected updateSelection(nodesToUnselect: RowNode<TData>[], source: SelectionEventSourceType): void {
+    protected deselectNodes(nodesToUnselect: RowNode<TData>[], source: SelectionEventSourceType): void {
         const selectionSvc = this.beans.selectionSvc;
         const selectionChanged = nodesToUnselect.length > 0;
         if (selectionChanged) {

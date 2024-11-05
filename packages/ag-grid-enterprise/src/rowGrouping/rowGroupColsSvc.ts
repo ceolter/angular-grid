@@ -27,7 +27,8 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
     } as const;
 
     override columnExtractors = {
-        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) => col.setRowGroupActive(flag, source),
+        setFlagFunc: (col: AgColumn, flag: boolean, source: ColumnEventType) =>
+            this.setColRowGroupActive(col, flag, source),
         getIndexFunc: (colDef: ColDef) => colDef.rowGroupIndex,
         getInitialIndexFunc: (colDef: ColDef) => colDef.initialRowGroupIndex,
         getValueFunc: (colDef: ColDef) => colDef.rowGroup,
@@ -75,7 +76,7 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
         if (rowGroup !== undefined || rowGroupIndex !== undefined) {
             if (typeof rowGroupIndex === 'number' || rowGroup) {
                 if (!column.isRowGroupActive()) {
-                    column.setRowGroupActive(true, source);
+                    this.setColRowGroupActive(column, true, source);
                     this.modifyColumnsNoEventsCallbacks.addCol(column);
                 }
                 if (rowIndex && typeof rowGroupIndex === 'number') {
@@ -83,7 +84,7 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
                 }
             } else {
                 if (column.isRowGroupActive()) {
-                    column.setRowGroupActive(false, source);
+                    this.setColRowGroupActive(column, false, source);
                     this.modifyColumnsNoEventsCallbacks.removeCol(column);
                 }
             }
@@ -95,10 +96,18 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
             return;
         }
 
-        column.setRowGroupActive(active, source);
+        this.setColRowGroupActive(column, active, source);
 
         if (_shouldUpdateColVisibilityAfterGroup(this.gos, active)) {
             this.colModel.setColsVisible([column], !active, source);
         }
+    }
+
+    private setColRowGroupActive(column: AgColumn, rowGroup: boolean, source: ColumnEventType): void {
+        if (column.rowGroupActive !== rowGroup) {
+            column.rowGroupActive = rowGroup;
+            column.dispatchColEvent('columnRowGroupChanged', source);
+        }
+        column.dispatchStateUpdatedEvent('rowGroup');
     }
 }

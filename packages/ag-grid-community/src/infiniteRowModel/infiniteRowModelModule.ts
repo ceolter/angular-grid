@@ -7,6 +7,9 @@ import { InfiniteRowModel } from './infiniteRowModel';
 import { getInfiniteRowCount, purgeInfiniteCache, refreshInfiniteCache } from './infiniteRowModelApi';
 import { RowNodeBlockLoader } from './rowNodeBlockLoader';
 
+/**
+ * @feature Infinite Row Model
+ */
 export const InfiniteRowModelCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('InfiniteRowModelCoreModule'),
     rowModels: ['infinite'],
@@ -14,6 +17,9 @@ export const InfiniteRowModelCoreModule: _ModuleWithoutApi = {
     dependsOn: [],
 };
 
+/**
+ * @feature Infinite Row Model
+ */
 export const InfiniteRowModelApiModule: _ModuleWithApi<_InfiniteRowModelGridApi> = {
     ...baseCommunityModule('InfiniteRowModelApiModule'),
     rowModels: ['infinite'],
@@ -25,6 +31,9 @@ export const InfiniteRowModelApiModule: _ModuleWithApi<_InfiniteRowModelGridApi>
     dependsOn: [InfiniteRowModelCoreModule, SsrmInfiniteSharedApiModule],
 };
 
+/**
+ * @feature Infinite Row Model
+ */
 export const InfiniteRowModelModule: _ModuleWithoutApi = {
     ...baseCommunityModule('InfiniteRowModelModule'),
     rowModels: ['infinite'],

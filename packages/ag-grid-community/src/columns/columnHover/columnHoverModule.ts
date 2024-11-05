@@ -4,6 +4,10 @@ import { baseCommunityModule } from '../../interfaces/iModule';
 import { isColumnHovered } from './columnHoverApi';
 import { ColumnHoverService } from './columnHoverService';
 
+/**
+ * @feature Rows -> Styling Rows
+ * @gridOption columnHoverHighlight
+ */
 export const ColumnHoverModule: _ModuleWithApi<_ColumnHoverApi> = {
     ...baseCommunityModule('ColumnHoverModule'),
     beans: [ColumnHoverService],

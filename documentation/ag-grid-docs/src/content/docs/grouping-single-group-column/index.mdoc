@@ -29,8 +29,8 @@ option.
 
 The example above uses the configuration demonstrated below to change the columns header name, apply a minimum width, and display
 `athlete` values in the leaf level rows.
-It also [Configures the Group Cell Component](./group-cell-renderer/) using the `cellRendererParams` option to add checkboxes and remove
-the count from each row group.
+It also [Configures the Group Cell Component](./group-cell-renderer/) using the `cellRendererParams` option to remove
+the count from each row group, and [Configures Row Selection](./grouping-row-selection/#checkboxes-in-group-cells) to render selection checkboxes to the group cells.
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
@@ -40,9 +40,12 @@ const gridOptions = {
         minWidth: 220,
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
         }
     },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
+    }
 }
 ```
 
@@ -51,7 +54,7 @@ The column uses the `agGroupCellRenderer` component to display the group informa
 for expanding and collapsing rows. The renderer also embeds the grouped columns renderer and displays this inside of the group cell.
 
 This can be configured with several [Group Renderer Properties](./grouping-single-group-column/#configurable-options) using
-the `autoGroupColumnDef` property `cellRendererParams`. The example below removes the row count and enables checkboxes for row selection.
+the `autoGroupColumnDef` property `cellRendererParams`. The example below removes the row count and also [Configures Row Selection](./grouping-row-selection/#checkboxes-in-group-cells) to enable checkboxes for row selection.
 
 {% gridExampleRunner title="Group Cell Renderer Configuration" name="renderer-config-group-cell" /%}
 
@@ -65,9 +68,12 @@ const gridOptions = {
     autoGroupColumnDef: {
         cellRendererParams: {
             suppressCount: true,
-            checkbox: true,
         }
     },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxLocation: 'autoGroupColumn',
+    }
 }
 ```
 

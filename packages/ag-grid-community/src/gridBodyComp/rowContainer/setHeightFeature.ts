@@ -1,29 +1,22 @@
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
 import type { RowContainerHeightService } from '../../rendering/rowContainerHeightService';
 
 export class SetHeightFeature extends BeanStub {
-    private maxDivHeightScaler: RowContainerHeightService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.maxDivHeightScaler = beans.rowContainerHeight;
-    }
-
-    private eContainer: HTMLElement;
-    private eViewport: HTMLElement | undefined;
-
-    constructor(eContainer: HTMLElement, eViewport?: HTMLElement) {
+    constructor(
+        private readonly eContainer: HTMLElement,
+        private readonly eViewport?: HTMLElement
+    ) {
         super();
-        this.eContainer = eContainer;
-        this.eViewport = eViewport;
     }
 
     public postConstruct(): void {
-        this.addManagedEventListeners({ rowContainerHeightChanged: this.onHeightChanged.bind(this) });
+        this.addManagedEventListeners({
+            rowContainerHeightChanged: this.onHeightChanged.bind(this, this.beans.rowContainerHeight),
+        });
     }
 
-    private onHeightChanged(): void {
-        const height = this.maxDivHeightScaler.getUiContainerHeight();
+    private onHeightChanged(maxDivHeightScaler: RowContainerHeightService): void {
+        const height = maxDivHeightScaler.uiContainerHeight;
         const heightString = height != null ? `${height}px` : ``;
 
         this.eContainer.style.height = heightString;

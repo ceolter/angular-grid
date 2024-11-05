@@ -75,7 +75,7 @@ export class CellRangeFeature implements ICellRangeFeature {
             return;
         }
 
-        this.rangeCount = this.rangeSvc.getCellRangeCount(this.cellCtrl.getCellPosition());
+        this.rangeCount = this.rangeSvc.getCellRangeCount(this.cellCtrl.cellPosition);
         this.hasChartRange = this.getHasChartRange();
 
         this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SELECTED, this.rangeCount !== 0);
@@ -148,23 +148,25 @@ export class CellRangeFeature implements ICellRangeFeature {
         let bottom = false;
         let left = false;
 
-        const thisCol = this.cellCtrl.getCellPosition().column as AgColumn;
-        const presentedColsService = this.beans.visibleCols;
+        const {
+            rangeSvc,
+            beans: { visibleCols },
+            cellCtrl: { cellPosition },
+        } = this;
+        const thisCol = cellPosition.column as AgColumn;
 
         let leftCol: AgColumn | null;
         let rightCol: AgColumn | null;
 
         if (isRtl) {
-            leftCol = presentedColsService.getColAfter(thisCol);
-            rightCol = presentedColsService.getColBefore(thisCol);
+            leftCol = visibleCols.getColAfter(thisCol);
+            rightCol = visibleCols.getColBefore(thisCol);
         } else {
-            leftCol = presentedColsService.getColBefore(thisCol);
-            rightCol = presentedColsService.getColAfter(thisCol);
+            leftCol = visibleCols.getColBefore(thisCol);
+            rightCol = visibleCols.getColAfter(thisCol);
         }
 
-        const ranges = this.rangeSvc
-            .getCellRanges()
-            .filter((range) => this.rangeSvc.isCellInSpecificRange(this.cellCtrl.getCellPosition(), range));
+        const ranges = rangeSvc.getCellRanges().filter((range) => rangeSvc.isCellInSpecificRange(cellPosition, range));
 
         // this means we are the first column in the grid
         if (!leftCol) {
@@ -182,14 +184,14 @@ export class CellRangeFeature implements ICellRangeFeature {
             }
 
             const range = ranges[i];
-            const startRow = this.rangeSvc.getRangeStartRow(range);
-            const endRow = this.rangeSvc.getRangeEndRow(range);
+            const startRow = rangeSvc.getRangeStartRow(range);
+            const endRow = rangeSvc.getRangeEndRow(range);
 
-            if (!top && _isSameRow(startRow, this.cellCtrl.getCellPosition())) {
+            if (!top && _isSameRow(startRow, cellPosition)) {
                 top = true;
             }
 
-            if (!bottom && _isSameRow(endRow, this.cellCtrl.getCellPosition())) {
+            if (!bottom && _isSameRow(endRow, cellPosition)) {
                 bottom = true;
             }
 
@@ -233,12 +235,12 @@ export class CellRangeFeature implements ICellRangeFeature {
         }
 
         const cellRange = _last(cellRanges);
-        const cellPosition = this.cellCtrl.getCellPosition();
-        const isFillHandleAvailable = _isFillHandleEnabled(gos) && !this.cellCtrl.isSuppressFillHandle();
+        const { cellPosition } = this.cellCtrl;
+        const isFillHandleAvailable = _isFillHandleEnabled(gos) && !this.cellCtrl.column.isSuppressFillHandle();
         const isRangeHandleAvailable = _isRangeHandleEnabled(gos);
 
         let handleIsAvailable =
-            rangesLen === 1 && !this.cellCtrl.isEditing() && (isFillHandleAvailable || isRangeHandleAvailable);
+            rangesLen === 1 && !this.cellCtrl.editing && (isFillHandleAvailable || isRangeHandleAvailable);
 
         if (this.hasChartRange) {
             const hasCategoryRange = cellRanges[0].type === CellRangeType.DIMENSION;

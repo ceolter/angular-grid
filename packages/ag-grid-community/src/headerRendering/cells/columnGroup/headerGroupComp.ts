@@ -7,11 +7,11 @@ import type { IComponent } from '../../../interfaces/iComponent';
 import { _setDisplayed } from '../../../utils/dom';
 import { _isStopPropagationForAgGrid, _stopPropagationForAgGrid } from '../../../utils/event';
 import { _exists } from '../../../utils/generic';
+import type { IconName } from '../../../utils/icon';
 import { _createIconNoSpan } from '../../../utils/icon';
 import { _escapeString } from '../../../utils/string';
 import { _warn } from '../../../validation/logging';
 import { Component, RefPlaceholder } from '../../../widgets/component';
-import { TouchListener } from '../../../widgets/touchListener';
 
 export interface IHeaderGroupParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
     /** The column group the header is for. */
@@ -36,10 +36,10 @@ export interface IHeaderGroup {}
 export interface IHeaderGroupComp extends IHeaderGroup, IComponent<IHeaderGroupParams> {}
 
 export class HeaderGroupComp extends Component implements IHeaderGroupComp {
-    private columnGroupSvc: ColumnGroupService;
+    private colGroupSvc: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection) {
-        this.columnGroupSvc = beans.columnGroupSvc!;
+        this.colGroupSvc = beans.colGroupSvc!;
     }
 
     private params: IHeaderGroupParams;
@@ -90,7 +90,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
             }
 
             const newExpandedValue = !this.params.columnGroup.isExpanded();
-            this.columnGroupSvc.setColumnGroupOpened(
+            this.colGroupSvc.setColumnGroupOpened(
                 (this.params.columnGroup as AgColumnGroup).getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'
@@ -125,10 +125,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     }
 
     private addTouchAndClickListeners(eElement: HTMLElement, action: (event: MouseEvent) => void): void {
-        const touchListener = new TouchListener(eElement, true);
-
-        this.addManagedListeners(touchListener, { tap: action });
-        this.addDestroyFunc(() => touchListener.destroy());
+        this.beans.touchSvc?.setupForHeaderGroup(this, eElement, action);
         this.addManagedElementListeners(eElement, { click: action });
     }
 
@@ -144,8 +141,8 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         }
     }
 
-    private addInIcon(iconName: string, element: HTMLElement): void {
-        const eIcon = _createIconNoSpan(iconName, this.gos, null);
+    private addInIcon(iconName: IconName, element: HTMLElement): void {
+        const eIcon = _createIconNoSpan(iconName, this.beans, null);
         if (eIcon) {
             element.appendChild(eIcon);
         }

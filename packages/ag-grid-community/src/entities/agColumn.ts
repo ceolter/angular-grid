@@ -1,8 +1,6 @@
-import type { ColumnState } from '../columns/columnStateService';
-import { isColumnSelectionCol } from '../columns/columnUtils';
+import type { ColumnState } from '../columns/columnStateUtils';
 import { BeanStub } from '../context/beanStub';
 import type { AgEvent, ColumnEvent, ColumnEventType } from '../events';
-import { _getCheckboxes } from '../gridOptionsUtils';
 import type {
     Column,
     ColumnEventName,
@@ -57,18 +55,9 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
 
     private frameworkEventListenerService?: IFrameworkEventListenerService<any, any>;
 
-    private readonly colId: any;
-    private colDef: ColDef<any, TValue>;
-
     // used by React (and possibly other frameworks) as key for rendering. also used to
     // identify old vs new columns for destroying cols when no longer used.
     private instanceId = getNextColInstanceId();
-
-    // We do NOT use this anywhere, we just keep a reference. this is to check object equivalence
-    // when the user provides an updated list of columns - so we can check if we have a column already
-    // existing for a col def. we cannot use the this.colDef as that is the result of a merge.
-    // This is used in ColumnFactory
-    private userProvidedColDef: ColDef<any, TValue> | null;
 
     private actualWidth: any;
 
@@ -76,109 +65,73 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     private autoHeaderHeight: number | null = null;
 
     private visible: any;
-    private pinned: ColumnPinnedType;
+    public pinned: ColumnPinnedType;
     private left: number | null;
     private oldLeft: number | null;
-    private aggFunc: string | IAggFunc | null | undefined;
-    private sort: SortDirection | undefined;
-    private sortIndex: number | null | undefined;
-    private moving = false;
-    private menuVisible = false;
-    private highlighted: ColumnHighlightPosition | null;
+    public aggFunc: string | IAggFunc | null | undefined;
+    public sort: SortDirection | undefined;
+    public sortIndex: number | null | undefined;
+    public moving = false;
+    public menuVisible = false;
+    public highlighted: ColumnHighlightPosition | null;
 
     private lastLeftPinned: boolean = false;
     private firstRightPinned: boolean = false;
 
-    private minWidth: number;
+    public minWidth: number;
     private maxWidth: number;
 
-    private filterActive = false;
+    public filterActive = false;
 
-    private columnEventService: LocalEventService<ColumnEventName> = new LocalEventService();
+    private readonly colEventSvc: LocalEventService<ColumnEventName> = new LocalEventService();
 
     private fieldContainsDots: boolean;
     private tooltipFieldContainsDots: boolean;
-    private tooltipEnabled = false;
+    public tooltipEnabled = false;
 
-    private rowGroupActive = false;
-    private pivotActive = false;
-    private aggregationActive = false;
-    private flex: number | null = null;
+    public rowGroupActive = false;
+    public pivotActive = false;
+    public aggregationActive = false;
+    public flex: number | null = null;
 
-    private readonly primary: boolean;
-
-    private parent: AgColumnGroup | null;
-    private originalParent: AgProvidedColumnGroup | null;
+    public parent: AgColumnGroup | null;
+    public originalParent: AgProvidedColumnGroup | null;
 
     constructor(
-        colDef: ColDef<any, TValue>,
-        userProvidedColDef: ColDef<any, TValue> | null,
-        colId: string,
-        primary: boolean
+        public colDef: ColDef<any, TValue>,
+        // We do NOT use this anywhere, we just keep a reference. this is to check object equivalence
+        // when the user provides an updated list of columns - so we can check if we have a column already
+        // existing for a col def. we cannot use the this.colDef as that is the result of a merge.
+        // This is used in ColumnFactory
+        public userProvidedColDef: ColDef<any, TValue> | null,
+        private readonly colId: string,
+        private readonly primary: boolean
     ) {
         super();
-        this.colDef = colDef;
-        this.userProvidedColDef = userProvidedColDef;
-        this.colId = colId;
-        this.primary = primary;
-
-        this.setState(colDef);
     }
 
     public getInstanceId(): ColumnInstanceId {
         return this.instanceId;
     }
 
-    private setState(colDef: ColDef): void {
-        // sort
-        if (colDef.sort !== undefined) {
-            if (colDef.sort === 'asc' || colDef.sort === 'desc') {
-                this.sort = colDef.sort;
-            }
-        } else {
-            if (colDef.initialSort === 'asc' || colDef.initialSort === 'desc') {
-                this.sort = colDef.initialSort;
-            }
-        }
+    private setState(): void {
+        const {
+            colDef,
+            beans: { sortSvc, pinnedCols, colFlex },
+        } = this;
 
-        // sortIndex
-        const sortIndex = colDef.sortIndex;
-        const initialSortIndex = colDef.initialSortIndex;
-        if (sortIndex !== undefined) {
-            if (sortIndex !== null) {
-                this.sortIndex = sortIndex;
-            }
-        } else {
-            if (initialSortIndex !== null) {
-                this.sortIndex = initialSortIndex;
-            }
-        }
+        sortSvc?.initCol(this);
 
-        // hide
         const hide = colDef.hide;
-        const initialHide = colDef.initialHide;
-
         if (hide !== undefined) {
             this.visible = !hide;
         } else {
-            this.visible = !initialHide;
+            this.visible = !colDef.initialHide;
         }
 
-        // pinned
-        if (colDef.pinned !== undefined) {
-            this.setPinned(colDef.pinned);
-        } else {
-            this.setPinned(colDef.initialPinned);
-        }
+        pinnedCols?.initCol(this);
 
-        // flex
-        const flex = colDef.flex;
-        const initialFlex = colDef.initialFlex;
-        if (flex !== undefined) {
-            this.flex = flex;
-        } else if (initialFlex !== undefined) {
-            this.flex = initialFlex;
-        }
+        colFlex?.initCol(this);
     }
 
     // gets called when user provides an alternative colDef, eg
@@ -192,23 +145,15 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         this.initMinAndMaxWidths();
         this.initDotNotation();
         this.initTooltip();
-        this.columnEventService.dispatchEvent(this.createColumnEvent('colDefChanged', source));
+        this.dispatchColEvent('colDefChanged', source);
     }
 
     public getUserProvidedColDef(): ColDef<any, TValue> | null {
         return this.userProvidedColDef;
     }
 
-    public setParent(parent: AgColumnGroup | null): void {
-        this.parent = parent;
-    }
-
     public getParent(): AgColumnGroup | null {
         return this.parent;
-    }
-
-    public setOriginalParent(originalParent: AgProvidedColumnGroup | null): void {
-        this.originalParent = originalParent;
     }
 
     public getOriginalParent(): AgProvidedColumnGroup | null {
@@ -217,6 +162,8 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
 
     // this is done after constructor as it uses gridOptionsService
     public postConstruct(): void {
+        this.setState();
+
         this.initMinAndMaxWidths();
 
         this.resetActualWidth('gridInitializing');
@@ -227,25 +174,24 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     private initDotNotation(): void {
-        const suppressDotNotation = this.gos.get('suppressFieldDotNotation');
-        this.fieldContainsDots =
-            _exists(this.colDef.field) && this.colDef.field.indexOf('.') >= 0 && !suppressDotNotation;
-        this.tooltipFieldContainsDots =
-            _exists(this.colDef.tooltipField) && this.colDef.tooltipField.indexOf('.') >= 0 && !suppressDotNotation;
+        const {
+            gos,
+            colDef: { field, tooltipField },
+        } = this;
+        const suppressDotNotation = gos.get('suppressFieldDotNotation');
+        this.fieldContainsDots = _exists(field) && field.indexOf('.') >= 0 && !suppressDotNotation;
+        this.tooltipFieldContainsDots = _exists(tooltipField) && tooltipField.indexOf('.') >= 0 && !suppressDotNotation;
     }
 
     private initMinAndMaxWidths(): void {
         const colDef = this.colDef;
 
-        this.minWidth = colDef.minWidth ?? this.gos.environment.getDefaultColumnMinWidth();
+        this.minWidth = colDef.minWidth ?? this.beans.environment.getDefaultColumnMinWidth();
         this.maxWidth = colDef.maxWidth ?? Number.MAX_SAFE_INTEGER;
     }
 
     private initTooltip(): void {
-        this.tooltipEnabled =
-            _exists(this.colDef.tooltipField) ||
-            _exists(this.colDef.tooltipValueGetter) ||
-            _exists(this.colDef.tooltipComponent);
+        this.beans.tooltipSvc?.initCol(this);
     }
 
     public resetActualWidth(source: ColumnEventType): void {
@@ -274,14 +220,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     public isRowGroupDisplayed(colId: string): boolean {
-        if (_missing(this.colDef) || _missing(this.colDef.showRowGroup)) {
-            return false;
-        }
-
-        const showingAllGroups = this.colDef.showRowGroup === true;
-        const showingThisGroup = this.colDef.showRowGroup === colId;
-
-        return showingAllGroups || showingThisGroup;
+        return this.beans.showRowGroupCols?.isRowGroupDisplayed(this, colId) ?? false;
     }
 
     public isPrimary(): boolean {
@@ -317,11 +256,11 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     ): void {
         this.frameworkEventListenerService = this.beans.frameworkOverrides.createLocalEventListenerWrapper?.(
             this.frameworkEventListenerService,
-            this.columnEventService
+            this.colEventSvc
         );
         const listener = this.frameworkEventListenerService?.wrap(userListener) ?? userListener;
 
-        this.columnEventService.addEventListener(eventType, listener);
+        this.colEventSvc.addEventListener(eventType, listener);
     }
 
     public override removeEventListener<T extends ColumnEventName>(
@@ -329,7 +268,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         userListener: (params: ColumnEvent<T>) => void
     ): void {
         const listener = this.frameworkEventListenerService?.unwrap(userListener) ?? userListener;
-        this.columnEventService.removeEventListener(eventType, listener);
+        this.colEventSvc.removeEventListener(eventType, listener);
     }
 
     public createColumnFunctionCallbackParams(rowNode: IRowNode): ColumnFunctionCallbackParams {
@@ -342,39 +281,11 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     public isSuppressNavigable(rowNode: IRowNode): boolean {
-        // if boolean set, then just use it
-        if (typeof this.colDef.suppressNavigable === 'boolean') {
-            return this.colDef.suppressNavigable;
-        }
-
-        // if function, then call the function to find out
-        if (typeof this.colDef.suppressNavigable === 'function') {
-            const params = this.createColumnFunctionCallbackParams(rowNode);
-            const userFunc = this.colDef.suppressNavigable;
-            return userFunc(params);
-        }
-
-        return false;
+        return this.beans.cellNavigation?.isSuppressNavigable(this, rowNode) ?? false;
     }
 
     public isCellEditable(rowNode: IRowNode): boolean {
-        if (rowNode.group) {
-            // This is a group - it could be a tree group or a grouping group...
-            if (this.gos.get('treeData')) {
-                // tree - allow editing of groups with data by default.
-                // Allow editing filler nodes (node without data) only if enableGroupEdit is true.
-                if (!rowNode.data && !this.gos.get('enableGroupEdit')) {
-                    return false;
-                }
-            } else {
-                // grouping - allow editing of groups if the user has enableGroupEdit option enabled
-                if (!this.gos.get('enableGroupEdit')) {
-                    return false;
-                }
-            }
-        }
-
-        return this.isColumnFunc(rowNode, this.colDef.editable);
+        return this.beans.editSvc?.isCellEditable(this, rowNode) ?? false;
     }
 
     public isSuppressFillHandle(): boolean {
@@ -398,18 +309,11 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     public isCellCheckboxSelection(rowNode: IRowNode): boolean {
-        const so = this.gos.get('rowSelection');
-
-        if (so && typeof so !== 'string') {
-            const checkbox = isColumnSelectionCol(this) && _getCheckboxes(so);
-            return this.isColumnFunc(rowNode, checkbox);
-        } else {
-            return this.isColumnFunc(rowNode, this.colDef.checkboxSelection);
-        }
+        return this.beans.selectionSvc?.isCellCheckboxSelection(this, rowNode) ?? false;
     }
 
     public isSuppressPaste(rowNode: IRowNode): boolean {
-        return this.isColumnFunc(rowNode, this.colDef ? this.colDef.suppressPaste : null);
+        return this.isColumnFunc(rowNode, this.colDef?.suppressPaste ?? null);
     }
 
     public isResizable(): boolean {
@@ -421,7 +325,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.colDef[key] ?? COL_DEF_DEFAULTS[key];
     }
 
-    private isColumnFunc(
+    public isColumnFunc(
         rowNode: IRowNode,
         value?: boolean | ((params: ColumnFunctionCallbackParams) => boolean) | null
     ): boolean {
@@ -440,26 +344,12 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return false;
     }
 
-    public setHighlighted(highlighted: ColumnHighlightPosition | null): void {
-        if (this.highlighted === highlighted) {
-            return;
-        }
-
-        this.highlighted = highlighted;
-        this.columnEventService.dispatchEvent(this.createColumnEvent('headerHighlightChanged', 'uiColumnMoved'));
-    }
-
-    public setMoving(moving: boolean, source: ColumnEventType): void {
-        this.moving = moving;
-        this.columnEventService.dispatchEvent(this.createColumnEvent('movingChanged', source));
-    }
-
     private createColumnEvent<T extends ColumnEventName>(type: T, source: ColumnEventType): ColumnEvent<T> {
         return this.gos.addGridCommonParams({
-            type: type,
+            type,
             column: this,
             columns: [this],
-            source: source,
+            source,
         });
     }
 
@@ -469,14 +359,6 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
 
     public getSort(): SortDirection | undefined {
         return this.sort;
-    }
-
-    public setSort(sort: SortDirection | undefined, source: ColumnEventType): void {
-        if (this.sort !== sort) {
-            this.sort = sort;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('sortChanged', source));
-        }
-        this.dispatchStateUpdatedEvent('sort');
     }
 
     public isSortable(): boolean {
@@ -506,24 +388,8 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.sortIndex;
     }
 
-    public setSortIndex(sortOrder?: number | null): void {
-        this.sortIndex = sortOrder;
-        this.dispatchStateUpdatedEvent('sortIndex');
-    }
-    public setMenuVisible(visible: boolean, source: ColumnEventType): void {
-        if (this.menuVisible !== visible) {
-            this.menuVisible = visible;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('menuVisibleChanged', source));
-        }
-    }
-
     public isMenuVisible(): boolean {
         return this.menuVisible;
-    }
-
-    public setAggFunc(aggFunc: string | IAggFunc | null | undefined): void {
-        this.aggFunc = aggFunc;
-        this.dispatchStateUpdatedEvent('aggFunc');
     }
 
     public getAggFunc(): string | IAggFunc | null | undefined {
@@ -546,7 +412,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         this.oldLeft = this.left;
         if (this.left !== left) {
             this.left = left;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('leftChanged', source));
+            this.dispatchColEvent('leftChanged', source);
         }
     }
 
@@ -554,45 +420,21 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.filterActive;
     }
 
-    // additionalEventAttributes is used by provided simple floating filter, so it can add 'floatingFilter=true' to the event
-    public setFilterActive(active: boolean, source: ColumnEventType, additionalEventAttributes?: any): void {
-        if (this.filterActive !== active) {
-            this.filterActive = active;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('filterActiveChanged', source));
-        }
-        const filterChangedEvent = this.createColumnEvent('filterChanged', source);
-        if (additionalEventAttributes) {
-            _mergeDeep(filterChangedEvent, additionalEventAttributes);
-        }
-        this.columnEventService.dispatchEvent(filterChangedEvent);
-    }
-
     public isHovered(): boolean {
         return !!this.beans.colHover?.isHovered(this);
-    }
-
-    public setPinned(pinned: ColumnPinnedType): void {
-        if (pinned === true || pinned === 'left') {
-            this.pinned = 'left';
-        } else if (pinned === 'right') {
-            this.pinned = 'right';
-        } else {
-            this.pinned = null;
-        }
-        this.dispatchStateUpdatedEvent('pinned');
     }
 
     public setFirstRightPinned(firstRightPinned: boolean, source: ColumnEventType): void {
         if (this.firstRightPinned !== firstRightPinned) {
             this.firstRightPinned = firstRightPinned;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('firstRightPinnedChanged', source));
+            this.dispatchColEvent('firstRightPinnedChanged', source);
         }
     }
 
     public setLastLeftPinned(lastLeftPinned: boolean, source: ColumnEventType): void {
         if (this.lastLeftPinned !== lastLeftPinned) {
             this.lastLeftPinned = lastLeftPinned;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('lastLeftPinnedChanged', source));
+            this.dispatchColEvent('lastLeftPinnedChanged', source);
         }
     }
 
@@ -624,7 +466,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         const newValue = visible === true;
         if (this.visible !== newValue) {
             this.visible = newValue;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('visibleChanged', source));
+            this.dispatchColEvent('visibleChanged', source);
         }
         this.dispatchStateUpdatedEvent('hide');
     }
@@ -679,7 +521,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     public getUniqueId(): HeaderColumnId {
-        return this.colId;
+        return this.colId as HeaderColumnId;
     }
 
     public getActualWidth(): number {
@@ -747,7 +589,7 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
     }
 
     public fireColumnWidthChangedEvent(source: ColumnEventType): void {
-        this.columnEventService.dispatchEvent(this.createColumnEvent('widthChanged', source));
+        this.dispatchColEvent('widthChanged', source);
     }
 
     public isGreaterThanMax(width: number): boolean {
@@ -766,35 +608,8 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.flex;
     }
 
-    // this method should only be used by the colModel to
-    // change flex when required by the applyColumnState method.
-    public setFlex(flex: number | null) {
-        this.flex = flex ?? null;
-        this.dispatchStateUpdatedEvent('flex');
-    }
-
-    public setMinimum(source: ColumnEventType): void {
-        this.setActualWidth(this.minWidth, source);
-    }
-
-    public setRowGroupActive(rowGroup: boolean, source: ColumnEventType): void {
-        if (this.rowGroupActive !== rowGroup) {
-            this.rowGroupActive = rowGroup;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('columnRowGroupChanged', source));
-        }
-        this.dispatchStateUpdatedEvent('rowGroup');
-    }
-
     public isRowGroupActive(): boolean {
         return this.rowGroupActive;
-    }
-
-    public setPivotActive(pivot: boolean, source: ColumnEventType): void {
-        if (this.pivotActive !== pivot) {
-            this.pivotActive = pivot;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('columnPivotChanged', source));
-        }
-        this.dispatchStateUpdatedEvent('pivot');
     }
 
     public isPivotActive(): boolean {
@@ -807,13 +622,6 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
 
     public isAnyFunctionAllowed(): boolean {
         return this.isAllowPivot() || this.isAllowRowGroup() || this.isAllowValue();
-    }
-
-    public setValueActive(value: boolean, source: ColumnEventType): void {
-        if (this.aggregationActive !== value) {
-            this.aggregationActive = value;
-            this.columnEventService.dispatchEvent(this.createColumnEvent('columnValueChanged', source));
-        }
     }
 
     public isValueActive(): boolean {
@@ -832,8 +640,16 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.colDef.enableRowGroup === true;
     }
 
-    private dispatchStateUpdatedEvent(key: keyof ColumnState): void {
-        this.columnEventService.dispatchEvent({
+    public dispatchColEvent(type: ColumnEventName, source: ColumnEventType, additionalEventAttributes?: any): void {
+        const colEvent = this.createColumnEvent(type, source);
+        if (additionalEventAttributes) {
+            _mergeDeep(colEvent, additionalEventAttributes);
+        }
+        this.colEventSvc.dispatchEvent(colEvent);
+    }
+
+    public dispatchStateUpdatedEvent(key: keyof ColumnState): void {
+        this.colEventSvc.dispatchEvent({
             type: 'columnStateUpdated',
             key,
         } as AgEvent<'columnStateUpdated'>);

@@ -196,7 +196,7 @@ export class ColumnMoveService extends BeanStub implements NamedBean {
             targetColumn = column;
         }
 
-        ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureColumnVisible(targetColumn, 'auto');
+        ctrlsSvc.getScrollFeature().ensureColumnVisible(targetColumn, 'auto');
 
         if ((!bean.isAlive() || gos.get('ensureDomOrder')) && headerPosition) {
             let restoreFocusColumn: AgColumn | AgColumnGroup | undefined;

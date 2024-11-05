@@ -3,6 +3,7 @@ import type {
     GridApi,
     _AdvancedFilterGridApi,
     _AggregationGridApi,
+    _CellSelectionGridApi,
     _ClientSideRowModelGridApi,
     _ClipboardGridApi,
     _ColumnAutosizeApi,
@@ -32,7 +33,6 @@ import type {
     _PinnedRowGridApi,
     _PivotGridApi,
     _QuickFilterGridApi,
-    _RangeSelectionGridApi,
     _RenderGridApi,
     _RowGridApi,
     _RowGroupingGridApi,
@@ -335,7 +335,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         hideColumnChooser: 0,
     }),
 
-    ...mod<_RangeSelectionGridApi>('RangeSelectionApiModule', {
+    ...mod<_CellSelectionGridApi>('CellSelectionApiModule', {
         getCellRanges: 0,
         addCellRange: 0,
         clearRangeSelection: 0,

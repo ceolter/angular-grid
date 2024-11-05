@@ -1,5 +1,5 @@
 import type { InternalFramework } from '@ag-grid-types';
-import type { FileContents } from '@features/example-generator/types';
+import type { FileContents } from '@components/example-generator/types';
 import { isReactInternalFramework } from '@utils/framework';
 import { getParameters } from 'codesandbox/lib/api/define';
 

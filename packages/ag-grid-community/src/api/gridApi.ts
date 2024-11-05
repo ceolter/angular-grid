@@ -1,4 +1,4 @@
-import type { ApplyColumnStateParams, ColumnState } from '../columns/columnStateService';
+import type { ApplyColumnStateParams, ColumnState } from '../columns/columnStateUtils';
 import type { RowDropZoneEvents, RowDropZoneParams } from '../dragAndDrop/rowDragFeature';
 import type { ColDef, ColGroupDef, ColumnChooserParams, HeaderLocation, IAggFunc } from '../entities/colDef';
 import type { ChartRef, GridOptions, SelectAllMode } from '../entities/gridOptions';
@@ -963,7 +963,7 @@ export interface _PivotGridApi<TData> {
     getPivotResultColumns(): Column[] | null;
 }
 
-export interface _RangeSelectionGridApi {
+export interface _CellSelectionGridApi {
     /**
      * Returns the list of selected cell ranges.
      *
@@ -1196,7 +1196,7 @@ export interface GridApi<TData = any>
         _RowGroupingGridApi,
         _AggregationGridApi<TData>,
         _PivotGridApi<TData>,
-        _RangeSelectionGridApi,
+        _CellSelectionGridApi,
         _ServerSideRowModelGridApi<TData>,
         _MenuGridApi,
         _MasterDetailGridApi,

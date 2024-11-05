@@ -109,13 +109,20 @@ In the following list, the name to use in the grid options is to the left, and o
 columnGroupOpened: 'expanded'
 // header column group shown when contracted (click to expand)
 columnGroupClosed: 'contracted'
-// tool panel column group contracted (click to expand)
-columnSelectClosed: 'tree-closed'
-// tool panel column group expanded (click to contract)
-columnSelectOpen: 'tree-open'
+// column tool panel column group contracted (click to expand)
+columnSelectClosed: 'tree-closed',
+// column tool panel column group expanded (click to contract)
+columnSelectOpen: 'tree-open',
 // column tool panel header expand/collapse all button, shown when some children are expanded and
 //     others are collapsed
-columnSelectIndeterminate: 'tree-indeterminate'
+columnSelectIndeterminate: 'tree-indeterminate',
+// accordion open (filter tool panel group, charts group)
+accordionOpen: 'tree-open',
+// accordion closed (filter tool panel group, charts group)
+accordionClosed: 'tree-closed',
+// accordion indeterminate - shown when some children are expanded and
+//     others are collapsed (filter tool panel group, charts group)
+accordionIndeterminate: 'tree-indeterminate',
 // shown on drag and drop image component icon while dragging column to the side of the grid to pin
 columnMovePin: 'pin'
 // shown on drag and drop image component icon while dragging over part of the page that is not a drop zone
@@ -148,7 +155,7 @@ setFilterGroupOpen: 'tree-open',
 setFilterGroupIndeterminate: 'tree-indeterminate',
 // context menu chart item
 chart: 'chart'
-// chart window title bar
+// dialog title bar
 close: 'cross'
 // X (remove) on column 'pill' after adding it to a drop zone list
 cancel: 'cancel'
@@ -166,16 +173,26 @@ last: 'last'
 linked: 'linked'
 // shown on top right of chart when chart is not linked to range data (click to link)
 unlinked: 'unlinked'
-// "Choose colour" button on chart settings tab
-colorPicker: 'color-picker'
 // rotating spinner shown by the loading cell renderer
 groupLoading: 'loading'
-// button to launch enterprise column menu
-menu: 'menu'
+// button to launch legacy column menu
+menu: 'menu',
+// button to launch new enterprise column menu
+menuAlt: 'menu-alt',
+// menu tab icon in legacy tabbed enterprise column menu
+legacyMenu: 'menu'
+// open filter button - header, floating filter, menu
+filter: 'filter',
+// filter is applied - header (legacy column menu), filter tool panel
+filterActive: 'filter'
+// filter tab icon in legacy tabbed enterprise column menu
+filterTab: 'filter',
 // filter tool panel tab
-filter: 'filter'
-// column tool panel tab
+filtersToolPanel: 'filter'
+// columns in menu (column chooser / columns tab)
 columns: 'columns'
+// column tool panel tab
+columnsToolPanel: 'columns'
 // button in chart regular size window title bar (click to maximise)
 maximize: 'maximize'
 // button in chart maximised window title bar (click to make regular size)
@@ -210,13 +227,20 @@ save: 'save'
 csvExport: 'csv'
 // excel export
 excelExport: 'excel'
-// icon on dropdown editors
-smallDown: 'small-down'
-// version of small-right used in RTL mode
-smallLeft: 'small-left'
-// separater between column 'pills' when you add multiple columns to the header drop zone
-smallRight: 'small-right'
-smallUp: 'small-up'
+// icon on select dropdowns (select cell editor, charts tool panels)
+selectOpen: 'small-down',
+// open icon for rich select editor
+richSelectOpen: 'small-down',
+// remove for rich select editor pills
+richSelectRemove: 'cancel',
+// icon for sub menu item
+subMenuOpen: 'small-right',
+// version of subMenuOpen used in RTL mode
+subMenuOpenRtl: 'small-left',
+// separator between column 'pills' when you add multiple columns to the header drop zone
+panelDelimiter: 'small-right',
+// version of panelDelimiter used in RTL mode
+panelDelimiterRtl: 'small-left',
 // show on column header when column is sorted ascending
 sortAscending: 'asc'
 // show on column header when column is sorted descending
@@ -237,22 +261,24 @@ advancedFilterBuilderMoveDown: 'down',
 advancedFilterBuilderAdd: 'plus',
 // shown on Advanced Filter Builder rows to remove row
 advancedFilterBuilderRemove: 'minus',
+// shown on Advanced Filter Builder selection pills
+advancedFilterBuilderSelect: 'small-down',
+// icon to open charts menu
+chartsMenu: 'menu-alt',
 // Edit Chart menu item shown in Integrated Charts menu
 chartsMenuEdit: 'chart',
 // Advanced Settings menu item shown in Integrated Charts menu
 chartsMenuAdvancedSettings: 'settings',
 // shown in Integrated Charts menu add fields
 chartsMenuAdd: 'plus',
-// checked checkbox
-checkboxChecked: 'checkbox-checked',
-// indeterminate checkbox
-checkboxIndeterminate: 'checkbox-indeterminate',
-// unchecked checkbox
-checkboxUnchecked: 'checkbox-unchecked',
-// radio button on
-radioButtonOn: 'radio-button-on',
-// radio button off
-radioButtonOff: 'radio-button-off',
+// shown in Integrated Charts tool panel color picker
+chartsColorPicker: 'small-down'
+// previous in Integrated Charts settings tool panel theme switcher
+chartsThemePrevious: 'previous',
+// next in Integrated Charts settings tool panel theme switcher
+chartsThemeNext: 'next',
+// download chart
+chartsDownload: 'save',
 ```
 
 ## Provided Icons

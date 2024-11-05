@@ -1,7 +1,7 @@
 import type { Framework } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Collapsible } from '@components/Collapsible';
-import { getExamplePageUrl } from '@features/docs/utils/urlPaths';
+import { getExamplePageUrl } from '@components/docs/utils/urlPaths';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import classnames from 'classnames';
 import { Fragment, useEffect, useState } from 'react';

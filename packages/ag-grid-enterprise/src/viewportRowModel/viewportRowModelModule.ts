@@ -5,6 +5,9 @@ import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { ViewportRowModel } from './viewportRowModel';
 
+/**
+ * @feature Viewport Row Model
+ */
 export const ViewportRowModelCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ViewportRowModelCoreModule'),
     rowModels: ['viewport'],
@@ -12,6 +15,9 @@ export const ViewportRowModelCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule],
 };
 
+/**
+ * @feature Viewport Row Model
+ */
 export const ViewportRowModelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ViewportRowModelModule'),
     rowModels: ['viewport'],

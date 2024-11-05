@@ -1,6 +1,4 @@
 import type { _ColumnGridApi, _GetColumnDefsApi } from '../api/gridApi';
-import { HeaderGroupCellCtrl } from '../headerRendering/cells/columnGroup/headerGroupCellCtrl';
-import { ColumnGroupHeaderCompModule } from '../headerRendering/cells/headerModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { CheckboxCellRendererModule } from '../rendering/cellRenderers/cellRendererModule';
@@ -32,17 +30,28 @@ import { ColumnFlexService } from './columnFlexService';
 import { DataTypeService } from './dataTypeService';
 import { SelectionColService } from './selectionColService';
 
+/**
+ * @feature Cells -> Cell Data Type
+ * @colDef cellDataType
+ */
 export const DataTypeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DataTypeModule'),
     beans: [DataTypeService],
     dependsOn: [CheckboxCellRendererModule],
 };
 
+/**
+ * @feature Selection -> Row Selection
+ * @gridOption rowSelection
+ */
 export const SelectionColumnModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SelectionColumnModule'),
     beans: [SelectionColService],
 };
 
+/**
+ * @feature Columns -> Column Definitions
+ */
 export const GetColumnDefsApiModule: _ModuleWithApi<_GetColumnDefsApi<any>> = {
     ...baseCommunityModule('GetColumnDefsApiModule'),
     beans: [ColumnDefFactory],
@@ -51,11 +60,18 @@ export const GetColumnDefsApiModule: _ModuleWithApi<_GetColumnDefsApi<any>> = {
     },
 };
 
+/**
+ * @feature Columns -> Column Sizing
+ * @colDef flex
+ */
 export const ColumnFlexModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnFlexModule'),
     beans: [ColumnFlexService],
 };
 
+/**
+ * @feature Columns
+ */
 export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
     ...baseCommunityModule('ColumnApiModule'),
     apiFunctions: {
@@ -80,10 +96,4 @@ export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
         getAllDisplayedColumns,
         getAllDisplayedVirtualColumns,
     },
-};
-
-export const ColumnGroupModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnGroupModule'),
-    dynamicBeans: { headerGroupCellCtrl: HeaderGroupCellCtrl as any },
-    dependsOn: [ColumnGroupHeaderCompModule],
 };

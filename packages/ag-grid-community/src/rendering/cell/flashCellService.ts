@@ -7,13 +7,13 @@ import { _exists } from '../../utils/generic';
 import type { CellCtrl } from './cellCtrl';
 
 export class FlashCellService extends BeanStub implements NamedBean {
-    beanName = 'flashCellService' as const;
+    beanName = 'flashCellSvc' as const;
 
     public onFlashCells(cellCtrl: CellCtrl, event: FlashCellsEvent): void {
-        if (!cellCtrl.getComp()) {
+        if (!cellCtrl.comp) {
             return;
         }
-        const cellId = _createCellId(cellCtrl.getCellPosition());
+        const cellId = _createCellId(cellCtrl.cellPosition);
         const shouldFlash = event.cells[cellId];
         if (shouldFlash) {
             this.animateCell(cellCtrl, 'highlight');
@@ -30,7 +30,7 @@ export class FlashCellService extends BeanStub implements NamedBean {
         flashDuration?: number | null,
         fadeDuration?: number | null
     ): void {
-        const cellComp = cellCtrl.getComp();
+        const cellComp = cellCtrl.comp;
         if (!cellComp) {
             return;
         }
@@ -55,7 +55,7 @@ export class FlashCellService extends BeanStub implements NamedBean {
         cellComp.addOrRemoveCssClass(fullName, true);
         cellComp.addOrRemoveCssClass(animationFullName, false);
 
-        const eGui = cellCtrl.getGui();
+        const { eGui } = cellCtrl;
 
         // then once that is applied, we remove the highlight with animation
         this.beans.frameworkOverrides.wrapIncoming(() => {

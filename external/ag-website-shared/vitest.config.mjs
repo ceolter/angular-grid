@@ -28,7 +28,6 @@ export default getViteConfig({
             '@astro': resolvePath('src/astro'),
             '@components': resolvePath('src/components'),
             '@design-system': resolvePath('src/design-system'),
-            '@features': resolvePath('src/features'),
             '@images': resolvePath('src/images'),
             '@layouts': resolvePath('src/layouts'),
             '@stores': resolvePath('src/stores'),

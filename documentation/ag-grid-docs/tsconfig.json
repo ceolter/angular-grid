@@ -22,7 +22,6 @@
       "@astro/*": ["src/astro/*"],
       "@components/*": ["src/components/*"],
       "@design-system/*": ["../../external/ag-website-shared/src/design-system/*"],
-      "@features/*": ["src/features/*"],
       "@images/*": ["src/images/*"],
       "@layouts/*": ["src/layouts/*"],
       "@stores/*": ["src/stores/*"],

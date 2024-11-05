@@ -14,12 +14,19 @@ import {
 } from './rowSelectionApi';
 import { SelectionService } from './selectionService';
 
+/**
+ * @feature Selection -> Row Selection
+ * @gridOption rowSelection
+ */
 export const RowSelectionCoreModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowSelectionCoreModule'),
     rowModels: ['clientSide', 'infinite', 'viewport'],
     beans: [SelectionService],
 };
 
+/**
+ * @feature Selection -> Row Selection
+ */
 export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
     ...baseCommunityModule('RowSelectionApiModule'),
     apiFunctions: {
@@ -35,6 +42,9 @@ export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
     },
 };
 
+/**
+ * @feature Selection -> Row Selection
+ */
 export const RowSelectionModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowSelectionModule'),
     dependsOn: [RowSelectionCoreModule, RowSelectionApiModule],

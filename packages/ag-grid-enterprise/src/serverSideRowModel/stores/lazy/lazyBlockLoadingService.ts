@@ -14,7 +14,7 @@ import type { LazyCache } from './lazyCache';
 import type { LazyStore } from './lazyStore';
 
 export class LazyBlockLoadingService extends BeanStub implements NamedBean {
-    beanName = 'lazyBlockLoadingService' as const;
+    beanName = 'lazyBlockLoadingSvc' as const;
 
     private outboundRequests: number = 0;
     private maxOutboundRequests: number | undefined;
@@ -175,8 +175,8 @@ export class LazyBlockLoadingService extends BeanStub implements NamedBean {
     }
 
     private getBlockToLoad() {
-        const firstRowInViewport = this.rowRenderer.getFirstVirtualRenderedRow();
-        const lastRowInViewport = this.rowRenderer.getLastVirtualRenderedRow();
+        const firstRowInViewport = this.rowRenderer.firstRenderedRow;
+        const lastRowInViewport = this.rowRenderer.lastRenderedRow;
 
         // quick look-up for priority rows needing loading in viewport.
         for (let i = firstRowInViewport; i <= lastRowInViewport; i++) {
