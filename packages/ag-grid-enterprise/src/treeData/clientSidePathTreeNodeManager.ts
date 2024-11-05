@@ -39,7 +39,12 @@ export class ClientSidePathTreeNodeManager<TData>
     }
 
     private executeTransactions(transactions: RowNodeTransaction<TData>[], changedPath: ChangedPath | undefined): void {
-        this.treeRoot?.setRow(this.rootNode);
+        const treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            return; // Destroyed or not active
+        }
+
+        treeRoot.setRow(this.rootNode);
 
         for (const { remove, update, add } of transactions) {
             // the order of [add, remove, update] is the same as in ClientSideNodeManager.
@@ -77,11 +82,7 @@ export class ClientSidePathTreeNodeManager<TData>
 
     /** Transactional add/update */
     private addOrUpdateRows(rows: RowNode[] | null, update: boolean): void {
-        const treeRoot = this.treeRoot;
-        if (!treeRoot) {
-            return;
-        }
-
+        const treeRoot = this.treeRoot!;
         if (!this.treeData) {
             // We assume that the data is flat and we use id as the key for the tree nodes.
             // This happens when treeData is false and getDataPath is undefined/null.
