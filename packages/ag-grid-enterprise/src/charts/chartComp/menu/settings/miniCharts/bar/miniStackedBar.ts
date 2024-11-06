@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -18,6 +19,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -26,18 +28,18 @@ export class MiniStackedBar extends MiniChartWithAxes {
         xScaleDomain = [0, 16],
         tooltipName: ChartTranslationKey = 'stackedBarTooltip'
     ) {
-        super(container, tooltipName);
+        super(container, agChartsContext, tooltipName);
 
         const size = this.size;
         const padding = this.padding;
 
-        const yScale = new _Scene.BandScale<number>();
+        const yScale = new this.agChartsContext._Scene.BandScale<number>();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
         yScale.paddingOuter = 0.3;
 
-        const xScale = new _Scene.LinearScale();
+        const xScale = new this.agChartsContext._Scene.LinearScale();
         xScale.domain = xScaleDomain;
         xScale.range = [size - padding, padding];
 
@@ -46,7 +48,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
 
         this.bars = data.map((series) =>
             series.map((datum, i) => {
-                const rect = new _Scene.Rect();
+                const rect = new this.agChartsContext._Scene.Rect();
                 rect.x = padding;
                 rect.y = yScale.convert(i);
                 rect.width = bottom - xScale.convert(datum);

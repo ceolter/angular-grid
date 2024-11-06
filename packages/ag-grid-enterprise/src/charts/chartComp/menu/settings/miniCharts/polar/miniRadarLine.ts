@@ -2,6 +2,7 @@ import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { createPolarPaths } from '../miniChartHelpers';
 import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
@@ -17,8 +18,8 @@ export class MiniRadarLine extends MiniChartWithPolarAxes {
         [0, 3, 3, 5, 4, 4, 2, 0],
     ];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'radarLineTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'radarLineTooltip');
 
         this.showRadiusAxisLine = false;
 
@@ -26,6 +27,7 @@ export class MiniRadarLine extends MiniChartWithPolarAxes {
         const innerRadius = 0;
 
         const { paths, markers } = createPolarPaths(
+            this.agChartsContext,
             this.root,
             this.data,
             this.size,

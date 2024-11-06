@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniRangeArea extends MiniChartWithAxes {
@@ -10,8 +11,8 @@ export class MiniRangeArea extends MiniChartWithAxes {
     private readonly lines: _Scene.Path[][];
     private readonly areas: _Scene.Path[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'rangeAreaTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'rangeAreaTooltip');
 
         // Create a set of repeating zigzag-shaped data series to use as the chart data
         const period = 4;
@@ -65,13 +66,13 @@ export class MiniRangeArea extends MiniChartWithAxes {
             -Infinity
         );
 
-        const xScale = new _Scene.LinearScale();
+        const xScale = new this.agChartsContext._Scene.LinearScale();
         xScale.domain = [xMin, xMax];
         xScale.range = [padding, size - padding];
 
         const scalePadding = 2 * padding;
 
-        const yScale = new _Scene.LinearScale();
+        const yScale = new this.agChartsContext._Scene.LinearScale();
         yScale.domain = [yMin, yMax];
         yScale.range = [size - scalePadding, scalePadding];
 
@@ -79,9 +80,9 @@ export class MiniRangeArea extends MiniChartWithAxes {
         const areas: _Scene.Path[] = [];
 
         const lowPoints = data.map((series) => {
-            const highLine = new _Scene.Path();
-            const lowLine = new _Scene.Path();
-            const area = new _Scene.Path();
+            const highLine = new this.agChartsContext._Scene.Path();
+            const lowLine = new this.agChartsContext._Scene.Path();
+            const area = new this.agChartsContext._Scene.Path();
 
             lines.push([highLine, lowLine]);
             areas.push(area);

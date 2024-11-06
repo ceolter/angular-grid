@@ -24,7 +24,6 @@ import {
     ModuleRegistry,
 } from 'ag-grid-community';
 
-import { GridChartsModule } from './charts/main';
 import {
     AdvancedFilterModule,
     ClipboardModule,
@@ -51,7 +50,6 @@ ModuleRegistry.registerModules([
     InfiniteRowModelModule,
     CsvExportModule,
     AdvancedFilterModule,
-    GridChartsModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     ExcelExportModule,

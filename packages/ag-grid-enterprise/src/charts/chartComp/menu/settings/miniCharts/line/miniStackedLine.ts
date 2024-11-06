@@ -1,5 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { stackData } from '../miniChartHelpers';
@@ -12,6 +13,7 @@ export class MiniStackedLine extends MiniLine {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -19,6 +21,6 @@ export class MiniStackedLine extends MiniLine {
         data: number[][] = MiniStackedLine.data,
         tooltipName: ChartTranslationKey = 'stackedLineTooltip'
     ) {
-        super(container, fills, strokes, _themeTemplateParameters, _isCustomTheme, data, tooltipName);
+        super(container, agChartsContext, fills, strokes, _themeTemplateParameters, _isCustomTheme, data, tooltipName);
     }
 }

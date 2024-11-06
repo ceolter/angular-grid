@@ -1,5 +1,6 @@
 import type { AgChartThemePalette } from 'ag-charts-types';
 
+import type { BeanCollection } from 'ag-grid-community';
 import {
     Component,
     RefPlaceholder,
@@ -11,6 +12,7 @@ import {
     _setDisplayed,
 } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../gridChartsModule';
 import type { ChartController } from '../../chartController';
 import { isStockTheme } from '../../chartProxies/chartTheme';
 import { MiniChartsContainer } from './miniChartsContainer';
@@ -32,6 +34,7 @@ export class ChartSettingsPanel extends Component {
     private themes: string[] = [];
 
     private isAnimating: boolean;
+    private agChartsContext: AgChartsContext;
 
     constructor(private readonly chartController: ChartController) {
         super(/* html */ `<div class="ag-chart-settings-wrapper">
@@ -46,6 +49,10 @@ export class ChartSettingsPanel extends Component {
                 </div>
             </div>
         </div>`);
+    }
+
+    public wireBeans(beans: BeanCollection): void {
+        this.agChartsContext = beans.agChartsContext as AgChartsContext;
     }
 
     public postConstruct() {
@@ -110,7 +117,7 @@ export class ChartSettingsPanel extends Component {
             const isActivePalette = this.activePaletteIndex === index;
             const { fills = [], strokes = [] } = palette;
             const themeName = themes[index];
-            const isCustomTheme = !isStockTheme(themeName);
+            const isCustomTheme = !isStockTheme(themeName, this.agChartsContext._Theme);
             const miniChartsContainer = this.createBean(
                 new MiniChartsContainer(
                     this.chartController,

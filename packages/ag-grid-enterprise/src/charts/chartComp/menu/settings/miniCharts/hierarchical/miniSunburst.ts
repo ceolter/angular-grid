@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniSunburst extends MiniChartWithPolarAxes {
@@ -20,8 +21,8 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
     private innerRadiusRatio = 0;
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'sunburstTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'sunburstTooltip');
 
         this.showRadiusAxisLine = false;
         this.showAngleAxisLines = false;
@@ -73,7 +74,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
             data.forEach((child, childIndex, children) => {
                 let childGroup = group;
                 if (!childGroup) {
-                    childGroup = new _Scene.Group();
+                    childGroup = new this.agChartsContext._Scene.Group();
                     this.series.push(childGroup);
                 }
 
@@ -84,7 +85,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
                 const start = previousAngle;
                 const end = start + availableAngle * angleRatio;
 
-                const sector = new _Scene.Sector();
+                const sector = new this.agChartsContext._Scene.Sector();
                 sector.centerX = center;
                 sector.centerY = center;
                 sector.innerRadius = innerRadius;

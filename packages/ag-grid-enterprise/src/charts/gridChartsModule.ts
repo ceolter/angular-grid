@@ -1,9 +1,11 @@
-import { VERSION as CHARTS_VERSION } from 'ag-charts-community';
+import type { AgCharts, _Scene, _Theme, _Util } from 'ag-charts-community';
 
-import type { _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { DragAndDropModule, PopupModule } from 'ag-grid-community';
+import type { NamedBean, _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import { BeanStub, DragAndDropModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
+import type { ILicenseManager } from '../license/shared/licenseManager';
+import { LicenseManager } from '../license/shared/licenseManager';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
 import { VERSION as GRID_VERSION } from '../version';
@@ -32,26 +34,41 @@ import { gridChartsModuleCSS } from './gridChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
 /**
- * @internal
- */
-export const GridChartsEnterpriseFeaturesModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GridChartsEnterpriseFeaturesModule'),
-    beans: [EnterpriseChartProxyFactory, AdvancedSettingsMenuFactory],
-};
-
-/**
  * @feature Integrated Charts
- * @gridOption enableCharts
  */
-export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
+export const GridChartsModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GridChartsModule'),
     validate: () => {
-        return validGridChartsVersion({
-            gridVersion: GRID_VERSION,
-            chartsVersion: CHARTS_VERSION,
-        });
+        return {
+            isValid: false,
+            message:
+                'AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule" instead.',
+        };
     },
-    beans: [ChartService, ChartTranslationService, ChartCrossFilterService, ChartMenuListFactory, ChartMenuService],
+};
+
+type IntegratedChartsModuleType = {
+    with: (params: ChartParams) => _ModuleWithApi<_GridChartsGridApi>;
+} & _ModuleWithApi<_GridChartsGridApi>;
+
+const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
+    ...baseEnterpriseModule('IntegratedChartsModule'),
+    validate: () => {
+        return {
+            isValid: false,
+            message: 'AG Grid: Integrated Charts module must be initialised with a version of the charts library',
+        };
+    },
+    beans: [
+        ChartService,
+        ChartTranslationService,
+        ChartCrossFilterService,
+        ChartMenuListFactory,
+        ChartMenuService,
+        // Include enterprise beans for now for all users as tiny compared to charts bundle size
+        EnterpriseChartProxyFactory,
+        AdvancedSettingsMenuFactory,
+    ],
     icons: {
         // shown on top right of chart when chart is linked to range data (click to unlink)
         linked: 'linked',
@@ -87,13 +104,61 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
         updateChart,
         restoreChart,
     },
-    dependsOn: [
-        CellSelectionModule,
-        EnterpriseCoreModule,
-        DragAndDropModule,
-        PopupModule,
-        MenuItemModule,
-        GridChartsEnterpriseFeaturesModule,
-    ],
+    dependsOn: [CellSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
     css: [gridChartsModuleCSS],
 };
+
+export const IntegratedChartsModule: IntegratedChartsModuleType = {
+    with: (params) => {
+        params.AgCharts.setGridContext(true);
+        // init agChartsContext bean to provide chart things to the grid
+        if (params.isEnterprise) {
+            // warn about passing enterprise charts into community integrated charts
+            LicenseManager.setChartsLicenseManager(params.AgCharts as ILicenseManager);
+        }
+
+        params.setupCharts();
+
+        return {
+            ...baseIntegratedChartsModule,
+            validate: () => {
+                return validGridChartsVersion({
+                    gridVersion: GRID_VERSION,
+                    chartsVersion: params.version,
+                });
+            },
+            // bind the params to the constructor to avoid the need for static properties
+            beans: [AgChartsContext.bind(null, params)],
+        };
+    },
+    ...baseIntegratedChartsModule,
+};
+
+type ChartParams = {
+    version: string;
+    isEnterprise: boolean;
+    AgCharts: typeof AgCharts;
+    setupCharts: () => void;
+    _Theme: typeof _Theme;
+    _Scene: typeof _Scene;
+    _Util: typeof _Util;
+};
+
+export class AgChartsContext extends BeanStub implements NamedBean {
+    beanName = 'agChartsContext' as const;
+
+    isEnterprise = false;
+    AgCharts: typeof AgCharts;
+    _Theme: typeof _Theme;
+    _Scene: typeof _Scene;
+    _Util: typeof _Util;
+
+    constructor(params: ChartParams) {
+        super();
+        this.AgCharts = params.AgCharts;
+        this._Theme = params._Theme;
+        this._Scene = params._Scene;
+        this.isEnterprise = params.isEnterprise;
+        this._Util = params._Util;
+    }
+}

@@ -1,7 +1,9 @@
-import { _Util } from 'ag-charts-community';
+import type { _Util } from 'ag-charts-community';
 
+import type { BeanCollection } from 'ag-grid-community';
 import { Component, KeyCode, RefPlaceholder, _exists, _setDisplayed } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../gridChartsModule';
 import type { AgColorInput } from './agColorInput';
 import { AgColorInputSelector } from './agColorInput';
 import type { AgColorPicker } from './agColorPicker';
@@ -26,6 +28,7 @@ export class AgColorPanel extends Component {
     private isSpectrumAlphaDragging = false;
 
     private picker: Component;
+    private color: typeof _Util.Color;
 
     private colorChanged = false;
     private tabIndex: string;
@@ -66,6 +69,10 @@ export class AgColorPanel extends Component {
             [AgColorInputSelector]
         );
         this.picker = config.picker;
+    }
+
+    public wireBeans(beans: BeanCollection): void {
+        this.color = (beans.agChartsContext as AgChartsContext)._Util.Color;
     }
 
     public postConstruct() {
@@ -283,17 +290,17 @@ export class AgColorPanel extends Component {
 
     private update(suppressColorInputUpdate?: boolean) {
         const hue = this.H * 360;
-        const color = _Util.Color.fromHSB(hue, this.S, this.B, this.A);
+        const color = this.color.fromHSB(hue, this.S, this.B, this.A);
         const rgbaColor = color.toRgbaString();
-        const colorWithoutAlpha = _Util.Color.fromHSB(hue, this.S, this.B);
+        const colorWithoutAlpha = this.color.fromHSB(hue, this.S, this.B);
         const rgbaColorWithoutAlpha = colorWithoutAlpha.toRgbaString();
-        const spectrumColor = _Util.Color.fromHSB(hue, 1, 1);
+        const spectrumColor = this.color.fromHSB(hue, 1, 1);
         const spectrumRgbaColor = spectrumColor.toRgbaString();
 
         // the recent color list needs to know color has actually changed
         const colorPicker = this.picker as AgColorPicker;
 
-        const existingColor = _Util.Color.fromString(colorPicker.getValue());
+        const existingColor = this.color.fromString(colorPicker.getValue());
         if (existingColor.toRgbaString() !== rgbaColor) {
             this.colorChanged = true;
         }
@@ -307,7 +314,7 @@ export class AgColorPanel extends Component {
 
         this.spectrumAlpha.style.setProperty(
             '--ag-internal-spectrum-alpha-color-from',
-            _Util.Color.fromHSB(hue, this.S, this.B, 0).toRgbaString()
+            this.color.fromHSB(hue, this.S, this.B, 0).toRgbaString()
         );
         this.spectrumAlpha.style.setProperty('--ag-internal-spectrum-alpha-color-to', rgbaColorWithoutAlpha);
         this.spectrumAlpha.style.setProperty('--ag-internal-spectrum-alpha-color', rgbaColor);
@@ -366,7 +373,7 @@ export class AgColorPanel extends Component {
     }
 
     public setValue(val: string): void {
-        const color: _Util.Color = _Util.Color.fromString(val);
+        const color = this.color.fromString(val);
         this.setColor(color, true);
     }
 
@@ -399,7 +406,7 @@ export class AgColorPanel extends Component {
     }
 
     private addRecentColor() {
-        const color = _Util.Color.fromHSB(this.H * 360, this.S, this.B, this.A);
+        const color = this.color.fromHSB(this.H * 360, this.S, this.B, this.A);
         const rgbaColor = color.toRgbaString();
 
         let recentColors = sharedRecentColors;

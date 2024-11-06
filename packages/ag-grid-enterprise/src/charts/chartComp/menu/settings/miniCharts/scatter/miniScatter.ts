@@ -1,15 +1,16 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniScatter extends MiniChartWithAxes {
     static chartType: ChartType = 'scatter';
     private readonly points: _Scene.Shape[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'scatterTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'scatterTooltip');
 
         const size = this.size;
         const padding = this.padding;
@@ -30,11 +31,11 @@ export class MiniScatter extends MiniChartWithAxes {
             ],
         ];
 
-        const xScale = new _Scene.LinearScale();
+        const xScale = new this.agChartsContext._Scene.LinearScale();
         xScale.domain = [-0.5, 4];
         xScale.range = [padding * 2, size - padding];
 
-        const yScale = new _Scene.LinearScale();
+        const yScale = new this.agChartsContext._Scene.LinearScale();
         yScale.domain = [-0.5, 3.5];
         yScale.range = [size - padding, padding];
 
@@ -42,7 +43,7 @@ export class MiniScatter extends MiniChartWithAxes {
 
         data.forEach((series) => {
             series.forEach(([x, y]) => {
-                const arc = new _Scene.Arc();
+                const arc = new this.agChartsContext._Scene.Arc();
                 arc.strokeWidth = 0;
                 arc.centerX = xScale.convert(x);
                 arc.centerY = yScale.convert(y);
@@ -54,8 +55,10 @@ export class MiniScatter extends MiniChartWithAxes {
         this.points = points;
         this.updateColors(fills, strokes);
 
-        const pointsGroup = new _Scene.Group();
-        pointsGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding * 2, size - padding * 2));
+        const pointsGroup = new this.agChartsContext._Scene.Group();
+        pointsGroup.setClipRect(
+            new this.agChartsContext._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
+        );
         pointsGroup.append(this.points);
         this.root.append(pointsGroup);
     }

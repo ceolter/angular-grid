@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniHistogram extends MiniChartWithAxes {
@@ -9,8 +10,8 @@ export class MiniHistogram extends MiniChartWithAxes {
 
     private readonly bars: _Scene.Rect[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'histogramTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'histogramTooltip');
 
         const padding = this.padding;
         const size = this.size;
@@ -18,11 +19,11 @@ export class MiniHistogram extends MiniChartWithAxes {
         // approx normal curve
         const data = [2, 5, 11, 13, 10, 6, 1];
 
-        const xScale = new _Scene.LinearScale();
+        const xScale = new this.agChartsContext._Scene.LinearScale();
         xScale.domain = [0, data.length];
         xScale.range = [padding, size - padding];
 
-        const yScale = new _Scene.LinearScale();
+        const yScale = new this.agChartsContext._Scene.LinearScale();
         yScale.domain = [0, data.reduce((a, b) => Math.max(a, b), 0)];
         yScale.range = [size - padding, padding];
 
@@ -33,7 +34,7 @@ export class MiniHistogram extends MiniChartWithAxes {
             const left = xScale.convert(i);
             const right = xScale.convert(i + 1);
 
-            const rect = new _Scene.Rect();
+            const rect = new this.agChartsContext._Scene.Rect();
             rect.x = left;
             rect.y = top;
             rect.width = right - left;

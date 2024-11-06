@@ -1,5 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { normalizeStackData } from '../miniChartHelpers';
@@ -13,6 +14,7 @@ export class MiniNormalizedLine extends MiniLine {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
@@ -20,6 +22,6 @@ export class MiniNormalizedLine extends MiniLine {
         data: number[][] = MiniNormalizedLine.data,
         tooltipName: ChartTranslationKey = 'normalizedLineTooltip'
     ) {
-        super(container, fills, strokes, themeTemplateParameters, isCustomTheme, data, tooltipName);
+        super(container, agChartsContext, fills, strokes, themeTemplateParameters, isCustomTheme, data, tooltipName);
     }
 }

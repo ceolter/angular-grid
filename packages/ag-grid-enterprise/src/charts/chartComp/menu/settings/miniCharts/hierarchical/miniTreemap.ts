@@ -1,7 +1,8 @@
-import { _Scene, _Theme } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
@@ -11,12 +12,13 @@ export class MiniTreemap extends MiniChart {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         themeTemplate: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, 'treemapTooltip');
+        super(container, agChartsContext, 'treemapTooltip');
 
         const { size, padding } = this;
 
@@ -50,7 +52,7 @@ export class MiniTreemap extends MiniChart {
 
             let previousY = range[0];
             const xRects = d.map((ratio) => {
-                const rect = new _Scene.Rect();
+                const rect = new this.agChartsContext._Scene.Rect();
 
                 const height = (availableHeight * ratio) / rowParts;
 
@@ -74,14 +76,14 @@ export class MiniTreemap extends MiniChart {
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
-        const rectGroup = new _Scene.Group();
-        rectGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding, size - padding));
+        const rectGroup = new this.agChartsContext._Scene.Group();
+        rectGroup.setClipRect(new this.agChartsContext._Scene.BBox(padding, padding, size - padding, size - padding));
         rectGroup.append(this.rects);
         this.root.append(rectGroup);
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
-        const defaultBackgroundColor = themeTemplate?.get(_Theme.DEFAULT_BACKGROUND_COLOUR);
+        const defaultBackgroundColor = themeTemplate?.get(this.agChartsContext._Theme.DEFAULT_BACKGROUND_COLOUR);
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
 

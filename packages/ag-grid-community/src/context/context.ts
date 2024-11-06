@@ -355,6 +355,7 @@ export type BeanName =
     | 'chartMenuSvc'
     | 'chartTranslation'
     | 'chartSvc'
+    | 'agChartsContext'
     | 'clipboardSvc'
     | 'colAnimation'
     | 'colAutosize'

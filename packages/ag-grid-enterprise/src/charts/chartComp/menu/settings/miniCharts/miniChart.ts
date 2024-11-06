@@ -1,8 +1,9 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { BeanCollection } from 'ag-grid-community';
 import { Component, _error } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../gridChartsModule';
 import type { ChartTranslationKey, ChartTranslationService } from '../../../services/chartTranslationService';
 
 const CANVAS_CLASS = 'ag-chart-mini-thumbnail-canvas';
@@ -16,16 +17,18 @@ export abstract class MiniChart extends Component {
 
     protected readonly size: number = 58;
     protected readonly padding: number = 5;
-    protected readonly root: _Scene.Group = new _Scene.Group();
+    protected readonly root: _Scene.Group;
     protected readonly scene: _Scene.Scene;
 
     constructor(
         container: HTMLElement,
+        protected readonly agChartsContext: AgChartsContext,
         protected tooltipName: ChartTranslationKey
     ) {
         super();
 
-        const scene = new _Scene.Scene({
+        this.root = new agChartsContext._Scene.Group();
+        const scene = new agChartsContext._Scene.Scene({
             width: this.size,
             height: this.size,
         });

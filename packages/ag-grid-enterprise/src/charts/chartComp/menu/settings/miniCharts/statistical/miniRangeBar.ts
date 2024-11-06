@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniRangeBar extends MiniChartWithAxes {
@@ -9,8 +10,8 @@ export class MiniRangeBar extends MiniChartWithAxes {
 
     private readonly bars: _Scene.Rect[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'rangeBarTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'rangeBarTooltip');
         const data = [3, 3.5, 3];
 
         this.bars = this.createRangeBar(this.root, data, this.size, this.padding, 'vertical');
@@ -34,7 +35,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const barAlongX = direction === 'horizontal';
         const scalePadding = 2 * padding;
 
-        const xScale = new _Scene.BandScale<number>();
+        const xScale = new this.agChartsContext._Scene.BandScale<number>();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.3;
@@ -43,7 +44,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const lowRatio = 0.7;
         const highRatio = 1.3;
 
-        const yScale = new _Scene.LinearScale();
+        const yScale = new this.agChartsContext._Scene.LinearScale();
         yScale.domain = [
             data.reduce((a, b) => Math.min(a, b), Infinity) * lowRatio,
             data.reduce((a, b) => Math.max(a, b), 0) * highRatio,
@@ -59,7 +60,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
             const y = yScale.convert(low);
             const height = yScale.convert(high) - y;
 
-            const rect = new _Scene.Rect();
+            const rect = new this.agChartsContext._Scene.Rect();
             rect.x = barAlongX ? y : x;
             rect.y = barAlongX ? x : y;
             rect.width = barAlongX ? height : width;

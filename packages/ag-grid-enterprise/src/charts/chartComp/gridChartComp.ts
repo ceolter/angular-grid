@@ -30,6 +30,7 @@ import {
 
 import { AgDialog } from '../../widgets/agDialog';
 import type { CrossFilteringContext } from '../chartService';
+import type { AgChartsContext } from '../gridChartsModule';
 import { ChartController, DEFAULT_THEMES } from './chartController';
 import { AreaChartProxy } from './chartProxies/cartesian/areaChartProxy';
 import { BarChartProxy } from './chartProxies/cartesian/barChartProxy';
@@ -80,6 +81,7 @@ export class GridChartComp extends Component {
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
     private environment: Environment;
+    private agChartsContext: AgChartsContext;
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
@@ -89,6 +91,7 @@ export class GridChartComp extends Component {
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
         this.environment = beans.environment;
+        this.agChartsContext = beans.agChartsContext as AgChartsContext;
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
@@ -197,6 +200,7 @@ export class GridChartComp extends Component {
 
         const chartType = this.chartController.getChartType();
         const chartProxyParams: ChartProxyParams = {
+            agChartsContext: this.agChartsContext,
             chartType,
             chartInstance,
             getChartThemeName: this.getChartThemeName.bind(this),

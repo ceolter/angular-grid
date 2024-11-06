@@ -2,6 +2,7 @@ import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { createLinePaths } from '../miniChartHelpers';
@@ -20,6 +21,7 @@ export class MiniLine extends MiniChartWithAxes {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -27,9 +29,9 @@ export class MiniLine extends MiniChartWithAxes {
         data: number[][] = MiniLine.data,
         tooltipName: ChartTranslationKey = 'lineTooltip'
     ) {
-        super(container, tooltipName);
+        super(container, agChartsContext, tooltipName);
 
-        this.lines = createLinePaths(this.root, data, this.size, this.padding);
+        this.lines = createLinePaths(this.agChartsContext, this.root, data, this.size, this.padding);
 
         this.updateColors(fills, strokes);
     }

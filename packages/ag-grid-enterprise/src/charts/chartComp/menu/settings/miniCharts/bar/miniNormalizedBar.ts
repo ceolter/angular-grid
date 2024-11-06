@@ -1,5 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniStackedBar } from './miniStackedBar';
 
@@ -13,6 +14,7 @@ export class MiniNormalizedBar extends MiniStackedBar {
 
     constructor(
         container: HTMLElement,
+        agChartsContext: AgChartsContext,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
@@ -20,6 +22,7 @@ export class MiniNormalizedBar extends MiniStackedBar {
     ) {
         super(
             container,
+            agChartsContext,
             fills,
             strokes,
             themeTemplateParameters,

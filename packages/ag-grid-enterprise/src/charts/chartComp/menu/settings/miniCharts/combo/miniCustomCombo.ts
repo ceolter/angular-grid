@@ -1,7 +1,8 @@
-import { _Scene } from 'ag-charts-community';
+import type { _Scene } from 'ag-charts-community';
 
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../../../../gridChartsModule';
 import { MiniChart } from '../miniChart';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects, createLinePaths } from '../miniChartHelpers';
@@ -16,8 +17,8 @@ export class MiniCustomCombo extends MiniChart {
 
     private lineData = [[5, 4, 6, 5, 4]];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'customComboTooltip');
+    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
+        super(container, agChartsContext, 'customComboTooltip');
 
         const { root, columnData, lineData, size, padding } = this;
 
@@ -34,26 +35,26 @@ export class MiniCustomCombo extends MiniChart {
 
         root.append(this.columns);
 
-        this.lines = createLinePaths(root, lineData, size, padding);
+        this.lines = createLinePaths(this.agChartsContext, root, lineData, size, padding);
 
         const axisStroke = 'grey';
         const axisOvershoot = 3;
 
-        const leftAxis = new _Scene.Line();
+        const leftAxis = new this.agChartsContext._Scene.Line();
         leftAxis.x1 = padding;
         leftAxis.y1 = padding;
         leftAxis.x2 = padding;
         leftAxis.y2 = size - padding + axisOvershoot;
         leftAxis.stroke = axisStroke;
 
-        const bottomAxis = new _Scene.Line();
+        const bottomAxis = new this.agChartsContext._Scene.Line();
         bottomAxis.x1 = padding - axisOvershoot + 1;
         bottomAxis.y1 = size - padding;
         bottomAxis.x2 = size - padding + 1;
         bottomAxis.y2 = size - padding;
         bottomAxis.stroke = axisStroke;
 
-        const penIcon = new _Scene.Path();
+        const penIcon = new this.agChartsContext._Scene.Path();
         this.buildPenIconPath(penIcon);
         penIcon.fill = 'whitesmoke';
         penIcon.stroke = 'darkslategrey';
