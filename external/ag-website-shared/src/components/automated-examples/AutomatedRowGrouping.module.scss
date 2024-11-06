@@ -62,7 +62,7 @@ $z-index-debug-panel: $z-index-debug-canvas + 10;
 
 .sectionFooter {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     gap: $spacing-size-12;
     margin-top: $spacing-size-12;

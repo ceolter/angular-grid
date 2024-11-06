@@ -187,6 +187,7 @@ export const ICON_MAP = {
     copy: CarbonIcon.Copy,
     play: CarbonIcon.PlayFilled,
     pause: CarbonIcon.PauseOutlineFilled,
+    speed: CarbonIcon.MeterAlt,
     ...SOCIALS_ICON_MAP,
     ...DOCS_CATEGORIES_ICON_MAP,
     ...HOMEPAGE_FEATURES_ICON_MAP,
