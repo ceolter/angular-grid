@@ -117,11 +117,7 @@ $z-index-splash-contents: 10;
 }
 
 .exploreButtonOuter {
-    margin-left: -80px;
-
-    @media screen and (min-width: $breakpoint-site-header-large) {
-        margin-left: -100px;
-    }
+    // margin-left: -80px;
 }
 
 .mouseMask {

@@ -49,7 +49,7 @@ export const AutomatedExamples: FunctionComponent = () => {
             </section>
 
             <section className={styles.automatedIntegratedChartsOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+                <div className={classNames(styles.homepageExample)}>
                     <div className={styles.automatedIntegratedCharts}>
                         <AutomatedIntegratedCharts
                             automatedExampleManager={automatedExampleManager}
@@ -57,12 +57,17 @@ export const AutomatedExamples: FunctionComponent = () => {
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
                         >
-                            <h2 class={styles.tag}>Fully Integrated Charting</h2>
-                            <h3 class={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
-                            <h4 class={styles.subHeading}>
-                                Let your users visualise their data in charts directly from your Data Grid. Multiple
-                                chart types, themes, customisations and more, all in one place.
-                            </h4>
+                            <div class={styles.sectionContent}>
+                                <header class={styles.headingContainer}>
+                                    <h2 class={styles.tag}>Fully Integrated Charting</h2>
+                                    <h3 class={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
+                                    <h4 class={styles.subHeading}>
+                                        Let your users visualise their data in charts directly from your Data Grid.
+                                        Multiple chart types, themes, customisations and more, all in one place.
+                                    </h4>
+                                </header>
+                                <div class={styles.blueRectangle}></div>
+                            </div>
                         </AutomatedIntegratedCharts>
                     </div>
                 </div>

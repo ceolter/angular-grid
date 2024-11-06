@@ -626,7 +626,7 @@ body {
     padding-top: $spacing-size-12;
     width: 100%;
     max-width: var(--layout-max-width-small);
-    padding-left: var(--layout-horizontal-margins);
+
     padding-right: var(--layout-horizontal-margins);
     margin-right: auto;
     margin-left: auto;
@@ -681,7 +681,7 @@ body {
 
 .blueRectangle {
     position: absolute;
-    transform: translate(-50%, 20%);
+    transform: translate(-50%, 100px);
     width: 150vw;
     height: 260px;
     background: linear-gradient(0deg, #ffffff -61.34%, #dde9f97c 89.79%);
