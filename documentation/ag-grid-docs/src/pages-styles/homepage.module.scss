@@ -647,6 +647,7 @@ body {
 .heading {
     font-size: 40px;
     font-weight: var(--text-bold);
+    letter-spacing: -1px;
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {
         padding: 0;
@@ -689,4 +690,10 @@ body {
     border-left: 1px solid linear-gradient(0deg, #dde9f9 -61.34%, #0e449126 89.79%);
     border-right: 1px solid linear-gradient(0deg, #dde9f9 -61.34%, #0e449126 89.79%);
     border-top: 1px solid #0e459124;
+}
+.customerSubheading {
+    opacity: 0.7;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
 }

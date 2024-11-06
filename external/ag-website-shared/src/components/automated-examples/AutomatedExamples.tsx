@@ -35,7 +35,7 @@ export const AutomatedExamples: FunctionComponent = () => {
     return (
         <>
             <section className={styles.automatedRowGroupingOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+                <div className={classNames(styles.homepageExample)}>
                     <div className={styles.automatedRowGrouping}>
                         <AutomatedRowGrouping
                             automatedExampleManager={automatedExampleManager}

@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: center;
     gap: $spacing-size-4 0;
+    font-size: var(--text-fs-lg);
 
     @media screen and (min-width: $breakpoint-automated-row-grouping-medium) {
         flex-direction: row;

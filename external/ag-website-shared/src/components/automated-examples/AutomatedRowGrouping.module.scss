@@ -86,6 +86,7 @@ $z-index-debug-panel: $z-index-debug-canvas + 10;
 
 .exploreButtonOuter {
     display: none;
+    font-size: var(--text-fs-lg);
 
     @media screen and (min-width: $breakpoint-automated-row-grouping-medium) {
         display: block;
