@@ -1,3 +1,11 @@
+export function _isPromise<T>(fn: any): fn is Promise<T> {
+    if (typeof fn.then === 'function') {
+        return true;
+    }
+
+    return false;
+}
+
 export type ResolveAndRejectCallback<T> = (resolve: (value: T | null) => void, reject: (params: any) => void) => void;
 
 enum AgPromiseStatus {

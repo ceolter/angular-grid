@@ -7,7 +7,7 @@ import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { Environment } from '../environment';
 import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
-import { _getDocument, _getRootNode } from '../gridOptionsUtils';
+import { _getDocument, _getPageBody, _getRootNode } from '../gridOptionsUtils';
 import type { AgGridCommon } from '../interfaces/iCommon';
 import type { DragItem } from '../interfaces/iDragItem';
 import { _removeFromArray } from '../utils/array';
@@ -630,30 +630,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.top = '20px';
         eGui.style.left = '20px';
 
-        const eDocument = _getDocument(this.beans);
-        let rootNode: Document | ShadowRoot | HTMLElement | null = null;
-        let targetEl: HTMLElement | ShadowRoot | null = null;
-
-        try {
-            rootNode = eDocument.fullscreenElement as HTMLElement;
-        } catch (e) {
-            // some environments like SalesForce will throw errors
-            // simply by trying to read the fullscreenElement property
-        } finally {
-            if (!rootNode) {
-                rootNode = _getRootNode(this.beans);
-            }
-            const body = rootNode.querySelector('body');
-            if (body) {
-                targetEl = body;
-            } else if (rootNode instanceof ShadowRoot) {
-                targetEl = rootNode;
-            } else if (rootNode instanceof Document) {
-                targetEl = rootNode?.documentElement;
-            } else {
-                targetEl = rootNode;
-            }
-        }
+        const targetEl = _getPageBody(this.beans);
 
         this.dragAndDropImageParent = targetEl;
 

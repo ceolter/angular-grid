@@ -200,9 +200,38 @@ export function _getActiveDomElement(beans: BeanCollection): Element | null {
     return _getRootNode(beans).activeElement;
 }
 
+export function _getPageBody(beans: BeanCollection): HTMLElement | ShadowRoot {
+    let rootNode: Document | ShadowRoot | HTMLElement | null = null;
+    let targetEl: HTMLElement | ShadowRoot | null = null;
+
+    try {
+        rootNode = _getDocument(beans).fullscreenElement as HTMLElement;
+    } catch (e) {
+        // some environments like SalesForce will throw errors
+        // simply by trying to read the fullscreenElement property
+    } finally {
+        if (!rootNode) {
+            rootNode = _getRootNode(beans);
+        }
+        const body = rootNode.querySelector('body');
+        if (body) {
+            targetEl = body;
+        } else if (rootNode instanceof ShadowRoot) {
+            targetEl = rootNode;
+        } else if (rootNode instanceof Document) {
+            targetEl = rootNode?.documentElement;
+        } else {
+            targetEl = rootNode;
+        }
+    }
+
+    return targetEl;
+}
+
 export function _isNothingFocused(beans: BeanCollection): boolean {
     const eDocument = _getDocument(beans);
     const activeEl = _getActiveDomElement(beans);
+
     return activeEl === null || activeEl === eDocument.body;
 }
 

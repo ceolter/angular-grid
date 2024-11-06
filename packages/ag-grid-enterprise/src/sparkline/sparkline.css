@@ -6,3 +6,7 @@
     left: 0;
     top: 0;
 }
+
+.ag-sparkline-wrapper canvas {
+    position: absolute;
+}

@@ -2,6 +2,8 @@
     z-index: 1;
     border-radius: var(--ag-border-radius);
     padding: 0;
+    border: var(--ag-cell-editing-border) !important;
+    box-shadow: var(--ag-cell-editing-shadow);
     /* do not add `height` here, it breaks gridOptions.rowHeight for the cellEditor */
 
     .ag-cell-wrapper,
@@ -34,8 +36,4 @@
 
 .ag-checkbox-edit {
     padding-left: var(--ag-cell-horizontal-padding);
-}
-
-.ag-cell-inline-editing {
-    border: var(--ag-input-focus-border) !important;
 }

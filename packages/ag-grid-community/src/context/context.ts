@@ -460,7 +460,6 @@ export type BeanName =
     | 'sideBar'
     | 'sortSvc'
     | 'sortStage'
-    | 'sparklineTooltipSingleton'
     | 'ssrmBlockUtils'
     | 'ssrmExpandListener'
     | 'ssrmFilterListener'

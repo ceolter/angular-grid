@@ -4,13 +4,13 @@ import type {
     BeanCollection,
     ComponentSelector,
     DataTypeService,
-    GetDataPath,
     IAfterGuiAttachedParams,
     IColsService,
     IDoesFilterPassParams,
     IRowNode,
     ISetFilter,
     KeyCreatorParams,
+    RowNode,
     SetFilterModel,
     SetFilterModelValue,
     SetFilterParams,
@@ -73,7 +73,6 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     private virtualList: VirtualList<any>;
     private caseSensitive: boolean = false;
     private treeDataTreeList = false;
-    private getDataPath?: GetDataPath<any>;
     private groupingTreeList = false;
     private hardRefreshVirtualList = false;
     private noValueFormatterSupplied = false;
@@ -313,7 +312,6 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         this.setValueFormatter(newParams.valueFormatter, keyCreator, !!newParams.treeList, !!newParams.colDef.refData);
         const isGroupCol = newParams.column.getId().startsWith(GROUP_AUTO_COLUMN_ID);
         this.treeDataTreeList = this.gos.get('treeData') && !!newParams.treeList && isGroupCol;
-        this.getDataPath = this.gos.get('getDataPath');
         this.groupingTreeList = !!this.rowGroupColsSvc?.columns.length && !!newParams.treeList && isGroupCol;
         this.createKey = this.generateCreateKey(keyCreator, this.treeDataTreeList || this.groupingTreeList);
     };
@@ -444,6 +442,10 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             return;
         }
 
+        this.addManagedPropertyListeners(['groupAllowUnbalanced'], () => {
+            this.syncAfterDataChange();
+        });
+
         this.addManagedEventListeners({
             cellValueChanged: (event) => {
                 // only interested in changes to do with this column
@@ -451,10 +453,6 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
                     this.syncAfterDataChange();
                 }
             },
-        });
-
-        this.addManagedPropertyListeners(['treeData', 'getDataPath', 'groupAllowUnbalanced'], () => {
-            this.syncAfterDataChange();
         });
     }
 
@@ -847,9 +845,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             return false;
         }
 
-        const { node, data } = params;
+        const { node } = params;
         if (this.treeDataTreeList) {
-            return this.doesFilterPassForTreeData(node, data);
+            return this.doesFilterPassForTreeData(node);
         }
         if (this.groupingTreeList) {
             return this.doesFilterPassForGrouping(node);
@@ -867,14 +865,18 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         return this.isInAppliedModel(this.createKey(value, node));
     }
 
-    private doesFilterPassForTreeData(node: IRowNode, data: any): boolean {
+    private doesFilterPassForTreeData(node: IRowNode): boolean {
         if (node.childrenAfterGroup?.length) {
             // only perform checking on leaves. The core filtering logic for tree data won't work properly otherwise
             return false;
         }
         return this.isInAppliedModel(
             this.createKey(
-                processDataPath(this.getDataPath!(data), true, this.gos.get('groupAllowUnbalanced')) as any
+                processDataPath(
+                    (node as RowNode).getRoute() ?? [node.key ?? node.id!],
+                    true,
+                    this.gos.get('groupAllowUnbalanced')
+                ) as any
             ) as any
         );
     }
@@ -911,10 +913,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     public override onNewRowsLoaded(): void {
-        if (!this.isValuesTakenFromGrid()) {
-            return;
+        if (this.isValuesTakenFromGrid()) {
+            this.syncAfterDataChange();
         }
-        this.syncAfterDataChange();
     }
 
     private isValuesTakenFromGrid(): boolean {

@@ -48,6 +48,9 @@ const docs: Record<AllThemeParams, string> = {
     headerCellBackgroundTransitionDuration:
         'Duration of the background color transition if headerCellHoverBackgroundColor or headerCellMovingBackgroundColor is set.',
     cellTextColor: 'Color of text in grid cells.',
+    cellEditingBorder: 'Border around cells being edited',
+    cellEditingShadow: 'Shadow for cells being edited',
+    cellFontFamily: 'Font family of text in grid cells',
     subtleTextColor: 'Color of text and UI elements that should stand out less than the default.',
     rangeSelectionBorderStyle: 'Border style around range selections.',
     rangeSelectionBorderColor:

@@ -629,6 +629,7 @@ export {
     _getActiveDomElement,
     _isNothingFocused,
     _getDocument,
+    _getPageBody,
     _getGroupAggFiltering,
     _isRowSelection,
     _isGetRowHeightFunction,
@@ -976,7 +977,8 @@ export { _isEventFromPrintableCharacter } from './utils/keyboard';
 export { _formatNumberCommas } from './utils/number';
 export { _mergeDeep } from './utils/object';
 export { _escapeString } from './utils/string';
-export { AgPromise } from './utils/promise';
+
+export { AgPromise, _isPromise } from './utils/promise';
 export {
     _addFocusableContainerListener,
     _findFocusableElements,
@@ -994,11 +996,11 @@ export * from './interfaces/iChartOptions';
 // sparklines
 export * from './interfaces/iSparklineCellRendererParams';
 
-// csv export
-export { BaseCreator } from './csvExport/baseCreator';
-export { BaseGridSerializingSession } from './csvExport/sessions/baseGridSerializingSession';
-export { _downloadFile } from './csvExport/downloader';
-export { RowSpanningAccumulator, GridSerializingParams, RowAccumulator } from './csvExport/interfaces';
+// export
+export { BaseCreator } from './export/baseCreator';
+export { BaseGridSerializingSession } from './export/baseGridSerializingSession';
+export { _downloadFile } from './export/downloader';
+export { RowSpanningAccumulator, GridSerializingParams, RowAccumulator } from './export/iGridSerializer';
 
 // modules
 export { Module, ModuleValidationResult, _ModuleWithApi, _ModuleWithoutApi, ModuleName } from './interfaces/iModule';
@@ -1042,6 +1044,7 @@ export {
     LargeTextEditorModule,
     SelectEditorModule,
     UndoRedoEditModule,
+    AllCommunityEditorsModule,
 } from './edit/editModule';
 export { StickyRowModule } from './rendering/features/stickyRowModule';
 export { RowSelectionCoreModule, RowSelectionApiModule, RowSelectionModule } from './selection/rowSelectionModule';
@@ -1120,6 +1123,8 @@ export { TooltipModule, TooltipCompModule, TooltipCoreModule } from './tooltip/t
 export { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
 export { LocaleModule } from './misc/locale/localeModule';
 export { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
+export { SharedExportModule } from './export/exportModule';
+export { AutoWidthModule } from './rendering/autoWidthModule';
 
 //  events
 export * from './events';

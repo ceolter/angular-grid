@@ -154,7 +154,7 @@ export const AG_GRID_ERRORS = {
     51: () => `Export cancelled. Export is not allowed as per your configuration.` as const,
     52: () => 'There is no `window` associated with the current `document`' as const,
     53: () => `unknown value type during csv conversion` as const,
-    54: () => 'Could not find document body, it is needed for drag and drop.' as const,
+    54: () => 'Could not find document body, it is needed for drag and drop and context menu.' as const,
     55: () => 'addRowDropZone - A container target needs to be provided' as const,
     56: () =>
         'addRowDropZone - target already exists in the list of DropZones. Use `removeRowDropZone` before adding it again.' as const,

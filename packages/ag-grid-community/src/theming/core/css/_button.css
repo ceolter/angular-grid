@@ -1,3 +1,20 @@
+:where(.ag-button) {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    font-weight: inherit;
+
+    &:focus-visible {
+        box-shadow: var(--ag-focus-shadow);
+    }
+}
+
 .ag-standard-button {
     font-family: inherit;
     appearance: none;
@@ -21,8 +38,4 @@
         background-color: var(--ag-input-disabled-background-color);
         border: var(--ag-input-disabled-border);
     }
-}
-
-:where(input[class^='ag-'][type='button'], button[class^='ag-']):focus-visible {
-    box-shadow: var(--ag-focus-shadow);
 }

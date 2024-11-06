@@ -108,3 +108,9 @@
     /* minimum width for the legacy tabbed column menu */
     min-width: 290px;
 }
+
+/* Context Menu */
+.ag-context-menu-loading-icon {
+    position: absolute;
+    pointer-events: none;
+}

@@ -83,6 +83,7 @@
 }
 
 .ag-filter-loading {
+    background-color: var(--ag-menu-background-color);
     height: 100%;
     padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);
     position: absolute;

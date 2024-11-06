@@ -14,7 +14,7 @@ import { ModuleRegistry } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
-import { changePortfolioOnServer, createRowOnServer, deletePortfolioOnServer } from './data';
+import { changePortfolioOnServer, createRowOnServer, data, deletePortfolioOnServer } from './data';
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
@@ -50,7 +50,7 @@ const gridOptions: GridOptions = {
     },
     onGridReady: (params: GridReadyEvent) => {
         // setup the fake server
-        const server = new FakeServer();
+        const server = new FakeServer(data);
 
         // create datasource with a reference to the fake server
         const datasource = getServerSideDatasource(server);

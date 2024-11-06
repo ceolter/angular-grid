@@ -1,14 +1,14 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
 import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    createGrid,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -18,9 +18,7 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,

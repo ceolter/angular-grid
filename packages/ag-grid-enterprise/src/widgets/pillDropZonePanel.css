@@ -155,11 +155,8 @@
 }
 
 .ag-sort-indicator-container {
-    display: contents;
-}
-
-.ag-sort-indicator-icon {
-    padding-left: var(--ag-spacing);
+    display: flex;
+    gap: var(--ag-spacing);
 }
 
 .ag-column-drop-horizontal {
