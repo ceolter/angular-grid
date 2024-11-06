@@ -403,7 +403,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
             this.params,
             this.cellRendererParams
         );
-        const cellRendererPromise = compDetails ? compDetails.newAgStackInstance() : undefined;
+        const cellRendererPromise = compDetails?.newAgStackInstance();
 
         if (cellRendererPromise == null) {
             this.renderCellWithoutCellRenderer();

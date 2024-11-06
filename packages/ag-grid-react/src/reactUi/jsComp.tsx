@@ -17,10 +17,7 @@ export const showJsComp = (
         return;
     }
 
-    const promise = compDetails!.newAgStackInstance();
-    if (promise == null) {
-        return;
-    }
+    const promise = compDetails.newAgStackInstance();
 
     // almost all JS Comps are NOT async, however the Floating Multi Filter is Async as it could
     // be wrapping a React filter, so we need to cater for async comps here.

@@ -71,7 +71,7 @@ export class DragAndDropImageComponent extends Component implements IDragAndDrop
         super.destroy();
     }
 
-    public setIcon(iconName: DragAndDropIcon | null, shake = false): void {
+    public setIcon(iconName: DragAndDropIcon | null, shake: boolean): void {
         _clearElement(this.eIcon);
 
         let eIcon: Element | null = null;

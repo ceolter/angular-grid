@@ -200,8 +200,10 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
             },
         });
 
-        const compDetails = _getHeaderGroupCompDetails(userCompFactory, params)!;
-        this.comp.setUserCompDetails(compDetails);
+        const compDetails = _getHeaderGroupCompDetails(userCompFactory, params);
+        if (compDetails) {
+            this.comp.setUserCompDetails(compDetails);
+        }
     }
 
     private addHeaderMouseListeners(compBean: BeanStub): void {

@@ -496,9 +496,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         }
         const filterPromise = compDetails.newAgStackInstance();
 
-        if (filterPromise) {
-            filterPromise.then((filter) => (filterInstance = filter!));
-        }
+        filterPromise.then((filter) => (filterInstance = filter!));
 
         return filterPromise;
     }

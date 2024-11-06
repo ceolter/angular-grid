@@ -208,9 +208,12 @@ export class GridCoreCreator {
     }
 
     private getRegisteredModules(params: GridParams | undefined, gridId: string, rowModelType: RowModelType): Module[] {
-        _registerModule(CommunityCoreModule, gridId);
+        const modules = params?.modules;
 
-        params?.modules?.forEach((m) => _registerModule(m, gridId));
+        // only pass grid id if grid-specific modules
+        _registerModule(CommunityCoreModule, modules ? gridId : undefined);
+
+        modules?.forEach((m) => _registerModule(m, gridId));
 
         return _getRegisteredModules(gridId, rowModelType);
     }
