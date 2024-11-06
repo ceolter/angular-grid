@@ -76,12 +76,37 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         if (this.isRowSelectionBlocked(rowNode)) return 0;
 
         if (event instanceof MouseEvent) {
-            const num = this.selectionStrategy.handleMouseEvent(event, rowNode, source);
+            const num = this.handleMouseEvent(event, rowNode, source);
             this.shotgunResetNodeSelectionState();
             this.dispatchSelectionChanged(source);
             return num;
         } else {
             throw new Error('unimplemented');
+        }
+    }
+
+    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
+        const selection = this.getNodeSelectionsFromMouseEvent(event, rowNode, source);
+
+        if (selection == null) {
+            return 0;
+        }
+
+        if ('select' in selection) {
+            if (selection.reset) {
+                this.selectionStrategy.deselectAllRowNodes({ source: 'api' });
+            } else {
+                this.selectionStrategy.setNodesSelected({ nodes: selection.deselect, newValue: false, source });
+            }
+            return this.selectionStrategy.setNodesSelected({ nodes: selection.select, newValue: true, source });
+        } else {
+            return this.selectionStrategy.setNodesSelected({
+                nodes: [selection.node],
+                newValue: selection.newValue,
+                clearSelection: selection.clearSelection,
+                event,
+                source,
+            });
         }
     }
 
@@ -200,6 +225,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
     public reset(): void {
         this.selectionStrategy.deselectAllRowNodes({ source: 'api' });
+        this.selectionCtx.reset();
     }
 
     public isEmpty(): boolean {
@@ -222,6 +248,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         }
 
         this.selectionStrategy.selectAllRowNodes(params);
+        this.selectionCtx.reset();
 
         this.rowModel.forEachNode((node) => {
             if (node.stub) {
@@ -238,6 +265,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         validateSelectionParameters(params);
 
         this.selectionStrategy.deselectAllRowNodes(params);
+        this.selectionCtx.reset();
 
         this.rowModel.forEachNode((node) => {
             if (node.stub) {

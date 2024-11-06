@@ -10,8 +10,13 @@ import {
     _getActiveDomElement,
     _getCheckboxes,
     _getEnableDeselection,
+    _getEnableSelection,
+    _getEnableSelectionWithoutKeys,
+    _getGroupSelection,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
+    _isClientSideRowModel,
+    _isMultiRowSelection,
     _isRowSelection,
 } from '../gridOptionsUtils';
 import type { IRowModel } from '../interfaces/iRowModel';
@@ -23,6 +28,7 @@ import { _setAriaSelected } from '../utils/aria';
 import type { ChangedPath } from '../utils/changedPath';
 import { _warn } from '../validation/logging';
 import { CheckboxSelectionComponent } from './checkboxSelectionComponent';
+import { RowRangeSelectionContext } from './rowRangeSelectionContext';
 import { SelectAllFeature } from './selectAllFeature';
 
 export abstract class BaseSelectionService extends BeanStub {
@@ -30,6 +36,7 @@ export abstract class BaseSelectionService extends BeanStub {
     private ariaAnnounce?: AriaAnnouncementService;
 
     protected isRowSelectable?: IsRowSelectable;
+    protected selectionCtx: RowRangeSelectionContext;
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
@@ -37,7 +44,9 @@ export abstract class BaseSelectionService extends BeanStub {
     }
 
     public postConstruct(): void {
-        const { gos } = this;
+        const { gos, rowModel } = this;
+        this.selectionCtx = new RowRangeSelectionContext(rowModel);
+
         this.addManagedPropertyListeners(['isRowSelectable', 'rowSelection'], () => {
             const callback = _getIsRowSelectable(gos);
             if (callback !== this.isRowSelectable) {
@@ -47,6 +56,11 @@ export abstract class BaseSelectionService extends BeanStub {
         });
 
         this.isRowSelectable = _getIsRowSelectable(gos);
+    }
+
+    public override destroy(): void {
+        super.destroy();
+        this.selectionCtx.reset();
     }
 
     public createCheckboxSelectionComponent(): CheckboxSelectionComponent {
@@ -262,4 +276,128 @@ export abstract class BaseSelectionService extends BeanStub {
             return column.isColumnFunc(rowNode, column.colDef.checkboxSelection);
         }
     }
+
+    protected getNodeSelectionsFromMouseEvent(
+        event: MouseEvent,
+        rowNode: RowNode,
+        source: SelectionEventSourceType
+    ): null | NodeSelection {
+        // if node is a footer, we don't do selection, just pass the info
+        // to the sibling (the parent of the group)
+        const node = rowNode.footer ? rowNode.sibling : rowNode;
+
+        const { gos, selectionCtx } = this;
+        const currentSelection = node.isSelected();
+        const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
+        const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
+        const enableClickSelection = _getEnableSelection(gos);
+        const enableDeselection = _getEnableDeselection(gos);
+        const isRowClicked = source === 'rowClicked';
+        const isMeta = event.metaKey || event.ctrlKey;
+
+        if (isRowClicked && !(enableClickSelection || enableDeselection)) return null;
+
+        if (event.shiftKey && isMeta && this.isMultiSelect()) {
+            const root = selectionCtx.getRoot();
+            if (root && !root.isSelected()) {
+                // range deselection mode
+                const partition = selectionCtx.extend(node, groupSelectsDescendants);
+                return {
+                    select: [],
+                    deselect: partition.keep,
+                    reset: false,
+                };
+            } else {
+                // default to range selection
+                const partition = selectionCtx.isInRange(node)
+                    ? selectionCtx.truncate(node)
+                    : selectionCtx.extend(node, groupSelectsDescendants);
+                return {
+                    deselect: partition.discard,
+                    select: partition.keep,
+                    reset: false,
+                };
+            }
+        } else if (event.shiftKey && this.isMultiSelect()) {
+            // range selection
+            const root = selectionCtx.getRoot();
+            const partition = selectionCtx.isInRange(node)
+                ? selectionCtx.truncate(node)
+                : selectionCtx.extend(node, groupSelectsDescendants);
+            if (root && !root.isSelected()) {
+                return {
+                    select: partition.keep,
+                    deselect: partition.discard,
+                    reset: true,
+                };
+            } else {
+                return {
+                    select: partition.keep,
+                    deselect: partition.discard,
+                    reset: false,
+                };
+            }
+        } else if (isMeta) {
+            // multi-selection + deselection
+            selectionCtx.setRoot(node);
+
+            if (isRowClicked && currentSelection && !enableDeselection) {
+                return null;
+            }
+
+            return {
+                node,
+                newValue: currentSelection ? false : true,
+                clearSelection: !this.isMultiSelect(),
+            };
+        } else {
+            // selection
+            selectionCtx.setRoot(node);
+            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+            const shouldClear = isRowClicked && (!enableSelectionWithoutKeys || !enableClickSelection);
+
+            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'`
+            if (groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
+                return {
+                    node,
+                    newValue: false,
+                    clearSelection: !this.isMultiSelect() || shouldClear,
+                };
+            }
+
+            if (isRowClicked) {
+                const newValue = currentSelection ? !enableSelectionWithoutKeys : enableClickSelection;
+                if (newValue === currentSelection) return null;
+
+                return {
+                    node,
+                    newValue,
+                    clearSelection: !this.isMultiSelect() || shouldClear,
+                };
+            }
+
+            return {
+                node,
+                newValue: !currentSelection,
+                clearSelection: !this.isMultiSelect() || shouldClear,
+            };
+        }
+    }
+
+    protected isMultiSelect(): boolean {
+        return _isMultiRowSelection(this.gos);
+    }
 }
+
+interface SingleNodeSelection {
+    node: RowNode;
+    newValue: boolean;
+    clearSelection: boolean;
+}
+
+interface MultiNodeSelection {
+    select: readonly RowNode[];
+    deselect: readonly RowNode[];
+    reset: boolean;
+}
+type NodeSelection = SingleNodeSelection | MultiNodeSelection;

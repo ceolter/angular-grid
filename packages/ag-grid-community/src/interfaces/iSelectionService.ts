@@ -82,5 +82,5 @@ interface INodeSelectionParams {
 
 export interface ISetNodesSelectedParams extends INodeSelectionParams {
     // node to change selection of
-    nodes: RowNode[];
+    nodes: readonly RowNode[];
 }

@@ -45,11 +45,9 @@ export class ServerSideRowRangeSelectionContext implements ISelectionContext<str
             const root = this.root ? this.rowModel.getRowNode(this.root) : undefined;
             const end = this.end ? this.rowModel.getRowNode(this.end) : undefined;
 
-            if (root == null || end == null) {
-                return this.cachedRange;
+            if (root && end) {
+                this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end).map((n) => n.id!);
             }
-
-            this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end).map((n) => n.id!);
         }
 
         return this.cachedRange;

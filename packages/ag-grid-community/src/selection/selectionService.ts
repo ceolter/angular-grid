@@ -4,9 +4,6 @@ import type { RowSelectionMode, SelectAllMode } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import type { RowSelectedEvent, SelectionEventSourceType } from '../events';
 import {
-    _getEnableDeselection,
-    _getEnableSelection,
-    _getEnableSelectionWithoutKeys,
     _getGroupSelection,
     _getGroupSelectsDescendants,
     _getRowSelectionMode,
@@ -19,13 +16,11 @@ import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { ISelectionService, ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../interfaces/selectionState';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
-import { _last } from '../utils/array';
+// import { _last } from '../utils/array';
 import { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 import { BaseSelectionService } from './baseSelectionService';
-import { RowRangeSelectionContext } from './rowRangeSelectionContext';
-import type { ISelectionContext } from './rowRangeSelectionContext';
 
 export class SelectionService extends BaseSelectionService implements NamedBean, ISelectionService {
     beanName = 'selectionSvc' as const;
@@ -38,7 +33,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private selectedNodes: Map<string, RowNode> = new Map();
-    private selectionCtx: ISelectionContext<RowNode>;
 
     private groupSelectsDescendants: boolean;
     private groupSelectsFiltered: boolean;
@@ -46,8 +40,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     public override postConstruct(): void {
         super.postConstruct();
-        const { gos, rowModel, onRowSelected } = this;
-        this.selectionCtx = new RowRangeSelectionContext(rowModel);
+        const { gos, onRowSelected } = this;
         this.mode = _getRowSelectionMode(gos);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
         this.groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
@@ -74,11 +67,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     public override destroy(): void {
         super.destroy();
         this.resetNodes();
-        this.selectionCtx.reset();
-    }
-
-    private isMultiSelect(): boolean {
-        return this.mode === 'multiRow';
     }
 
     public processSelectionAction(
@@ -96,81 +84,24 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
-        // if node is a footer, we don't do selection, just pass the info
-        // to the sibling (the parent of the group)
-        const node = rowNode.footer ? rowNode.sibling : rowNode;
+        const selection = this.getNodeSelectionsFromMouseEvent(event, rowNode, source);
 
-        const { gos, groupSelectsDescendants, groupSelectsFiltered, selectionCtx } = this;
-        const currentSelection = node.isSelected();
-        const enableClickSelection = _getEnableSelection(gos);
-        const enableDeselection = _getEnableDeselection(gos);
-        const isRowClicked = source === 'rowClicked';
-        const isMeta = event.metaKey || event.ctrlKey;
+        if (selection == null) {
+            return 0;
+        }
 
-        if (isRowClicked && !(enableClickSelection || enableDeselection)) return 0;
-
-        if (event.shiftKey && isMeta && this.isMultiSelect()) {
-            const root = selectionCtx.getRoot();
-            if (root && !root.isSelected()) {
-                // range deselection mode
-                const partition = selectionCtx.extend(node, groupSelectsDescendants);
-                return this.selectRange(partition.keep, false, source);
-            } else {
-                // default to range selection
-                const partition = selectionCtx.isInRange(node)
-                    ? selectionCtx.truncate(node)
-                    : selectionCtx.extend(node, groupSelectsDescendants);
-                this.selectRange(partition.discard, false, source);
-                return this.selectRange(partition.keep, true, source);
-            }
-        } else if (event.shiftKey && this.isMultiSelect()) {
-            // range selection
-            const root = selectionCtx.getRoot();
-            const partition = selectionCtx.isInRange(node)
-                ? selectionCtx.truncate(node)
-                : selectionCtx.extend(node, groupSelectsDescendants);
-            if (root && !root.isSelected()) {
+        if ('select' in selection) {
+            if (selection.reset) {
                 this.resetNodes();
             } else {
-                this.selectRange(partition.discard, false, source);
+                this.selectRange(selection.deselect, false, source);
             }
-            return this.selectRange(partition.keep, true, source);
-        } else if (isMeta) {
-            // multi-selection + deselection
-            selectionCtx.setRoot(node);
-
-            if (isRowClicked && currentSelection && !enableDeselection) {
-                return 0;
-            }
-
-            return this.setNodesSelected({
-                nodes: [node],
-                newValue: currentSelection ? false : true,
-                clearSelection: !this.isMultiSelect(),
-                event,
-                source,
-            });
+            return this.selectRange(selection.select, true, source);
         } else {
-            // selection
-            selectionCtx.setRoot(node);
-            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
-            const shouldClear = isRowClicked && !enableSelectionWithoutKeys;
-
-            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'`
-            if (groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
-                return this.setNodesSelected({
-                    nodes: [node],
-                    newValue: false,
-                    clearSelection: !this.isMultiSelect() || shouldClear,
-                    event,
-                    source,
-                });
-            }
-
             return this.setNodesSelected({
-                nodes: [node],
-                newValue: !currentSelection,
-                clearSelection: !this.isMultiSelect() || shouldClear,
+                nodes: [selection.node],
+                newValue: selection.newValue,
+                clearSelection: selection.clearSelection,
                 event,
                 source,
             });
@@ -181,6 +112,11 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         const { newValue, clearSelection, suppressFinishActions, nodes, event, source } = params;
 
         if (nodes.length === 0) return 0;
+
+        if (nodes.length > 1 && !this.isMultiSelect()) {
+            _warn(130);
+            return 0;
+        }
 
         let updatedCount = 0;
         for (let i = 0; i < nodes.length; i++) {
@@ -521,7 +457,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             this.reset(source);
         }
 
-        this.selectionCtx.reset();
+        // this.selectionCtx.reset();
 
         // the above does not clean up the parent rows if they are selected
         if (rowModelClientSide && this.groupSelectsDescendants) {
@@ -658,8 +594,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         const nodes = this.getNodesToSelect(selectAll);
         nodes.forEach((rowNode) => this.selectRowNode(rowNode, true, undefined, source));
 
-        this.selectionCtx.setRoot(nodes[0] ?? null);
-        this.selectionCtx.setEndRange(_last(nodes) ?? null);
+        // this.selectionCtx.setRoot(nodes[0] ?? null);
+        // this.selectionCtx.setEndRange(_last(nodes) ?? null);
 
         // the above does not clean up the parent rows if they are selected
         if (_isClientSideRowModel(this.gos) && this.groupSelectsDescendants) {

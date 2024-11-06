@@ -230,6 +230,26 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowsByIndex([2, 3], api);
             });
 
+            test('must de-select with CTRL when `enableClickSelection: true`', () => {
+                const api = createGrid({
+                    columnDefs,
+                    rowData,
+                    rowSelection: {
+                        mode: 'multiRow',
+                        enableClickSelection: true,
+                    },
+                });
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3, { ctrlKey: true });
+                assertSelectedRowsByIndex([], api);
+            });
+
             describe('Range selection behaviour', () => {
                 test('CTRL-click and CMD-click selects multiple rows', () => {
                     const api = createGrid({

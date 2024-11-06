@@ -262,6 +262,31 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowsByIndex([2, 3], api);
             });
 
+            test('must de-select with CTRL when `enableClickSelection: true`', async () => {
+                const api = await createGridAndWait({
+                    columnDefs,
+                    rowModelType: 'serverSide',
+                    serverSideDatasource: {
+                        getRows(params) {
+                            return params.success({ rowData, rowCount: rowData.length });
+                        },
+                    },
+                    rowSelection: {
+                        mode: 'multiRow',
+                        enableClickSelection: true,
+                    },
+                });
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3, { ctrlKey: true });
+                assertSelectedRowsByIndex([], api);
+            });
+
             describe('Range selection behaviour', () => {
                 test('CTRL-click and CMD-click selects multiple rows', async () => {
                     const api = await createGridAndWait({
@@ -1222,7 +1247,7 @@ describe('Row Selection Grid Options', () => {
             });
         });
 
-        describe('Group checkbox selection', () => {
+        describe('Group selection', () => {
             function getRowIdRaw(params: Pick<GetRowIdParams, 'api' | 'data' | 'parentKeys'>) {
                 return getRowId({ ...params, level: -1, context: {} });
             }
@@ -1427,7 +1452,7 @@ describe('Row Selection Grid Options', () => {
                 );
             });
 
-            test.only('Selection when `enableSelectionWithoutKeys` for `groupSelects = "descendants"`', async () => {
+            test('Selection when `enableSelectionWithoutKeys` for `groupSelects = "descendants"`', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,
                     rowSelection: {
