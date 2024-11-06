@@ -10,7 +10,7 @@ import type {
     ISetNodesSelectedParams,
     RowNode,
 } from 'ag-grid-community';
-import { BeanStub, _error, _isMultiRowSelection, _last, _warn } from 'ag-grid-community';
+import { BeanStub, _error, _isMultiRowSelection, _warn } from 'ag-grid-community';
 
 import type { LazyStore } from '../../../stores/lazy/lazyStore';
 import type { ISelectionStrategy } from './iSelectionStrategy';
@@ -174,29 +174,6 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         });
         this.removeRedundantState();
         return 1;
-    }
-
-    private selectRange(nodes: readonly string[], newValue: boolean) {
-        // sort routes longest to shortest, meaning we can do the lowest level children first
-        const routes = nodes
-            .map((id) => {
-                const node = this.rowModel.getRowNode(id);
-                return node ? this.getRouteToNode(node) : [];
-            })
-            .sort((a, b) => b.length - a.length);
-
-        // keep track of nodes we've seen so we can skip branches we've visited already
-        const seen = new Set<RowNode>();
-        routes.forEach((route) => {
-            if (seen.has(_last(route))) {
-                return;
-            }
-            route.forEach((part) => seen.add(part));
-
-            this.recursivelySelectNode(route, this.selectedState, newValue);
-        });
-
-        this.removeRedundantState();
     }
 
     public isNodeSelected(node: RowNode): boolean | undefined {
