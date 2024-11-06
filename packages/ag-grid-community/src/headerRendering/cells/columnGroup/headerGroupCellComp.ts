@@ -57,7 +57,7 @@ export class HeaderGroupCellComp extends AbstractHeaderCellComp<HeaderGroupCellC
     }
 
     private setUserCompDetails(details: UserCompDetails): void {
-        details.newAgStackInstance()!.then((comp) => this.afterHeaderCompCreated(comp));
+        details.newAgStackInstance().then((comp) => this.afterHeaderCompCreated(comp));
     }
 
     private afterHeaderCompCreated(headerGroupComp: IHeaderGroupComp): void {

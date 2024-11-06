@@ -300,7 +300,6 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected handleDragEnterEnd(_: DraggingEvent): void {}
 
     private onDragEnter(draggingEvent: DraggingEvent): void {
@@ -334,7 +333,6 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         return !!this.potentialDndItems?.length;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected handleDragLeaveEnd(_: DraggingEvent): void {}
 
     private onDragLeave(draggingEvent: DraggingEvent): void {

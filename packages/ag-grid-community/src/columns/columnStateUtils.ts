@@ -249,7 +249,6 @@ export function _applyColumnState(
 
     colAnimation?.start();
 
-    // eslint-disable-next-line prefer-const
     let { unmatchedAndAutoStates, unmatchedCount } = applyStates(params.state || [], providedCols, (id) =>
         colModel.getColDefCol(id)
     );

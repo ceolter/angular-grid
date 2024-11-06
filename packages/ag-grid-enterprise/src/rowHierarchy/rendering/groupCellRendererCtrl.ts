@@ -7,6 +7,7 @@ import type {
     CtrlsService,
     ExpressionService,
     GroupCellRendererParams,
+    ICellRendererComp,
     ICellRendererParams,
     IColsService,
     IGroupCellRenderer,
@@ -49,16 +50,16 @@ function getInnerRendererDetails(
     userCompFactory: UserComponentFactory,
     def: GroupCellRendererParams,
     params: WithoutGridCommon<ICellRendererParams>
-): UserCompDetails | undefined {
-    return userCompFactory.getCompDetails(def, InnerRendererComponent, null, params);
+): UserCompDetails<ICellRendererComp> | undefined {
+    return userCompFactory.getCompDetails(def, InnerRendererComponent, undefined, params);
 }
 
 function getFullWidthGroupRowInnerCellRenderer(
     userCompFactory: UserComponentFactory,
     def: any,
     params: WithoutGridCommon<ICellRendererParams>
-): UserCompDetails | undefined {
-    return userCompFactory.getCompDetails(def, InnerRendererComponent, null, params);
+): UserCompDetails<ICellRendererComp> | undefined {
+    return userCompFactory.getCompDetails(def, InnerRendererComponent, undefined, params);
 }
 
 export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendererCtrl {

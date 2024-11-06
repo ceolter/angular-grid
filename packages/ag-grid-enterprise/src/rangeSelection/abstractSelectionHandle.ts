@@ -130,7 +130,6 @@ export abstract class AbstractSelectionHandle extends Component {
         e.stopPropagation();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected onDragStart(_: MouseEvent) {
         [this.cellHoverListener] = this.addManagedElementListeners(this.ctrlsSvc.get('gridCtrl').getGui(), {
             mousemove: this.updateValuesOnMove.bind(this),

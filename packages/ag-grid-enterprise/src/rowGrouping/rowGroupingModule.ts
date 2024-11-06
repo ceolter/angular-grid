@@ -75,8 +75,8 @@ export const GroupFloatingFilterModule: _ModuleWithoutApi = {
 /**
  * @feature Row Grouping
  */
-export const RowGroupingNoPivotModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGroupingNoPivotModule'),
+export const RowGroupingOnlyModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('RowGroupingOnlyModule'),
     dependsOn: [
         RowGroupingCoreModule,
         StickyRowModule,

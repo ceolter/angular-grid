@@ -13,6 +13,7 @@ import type { AdvancedFilterModel } from '../interfaces/advancedFilterModel';
 import type { IAdvancedFilterService } from '../interfaces/iAdvancedFilterService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { FilterModel, IFilter, IFilterComp, IFilterParams } from '../interfaces/iFilter';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { UserCompDetails } from '../interfaces/iUserCompDetails';
 import { _mergeDeep } from '../utils/object';
 import { AgPromise } from '../utils/promise';
@@ -45,6 +46,8 @@ export class FilterManager extends BeanStub implements NamedBean {
     // when we're waiting for cell data types to be inferred, we need to defer filter model updates
     private advancedFilterModelUpdateQueue: (AdvancedFilterModel | null | undefined)[] = [];
 
+    private alwaysPassFilter?: (rowNode: IRowNode) => boolean;
+
     public postConstruct(): void {
         const refreshFiltersForAggregations = this.refreshFiltersForAggregations.bind(this);
         const updateAdvancedFilterColumns = this.updateAdvancedFilterColumns.bind(this);
@@ -74,6 +77,13 @@ export class FilterManager extends BeanStub implements NamedBean {
                 quickFilterChanged: () => this.onFilterChanged({ source: 'quickFilter' }),
             });
         }
+
+        const { gos } = this;
+        this.alwaysPassFilter = gos.get('alwaysPassFilter');
+        this.addManagedPropertyListener('alwaysPassFilter', () => {
+            this.alwaysPassFilter = gos.get('alwaysPassFilter');
+            this.onFilterChanged({ source: 'api' });
+        });
     }
 
     private isExternalFilterPresentCallback() {
@@ -228,14 +238,20 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     public doesRowPassAggregateFilters(params: { rowNode: RowNode; filterInstanceToSkip?: IFilterComp }): boolean {
+        const { rowNode } = params;
+
+        if (this.alwaysPassFilter?.(rowNode)) {
+            return true;
+        }
+
         // check quick filter
-        if (this.isAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(params.rowNode)) {
+        if (this.isAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(rowNode)) {
             return false;
         }
 
         if (
             this.isAggregateFilterPresent() &&
-            !this.colFilter!.doAggregateFiltersPass(params.rowNode, params.filterInstanceToSkip)
+            !this.colFilter!.doAggregateFiltersPass(rowNode, params.filterInstanceToSkip)
         ) {
             return false;
         }
@@ -245,29 +261,34 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     public doesRowPassFilter(params: { rowNode: RowNode; filterInstanceToSkip?: IFilterComp }): boolean {
+        const { rowNode } = params;
+
+        if (this.alwaysPassFilter?.(rowNode)) {
+            return true;
+        }
+
         // the row must pass ALL of the filters, so if any of them fail,
         // we return true. that means if a row passes the quick filter,
         // but fails the column filter, it fails overall
-
         // first up, check quick filter
-        if (this.isNonAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(params.rowNode)) {
+        if (this.isNonAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(rowNode)) {
             return false;
         }
 
         // secondly, give the client a chance to reject this row
-        if (this.isExternalFilterPresent() && !this.doesExternalFilterPass(params.rowNode)) {
+        if (this.isExternalFilterPresent() && !this.doesExternalFilterPass(rowNode)) {
             return false;
         }
 
         // lastly, check column filter
         if (
             this.isColumnFilterPresent() &&
-            !this.colFilter!.doColumnFiltersPass(params.rowNode, params.filterInstanceToSkip)
+            !this.colFilter!.doColumnFiltersPass(rowNode, params.filterInstanceToSkip)
         ) {
             return false;
         }
 
-        if (this.isAdvancedFilterPresent() && !this.advancedFilter.doesFilterPass(params.rowNode)) {
+        if (this.isAdvancedFilterPresent() && !this.advancedFilter.doesFilterPass(rowNode)) {
             return false;
         }
 

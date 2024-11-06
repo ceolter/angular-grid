@@ -94,7 +94,6 @@ export class AgFillHandle extends AbstractSelectionHandle {
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected onDrag(_: MouseEvent) {
         if (!this.initialPosition) {
             const cellCtrl = this.getCellCtrl();

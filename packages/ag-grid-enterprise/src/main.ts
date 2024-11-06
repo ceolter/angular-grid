@@ -30,7 +30,7 @@ export {
     GroupFilterModule,
     GroupFloatingFilterModule,
     RowGroupingCoreModule,
-    RowGroupingNoPivotModule,
+    RowGroupingOnlyModule,
     RowGroupingPanelModule,
 } from './rowGrouping/rowGroupingModule';
 export { SideBarModule } from './sideBar/sideBarModule';

@@ -417,7 +417,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
         if (value == null) {
             return undefined;
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [cellDataType] = Object.entries(this.dataTypeMatchers).find(([_cellDataType, dataTypeMatcher]) =>
             dataTypeMatcher!(value)
         ) ?? ['object'];

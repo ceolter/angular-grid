@@ -1,7 +1,16 @@
+import {
+    AgPromise,
+    BeanStub,
+    KeyCode,
+    _loadTemplate,
+    _setAriaDisabled,
+    _setAriaExpanded,
+    _setAriaLevel,
+    _setAriaRole,
+} from 'ag-grid-community';
 import type {
     AgColumn,
     AgEvent,
-    AgPromise,
     BeanCollection,
     Component,
     ComponentType,
@@ -13,21 +22,12 @@ import type {
     ITooltipCtrl,
     MenuItemDef,
     PopupService,
+    Registry,
     TooltipFeature,
     UserCompDetails,
     UserComponentFactory,
     WithoutGridCommon,
 } from 'ag-grid-community';
-import {
-    BeanStub,
-    KeyCode,
-    _loadTemplate,
-    _setAriaDisabled,
-    _setAriaExpanded,
-    _setAriaLevel,
-    _setAriaRole,
-} from 'ag-grid-community';
-import type { Registry } from 'ag-grid-community';
 
 import { AgMenuList } from './agMenuList';
 import { AgMenuPanel } from './agMenuPanel';
@@ -55,8 +55,8 @@ function getMenuItemCompDetails(
     userCompFactory: UserComponentFactory,
     def: MenuItemDef,
     params: WithoutGridCommon<IMenuItemParams>
-): UserCompDetails {
-    return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true)!;
+): UserCompDetails<IMenuItemComp> | undefined {
+    return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true);
 }
 
 const MenuItemComponent: ComponentType = {
@@ -118,13 +118,15 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
         });
-        return compDetails.newAgStackInstance().then((comp: IMenuItemComp) => {
-            this.menuItemComp = comp;
-            const configureDefaults = comp.configureDefaults?.();
-            if (configureDefaults) {
-                this.configureDefaults(configureDefaults === true ? undefined : configureDefaults);
-            }
-        });
+        return (
+            compDetails?.newAgStackInstance().then((comp: IMenuItemComp) => {
+                this.menuItemComp = comp;
+                const configureDefaults = comp.configureDefaults?.();
+                if (configureDefaults) {
+                    this.configureDefaults(configureDefaults === true ? undefined : configureDefaults);
+                }
+            }) ?? AgPromise.resolve()
+        );
     }
 
     private addListeners(eGui: HTMLElement, params?: IMenuConfigParams): void {

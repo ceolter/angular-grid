@@ -811,6 +811,12 @@
       "UseGroupTotalRow"
     ]
   },
+  "alwaysPassFilter": {
+    "typeName": "(rowNode: IRowNode<TData>) => boolean",
+    "typesToInclude": [
+      "IRowNode"
+    ]
+  },
   "suppressMakeColumnVisibleAfterUnGroup": {
     "typeName": "boolean",
     "typesToInclude": []

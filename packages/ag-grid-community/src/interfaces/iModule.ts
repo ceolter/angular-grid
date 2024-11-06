@@ -197,7 +197,7 @@ export type EnterpriseModuleName =
     | 'RichSelectModule'
     | 'RowGroupingCoreModule'
     | 'RowGroupingModule'
-    | 'RowGroupingNoPivotModule'
+    | 'RowGroupingOnlyModule'
     | 'RowGroupingPanelModule'
     | 'ServerSideRowModelApiModule'
     | 'ServerSideRowModelCoreModule'

@@ -192,8 +192,12 @@ export class OverlayService extends BeanStub implements NamedBean {
         this.updateExclusive();
     }
 
-    private showOverlay(compDetails: UserCompDetails, wrapperCssClass: string, gridOption: keyof GridOptions): void {
-        const promise = compDetails.newAgStackInstance();
+    private showOverlay(
+        compDetails: UserCompDetails | undefined,
+        wrapperCssClass: string,
+        gridOption: keyof GridOptions
+    ): void {
+        const promise = compDetails?.newAgStackInstance() ?? null;
         this.overlayWrapperComp?.showOverlay(promise, wrapperCssClass, this.isExclusive(), gridOption);
         this.refreshWrapperPadding();
     }

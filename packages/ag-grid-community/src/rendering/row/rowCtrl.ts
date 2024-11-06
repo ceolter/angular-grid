@@ -1069,13 +1069,13 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         const compFactory = this.beans.userCompFactory;
         switch (this.rowType) {
             case 'FullWidthDetail':
-                return _getFullWidthDetailCellRendererDetails(compFactory, params);
+                return _getFullWidthDetailCellRendererDetails(compFactory, params)!;
             case 'FullWidthGroup':
-                return _getFullWidthGroupCellRendererDetails(compFactory, params);
+                return _getFullWidthGroupCellRendererDetails(compFactory, params)!;
             case 'FullWidthLoading':
-                return _getFullWidthLoadingCellRendererDetails(compFactory, params);
+                return _getFullWidthLoadingCellRendererDetails(compFactory, params)!;
             default:
-                return _getFullWidthCellRendererDetails(compFactory, params);
+                return _getFullWidthCellRendererDetails(compFactory, params)!;
         }
     }
 

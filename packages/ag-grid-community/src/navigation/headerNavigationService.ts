@@ -149,7 +149,6 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         let {
             headerRowIndex: nextRow,
             column: nextFocusColumn,
-            // eslint-disable-next-line prefer-const
             headerRowIndexWithoutSpan,
         } = isUp
             ? this.getColumnVisibleParent(column, headerRowIndex)

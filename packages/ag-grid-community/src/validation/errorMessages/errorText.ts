@@ -345,7 +345,8 @@ export const AG_GRID_ERRORS = {
     144: ({ type }: { type: string }) => `Invalid charts data panel group name supplied: '${type}'` as const,
     145: ({ group }: { group: string }) =>
         `As of v32, only one charts customize panel group can be expanded at a time. '${group}' will not be expanded.` as const,
-    // 146: () => '' as const,
+    146: ({ comp }: { comp: string }) =>
+        `Unable to instantiate component '${comp}' as its module hasn't been loaded. Add 'ValidationModule' to see which module is required.` as const,
     147: ({ group }: { group: string }) => `Invalid charts customize panel group name supplied: '${group}'` as const,
     148: ({ group }: { group: string }) => `invalid chartGroupsDef config '${group}'` as const,
     149: ({ group, chartType }: { group: string; chartType: string }) =>

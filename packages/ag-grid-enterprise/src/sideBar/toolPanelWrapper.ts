@@ -16,8 +16,8 @@ function getToolPanelCompDetails(
     userCompFactory: UserComponentFactory,
     toolPanelDef: ToolPanelDef,
     params: WithoutGridCommon<IToolPanelParams>
-): UserCompDetails {
-    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, null, params, true)!;
+): UserCompDetails<IToolPanelComp> | undefined {
+    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, undefined, params, true);
 }
 
 const ToolPanelComponent: ComponentType = {
@@ -63,14 +63,14 @@ export class ToolPanelWrapper extends Component {
         this.width = width;
 
         const compDetails = getToolPanelCompDetails(this.userCompFactory, toolPanelDef, params);
-        const componentPromise = compDetails.newAgStackInstance();
-
-        this.params = compDetails.params;
-
-        if (componentPromise == null) {
+        if (compDetails == null) {
             _warn(216, { id });
             return;
         }
+
+        const componentPromise = compDetails.newAgStackInstance();
+        this.params = compDetails.params;
+
         componentPromise.then(this.setToolPanelComponent.bind(this));
 
         if (minWidth != null) {

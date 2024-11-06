@@ -590,6 +590,12 @@ export interface GridOptions<TData = any> {
      * @default false
      */
     enableAdvancedFilter?: boolean;
+    /**
+     * Allows rows to always be displayed, even if they don't match the applied filtering.
+     * Return `true` for the provided row to always be displayed.
+     * Only works with the Client-Side Row Model.
+     */
+    alwaysPassFilter?: (rowNode: IRowNode<TData>) => boolean;
 
     /**
      * Hidden columns are excluded from the Advanced Filter by default.
