@@ -57,11 +57,12 @@ export const AutomatedExamples: FunctionComponent = () => {
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
                         >
-                            <h2 className="text-3xl">Standalone JavaScript Charting Library</h2>
-                            <p className="text-xl">
-                                Choose from 20+ chart types to visualise any data, 100% free and open source. Use it as
-                                a standalone library that is also fully compatible with AG Grid
-                            </p>
+                            <h2 class={styles.tag}>Fully Integrated Charting</h2>
+                            <h3 class={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
+                            <h4 class={styles.subHeading}>
+                                Let your users visualise their data in charts directly from your Data Grid. Multiple
+                                chart types, themes, customisations and more, all in one place.
+                            </h4>
                         </AutomatedIntegratedCharts>
                     </div>
                 </div>

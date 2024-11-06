@@ -570,6 +570,10 @@ body {
     div {
         display: flex;
         gap: 8px;
+        padding-bottom: 8px;
+    }
+    .active {
+        border-bottom: 1.5px solid var(--color-white);
     }
     :not(.active) {
         transition: color opacity 0.5s;

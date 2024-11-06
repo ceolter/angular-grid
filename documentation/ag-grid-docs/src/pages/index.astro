@@ -129,20 +129,30 @@ const frameworksData = [
         <AutomatedExamples client:visible />
     </div>
 
-    <div class={styles.homepageQuotes}>
-        <div class="layout-max-width-small">
-            <Quotes client:load data={quotesData} />
+    <div class={styles.sectionContent}>
+        <div class={styles.headingContainer}>
+            <h2 class={styles.tag}>Who Builds Data Grids with AG Grid?</h2>
+            <h3 class={styles.heading}>Loved By Developers, Trusted By The Worlds Largest Enterprises</h3>
+            <h4 class={styles.subHeading}>
+                Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000 Stars on
+                GitHub.
+            </h4>
         </div>
+        <Quotes client:load data={quotesData} />
+    </div>
+
+    <div class={styles.homepageQuotes}>
+        <div class="layout-max-width-small"></div>
     </div>
 
     <div class={styles.section}>
         <div class:list={[styles.latestNewsSectionInner, 'layout-max-width-small']}>
             <div class={styles.headingContainer}>
-                <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Charts</h2>
+                <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Grid</h2>
                 <h3 class={styles.heading}>Regular Releases, <br /> Updates, and&nbsp;Enhancements</h3>
                 <h4 class={styles.subHeading}>
-                    Browse the latest updates to AG Charts JavaScript Charting Library, including new features, series
-                    types, functionality and more.
+                    With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of
+                    the newest features and improvements to AG Grid Data Grids.
                 </h4>
             </div>
             <div class={styles.latestNewsVersions}>
@@ -190,28 +200,5 @@ const frameworksData = [
             </h4>
         </div>
         <Faqs client:load />
-    </div>
-
-    <div class={styles.homepageSponsorship}>
-        <section class:list={[styles.sponsorshipInner, 'layout-max-width-small']}>
-            <div>
-                <h2>Supporting Open&nbsp;Source</h2>
-                <h3 class="thin-text">We are proud to sponsor the tools we use and love.</h3>
-            </div>
-
-            <ul class:list={[styles.projectsList, 'list-style-none']}>
-                <li class={styles.project}>
-                    <img src={urlWithBaseUrl('images/webpack.svg')} alt="Webpack" />
-
-                    <h3>Webpack</h3>
-                </li>
-
-                <li class:list={[styles.project, styles.projectPlunker]}>
-                    <img src={urlWithBaseUrl('images/plunker.svg')} alt="Plunker" />
-
-                    <h3>Plunker</h3>
-                </li>
-            </ul>
-        </section>
     </div>
 </Layout>
