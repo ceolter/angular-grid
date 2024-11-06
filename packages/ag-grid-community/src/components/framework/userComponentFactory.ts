@@ -99,9 +99,6 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         this.gridOptions = beans.gridOptions;
     }
 
-    /**
-     * @param mandatory if `defaultName` is `undefined`, will display warning if this is `true`. Unused otherwise
-     */
     public getCompDetailsFromGridOptions(
         type: ComponentType,
         defaultName: string | undefined,
@@ -111,9 +108,6 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         return this.getCompDetails(this.gridOptions, type, defaultName, params, mandatory);
     }
 
-    /**
-     * @param mandatory if `defaultName` is `undefined`, will display warning if this is `true`. Unused otherwise
-     */
     public getCompDetails<TDefinition, TComp extends IComponent<any>>(
         defObject: TDefinition,
         type: ComponentType,
