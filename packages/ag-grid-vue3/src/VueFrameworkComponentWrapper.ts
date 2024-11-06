@@ -30,7 +30,7 @@ export class VueFrameworkComponentWrapper extends BaseComponentWrapper<Wrappable
             public hasMethod(name: string): boolean {
                 const componentInstance = wrapper.getFrameworkComponentInstance();
                 if (!componentInstance[name]) {
-                    return componentInstance.$.setupState[name] != null;
+                    return componentInstance.$.exposed != null || componentInstance.$.setupState[name] != null;
                 } else {
                     return true;
                 }
@@ -42,7 +42,8 @@ export class VueFrameworkComponentWrapper extends BaseComponentWrapper<Wrappable
                 if (frameworkComponentInstance[name]) {
                     return frameworkComponentInstance[name].apply(componentInstance, args);
                 } else {
-                    return frameworkComponentInstance.$.setupState[name]?.apply(componentInstance, args);
+                    const fn = componentInstance.$.exposed[name] || componentInstance.$.setupState[name]
+                    return fn?.apply(componentInstance, args);
                 }
             }
 
