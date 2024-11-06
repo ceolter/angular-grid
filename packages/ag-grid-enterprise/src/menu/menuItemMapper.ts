@@ -255,7 +255,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     action: () => this.expansionSvc?.expandAll(false),
                 };
             case 'copy':
-                if (this.gos.assertModuleRegistered('ClipboardCoreModule', 5)) {
+                if (this.gos.assertModuleRegistered('ClipboardModule', 5)) {
                     return {
                         name: localeTextFunc('copy', 'Copy'),
                         shortcut: localeTextFunc('ctrlC', 'Ctrl+C'),
@@ -266,7 +266,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return null;
                 }
             case 'copyWithHeaders':
-                if (this.gos.assertModuleRegistered('ClipboardCoreModule', 6)) {
+                if (this.gos.assertModuleRegistered('ClipboardModule', 6)) {
                     return {
                         name: localeTextFunc('copyWithHeaders', 'Copy with Headers'),
                         // shortcut: localeTextFunc('ctrlC','Ctrl+C'),
@@ -277,7 +277,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return null;
                 }
             case 'copyWithGroupHeaders':
-                if (this.gos.assertModuleRegistered('ClipboardCoreModule', 7)) {
+                if (this.gos.assertModuleRegistered('ClipboardModule', 7)) {
                     return {
                         name: localeTextFunc('copyWithGroupHeaders', 'Copy with Group Headers'),
                         // shortcut: localeTextFunc('ctrlC','Ctrl+C'),
@@ -289,7 +289,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return null;
                 }
             case 'cut':
-                if (this.gos.assertModuleRegistered('ClipboardCoreModule', 8)) {
+                if (this.gos.assertModuleRegistered('ClipboardModule', 8)) {
                     const focusedCell = this.beans.focusSvc.getFocusedCell();
                     const rowNode = focusedCell ? _getRowNode(this.beans, focusedCell) : null;
                     const isEditable = rowNode ? focusedCell?.column.isCellEditable(rowNode) : false;
@@ -304,7 +304,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                     return null;
                 }
             case 'paste':
-                if (this.gos.assertModuleRegistered('ClipboardCoreModule', 9)) {
+                if (this.gos.assertModuleRegistered('ClipboardModule', 9)) {
                     return {
                         name: localeTextFunc('paste', 'Paste'),
                         shortcut: localeTextFunc('ctrlV', 'Ctrl+V'),
@@ -318,8 +318,8 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
             case 'export': {
                 const exportSubMenuItems: string[] = [];
 
-                const csvModuleLoaded = this.gos.isModuleRegistered('CsvExportCoreModule');
-                const excelModuleLoaded = this.gos.isModuleRegistered('ExcelExportCoreModule');
+                const csvModuleLoaded = this.gos.isModuleRegistered('CsvExportModule');
+                const excelModuleLoaded = this.gos.isModuleRegistered('ExcelExportModule');
 
                 if (!this.gos.get('suppressCsvExport') && csvModuleLoaded) {
                     exportSubMenuItems.push('csvExport');

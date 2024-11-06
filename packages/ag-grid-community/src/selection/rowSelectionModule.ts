@@ -1,6 +1,6 @@
 import type { _RowSelectionGridApi } from '../api/gridApi';
 import { baseCommunityModule } from '../interfaces/iModule';
-import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
+import type { _ModuleWithApi } from '../interfaces/iModule';
 import {
     deselectAll,
     deselectAllFiltered,
@@ -18,17 +18,10 @@ import { SelectionService } from './selectionService';
  * @feature Selection -> Row Selection
  * @gridOption rowSelection
  */
-export const RowSelectionCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowSelectionCoreModule'),
+export const RowSelectionModule: _ModuleWithApi<_RowSelectionGridApi> = {
+    ...baseCommunityModule('RowSelectionModule'),
     rowModels: ['clientSide', 'infinite', 'viewport'],
     beans: [SelectionService],
-};
-
-/**
- * @feature Selection -> Row Selection
- */
-export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
-    ...baseCommunityModule('RowSelectionApiModule'),
     apiFunctions: {
         setNodesSelected,
         selectAll,
@@ -40,12 +33,4 @@ export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
         getSelectedNodes,
         getSelectedRows,
     },
-};
-
-/**
- * @feature Selection -> Row Selection
- */
-export const RowSelectionModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowSelectionModule'),
-    dependsOn: [RowSelectionCoreModule, RowSelectionApiModule],
 };

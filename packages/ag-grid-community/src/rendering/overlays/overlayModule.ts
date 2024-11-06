@@ -10,22 +10,14 @@ import { OverlayService } from './overlayService';
  * @feature Accessories -> Overlays
  * @gridOption loading, overlayLoadingTemplate, loadingOverlayComponent, overlayNoRowsTemplate, noRowsOverlayComponent
  */
-export const OverlayCoreModule: _ModuleWithoutApi = {
+export const OverlayCoreModule: _ModuleWithApi<_OverlayGridApi> = {
     ...baseCommunityModule('OverlayCoreModule'),
-    beans: [OverlayService],
-};
-
-/**
- * @feature Accessories -> Overlays
- */
-export const OverlayApiModule: _ModuleWithApi<_OverlayGridApi> = {
-    ...baseCommunityModule('OverlayApiModule'),
     apiFunctions: {
         showLoadingOverlay,
         showNoRowsOverlay,
         hideOverlay,
     },
-    dependsOn: [OverlayCoreModule],
+    beans: [OverlayService],
 };
 
 /**
@@ -55,5 +47,5 @@ export const NoRowsOverlayModule: _ModuleWithoutApi = {
  */
 export const OverlayModule: _ModuleWithoutApi = {
     ...baseCommunityModule('OverlayModule'),
-    dependsOn: [OverlayCoreModule, OverlayApiModule, LoadingOverlayModule, NoRowsOverlayModule],
+    dependsOn: [OverlayCoreModule, LoadingOverlayModule, NoRowsOverlayModule],
 };

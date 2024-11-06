@@ -1,5 +1,5 @@
 import type { _PaginationGridApi } from '../api/gridApi';
-import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
+import type { _ModuleWithApi } from '../interfaces/iModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import {
     paginationGetCurrentPage,
@@ -20,8 +20,8 @@ import { PaginationService } from './paginationService';
  * @feature Rows -> Row Pagination
  * @gridOption pagination
  */
-export const PaginationCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('PaginationCoreModule'),
+export const PaginationModule: _ModuleWithApi<_PaginationGridApi> = {
+    ...baseCommunityModule('PaginationModule'),
     beans: [PaginationService, PaginationAutoPageSizeService],
     icons: {
         // "go to first" button in pagination controls
@@ -33,14 +33,6 @@ export const PaginationCoreModule: _ModuleWithoutApi = {
         // "go to last" button in pagination controls
         last: 'last',
     },
-};
-
-/**
- * @feature Rows -> Row Pagination
- */
-export const PaginationApiModule: _ModuleWithApi<_PaginationGridApi> = {
-    ...baseCommunityModule('PaginationApiModule'),
-    dependsOn: [PaginationCoreModule],
     apiFunctions: {
         paginationIsLastPageFound,
         paginationGetPageSize,
@@ -53,12 +45,4 @@ export const PaginationApiModule: _ModuleWithApi<_PaginationGridApi> = {
         paginationGoToLastPage,
         paginationGoToPage,
     },
-};
-
-/**
- * @feature Rows -> Row Pagination
- */
-export const PaginationModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('PaginationModule'),
-    dependsOn: [PaginationCoreModule, PaginationApiModule],
 };

@@ -1,5 +1,5 @@
-import type { _MenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { CommunityMenuApiModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import { DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -88,33 +88,27 @@ export const ColumnMenuModule: _ModuleWithoutApi = {
 /**
  * @feature Accessories -> Column Menu
  */
-export const ColumnChooserModule: _ModuleWithoutApi = {
+export const ColumnChooserModule: _ModuleWithApi<_ColumnChooserGridApi> = {
     ...baseEnterpriseModule('ColumnChooserModule'),
     beans: [ColumnChooserFactory, ToolPanelColDefService],
     icons: COLUMN_SELECT_ICONS,
+    apiFunctions: {
+        showColumnChooser,
+        hideColumnChooser,
+    },
     dependsOn: [MenuCoreModule, DragAndDropModule],
 };
 
 /**
  * @feature Accessories -> Context Menu
  */
-export const ContextMenuModule: _ModuleWithoutApi = {
+export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
     ...baseEnterpriseModule('ContextMenuModule'),
     beans: [ContextMenuService],
-    dependsOn: [MenuCoreModule],
-};
-
-/**
- * @feature Accessories -> Column Menu
- */
-export const MenuApiModule: _ModuleWithApi<_MenuGridApi> = {
-    ...baseEnterpriseModule('MenuApiModule'),
     apiFunctions: {
         showContextMenu,
-        showColumnChooser,
-        hideColumnChooser,
     },
-    dependsOn: [ColumnChooserModule, ContextMenuModule, CommunityMenuApiModule],
+    dependsOn: [MenuCoreModule],
 };
 
 /**
@@ -122,5 +116,5 @@ export const MenuApiModule: _ModuleWithApi<_MenuGridApi> = {
  */
 export const MenuModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MenuModule'),
-    dependsOn: [ColumnMenuModule, ColumnChooserModule, ContextMenuModule, MenuApiModule],
+    dependsOn: [ColumnMenuModule, ColumnChooserModule, ContextMenuModule],
 };

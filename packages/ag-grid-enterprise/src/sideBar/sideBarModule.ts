@@ -22,17 +22,9 @@ import { SideBarService } from './sideBarService';
  * @feature Accessories -> Side Bar
  * @gridOption sideBar
  */
-export const SideBarCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SideBarCoreModule'),
+export const SideBarModule: _ModuleWithApi<_SideBarGridApi<any>> = {
+    ...baseEnterpriseModule('SideBarModule'),
     beans: [SideBarService],
-    dependsOn: [EnterpriseCoreModule, HorizontalResizeModule],
-};
-
-/**
- * @feature Accessories -> Side Bar
- */
-export const SideBarApiModule: _ModuleWithApi<_SideBarGridApi<any>> = {
-    ...baseEnterpriseModule('SideBarApiModule'),
     apiFunctions: {
         isSideBarVisible,
         setSideBarVisible,
@@ -45,7 +37,7 @@ export const SideBarApiModule: _ModuleWithApi<_SideBarGridApi<any>> = {
         getToolPanelInstance,
         getSideBar,
     },
-    dependsOn: [SideBarCoreModule],
+    dependsOn: [EnterpriseCoreModule, HorizontalResizeModule],
 };
 
 /**
@@ -54,12 +46,4 @@ export const SideBarApiModule: _ModuleWithApi<_SideBarGridApi<any>> = {
 export const SideBarSharedModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SideBarSharedModule'),
     beans: [ToolPanelColDefService],
-};
-
-/**
- * @feature Accessories -> Side Bar
- */
-export const SideBarModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SideBarModule'),
-    dependsOn: [SideBarCoreModule, SideBarApiModule],
 };

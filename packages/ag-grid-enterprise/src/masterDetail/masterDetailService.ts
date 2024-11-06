@@ -2,6 +2,7 @@ import type {
     BeanCollection,
     BeanName,
     BeforeRefreshModelEvent,
+    DetailGridInfo,
     IColsService,
     IMasterDetailService,
     IRowModel,
@@ -9,9 +10,10 @@ import type {
     RowCtrl,
     RowNodeTransaction,
 } from 'ag-grid-community';
-import { RowNode, _exists } from 'ag-grid-community';
 import {
     BeanStub,
+    RowNode,
+    _exists,
     _getClientSideRowModel,
     _isClientSideRowModel,
     _isServerSideRowModel,
@@ -20,6 +22,8 @@ import {
 
 export class MasterDetailService extends BeanStub implements NamedBean, IMasterDetailService {
     beanName: BeanName = 'masterDetailSvc' as const;
+
+    public store: { [id: string]: DetailGridInfo | undefined } = {};
 
     private enabled: boolean;
     private rowModel: IRowModel;
@@ -185,5 +189,10 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         rowCtrl.addDestroyFunc(resizeObserverDestroyFunc);
 
         checkRowSizeFunc();
+    }
+
+    public override destroy(): void {
+        this.store = {};
+        super.destroy();
     }
 }

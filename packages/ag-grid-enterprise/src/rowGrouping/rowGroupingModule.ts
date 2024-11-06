@@ -22,9 +22,16 @@ import {
  * @feature Row Grouping
  * @colDef enableRowGroup, rowGroup, rowGroupIndex
  */
-export const RowGroupingCoreModule: _ModuleWithoutApi = {
+export const RowGroupingCoreModule: _ModuleWithApi<_RowGroupingGridApi> = {
     ...baseEnterpriseModule('RowGroupingCoreModule'),
     beans: [GroupStage, GroupHideOpenParentsService],
+    apiFunctions: {
+        setRowGroupColumns,
+        removeRowGroupColumns,
+        addRowGroupColumns,
+        getRowGroupColumns,
+        moveRowGroupColumn,
+    },
     dependsOn: [EnterpriseCoreModule, AggregationModule, GroupColumnModule],
 };
 
@@ -45,21 +52,6 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
         panelDelimiterRtl: 'small-left',
     },
     dependsOn: [RowGroupingCoreModule, PopupModule],
-};
-
-/**
- * @feature Row Grouping
- */
-export const RowGroupingApiModule: _ModuleWithApi<_RowGroupingGridApi> = {
-    ...baseEnterpriseModule('RowGroupingApiModule'),
-    apiFunctions: {
-        setRowGroupColumns,
-        removeRowGroupColumns,
-        addRowGroupColumns,
-        getRowGroupColumns,
-        moveRowGroupColumn,
-    },
-    dependsOn: [RowGroupingCoreModule],
 };
 
 /**
@@ -87,7 +79,6 @@ export const RowGroupingNoPivotModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RowGroupingNoPivotModule'),
     dependsOn: [
         RowGroupingCoreModule,
-        RowGroupingApiModule,
         StickyRowModule,
         RowGroupingPanelModule,
         ClientSideRowModelHierarchyModule,

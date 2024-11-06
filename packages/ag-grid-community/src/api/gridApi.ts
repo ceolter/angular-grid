@@ -638,12 +638,6 @@ export interface _DragGridApi {
 }
 
 export interface _EditGridApi<TData> {
-    /** Reverts the last cell edit. */
-    undoCellEditing(): void;
-
-    /** Re-applies the most recently undone cell edit. */
-    redoCellEditing(): void;
-
     /** Returns the list of active cell editor instances. Optionally provide parameters to restrict to certain columns / row nodes. */
     getCellEditorInstances(params?: GetCellEditorInstancesParams<TData>): ICellEditor[];
 
@@ -655,6 +649,14 @@ export interface _EditGridApi<TData> {
 
     /** Start editing the provided cell. If another cell is editing, the editing will be stopped in that other cell. */
     startEditingCell(params: StartEditingCellParams): void;
+}
+
+export interface _UndoRedoGridApi {
+    /** Reverts the last cell edit. */
+    undoCellEditing(): void;
+
+    /** Re-applies the most recently undone cell edit. */
+    redoCellEditing(): void;
 
     /** Returns current number of available cell edit undo operations. */
     getCurrentUndoSize(): number;
@@ -1041,12 +1043,14 @@ export interface _ServerSideRowModelGridApi<TData> {
     getServerSideGroupLevelState(): ServerSideGroupLevelState[];
 }
 
-export interface _MenuGridApi {
+export interface _ContextMenuGridApi {
     /**
      * Displays the AG Grid context menu
      */
     showContextMenu(params?: IContextMenuParams): void;
+}
 
+export interface _ColumnChooserGridApi {
     /** Show the column chooser. */
     showColumnChooser(params?: ColumnChooserParams): void;
 
@@ -1182,6 +1186,7 @@ export interface GridApi<TData = any>
         _ColumnGroupGridApi,
         _DragGridApi,
         _EditGridApi<TData>,
+        _UndoRedoGridApi,
         _FilterGridApi,
         _ColumnFilterGridApi,
         _QuickFilterGridApi,
@@ -1198,7 +1203,8 @@ export interface GridApi<TData = any>
         _PivotGridApi<TData>,
         _CellSelectionGridApi,
         _ServerSideRowModelGridApi<TData>,
-        _MenuGridApi,
+        _ContextMenuGridApi,
+        _ColumnChooserGridApi,
         _MasterDetailGridApi,
         _ExcelExportGridApi,
         _ClipboardGridApi,

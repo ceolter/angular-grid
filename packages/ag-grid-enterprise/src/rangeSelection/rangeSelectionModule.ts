@@ -1,5 +1,5 @@
 import type { _CellSelectionGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { DragModule, KeyboardNavigationCoreModule } from 'ag-grid-community';
+import { DragModule, KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -13,25 +13,17 @@ import { RangeService } from './rangeService';
  * @feature Selection -> Cell Selection
  * @gridOption cellSelection
  */
-export const CellSelectionCoreModule: _ModuleWithoutApi = {
+export const CellSelectionCoreModule: _ModuleWithApi<_CellSelectionGridApi> = {
     ...baseEnterpriseModule('CellSelectionCoreModule'),
     beans: [RangeService],
-    dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule, DragModule],
-    css: [rangeSelectionCSS],
-};
-
-/**
- * @feature Selection -> Cell Selection
- */
-export const CellSelectionApiModule: _ModuleWithApi<_CellSelectionGridApi> = {
-    ...baseEnterpriseModule('CellSelectionApiModule'),
     apiFunctions: {
         getCellRanges,
         addCellRange,
         clearRangeSelection,
         clearCellSelection: clearRangeSelection,
     },
-    dependsOn: [CellSelectionCoreModule],
+    dependsOn: [EnterpriseCoreModule, KeyboardNavigationModule, DragModule],
+    css: [rangeSelectionCSS],
 };
 
 /**
@@ -55,12 +47,7 @@ export const CellSelectionRangeHandleModule: _ModuleWithoutApi = {
  */
 export const CellSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('CellSelectionModule'),
-    dependsOn: [
-        CellSelectionCoreModule,
-        CellSelectionApiModule,
-        CellSelectionFillHandleModule,
-        CellSelectionRangeHandleModule,
-    ],
+    dependsOn: [CellSelectionCoreModule, CellSelectionFillHandleModule, CellSelectionRangeHandleModule],
 };
 
 // legacy name

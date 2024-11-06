@@ -1,7 +1,6 @@
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { baseCommunityModule } from '../interfaces/iModule';
-import { destroy, getGridId, getGridOption, isDestroyed, setGridOption, updateGridOptions } from './coreApi';
-import type { _CoreGridApi, _RowGridApi, _ScrollGridApi } from './gridApi';
+import type { _RowGridApi, _ScrollGridApi } from './gridApi';
 import {
     addRenderedRowListener,
     forEachNode,
@@ -21,22 +20,6 @@ import {
     getHorizontalPixelRange,
     getVerticalPixelRange,
 } from './scrollApi';
-
-/**
- * Included by default
- * @internal
- */
-export const CoreApiModule: _ModuleWithApi<_CoreGridApi> = {
-    ...baseCommunityModule('CoreApiModule'),
-    apiFunctions: {
-        getGridId,
-        destroy,
-        isDestroyed,
-        getGridOption,
-        setGridOption,
-        updateGridOptions,
-    },
-};
 
 /**
  * @feature Rows

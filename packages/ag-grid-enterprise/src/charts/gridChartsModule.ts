@@ -32,11 +32,19 @@ import { gridChartsModuleCSS } from './gridChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
 /**
+ * @internal
+ */
+export const GridChartsEnterpriseFeaturesModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('GridChartsEnterpriseFeaturesModule'),
+    beans: [EnterpriseChartProxyFactory, AdvancedSettingsMenuFactory],
+};
+
+/**
  * @feature Integrated Charts
  * @gridOption enableCharts
  */
-export const GridChartsCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GridChartsCoreModule'),
+export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
+    ...baseEnterpriseModule('GridChartsModule'),
     validate: () => {
         return validGridChartsVersion({
             gridVersion: GRID_VERSION,
@@ -66,15 +74,6 @@ export const GridChartsCoreModule: _ModuleWithoutApi = {
         // next in Integrated Charts settings tool panel theme switcher
         chartsThemeNext: 'next',
     },
-    dependsOn: [CellSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
-    css: [gridChartsModuleCSS],
-};
-
-/**
- * @feature Integrated Charts
- */
-export const GridChartsApiModule: _ModuleWithApi<_GridChartsGridApi> = {
-    ...baseEnterpriseModule('GridChartsApiModule'),
     apiFunctions: {
         getChartModels,
         getChartRef,
@@ -88,21 +87,13 @@ export const GridChartsApiModule: _ModuleWithApi<_GridChartsGridApi> = {
         updateChart,
         restoreChart,
     },
-    dependsOn: [GridChartsCoreModule],
-};
-
-/**
- * @feature Integrated Charts
- */
-export const GridChartsEnterpriseFeaturesModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GridChartsEnterpriseFeaturesModule'),
-    beans: [EnterpriseChartProxyFactory, AdvancedSettingsMenuFactory],
-};
-
-/**
- * @feature Integrated Charts
- */
-export const GridChartsModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GridChartsModule'),
-    dependsOn: [GridChartsCoreModule, GridChartsApiModule, GridChartsEnterpriseFeaturesModule],
+    dependsOn: [
+        CellSelectionModule,
+        EnterpriseCoreModule,
+        DragAndDropModule,
+        PopupModule,
+        MenuItemModule,
+        GridChartsEnterpriseFeaturesModule,
+    ],
+    css: [gridChartsModuleCSS],
 };

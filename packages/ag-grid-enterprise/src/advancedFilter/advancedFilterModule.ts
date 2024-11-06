@@ -1,4 +1,4 @@
-import type { _AdvancedFilterGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import type { _AdvancedFilterGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { DragAndDropModule, FilterCoreModule, FilterValueModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -17,8 +17,8 @@ import { AdvancedFilterService } from './advancedFilterService';
  * @feature Filtering -> Advanced Filter
  * @gridOption enableAdvanced Filter
  */
-export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AdvancedFilterCoreModule'),
+export const AdvancedFilterModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
+    ...baseEnterpriseModule('AdvancedFilterModule'),
     beans: [AdvancedFilterService, AdvancedFilterExpressionService],
     icons: {
         // Builder button in Advanced Filter
@@ -40,28 +40,12 @@ export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
         // remove for rich select editor pills
         richSelectRemove: 'cancel',
     },
-    dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
-    css: [advancedFilterCSS],
-};
-
-/**
- * @feature Filtering -> Advanced Filter
- */
-export const AdvancedFilterApiModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
-    ...baseEnterpriseModule('AdvancedFilterApiModule'),
     apiFunctions: {
         getAdvancedFilterModel,
         setAdvancedFilterModel,
         showAdvancedFilterBuilder,
         hideAdvancedFilterBuilder,
     },
-    dependsOn: [AdvancedFilterCoreModule],
-};
-
-/**
- * @feature Filtering -> Advanced Filter
- */
-export const AdvancedFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AdvancedFilterModule'),
-    dependsOn: [AdvancedFilterCoreModule, AdvancedFilterApiModule],
+    dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
+    css: [advancedFilterCSS],
 };
