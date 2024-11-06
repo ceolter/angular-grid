@@ -68,7 +68,6 @@ body {
         }
 
         @media screen and (min-width: $breakpoint-hero-large) {
-            font-size: min(1.9vw, 30px);
             max-width: unset;
         }
     }
@@ -78,6 +77,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0 $spacing-size-16;
+    padding-bottom: $spacing-size-8;
 
     @media screen and (min-width: $breakpoint-hero-large) {
         flex-direction: row;
@@ -86,6 +86,7 @@ body {
 
 .heroGrid {
     display: flex;
+
     flex-direction: row-reverse;
     height: 320px;
     overflow: hidden;
@@ -113,10 +114,9 @@ body {
 }
 
 .homepageFrameworks {
-    background-color: var(--color-util-brand-100);
+    background-color: var(--color-brand-500);
     padding-top: $spacing-size-4;
     padding-bottom: $spacing-size-12;
-
     @media screen and (min-width: 640px) {
         padding-top: $spacing-size-12;
     }
@@ -144,12 +144,10 @@ body {
 }
 
 .frameworksLabel {
+    color: var(--color-white);
+    font-weight: var(--text-bold);
     @media screen and (min-width: 1020px) {
         --font-size: var(--text--fs-xl);
-    }
-
-    #{$selector-darkmode} & {
-        color: var(--color-text-primary);
     }
 }
 
@@ -537,4 +535,70 @@ body {
         transform-origin: center left;
         transform: translate(-30px, 0) scale(0.5);
     }
+}
+
+.heroButton {
+    width: fit-content;
+    background-color: var(--color-brand-200);
+}
+
+.heroSectionversionTagContainer {
+    display: flex;
+    border-radius: var(--radius-4xl);
+    justify-content: left;
+    align-items: left;
+    cursor: pointer;
+    align-self: left;
+    background-color: var(--color-brand-200);
+    font-weight: var(--text-bold);
+    width: fit-content;
+    gap: $spacing-size-2;
+    padding: $spacing-size-1 $spacing-size-3;
+    margin-bottom: $spacing-size-6;
+    #{$selector-darkmode} & {
+        background-color: var(--color-bg-secondary);
+    }
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    padding: $spacing-size-2 $spacing-size-2;
+    font-weight: 500;
+
+    div {
+        display: flex;
+        gap: 8px;
+    }
+    :not(.active) {
+        opacity: 0.5;
+    }
+    img {
+        height: 20px;
+    }
+}
+.frameworkSelector {
+    background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-brand-500) 90%);
+    width: 400px;
+    border-radius: $spacing-size-2;
+    color: var(--color-white);
+}
+
+.frameworkCode {
+    background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-brand-500) 80%);
+    font-family: var(--text-monospace-font-family);
+    font-size: var(--text-fs-sm);
+    padding: $spacing-size-3;
+    border-bottom-left-radius: $spacing-size-2;
+    border-bottom-right-radius: $spacing-size-2;
+    display: flex;
+    justify-content: space-between;
+}
+
+.copyToClipboardIcon {
+    fill: var(--color-white);
+    height: 20px;
+    width: 20px;
 }

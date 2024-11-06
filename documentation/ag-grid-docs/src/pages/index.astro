@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
 import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
@@ -9,6 +10,9 @@ import HeroGrid from '@components/hero-grid/HeroGrid.astro';
 import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { Image } from 'astro:assets';
+import { Icon } from '@ag-website-shared/components/icon/Icon';
+
+const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 
 const frameworksData = [
     {
@@ -53,10 +57,23 @@ const frameworksData = [
     <div class={styles.homepageHero}>
         <section class:list={[styles.heroInner, 'layout-max-width-small']}>
             <section class={styles.heroHeadings}>
-                <h1 class="text-xl">The&nbsp;Best&nbsp;JavaScript Grid&nbsp;in&nbsp;the&nbsp;World</h1>
-                <h2 class="text-base normal-weight-text">
-                    The professional choice for developers building enterprise&nbsp;applications
+                <a
+                    href={urlWithBaseUrl('./whats-new')}
+                    class:list={[styles.heroSectionversionTagContainer, 'plausible-event-name=react-table-whats-new']}
+                >
+                    <span class={styles.heroSectionversion}>v{versionsData[0].version}</span>
+                    <span class={styles.heroSectionfeatureHighlight}>
+                        {versionsData[0].landingPageHighlight}
+                    </span>
+                </a>
+                <h1 class="text-xl">The&nbsp;Best&nbsp;JavaScript Data Grid in the World</h1>
+                <h2 class="text-fs-xs">
+                    Fully customisable and Framework agnostic Data Grids that handle millions of cells out of the box,
+                    for free.
                 </h2>
+                <a href="/react-data-grid/getting-started/" class:list={[styles.heroButton, 'button-secondary']}
+                    >Get started
+                </a>
             </section>
             <section class={styles.heroGrid}>
                 <HeroGrid />
@@ -66,9 +83,20 @@ const frameworksData = [
 
     <div class={styles.homepageFrameworks}>
         <div class:list={[styles.frameworksInner, 'layout-max-width-small']}>
-            <span class:list={[styles.frameworksLabel, 'text-secondary']}>Get&nbsp;started</span>
-
-            <FrameworkSelector client:load data={frameworksData} isFullWidth />
+            <div class={styles.frameworkSelector}>
+                <div class={styles.tabs}>
+                    <div class={styles.active}>
+                        <img src={urlWithBaseUrl('images/fw-logos/react.png')} alt="" />React
+                    </div>
+                    <div><img src={urlWithBaseUrl('images/fw-logos/angular.png')} alt="" />Angular</div>
+                    <div><img src={urlWithBaseUrl('images/fw-logos/vue.png')} alt="" />Vue3</div>
+                    <div><img src={urlWithBaseUrl('images/fw-logos/js.png')} alt="" />Javascript</div>
+                </div>
+                <div class={styles.frameworkCode}>
+                    <div>npm install ag-grid-react</div>
+                    <Icon svgClasses={styles.copyToClipboardIcon} name="copy" />
+                </div>
+            </div>
         </div>
     </div>
 

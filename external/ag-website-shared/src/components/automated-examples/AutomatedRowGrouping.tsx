@@ -139,11 +139,10 @@ export function AutomatedRowGrouping({
     return (
         <>
             <header className={styles.sectionHeader}>
-                <h2 className="text-3xl">Feature Packed, Incredible Performance</h2>
+                <h2 className="text-3xl">The Fastest Data Grid In The World</h2>
                 <p className="text-xl">
-                    Millions of rows, thousands of updates per second? No problem!
-                    <br />
-                    Out of the box performance that can handle any data you can throw at it.
+                    Handle millions of rows, and thousands of updates per second out of the box, without compromising on
+                    performance
                 </p>
             </header>
 

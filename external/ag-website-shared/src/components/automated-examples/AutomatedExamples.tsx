@@ -57,10 +57,10 @@ export const AutomatedExamples: FunctionComponent = () => {
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
                         >
-                            <h2 className="text-3xl">Fully Integrated Charting</h2>
+                            <h2 className="text-3xl">Standalone JavaScript Charting Library</h2>
                             <p className="text-xl">
-                                With a complete suite of integrated charting tools, your users can visualise their data
-                                any way they choose.
+                                Choose from 20+ chart types to visualise any data, 100% free and open source. Use it as
+                                a standalone library that is also fully compatible with AG Grid
                             </p>
                         </AutomatedIntegratedCharts>
                     </div>
