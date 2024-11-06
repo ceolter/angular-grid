@@ -17,7 +17,7 @@ function getToolPanelCompDetails(
     toolPanelDef: ToolPanelDef,
     params: WithoutGridCommon<IToolPanelParams>
 ): UserCompDetails<IToolPanelComp> | undefined {
-    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, undefined, params, true)!;
+    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, undefined, params, true);
 }
 
 const ToolPanelComponent: ComponentType = {
