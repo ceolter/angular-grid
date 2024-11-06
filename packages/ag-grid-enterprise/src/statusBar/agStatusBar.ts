@@ -19,7 +19,7 @@ function getStatusPanelCompDetails(
     def: StatusPanelDef,
     params: WithoutGridCommon<IStatusPanelParams>
 ): UserCompDetails<IStatusPanelComp> | undefined {
-    return userCompFactory.getCompDetails(def, StatusPanelComponent, undefined, params, true)!;
+    return userCompFactory.getCompDetails(def, StatusPanelComponent, undefined, params, true);
 }
 
 const StatusPanelComponent: ComponentType = {

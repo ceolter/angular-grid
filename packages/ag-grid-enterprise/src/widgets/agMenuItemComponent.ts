@@ -56,7 +56,7 @@ function getMenuItemCompDetails(
     def: MenuItemDef,
     params: WithoutGridCommon<IMenuItemParams>
 ): UserCompDetails<IMenuItemComp> | undefined {
-    return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true)!;
+    return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params);
 }
 
 const MenuItemComponent: ComponentType = {

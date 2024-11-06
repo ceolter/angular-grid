@@ -99,6 +99,9 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         this.gridOptions = beans.gridOptions;
     }
 
+    /**
+     * @param mandatory if `defaultName` is `undefined`, will display warning if this is `true`. Unused otherwise
+     */
     public getCompDetailsFromGridOptions(
         type: ComponentType,
         defaultName: string | undefined,
@@ -108,6 +111,9 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         return this.getCompDetails(this.gridOptions, type, defaultName, params, mandatory);
     }
 
+    /**
+     * @param mandatory if `defaultName` is `undefined`, will display warning if this is `true`. Unused otherwise
+     */
     public getCompDetails<TDefinition, TComp extends IComponent<any>>(
         defObject: TDefinition,
         type: ComponentType,
@@ -148,10 +154,12 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         }
 
         if (!jsComp && !fwComp) {
-            if (mandatory) {
-                _error(50, { compName: compName ?? defaultName });
+            if (mandatory && !defaultName) {
+                // expecting the user to provide a component with this name
+                _error(50, { compName });
             } else if (defaultName && !this.beans.validation) {
-                // validation service will have already warned about this with the correct module name
+                // Grid should be providing this component.
+                // Validation service will have already warned about this with the correct module name if it was present.
                 _error(146, { comp: defaultName });
             }
             return;
