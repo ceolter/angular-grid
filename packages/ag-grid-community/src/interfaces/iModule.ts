@@ -133,6 +133,8 @@ type CommunityModuleName =
     | 'RowAutoHeightModule'
     | 'RowDragModule'
     | 'RowNodeBlockModule'
+    | 'RowSelectionApiModule'
+    | 'RowSelectionCoreModule'
     | 'RowSelectionModule'
     | 'RowStyleModule'
     | 'ScrollApiModule'

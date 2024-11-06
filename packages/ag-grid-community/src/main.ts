@@ -1037,7 +1037,7 @@ export {
     AllCommunityEditorsModule,
 } from './edit/editModule';
 export { StickyRowModule } from './rendering/features/stickyRowModule';
-export { RowSelectionModule } from './selection/rowSelectionModule';
+export { RowSelectionCoreModule, RowSelectionApiModule, RowSelectionModule } from './selection/rowSelectionModule';
 export {
     CsrmSsrmSharedApiModule as _CsrmSsrmSharedApiModule,
     SsrmInfiniteSharedApiModule as _SsrmInfiniteSharedApiModule,

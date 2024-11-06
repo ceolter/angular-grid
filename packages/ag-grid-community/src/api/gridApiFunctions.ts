@@ -73,7 +73,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
     ...mod<_StateGridApi>('StateModule', {
         getState: 0,
     }),
-    ...mod<_RowSelectionGridApi<any>>('RowSelectionModule', {
+    ...mod<_RowSelectionGridApi<any>>('RowSelectionApiModule', {
         setNodesSelected: 0,
         selectAll: 0,
         deselectAll: 0,
