@@ -5,7 +5,6 @@
     width: 100%;
     max-width: 1500px;
     justify-content: space-between;
-    padding: $spacing-size-5;
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {
         flex-direction: column;
