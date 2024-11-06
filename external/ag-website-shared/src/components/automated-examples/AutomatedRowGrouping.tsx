@@ -138,14 +138,6 @@ export function AutomatedRowGrouping({
 
     return (
         <>
-            <header className={styles.sectionHeader}>
-                <h2 className="text-3xl">The Fastest Data Grid In The World</h2>
-                <p className="text-xl">
-                    Handle millions of rows, and thousands of updates per second out of the box, without compromising on
-                    performance
-                </p>
-            </header>
-
             <div
                 ref={gridRef}
                 className={classNames('automated-row-grouping-grid', {
