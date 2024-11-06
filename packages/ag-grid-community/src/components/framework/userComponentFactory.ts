@@ -154,7 +154,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         }
 
         if (!jsComp && !fwComp) {
-            if (mandatory && !defaultName) {
+            if (mandatory && compName !== defaultName) {
                 // expecting the user to provide a component with this name
                 _error(50, { compName });
             } else if (defaultName && !this.beans.validation) {

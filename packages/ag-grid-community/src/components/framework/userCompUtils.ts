@@ -106,7 +106,7 @@ export function _getDragAndDropImageCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<IDragAndDropImageParams>
 ): UserCompDetails<IDragAndDropImageComponent> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(DragAndDropImageComponent, 'agDragAndDropImage', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(DragAndDropImageComponent, 'agDragAndDropImage', params, true);
 }
 
 export function _getHeaderCompDetails(
@@ -131,28 +131,28 @@ export function _getFullWidthCellRendererDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ICellRendererParams>
 ): UserCompDetails<ICellRendererComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(FullWidth, undefined, params, true)!;
+    return userCompFactory.getCompDetailsFromGridOptions(FullWidth, undefined, params, true);
 }
 
 export function _getFullWidthLoadingCellRendererDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ICellRendererParams>
 ): UserCompDetails<ILoadingCellRendererComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(FullWidthLoading, 'agLoadingCellRenderer', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(FullWidthLoading, 'agLoadingCellRenderer', params, true);
 }
 
 export function _getFullWidthGroupCellRendererDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ICellRendererParams>
 ): UserCompDetails<ICellRendererComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(FullWidthGroup, 'agGroupRowRenderer', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(FullWidthGroup, 'agGroupRowRenderer', params, true);
 }
 
 export function _getFullWidthDetailCellRendererDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ICellRendererParams>
 ): UserCompDetails<ICellRendererComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(FullWidthDetail, 'agDetailCellRenderer', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(FullWidthDetail, 'agDetailCellRenderer', params, true);
 }
 // CELL RENDERER
 
@@ -182,7 +182,7 @@ export function _getLoadingCellRendererDetails(
     def: ColDef,
     params: WithoutGridCommon<ICellRendererParams>
 ): UserCompDetails<ILoadingCellRendererComp> | undefined {
-    return userCompFactory.getCompDetails(def, LoadingCellRendererComponent, 'agSkeletonCellRenderer', params);
+    return userCompFactory.getCompDetails(def, LoadingCellRendererComponent, 'agSkeletonCellRenderer', params, true);
 }
 // CELL EDITOR
 
@@ -191,7 +191,7 @@ export function _getCellEditorDetails(
     def: ColDef,
     params: WithoutGridCommon<ICellEditorParams>
 ): UserCompDetails<ICellEditorComp> | undefined {
-    return userCompFactory.getCompDetails(def, CellEditorComponent, 'agCellEditor', params);
+    return userCompFactory.getCompDetails(def, CellEditorComponent, 'agCellEditor', params, true);
 }
 // FILTER
 
@@ -204,35 +204,35 @@ export function _getFilterDetails(
     params: WithoutGridCommon<IFilterParams>,
     defaultFilter: string
 ): UserCompDetails<IFilterComp> | undefined {
-    return userCompFactory.getCompDetails(def, FilterComponent, defaultFilter, params);
+    return userCompFactory.getCompDetails(def, FilterComponent, defaultFilter, params, true);
 }
 
 export function _getDateCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<IDateParams>
 ): UserCompDetails<IDateComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(DateComponent, 'agDateInput', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(DateComponent, 'agDateInput', params, true);
 }
 
 export function _getLoadingOverlayCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ILoadingOverlayParams>
 ): UserCompDetails<ILoadingOverlayComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(LoadingOverlayComponent, 'agLoadingOverlay', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(LoadingOverlayComponent, 'agLoadingOverlay', params, true);
 }
 
 export function _getNoRowsOverlayCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<INoRowsOverlayParams>
 ): UserCompDetails<INoRowsOverlayComp> | undefined {
-    return userCompFactory.getCompDetailsFromGridOptions(NoRowsOverlayComponent, 'agNoRowsOverlay', params)!;
+    return userCompFactory.getCompDetailsFromGridOptions(NoRowsOverlayComponent, 'agNoRowsOverlay', params, true);
 }
 
 export function _getTooltipCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<ITooltipParams>
 ): UserCompDetails<ITooltipComp> | undefined {
-    return userCompFactory.getCompDetails(params.colDef!, TooltipComponent, 'agTooltipComponent', params)!;
+    return userCompFactory.getCompDetails(params.colDef!, TooltipComponent, 'agTooltipComponent', params, true);
 }
 
 /**
