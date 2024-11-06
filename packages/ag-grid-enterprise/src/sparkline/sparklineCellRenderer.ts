@@ -4,8 +4,6 @@ import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
 
-import { needsResize, sizeValid, transformData } from './sparklineUtil';
-
 export class SparklineCellRenderer extends Component implements ICellRenderer {
     private readonly eSparkline: HTMLElement = RefPlaceholder;
     private sparklineInstance?: AgChartInstance<any>;
@@ -18,48 +16,35 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     public init(params: ISparklineCellRendererParams): void {
-        const unsubscribeFromResize = _observeResize(this.beans, this.getGui(), () => {
-            this.updateSparkline(params);
-        });
+        const unsubscribeFromResize = _observeResize(this.beans, this.getGui(), () => this.refresh(params));
         this.addDestroyFunc(() => unsubscribeFromResize());
     }
 
-    private updateSparkline(params?: ISparklineCellRendererParams): boolean {
+    public refresh(params?: ISparklineCellRendererParams): boolean {
         const { clientWidth: width, clientHeight: height } = this.getGui();
 
-        if (sizeValid(width, height)) {
-            if (!this.sparklineInstance && params) {
-                const options = {
-                    background: { visible: false },
-                    container: this.eSparkline,
-                    width,
-                    height,
-                    ...params.sparklineOptions,
-                } as AgSparklineOptions;
+        if (!this.sparklineInstance && params && width > 0 && height) {
+            this.sparklineOptions = {
+                background: { visible: false },
+                container: this.eSparkline,
+                width,
+                height,
+                ...params.sparklineOptions,
+                data: params.value,
+            } as AgSparklineOptions;
 
-                transformData((this.sparklineOptions = options), params);
+            // create new sparkline
+            this.sparklineInstance = AgCharts.__createSparkline(this.sparklineOptions);
+            return true;
+        } else if (this.sparklineInstance) {
+            const data = params?.value;
+            this.sparklineOptions.width = width;
+            this.sparklineOptions.height = height;
+            this.sparklineOptions.data = data;
 
-                // create new sparkline
-                this.sparklineInstance = AgCharts.__createSparkline(options);
-                return true;
-            } else if (this.sparklineInstance && needsResize(width, height, this.sparklineOptions)) {
-                this.sparklineOptions.width = width;
-                this.sparklineOptions.height = height;
+            this.sparklineInstance.updateDelta(this.sparklineOptions);
 
-                transformData(this.sparklineOptions, params);
-
-                this.sparklineInstance?.updateDelta({ width, height, data: this.sparklineOptions.data });
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public refresh(params: ISparklineCellRendererParams): boolean {
-        if (this.sparklineInstance) {
-            transformData(this.sparklineOptions, params);
-
-            return this.updateSparkline(params);
+            return true;
         }
         return false;
     }

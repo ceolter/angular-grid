@@ -10,9 +10,12 @@ import { SortService } from './sortService';
  * @feature Rows -> Row Sorting
  * @colDef sortable, sort, sortIndex
  */
-export const SortCoreModule: _ModuleWithoutApi = {
+export const SortCoreModule: _ModuleWithApi<_SortGridApi> = {
     ...baseCommunityModule('SortCoreModule'),
     beans: [SortService, RowNodeSorter],
+    apiFunctions: {
+        onSortChanged,
+    },
 };
 
 /**
@@ -37,18 +40,7 @@ export const SortIndicatorCompModule: _ModuleWithoutApi = {
 /**
  * @feature Rows -> Row Sorting
  */
-export const SortApiModule: _ModuleWithApi<_SortGridApi> = {
-    ...baseCommunityModule('SortApiModule'),
-    apiFunctions: {
-        onSortChanged,
-    },
-    dependsOn: [SortCoreModule],
-};
-
-/**
- * @feature Rows -> Row Sorting
- */
 export const SortModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SortModule'),
-    dependsOn: [SortApiModule, SortIndicatorCompModule],
+    dependsOn: [SortCoreModule, SortIndicatorCompModule],
 };

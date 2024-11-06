@@ -1,6 +1,6 @@
 import type { _KeyboardNavigationGridApi } from '../api/gridApi';
 import { baseCommunityModule } from '../interfaces/iModule';
-import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
+import type { _ModuleWithApi } from '../interfaces/iModule';
 import { CellNavigationService } from './cellNavigationService';
 import { HeaderNavigationService } from './headerNavigationService';
 import {
@@ -16,16 +16,9 @@ import { NavigationService } from './navigationService';
 /**
  * @feature Interactivity -> Keyboard Navigation
  */
-export const KeyboardNavigationCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('KeyboardNavigationCoreModule'),
+export const KeyboardNavigationModule: _ModuleWithApi<_KeyboardNavigationGridApi> = {
+    ...baseCommunityModule('KeyboardNavigationModule'),
     beans: [NavigationService, CellNavigationService, HeaderNavigationService],
-};
-
-/**
- * @feature Interactivity -> Keyboard Navigation
- */
-export const KeyboardNavigationApiModule: _ModuleWithApi<_KeyboardNavigationGridApi> = {
-    ...baseCommunityModule('KeyboardNavigationApiModule'),
     apiFunctions: {
         getFocusedCell,
         clearFocusedCell,
@@ -34,13 +27,4 @@ export const KeyboardNavigationApiModule: _ModuleWithApi<_KeyboardNavigationGrid
         tabToNextCell,
         tabToPreviousCell,
     },
-    dependsOn: [KeyboardNavigationCoreModule],
-};
-
-/**
- * @feature Interactivity -> Keyboard Navigation
- */
-export const KeyboardNavigationModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('KeyboardNavigationModule'),
-    dependsOn: [KeyboardNavigationApiModule, KeyboardNavigationCoreModule],
 };

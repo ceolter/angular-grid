@@ -1,5 +1,6 @@
 import { ApiFunctionService } from './api/apiFunctionService';
-import { CoreApiModule } from './api/apiModule';
+import { destroy, getGridId, getGridOption, isDestroyed, setGridOption, updateGridOptions } from './api/coreApi';
+import type { _CoreGridApi } from './api/gridApi';
 import { ColumnModel } from './columns/columnModel';
 import { ColumnNameService } from './columns/columnNameService';
 import { ColumnViewportService } from './columns/columnViewportService';
@@ -13,7 +14,7 @@ import { FocusService } from './focusService';
 import { ScrollVisibleService } from './gridBodyComp/scrollVisibleService';
 import { GridDestroyService } from './gridDestroyService';
 import { GridOptionsService } from './gridOptionsService';
-import type { _ModuleWithoutApi } from './interfaces/iModule';
+import type { _ModuleWithApi } from './interfaces/iModule';
 import { baseCommunityModule } from './interfaces/iModule';
 import { PageBoundsListener } from './pagination/pageBoundsListener';
 import { PageBoundsService } from './pagination/pageBoundsService';
@@ -22,7 +23,7 @@ import { RowRenderer } from './rendering/rowRenderer';
 import { SyncService } from './syncService';
 import { ValueService } from './valueService/valueService';
 
-export const CommunityCoreModule: _ModuleWithoutApi = {
+export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
     ...baseCommunityModule('CommunityCoreModule'),
     beans: [
         GridDestroyService,
@@ -71,5 +72,12 @@ export const CommunityCoreModule: _ModuleWithoutApi = {
         /** @deprecated v33 */
         smallRight: 'small-right',
     },
-    dependsOn: [CoreApiModule],
+    apiFunctions: {
+        getGridId,
+        destroy,
+        isDestroyed,
+        getGridOption,
+        setGridOption,
+        updateGridOptions,
+    },
 };

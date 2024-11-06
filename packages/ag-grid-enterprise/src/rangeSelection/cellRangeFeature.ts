@@ -259,18 +259,22 @@ export class CellRangeFeature implements ICellRangeFeature {
     }
 
     private addSelectionHandle() {
-        const cellRangeType = _last(this.rangeSvc.getCellRanges()).type;
-        const selectionHandleFill = _isFillHandleEnabled(this.beans.gos) && _missing(cellRangeType);
+        const { beans, rangeSvc } = this;
+        const cellRangeType = _last(rangeSvc.getCellRanges()).type;
+        const selectionHandleFill = _isFillHandleEnabled(beans.gos) && _missing(cellRangeType);
         const type = selectionHandleFill ? SelectionHandleType.FILL : SelectionHandleType.RANGE;
 
         if (this.selectionHandle && this.selectionHandle.getType() !== type) {
-            this.selectionHandle = this.beans.context.destroyBean(this.selectionHandle);
+            this.selectionHandle = beans.context.destroyBean(this.selectionHandle);
         }
 
         if (!this.selectionHandle) {
-            this.selectionHandle = this.beans.context.createBean(
-                this.beans.registry.createDynamicBean(type === SelectionHandleType.FILL ? 'fillHandle' : 'rangeHandle')
+            const selectionHandle = beans.registry.createDynamicBean<AgFillHandle | AgRangeHandle>(
+                type === SelectionHandleType.FILL ? 'fillHandle' : 'rangeHandle'
             );
+            if (selectionHandle) {
+                this.selectionHandle = beans.context.createBean(selectionHandle);
+            }
         }
 
         this.selectionHandle?.refresh(this.cellCtrl);

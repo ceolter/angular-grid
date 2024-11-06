@@ -1,4 +1,6 @@
-import type { ColDef, TooltipRendererParams, TooltipRendererResult } from 'ag-grid-community';
+import type { AgSparklineOptions } from 'ag-charts-types';
+
+import type { ColDef } from 'ag-grid-community';
 
 import { ChangeCellRenderer } from '../../utils/grid/changeCellRenderer';
 import { CurrentCellRenderer } from '../../utils/grid/currentCellRenderer';
@@ -17,7 +19,9 @@ export interface Stock {
     timeline: Change[];
 }
 
-const timelineTooltipRenderer = ({ xValue, yValue }: TooltipRendererParams): TooltipRendererResult => {
+const timelineTooltipRenderer = ({ datum, xKey, yKey }: any): any => {
+    const xValue = datum[xKey];
+    const yValue = datum[yKey];
     return {
         title: toTime({ value: xValue }),
         content: toCurrency({ value: yValue }),
@@ -47,19 +51,25 @@ export const columnDefs: ColDef[] = [
         cellRenderer: 'agSparklineCellRenderer',
         cellRendererParams: {
             sparklineOptions: {
-                type: 'column',
+                type: 'bar',
+                direction: 'vertical',
                 xKey: 'time',
                 yKey: 'value',
-                padding: {
-                    top: 10,
-                    bottom: 10,
-                },
-                paddingInner: 0.5,
-                paddingOuter: 0.5,
-                fill: '#65819c',
-                highlightStyle: {
-                    fill: '#94b2d0',
-                    strokeWidth: 0,
+                theme: {
+                    overrides: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                        },
+                        paddingInner: 0.5,
+                        paddingOuter: 0.5,
+                        series: {
+                            bar: {
+                                fill: '#65819c',
+                                strokeWidth: 0,
+                            },
+                        },
+                    },
                 },
                 axis: {
                     type: 'category',
@@ -68,7 +78,7 @@ export const columnDefs: ColDef[] = [
                 tooltip: {
                     renderer: timelineTooltipRenderer,
                 },
-            },
+            } as AgSparklineOptions,
         },
     },
     {

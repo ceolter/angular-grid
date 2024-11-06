@@ -49,7 +49,6 @@ import type { IClipboardService } from '../interfaces/iClipboardService';
 import type { IColsService } from '../interfaces/iColsService';
 import type { IContextMenuService } from '../interfaces/iContextMenu';
 import type { ICsvCreator } from '../interfaces/iCsvCreator';
-import type { IDetailGridApiService } from '../interfaces/iDetailGridApiService';
 import type { IExcelCreator } from '../interfaces/iExcelCreator';
 import type { IExpansionService } from '../interfaces/iExpansionService';
 import type { IFooterService } from '../interfaces/iFooterService';
@@ -268,7 +267,6 @@ export interface CoreBeanCollection {
     pagination?: PaginationService;
     pageBounds: PageBoundsService;
     apiFunctionSvc: ApiFunctionService;
-    detailGridApiSvc?: IDetailGridApiService;
     gridDestroySvc: GridDestroyService;
     expansionSvc?: IExpansionService;
     sideBar?: ISideBarService;
@@ -381,7 +379,6 @@ export type BeanName =
     | 'csvCreator'
     | 'dataTypeSvc'
     | 'visibleCols'
-    | 'detailGridApiSvc'
     | 'dragAndDrop'
     | 'dragSvc'
     | 'editSvc'

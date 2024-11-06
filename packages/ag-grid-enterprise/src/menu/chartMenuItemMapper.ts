@@ -21,7 +21,7 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
     public getChartItems(key: 'pivotChart' | 'chartRange'): MenuItemDef | undefined {
         const isPivot = key === 'pivotChart';
         if (!this.chartSvc) {
-            this.gos.assertModuleRegistered('GridChartsCoreModule', isPivot ? 2 : 3);
+            this.gos.assertModuleRegistered('GridChartsModule', isPivot ? 2 : 3);
             return undefined;
         }
 

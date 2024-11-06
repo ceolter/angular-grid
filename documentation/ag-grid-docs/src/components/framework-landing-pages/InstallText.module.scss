@@ -4,13 +4,14 @@
 }
 
 .copyToClipboardIcon {
-    fill: var(--color-fg-secondary);
+    --icon-color: var(--color-fg-secondary);
+
     width: var(--icon-size);
     height: var(--icon-size);
     padding: 6px;
+    cursor: pointer;
 
     &:hover {
-        cursor: pointer;
-        fill: var(--color-util-brand-400);
+        --icon-color: var(--color-link-hover);
     }
 }

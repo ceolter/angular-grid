@@ -7,11 +7,7 @@ export type { MultiFilter } from './multiFilter/multiFilter';
 export type { SetFilter } from './setFilter/setFilter';
 
 export { EnterpriseCoreModule } from './agGridEnterpriseModule';
-export {
-    AdvancedFilterModule,
-    AdvancedFilterApiModule,
-    AdvancedFilterCoreModule,
-} from './advancedFilter/advancedFilterModule';
+export { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
 export {
     ColumnsToolPanelModule,
     ColumnsToolPanelCoreModule,
@@ -22,36 +18,28 @@ export {
     ColumnChooserModule,
     ColumnMenuModule,
     ContextMenuModule,
-    MenuApiModule,
     MenuCoreModule,
 } from './menu/menuModule';
 export { RichSelectModule } from './richSelect/richSelectModule';
 export { SetFilterModule, SetFilterCoreModule, SetFloatingFilterModule } from './setFilter/setFilterModule';
-export {
-    StatusBarModule,
-    StatusBarApiModule,
-    StatusBarCoreModule,
-    StatusBarSelectionModule,
-} from './statusBar/statusBarModule';
-export { ExcelExportModule, ExcelExportApiModule, ExcelExportCoreModule } from './excelExport/excelExportModule';
+export { StatusBarModule, StatusBarCoreModule, StatusBarSelectionModule } from './statusBar/statusBarModule';
+export { ExcelExportModule } from './excelExport/excelExportModule';
 export { MultiFilterModule, MultiFilterCoreModule, MultiFloatingFilterModule } from './multiFilter/multiFilterModule';
 export { RowGroupingModule } from './rowGrouping/rowGroupingBundleModule';
 export {
     GroupFilterModule,
     GroupFloatingFilterModule,
-    RowGroupingApiModule,
     RowGroupingCoreModule,
     RowGroupingNoPivotModule,
     RowGroupingPanelModule,
 } from './rowGrouping/rowGroupingModule';
-export { SideBarModule, SideBarApiModule, SideBarCoreModule } from './sideBar/sideBarModule';
+export { SideBarModule } from './sideBar/sideBarModule';
 export { ViewportRowModelModule, ViewportRowModelCoreModule } from './viewportRowModel/viewportRowModelModule';
-export { ClipboardModule, ClipboardApiModule, ClipboardCoreModule } from './clipboard/clipboardModule';
+export { ClipboardModule } from './clipboard/clipboardModule';
 export { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
-export { MasterDetailModule, MasterDetailApiModule, MasterDetailCoreModule } from './masterDetail/masterDetailModule';
+export { MasterDetailModule, MasterDetailCoreModule } from './masterDetail/masterDetailModule';
 export {
     CellSelectionModule,
-    CellSelectionApiModule,
     CellSelectionCoreModule,
     CellSelectionFillHandleModule,
     CellSelectionRangeHandleModule,
@@ -77,5 +65,5 @@ export {
 
 // tbd - having these here means all charts will be enterprise
 // once we have independent module imports this issue will go away
-export { GridChartsModule, GridChartsApiModule, GridChartsCoreModule } from './charts/gridChartsModule';
+export { GridChartsModule, GridChartsEnterpriseFeaturesModule } from './charts/gridChartsModule';
 export { GridChartsModule as GridChartsEnterpriseModule } from './charts-enterprise/gridChartsEnterpriseModule';

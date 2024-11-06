@@ -110,13 +110,13 @@ function toConstrainedNum(
  */
 const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
-        sideBar: { module: 'SideBarCoreModule' },
+        sideBar: { module: 'SideBarModule' },
         statusBar: { module: 'StatusBarCoreModule' },
-        enableCharts: { module: 'GridChartsCoreModule' },
+        enableCharts: { module: 'GridChartsModule' },
         getMainMenuItems: { module: 'ColumnMenuModule' },
         getContextMenuItems: { module: 'ContextMenuModule' },
         allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
-        enableAdvancedFilter: { module: 'AdvancedFilterCoreModule' },
+        enableAdvancedFilter: { module: 'AdvancedFilterModule' },
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
             module: 'TreeDataCoreModule',

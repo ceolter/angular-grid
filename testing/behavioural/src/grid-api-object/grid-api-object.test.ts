@@ -168,7 +168,7 @@ describe('ag-grid overlays state', () => {
 
         expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
         // expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('exportDataAsExcel'));
-        // expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('ExcelExportApiModule'));
+        // expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('ExcelExportModule'));
 
         expect(api.exportDataAsExcel()).toBeUndefined();
         expect(consoleErrorSpy).toHaveBeenCalledTimes(1);

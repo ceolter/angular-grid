@@ -71,31 +71,15 @@ export const DragAndDropModule: _ModuleWithoutApi = {
  * @feature Rows -> Row Dragging
  * @colDef rowDrag
  */
-export const RowDragCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowDragCoreModule'),
+export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
+    ...baseCommunityModule('RowDragModule'),
     beans: [RowDragService],
-    dependsOn: [DragAndDropModule],
-};
-
-/**
- * @feature Rows -> Row Dragging
- */
-export const RowDragApiModule: _ModuleWithApi<_DragGridApi> = {
-    ...baseCommunityModule('RowDragApiModule'),
     apiFunctions: {
         addRowDropZone,
         removeRowDropZone,
         getRowDropZoneParams,
     },
-    dependsOn: [RowDragCoreModule],
-};
-
-/**
- * @feature Rows -> Row Dragging
- */
-export const RowDragModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowDragModule'),
-    dependsOn: [RowDragApiModule],
+    dependsOn: [DragAndDropModule],
 };
 
 /**

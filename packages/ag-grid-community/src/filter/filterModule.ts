@@ -3,7 +3,7 @@ import { HeaderFilterCellCtrl } from '../headerRendering/cells/floatingFilter/he
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
-import { CommunityMenuApiModule, SharedMenuModule } from '../misc/menu/sharedMenuModule';
+import { SharedMenuModule } from '../misc/menu/sharedMenuModule';
 import { PopupModule } from '../widgets/popupModule';
 import { columnFiltersCSS } from './column-filters.css-GENERATED';
 import {
@@ -35,22 +35,14 @@ import { QuickFilterService } from './quickFilterService';
 /**
  * @feature Filtering
  */
-export const FilterCoreModule: _ModuleWithoutApi = {
+export const FilterCoreModule: _ModuleWithApi<_FilterGridApi> = {
     ...baseCommunityModule('FilterCoreModule'),
     beans: [FilterManager],
-    css: [columnFiltersCSS],
-};
-
-/**
- * @feature Filtering
- */
-export const FilterApiModule: _ModuleWithApi<_FilterGridApi> = {
-    ...baseCommunityModule('FilterApiModule'),
     apiFunctions: {
         isAnyFilterPresent,
         onFilterChanged,
     },
-    dependsOn: [FilterCoreModule],
+    css: [columnFiltersCSS],
 };
 
 /**
@@ -65,7 +57,7 @@ export const FilterValueModule: _ModuleWithoutApi = {
  * @feature Filtering -> Column Filters
  * @colDef filter
  */
-export const ColumnFilterModule: _ModuleWithoutApi = {
+export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
     ...baseCommunityModule('ColumnFilterModule'),
     beans: [ColumnFilterService],
     icons: {
@@ -73,6 +65,16 @@ export const ColumnFilterModule: _ModuleWithoutApi = {
         filter: 'filter',
         // filter is applied - header (legacy column menu), filter tool panel
         filterActive: 'filter',
+    },
+    apiFunctions: {
+        isColumnFilterPresent,
+        getColumnFilterInstance,
+        destroyFilter,
+        setFilterModel,
+        getFilterModel,
+        getColumnFilterModel,
+        setColumnFilterModel,
+        showColumnFilter,
     },
     dependsOn: [FilterCoreModule, PopupModule, FilterValueModule],
 };
@@ -84,24 +86,6 @@ export const ColumnFilterMenuModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnFilterMenuModule'),
     beans: [FilterMenuFactory],
     dependsOn: [ColumnFilterModule, PopupModule, SharedMenuModule],
-};
-
-/**
- * @feature Filtering -> Column Filters
- */
-export const ColumnFilterApiModule: _ModuleWithApi<_ColumnFilterGridApi> = {
-    ...baseCommunityModule('ColumnFilterApiModule'),
-    apiFunctions: {
-        isColumnFilterPresent,
-        getColumnFilterInstance,
-        destroyFilter,
-        setFilterModel,
-        getFilterModel,
-        getColumnFilterModel,
-        setColumnFilterModel,
-        showColumnFilter,
-    },
-    dependsOn: [ColumnFilterModule, FilterApiModule, CommunityMenuApiModule],
 };
 
 /**
@@ -162,32 +146,16 @@ export const SimpleFloatingFilterModule: _ModuleWithoutApi = {
  * @feature Filtering -> Quick Filter
  * @gridOption quickFilterText
  */
-export const QuickFilterCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('QuickFilterCoreModule'),
+export const QuickFilterModule: _ModuleWithApi<_QuickFilterGridApi> = {
+    ...baseCommunityModule('QuickFilterModule'),
     rowModels: ['clientSide'],
     beans: [QuickFilterService],
-    dependsOn: [FilterCoreModule, FilterValueModule],
-};
-
-/**
- * @feature Filtering -> Quick Filter
- */
-export const QuickFilterApiModule: _ModuleWithApi<_QuickFilterGridApi> = {
-    ...baseCommunityModule('QuickFilterApiModule'),
     apiFunctions: {
         isQuickFilterPresent,
         getQuickFilter,
         resetQuickFilter,
     },
-    dependsOn: [QuickFilterCoreModule],
-};
-
-/**
- * @feature Filtering -> Quick Filter
- */
-export const QuickFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('QuickFilterModule'),
-    dependsOn: [QuickFilterCoreModule, QuickFilterApiModule],
+    dependsOn: [FilterCoreModule, FilterValueModule],
 };
 
 /**
@@ -195,11 +163,5 @@ export const QuickFilterModule: _ModuleWithoutApi = {
  */
 export const FilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FilterModule'),
-    dependsOn: [
-        SimpleFloatingFilterModule,
-        ReadOnlyFloatingFilterModule,
-        QuickFilterModule,
-        ColumnFilterApiModule,
-        ColumnFilterMenuModule,
-    ],
+    dependsOn: [SimpleFloatingFilterModule, ReadOnlyFloatingFilterModule, QuickFilterModule, ColumnFilterMenuModule],
 };

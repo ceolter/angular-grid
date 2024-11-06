@@ -22,7 +22,6 @@ import { baseCommunityModule } from './interfaces/iModule';
 import { AnimationFrameModule } from './misc/animationFrameModule';
 import { EventApiModule } from './misc/apiEvents/apiEventModule';
 import { LocaleModule } from './misc/locale/localeModule';
-import { CommunityMenuApiModule } from './misc/menu/sharedMenuModule';
 import { StateModule } from './misc/state/stateModule';
 import { TouchModule } from './misc/touchModule';
 import { KeyboardNavigationModule } from './navigation/navigationModule';
@@ -95,7 +94,6 @@ export const CommunityFeaturesModule: _ModuleWithoutApi = {
         ColumnFlexModule,
         KeyboardNavigationModule,
         CellApiModule,
-        CommunityMenuApiModule,
         CellFlashModule,
         TooltipModule,
         PinnedColumnModule,

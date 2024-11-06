@@ -19,7 +19,8 @@ const gridOptions: GridOptions = {
             cellRenderer: 'agSparklineCellRenderer',
             cellRendererParams: {
                 sparklineOptions: {
-                    type: 'column',
+                    type: 'bar',
+                    direction: 'vertical',
                     fill: '#fac858',
                     highlightStyle: {
                         stroke: '#fac858',

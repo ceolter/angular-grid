@@ -1,4 +1,4 @@
-import type { _EditGridApi } from '../api/gridApi';
+import type { _EditGridApi, _UndoRedoGridApi } from '../api/gridApi';
 import type { DefaultProvidedCellEditorParams } from '../interfaces/iCellEditor';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
@@ -29,38 +29,31 @@ import { RowEditService } from './rowEditService';
  * @feature Editing
  * @colDef editable
  */
-export const EditCoreModule: _ModuleWithoutApi = {
+export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
     ...baseCommunityModule('EditCoreModule'),
     beans: [EditService],
-    dependsOn: [PopupModule],
-
-    css: [cellEditingCSS],
-};
-
-/**
- * @feature Editing
- */
-export const EditApiModule: _ModuleWithApi<_EditGridApi<any>> = {
-    ...baseCommunityModule('EditApiModule'),
     apiFunctions: {
-        undoCellEditing,
-        redoCellEditing,
         getCellEditorInstances,
         getEditingCells,
         stopEditing,
         startEditingCell,
-        getCurrentUndoSize,
-        getCurrentRedoSize,
     },
-    dependsOn: [EditCoreModule],
+    dependsOn: [PopupModule],
+    css: [cellEditingCSS],
 };
 
 /**
  * @feature Editing -> Undo / Redo Edits
  */
-export const UndoRedoEditModule: _ModuleWithoutApi = {
+export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
     ...baseCommunityModule('UndoRedoEditModule'),
     beans: [UndoRedoService],
+    apiFunctions: {
+        undoCellEditing,
+        redoCellEditing,
+        getCurrentUndoSize,
+        getCurrentRedoSize,
+    },
     dependsOn: [EditCoreModule],
 };
 
@@ -134,5 +127,5 @@ export const AllCommunityEditorsModule: _ModuleWithoutApi = {
  */
 export const EditModule: _ModuleWithoutApi = {
     ...baseCommunityModule('EditModule'),
-    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule, EditApiModule],
+    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule],
 };
