@@ -69,22 +69,19 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         this.resetNodes();
     }
 
-    public processSelectionAction(
+    public processSelectionEvent(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode,
         source: SelectionEventSourceType
     ): number {
         if (this.isRowSelectionBlocked(rowNode)) return 0;
 
-        if (event instanceof MouseEvent) {
-            return this.handleMouseEvent(event, rowNode, source);
-        } else {
-            throw new Error('unimplemented');
-        }
-    }
-
-    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
-        const selection = this.getNodeSelectionsFromMouseEvent(event, rowNode, source);
+        const selection = this.getNodeSelectionsFromMouseEvent(
+            rowNode,
+            event.shiftKey,
+            event.metaKey || event.ctrlKey,
+            source
+        );
 
         if (selection == null) {
             return 0;
@@ -712,7 +709,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     // only called by CSRM
-    public override updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void {
+    public updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void {
         this.updateSelectable(changedPath);
 
         if (this.groupSelectsDescendants) {

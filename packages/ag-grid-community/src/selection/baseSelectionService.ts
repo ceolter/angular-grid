@@ -71,12 +71,6 @@ export abstract class BaseSelectionService extends BeanStub {
         return new SelectAllFeature(column);
     }
 
-    public abstract processSelectionAction(
-        event: MouseEvent | KeyboardEvent,
-        rowNode: RowNode,
-        source: SelectionEventSourceType
-    ): number;
-
     public onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void {
         // Treat undefined as false, if we pass undefined down it gets treated as toggle class, rather than explicitly
         // setting the required value
@@ -118,12 +112,10 @@ export abstract class BaseSelectionService extends BeanStub {
         });
     }
 
-    // should only be called if groupSelectsChildren=true
+    /** should only be called if groupSelects = 'descendants' or 'filteredDescendants' */
     public updateGroupsFromChildrenSelections?(source: SelectionEventSourceType, changedPath?: ChangedPath): boolean;
 
     public abstract setNodesSelected(params: ISetNodesSelectedParams): number;
-
-    public abstract updateSelectableAfterGrouping(changedPath?: ChangedPath): void;
 
     protected abstract updateSelectable(changedPath?: ChangedPath): void;
 
@@ -164,7 +156,6 @@ export abstract class BaseSelectionService extends BeanStub {
         }
     }
 
-    // + selectionController.calculatedSelectedForAllGroupNodes()
     protected calculateSelectedFromChildren(rowNode: RowNode): boolean | undefined | null {
         let atLeastOneSelected = false;
         let atLeastOneDeSelected = false;
@@ -278,8 +269,9 @@ export abstract class BaseSelectionService extends BeanStub {
     }
 
     protected getNodeSelectionsFromMouseEvent(
-        event: MouseEvent,
         rowNode: RowNode,
+        shiftKey: boolean,
+        metaKey: boolean,
         source: SelectionEventSourceType
     ): null | NodeSelection {
         // if node is a footer, we don't do selection, just pass the info
@@ -293,11 +285,10 @@ export abstract class BaseSelectionService extends BeanStub {
         const enableClickSelection = _getEnableSelection(gos);
         const enableDeselection = _getEnableDeselection(gos);
         const isRowClicked = source === 'rowClicked';
-        const isMeta = event.metaKey || event.ctrlKey;
 
         if (isRowClicked && !(enableClickSelection || enableDeselection)) return null;
 
-        if (event.shiftKey && isMeta && this.isMultiSelect()) {
+        if (shiftKey && metaKey && this.isMultiSelect()) {
             const root = selectionCtx.getRoot();
             if (root && !root.isSelected()) {
                 // range deselection mode
@@ -318,7 +309,7 @@ export abstract class BaseSelectionService extends BeanStub {
                     reset: false,
                 };
             }
-        } else if (event.shiftKey && this.isMultiSelect()) {
+        } else if (shiftKey && this.isMultiSelect()) {
             // range selection
             const root = selectionCtx.getRoot();
             const partition = selectionCtx.isInRange(node)
@@ -337,7 +328,7 @@ export abstract class BaseSelectionService extends BeanStub {
                     reset: false,
                 };
             }
-        } else if (isMeta) {
+        } else if (metaKey) {
             // multi-selection + deselection
             selectionCtx.setRoot(node);
 

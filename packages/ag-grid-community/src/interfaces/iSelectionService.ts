@@ -59,7 +59,7 @@ export interface ISelectionService {
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
     setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
-    processSelectionAction(
+    processSelectionEvent(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode,
         source: SelectionEventSourceType

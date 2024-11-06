@@ -68,25 +68,21 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy = this.createManagedBean(new Strategy());
     }
 
-    public processSelectionAction(
+    public processSelectionEvent(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode<any>,
         source: SelectionEventSourceType
     ): number {
         if (this.isRowSelectionBlocked(rowNode)) return 0;
 
-        if (event instanceof MouseEvent) {
-            const num = this.handleMouseEvent(event, rowNode, source);
-            this.shotgunResetNodeSelectionState();
-            this.dispatchSelectionChanged(source);
-            return num;
-        } else {
-            throw new Error('unimplemented');
-        }
-    }
+        let updatedRows = 0;
 
-    private handleMouseEvent(event: MouseEvent, rowNode: RowNode, source: SelectionEventSourceType): number {
-        const selection = this.getNodeSelectionsFromMouseEvent(event, rowNode, source);
+        const selection = this.getNodeSelectionsFromMouseEvent(
+            rowNode,
+            event.shiftKey,
+            event.metaKey || event.ctrlKey,
+            source
+        );
 
         if (selection == null) {
             return 0;
@@ -98,9 +94,9 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
             } else {
                 this.selectionStrategy.setNodesSelected({ nodes: selection.deselect, newValue: false, source });
             }
-            return this.selectionStrategy.setNodesSelected({ nodes: selection.select, newValue: true, source });
+            updatedRows = this.selectionStrategy.setNodesSelected({ nodes: selection.select, newValue: true, source });
         } else {
-            return this.selectionStrategy.setNodesSelected({
+            updatedRows = this.selectionStrategy.setNodesSelected({
                 nodes: [selection.node],
                 newValue: selection.newValue,
                 clearSelection: selection.clearSelection,
@@ -108,6 +104,11 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
                 source,
             });
         }
+
+        this.shotgunResetNodeSelectionState();
+        this.dispatchSelectionChanged(source);
+
+        return updatedRows;
     }
 
     public getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null {
@@ -319,7 +320,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         }
     }
 
-    public override updateSelectableAfterGrouping(): void {
+    public updateSelectableAfterGrouping(): void {
         return _error(194, { method: 'updateSelectableAfterGrouping' }) as undefined;
     }
 }

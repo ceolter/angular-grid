@@ -168,7 +168,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         }
 
         const key = event.key;
-        if (key === ' ') {
+        if (key === KeyCode.SPACE) {
             this.onSpaceKeyDown(event);
         } else {
             if (this.beans.editSvc?.startRowOrCellEdit(this.cellCtrl, key, event)) {
@@ -186,25 +186,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         const { gos } = this.beans;
 
         if (!this.cellCtrl.editing && _isRowSelection(gos)) {
-            const currentSelection = this.rowNode.isSelected();
-            const newSelection = !currentSelection;
-            const { selectionSvc } = this.beans;
-            const updatedCount = selectionSvc?.setSelectedParams({
-                rowNode: this.rowNode,
-                newValue: newSelection,
-                rangeSelect: event.shiftKey,
-                event,
-                source: 'spaceKey',
-            });
-            if (currentSelection === undefined && updatedCount === 0) {
-                selectionSvc?.setSelectedParams({
-                    rowNode: this.rowNode,
-                    newValue: false,
-                    rangeSelect: event.shiftKey,
-                    event,
-                    source: 'spaceKey',
-                });
-            }
+            this.beans.selectionSvc?.processSelectionEvent(event, this.rowNode, 'spaceKey');
         }
 
         // prevent default as space key, by default, moves browser scroll down

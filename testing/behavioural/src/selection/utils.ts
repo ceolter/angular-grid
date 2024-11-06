@@ -1,8 +1,12 @@
 import type { AgPublicEventType, GridApi, IRowNode } from 'ag-grid-community';
-import { _areEqual } from 'ag-grid-community';
+import { KeyCode, _areEqual } from 'ag-grid-community';
 
 export function getRowByIndex(index: number): HTMLElement | null {
     return document.getElementById('myGrid')!.querySelector(`[row-index="${index}"]`);
+}
+
+export function getCellByPosition(rowIndex: number, colId: string): HTMLElement | null {
+    return getRowByIndex(rowIndex)?.querySelector(`[col-id="${colId}"]`) ?? null;
 }
 
 export function getCheckboxByIndex(index: number): HTMLElement | null {
@@ -110,4 +114,8 @@ export function waitForEvent(event: AgPublicEventType, api: GridApi, n = 1): Pro
             }
         })
     );
+}
+
+export function pressSpaceKey(element: HTMLElement, opts?: KeyboardEventInit): void {
+    element.dispatchEvent(new KeyboardEvent('keydown', { ...opts, key: KeyCode.SPACE, bubbles: true }));
 }
