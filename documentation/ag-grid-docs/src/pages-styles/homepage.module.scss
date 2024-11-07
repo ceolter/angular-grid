@@ -697,3 +697,8 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.learnMoreButton {
+    width: fit-content;
+    margin-top: $spacing-size-3;
+}

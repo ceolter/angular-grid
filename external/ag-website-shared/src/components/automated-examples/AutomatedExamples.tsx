@@ -65,6 +65,12 @@ export const AutomatedExamples: FunctionComponent = () => {
                                         Let your users visualise their data in charts directly from your Data Grid.
                                         Multiple chart types, themes, customisations and more, all in one place.
                                     </h4>
+                                    <a
+                                        href="/react-data-grid/getting-started/"
+                                        class:list={[styles.learnMoreButton, 'button-tertiary']}
+                                    >
+                                        Learn more
+                                    </a>
                                 </header>
                                 <div class={styles.blueRectangle}></div>
                             </div>
