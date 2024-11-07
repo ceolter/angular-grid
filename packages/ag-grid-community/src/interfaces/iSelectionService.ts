@@ -20,6 +20,7 @@ export interface ISelectionService {
     getSelectionCount(): number;
     setNodesSelected(params: ISetNodesSelectedParams): number;
     filterFromSelection?(predicate: (node: RowNode) => boolean): void;
+    /** Should only be called if groupSelects = 'descendants' or 'filteredDescendants' in CSRM */
     updateGroupsFromChildrenSelections?(source: SelectionEventSourceType, changedPath?: ChangedPath): boolean;
     syncInRowNode(rowNode: RowNode, oldNode?: RowNode): void;
     reset(source: SelectionEventSourceType): void;

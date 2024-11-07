@@ -116,7 +116,6 @@ export abstract class BaseSelectionService extends BeanStub {
         });
     }
 
-    /** should only be called if groupSelects = 'descendants' or 'filteredDescendants' */
     public updateGroupsFromChildrenSelections?(source: SelectionEventSourceType, changedPath?: ChangedPath): boolean;
 
     public abstract setNodesSelected(params: ISetNodesSelectedParams): number;

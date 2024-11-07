@@ -1,5 +1,4 @@
 import type { NamedBean } from '../context/bean';
-import type { BeanCollection } from '../context/context';
 import type { RowSelectionMode, SelectAllMode } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import type { RowSelectedEvent, SelectionEventSourceType } from '../events';
@@ -15,21 +14,12 @@ import {
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { ISelectionService, ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../interfaces/selectionState';
-import type { PageBoundsService } from '../pagination/pageBoundsService';
 import { ChangedPath } from '../utils/changedPath';
-import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 import { BaseSelectionService } from './baseSelectionService';
 
 export class SelectionService extends BaseSelectionService implements NamedBean, ISelectionService {
     beanName = 'selectionSvc' as const;
-
-    private pageBounds: PageBoundsService;
-
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.pageBounds = beans.pageBounds;
-    }
 
     private selectedNodes: Map<string, RowNode> = new Map();
 
@@ -40,10 +30,12 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     public override postConstruct(): void {
         super.postConstruct();
         const { gos, onRowSelected } = this;
+
         this.mode = _getRowSelectionMode(gos);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
         this.groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
-        this.addManagedPropertyListeners(['groupSelectsChildren', 'rowSelection'], () => {
+
+        this.addManagedPropertyListeners(['groupSelectsChildren', 'groupSelectsFiltered', 'rowSelection'], () => {
             const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
             const selectionMode = _getRowSelectionMode(gos);
             const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
@@ -210,9 +202,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public getSelectedRows(): any[] {
-        this.selectedNodes.values();
         const selectedRows: any[] = [];
-
         this.selectedNodes.forEach((rowNode) => selectedRows.push(rowNode.data));
         return selectedRows;
     }
@@ -235,7 +225,6 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         this.selectedNodes = newSelectedNodes;
     }
 
-    // should only be called if groupSelectsChildren=true
     public override updateGroupsFromChildrenSelections(
         source: SelectionEventSourceType,
         changedPath?: ChangedPath
@@ -302,7 +291,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private onRowSelected(event: RowSelectedEvent): void {
-        const rowNode = event.node as RowNode;
+        const rowNode = event.node;
 
         // we do not store the group rows when the groups select children
         if (this.groupSelectsDescendants && rowNode.group) {
@@ -310,7 +299,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
 
         if (rowNode.isSelected()) {
-            this.selectedNodes.set(rowNode.id!, rowNode);
+            this.selectedNodes.set(rowNode.id!, rowNode as RowNode);
         } else {
             this.selectedNodes.delete(rowNode.id!);
         }
@@ -322,7 +311,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public createDaemonNode(rowNode: RowNode): RowNode | undefined {
-        if (!_exists(rowNode.id)) {
+        if (!rowNode.id) {
             return undefined;
         }
         const oldNode = new RowNode(this.beans);
@@ -422,13 +411,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public isEmpty(): boolean {
-        let count = 0;
-        this.selectedNodes.forEach((rowNode) => {
-            if (rowNode) {
-                count++;
-            }
-        });
-        return count === 0;
+        return this.getSelectionCount() === 0;
     }
 
     public deselectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
@@ -444,12 +427,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             }
             this.getNodesToSelect(selectAll).forEach(callback);
         } else {
-            this.selectedNodes.forEach((rowNode) => {
-                // remember the reference can be to null, as we never 'delete' from the map
-                if (rowNode) {
-                    callback(rowNode);
-                }
-            });
+            this.selectedNodes.forEach(callback);
             // this clears down the map (whereas above only sets the items in map to 'undefined')
             this.reset(source);
         }
@@ -503,7 +481,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         return selectedCount > 0;
     }
 
-    public hasNodesToSelect(selectAll: SelectAllMode) {
+    public hasNodesToSelect(selectAll: SelectAllMode): boolean {
         return this.getNodesToSelect(selectAll).filter((node) => node.selectable).length > 0;
     }
 
@@ -560,8 +538,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private forEachNodeOnPage(callback: (rowNode: RowNode) => void) {
-        const firstRow = this.pageBounds.getFirstRow();
-        const lastRow = this.pageBounds.getLastRow();
+        const { pageBounds } = this.beans;
+        const firstRow = pageBounds.getFirstRow();
+        const lastRow = pageBounds.getLastRow();
         for (let i = firstRow; i <= lastRow; i++) {
             const node = this.rowModel.getRow(i);
             if (node) {
