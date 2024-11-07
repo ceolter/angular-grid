@@ -15,6 +15,7 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
 import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
 import { parseVersion } from '@ag-website-shared/utils/parseVersion';
 import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
+import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { blogPrefix } = whatsNewData['grid'];
@@ -131,6 +132,20 @@ const frameworksData = [
         </header>
         <div class={styles.blueRectangle}></div>
         <AutomatedExamples client:visible />
+    </div>
+
+    <div class={styles.sectionContent}>
+        <div class={styles.sectionInner}>
+            <div class={styles.headingContainer}>
+                <h2 class={styles.tag}>Where Can I See AG Grid React Tables Being Used?</h2>
+                <h3 class={styles.heading}>Used in Every Industry, for All Types of Data</h3>
+                <h4 class={styles.subHeading}>
+                    Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of
+                    these uses are private, but we've hand-picked a few open-source examples:
+                </h4>
+            </div>
+            <Showcase client:load />
+        </div>
     </div>
 
     <div class:list={[styles.sectionContent, styles.quotesSection]}>
