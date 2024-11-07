@@ -1144,7 +1144,7 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowsByIndex([], api);
             });
 
-            test('clicking group row selects only that row', async () => {
+            test('toggling group row selects only that row', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,
                     rowSelection: { mode: 'multiRow' },
@@ -1152,6 +1152,16 @@ describe('Row Selection Grid Options', () => {
 
                 toggleCheckboxByIndex(0);
                 assertSelectedRowsByIndex([0], api);
+            });
+
+            test('clicking group row does nothing', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: { mode: 'multiRow' },
+                });
+
+                clickRowByIndex(0);
+                assertSelectedRowsByIndex([], api);
             });
 
             test('clicking group row with `groupSelects = "descendants"` enabled selects that row and all its children', async () => {
