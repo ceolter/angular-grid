@@ -1,10 +1,4 @@
-import type {
-    IChangedRowNodes,
-    IClientSideNodeManager,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
 import { ChangedPath, _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -89,10 +83,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public override setImmutableRowData(
-        params: RefreshModelParams<TData> & { changedRowNodes: IChangedRowNodes<TData> },
-        rowData: TData[]
-    ): void {
+    public override setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
         const gos = this.gos;
         const treeRoot = this.treeRoot!;
         const rootNode = this.rootNode!;
