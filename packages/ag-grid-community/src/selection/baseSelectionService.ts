@@ -71,6 +71,10 @@ export abstract class BaseSelectionService extends BeanStub {
         return new SelectAllFeature(column);
     }
 
+    protected isMultiSelect(): boolean {
+        return _isMultiRowSelection(this.gos);
+    }
+
     public onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void {
         // Treat undefined as false, if we pass undefined down it gets treated as toggle class, rather than explicitly
         // setting the required value
@@ -367,10 +371,6 @@ export abstract class BaseSelectionService extends BeanStub {
                 clearSelection: !this.isMultiSelect() || shouldClear,
             };
         }
-    }
-
-    protected isMultiSelect(): boolean {
-        return _isMultiRowSelection(this.gos);
     }
 }
 
