@@ -4,8 +4,7 @@ import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
-import { GridRows, TestGridsManager } from '../test-utils';
-import { GridRowsDiagramTree } from '../test-utils/gridRows/gridRowsDiagramTree';
+import { TestGridsManager } from '../test-utils';
 import { fakeFetch } from './data';
 import {
     assertSelectedRowElementsById,
@@ -17,11 +16,6 @@ import {
     toggleHeaderCheckboxByIndex,
 } from './utils';
 
-function draw(api: any) {
-    const gr = new GridRows(api);
-    const tr = new GridRowsDiagramTree(gr);
-    console.log(tr.diagramToString(false, null));
-}
 describe('Row Selection Grid Options', () => {
     const columnDefs = [{ field: 'sport' }];
     const rowData = [
@@ -1332,7 +1326,10 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowElementsById([], api);
             });
 
-            test('deselect group row with `groupSelects = "descendants"` and `enableClickSelection`', async () => {
+            // This behaviour is actually explicitly disabled because it doesn't work in CSRM
+            // however, keep the test because it works (at time of writing) in SSRM and we may want
+            // to bring this behaviour back
+            test.skip('deselect group row with `groupSelects = "descendants"` and `enableClickSelection`', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,
                     rowSelection: { mode: 'multiRow', groupSelects: 'descendants', enableClickSelection: true },
@@ -1452,7 +1449,10 @@ describe('Row Selection Grid Options', () => {
                 );
             });
 
-            test('Selection when `enableSelectionWithoutKeys` for `groupSelects = "descendants"`', async () => {
+            // This behaviour is actually explicitly disabled because it doesn't work in CSRM
+            // however, keep the test because it works (at time of writing) in SSRM and we may want
+            // to bring this behaviour back
+            test.skip('Selection when `enableSelectionWithoutKeys` for `groupSelects = "descendants"`', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,
                     rowSelection: {
