@@ -94,8 +94,6 @@
   "devDependencies": {
     "source-map-loader": "^5.0.0",
     "@ag-grid-community/styles": "32.2.0",
-    "ag-charts-community": "10.3.1-beta.20241107",
-    "ag-charts-enterprise": "10.3.1-beta.20241107",
     "ts-loader": "^9.5.1",
     "style-loader": "^3.3.4",
     "css-loader": "^6.10.0",
