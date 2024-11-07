@@ -1,3 +1,5 @@
+import { AllEnterpriseModules } from './moduleDefinitions';
+
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
@@ -16,86 +18,6 @@ const entPlaceholderEndRgx = '/\\*\\* __ENTERPRISE_PLACEHOLDER__END__ \\*/';
 const entPlaceholderStart = '/** __ENTERPRISE_PLACEHOLDER__START__ */';
 const entPlaceholderEnd = '/** __ENTERPRISE_PLACEHOLDER__END__ */';
 
-const ENTERPRISE_MODULES = [
-    'AdvancedFilterApiModule',
-    'AdvancedFilterCoreModule',
-    'AdvancedFilterModule',
-    'AggregationModule',
-    'ClientSideRowModelExpansionModule',
-    'ClipboardApiModule',
-    'ClipboardCoreModule',
-    'ClipboardModule',
-    'ColumnChooserModule',
-    'ColumnMenuModule',
-    'ColumnsToolPanelCoreModule',
-    'ColumnsToolPanelModule',
-    'ColumnsToolPanelRowGroupingModule',
-    'ContextMenuModule',
-    'EnterpriseCoreModule',
-    'ExcelExportApiModule',
-    'ExcelExportCoreModule',
-    'ExcelExportModule',
-    'FiltersToolPanelModule',
-    'GridChartsApiModule',
-    'GridChartsCoreModule',
-    'GridChartsEnterpriseFeaturesModule',
-    'GridChartsEnterpriseModule',
-    'GridChartsModule',
-    'GroupCellRendererModule',
-    'GroupColumnModule',
-    'GroupFilterModule',
-    'GroupFloatingFilterModule',
-    'IntegratedChartsModule',
-    'LoadingCellRendererModule',
-    'MasterDetailApiModule',
-    'MasterDetailCoreModule',
-    'MasterDetailModule',
-    'MenuApiModule',
-    'MenuCoreModule',
-    'MenuItemModule',
-    'MenuModule',
-    'MultiFilterCoreModule',
-    'MultiFilterModule',
-    'MultiFloatingFilterModule',
-    'PivotApiModule',
-    'PivotCoreModule',
-    'PivotModule',
-    'RangeSelectionApiModule',
-    'RangeSelectionCoreModule',
-    'RangeSelectionFillHandleModule',
-    'RangeSelectionModule',
-    'RangeSelectionRangeHandleModule',
-    'RichSelectModule',
-    'RowGroupingApiModule',
-    'RowGroupingCoreModule',
-    'RowGroupingModule',
-    'RowGroupingNoPivotModule',
-    'RowGroupingPanelModule',
-    'ServerSideRowModelApiModule',
-    'ServerSideRowModelCoreModule',
-    'ServerSideRowModelModule',
-    'ServerSideRowModelRowGroupingModule',
-    'ServerSideRowModelRowSelectionModule',
-    'ServerSideRowModelSortModule',
-    'SetFilterCoreModule',
-    'SetFilterModule',
-    'SetFloatingFilterModule',
-    'SideBarApiModule',
-    'SideBarCoreModule',
-    'SideBarModule',
-    'SideBarSharedModule',
-    'SkeletonCellRendererModule',
-    'SparklinesModule',
-    'StatusBarApiModule',
-    'StatusBarCoreModule',
-    'StatusBarModule',
-    'StatusBarSelectionModule',
-    'TreeDataCoreModule',
-    'TreeDataModule',
-    'ViewportRowModelCoreModule',
-    'ViewportRowModelModule',
-];
-
 // Get modules from command line arguments
 const modules = process.argv.slice(2);
 
@@ -104,9 +26,8 @@ fs.readFile(filePath, 'utf8', (err, data) => {
         console.error('Error reading file:', err);
         return;
     }
-
-    const communityModules = modules.filter((module) => !ENTERPRISE_MODULES.includes(module));
-    const enterpriseModules = modules.filter((module) => ENTERPRISE_MODULES.includes(module));
+    const communityModules = modules.filter((module) => AllEnterpriseModules[module] !== 1);
+    const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] === 1);
 
     const replacement = communityModules.join(', ');
     const regex = new RegExp(`${placeholderStartRgx}[\\s\\S]*?${placeholderEndRgx}`, 'g');

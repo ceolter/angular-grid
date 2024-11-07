@@ -2,13 +2,12 @@
   "name": "module-size",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "module-stats": "node runModuleCombinations.cjs"
+    "module-stats": "ts-node moduleCombinations.ts"
   },
   "dependencies": {
     "ag-grid-react": "32.2.0",

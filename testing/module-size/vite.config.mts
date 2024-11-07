@@ -9,8 +9,9 @@ export default defineConfig({
             output: {
                 manualChunks: {
                     react: ['react', 'react-dom'],
+                    // agGridCommunity: ['ag-grid-community'],
+                    // agGridEnterprise: ['ag-grid-enterprise'],
                     agGridCommunity: ['ag-grid-community', 'ag-grid-enterprise'],
-                    // agGridEnterprise: [],
                     agGridReact: ['ag-grid-react'],
                 },
             },
