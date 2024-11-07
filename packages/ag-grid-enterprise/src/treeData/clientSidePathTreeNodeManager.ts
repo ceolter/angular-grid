@@ -1,5 +1,12 @@
 import { _warn } from 'ag-grid-community';
-import type { ChangedPath, IChangedRowNodes, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
+import type {
+    ChangedPath,
+    GetDataPath,
+    IChangedRowNodes,
+    NamedBean,
+    RefreshModelParams,
+    RowNode,
+} from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -20,8 +27,9 @@ export class ClientSidePathTreeNodeManager<TData>
         super.loadNewRowData(rowData);
 
         const allLeafChildren = rootNode.allLeafChildren!;
+        const getDataPath = this.gos.get('getDataPath');
         for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
-            this.addOrUpdateRow(allLeafChildren[i], false);
+            this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
 
         this.treeCommit();
@@ -61,12 +69,9 @@ export class ClientSidePathTreeNodeManager<TData>
         }
 
         const updates = changedRowNodes.updates;
+        const getDataPath = this.gos.get('getDataPath');
         for (const row of updates.keys()) {
-            const updated = updates.get(row) === 2;
-            if (updated) {
-                rowNodesOrderMaybeChanged = true; // Order might have changed
-            }
-            this.addOrUpdateRow(row, updated);
+            this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
         }
 
         const rows = treeRoot.row?.allLeafChildren;
@@ -82,16 +87,15 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit(changedPath); // One single commit for all the transactions
     }
 
-    private addOrUpdateRow(row: RowNode, update: boolean): void {
+    private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {
         const treeRoot = this.treeRoot!;
         if (!this.treeData) {
             // We assume that the data is flat and we use id as the key for the tree nodes.
             // This happens when treeData is false and getDataPath is undefined/null.
-            this.treeSetRow(treeRoot.upsertKey(row.id!), row, update);
+            this.treeSetRow(treeRoot.upsertKey(row.id!), row, created);
             return;
         }
 
-        const getDataPath = this.gos.get('getDataPath');
         const path = getDataPath?.(row.data);
         const pathLength = path?.length;
         if (!pathLength) {
@@ -103,7 +107,7 @@ export class ClientSidePathTreeNodeManager<TData>
             do {
                 node = node.upsertKey(path[level++]);
             } while (level < pathLength);
-            this.treeSetRow(node, row, update);
+            this.treeSetRow(node, row, created);
         }
     }
 }

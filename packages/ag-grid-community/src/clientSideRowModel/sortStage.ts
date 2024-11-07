@@ -194,67 +194,67 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             return this.rowNodeSorter.doFullSort(unsortedRows, sortOptions);
         }
 
-        const untouchedRows = new Set<RowNode>();
-        const touchedRows: RowNode[] = [];
+        const untouchedRows = new Set<string>();
+        const touchedRows: SortedRowNode[] = [];
 
-        const updates = changedRowNodes.updates;
-        unsortedRows.forEach((row) => {
+        const { removals, updates } = changedRowNodes;
+        for (let i = 0, len = unsortedRows.length; i < len; ++i) {
+            const row = unsortedRows[i];
             if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
-                touchedRows.push(row);
-            } else {
-                untouchedRows.add(row);
+                touchedRows.push({
+                    currentPos: touchedRows.length,
+                    rowNode: row,
+                });
+            } else if (!removals.has(row)) {
+                untouchedRows.add(row.id!);
             }
-        });
+        }
 
-        const sortedUntouchedRows = oldSortedRows.filter((child) => untouchedRows.has(child));
+        const sortedUntouchedRows = oldSortedRows
+            .filter((child) => untouchedRows.has(child.id!))
+            .map((rowNode: RowNode, currentPos: number): SortedRowNode => ({ currentPos, rowNode }));
 
-        const mapNodeToSortedNode = (rowNode: RowNode, pos: number): SortedRowNode => ({
-            currentPos: pos,
-            rowNode: rowNode,
-        });
+        touchedRows.sort((a, b) => this.rowNodeSorter.compareRowNodes(sortOptions, a, b));
 
-        const sortedChangedRows = touchedRows
-            .map(mapNodeToSortedNode)
-            .sort((a, b) => this.rowNodeSorter.compareRowNodes(sortOptions, a, b));
-
-        return this.mergeSortedArrays(sortOptions, sortedChangedRows, sortedUntouchedRows.map(mapNodeToSortedNode)).map(
-            ({ rowNode }) => rowNode
-        );
+        return this.mergeSortedArrays(sortOptions, touchedRows, sortedUntouchedRows);
     }
 
     // Merge two sorted arrays into each other
-    private mergeSortedArrays(
-        sortOptions: SortOption[],
-        arr1: SortedRowNode[],
-        arr2: SortedRowNode[]
-    ): SortedRowNode[] {
-        const res: SortedRowNode[] = [];
+    private mergeSortedArrays(sortOptions: SortOption[], arr1: SortedRowNode[], arr2: SortedRowNode[]): RowNode[] {
+        const res: RowNode[] = [];
         let i = 0;
         let j = 0;
+        const arr1Length = arr1.length;
+        const arr2Length = arr2.length;
+        const rowNodeSorter = this.rowNodeSorter;
 
         // Traverse both array, adding them in order
-        while (i < arr1.length && j < arr2.length) {
-            // Check if current element of first
-            // array is smaller than current element
-            // of second array. If yes, store first
-            // array element and increment first array
-            // index. Otherwise do same with second array
-            const compareResult = this.rowNodeSorter.compareRowNodes(sortOptions, arr1[i], arr2[j]);
+        while (i < arr1Length && j < arr2Length) {
+            const a = arr1[i];
+            const b = arr2[j];
+            // Check if current element of first array is smaller than current element
+            // of second array. If yes, store first array element and increment first array index.
+            // Otherwise do same with second array
+            const compareResult = rowNodeSorter.compareRowNodes(sortOptions, a, b);
+            let chosen: SortedRowNode;
             if (compareResult < 0) {
-                res.push(arr1[i++]);
+                chosen = a;
+                ++i;
             } else {
-                res.push(arr2[j++]);
+                chosen = b;
+                ++j;
             }
+            res.push(chosen.rowNode);
         }
 
         // add remaining from arr1
-        while (i < arr1.length) {
-            res.push(arr1[i++]);
+        while (i < arr1Length) {
+            res.push(arr1[i++].rowNode);
         }
 
         // add remaining from arr2
-        while (j < arr2.length) {
-            res.push(arr2[j++]);
+        while (j < arr2Length) {
+            res.push(arr2[j++].rowNode);
         }
 
         return res;

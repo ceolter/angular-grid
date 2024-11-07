@@ -57,17 +57,18 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     isRowDataLoaded(): boolean;
 }
 
-export type ChangedRowNodesFlags =
-    // added
-    | 1
-    // updated
-    | 2
-    // added and updated
-    | 3;
-
 export interface IChangedRowNodes<TData = any> {
+    /**
+     * The set of removed nodes.
+     * Mutually exclusive, if a node is here, it cannot be in the updates map.
+     */
     readonly removals: ReadonlySet<RowNode<TData>>;
-    readonly updates: ReadonlyMap<RowNode<TData>, ChangedRowNodesFlags>;
+
+    /**
+     * Map of row nodes that have been updated.
+     * The value is true if the row node is a new node. is false if it was just updated.
+     */
+    readonly updates: ReadonlyMap<RowNode<TData>, boolean>;
 
     /** Marks a row as removed. Order of operations is: remove, update, add */
     remove(node: IRowNode<TData>): void;

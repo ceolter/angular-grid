@@ -105,7 +105,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Add or updates the row to a non-root node, preparing the tree correctly for the commit. */
-    protected treeSetRow(node: TreeNode, newRow: RowNode, update: boolean): boolean {
+    protected treeSetRow(node: TreeNode, newRow: RowNode, created: boolean): boolean {
         const { level, row: oldRow } = node;
         if (level < 0) {
             return false; // Cannot overwrite the root row
@@ -137,7 +137,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             }
         }
 
-        if (update && !isTreeRowUpdated(newRow)) {
+        if (!created && !isTreeRowUpdated(newRow)) {
             setTreeRowUpdated(newRow);
             invalidate = true;
         }
