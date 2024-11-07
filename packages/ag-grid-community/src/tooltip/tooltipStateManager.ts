@@ -306,7 +306,7 @@ export class TooltipStateManager extends BeanStub {
         const callback = this.newTooltipComponentCallback.bind(this, this.tooltipInstanceCount);
 
         const userDetails = _getTooltipCompDetails(this.userCompFactory, params);
-        userDetails.newAgStackInstance()!.then(callback);
+        userDetails?.newAgStackInstance().then(callback);
     }
 
     public hideTooltip(forceHide?: boolean): void {

@@ -254,9 +254,6 @@ export class CellComp extends Component {
         const versionCopy = this.editorVersion;
 
         const cellEditorPromise = compDetails.newAgStackInstance();
-        if (cellEditorPromise == null) {
-            return;
-        } // if empty, userCompFactory already did a console message
 
         const { params } = compDetails;
         cellEditorPromise.then((c) => this.afterCellEditorCreated(versionCopy, c!, params, popup, position));

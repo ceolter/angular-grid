@@ -4,6 +4,7 @@ import type { BeanCollection } from '../../context/context';
 import type { CellEditorSelectorFunc, CellEditorSelectorResult, CellRendererSelectorFunc } from '../../entities/colDef';
 import type { GridOptions } from '../../entities/gridOptions';
 import type { AgGridCommon } from '../../interfaces/iCommon';
+import type { IComponent } from '../../interfaces/iComponent';
 import type { IFrameworkOverrides } from '../../interfaces/iFrameworkOverrides';
 import type { ComponentType, UserCompDetails } from '../../interfaces/iUserCompDetails';
 import { _mergeDeep } from '../../utils/object';
@@ -100,20 +101,20 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
 
     public getCompDetailsFromGridOptions(
         type: ComponentType,
-        defaultName: string | null | undefined,
+        defaultName: string | undefined,
         params: any,
         mandatory = false
     ): UserCompDetails | undefined {
         return this.getCompDetails(this.gridOptions, type, defaultName, params, mandatory);
     }
 
-    public getCompDetails<TDefinition>(
+    public getCompDetails<TDefinition, TComp extends IComponent<any>>(
         defObject: TDefinition,
         type: ComponentType,
-        defaultName: string | null | undefined,
+        defaultName: string | undefined,
         params: any,
         mandatory = false
-    ): UserCompDetails | undefined {
+    ): UserCompDetails<TComp> | undefined {
         const { name, cellRenderer } = type;
 
         let { compName, jsComp, fwComp, paramsFromSelector, popupFromSelector, popupPositionFromSelector } =
@@ -147,8 +148,13 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         }
 
         if (!jsComp && !fwComp) {
-            if (mandatory) {
+            if (mandatory && compName !== defaultName) {
+                // expecting the user to provide a component with this name
                 _error(50, { compName });
+            } else if (defaultName && !this.beans.validation) {
+                // Grid should be providing this component.
+                // Validation service will have already warned about this with the correct module name if it was present.
+                _error(146, { comp: defaultName });
             }
             return;
         }
@@ -156,7 +162,7 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         const paramsMerged = this.mergeParams(defObject, type, params, paramsFromSelector, defaultCompParams);
 
         const componentFromFramework = jsComp == null;
-        const componentClass = jsComp ? jsComp : fwComp;
+        const componentClass = jsComp ?? fwComp;
 
         return {
             componentFromFramework,
@@ -170,15 +176,15 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         };
     }
 
-    private newAgStackInstance(
+    private newAgStackInstance<TComp extends IComponent<any>>(
         ComponentClass: any,
         componentFromFramework: boolean,
         params: any,
         type: ComponentType
-    ): AgPromise<any> {
+    ): AgPromise<TComp> {
         const jsComponent = !componentFromFramework;
         // using javascript component
-        let instance: any;
+        let instance: TComp;
 
         if (jsComponent) {
             instance = new ComponentClass();

@@ -550,14 +550,12 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         return {
             filterPromise: () => {
                 const filterPromise = compDetails.newAgStackInstance();
-                if (filterPromise != null) {
-                    filterPromise.then((r) => {
-                        filterInstance = r!;
-                        if (filterWrapper) {
-                            filterWrapper.filter = r;
-                        }
-                    });
-                }
+                filterPromise.then((r) => {
+                    filterInstance = r!;
+                    if (filterWrapper) {
+                        filterWrapper.filter = r ?? undefined;
+                    }
+                });
                 return filterPromise;
             },
             compDetails,

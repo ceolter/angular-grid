@@ -140,7 +140,9 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private setupUserComp(): void {
         const compDetails = this.lookupUserCompDetails();
-        this.setCompDetails(compDetails);
+        if (compDetails) {
+            this.setCompDetails(compDetails);
+        }
     }
 
     private setCompDetails(compDetails: UserCompDetails): void {
@@ -148,7 +150,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.comp.setUserCompDetails(compDetails);
     }
 
-    private lookupUserCompDetails(): UserCompDetails {
+    private lookupUserCompDetails(): UserCompDetails | undefined {
         const params = this.createParams();
         const colDef = this.column.getColDef();
         return _getHeaderCompDetails(this.beans.userCompFactory, colDef, params)!;
@@ -334,6 +336,9 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private refreshHeaderComp(): void {
         const newCompDetails = this.lookupUserCompDetails();
+        if (!newCompDetails) {
+            return;
+        }
 
         const compInstance = this.comp.getUserCompInstance();
 

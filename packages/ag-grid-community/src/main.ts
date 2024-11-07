@@ -1102,6 +1102,8 @@ export { LocaleModule } from './misc/locale/localeModule';
 export { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
 export { SharedExportModule } from './export/exportModule';
 export { AutoWidthModule } from './rendering/autoWidthModule';
+export { AriaModule } from './rendering/ariaModule';
+export { TouchModule } from './misc/touchModule';
 
 //  events
 export * from './events';

@@ -30,7 +30,7 @@ export {
     GroupFilterModule,
     GroupFloatingFilterModule,
     RowGroupingCoreModule,
-    RowGroupingNoPivotModule,
+    RowGroupingOnlyModule,
     RowGroupingPanelModule,
 } from './rowGrouping/rowGroupingModule';
 export { SideBarModule } from './sideBar/sideBarModule';
@@ -62,5 +62,6 @@ export {
     GroupColumnModule,
     ClientSideRowModelHierarchyModule,
 } from './rowHierarchy/rowHierarchyModule';
+export { PivotCoreModule, PivotModule } from './pivot/pivotModule';
 
 export { GridChartsModule, IntegratedChartsModule } from './charts/gridChartsModule';

@@ -18,8 +18,8 @@ function getStatusPanelCompDetails(
     userCompFactory: UserComponentFactory,
     def: StatusPanelDef,
     params: WithoutGridCommon<IStatusPanelParams>
-): UserCompDetails {
-    return userCompFactory.getCompDetails(def, StatusPanelComponent, null, params, true)!;
+): UserCompDetails<IStatusPanelComp> | undefined {
+    return userCompFactory.getCompDetails(def, StatusPanelComponent, undefined, params, true);
 }
 
 const StatusPanelComponent: ComponentType = {
@@ -169,11 +169,11 @@ export class AgStatusBar extends Component {
                 const params: WithoutGridCommon<IStatusPanelParams> = {};
 
                 const compDetails = getStatusPanelCompDetails(this.userCompFactory, componentConfig, params);
-                promise = compDetails.newAgStackInstance();
 
-                if (promise == null) {
+                if (compDetails == null) {
                     return;
                 }
+                promise = compDetails.newAgStackInstance();
             }
 
             componentDetails.push({

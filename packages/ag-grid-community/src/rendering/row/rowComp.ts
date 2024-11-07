@@ -75,10 +75,6 @@ export class RowComp extends Component {
         // if not in cache, create new one
         const res = compDetails.newAgStackInstance();
 
-        if (res == null) {
-            return;
-        }
-
         res.then(callback);
     }
 
