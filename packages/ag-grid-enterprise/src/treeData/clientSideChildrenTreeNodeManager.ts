@@ -1,4 +1,10 @@
-import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
+import type {
+    IChangedRowNodes,
+    IClientSideNodeManager,
+    NamedBean,
+    RefreshModelParams,
+    RowNode,
+} from 'ag-grid-community';
 import { ChangedPath, _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -83,7 +89,10 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public override setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
+    public override setImmutableRowData(
+        params: RefreshModelParams<TData> & { changedRowNodes: IChangedRowNodes<TData> },
+        rowData: TData[]
+    ): void {
         const gos = this.gos;
         const treeRoot = this.treeRoot!;
         const rootNode = this.rootNode!;
@@ -95,6 +104,8 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const changedPath = new ChangedPath(false, rootNode);
         params.changedPath = changedPath;
+
+        const changedRowNodes = params.changedRowNodes!;
 
         const oldAllLeafChildren = rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
@@ -147,6 +158,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             let row = this.getRowNode(id) as TreeRow<TData> | undefined;
             if (row) {
                 if (row.data !== data) {
+                    changedRowNodes.update(row);
                     row.updateData(data);
                     if (!row.selectable && row.isSelected()) {
                         nodesToUnselect.push(row);
@@ -155,6 +167,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 }
             } else {
                 row = this.createRowNode(data, -1);
+                changedRowNodes.add(row);
             }
 
             let oldSourceRowIndex: number;
@@ -187,6 +200,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 const row = oldAllLeafChildren[i];
                 const node = row.treeNode as TreeNode | null;
                 if (node && !processedDataSet.has(row.data!)) {
+                    changedRowNodes.remove(row);
                     this.treeRemove(node, row);
                 }
             }

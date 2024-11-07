@@ -2,6 +2,7 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
 import type { IRowModel } from './iRowModel';
+import type { IRowNode } from './iRowNode';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -56,12 +57,36 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     isRowDataLoaded(): boolean;
 }
 
+export type ChangedRowNodesFlags =
+    // added
+    | 1
+    // updated
+    | 2
+    // added and updated
+    | 3;
+
+export interface IChangedRowNodes<TData = any> {
+    readonly removed: ReadonlySet<RowNode<TData>>;
+    readonly updated: ReadonlyMap<RowNode<TData>, ChangedRowNodesFlags>;
+
+    /** Marks a row as removed. Order of operations is: remove, update, add */
+    remove(node: IRowNode<TData>): void;
+
+    /** Marks a row as updated. Order of operations is: remove, update, add */
+    update(node: IRowNode<TData>): void;
+
+    /** Marks a row as added. Order of operation is: remove, update, add */
+    add(node: IRowNode<TData>): void;
+}
+
 export interface RefreshModelParams<TData = any> {
     // how much of the pipeline to execute
     step: ClientSideRowModelStage;
 
     // The set of changed grid options, if any
     changedProps?: Set<keyof GridOptions<TData>>;
+
+    changedRowNodes?: IChangedRowNodes<TData>;
 
     // The changedPath, if any
     changedPath?: ChangedPath;

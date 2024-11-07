@@ -432,8 +432,14 @@ export {
     ClientSideRowModelStage,
     ClientSideRowModelStep,
     RefreshModelParams,
+    IChangedRowNodes,
+    ChangedRowNodesFlags,
 } from './interfaces/iClientSideRowModel';
-export { IClientSideNodeManager, ClientSideNodeManagerUpdateRowDataResult } from './interfaces/iClientSideNodeManager';
+export {
+    IClientSideNodeManager,
+    ClientSideNodeManagerUpdateRowDataResult,
+    SetImmutableRowDataRefreshModelParams,
+} from './interfaces/iClientSideNodeManager';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';
 export { IGroupHideOpenParentsService } from './interfaces/iGroupHideOpenParentsService';
 export type { RowAutoHeightService } from './rendering/row/rowAutoHeightService';
