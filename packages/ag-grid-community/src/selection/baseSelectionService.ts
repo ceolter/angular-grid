@@ -21,7 +21,7 @@ import {
 } from '../gridOptionsUtils';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
-import type { ISetNodesSelectedParams, ISetSelectedParams } from '../interfaces/iSelectionService';
+import type { ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import { _setAriaSelected } from '../utils/aria';
@@ -145,13 +145,13 @@ export abstract class BaseSelectionService extends BeanStub {
             const isGroupSelectsChildren = _getGroupSelectsDescendants(this.gos);
             if (isGroupSelectsChildren) {
                 const selected = this.calculateSelectedFromChildren(rowNode);
-                this.setSelectedParams({ rowNode, newValue: selected ?? false, source: 'selectableChanged' });
+                this.setNodesSelected({ nodes: [rowNode], newValue: selected ?? false, source: 'selectableChanged' });
                 return;
             }
 
             // if row is selected but shouldn't be selectable, then deselect.
             if (rowNode.isSelected() && !rowNode.selectable) {
-                this.setSelectedParams({ rowNode, newValue: false, source: 'selectableChanged' });
+                this.setNodesSelected({ nodes: [rowNode], newValue: false, source: 'selectableChanged' });
             }
         }
     }
@@ -240,21 +240,6 @@ export abstract class BaseSelectionService extends BeanStub {
         });
 
         return true;
-    }
-
-    public setSelectedParams(params: ISetSelectedParams): number {
-        const { rowNode } = params;
-        if (rowNode.rowPinned) {
-            _warn(59);
-            return 0;
-        }
-
-        if (rowNode.id === undefined) {
-            _warn(60);
-            return 0;
-        }
-
-        return this.setNodesSelected({ ...params, nodes: [rowNode.footer ? rowNode.sibling : rowNode] });
     }
 
     public isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean {

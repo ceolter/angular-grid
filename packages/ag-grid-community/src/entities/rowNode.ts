@@ -600,8 +600,8 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         clearSelection: boolean = false,
         source: SelectionEventSourceType = 'api'
     ): void {
-        this.beans.selectionSvc?.setSelectedParams({
-            rowNode: this,
+        this.beans.selectionSvc?.setNodesSelected({
+            nodes: [this],
             newValue,
             clearSelection,
             source,

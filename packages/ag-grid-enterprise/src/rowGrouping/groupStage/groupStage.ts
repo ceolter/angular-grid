@@ -361,8 +361,8 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
                         this.removeFromParent(rowNode, batchRemover);
                         // we remove selection on filler nodes here, as the selection would not be removed
                         // from the RowNodeManager, as filler nodes don't exist on the RowNodeManager
-                        this.selectionSvc?.setSelectedParams({
-                            rowNode,
+                        this.selectionSvc?.setNodesSelected({
+                            nodes: [rowNode],
                             newValue: false,
                             source: 'rowGroupChanged',
                         });

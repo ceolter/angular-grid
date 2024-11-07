@@ -123,6 +123,16 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             // here, otherwise the updatedCount would include it.
             const skipThisNode = this.groupSelectsFiltered && node.group;
 
+            if (node.rowPinned) {
+                _warn(59);
+                continue;
+            }
+
+            if (node.id === undefined) {
+                _warn(60);
+                continue;
+            }
+
             if (!skipThisNode) {
                 const thisNodeWasSelected = this.selectRowNode(node, newValue, event, source);
                 if (thisNodeWasSelected) {
@@ -195,24 +205,15 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         });
     }
 
-    public getSelectedNodes() {
-        const selectedNodes: RowNode[] = [];
-        this.selectedNodes.forEach((rowNode: RowNode) => {
-            if (rowNode) {
-                selectedNodes.push(rowNode);
-            }
-        });
-        return selectedNodes;
+    public getSelectedNodes(): RowNode[] {
+        return Array.from(this.selectedNodes.values());
     }
 
-    public getSelectedRows() {
+    public getSelectedRows(): any[] {
+        this.selectedNodes.values();
         const selectedRows: any[] = [];
 
-        this.selectedNodes.forEach((rowNode: RowNode) => {
-            if (rowNode && rowNode.data) {
-                selectedRows.push(rowNode.data);
-            }
-        });
+        this.selectedNodes.forEach((rowNode) => selectedRows.push(rowNode.data));
         return selectedRows;
     }
 
@@ -278,8 +279,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         this.selectedNodes.forEach((otherRowNode) => {
             if (otherRowNode && otherRowNode.id !== rowNodeToKeepSelected.id) {
                 const rowNode = this.selectedNodes.get(otherRowNode.id!)!;
-                updatedCount += this.setSelectedParams({
-                    rowNode,
+                updatedCount += this.setNodesSelected({
+                    nodes: [rowNode],
                     newValue: false,
                     clearSelection: false,
                     suppressFinishActions: true,

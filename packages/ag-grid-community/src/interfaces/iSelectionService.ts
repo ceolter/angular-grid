@@ -9,10 +9,6 @@ import type { ChangedPath } from '../utils/changedPath';
 import type { IRowNode } from './iRowNode';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from './selectionState';
 
-export interface ISetSelectedParams extends ICommonSelectionParams {
-    rowNode: RowNode;
-}
-
 export interface ISelectionService {
     getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null;
     setSelectionState(
@@ -45,7 +41,6 @@ export interface ISelectionService {
     updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void;
     updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean;
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
-    setSelectedParams(params: ISetSelectedParams): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
     handleSelectionEvent(event: MouseEvent | KeyboardEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
     isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
