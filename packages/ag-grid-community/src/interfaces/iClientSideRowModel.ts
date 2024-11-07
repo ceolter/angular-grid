@@ -66,8 +66,8 @@ export type ChangedRowNodesFlags =
     | 3;
 
 export interface IChangedRowNodes<TData = any> {
-    readonly removed: ReadonlySet<RowNode<TData>>;
-    readonly updated: ReadonlyMap<RowNode<TData>, ChangedRowNodesFlags>;
+    readonly removals: ReadonlySet<RowNode<TData>>;
+    readonly updates: ReadonlyMap<RowNode<TData>, ChangedRowNodesFlags>;
 
     /** Marks a row as removed. Order of operations is: remove, update, add */
     remove(node: IRowNode<TData>): void;

@@ -110,9 +110,9 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         };
 
         if (changedRowNodes) {
-            const updated = changedRowNodes.updated;
-            for (const node of updated.keys()) {
-                const flags = updated.get(node)!;
+            const updates = changedRowNodes.updates;
+            for (const node of updates.keys()) {
+                const flags = updates.get(node)!;
                 setMaster(node, (flags & 1) === 1, flags === 2);
             }
         } else {
