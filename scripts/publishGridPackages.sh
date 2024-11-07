@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 1 ]
+if [ "$#" -lt 1 ]
   then
     echo "You must supply a dist directory"
     exit 1
 fi
+
+TAG=${2:-latest}
 
 DIST_DIRECTORY="$1/dist/artifacts"
 
@@ -32,7 +34,7 @@ for file in *.tgz; do
     PACKAGE_NAME=`basename $file .tgz`
     echo $PACKAGE_NAME
 
-    npm publish "$file" --registry http://52.50.158.57:4873/
-    npm dist-tag add $PACKAGE_NAME@$RELEASE_VERSION latest --registry=http://52.50.158.57:4873
+    npm publish "$file" --registry http://52.50.158.57:4873/ --tag $TAG
+    npm dist-tag add $PACKAGE_NAME@$RELEASE_VERSION $TAG --registry=http://52.50.158.57:4873
 done
 
