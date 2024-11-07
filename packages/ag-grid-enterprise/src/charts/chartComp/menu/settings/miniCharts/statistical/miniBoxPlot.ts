@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -9,7 +7,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniBoxPlot extends MiniChartWithAxes {
     static chartType: ChartType = 'boxPlot';
 
-    private readonly boxPlotGroups: _Scene.Group[];
+    private readonly boxPlotGroups: any[];
 
     constructor(
         container: HTMLElement,
@@ -102,13 +100,13 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         isCustomTheme?: boolean
     ) {
         const themeBackgroundColor = themeTemplateParameters?.get(
-            this.agChartsContext._Theme.DEFAULT_BACKGROUND_COLOUR
+            this.agChartsContext._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
         );
         const backgroundFill =
             (Array.isArray(themeBackgroundColor) ? themeBackgroundColor[0] : themeBackgroundColor) ?? 'white';
 
         this.boxPlotGroups.forEach((group, i) => {
-            for (const node of group.children() as Iterable<_Scene.Rect | _Scene.Line>) {
+            for (const node of group.children() as Iterable<any>) {
                 const fill = fills[i % fills.length];
                 node.fill = isCustomTheme
                     ? fill
@@ -118,7 +116,7 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         });
     }
 
-    setLineProperties(line: _Scene.Line, x1: number, x2: number, y1: number, y2: number) {
+    setLineProperties(line: any, x1: number, x2: number, y1: number, y2: number) {
         line.x1 = x1;
         line.x2 = x2;
         line.y1 = y1;

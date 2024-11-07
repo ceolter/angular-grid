@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -8,8 +6,8 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniRadarLine extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radarLine';
-    private readonly lines: _Scene.Path[];
-    private readonly markers: _Scene.Circle[];
+    private readonly lines: any[];
+    private readonly markers: any[];
     private readonly markerSize: number = 4;
 
     private data = [
@@ -43,7 +41,7 @@ export class MiniRadarLine extends MiniChartWithPolarAxes {
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.lines.forEach((line: _Scene.Path, i: number) => {
+        this.lines.forEach((line: any, i: number) => {
             const n = this.data[i].length;
             line.stroke = fills[i];
             const startIdx = i * n;

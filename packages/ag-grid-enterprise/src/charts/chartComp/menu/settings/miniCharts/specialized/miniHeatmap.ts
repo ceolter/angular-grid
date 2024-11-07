@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -8,7 +6,7 @@ import { MiniChart } from '../miniChart';
 
 export class MiniHeatmap extends MiniChart {
     static chartType: ChartType = 'heatmap';
-    private readonly rects: _Scene.Rect[];
+    private readonly rects: any[];
 
     constructor(
         container: HTMLElement,
@@ -61,7 +59,7 @@ export class MiniHeatmap extends MiniChart {
             rects.push(...xRects);
 
             return rects;
-        }, [] as _Scene.Rect[]);
+        }, []);
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
@@ -72,8 +70,12 @@ export class MiniHeatmap extends MiniChart {
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
-        const defaultColorRange = themeTemplate?.get(this.agChartsContext._Theme.DEFAULT_DIVERGING_SERIES_COLOR_RANGE);
-        const defaultBackgroundColor = themeTemplate?.get(this.agChartsContext._Theme.DEFAULT_BACKGROUND_COLOUR);
+        const defaultColorRange = themeTemplate?.get(
+            this.agChartsContext._Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE
+        );
+        const defaultBackgroundColor = themeTemplate?.get(
+            this.agChartsContext._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
+        );
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
 

@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -7,7 +5,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniSunburst extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'sunburst';
-    private readonly series: _Scene.Group[];
+    private readonly series: any[];
 
     // Hierarchical data using multidimensional array
     private data = [
@@ -54,13 +52,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
         this.series = [];
 
-        const createSectors = (
-            data: any[],
-            depth: number,
-            startAngle: number,
-            availableAngle: number,
-            group?: _Scene.Group
-        ) => {
+        const createSectors = (data: any[], depth: number, startAngle: number, availableAngle: number, group?: any) => {
             const isArray = Array.isArray(data);
 
             if (!isArray) {
@@ -113,7 +105,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
     updateColors(fills: string[], strokes: string[]) {
         this.series.forEach((group, i) => {
-            for (const sector of group.children() as Iterable<_Scene.Sector>) {
+            for (const sector of group.children() as Iterable<any>) {
                 sector.fill = fills[i % fills.length];
                 sector.stroke = strokes[i % strokes.length];
             }

@@ -1,4 +1,4 @@
-import type { _Util } from 'ag-charts-community';
+import type { IColor, _IUtil } from 'ag-charts-types';
 
 import type { AgInputTextFieldParams, BeanCollection, ComponentSelector } from 'ag-grid-community';
 import { AgInputTextField, RefPlaceholder } from 'ag-grid-community';
@@ -9,7 +9,7 @@ import type { AgChartsContext } from '../gridChartsModule';
 export type AgColorInputEvent = 'colorChanged';
 export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgColorInputEvent> {
     private chartTranslation: ChartTranslationService;
-    private color: typeof _Util.Color;
+    private color: _IUtil['Color'];
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
@@ -30,7 +30,7 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
         });
     }
 
-    public setColor(color: _Util.Color): void {
+    public setColor(color: IColor): void {
         const rgbaColor = color.toRgbaString();
         this.setValue(this.color.fromString(rgbaColor).toHexString().toUpperCase(), true);
         this.eColor.style.backgroundColor = rgbaColor;
@@ -46,7 +46,7 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
         return this;
     }
 
-    public onColorChanged(callback: (color: _Util.Color) => void): void {
+    public onColorChanged(callback: (color: IColor) => void): void {
         this.addManagedListeners(this, { colorChanged: () => callback(this.color.fromString(this.value!)) });
     }
 }

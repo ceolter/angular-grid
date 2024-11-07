@@ -1,10 +1,10 @@
-import type { _Theme } from 'ag-charts-community';
 import type {
     AgChartLegendClickEvent,
     AgChartTheme,
     AgChartThemeName,
     AgChartThemeOverrides,
     AgChartThemePalette,
+    _ITheme,
 } from 'ag-charts-types';
 
 import { _warn } from 'ag-grid-community';
@@ -97,7 +97,7 @@ function isIdenticalPalette(paletteA: AgChartThemePalette, paletteB: AgChartThem
     return arrayCompare(paletteA.fills, paletteB.fills) && arrayCompare(paletteA.strokes, paletteB.strokes);
 }
 
-export function isStockTheme(themeName: string, theme: typeof _Theme): boolean {
+export function isStockTheme(themeName: string, theme: _ITheme): boolean {
     return Object.keys(theme.themes).includes(themeName);
 }
 

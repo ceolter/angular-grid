@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -12,7 +10,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniStackedColumn extends MiniChartWithAxes {
     static chartType: ChartType = 'stackedColumn';
 
-    private readonly stackedColumns: _Scene.Rect[][];
+    private readonly stackedColumns: any[][];
 
     static data = [
         [8, 12, 16],
@@ -46,13 +44,13 @@ export class MiniStackedColumn extends MiniChartWithAxes {
             xScalePadding: 0.3,
         } as CreateColumnRectsParams);
 
-        root.append(([] as _Scene.Rect[]).concat.apply([], this.stackedColumns));
+        root.append(([] as any[]).concat.apply([], this.stackedColumns));
 
         this.updateColors(fills, strokes);
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.stackedColumns.forEach((series: _Scene.Rect[], i: number) =>
+        this.stackedColumns.forEach((series: any[], i: number) =>
             series.forEach((column) => {
                 column.fill = fills[i];
                 column.stroke = strokes[i];

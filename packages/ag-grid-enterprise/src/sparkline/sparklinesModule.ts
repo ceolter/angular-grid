@@ -1,4 +1,4 @@
-import type { AgCharts } from 'ag-charts-community';
+import type { IntegratedSparklineModule } from 'ag-charts-types';
 
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
@@ -7,12 +7,7 @@ import { baseEnterpriseModule } from '../moduleUtils';
 import { sparklineCSS } from './sparkline.css-GENERATED';
 import { SparklineCellRenderer } from './sparklineCellRenderer';
 
-type SparklineChartParams = {
-    AgCharts: typeof AgCharts;
-    setupCharts: () => void;
-};
-
-type SparklineChartsModuleType = { with: (params: SparklineChartParams) => _ModuleWithoutApi } & _ModuleWithoutApi;
+type SparklineChartsModuleType = { with: (params: IntegratedSparklineModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
 const baseSparklinesModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SparklinesModule'),
@@ -31,14 +26,14 @@ const baseSparklinesModule: _ModuleWithoutApi = {
  */
 export const SparklinesModule: SparklineChartsModuleType = {
     with: (params) => {
-        params.setupCharts();
+        params.setup();
         return {
             ...baseSparklinesModule,
             userComponents: {
                 agSparklineCellRenderer: {
                     classImp: SparklineCellRenderer,
                     /** Default params for provided components */
-                    params: { __createSparkline: params.AgCharts.__createSparkline.bind(params.AgCharts) },
+                    params: { __createSparkline: params.create },
                 },
             },
             validate: () => {

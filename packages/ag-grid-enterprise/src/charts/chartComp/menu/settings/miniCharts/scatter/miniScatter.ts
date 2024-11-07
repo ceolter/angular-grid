@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -7,7 +5,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniScatter extends MiniChartWithAxes {
     static chartType: ChartType = 'scatter';
-    private readonly points: _Scene.Shape[];
+    private readonly points: any[];
 
     constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
         super(container, agChartsContext, 'scatterTooltip');
@@ -39,7 +37,7 @@ export class MiniScatter extends MiniChartWithAxes {
         yScale.domain = [-0.5, 3.5];
         yScale.range = [size - padding, padding];
 
-        const points: _Scene.Shape[] = [];
+        const points: any[] = [];
 
         data.forEach((series) => {
             series.forEach(([x, y]) => {

@@ -1,5 +1,4 @@
-import type { _Theme } from 'ag-charts-community';
-import type { AgCartesianAxisType, AgChartThemeOverrides, AgChartThemePalette } from 'ag-charts-types';
+import type { AgCartesianAxisType, AgChartThemeOverrides, AgChartThemePalette, IChartTheme } from 'ag-charts-types';
 
 import type {
     BeanCollection,
@@ -384,7 +383,7 @@ export class ChartController extends BeanStub<ChartControllerEvent> {
         return this.gos.get('chartThemes') || DEFAULT_THEMES;
     }
 
-    public getThemes(): _Theme.ChartTheme[] {
+    public getThemes(): IChartTheme[] {
         const themeNames = this.getThemeNames();
 
         return themeNames.map((themeName) => {

@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -15,7 +13,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
         [2, 3, 4],
     ];
 
-    private readonly bars: _Scene.Rect[][];
+    private readonly bars: any[][];
 
     constructor(
         container: HTMLElement,
@@ -33,7 +31,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
         const size = this.size;
         const padding = this.padding;
 
-        const yScale = new this.agChartsContext._Scene.BandScale<number>();
+        const yScale = new this.agChartsContext._Scene.BandScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
@@ -61,7 +59,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
         );
 
         this.updateColors(fills, strokes);
-        this.root.append(([] as _Scene.Rect[]).concat.apply([], this.bars));
+        this.root.append(([] as any[]).concat.apply([], this.bars));
     }
 
     updateColors(fills: string[], strokes: string[]) {

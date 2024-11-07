@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -10,7 +8,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniWaterfall extends MiniChartWithAxes {
     static chartType: ChartType = 'waterfall';
 
-    private readonly bars: _Scene.Rect[];
+    private readonly bars: any[];
 
     private data = [4, 3, -3, 6, -3];
 
@@ -31,14 +29,20 @@ export class MiniWaterfall extends MiniChartWithAxes {
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
         const { data } = this;
         const positive = {
-            fill: isCustomTheme ? fills[0] : themeTemplate?.get(this.agChartsContext._Theme.PALETTE_ALT_UP_FILL),
-            stroke: isCustomTheme ? strokes[0] : themeTemplate?.get(this.agChartsContext._Theme.PALETTE_ALT_UP_STROKE),
+            fill: isCustomTheme
+                ? fills[0]
+                : themeTemplate?.get(this.agChartsContext._Theme.themeSymbols.PALETTE_ALT_UP_FILL),
+            stroke: isCustomTheme
+                ? strokes[0]
+                : themeTemplate?.get(this.agChartsContext._Theme.themeSymbols.PALETTE_ALT_UP_STROKE),
         };
         const negative = {
-            fill: isCustomTheme ? fills[1] : themeTemplate?.get(this.agChartsContext._Theme.PALETTE_ALT_DOWN_FILL),
+            fill: isCustomTheme
+                ? fills[1]
+                : themeTemplate?.get(this.agChartsContext._Theme.themeSymbols.PALETTE_ALT_DOWN_FILL),
             stroke: isCustomTheme
                 ? strokes[1]
-                : themeTemplate?.get(this.agChartsContext._Theme.PALETTE_ALT_DOWN_STROKE),
+                : themeTemplate?.get(this.agChartsContext._Theme.themeSymbols.PALETTE_ALT_DOWN_STROKE),
         };
         this.bars.forEach((bar, i) => {
             const isPositive = data[i] >= 0;
@@ -48,12 +52,12 @@ export class MiniWaterfall extends MiniChartWithAxes {
     }
 
     createWaterfall(
-        root: _Scene.Group,
+        root: any,
         data: number[],
         size: number,
         padding: number,
         direction: 'horizontal' | 'vertical'
-    ): { bars: _Scene.Rect[] } {
+    ): { bars: any[] } {
         const scalePadding = 2 * padding;
 
         const { processedData, min, max } = accumulateData(data.map((d) => [d]));
@@ -63,7 +67,7 @@ export class MiniWaterfall extends MiniChartWithAxes {
         yScale.domain = [Math.min(min, 0), max];
         yScale.range = [size - scalePadding, scalePadding];
 
-        const xScale = new this.agChartsContext._Scene.BandScale<number>();
+        const xScale = new this.agChartsContext._Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.2;

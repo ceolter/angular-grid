@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -10,8 +8,8 @@ import { createColumnRects, createLinePaths } from '../miniChartHelpers';
 export class MiniCustomCombo extends MiniChart {
     static chartType: ChartType = 'customCombo';
 
-    private columns: _Scene.Rect[];
-    private lines: _Scene.Path[];
+    private columns: any[];
+    private lines: any[];
 
     private columnData = [3, 4];
 
@@ -66,17 +64,17 @@ export class MiniCustomCombo extends MiniChart {
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.columns.forEach((bar: _Scene.Rect, i: number) => {
+        this.columns.forEach((bar: any, i: number) => {
             bar.fill = fills[i];
             bar.stroke = strokes[i];
         });
 
-        this.lines.forEach((line: _Scene.Path, i: number) => {
+        this.lines.forEach((line: any, i: number) => {
             line.stroke = fills[i + 2];
         });
     }
 
-    buildPenIconPath(penIcon: _Scene.Path) {
+    buildPenIconPath(penIcon: any) {
         const { path } = penIcon;
         path.moveTo(25.76, 43.46);
         path.lineTo(31.27, 48.53);

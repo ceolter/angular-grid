@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -8,8 +6,8 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniRangeArea extends MiniChartWithAxes {
     static chartType: ChartType = 'rangeArea';
 
-    private readonly lines: _Scene.Path[][];
-    private readonly areas: _Scene.Path[];
+    private readonly lines: any[][];
+    private readonly areas: any[];
 
     constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
         super(container, agChartsContext, 'rangeAreaTooltip');
@@ -53,11 +51,11 @@ export class MiniRangeArea extends MiniChartWithAxes {
     }
 
     createRangeArea(
-        root: _Scene.Group,
+        root: any,
         data: Array<Array<{ x: number; low: number; high: number }>>,
         size: number,
         padding: number
-    ): { lines: _Scene.Path[][]; areas: _Scene.Path[] } {
+    ): { lines: any[][]; areas: any[] } {
         const xMin = data.reduce((acc, series) => series.reduce((acc, { x }) => Math.min(acc, x), acc), Infinity);
         const xMax = data.reduce((acc, series) => series.reduce((acc, { x }) => Math.max(acc, x), acc), -Infinity);
         const yMin = data.reduce((acc, series) => series.reduce((acc, { low }) => Math.min(acc, low), acc), Infinity);
@@ -76,8 +74,8 @@ export class MiniRangeArea extends MiniChartWithAxes {
         yScale.domain = [yMin, yMax];
         yScale.range = [size - scalePadding, scalePadding];
 
-        const lines: _Scene.Path[][] = [];
-        const areas: _Scene.Path[] = [];
+        const lines: any[][] = [];
+        const areas: any[] = [];
 
         const lowPoints = data.map((series) => {
             const highLine = new this.agChartsContext._Scene.Path();

@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -11,7 +9,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniArea extends MiniChartWithAxes {
     static chartType: ChartType = 'area';
-    protected readonly areas: _Scene.Path[];
+    protected readonly areas: any[];
 
     static readonly data = MiniLine.data;
 

@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -8,7 +6,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniRangeBar extends MiniChartWithAxes {
     static chartType: ChartType = 'rangeBar';
 
-    private readonly bars: _Scene.Rect[];
+    private readonly bars: any[];
 
     constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
         super(container, agChartsContext, 'rangeBarTooltip');
@@ -26,16 +24,16 @@ export class MiniRangeBar extends MiniChartWithAxes {
     }
 
     createRangeBar(
-        root: _Scene.Group,
+        root: any,
         data: number[],
         size: number,
         padding: number,
         direction: 'horizontal' | 'vertical'
-    ): _Scene.Rect[] {
+    ): any[] {
         const barAlongX = direction === 'horizontal';
         const scalePadding = 2 * padding;
 
-        const xScale = new this.agChartsContext._Scene.BandScale<number>();
+        const xScale = new this.agChartsContext._Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.3;

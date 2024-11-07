@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -14,8 +12,8 @@ export interface Coordinate {
 export class MiniAreaColumnCombo extends MiniChartWithAxes {
     static chartType: ChartType = 'areaColumnCombo';
 
-    private columns: _Scene.Rect[];
-    private areas: _Scene.Path[];
+    private columns: any[];
+    private areas: any[];
 
     private columnData = [3, 4.5];
 
@@ -38,7 +36,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         } as CreateColumnRectsParams);
 
         // scale for area series
-        const xScale = new this.agChartsContext._Scene.BandScale<number>();
+        const xScale = new this.agChartsContext._Scene.BandScale();
         xScale.range = [padding, size - padding];
         xScale.domain = [0, 1, 2, 3, 4];
         xScale.paddingInner = 1;
@@ -114,7 +112,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
             area.stroke = strokes[i];
         });
 
-        this.columns.forEach((bar: _Scene.Rect, i: number) => {
+        this.columns.forEach((bar: any, i: number) => {
             bar.fill = fills[i + 1];
             bar.stroke = strokes[i + 1];
         });

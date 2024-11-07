@@ -32,7 +32,7 @@ export default [
             '@typescript-eslint/no-for-in-array': 'error',
             'no-restricted-syntax': ['error', 'ForInStatement'],
             'no-restricted-imports': [
-                'warn',
+                'error',
                 {
                     name: 'ag-charts-community',
                     message: 'There should be no direct imports of ag-charts-community',

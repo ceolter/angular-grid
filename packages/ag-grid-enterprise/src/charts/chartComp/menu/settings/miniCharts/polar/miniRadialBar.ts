@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -8,7 +6,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniRadialBar extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radialBar';
-    private readonly series: _Scene.Group[];
+    private readonly series: any[];
 
     private data = [
         [6, 8, 10],
@@ -77,7 +75,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
 
     updateColors(fills: string[], strokes: string[]) {
         this.series.forEach((group, i) => {
-            for (const sector of group.children() as Iterable<_Scene.Sector>) {
+            for (const sector of group.children() as Iterable<any>) {
                 sector.fill = fills[i % fills.length];
                 sector.stroke = strokes[i % strokes.length];
             }

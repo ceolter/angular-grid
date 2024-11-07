@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -10,7 +8,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniColumn extends MiniChartWithAxes {
     static chartType: ChartType = 'groupedColumn';
 
-    private readonly columns: _Scene.Rect[];
+    private readonly columns: any[];
 
     private columnData = [2, 3, 4];
 
@@ -36,7 +34,7 @@ export class MiniColumn extends MiniChartWithAxes {
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.columns.forEach((column: _Scene.Rect, i) => {
+        this.columns.forEach((column: any, i) => {
             column.fill = fills[i];
             column.stroke = strokes[i];
         });

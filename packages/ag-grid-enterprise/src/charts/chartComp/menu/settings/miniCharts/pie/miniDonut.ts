@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -9,7 +7,7 @@ import { MiniChart } from '../miniChart';
 
 export class MiniDonut extends MiniChart {
     static chartType: ChartType = 'donut';
-    private readonly sectors: _Scene.Sector[];
+    private readonly sectors: any[];
 
     constructor(
         container: HTMLElement,

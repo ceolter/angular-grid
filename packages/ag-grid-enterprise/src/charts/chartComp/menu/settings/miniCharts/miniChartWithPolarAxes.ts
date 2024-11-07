@@ -1,12 +1,10 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { AgChartsContext } from '../../../../gridChartsModule';
 import type { ChartTranslationKey } from '../../../services/chartTranslationService';
 import { MiniChart } from './miniChart';
 
 export abstract class MiniChartWithPolarAxes extends MiniChart {
     private readonly stroke = 'gray';
-    private gridLines: _Scene.Path[];
+    private gridLines: any[];
     protected showRadiusAxisLine: boolean = true;
     protected showAngleAxisLines: boolean = true;
 

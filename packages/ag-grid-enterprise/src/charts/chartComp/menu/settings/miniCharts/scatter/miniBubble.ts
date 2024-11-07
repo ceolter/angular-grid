@@ -1,5 +1,3 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsContext } from '../../../../../gridChartsModule';
@@ -7,7 +5,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniBubble extends MiniChartWithAxes {
     static chartType: ChartType = 'bubble';
-    private readonly points: _Scene.Shape[];
+    private readonly points: any[];
 
     constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
         super(container, agChartsContext, 'bubbleTooltip');
@@ -36,7 +34,7 @@ export class MiniBubble extends MiniChartWithAxes {
         yScale.domain = [0, 1];
         yScale.range = [size - padding, padding];
 
-        const points: _Scene.Shape[] = [];
+        const points: any[] = [];
 
         data.forEach((series) => {
             series.forEach(([x, y, radius]) => {
