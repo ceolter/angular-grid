@@ -37,6 +37,10 @@ export default [
                     name: 'ag-charts-community',
                     message: 'There should be no direct imports of ag-charts-community',
                 },
+                {
+                    name: 'ag-charts-enterprise',
+                    message: 'There should be no direct imports of ag-charts-enterprise',
+                },
             ],
         },
     },
