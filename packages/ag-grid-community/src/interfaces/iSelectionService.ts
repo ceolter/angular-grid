@@ -9,20 +9,8 @@ import type { ChangedPath } from '../utils/changedPath';
 import type { IRowNode } from './iRowNode';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from './selectionState';
 
-export interface SetSelectedParams {
+export interface ISetSelectedParams extends ICommonSelectionParams {
     rowNode: RowNode;
-    /** true or false, whatever you want to set selection to */
-    newValue: boolean;
-    /** whether to remove other selections after this selection is done */
-    clearSelection?: boolean;
-    /** true when action is NOT on this node, ie user clicked a group and this is the child of a group */
-    suppressFinishActions?: boolean;
-    /** gets used when user shift-selects a range */
-    rangeSelect?: boolean;
-    /** used in group selection, if true, filtered out children will not be selected */
-    groupSelectsFiltered?: boolean;
-    /** event source, if from an event */
-    source: SelectionEventSourceType;
 }
 
 export interface ISelectionService {
@@ -57,15 +45,13 @@ export interface ISelectionService {
     updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void;
     updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean;
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
-    setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
+    setSelectedParams(params: ISetSelectedParams): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
     handleSelectionEvent(event: MouseEvent | KeyboardEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
     isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
 }
 
-export interface ISetNodesSelectedParams {
-    /** nodes to change selection of */
-    nodes: readonly RowNode[];
+interface ICommonSelectionParams {
     /** true or false, whatever you want to set selection to */
     newValue: boolean;
     /** whether to remove other selections after this selection is done */
@@ -74,6 +60,11 @@ export interface ISetNodesSelectedParams {
     suppressFinishActions?: boolean;
     /** event source, if from an event */
     source: SelectionEventSourceType;
-    // event
+    /** originating event */
     event?: Event;
+}
+
+export interface ISetNodesSelectedParams extends ICommonSelectionParams {
+    /** nodes to change selection of */
+    nodes: readonly RowNode[];
 }

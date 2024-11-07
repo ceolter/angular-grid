@@ -604,7 +604,6 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
             rowNode: this,
             newValue,
             clearSelection,
-            rangeSelect: false,
             source,
         });
     }

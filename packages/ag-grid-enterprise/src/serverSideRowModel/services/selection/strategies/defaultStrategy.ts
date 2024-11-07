@@ -6,7 +6,6 @@ import type {
     IServerSideSelectionState,
     ISetNodesSelectedParams,
     RowNode,
-    SelectionEventSourceType,
 } from 'ag-grid-community';
 import { BeanStub, _error, _isMultiRowSelection, _isUsingNewRowSelectionAPI, _warn } from 'ag-grid-community';
 
@@ -173,27 +172,6 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
             return -1;
         }
         return this.selectedState.toggledNodes.size;
-    }
-
-    public clearOtherNodes(rowNodeToKeepSelected: RowNode<any>, source: SelectionEventSourceType): number {
-        const clearedRows = this.selectedState.selectAll ? 1 : this.selectedState.toggledNodes.size - 1;
-        this.selectedState = {
-            selectAll: false,
-            toggledNodes: new Set([rowNodeToKeepSelected.id!]),
-        };
-
-        this.rowModel.forEachNode((node) => {
-            if (node !== rowNodeToKeepSelected) {
-                this.selectionSvc?.selectRowNode(node, false, undefined, source);
-            }
-        });
-
-        this.eventSvc.dispatchEvent({
-            type: 'selectionChanged',
-            source,
-        });
-
-        return clearedRows;
     }
 
     public isEmpty(): boolean {

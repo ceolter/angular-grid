@@ -17,7 +17,7 @@ import type { ISelectionService, ISetNodesSelectedParams } from '../interfaces/i
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../interfaces/selectionState';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
 import { ChangedPath } from '../utils/changedPath';
-import { _exists, _missing } from '../utils/generic';
+import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 import { BaseSelectionService } from './baseSelectionService';
 
@@ -182,7 +182,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     private selectChildren(node: RowNode, newValue: boolean, source: SelectionEventSourceType): number {
         const children = this.groupSelectsFiltered ? node.childrenAfterAggFilter : node.childrenAfterGroup;
 
-        if (_missing(children)) {
+        if (!children) {
             return 0;
         }
 
@@ -272,7 +272,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         return selectionChanged;
     }
 
-    public clearOtherNodes(rowNodeToKeepSelected: RowNode, source: SelectionEventSourceType): number {
+    private clearOtherNodes(rowNodeToKeepSelected: RowNode, source: SelectionEventSourceType): number {
         const groupsToRefresh = new Map<string, RowNode>();
         let updatedCount = 0;
         this.selectedNodes.forEach((otherRowNode) => {
@@ -422,7 +422,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
     public isEmpty(): boolean {
         let count = 0;
-        this.selectedNodes.forEach((rowNode: RowNode) => {
+        this.selectedNodes.forEach((rowNode) => {
             if (rowNode) {
                 count++;
             }
@@ -443,7 +443,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             }
             this.getNodesToSelect(selectAll).forEach(callback);
         } else {
-            this.selectedNodes.forEach((rowNode: RowNode) => {
+            this.selectedNodes.forEach((rowNode) => {
                 // remember the reference can be to null, as we never 'delete' from the map
                 if (rowNode) {
                     callback(rowNode);

@@ -21,7 +21,7 @@ import {
 } from '../gridOptionsUtils';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
-import type { ISetNodesSelectedParams, SetSelectedParams } from '../interfaces/iSelectionService';
+import type { ISetNodesSelectedParams, ISetSelectedParams } from '../interfaces/iSelectionService';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import { _setAriaSelected } from '../utils/aria';
@@ -242,7 +242,7 @@ export abstract class BaseSelectionService extends BeanStub {
         return true;
     }
 
-    public setSelectedParams(params: SetSelectedParams & { event?: Event }): number {
+    public setSelectedParams(params: ISetSelectedParams): number {
         const { rowNode } = params;
         if (rowNode.rowPinned) {
             _warn(59);
