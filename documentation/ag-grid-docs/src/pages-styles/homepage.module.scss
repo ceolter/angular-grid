@@ -612,7 +612,7 @@ body {
 }
 
 .copyToClipboardIcon {
-    fill: var(--color-white);
+    fill: var(--color-white) !important;
     height: 20px;
     width: 20px;
     cursor: pointer;
