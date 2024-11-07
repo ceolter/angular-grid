@@ -186,7 +186,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         const { gos } = this.beans;
 
         if (!this.cellCtrl.editing && _isRowSelection(gos)) {
-            this.beans.selectionSvc?.processSelectionEvent(event, this.rowNode, 'spaceKey');
+            this.beans.selectionSvc?.handleSelectionEvent(event, this.rowNode, 'spaceKey');
         }
 
         // prevent default as space key, by default, moves browser scroll down

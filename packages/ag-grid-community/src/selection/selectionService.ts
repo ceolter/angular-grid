@@ -69,7 +69,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         this.resetNodes();
     }
 
-    public processSelectionEvent(
+    public handleSelectionEvent(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode,
         source: SelectionEventSourceType

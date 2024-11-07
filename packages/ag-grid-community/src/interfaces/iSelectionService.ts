@@ -59,15 +59,13 @@ export interface ISelectionService {
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
     setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
-    processSelectionEvent(
-        event: MouseEvent | KeyboardEvent,
-        rowNode: RowNode,
-        source: SelectionEventSourceType
-    ): number;
+    handleSelectionEvent(event: MouseEvent | KeyboardEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
     isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
 }
 
-interface INodeSelectionParams {
+export interface ISetNodesSelectedParams {
+    /** nodes to change selection of */
+    nodes: readonly RowNode[];
     /** true or false, whatever you want to set selection to */
     newValue: boolean;
     /** whether to remove other selections after this selection is done */
@@ -78,9 +76,4 @@ interface INodeSelectionParams {
     source: SelectionEventSourceType;
     // event
     event?: Event;
-}
-
-export interface ISetNodesSelectedParams extends INodeSelectionParams {
-    // node to change selection of
-    nodes: readonly RowNode[];
 }

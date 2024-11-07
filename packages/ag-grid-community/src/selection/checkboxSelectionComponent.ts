@@ -101,7 +101,7 @@ export class CheckboxSelectionComponent extends Component {
                 // would possibly get selected twice
                 _stopPropagationForAgGrid(event);
 
-                this.beans.selectionSvc?.processSelectionEvent(event, this.rowNode, 'checkboxSelected');
+                this.beans.selectionSvc?.handleSelectionEvent(event, this.rowNode, 'checkboxSelected');
             },
         });
 

@@ -68,7 +68,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy = this.createManagedBean(new Strategy());
     }
 
-    public processSelectionEvent(
+    public handleSelectionEvent(
         event: MouseEvent | KeyboardEvent,
         rowNode: RowNode<any>,
         source: SelectionEventSourceType
