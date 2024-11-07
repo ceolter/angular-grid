@@ -145,8 +145,8 @@ const frameworksData = [
         <Quotes client:load data={quotesData} />
     </div>
 
-    <div class={styles.section}>
-        <div class:list={[styles.latestNewsSectionInner, 'layout-max-width-small']}>
+    <div class:list={[styles.sectionContent, styles.faqSection]}>
+        <div class:list={[styles.latestNewsSectionInner]}>
             <div class={styles.headingContainer}>
                 <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Grid</h2>
                 <h3 class={styles.heading}>Regular Releases, <br /> Updates, and&nbsp;Enhancements</h3>
@@ -154,6 +154,7 @@ const frameworksData = [
                     With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of
                     the newest features and improvements to AG Grid Data Grids.
                 </h4>
+                <div class={styles.blueRectangle}></div>
             </div>
             <div class={styles.latestNewsVersions}>
                 {
@@ -190,7 +191,7 @@ const frameworksData = [
         </div>
     </div>
 
-    <div class={styles.sectionContent}>
+    <div class:list={[styles.sectionContent, styles.faqSection]}>
         <div class={styles.headingContainer}>
             <h2 class={styles.tag}>Data Grid FAQs</h2>
             <h3 class={styles.heading}>Frequently Asked Questions</h3>

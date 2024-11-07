@@ -28,7 +28,7 @@
         position: relative;
         margin-bottom: $spacing-size-6;
         padding: $spacing-size-4 $spacing-size-6;
-        background-color: color-mix(in srgb, var(--color-brand-100), var(--color-bg-primary) 50%);
+        background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 50%);
         border-radius: var(--radius-md);
     }
 
@@ -95,7 +95,7 @@
     height: 22px;
     bottom: -$spacing-size-4;
     left: var(--avatar-size);
-    fill: color-mix(in srgb, var(--color-brand-100), var(--color-bg-primary) 50%);
+    fill: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 50%);
 
     @media screen and (min-width: $breakpoint-quotes-large) {
         bottom: -22px;

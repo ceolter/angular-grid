@@ -209,12 +209,12 @@ body {
 
     &::before {
         left: 0;
-        background-image: linear-gradient(90deg, var(--color-util-gray-50), transparent);
+        background-image: linear-gradient(90deg, var(--color-white), transparent);
     }
 
     &::after {
         right: 0;
-        background-image: linear-gradient(90deg, transparent, var(--color-util-gray-50));
+        background-image: linear-gradient(90deg, transparent, var(--color-white));
     }
 
     @media screen and (max-width: $breakpoint-hero-small) {
@@ -676,7 +676,6 @@ body {
     gap: var(--versions-gap);
     margin-top: $spacing-size-8;
     margin-bottom: $spacing-size-8;
-    overflow-x: hidden;
 }
 
 .blueRectangle {
@@ -691,18 +690,32 @@ body {
     border-right: 1px solid linear-gradient(0deg, #dde9f9 -61.34%, #0e449126 89.79%);
     border-top: 1px solid #0e459124;
 }
+
+.faqSection {
+    .blueRectangle {
+        transform: translate(-50%, 250px);
+    }
+}
 .customerSubheading {
     opacity: 0.7;
     margin: 0 auto;
     display: flex;
     justify-content: center;
 }
-
+.sectionContent a {
+    width: fit-content;
+    margin-top: $spacing-size-3;
+}
 .learnMoreButton {
     width: fit-content;
     margin-top: $spacing-size-3;
 }
 
 .quotesSection {
+    padding-bottom: $spacing-size-16;
+}
+
+.faqSection {
+    padding-top: $spacing-size-20;
     padding-bottom: $spacing-size-16;
 }

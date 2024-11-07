@@ -32,8 +32,10 @@
     width: 100%;
     padding: $spacing-size-4;
     border-radius: 8px;
-    border: 1px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-secondary);
     gap: $spacing-size-4;
+    background-color: var(--color-bg-primary);
+    box-shadow: var(--shadow-sm);
 
     @container (min-width: 640px) {
         width: calc(100% / 2 - var(--versions-gap) / 2);
