@@ -1,0 +1,8 @@
+{
+  "name": "module-size",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "testing/module-size",
+  "projectType": "app",
+  "targets": {},
+  "tags": []
+}
