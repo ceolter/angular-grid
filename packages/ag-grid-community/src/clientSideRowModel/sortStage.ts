@@ -197,7 +197,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         const untouchedRows = new Set<string>();
         const touchedRows: SortedRowNode[] = [];
 
-        const { removals, updates } = changedRowNodes;
+        const updates = changedRowNodes.updates;
         for (let i = 0, len = unsortedRows.length; i < len; ++i) {
             const row = unsortedRows[i];
             if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
@@ -205,7 +205,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
                     currentPos: touchedRows.length,
                     rowNode: row,
                 });
-            } else if (!removals.has(row)) {
+            } else {
                 untouchedRows.add(row.id!);
             }
         }
