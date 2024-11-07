@@ -112,7 +112,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
         sideBar: { module: 'SideBarModule' },
         statusBar: { module: 'StatusBarCoreModule' },
-        enableCharts: { module: 'GridChartsModule' },
+        enableCharts: { module: 'IntegratedChartsModule' },
         getMainMenuItems: { module: 'ColumnMenuModule' },
         getContextMenuItems: { module: 'ContextMenuModule' },
         allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
