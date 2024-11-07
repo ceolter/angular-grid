@@ -8,7 +8,7 @@ import type { ILicenseManager } from '../license/shared/licenseManager';
 import { LicenseManager } from '../license/shared/licenseManager';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
-import { VERSION as GRID_VERSION } from '../version';
+import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { EnterpriseChartProxyFactory } from './chartComp/chartProxies/enterpriseChartProxyFactory';
 import { AdvancedSettingsMenuFactory } from './chartComp/menu/advancedSettings/advancedSettingsMenuFactory';
@@ -110,11 +110,12 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
 
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
     with: (params) => {
-        // params.AgCharts.setGridContext(true);
+        const AgCharts = (params as any).AgCharts;
+        AgCharts.setGridContext(true);
         // init agChartsContext bean to provide chart things to the grid
         if (params.isEnterprise) {
             // warn about passing enterprise charts into community integrated charts
-            // LicenseManager.setChartsLicenseManager(params.AgCharts as ILicenseManager);
+            LicenseManager.setChartsLicenseManager(AgCharts as ILicenseManager);
         }
 
         params.setup();
@@ -123,12 +124,12 @@ export const IntegratedChartsModule: IntegratedChartsModuleType = {
             ...baseIntegratedChartsModule,
             validate: () => {
                 return validGridChartsVersion({
-                    gridVersion: GRID_VERSION,
+                    gridVersion: VERSION,
                     chartsVersion: params.VERSION,
                 });
             },
             // bind the params to the constructor to avoid the need for static properties
-            beans: [AgChartsContext.bind(null, params)],
+            beans: [...baseIntegratedChartsModule.beans!, AgChartsContext.bind(null, params)],
         };
     },
     ...baseIntegratedChartsModule,
@@ -142,9 +143,11 @@ export class AgChartsContext extends BeanStub implements NamedBean {
     _Theme: IntegratedChartModule['_Theme'];
     _Scene: any; // IntegratedChartModule['_Scene'];
     _Util: IntegratedChartModule['_Util'];
+    AgCharts: any; // AgChartsModule;
 
     constructor(params: IntegratedChartModule) {
         super();
+        this.AgCharts = (params as any).AgCharts;
         this.createChart = params.create;
         this._Theme = params._Theme;
         this._Scene = params._Scene;

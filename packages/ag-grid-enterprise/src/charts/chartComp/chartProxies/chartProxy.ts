@@ -86,7 +86,7 @@ export abstract class ChartProxy<
         this.standaloneChartType = getSeriesType(this.chartType) as TSeries;
 
         if (this.chart == null) {
-            this.chart = chartProxyParams.agChartsContext.createChart(this.getCommonChartOptions());
+            this.chart = chartProxyParams.agChartsContext.AgCharts.create(this.getCommonChartOptions());
         } else {
             // On chart change, reset formatting panel changes.
             this.clearThemeOverrides = true;
