@@ -1,12 +1,7 @@
 import type { AgColumn } from '../entities/agColumn';
 import type { CheckboxSelectionCallback } from '../entities/colDef';
 import type { RowNode } from '../entities/rowNode';
-import {
-    _getCheckboxes,
-    _getHideDisabledCheckboxes,
-    _getIsRowSelectable,
-    _isClientSideRowModel,
-} from '../gridOptionsUtils';
+import { _getCheckboxes, _getHideDisabledCheckboxes, _getIsRowSelectable } from '../gridOptionsUtils';
 import type { GroupCheckboxSelectionCallback } from '../interfaces/groupCellRenderer';
 import { _getAriaCheckboxStateName } from '../utils/aria';
 import { _stopPropagationForAgGrid } from '../utils/event';
@@ -66,18 +61,6 @@ export class CheckboxSelectionComponent extends Component {
         this.eCheckbox.setInputAriaLabel(`${translatedLabel} (${stateName})`);
     }
 
-    private onClicked(newValue: boolean, event: MouseEvent): number {
-        return (
-            this.beans.selectionSvc?.setSelectedParams({
-                rowNode: this.rowNode,
-                newValue,
-                rangeSelect: event.shiftKey,
-                event,
-                source: 'checkboxSelected',
-            }) ?? 0
-        );
-    }
-
     public init(params: {
         rowNode: RowNode;
         column?: AgColumn;
@@ -135,16 +118,6 @@ export class CheckboxSelectionComponent extends Component {
         }
 
         this.eCheckbox.getInputElement().setAttribute('tabindex', '-1');
-    }
-
-    private shouldHandleIndeterminateState(isSelected: boolean | undefined, groupSelectsFiltered: boolean): boolean {
-        // for CSRM groupSelectsFiltered, we can get an indeterminate state where all filtered children are selected,
-        // and we would expect clicking to deselect all rather than select all
-        return (
-            groupSelectsFiltered &&
-            (this.eCheckbox.getPreviousValue() === undefined || isSelected === undefined) &&
-            _isClientSideRowModel(this.gos)
-        );
     }
 
     private showOrHideSelect(): void {

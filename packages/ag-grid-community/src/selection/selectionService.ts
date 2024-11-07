@@ -16,7 +16,6 @@ import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { ISelectionService, ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../interfaces/selectionState';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
-// import { _last } from '../utils/array';
 import { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';

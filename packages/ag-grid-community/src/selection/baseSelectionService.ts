@@ -355,7 +355,8 @@ export abstract class BaseSelectionService extends BeanStub {
             const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
             const shouldClear = isRowClicked && (!enableSelectionWithoutKeys || !enableClickSelection);
 
-            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'`
+            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'` in CSRM.
+            // Specifically, clicking should toggle them _off_ instead of _on_
             if (groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
                 return {
                     node,
