@@ -719,3 +719,12 @@ body {
     padding-top: $spacing-size-20;
     padding-bottom: $spacing-size-16;
 }
+
+.themeBuilder {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    align-items: center;
+}

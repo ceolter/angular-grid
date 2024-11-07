@@ -119,102 +119,117 @@ const frameworksData = [
     </div>
 
     <div class={styles.sectionContent}>
-        <header class={styles.headingContainer}>
-            <h2 class={styles.tag}>Performance And Speed First</h2>
-            <h3 class={styles.heading}>The Fastest Data Grid In The World</h3>
-            <h4 class={styles.subHeading}>
-                Handle millions of rows, and thousands of updates per second out of the box, without compromising on
-                performance
-            </h4>
-            <a href="/react-data-grid/getting-started/" class:list={[styles.learnMoreButton, 'button-tertiary']}
-                >Learn more
-            </a>
-        </header>
-        <div class={styles.blueRectangle}></div>
-        <AutomatedExamples client:visible />
-    </div>
-
-    <div class={styles.sectionContent}>
         <div class={styles.sectionInner}>
             <div class={styles.headingContainer}>
-                <h2 class={styles.tag}>Where Can I See AG Grid React Tables Being Used?</h2>
-                <h3 class={styles.heading}>Used in Every Industry, for All Types of Data</h3>
+                <h2 class={styles.tag}>Why Use AG Grid for your Data Grids?</h2>
+                <h3 class={styles.heading}>Fully Customisable Data Grids, with an Unbeatable Feature Set</h3>
                 <h4 class={styles.subHeading}>
-                    Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of
-                    these uses are private, but we've hand-picked a few open-source examples:
+                    Get started in minutes and access 1000s of features without compromising on performance. Customise
+                    your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our
+                    advanced features.
                 </h4>
             </div>
-            <Showcase client:load />
         </div>
-    </div>
+        <div class={styles.themeBuilder}>Minidifed version of the Theme builder here <div></div></div>
 
-    <div class:list={[styles.sectionContent, styles.quotesSection]}>
-        <div class={styles.headingContainer}>
-            <h2 class={styles.tag}>Who Builds Data Grids with AG Grid?</h2>
-            <h3 class={styles.heading}>Loved By Developers, Trusted By The Worlds Largest Enterprises</h3>
-            <h4 class={styles.subHeading}>
-                Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000 Stars on
-                GitHub.
-            </h4>
+        <div class={styles.sectionContent}>
+            <header class={styles.headingContainer}>
+                <h2 class={styles.tag}>Performance And Speed First</h2>
+                <h3 class={styles.heading}>The Fastest Data Grid In The World</h3>
+                <h4 class={styles.subHeading}>
+                    Handle millions of rows, and thousands of updates per second out of the box, without compromising on
+                    performance
+                </h4>
+                <a href="/react-data-grid/getting-started/" class:list={[styles.learnMoreButton, 'button-tertiary']}
+                    >Learn more
+                </a>
+            </header>
+            <div class={styles.blueRectangle}></div>
+            <AutomatedExamples client:visible />
         </div>
-        <Quotes client:load data={quotesData} />
-    </div>
 
-    <div class:list={[styles.sectionContent, styles.faqSection]}>
-        <div class:list={[styles.latestNewsSectionInner]}>
+        <div class={styles.sectionContent}>
+            <div class={styles.sectionInner}>
+                <div class={styles.headingContainer}>
+                    <h2 class={styles.tag}>Where Can I See AG Grid React Tables Being Used?</h2>
+                    <h3 class={styles.heading}>Used in Every Industry, for All Types of Data</h3>
+                    <h4 class={styles.subHeading}>
+                        Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most
+                        of these uses are private, but we've hand-picked a few open-source examples:
+                    </h4>
+                </div>
+                <Showcase client:load />
+            </div>
+        </div>
+
+        <div class:list={[styles.sectionContent, styles.quotesSection]}>
             <div class={styles.headingContainer}>
-                <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Grid</h2>
-                <h3 class={styles.heading}>Regular Releases, <br /> Updates, and&nbsp;Enhancements</h3>
+                <h2 class={styles.tag}>Who Builds Data Grids with AG Grid?</h2>
+                <h3 class={styles.heading}>Loved By Developers, Trusted By The Worlds Largest Enterprises</h3>
                 <h4 class={styles.subHeading}>
-                    With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of
-                    the newest features and improvements to AG Grid Data Grids.
+                    Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000
+                    Stars on GitHub.
                 </h4>
-                <div class={styles.blueRectangle}></div>
             </div>
-            <div class={styles.latestNewsVersions}>
-                {
-                    versionsData
-                        .filter((versionInfo) => versionInfo.version.endsWith('.0')) // Exclude patch releases
-                        .slice(0, 3)
-                        .map((versionInfo, index) => {
-                            if (versionInfo.highlights) {
-                                const { major, minor } = parseVersion(versionInfo.version);
-                                const blogUrl = `${minor ? `${blogPrefix}${major}-${minor}` : `${blogPrefix}${major}`}/`;
-                                return (
-                                    <Version
-                                        client:load
-                                        isLatest={index === 0}
-                                        blogUrl={blogUrl}
-                                        version={versionInfo.version}
-                                        date={versionInfo.date}
-                                        highlights={versionInfo.highlights}
-                                        notesPath={versionInfo.notesPath}
-                                    />
-                                );
-                            }
-                        })
-                }
-            </div>
-            <div class={styles.ctaButton}>
-                <a
-                    href={urlWithBaseUrl(
-                        '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
-                    )}
-                    class="button">See Whats New</a
-                >
-            </div>
+            <Quotes client:load data={quotesData} />
         </div>
-    </div>
 
-    <div class:list={[styles.sectionContent, styles.faqSection]}>
-        <div class={styles.headingContainer}>
-            <h2 class={styles.tag}>Data Grid FAQs</h2>
-            <h3 class={styles.heading}>Frequently Asked Questions</h3>
-            <h4 class={styles.subHeading}>
-                How many rows can AG Grid handle? How fast is AG Grid? Is AG Grid free? Answers to these common
-                questions and more.
-            </h4>
+        <div class:list={[styles.sectionContent, styles.faqSection]}>
+            <div class:list={[styles.latestNewsSectionInner]}>
+                <div class={styles.headingContainer}>
+                    <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Grid</h2>
+                    <h3 class={styles.heading}>Regular Releases, <br /> Updates, and&nbsp;Enhancements</h3>
+                    <h4 class={styles.subHeading}>
+                        With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all
+                        of the newest features and improvements to AG Grid Data Grids.
+                    </h4>
+                    <div class={styles.blueRectangle}></div>
+                </div>
+                <div class={styles.latestNewsVersions}>
+                    {
+                        versionsData
+                            .filter((versionInfo) => versionInfo.version.endsWith('.0')) // Exclude patch releases
+                            .slice(0, 3)
+                            .map((versionInfo, index) => {
+                                if (versionInfo.highlights) {
+                                    const { major, minor } = parseVersion(versionInfo.version);
+                                    const blogUrl = `${minor ? `${blogPrefix}${major}-${minor}` : `${blogPrefix}${major}`}/`;
+                                    return (
+                                        <Version
+                                            client:load
+                                            isLatest={index === 0}
+                                            blogUrl={blogUrl}
+                                            version={versionInfo.version}
+                                            date={versionInfo.date}
+                                            highlights={versionInfo.highlights}
+                                            notesPath={versionInfo.notesPath}
+                                        />
+                                    );
+                                }
+                            })
+                    }
+                </div>
+                <div class={styles.ctaButton}>
+                    <a
+                        href={urlWithBaseUrl(
+                            '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
+                        )}
+                        class="button">See Whats New</a
+                    >
+                </div>
+            </div>
         </div>
-        <Faqs client:load />
+
+        <div class:list={[styles.sectionContent, styles.faqSection]}>
+            <div class={styles.headingContainer}>
+                <h2 class={styles.tag}>Data Grid FAQs</h2>
+                <h3 class={styles.heading}>Frequently Asked Questions</h3>
+                <h4 class={styles.subHeading}>
+                    How many rows can AG Grid handle? How fast is AG Grid? Is AG Grid free? Answers to these common
+                    questions and more.
+                </h4>
+            </div>
+            <Faqs client:load />
+        </div>
     </div>
 </Layout>
