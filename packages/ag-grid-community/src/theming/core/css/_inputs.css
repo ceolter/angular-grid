@@ -18,25 +18,3 @@
     width: 100%;
     min-width: 0;
 }
-
-/* icon for search inputs */
-:where(.ag-column-select-header-filter-wrapper, .ag-filter-toolpanel-search, .ag-mini-filter, .ag-filter-filter) {
-    .ag-input-wrapper::before {
-        position: absolute;
-        display: block;
-        margin-left: var(--ag-spacing);
-        width: 12px;
-        height: 12px;
-        background-color: currentcolor;
-        mask-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMS41Ij48cGF0aCBkPSJNNS4zIDlhMy43IDMuNyAwIDEgMCAwLTcuNSAzLjcgMy43IDAgMCAwIDAgNy41Wk0xMC41IDEwLjUgOC4zIDguMiIvPjwvc3ZnPg==');
-        mask-position: center;
-        mask-repeat: no-repeat;
-        opacity: 0.5;
-        content: '';
-    }
-
-    .ag-text-field-input,
-    .ag-number-field-input {
-        padding-left: calc(var(--ag-spacing) * 1.5 + 12px);
-    }
-}

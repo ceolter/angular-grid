@@ -366,6 +366,12 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     position: absolute;
     white-space: nowrap;
     height: 100%;
+
+    /* remove the box shadow added by default to all focussed divs because cells
+       use a border only to indicate focus */
+    &:focus-visible {
+        box-shadow: none;
+    }
 }
 
 /* This is used when using a Cell Wrapper (eg row drag, selection, or auto-height).

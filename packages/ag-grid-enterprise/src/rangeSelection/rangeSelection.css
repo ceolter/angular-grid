@@ -1,4 +1,7 @@
-/* stylelint-disable selector-max-specificity */
+/* stylelint-disable selector-max-specificity -- cell and column borders have
+    lots of overlapping rules defined in different files that rely on different
+    specificities to work, one day it would be good to tackle this and properly
+    refactor border styles to be less specific */
 
 .ag-cell-range-selected:not(.ag-cell-focus),
 .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {
