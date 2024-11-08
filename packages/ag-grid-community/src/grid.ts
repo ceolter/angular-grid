@@ -280,11 +280,10 @@ export class GridCoreCreator {
             _logPreCreationError(
                 200,
                 {
-                    reason: `rowModelType = '${rowModelType}'`,
+                    reasonOrId: `rowModelType = '${rowModelType}'`,
                     moduleName: rowModuleModelName,
                     gridScoped: _areModulesGridScoped(),
                     gridId,
-                    isEnterprise: rowModelType === 'serverSide' || rowModelType === 'viewport',
                 },
                 `Missing module ${rowModuleModelName} for rowModelType ${rowModelType}.`
             );

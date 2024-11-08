@@ -1,42 +1,41 @@
 import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
-import type { ModuleName } from '../../interfaces/iModule';
+import type { EnterpriseModuleName, ModuleName } from '../../interfaces/iModule';
 import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
+import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
 
+export const moduleImportMsg = (moduleName: ModuleName | ModuleName[]) => {
+    const moduleNames = Array.isArray(moduleName) ? moduleName : [moduleName];
+    const imports = moduleNames
+        .map(
+            (modName) =>
+                `import { ${modName} } from '${ENTERPRISE_MODULE_NAMES[modName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
+        )
+        .join(' \n');
+    return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
+};
+
 const missingModule = ({
-    reason,
+    reasonOrId,
     moduleName,
     gridScoped,
     gridId,
-    isEnterprise,
     additionalText,
 }: {
-    reason: string;
+    reasonOrId: string | keyof MissingModuleErrors;
     moduleName: ModuleName | ModuleName[];
     gridScoped: boolean;
     gridId: string;
-    isEnterprise?: boolean;
     additionalText?: string;
 }) => {
-    // TODO - update to list multiple
-    const singleModuleName = Array.isArray(moduleName) ? moduleName[0] : moduleName;
+    const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
     return (
-        `Unable to use ${reason} as ${singleModuleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
-import { ModuleRegistry } from 'ag-grid-community';
-import { ${singleModuleName} } from '${isEnterprise ? 'ag-grid-enterprise' : 'ag-grid-community'}';
-
-ModuleRegistry.registerModules([ ${singleModuleName} ]);
-
-For more info see: ${BASE_URL}/javascript-grid/modules/` +
-        (additionalText
-            ? `
-
-${additionalText}`
-            : '')
+        `Unable to use ${reason} as ${Array.isArray(moduleName) ? 'one of ' + moduleName.join(', ') : moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '')
     );
 };
 
@@ -476,8 +475,7 @@ export const AG_GRID_ERRORS = {
     214: ({ key }: { key: string }) => `unable to lookup Tool Panel as invalid key supplied: ${key}` as const,
     215: ({ key, defaultByKey }: { key: string; defaultByKey: object }) =>
         `the key ${key} is not a valid key for specifying a tool panel, valid keys are: ${Object.keys(defaultByKey).join(',')}` as const,
-    216: ({ id }: { id: string }) =>
-        `error processing tool panel component ${id}. You need to specify 'toolPanel'` as const,
+    216: ({ name }: { name: string }) => `Missing component for '${name}'` as const,
     217: ({ invalidColIds }: { invalidColIds: any[] }) =>
         ['unable to find grid columns for the supplied colDef(s):', invalidColIds] as const,
     218: ({ property, defaultOffset }: { property: string; defaultOffset: number | undefined }) =>
