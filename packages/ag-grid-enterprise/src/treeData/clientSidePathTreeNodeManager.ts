@@ -43,17 +43,13 @@ export class ClientSidePathTreeNodeManager<TData>
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const changedRowNodes = params.changedRowNodes;
         if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes, params.changedPath, params.rowNodesOrderChanged);
+            this.executeTransactions(changedRowNodes, params.changedPath);
         }
 
         super.refreshModel(params);
     }
 
-    private executeTransactions(
-        changedRowNodes: IChangedRowNodes,
-        changedPath: ChangedPath | undefined,
-        rowNodesOrderMaybeChanged: boolean | undefined
-    ): void {
+    private executeTransactions(changedRowNodes: IChangedRowNodes, changedPath: ChangedPath | undefined): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
@@ -75,7 +71,8 @@ export class ClientSidePathTreeNodeManager<TData>
         }
 
         const rows = treeRoot.row?.allLeafChildren;
-        if (rowNodesOrderMaybeChanged && rows) {
+
+        if (rows && (changedRowNodes.rowsOrderChanged || changedRowNodes.rowsInserted)) {
             for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
                 const node = rows[rowIdx].treeNode as TreeNode | null;
                 if (node && node.sourceIdx !== rowIdx) {

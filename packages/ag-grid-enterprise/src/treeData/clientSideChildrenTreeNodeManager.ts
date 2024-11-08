@@ -103,7 +103,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         const nodesToUnselect: TreeRow<TData>[] = [];
 
         let orderChanged = false;
-        let rowsChanged = false;
+        let treeChanged = false;
 
         const processChildrenNoReorder = (node: TreeNode, children: TData[]): void => {
             for (let i = 0, len = children.length; i < len; ++i) {
@@ -173,7 +173,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             }
 
             if (this.treeSetRow(node, row, created)) {
-                rowsChanged = true;
+                treeChanged = true;
             }
 
             const children = childrenGetter?.(data);
@@ -220,10 +220,13 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         this.treeCommit(changedPath);
 
-        if (rowsChanged || orderChanged) {
+        if (orderChanged) {
+            changedRowNodes.rowsOrderChanged = true;
+        }
+
+        if (treeChanged || changedRowNodes.hasChanges()) {
             params.step = 'group';
             params.rowDataUpdated = true;
-            params.rowNodesOrderChanged = orderChanged;
         }
     }
 

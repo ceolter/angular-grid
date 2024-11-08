@@ -70,6 +70,12 @@ export interface IChangedRowNodes<TData = any> {
      */
     readonly updates: ReadonlyMap<RowNode<TData>, boolean>;
 
+    /** true if rows were inserted in the middle of something else and not just appended or removed. */
+    rowsInserted: boolean;
+
+    /** true if the order of root.allLeafChildren has changed. */
+    rowsOrderChanged: boolean;
+
     /** Marks a row as removed. Order of operations is: remove, update, add */
     remove(node: IRowNode<TData>): void;
 
@@ -78,6 +84,9 @@ export interface IChangedRowNodes<TData = any> {
 
     /** Marks a row as added. Order of operation is: remove, update, add */
     add(node: IRowNode<TData>): void;
+
+    /** Returns true if there are changes */
+    hasChanges(): boolean;
 }
 
 export interface RefreshModelParams<TData = any> {
@@ -97,12 +106,6 @@ export interface RefreshModelParams<TData = any> {
      * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
      */
     newData?: boolean;
-
-    /**
-     * true if the order of root.allLeafChildren has changed.
-     * This can happen if order of root.allLeafChildren is updated or rows are inserted (and not just appended at the end)
-     */
-    rowNodesOrderChanged?: boolean;
 
     /**
      * A data structure that holds the affected row nodes, if this was an update and not a full reload.

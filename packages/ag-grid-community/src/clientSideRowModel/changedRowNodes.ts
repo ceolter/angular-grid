@@ -6,6 +6,9 @@ export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public readonly removals = new Set<RowNode<TData>>();
     public readonly updates = new Map<RowNode<TData>, boolean>();
 
+    public rowsInserted = false;
+    public rowsOrderChanged = false;
+
     /** Marks a row as removed. Order of operations is: remove, update, add */
     public remove(node: IRowNode<TData>): void {
         this.removals.add(node as RowNode<TData>);
@@ -25,5 +28,9 @@ export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public add(node: IRowNode<TData>): void {
         this.removals.delete(node as RowNode<TData>);
         this.updates.set(node as RowNode<TData>, true);
+    }
+
+    public hasChanges(): boolean {
+        return this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
     }
 }
