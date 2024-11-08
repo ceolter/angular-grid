@@ -14,6 +14,7 @@ import {
     selectRowsByIndex,
     toggleCheckboxByIndex,
     toggleHeaderCheckboxByIndex,
+    waitForEvent,
 } from './utils';
 
 describe('Row Selection Grid Options', () => {
@@ -37,7 +38,9 @@ describe('Row Selection Grid Options', () => {
     async function createGridAndWait(gridOptions: GridOptions): Promise<GridApi> {
         const api = createGrid(gridOptions);
 
-        return new Promise((resolve) => api.addEventListener('firstDataRendered', () => resolve(api)));
+        await waitForEvent('firstDataRendered', api);
+
+        return api;
     }
 
     const gridMgr = new TestGridsManager({
