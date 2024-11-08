@@ -1,6 +1,6 @@
 import { getIsDev } from '@utils/env';
 
-import { PUBLISHED_UMD_URLS, USE_PUBLISHED_PACKAGES, getEnterprisePackageName } from '../constants';
+import { PUBLISHED_UMD_URLS, USE_PUBLISHED_PACKAGES } from '../constants';
 import { pathJoin } from './pathJoin';
 
 export const getGridScriptPath = (sitePrefix?: string) => {
@@ -16,10 +16,7 @@ export const getGridEnterpriseScriptPath = (sitePrefix?: string) => {
         return PUBLISHED_UMD_URLS['ag-grid-enterprise'];
     }
     const sitePrefixUrl = sitePrefix ? sitePrefix : '';
-    return pathJoin(
-        sitePrefixUrl,
-        `/files/${getEnterprisePackageName()}/dist/${getEnterprisePackageName()}${getIsDev() ? '' : '.min'}.js`
-    );
+    return pathJoin(sitePrefixUrl, `/files/ag-grid-enterprise/dist/ag-grid-enterprise${getIsDev() ? '' : '.min'}.js`);
 };
 
 export const getGridLocaleScriptPath = (sitePrefix?: string) => {

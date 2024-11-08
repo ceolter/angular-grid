@@ -54,12 +54,9 @@ export const PUBLISHED_URLS = {
 export const integratedChartsUsesChartsEnterprise = false;
 export const PUBLISHED_UMD_URLS = {
     'ag-grid-community': `${NPM_CDN}/ag-grid-community@${agGridVersion}/dist/ag-grid-community.js`,
-    'ag-grid-enterprise': `${NPM_CDN}/ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise@${agGridVersion}/dist/ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise.js`,
+    'ag-grid-enterprise': `${NPM_CDN}/ag-grid-enterprise@${agGridVersion}/dist/ag-grid-enterprise.js`,
     '@ag-grid-community/locale': `${NPM_CDN}/@ag-grid-community/locale@${agGridVersion}/dist/umd/@ag-grid-community/locale.min.js`,
 };
-
-export const getEnterprisePackageName = () =>
-    `ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise`;
 
 /**
  * Site base URL
