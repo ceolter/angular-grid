@@ -1,4 +1,8 @@
-:where([class^='ag-']) {
+/* NOTE: this list of root selectors is present in _root.css too, if you update
+   one then don't forget the other */
+
+/* stylelint-disable-next-line selector-disallowed-list  */
+:where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart) :where([class^='ag-']) {
     box-sizing: border-box;
     outline: none;
 
@@ -10,7 +14,23 @@
         outline: none;
     }
 
-    &::-ms-clear {
-        display: none;
+    &:focus-visible {
+        box-shadow: var(--ag-focus-shadow);
     }
+
+    &:where(div, span, label):focus-visible {
+        /* elements that are not normally focussable, but are made
+               focussable by the grid, get an inset shadow since they are often
+               right up against the edge of an overflow:hidden container that
+               will crop a regular shadow  */
+        box-shadow: inset var(--ag-focus-shadow);
+    }
+}
+
+/* This next block must be on its own because browsers that don't support
+   ::-ms-clear will ignore the whole block if it is placed in the above block */
+
+/* stylelint-disable-next-line selector-disallowed-list */
+:where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart) :where([class^='ag-']) ::-ms-clear {
+    display: none;
 }

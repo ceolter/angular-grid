@@ -26,10 +26,21 @@ export class VanillaFrameworkOverrides implements IFrameworkOverrides {
         element: HTMLElement,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        useCapture?: boolean
+        options?: boolean | AddEventListenerOptions
     ): void {
-        const isPassive = PASSIVE_EVENTS.includes(type);
-        element.addEventListener(type, listener, { capture: !!useCapture, passive: isPassive });
+        let eventListenerOptions: AddEventListenerOptions = {};
+
+        if (typeof options === 'object') {
+            eventListenerOptions = options;
+        } else if (typeof options === 'boolean') {
+            eventListenerOptions = { capture: options };
+        }
+
+        if (!eventListenerOptions.passive && PASSIVE_EVENTS.includes(type)) {
+            eventListenerOptions.passive = true;
+        }
+
+        element.addEventListener(type, listener, eventListenerOptions);
     }
 
     wrapIncoming: <T>(callback: () => T, source?: FrameworkOverridesIncomingSource) => T = (callback) => callback();

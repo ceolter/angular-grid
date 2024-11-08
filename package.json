@@ -68,6 +68,8 @@
     "prettier": "^3.0.0",
     "prompts": "^2.4.2",
     "react-instantsearch": "^7.7.0",
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tsx": "4.8.2",

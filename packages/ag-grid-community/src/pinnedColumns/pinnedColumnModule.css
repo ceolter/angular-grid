@@ -1,3 +1,8 @@
+/* stylelint-disable selector-max-specificity -- cell and column borders have
+    lots of overlapping rules defined in different files that rely on different
+    specificities to work, one day it would be good to tackle this and properly
+    refactor border styles to be less specific */
+
 /**
  * NOTE: these don't need RTL versions when pinning columns, "left" always means
  * visually on the left
@@ -7,28 +12,28 @@
     display: inline-block;
     overflow: hidden;
     position: relative;
-    min-width: 0px;
+    min-width: 0;
 }
 
 .ag-pinned-right-floating-top {
     display: inline-block;
     overflow: hidden;
     position: relative;
-    min-width: 0px;
+    min-width: 0;
 }
 
 .ag-pinned-left-floating-bottom {
     display: inline-block;
     overflow: hidden;
     position: relative;
-    min-width: 0px;
+    min-width: 0;
 }
 
 .ag-pinned-right-floating-bottom {
     display: inline-block;
     overflow: hidden;
     position: relative;
-    min-width: 0px;
+    min-width: 0;
 }
 
 .ag-pinned-left-sticky-top,
@@ -50,67 +55,59 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
+    height: 100%;
 }
 
 .ag-body-horizontal-scroll:not(.ag-scrollbar-invisible) {
     .ag-horizontal-left-spacer:not(.ag-scroller-corner) {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-right: var(--ag-pinned-column-border);
     }
 
     .ag-horizontal-right-spacer:not(.ag-scroller-corner) {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-left: var(--ag-pinned-column-border);
     }
 }
 
 .ag-pinned-right-header {
-    /*rtl:ignore*/
+    /* rtl:ignore */
     border-left: var(--ag-pinned-column-border);
 }
 
 .ag-pinned-left-header {
-    /*rtl:ignore*/
+    /* rtl:ignore */
     border-right: var(--ag-pinned-column-border);
 }
 
-.ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left):not(.ag-cell-range-single-cell) {
-    /*rtl:ignore*/
+.ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left, .ag-cell-range-single-cell) {
+    /* rtl:ignore */
     border-left: var(--ag-pinned-column-border);
 }
 
-.ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right):not(.ag-cell-range-single-cell) {
-    /*rtl:ignore*/
+.ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right, .ag-cell-range-single-cell) {
+    /* rtl:ignore */
     border-right: var(--ag-pinned-column-border);
 }
 
-/*  */
 .ag-pinned-left-header .ag-header-cell-resize::after {
-    /*rtl:ignore*/
+    /* rtl:ignore */
     left: calc(50% - var(--ag-header-column-resize-handle-width));
 }
 
 .ag-pinned-right-header .ag-header-cell-resize::after {
-    /*rtl:ignore*/
+    /* rtl:ignore */
     left: 50%;
-}
-
-.ag-pinned-left-header {
-    height: 100%;
-}
-
-.ag-pinned-right-header {
-    height: 100%;
 }
 
 .ag-pinned-left-header .ag-header-cell-resize {
     /* pinned left headers always have their resize on the right, even in RTL mode */
-    /*rtl:ignore*/
+    /* rtl:ignore */
     right: -3px;
 }
 
 .ag-pinned-right-header .ag-header-cell-resize {
     /* pinned right headers always have their resize on the left, even in RTL mode */
-    /*rtl:ignore*/
+    /* rtl:ignore */
     left: -3px;
 }

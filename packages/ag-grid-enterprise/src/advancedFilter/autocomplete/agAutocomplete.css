@@ -17,6 +17,7 @@
     position: relative;
     width: 100%;
     min-width: 200px;
+
     /* the cell editor looks better when it extends to a half row boundary, hence
      the multiple of row height */
     height: calc(var(--ag-row-height) * 6.5);
@@ -47,7 +48,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0px var(--ag-widget-container-horizontal-padding);
+    margin: 0 var(--ag-widget-container-horizontal-padding);
 }
 
 .ag-autocomplete-row-selected {

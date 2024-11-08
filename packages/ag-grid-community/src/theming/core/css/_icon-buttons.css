@@ -4,8 +4,8 @@
 .ag-header-expand-icon,
 .ag-column-group-icons,
 .ag-set-filter-group-icons,
-.ag-group-expanded .ag-icon,
-.ag-group-contracted .ag-icon,
+:where(.ag-group-expanded) .ag-icon,
+:where(.ag-group-contracted) .ag-icon,
 .ag-chart-settings-prev,
 .ag-chart-settings-next,
 .ag-group-title-bar-icon,
@@ -40,7 +40,7 @@
         background-color: var(--ag-accent-color);
     }
 
-    .ag-icon-filter {
+    :where(.ag-icon-filter) {
         clip-path: path('M8,0C8,4.415 11.585,8 16,8L16,16L0,16L0,0L8,0Z');
     }
 }

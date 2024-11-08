@@ -3,164 +3,215 @@
     display: block;
     width: var(--ag-icon-size);
     height: var(--ag-icon-size);
-    background-color: currentColor;
+    background-color: currentcolor;
     mask-size: contain;
     mask-image: linear-gradient(#0000, #0000);
 }
 
 .ag-icon-aggregation::before {
-    mask-image: url(./alpine-svg-icons/aggregation.svg);
+    mask-image: url("./alpine-svg-icons/aggregation.svg");
 }
+
 .ag-icon-arrows::before {
-    mask-image: url(./alpine-svg-icons/arrows.svg);
+    mask-image: url("./alpine-svg-icons/arrows.svg");
 }
+
 .ag-icon-asc::before {
-    mask-image: url(./alpine-svg-icons/asc.svg);
+    mask-image: url("./alpine-svg-icons/asc.svg");
 }
+
 .ag-icon-cancel::before {
-    mask-image: url(./alpine-svg-icons/cancel.svg);
+    mask-image: url("./alpine-svg-icons/cancel.svg");
 }
+
 .ag-icon-chart::before {
-    mask-image: url(./alpine-svg-icons/chart.svg);
+    mask-image: url("./alpine-svg-icons/chart.svg");
 }
+
 .ag-icon-color-picker::before {
-    mask-image: url(./alpine-svg-icons/color-picker.svg);
+    mask-image: url("./alpine-svg-icons/color-picker.svg");
 }
+
 .ag-icon-columns::before {
-    mask-image: url(./alpine-svg-icons/columns.svg);
+    mask-image: url("./alpine-svg-icons/columns.svg");
 }
+
 .ag-icon-contracted::before {
-    mask-image: url(./alpine-svg-icons/contracted.svg);
+    mask-image: url("./alpine-svg-icons/contracted.svg");
 }
+
 .ag-icon-copy::before {
-    mask-image: url(./alpine-svg-icons/copy.svg);
+    mask-image: url("./alpine-svg-icons/copy.svg");
 }
+
 .ag-icon-cross::before {
-    mask-image: url(./alpine-svg-icons/cross.svg);
+    mask-image: url("./alpine-svg-icons/cross.svg");
 }
+
 .ag-icon-csv::before {
-    mask-image: url(./alpine-svg-icons/csv.svg);
+    mask-image: url("./alpine-svg-icons/csv.svg");
 }
+
 .ag-icon-cut::before {
-    mask-image: url(./alpine-svg-icons/cut.svg);
+    mask-image: url("./alpine-svg-icons/cut.svg");
 }
+
 .ag-icon-desc::before {
-    mask-image: url(./alpine-svg-icons/desc.svg);
+    mask-image: url("./alpine-svg-icons/desc.svg");
 }
+
 .ag-icon-down::before {
-    mask-image: url(./alpine-svg-icons/down.svg);
+    mask-image: url("./alpine-svg-icons/down.svg");
 }
+
 .ag-icon-excel::before {
-    mask-image: url(./alpine-svg-icons/excel.svg);
+    mask-image: url("./alpine-svg-icons/excel.svg");
 }
+
 .ag-icon-expanded::before {
-    mask-image: url(./alpine-svg-icons/expanded.svg);
+    mask-image: url("./alpine-svg-icons/expanded.svg");
 }
+
 .ag-icon-eye-slash::before {
-    mask-image: url(./alpine-svg-icons/eye-slash.svg);
+    mask-image: url("./alpine-svg-icons/eye-slash.svg");
 }
+
 .ag-icon-eye::before {
-    mask-image: url(./alpine-svg-icons/eye.svg);
+    mask-image: url("./alpine-svg-icons/eye.svg");
 }
+
 .ag-icon-filter::before {
-    mask-image: url(./alpine-svg-icons/filter.svg);
+    mask-image: url("./alpine-svg-icons/filter.svg");
 }
+
 .ag-icon-first::before {
-    mask-image: url(./alpine-svg-icons/first.svg);
+    mask-image: url("./alpine-svg-icons/first.svg");
 }
+
 .ag-icon-group::before {
-    mask-image: url(./alpine-svg-icons/group.svg);
+    mask-image: url("./alpine-svg-icons/group.svg");
 }
+
 .ag-icon-last::before {
-    mask-image: url(./alpine-svg-icons/last.svg);
+    mask-image: url("./alpine-svg-icons/last.svg");
 }
+
 .ag-icon-left::before {
-    mask-image: url(./alpine-svg-icons/left.svg);
+    mask-image: url("./alpine-svg-icons/left.svg");
 }
+
 .ag-icon-linked::before {
-    mask-image: url(./alpine-svg-icons/linked.svg);
+    mask-image: url("./alpine-svg-icons/linked.svg");
 }
+
 .ag-icon-loading::before {
-    mask-image: url(./alpine-svg-icons/loading.svg);
+    mask-image: url("./alpine-svg-icons/loading.svg");
 }
+
 .ag-icon-maximize::before {
-    mask-image: url(./alpine-svg-icons/maximize.svg);
+    mask-image: url("./alpine-svg-icons/maximize.svg");
 }
+
 .ag-icon-menu::before {
-    mask-image: url(./alpine-svg-icons/menu.svg);
+    mask-image: url("./alpine-svg-icons/menu.svg");
 }
+
 .ag-icon-menu-alt::before {
-    mask-image: url(./alpine-svg-icons/menu-alt.svg);
+    mask-image: url("./alpine-svg-icons/menu-alt.svg");
 }
+
 .ag-icon-minimize::before {
-    mask-image: url(./alpine-svg-icons/minimize.svg);
+    mask-image: url("./alpine-svg-icons/minimize.svg");
 }
+
 .ag-icon-minus::before {
-    mask-image: url(./alpine-svg-icons/minus.svg);
+    mask-image: url("./alpine-svg-icons/minus.svg");
 }
+
 .ag-icon-next::before {
-    mask-image: url(./alpine-svg-icons/next.svg);
+    mask-image: url("./alpine-svg-icons/next.svg");
 }
+
 .ag-icon-none::before {
-    mask-image: url(./alpine-svg-icons/none.svg);
+    mask-image: url("./alpine-svg-icons/none.svg");
 }
+
 .ag-icon-not-allowed::before {
-    mask-image: url(./alpine-svg-icons/not-allowed.svg);
+    mask-image: url("./alpine-svg-icons/not-allowed.svg");
 }
+
 .ag-icon-paste::before {
-    mask-image: url(./alpine-svg-icons/paste.svg);
+    mask-image: url("./alpine-svg-icons/paste.svg");
 }
+
 .ag-icon-pin::before {
-    mask-image: url(./alpine-svg-icons/pin.svg);
+    mask-image: url("./alpine-svg-icons/pin.svg");
 }
+
 .ag-icon-pivot::before {
-    mask-image: url(./alpine-svg-icons/pivot.svg);
+    mask-image: url("./alpine-svg-icons/pivot.svg");
 }
+
 .ag-icon-plus::before {
-    mask-image: url(./alpine-svg-icons/plus.svg);
+    mask-image: url("./alpine-svg-icons/plus.svg");
 }
+
 .ag-icon-previous::before {
-    mask-image: url(./alpine-svg-icons/previous.svg);
+    mask-image: url("./alpine-svg-icons/previous.svg");
 }
+
 .ag-icon-right::before {
-    mask-image: url(./alpine-svg-icons/right.svg);
+    mask-image: url("./alpine-svg-icons/right.svg");
 }
+
 .ag-icon-save::before {
-    mask-image: url(./alpine-svg-icons/save.svg);
+    mask-image: url("./alpine-svg-icons/save.svg");
 }
+
 .ag-icon-small-down::before {
-    mask-image: url(./alpine-svg-icons/small-down.svg);
+    mask-image: url("./alpine-svg-icons/small-down.svg");
 }
+
 .ag-icon-small-left::before {
-    mask-image: url(./alpine-svg-icons/small-left.svg);
+    mask-image: url("./alpine-svg-icons/small-left.svg");
 }
+
 .ag-icon-small-right::before {
-    mask-image: url(./alpine-svg-icons/small-right.svg);
+    mask-image: url("./alpine-svg-icons/small-right.svg");
 }
+
 .ag-icon-small-up::before {
-    mask-image: url(./alpine-svg-icons/small-up.svg);
+    mask-image: url("./alpine-svg-icons/small-up.svg");
 }
+
 .ag-icon-tick::before {
-    mask-image: url(./alpine-svg-icons/tick.svg);
+    mask-image: url("./alpine-svg-icons/tick.svg");
 }
+
 .ag-icon-tree-closed::before {
-    mask-image: url(./alpine-svg-icons/tree-closed.svg);
+    mask-image: url("./alpine-svg-icons/tree-closed.svg");
 }
+
 .ag-icon-tree-indeterminate::before {
-    mask-image: url(./alpine-svg-icons/tree-indeterminate.svg);
+    mask-image: url("./alpine-svg-icons/tree-indeterminate.svg");
 }
+
 .ag-icon-tree-open::before {
-    mask-image: url(./alpine-svg-icons/tree-open.svg);
+    mask-image: url("./alpine-svg-icons/tree-open.svg");
 }
+
 .ag-icon-unlinked::before {
-    mask-image: url(./alpine-svg-icons/unlinked.svg);
+    mask-image: url("./alpine-svg-icons/unlinked.svg");
 }
+
 .ag-icon-up::before {
-    mask-image: url(./alpine-svg-icons/up.svg);
+    mask-image: url("./alpine-svg-icons/up.svg");
 }
+
 .ag-icon-grip::before {
-    mask-image: url(./alpine-svg-icons/grip.svg);
+    mask-image: url("./alpine-svg-icons/grip.svg");
 }
+
 .ag-icon-settings::before {
-    mask-image: url(./alpine-svg-icons/settings.svg);
+    mask-image: url("./alpine-svg-icons/settings.svg");
 }

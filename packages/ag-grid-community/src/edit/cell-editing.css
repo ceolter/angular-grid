@@ -4,20 +4,21 @@
     padding: 0;
     border: var(--ag-cell-editing-border) !important;
     box-shadow: var(--ag-cell-editing-shadow);
+
     /* do not add `height` here, it breaks gridOptions.rowHeight for the cellEditor */
 
     .ag-cell-wrapper,
     .ag-cell-edit-wrapper,
     .ag-cell-editor,
-    .ag-cell-editor .ag-wrapper,
-    .ag-cell-editor input {
+    :where(.ag-cell-editor) .ag-wrapper,
+    :where(.ag-cell-editor) .ag-input-field-input {
         height: 100%;
         width: 100%;
         line-height: normal;
     }
 }
 
-.ag-popup-editor .ag-large-text,
+:where(.ag-popup-editor) .ag-large-text,
 .ag-autocomplete-list-popup {
     border-radius: var(--ag-border-radius);
     box-shadow: var(--ag-dropdown-shadow);
@@ -30,7 +31,7 @@
     padding: var(--ag-cell-horizontal-padding);
 }
 
-.ag-rtl .ag-large-text-input textarea {
+:where(.ag-rtl .ag-large-text-input) textarea {
     resize: none;
 }
 

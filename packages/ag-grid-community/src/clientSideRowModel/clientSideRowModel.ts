@@ -10,6 +10,7 @@ import { _getGroupSelectsDescendants, _getRowHeightForNode, _isAnimateRows, _isD
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
     ClientSideRowModelStage,
+    IChangedRowNodes,
     IClientSideRowModel,
     RefreshModelParams,
 } from '../interfaces/iClientSideRowModel';
@@ -22,6 +23,7 @@ import { ChangedPath } from '../utils/changedPath';
 import { _debounce } from '../utils/function';
 import { _warn } from '../validation/logging';
 import type { ValueCache } from '../valueService/valueCache';
+import { ChangedRowNodes } from './changedRowNodes';
 import { updateRowNodeAfterFilter } from './filterStage';
 import { updateRowNodeAfterSort } from './sortStage';
 
@@ -336,6 +338,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             if (immutable) {
                 params.keepRenderedRows = true;
                 params.animate = !this.gos.get('suppressAnimationFrame');
+                params.changedRowNodes = new ChangedRowNodes();
 
                 this.nodeManager.setImmutableRowData(params, newRowData);
             } else {
@@ -761,6 +764,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             case 'group': {
                 this.doRowGrouping(
                     params.rowNodeTransactions,
+                    params.changedRowNodes,
                     changedPath,
                     !!params.rowNodesOrderChanged,
                     !!params.afterColumnsChanged
@@ -776,7 +780,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             case 'filter_aggregates':
                 this.doFilterAggregates(changedPath);
             case 'sort':
-                this.doSort(params.rowNodeTransactions, changedPath);
+                this.doSort(params.changedRowNodes, changedPath);
             case 'map':
                 this.doRowsToDisplay();
             /* eslint-enable no-fallthrough */
@@ -1056,12 +1060,12 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private doSort(rowNodeTransactions: RowNodeTransaction[] | undefined, changedPath: ChangedPath) {
+    private doSort(changedRowNodes: IChangedRowNodes | undefined, changedPath: ChangedPath) {
         const { groupHideOpenParentsSvc } = this.beans;
         if (this.sortStage) {
             this.sortStage.execute({
                 rowNode: this.rootNode!,
-                rowNodeTransactions: rowNodeTransactions,
+                changedRowNodes,
                 changedPath: changedPath,
             });
         } else {
@@ -1081,6 +1085,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private doRowGrouping(
         rowNodeTransactions: RowNodeTransaction[] | undefined,
+        changedRowNodes: IChangedRowNodes | undefined,
         changedPath: ChangedPath,
         rowNodesOrderChanged: boolean,
         afterColumnsChanged: boolean
@@ -1090,20 +1095,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (!treeData) {
             const groupStage = this.groupStage;
             if (groupStage) {
-                if (rowNodeTransactions) {
-                    groupStage.execute({
-                        rowNode: rootNode,
-                        rowNodeTransactions,
-                        rowNodesOrderChanged,
-                        changedPath: changedPath,
-                    });
-                } else {
-                    groupStage.execute({
-                        rowNode: rootNode,
-                        changedPath: changedPath,
-                        afterColumnsChanged: afterColumnsChanged,
-                    });
-                }
+                groupStage.execute({
+                    rowNode: rootNode,
+                    changedPath,
+                    changedRowNodes,
+                    rowNodeTransactions,
+                    rowNodesOrderChanged,
+                    afterColumnsChanged,
+                });
             } else {
                 const sibling: ClientSideRowModelRootNode = rootNode.sibling;
                 rootNode.childrenAfterGroup = rootNode.allLeafChildren;
@@ -1188,10 +1187,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const callbackFuncsBound: ((...args: any[]) => any)[] = [];
         const rowNodeTrans: RowNodeTransaction[] = [];
 
+        const changedRowNodes = new ChangedRowNodes();
         let orderChanged = false;
         this.rowDataTransactionBatch?.forEach((tranItem) => {
             this.rowNodesCountReady = true;
-            const { rowNodeTransaction, rowsInserted } = this.nodeManager.updateRowData(tranItem.rowDataTransaction);
+            const { rowNodeTransaction, rowsInserted } = this.nodeManager.updateRowData(
+                tranItem.rowDataTransaction,
+                changedRowNodes
+            );
             if (rowsInserted) {
                 orderChanged = true;
             }
@@ -1201,7 +1204,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         });
 
-        this.commitTransactions(rowNodeTrans, orderChanged);
+        this.commitTransactions(rowNodeTrans, orderChanged, changedRowNodes);
 
         // do callbacks in next VM turn so it's async
         if (callbackFuncsBound.length > 0) {
@@ -1229,9 +1232,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.valueCache?.onDataChanged();
 
         this.rowNodesCountReady = true;
-        const { rowNodeTransaction, rowsInserted } = this.nodeManager.updateRowData(rowDataTran);
+        const changedRowNodes = new ChangedRowNodes();
+        const { rowNodeTransaction, rowsInserted } = this.nodeManager.updateRowData(rowDataTran, changedRowNodes);
 
-        this.commitTransactions([rowNodeTransaction], rowsInserted);
+        this.commitTransactions([rowNodeTransaction], rowsInserted, changedRowNodes);
 
         return rowNodeTransaction;
     }
@@ -1245,7 +1249,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
      * @param rowNodeTrans - the transactions to apply
      * @param orderChanged - whether the order of the rows has changed, either via generated transaction or user provided addIndex
      */
-    private commitTransactions(rowNodeTransactions: RowNodeTransaction[], rowNodesOrderChanged: boolean): void {
+    private commitTransactions(
+        rowNodeTransactions: RowNodeTransaction[],
+        rowNodesOrderChanged: boolean,
+        changedRowNodes: IChangedRowNodes
+    ): void {
         this.refreshModel({
             step: 'group',
             rowDataUpdated: true,
@@ -1253,6 +1261,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             rowNodesOrderChanged,
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
+            changedRowNodes,
             changedPath: this.createChangePath(rowNodeTransactions),
         });
     }

@@ -21,7 +21,7 @@
     cursor: pointer;
 }
 
-.ag-menu-option-popup-pointer .ag-icon {
+:where(.ag-menu-option-popup-pointer) .ag-icon {
     text-align: right;
 }
 
@@ -97,14 +97,14 @@
     height: 265px;
     overflow: auto;
 
-    .ag-column-select {
+    :where(.ag-column-select) {
         height: 100%;
     }
 }
 
 /* Column Filter */
 
-.ag-menu.ag-tabs {
+.ag-menu:where(.ag-tabs) {
     /* minimum width for the legacy tabbed column menu */
     min-width: 290px;
 }

@@ -432,6 +432,7 @@ export {
     ClientSideRowModelStage,
     ClientSideRowModelStep,
     RefreshModelParams,
+    IChangedRowNodes,
 } from './interfaces/iClientSideRowModel';
 export { IClientSideNodeManager, ClientSideNodeManagerUpdateRowDataResult } from './interfaces/iClientSideNodeManager';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';

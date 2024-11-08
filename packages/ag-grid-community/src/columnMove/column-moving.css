@@ -1,4 +1,4 @@
-.ag-column-moving {
+:where(.ag-column-moving) {
     .ag-cell {
         transition: left 0.2s;
     }

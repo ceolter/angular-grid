@@ -346,7 +346,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
     }
 
     private createPill(params: CreatePillParams): SelectPillComp | InputPillComp {
-        const { key, displayValue, cssClass, update, ariaLabel } = params;
+        const { key, cssClass, update, ariaLabel } = params;
         const onUpdated = (key: string) => {
             if (key == null) {
                 return;
@@ -357,7 +357,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
             });
         };
         if (params.isSelect) {
-            const { getEditorParams, pickerAriaLabelKey, pickerAriaLabelValue } = params;
+            const { getEditorParams, pickerAriaLabelKey, pickerAriaLabelValue, displayValue } = params;
             const advancedFilterBuilderParams = this.gos.get('advancedFilterBuilderParams');
             const minPickerWidth = `${advancedFilterBuilderParams?.pillSelectMinWidth ?? 140}px`;
             const maxPickerWidth = `${advancedFilterBuilderParams?.pillSelectMaxWidth ?? 200}px`;
@@ -386,11 +386,13 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
             });
             return comp;
         } else {
+            const { baseCellDataType, valueFormatter } = params;
             const comp = this.createBean(
                 new InputPillComp({
-                    value: displayValue,
+                    value: key,
+                    valueFormatter,
                     cssClass,
-                    type: this.getInputType(params.baseCellDataType),
+                    type: this.getInputType(baseCellDataType),
                     ariaLabel,
                 })
             );

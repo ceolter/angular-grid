@@ -1,7 +1,9 @@
 .ag-pill-select {
     display: flex;
     flex-direction: column;
+}
 
+:where(.ag-pill-select) {
     .ag-column-drop-list {
         padding: 0;
     }
@@ -21,7 +23,7 @@
         color: var(--ag-chart-menu-label-color);
     }
 
-    .ag-picker-field-icon .ag-icon {
+    .ag-picker-field-icon {
         color: var(--ag-chart-menu-label-color);
     }
 }
