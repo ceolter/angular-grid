@@ -1,18 +1,11 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GetContextMenuItemsParams, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClipboardModule, ExcelExportModule, MenuModule, RangeSelectionModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,
-    GridChartsModule,
     MenuModule,
     RangeSelectionModule,
 ]);

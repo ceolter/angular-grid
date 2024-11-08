@@ -1,22 +1,22 @@
 import { AG_GRID_LOCALE_DE } from '@ag-grid-community/locale';
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { CsvExportModule } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { MultiFilterModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
-import { StatusBarModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, CsvExportModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClipboardModule,
+    ColumnsToolPanelModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    IntegratedChartsModule,
+    MenuModule,
+    MultiFilterModule,
+    RangeSelectionModule,
+    RowGroupingModule,
+    SetFilterModule,
+    SideBarModule,
+    StatusBarModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
     MenuModule,
     MultiFilterModule,
     RangeSelectionModule,

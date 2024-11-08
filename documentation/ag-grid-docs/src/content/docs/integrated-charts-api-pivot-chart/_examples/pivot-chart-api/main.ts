@@ -1,12 +1,15 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, GridChartsModule, MenuModule, RowGroupingModule]);
+import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
+
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
+    MenuModule,
+    RowGroupingModule,
+]);
 
 let gridApi: GridApi;
 

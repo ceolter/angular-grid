@@ -1,13 +1,15 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { MultiFilterModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    IntegratedChartsModule,
+    MenuModule,
+    MultiFilterModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
@@ -15,7 +17,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
     MenuModule,
     MultiFilterModule,
     SetFilterModule,

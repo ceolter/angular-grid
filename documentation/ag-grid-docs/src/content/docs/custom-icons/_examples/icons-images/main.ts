@@ -1,3 +1,5 @@
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -5,7 +7,7 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule,
     MenuModule,
     RowGroupingModule,
     SetFilterModule,
@@ -15,7 +17,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
     MenuModule,
     RowGroupingModule,
     SetFilterModule,

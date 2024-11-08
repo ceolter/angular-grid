@@ -1,4 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+
 import type {
     ChartToolbarMenuItemOptions,
     ChartType,
@@ -8,12 +9,14 @@ import type {
     GridOptions,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, GridChartsModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
+    RowGroupingModule,
+]);
 
 declare let __basePath: string;
 
