@@ -3,8 +3,8 @@ import type { IColor, _IUtil } from 'ag-charts-types';
 import type { AgInputTextFieldParams, BeanCollection, ComponentSelector } from 'ag-grid-community';
 import { AgInputTextField, RefPlaceholder } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../agChartsContext';
 import type { ChartTranslationService } from '../chartComp/services/chartTranslationService';
-import type { AgChartsContext } from '../gridChartsModule';
 
 export type AgColorInputEvent = 'colorChanged';
 export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgColorInputEvent> {

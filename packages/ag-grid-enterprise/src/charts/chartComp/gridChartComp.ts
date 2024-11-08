@@ -29,8 +29,8 @@ import {
 } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
+import type { AgChartsContext } from '../agChartsContext';
 import type { CrossFilteringContext } from '../chartService';
-import type { AgChartsContext } from '../gridChartsModule';
 import { ChartController, DEFAULT_THEMES } from './chartController';
 import { AreaChartProxy } from './chartProxies/cartesian/areaChartProxy';
 import { BarChartProxy } from './chartProxies/cartesian/barChartProxy';

@@ -1,7 +1,7 @@
 import type { IntegratedChartModule } from 'ag-charts-types';
 
-import type { NamedBean, _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { BeanStub, DragAndDropModule, PopupModule } from 'ag-grid-community';
+import type { _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import { DragAndDropModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import type { ILicenseManager } from '../license/shared/licenseManager';
@@ -10,6 +10,7 @@ import { baseEnterpriseModule } from '../moduleUtils';
 import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
 import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
+import { AgChartsContext } from './agChartsContext';
 import { EnterpriseChartProxyFactory } from './chartComp/chartProxies/enterpriseChartProxyFactory';
 import { AdvancedSettingsMenuFactory } from './chartComp/menu/advancedSettings/advancedSettingsMenuFactory';
 import { ChartMenuListFactory } from './chartComp/menu/chartMenuList';
@@ -30,7 +31,7 @@ import {
     restoreChart,
     updateChart,
 } from './chartsApi';
-import { gridChartsModuleCSS } from './gridChartsModule.css-GENERATED';
+import { gridChartsModuleCSS } from './integratedChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
 /**
@@ -133,22 +134,3 @@ export const IntegratedChartsModule: IntegratedChartsModuleType = {
     },
     ...baseIntegratedChartsModule,
 };
-
-export class AgChartsContext extends BeanStub implements NamedBean {
-    beanName = 'agChartsContext' as const;
-
-    isEnterprise = false;
-    create: IntegratedChartModule['create'];
-    _Theme: IntegratedChartModule['_Theme'];
-    _Scene: any; // types not exposed as only used for mini charts
-    _Util: IntegratedChartModule['_Util'];
-
-    constructor(params: IntegratedChartModule) {
-        super();
-        this.create = params.create;
-        this._Theme = params._Theme;
-        this._Scene = params._Scene;
-        this.isEnterprise = params.isEnterprise;
-        this._Util = params._Util;
-    }
-}

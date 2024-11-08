@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../gridChartsModule';
+import type { AgChartsContext } from '../../../../../agChartsContext';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniHistogram extends MiniChartWithAxes {

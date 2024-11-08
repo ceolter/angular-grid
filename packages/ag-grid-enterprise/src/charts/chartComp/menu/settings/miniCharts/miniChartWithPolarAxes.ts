@@ -1,4 +1,4 @@
-import type { AgChartsContext } from '../../../../gridChartsModule';
+import type { AgChartsContext } from '../../../../agChartsContext';
 import type { ChartTranslationKey } from '../../../services/chartTranslationService';
 import { MiniChart } from './miniChart';
 

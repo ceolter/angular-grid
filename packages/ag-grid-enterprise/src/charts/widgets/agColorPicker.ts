@@ -2,7 +2,7 @@ import type { AgPickerFieldParams, BeanCollection, ComponentSelector } from 'ag-
 import { AgPickerField, _getDocument } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
-import type { AgChartsContext } from '../gridChartsModule';
+import type { AgChartsContext } from '../agChartsContext';
 import { AgColorPanel } from './agColorPanel';
 
 export interface AgColorPickerParams

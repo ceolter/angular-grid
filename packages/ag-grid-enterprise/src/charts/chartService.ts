@@ -27,12 +27,12 @@ import type {
 import { BeanStub, _focusInto, _warn } from 'ag-grid-community';
 
 import { VERSION as GRID_VERSION } from '../version';
+import type { AgChartsContext } from './agChartsContext';
 import type { GridChartParams } from './chartComp/gridChartComp';
 import { GridChartComp } from './chartComp/gridChartComp';
 import { ChartParamsValidator } from './chartComp/utils/chartParamsValidator';
 import { getCanonicalChartType } from './chartComp/utils/seriesTypeMapper';
 import { upgradeChartModel } from './chartModelMigration';
-import type { AgChartsContext } from './gridChartsModule';
 
 export interface CrossFilteringContext {
     lastSelectedChartId: string;

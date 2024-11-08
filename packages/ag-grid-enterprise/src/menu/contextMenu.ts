@@ -93,7 +93,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             }
         }
 
-        if (this.gos.get('enableCharts') && this.gos.isModuleRegistered('GridChartsModule')) {
+        if (this.gos.get('enableCharts') && this.gos.isModuleRegistered('IntegratedChartsModule')) {
             if (this.colModel.isPivotMode()) {
                 defaultMenuOptions.push('pivotChart');
             }

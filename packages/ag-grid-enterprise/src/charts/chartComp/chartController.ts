@@ -18,7 +18,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, _warn } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../gridChartsModule';
+import type { AgChartsContext } from '../agChartsContext';
 import type { ChartProxy, FieldDefinition, UpdateParams } from './chartProxies/chartProxy';
 import { isStockTheme } from './chartProxies/chartTheme';
 import type { ChartDataModel, ChartModelParams, ColState } from './model/chartDataModel';

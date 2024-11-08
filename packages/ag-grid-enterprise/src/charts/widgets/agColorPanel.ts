@@ -3,7 +3,7 @@ import type { IColor, _IUtil } from 'ag-charts-types';
 import type { BeanCollection } from 'ag-grid-community';
 import { Component, KeyCode, RefPlaceholder, _exists, _setDisplayed } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../gridChartsModule';
+import type { AgChartsContext } from '../agChartsContext';
 import type { AgColorInput } from './agColorInput';
 import { AgColorInputSelector } from './agColorInput';
 import type { AgColorPicker } from './agColorPicker';

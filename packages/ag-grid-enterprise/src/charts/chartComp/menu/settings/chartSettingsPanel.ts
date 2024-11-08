@@ -12,7 +12,7 @@ import {
     _setDisplayed,
 } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../gridChartsModule';
+import type { AgChartsContext } from '../../../agChartsContext';
 import type { ChartController } from '../../chartController';
 import { isStockTheme } from '../../chartProxies/chartTheme';
 import { MiniChartsContainer } from './miniChartsContainer';

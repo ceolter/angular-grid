@@ -10,8 +10,8 @@ import type {
 
 import type { ChartType, SeriesChartType, SeriesGroupType } from 'ag-grid-community';
 
+import type { AgChartsContext } from '../../agChartsContext';
 import type { CrossFilteringContext } from '../../chartService';
-import type { AgChartsContext } from '../../gridChartsModule';
 import { deproxy } from '../utils/integration';
 import { get } from '../utils/object';
 import type { ChartSeriesType } from '../utils/seriesTypeMapper';

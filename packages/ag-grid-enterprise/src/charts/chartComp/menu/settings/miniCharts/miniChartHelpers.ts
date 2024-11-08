@@ -1,6 +1,6 @@
 import { _last } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../gridChartsModule';
+import type { AgChartsContext } from '../../../../agChartsContext';
 import type { CommandSegment } from './miniChartApi';
 
 export interface CreateColumnRectsParams {

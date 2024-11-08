@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../gridChartsModule';
+import type { AgChartsContext } from '../../../../../agChartsContext';
 import { MiniChart } from '../miniChart';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects, createLinePaths } from '../miniChartHelpers';

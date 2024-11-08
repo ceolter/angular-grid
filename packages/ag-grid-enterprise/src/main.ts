@@ -64,4 +64,4 @@ export {
 } from './rowHierarchy/rowHierarchyModule';
 export { PivotCoreModule, PivotModule } from './pivot/pivotModule';
 
-export { GridChartsModule, IntegratedChartsModule } from './charts/gridChartsModule';
+export { GridChartsModule, IntegratedChartsModule } from './charts/integratedChartsModule';

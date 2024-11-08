@@ -295,7 +295,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         hideAdvancedFilterBuilder: 0,
     }),
 
-    ...mod<_GridChartsGridApi>('GridChartsModule', {
+    ...mod<_GridChartsGridApi>('IntegratedChartsModule', {
         getChartModels: 0,
         getChartRef: 0,
         getChartImageDataURL: 0,

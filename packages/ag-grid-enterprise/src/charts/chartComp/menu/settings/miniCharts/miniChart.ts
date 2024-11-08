@@ -1,7 +1,7 @@
 import type { BeanCollection } from 'ag-grid-community';
 import { Component, _error } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../gridChartsModule';
+import type { AgChartsContext } from '../../../../agChartsContext';
 import type { ChartTranslationKey, ChartTranslationService } from '../../../services/chartTranslationService';
 
 const CANVAS_CLASS = 'ag-chart-mini-thumbnail-canvas';
