@@ -432,6 +432,7 @@ export {
     ClientSideRowModelStage,
     ClientSideRowModelStep,
     RefreshModelParams,
+    IChangedRowNodes,
 } from './interfaces/iClientSideRowModel';
 export { IClientSideNodeManager, ClientSideNodeManagerUpdateRowDataResult } from './interfaces/iClientSideNodeManager';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';
@@ -910,6 +911,7 @@ export {
     IMenuItemComp,
     BaseMenuItem,
     BaseMenuItemParams,
+    DefaultMenuItem,
 } from './interfaces/menuItem';
 export { IWatermark } from './interfaces/iWatermark';
 export { IRowChildrenService } from './interfaces/iRowChildrenService';

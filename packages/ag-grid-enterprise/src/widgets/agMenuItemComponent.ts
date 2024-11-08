@@ -486,7 +486,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             return;
         }
 
-        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
             getGui: () => this.getGui(),
             getTooltipValue: () => this.tooltip,
             getLocation: () => 'menu',

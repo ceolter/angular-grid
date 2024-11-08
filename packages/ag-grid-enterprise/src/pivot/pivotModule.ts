@@ -27,11 +27,10 @@ import { PivotColDefService } from './pivotColDefService';
 import { PivotColsSvc } from './pivotColsSvc';
 import { PivotResultColsService } from './pivotResultColsService';
 import { PivotStage } from './pivotStage';
-import { ValueColsSvc } from './valueColsSvc';
 
 export const PivotCoreModule: _ModuleWithApi<_PivotGridApi<any>> = {
     ...baseEnterpriseModule('PivotCoreModule'),
-    beans: [PivotResultColsService, PivotColDefService, PivotStage, PivotColDefService, PivotColsSvc, ValueColsSvc],
+    beans: [PivotResultColsService, PivotColDefService, PivotStage, PivotColDefService, PivotColsSvc],
     apiFunctions: {
         isPivotMode,
         getPivotResultColumn,

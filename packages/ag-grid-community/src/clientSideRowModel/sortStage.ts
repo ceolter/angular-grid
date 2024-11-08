@@ -6,7 +6,7 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
-import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
+import type { ClientSideRowModelStage, IChangedRowNodes } from '../interfaces/iClientSideRowModel';
 import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
@@ -75,7 +75,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
         const deltaSort =
             sortActive &&
-            _exists(params.rowNodeTransactions) &&
+            !!params.changedRowNodes &&
             // in time we can remove this check, so that delta sort is always
             // on if transactions are present. it's off for now so that we can
             // selectively turn it on and test it with some select users before
@@ -93,7 +93,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             sortOptions,
             sortActive,
             deltaSort,
-            params.rowNodeTransactions,
+            params.changedRowNodes,
             params.changedPath,
             sortContainsGroupColumns
         );
@@ -103,17 +103,12 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         sortOptions: SortOption[],
         sortActive: boolean,
         useDeltaSort: boolean,
-        rowNodeTransactions: RowNodeTransaction[] | null | undefined,
+        changedRowNodes: IChangedRowNodes | undefined,
         changedPath: ChangedPath | undefined,
         sortContainsGroupColumns: boolean
     ): void {
         const groupMaintainOrder = this.gos.get('groupMaintainOrder');
         const groupColumnsPresent = this.colModel.getCols().some((c) => c.isRowGroupActive());
-
-        let allDirtyNodes: { [key: string]: true } = {};
-        if (useDeltaSort && rowNodeTransactions) {
-            allDirtyNodes = this.calculateDirtyNodes(rowNodeTransactions);
-        }
 
         const isPivotMode = this.colModel.isPivotMode();
         const postSortFunc = this.gos.getCallback('postSortRows');
@@ -149,8 +144,8 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             } else if (!sortActive || skipSortingPivotLeafs) {
                 // if there's no sort to make, skip this step
                 rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-            } else if (useDeltaSort) {
-                rowNode.childrenAfterSort = this.doDeltaSort(rowNode, allDirtyNodes, changedPath!, sortOptions);
+            } else if (useDeltaSort && changedRowNodes) {
+                rowNode.childrenAfterSort = this.doDeltaSort(rowNode, changedRowNodes, changedPath, sortOptions);
             } else {
                 rowNode.childrenAfterSort = this.rowNodeSorter.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
             }
@@ -163,9 +158,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
         };
 
-        if (changedPath) {
-            changedPath.forEachChangedNodeDepthFirst(callback);
-        }
+        changedPath?.forEachChangedNodeDepthFirst(callback);
     }
 
     private calculateDirtyNodes(rowNodeTransactions?: RowNodeTransaction[] | null): { [nodeId: string]: true } {
@@ -191,8 +184,8 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private doDeltaSort(
         rowNode: RowNode,
-        allTouchedNodes: { [rowId: string]: true },
-        changedPath: ChangedPath,
+        changedRowNodes: IChangedRowNodes,
+        changedPath: ChangedPath | undefined,
         sortOptions: SortOption[]
     ): RowNode[] {
         const unsortedRows = rowNode.childrenAfterAggFilter!;
@@ -201,66 +194,67 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             return this.rowNodeSorter.doFullSort(unsortedRows, sortOptions);
         }
 
-        const untouchedRowsMap: { [rowId: string]: true } = {};
-        const touchedRows: RowNode[] = [];
+        const untouchedRows = new Set<string>();
+        const touchedRows: SortedRowNode[] = [];
 
-        unsortedRows.forEach((row) => {
-            if (allTouchedNodes[row.id!] || !changedPath.canSkip(row)) {
-                touchedRows.push(row);
+        const updates = changedRowNodes.updates;
+        for (let i = 0, len = unsortedRows.length; i < len; ++i) {
+            const row = unsortedRows[i];
+            if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
+                touchedRows.push({
+                    currentPos: touchedRows.length,
+                    rowNode: row,
+                });
             } else {
-                untouchedRowsMap[row.id!] = true;
+                untouchedRows.add(row.id!);
             }
-        });
+        }
 
-        const sortedUntouchedRows = oldSortedRows.filter((child) => untouchedRowsMap[child.id!]);
+        const sortedUntouchedRows = oldSortedRows
+            .filter((child) => untouchedRows.has(child.id!))
+            .map((rowNode: RowNode, currentPos: number): SortedRowNode => ({ currentPos, rowNode }));
 
-        const mapNodeToSortedNode = (rowNode: RowNode, pos: number): SortedRowNode => ({
-            currentPos: pos,
-            rowNode: rowNode,
-        });
+        touchedRows.sort((a, b) => this.rowNodeSorter.compareRowNodes(sortOptions, a, b));
 
-        const sortedChangedRows = touchedRows
-            .map(mapNodeToSortedNode)
-            .sort((a, b) => this.rowNodeSorter.compareRowNodes(sortOptions, a, b));
-
-        return this.mergeSortedArrays(sortOptions, sortedChangedRows, sortedUntouchedRows.map(mapNodeToSortedNode)).map(
-            ({ rowNode }) => rowNode
-        );
+        return this.mergeSortedArrays(sortOptions, touchedRows, sortedUntouchedRows);
     }
 
     // Merge two sorted arrays into each other
-    private mergeSortedArrays(
-        sortOptions: SortOption[],
-        arr1: SortedRowNode[],
-        arr2: SortedRowNode[]
-    ): SortedRowNode[] {
-        const res: SortedRowNode[] = [];
+    private mergeSortedArrays(sortOptions: SortOption[], arr1: SortedRowNode[], arr2: SortedRowNode[]): RowNode[] {
+        const res: RowNode[] = [];
         let i = 0;
         let j = 0;
+        const arr1Length = arr1.length;
+        const arr2Length = arr2.length;
+        const rowNodeSorter = this.rowNodeSorter;
 
         // Traverse both array, adding them in order
-        while (i < arr1.length && j < arr2.length) {
-            // Check if current element of first
-            // array is smaller than current element
-            // of second array. If yes, store first
-            // array element and increment first array
-            // index. Otherwise do same with second array
-            const compareResult = this.rowNodeSorter.compareRowNodes(sortOptions, arr1[i], arr2[j]);
+        while (i < arr1Length && j < arr2Length) {
+            const a = arr1[i];
+            const b = arr2[j];
+            // Check if current element of first array is smaller than current element
+            // of second array. If yes, store first array element and increment first array index.
+            // Otherwise do same with second array
+            const compareResult = rowNodeSorter.compareRowNodes(sortOptions, a, b);
+            let chosen: SortedRowNode;
             if (compareResult < 0) {
-                res.push(arr1[i++]);
+                chosen = a;
+                ++i;
             } else {
-                res.push(arr2[j++]);
+                chosen = b;
+                ++j;
             }
+            res.push(chosen.rowNode);
         }
 
         // add remaining from arr1
-        while (i < arr1.length) {
-            res.push(arr1[i++]);
+        while (i < arr1Length) {
+            res.push(arr1[i++].rowNode);
         }
 
         // add remaining from arr2
-        while (j < arr2.length) {
-            res.push(arr2[j++]);
+        while (j < arr2Length) {
+            res.push(arr2[j++].rowNode);
         }
 
         return res;

@@ -179,7 +179,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         });
 
         this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getTooltipValue: () => text,
                 getGui: () => itemEl,
                 getLocation: () => 'UNKNOWN',

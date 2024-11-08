@@ -1,12 +1,12 @@
 .ag-aria-description-container {
     z-index: 9999;
-    border: 0px;
+    border: 0;
     clip: rect(1px, 1px, 1px, 1px);
     height: 1px;
     width: 1px;
     position: absolute;
     overflow: hidden;
-    padding: 0px;
+    padding: 0;
     white-space: nowrap;
 }
 
@@ -35,7 +35,7 @@
 
 /* special setting for lists to prevent scroll
      while tabbing out of the container */
-.ag-virtual-list-viewport .ag-tab-guard {
+:where(.ag-virtual-list-viewport) .ag-tab-guard {
     /* this keeps the tabguard within "visible" range
        while scrolling so focusing the tabguard doesn't
        scroll the list viewport. */
@@ -57,7 +57,7 @@
     animation-name: ag-shake-left-to-right;
 }
 
-/*rtl:ignore*/
+/* rtl:ignore */
 @keyframes ag-shake-left-to-right {
     from {
         padding-left: 6px;
@@ -87,7 +87,7 @@
 .ag-sticky-bottom-viewport {
     position: relative;
     height: 100%;
-    min-width: 0px;
+    min-width: 0;
     overflow: hidden;
     flex: 1 1 auto;
 }
@@ -100,9 +100,11 @@
 .ag-sticky-top-viewport,
 .ag-sticky-bottom-viewport {
     overflow-x: auto;
+
     &::-webkit-scrollbar {
         display: none !important;
     }
+
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
@@ -111,7 +113,7 @@
     display: flex;
     overflow-x: hidden;
 
-    &.ag-layout-normal {
+    &:where(.ag-layout-normal) {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -196,8 +198,9 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 .ag-sticky-top-full-width-container,
 .ag-sticky-bottom-full-width-container {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
+
     /* turn off pointer events, because this container overlays the main row containers.
          so when user clicks on space between full width rows, we want the mouse clicks to
          pass onto the underlying container where the real rows are. eg if using full width
@@ -242,15 +245,17 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     min-width: 0;
     display: flex;
     position: relative;
-    &.ag-scrollbar-invisible {
+
+    &:where(.ag-scrollbar-invisible) {
         position: absolute;
         bottom: 0;
-        &.ag-apple-scrollbar {
+
+        &:where(.ag-apple-scrollbar) {
             opacity: 0;
             transition: opacity 400ms;
             visibility: hidden;
-            &.ag-scrollbar-scrolling,
-            &.ag-scrollbar-active {
+
+            &:where(.ag-scrollbar-scrolling, .ag-scrollbar-active) {
                 visibility: visible;
                 opacity: 1;
             }
@@ -260,7 +265,8 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-body-horizontal-scroll {
     width: 100%;
-    &.ag-scrollbar-invisible {
+
+    &:where(.ag-scrollbar-invisible) {
         left: 0;
         right: 0;
     }
@@ -268,7 +274,8 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-body-vertical-scroll {
     height: 100%;
-    &.ag-scrollbar-invisible {
+
+    &:where(.ag-scrollbar-invisible) {
         top: 0;
         z-index: 10;
         right: 0;
@@ -284,7 +291,8 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     height: 100%;
     min-width: 0;
     overflow-x: scroll;
-    &.ag-scroller-corner {
+
+    &:where(.ag-scroller-corner) {
         overflow-x: hidden;
     }
 }
@@ -294,23 +302,24 @@ always be 0 and then making a row sticky causes the grid to scroll. */
   * Rows
   ****************************
   */
-.ag-row-animation .ag-row {
+:where(.ag-row-animation) .ag-row {
     transition:
         transform 0.4s,
         top 0.4s,
         opacity 0.2s;
-}
-/* for rows older than one second, we also animate the height. we don't include the height
-     initially so we are not animating auto-height rows on initial render. */
-.ag-row-animation .ag-row.ag-after-created {
-    transition:
-        transform 0.4s,
-        top 0.4s,
-        height 0.4s,
-        opacity 0.2s;
+
+    /* for rows older than one second, we also animate the height. we don't include the height
+       initially so we are not animating auto-height rows on initial render. */
+    &:where(.ag-after-created) {
+        transition:
+            transform 0.4s,
+            top 0.4s,
+            height 0.4s,
+            opacity 0.2s;
+    }
 }
 
-.ag-row-no-animation .ag-row {
+:where(.ag-row-no-animation) .ag-row {
     transition: none;
 }
 
@@ -329,6 +338,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-full-width-row {
     overflow: hidden;
+
     /* turn events back on, as we removed them in the parent */
     pointer-events: all;
 }
@@ -356,6 +366,12 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     position: absolute;
     white-space: nowrap;
     height: 100%;
+
+    /* remove the box shadow added by default to all focussed divs because cells
+       use a border only to indicate focus */
+    &:focus-visible {
+        box-shadow: none;
+    }
 }
 
 /* This is used when using a Cell Wrapper (eg row drag, selection, or auto-height).
@@ -380,12 +396,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     word-break: break-word;
 }
 
-.ag-full-width-row .ag-cell-wrapper.ag-row-group {
-    height: 100%;
-    align-items: center;
-}
-
-.ag-cell .ag-icon {
+:where(.ag-cell) .ag-icon {
     display: inline-block;
     vertical-align: middle;
 }
@@ -424,7 +435,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     display: flex;
     width: 100%;
     overflow: hidden;
-    height: 0px;
+    height: 0;
     background-color: var(--ag-background-color);
 }
 
@@ -446,7 +457,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     width: 100%;
 }
 
-.ag-right-aligned-header {
+:where(.ag-right-aligned-header) {
     .ag-cell-label-container {
         flex-direction: row;
     }
@@ -464,13 +475,15 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-column-group-icons {
     display: block;
+
     > * {
         cursor: pointer;
     }
 }
 
-.ag-ltr {
+:where(.ag-ltr) {
     direction: ltr;
+
     .ag-body,
     .ag-floating-top,
     .ag-floating-bottom,
@@ -483,8 +496,9 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     }
 }
 
-.ag-rtl {
+:where(.ag-rtl) {
     direction: rtl;
+
     .ag-body,
     .ag-floating-top,
     .ag-floating-bottom,
@@ -508,8 +522,4 @@ always be 0 and then making a row sticky causes the grid to scroll. */
     width: 0;
     overflow: hidden;
     visibility: hidden;
-
-    & div {
-        position: absolute;
-    }
 }

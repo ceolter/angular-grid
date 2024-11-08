@@ -275,6 +275,7 @@ export class HeaderRowCtrl extends BeanStub {
                     headerCtrl = this.createBean(
                         this.beans.registry.createDynamicBean<HeaderFilterCellCtrl>(
                             'headerFilterCellCtrl',
+                            true,
                             headerColumn as AgColumn,
                             this
                         )!
@@ -285,6 +286,7 @@ export class HeaderRowCtrl extends BeanStub {
                     headerCtrl = this.createBean(
                         this.beans.registry.createDynamicBean<HeaderGroupCellCtrl>(
                             'headerGroupCellCtrl',
+                            true,
                             headerColumn as AgColumnGroup,
                             this
                         )!

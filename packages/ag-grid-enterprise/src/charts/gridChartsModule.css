@@ -1,6 +1,6 @@
 /* TODO these styles would be easier to maintain if associated with the
    individual components (through component.registerCSS) rather than the charts
    module, to aid future refactoring */
-@import './css/_charts.css';
-@import './css/_chart-widgets.css';
-@import './css/_range.css';
+@import url('./css/_charts.css');
+@import url('./css/_chart-widgets.css');
+@import url('./css/_range.css');

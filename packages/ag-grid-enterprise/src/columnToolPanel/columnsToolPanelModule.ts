@@ -5,18 +5,16 @@ import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { RowGroupingModule } from '../rowGrouping/rowGroupingBundleModule';
 import { RowGroupingCoreModule } from '../rowGrouping/rowGroupingModule';
-import { SideBarModule, SideBarSharedModule } from '../sideBar/sideBarModule';
+import { SideBarModule } from '../sideBar/sideBarModule';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { ColumnToolPanel } from './columnToolPanel';
 import { ColumnToolPanelFactory } from './columnToolPanelFactory';
-import { ModelItemUtils } from './modelItemUtils';
 
 /**
  * @feature Accessories -> Columns Tool Panel
  */
 export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ColumnsToolPanelCoreModule'),
-    beans: [ModelItemUtils],
     userComponents: { agColumnsToolPanel: ColumnToolPanel },
     icons: {
         // column tool panel tab
@@ -39,15 +37,7 @@ export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
         //     others are collapsed
         columnSelectIndeterminate: 'tree-indeterminate',
     },
-    dependsOn: [
-        EnterpriseCoreModule,
-        SideBarModule,
-        ColumnMoveModule,
-        DragAndDropModule,
-        PopupModule,
-        MenuItemModule,
-        SideBarSharedModule,
-    ],
+    dependsOn: [EnterpriseCoreModule, SideBarModule, ColumnMoveModule, DragAndDropModule, PopupModule, MenuItemModule],
 };
 
 /**

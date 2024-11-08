@@ -66,7 +66,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             allLeafChildren.push(row);
 
             node = node.upsertKey(row.id!);
-            this.treeSetRow(node, row, false);
+            this.treeSetRow(node, row, true);
 
             const children = childrenGetter?.(data);
             if (children) {
@@ -95,6 +95,8 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const changedPath = new ChangedPath(false, rootNode);
         params.changedPath = changedPath;
+
+        const changedRowNodes = params.changedRowNodes!;
 
         const oldAllLeafChildren = rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
@@ -143,18 +145,20 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
             const id = getRowIdFunc({ data, level: parent.level + 1 });
 
-            let update = false;
+            let created = false;
             let row = this.getRowNode(id) as TreeRow<TData> | undefined;
             if (row) {
                 if (row.data !== data) {
+                    changedRowNodes.update(row);
                     row.updateData(data);
                     if (!row.selectable && row.isSelected()) {
                         nodesToUnselect.push(row);
                     }
-                    update = true;
                 }
             } else {
                 row = this.createRowNode(data, -1);
+                changedRowNodes.add(row);
+                created = true;
             }
 
             let oldSourceRowIndex: number;
@@ -168,7 +172,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 oldSourceRowIndex = -1;
             }
 
-            if (this.treeSetRow(node, row, update)) {
+            if (this.treeSetRow(node, row, created)) {
                 rowsChanged = true;
             }
 
@@ -187,6 +191,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 const row = oldAllLeafChildren[i];
                 const node = row.treeNode as TreeNode | null;
                 if (node && !processedDataSet.has(row.data!)) {
+                    changedRowNodes.remove(row);
                     this.treeRemove(node, row);
                 }
             }

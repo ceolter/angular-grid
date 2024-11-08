@@ -5,20 +5,19 @@ import type { BeanCollection, UserComponentName } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
 import { INITIAL_GRID_OPTION_KEYS } from '../gridOptionsInitial';
 import type { PropertyChangedSource } from '../gridOptionsService';
-import type { EnterpriseModuleName, ModuleName } from '../interfaces/iModule';
 import type { RowNodeEventType } from '../interfaces/iRowNode';
+import type { DefaultMenuItem } from '../interfaces/menuItem';
 import { _areModulesGridScoped } from '../modules/moduleRegistry';
 import { _warnOnce } from '../utils/function';
 import { _fuzzySuggestions } from '../utils/fuzzyMatch';
 import type { IconName, IconValue } from '../utils/icon';
 import { validateApiFunction } from './apiFunctionValidator';
-import { ENTERPRISE_MODULE_NAMES } from './enterpriseModuleNames';
-import type { ErrorId, GetErrorParams, MissingModuleErrors } from './errorMessages/errorText';
-import { MISSING_MODULE_REASONS } from './errorMessages/errorText';
+import type { ErrorId, GetErrorParams } from './errorMessages/errorText';
 import { getError } from './errorMessages/errorText';
 import { _error, _warn, provideValidationServiceLogger } from './logging';
 import { GRID_OPTIONS_VALIDATORS } from './rules/gridOptionsValidations';
 import { DEPRECATED_ICONS_V33, ICON_MODULES, ICON_VALUES } from './rules/iconValidations';
+import { MENU_ITEM_MODULES } from './rules/menuItemValidations';
 import { USER_COMP_MODULES } from './rules/userCompValidations';
 import type { DependentValues, OptionsValidation, OptionsValidator, RequiredOptions } from './validationTypes';
 
@@ -51,25 +50,6 @@ export class ValidationService extends BeanStub implements NamedBean {
         apiFunction: ApiFunction<TFunctionName>
     ): ApiFunction<TFunctionName> {
         return validateApiFunction(functionName, apiFunction, this.beans);
-    }
-
-    public missingModule(
-        moduleName: ModuleName | ModuleName[],
-        reasonOrId: string | keyof MissingModuleErrors,
-        gridId: string,
-        additionalText?: string
-    ): void {
-        const gridScoped = _areModulesGridScoped();
-        const isEnterprise = ENTERPRISE_MODULE_NAMES[moduleName as EnterpriseModuleName] === 1;
-        const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
-        _error(200, {
-            reason,
-            moduleName,
-            gridScoped,
-            gridId,
-            isEnterprise,
-            additionalText,
-        });
     }
 
     public missingUserComponent(
@@ -109,19 +89,32 @@ export class ValidationService extends BeanStub implements NamedBean {
         }
         const moduleName = ICON_MODULES[iconName];
         if (moduleName) {
-            this.missingModule(
+            _error(200, {
+                reasonOrId: `icon '${iconName}'`,
                 moduleName,
-                `icon '${iconName}'`,
-                this.beans.context.getGridId(),
-                `Alternatively, use the CSS icon name directly.`
-            );
+                gridScoped: _areModulesGridScoped(),
+                gridId: this.beans.context.getGridId(),
+                additionalText: 'Alternatively, use the CSS icon name directly.',
+            });
             return;
         }
         _warn(134, { iconName });
     }
 
+    public validateMenuItem(key: string): void {
+        const moduleName = MENU_ITEM_MODULES[key as DefaultMenuItem];
+        if (moduleName) {
+            this.gos.assertModuleRegistered(moduleName, `menu item '${key}'`);
+        }
+    }
+
+    public isProvidedUserComp(compName: string): boolean {
+        return !!USER_COMP_MODULES[compName as UserComponentName];
+    }
+
     private processOptions<T extends object>(options: T, validator: OptionsValidator<T>): void {
-        const { validations, deprecations, allProperties, propertyExceptions, objectName, docsUrl } = validator;
+        const { validations, deprecations, allProperties, propertyExceptions, objectName, docsUrl, mandatoryKeys } =
+            validator;
 
         if (allProperties && this.gridOptions.suppressPropertyNamesCheck !== true) {
             this.checkProperties(
@@ -135,26 +128,12 @@ export class ValidationService extends BeanStub implements NamedBean {
 
         const warnings = new Set<string>();
 
-        const optionKeys = Object.keys(options) as (keyof T)[];
-        optionKeys.forEach((key: keyof T) => {
-            const deprecation = deprecations[key];
-            if (deprecation) {
-                const { message, version } = deprecation;
-                warnings.add(`As of v${version}, ${String(key)} is deprecated. ${message ?? ''}`);
-            }
-
-            const value = options[key];
-            if (value == null || value === false) {
-                // false implies feature is disabled, don't validate.
-                return;
-            }
-
+        const getRules = (key: keyof T): OptionsValidation<T> | undefined => {
             const rulesOrGetter = validations[key];
-            let rules: OptionsValidation<T>;
             if (!rulesOrGetter) {
                 return;
             } else if (typeof rulesOrGetter === 'function') {
-                const fromGetter = rulesOrGetter(options, this.gridOptions);
+                const fromGetter = rulesOrGetter(options, this.gridOptions, this.beans);
                 if (!fromGetter) {
                     return;
                 }
@@ -172,9 +151,29 @@ export class ValidationService extends BeanStub implements NamedBean {
                     return;
                 }
 
-                rules = fromGetter;
+                return fromGetter;
             } else {
-                rules = rulesOrGetter;
+                return rulesOrGetter;
+            }
+        };
+
+        const optionKeys = Object.keys(options) as (keyof T)[];
+        optionKeys.forEach((key: keyof T) => {
+            const deprecation = deprecations[key];
+            if (deprecation) {
+                const { message, version } = deprecation;
+                warnings.add(`As of v${version}, ${String(key)} is deprecated. ${message ?? ''}`);
+            }
+
+            const value = options[key];
+            if (value == null || value === false) {
+                // false implies feature is disabled, don't validate.
+                return;
+            }
+
+            const rules = getRules(key);
+            if (!rules) {
+                return;
             }
 
             const { module, dependencies, validate, supportedRowModels, expectedType } = rules;
@@ -206,7 +205,6 @@ export class ValidationService extends BeanStub implements NamedBean {
                 modules.forEach((m) => {
                     if (!this.gos.assertModuleRegistered(m, String(key))) {
                         allRegistered = false;
-                        warnings.add(`${String(key)} is only available when ${m} is loaded.`);
                     }
                 });
 
@@ -223,7 +221,21 @@ export class ValidationService extends BeanStub implements NamedBean {
                 }
             }
             if (validate) {
-                const warning = validate(options, this.gridOptions);
+                const warning = validate(options, this.gridOptions, this.beans);
+                if (warning) {
+                    warnings.add(warning);
+                    return;
+                }
+            }
+        });
+        mandatoryKeys?.forEach((key) => {
+            const rules = getRules(key);
+            if (!rules) {
+                return;
+            }
+            const { validate } = rules;
+            if (validate) {
+                const warning = validate(options, this.gridOptions, this.beans);
                 if (warning) {
                     warnings.add(warning);
                     return;

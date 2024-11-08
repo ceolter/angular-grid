@@ -12,13 +12,13 @@ import type {
 } from 'ag-grid-community';
 import { Component, _exists, _setAriaLabel, _setAriaLevel, _warn, isProvidedColumnGroup } from 'ag-grid-community';
 
-import type { ToolPanelColDefService } from '../sideBar/common/toolPanelColDefService';
+import { syncLayoutWithGrid, toolPanelCreateColumnTree } from '../sideBar/common/toolPanelColDefService';
 import type { VirtualListModel } from '../widgets/iVirtualList';
 import { VirtualList } from '../widgets/virtualList';
 import { ExpandState } from './agPrimaryColsHeader';
 import { ColumnModelItem } from './columnModelItem';
 import type { ToolPanelColumnCompParams } from './columnToolPanel';
-import type { ModelItemUtils } from './modelItemUtils';
+import { selectAllChildren } from './modelItemUtils';
 import { PrimaryColsListPanelItemDragFeature } from './primaryColsListPanelItemDragFeature';
 import { ToolPanelColumnComp } from './toolPanelColumnComp';
 import { ToolPanelColumnGroupComp } from './toolPanelColumnGroupComp';
@@ -45,14 +45,10 @@ export type AgPrimaryColsListEvent = 'groupExpanded' | 'selectionChanged';
 export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
     private colModel: ColumnModel;
     private colNames: ColumnNameService;
-    private colDefService: ToolPanelColDefService;
-    private modelItemUtils: ModelItemUtils;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.colNames = beans.colNames;
-        this.colDefService = beans.toolPanelColDefSvc as ToolPanelColDefService;
-        this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
     }
 
     private allowDragging: boolean;
@@ -236,11 +232,11 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
     }
 
     private buildTreeFromWhatGridIsDisplaying(): void {
-        this.colDefService.syncLayoutWithGrid(this.setColumnLayout.bind(this));
+        syncLayoutWithGrid(this.colModel, this.setColumnLayout.bind(this));
     }
 
     public setColumnLayout(colDefs: AbstractColDef[]): void {
-        const columnTree = this.colDefService.createColumnTree(colDefs);
+        const columnTree = toolPanelCreateColumnTree(this.colModel, colDefs);
         this.buildListModel(columnTree);
 
         // using col defs to check if groups exist as it could be a custom layout
@@ -458,7 +454,7 @@ export class AgPrimaryColsList extends Component<AgPrimaryColsListEvent> {
     }
 
     public doSetSelectedAll(selectAllChecked: boolean): void {
-        this.modelItemUtils.selectAllChildren(this.allColsTree, selectAllChecked, this.eventType);
+        selectAllChildren(this.beans, this.allColsTree, selectAllChecked, this.eventType);
     }
 
     private getSelectionState(): boolean | undefined {

@@ -40,17 +40,11 @@ describe('ag-grid tree data without tree module', () => {
         };
 
         consoleErrorSpy = vitest.spyOn(console, 'error').mockImplementation(() => {});
-        consoleWarnSpy = vitest.spyOn(console, 'warn').mockImplementation(() => {});
 
         const api = gridsManager.createGrid('myGrid', gridOptions);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-            'AG Grid: treeData is only available when TreeDataCoreModule is loaded.'
-        );
-
         expect(consoleErrorSpy).toHaveBeenCalled();
 
-        consoleWarnSpy.mockRestore();
         consoleErrorSpy.mockRestore();
 
         const gridRowsOptions = {

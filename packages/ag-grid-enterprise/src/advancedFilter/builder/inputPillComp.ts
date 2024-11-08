@@ -28,10 +28,12 @@ export class InputPillComp extends Component<InputPillCompEvent> {
 
     private eEditor: AgInputTextField | undefined;
     private value: string;
+    private displayValue: string;
 
     constructor(
         private readonly params: {
             value: string;
+            valueFormatter: (value: string) => string;
             cssClass: string;
             type: 'text' | 'number' | 'date';
             ariaLabel: string;
@@ -44,7 +46,9 @@ export class InputPillComp extends Component<InputPillCompEvent> {
                 </div>
             </div>
         `);
-        this.value = params.value;
+        const { value, valueFormatter } = params;
+        this.value = value;
+        this.displayValue = valueFormatter(value);
     }
 
     public postConstruct(): void {
@@ -144,22 +148,24 @@ export class InputPillComp extends Component<InputPillCompEvent> {
 
     private renderValue(): void {
         let value: string;
-        this.eLabel.classList.remove(
+        const { displayValue, eLabel } = this;
+        const { classList } = eLabel;
+        classList.remove(
             'ag-advanced-filter-builder-value-empty',
             'ag-advanced-filter-builder-value-number',
             'ag-advanced-filter-builder-value-text'
         );
-        if (!_exists(this.value)) {
+        if (!_exists(displayValue)) {
             value = this.advFilterExpSvc.translate('advancedFilterBuilderEnterValue');
-            this.eLabel.classList.add('ag-advanced-filter-builder-value-empty');
+            classList.add('ag-advanced-filter-builder-value-empty');
         } else if (this.params.type === 'number') {
-            value = this.value;
-            this.eLabel.classList.add('ag-advanced-filter-builder-value-number');
+            value = displayValue;
+            classList.add('ag-advanced-filter-builder-value-number');
         } else {
-            value = `"${this.value}"`;
-            this.eLabel.classList.add('ag-advanced-filter-builder-value-text');
+            value = `"${displayValue}"`;
+            classList.add('ag-advanced-filter-builder-value-text');
         }
-        this.eLabel.innerText = value;
+        eLabel.innerText = value;
     }
 
     private updateValue(keepFocus: boolean): void {
@@ -172,6 +178,7 @@ export class InputPillComp extends Component<InputPillCompEvent> {
             value,
         });
         this.value = value;
+        this.displayValue = this.params.valueFormatter(value);
         this.renderValue();
         this.hideEditor(keepFocus);
     }

@@ -3,12 +3,12 @@ import type {
     BeanName,
     BeforeRefreshModelEvent,
     DetailGridInfo,
+    IChangedRowNodes,
     IColsService,
     IMasterDetailService,
     IRowModel,
     NamedBean,
     RowCtrl,
-    RowNodeTransaction,
 } from 'ag-grid-community';
 import {
     BeanStub,
@@ -60,11 +60,11 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         }
 
         if (params.rowDataUpdated) {
-            this.setMasters(params.rowNodeTransactions);
+            this.setMasters(params.changedRowNodes);
         }
     }
 
-    private setMasters(transactions: RowNodeTransaction[] | null | undefined): void {
+    private setMasters(changedRowNodes: IChangedRowNodes | null | undefined): void {
         const enabled = this.isEnabled();
         this.enabled = enabled;
 
@@ -109,15 +109,11 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         };
 
-        if (transactions) {
-            for (let i = 0, len = transactions.length; i < len; ++i) {
-                const { update, add } = transactions[i];
-                for (let j = 0, len = add.length; j < len; ++j) {
-                    setMaster(add[j] as RowNode, true, false);
-                }
-                for (let j = 0, len = update.length; j < len; ++j) {
-                    setMaster(update[j] as RowNode, false, true);
-                }
+        if (changedRowNodes) {
+            const updates = changedRowNodes.updates;
+            for (const node of updates.keys()) {
+                const created = updates.get(node)!;
+                setMaster(node, created, !created);
             }
         } else {
             const allLeafChildren = _getClientSideRowModel(this.beans)?.rootNode?.allLeafChildren;

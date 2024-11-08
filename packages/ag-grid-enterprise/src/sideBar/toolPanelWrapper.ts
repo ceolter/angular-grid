@@ -8,7 +8,7 @@ import type {
     UserComponentFactory,
     WithoutGridCommon,
 } from 'ag-grid-community';
-import { Component, _warn } from 'ag-grid-community';
+import { Component } from 'ag-grid-community';
 
 import { AgHorizontalResize } from './agHorizontalResize';
 
@@ -56,7 +56,7 @@ export class ToolPanelWrapper extends Component {
         return this.toolPanelId;
     }
 
-    public setToolPanelDef(toolPanelDef: ToolPanelDef, params: WithoutGridCommon<IToolPanelParams>): void {
+    public setToolPanelDef(toolPanelDef: ToolPanelDef, params: WithoutGridCommon<IToolPanelParams>): boolean {
         const { id, minWidth, maxWidth, width } = toolPanelDef;
 
         this.toolPanelId = id;
@@ -64,8 +64,7 @@ export class ToolPanelWrapper extends Component {
 
         const compDetails = getToolPanelCompDetails(this.userCompFactory, toolPanelDef, params);
         if (compDetails == null) {
-            _warn(216, { id });
-            return;
+            return false;
         }
 
         const componentPromise = compDetails.newAgStackInstance();
@@ -80,6 +79,8 @@ export class ToolPanelWrapper extends Component {
         if (maxWidth != null) {
             this.resizeBar.setMaxWidth(maxWidth);
         }
+
+        return true;
     }
 
     private setToolPanelComponent(compInstance: IToolPanelComp): void {

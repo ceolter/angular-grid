@@ -1,6 +1,6 @@
 import type { BeanCollection, ColDef, Column, IAggFunc } from 'ag-grid-community';
 
-import type { ValueColsSvc } from '../pivot/valueColsSvc';
+import type { ValueColsSvc } from './valueColsSvc';
 
 export function addAggFuncs(beans: BeanCollection, aggFuncs: { [key: string]: IAggFunc }): void {
     if (beans.aggFuncSvc) {

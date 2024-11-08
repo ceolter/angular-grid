@@ -2,6 +2,7 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
 import type { IRowModel } from './iRowModel';
+import type { IRowNode } from './iRowNode';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -56,40 +57,81 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     isRowDataLoaded(): boolean;
 }
 
+export interface IChangedRowNodes<TData = any> {
+    /**
+     * The set of removed nodes.
+     * Mutually exclusive, if a node is here, it cannot be in the updates map.
+     */
+    readonly removals: ReadonlySet<RowNode<TData>>;
+
+    /**
+     * Map of row nodes that have been updated.
+     * The value is true if the row node is a new node. is false if it was just updated.
+     */
+    readonly updates: ReadonlyMap<RowNode<TData>, boolean>;
+
+    /** Marks a row as removed. Order of operations is: remove, update, add */
+    remove(node: IRowNode<TData>): void;
+
+    /** Marks a row as updated. Order of operations is: remove, update, add */
+    update(node: IRowNode<TData>): void;
+
+    /** Marks a row as added. Order of operation is: remove, update, add */
+    add(node: IRowNode<TData>): void;
+}
+
 export interface RefreshModelParams<TData = any> {
-    // how much of the pipeline to execute
+    /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
 
-    // The set of changed grid options, if any
+    /** The set of changed grid options, if any */
     changedProps?: Set<keyof GridOptions<TData>>;
 
-    // The changedPath, if any
-    changedPath?: ChangedPath;
-
-    // if NOT new data, then this flag tells grid to check if rows already
-    // exist for the nodes (matching by node id) and reuses the row if it does.
-    keepRenderedRows?: boolean;
-
-    // if true, rows that are kept are animated to the new position
-    animate?: boolean;
-
-    // if doing delta updates, this has the changes that were done
-    rowNodeTransactions?: RowNodeTransaction<TData>[];
-
-    // true if the order of root.allLeafChildren has changed.
-    // This can happen if order of root.allLeafChildren is updated or rows are inserted (and not just appended at the end)
-    rowNodesOrderChanged?: boolean;
-
-    // true if user called setRowData() (or a new page in pagination). the grid scrolls
-    // back to the top when this is true.
-    newData?: boolean;
-
-    // true if the row data changed, due to a setRowData, immutable row data or a transaction.
+    /**
+     * true if the row data changed, due to a setRowData, immutable row data or a transaction, or an update of the row data.
+     */
     rowDataUpdated?: boolean;
 
-    // true if this update is due to columns changing, ie no rows were changed
+    /**
+     * Indicates a completely new rowData array is loaded.
+     * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
+     */
+    newData?: boolean;
+
+    /**
+     * true if the order of root.allLeafChildren has changed.
+     * This can happen if order of root.allLeafChildren is updated or rows are inserted (and not just appended at the end)
+     */
+    rowNodesOrderChanged?: boolean;
+
+    /**
+     * A data structure that holds the affected row nodes, if this was an update and not a full reload.
+     */
+    changedRowNodes?: IChangedRowNodes<TData>;
+
+    /** The changedPath, if any */
+    changedPath?: ChangedPath;
+
+    /**
+     * List of transactions being executed for a delta update.
+     * To see the affected nodes for a delta update, use `changedRowNodes` instead.
+     */
+    rowNodeTransactions?: RowNodeTransaction<TData>[];
+
+    /**
+     * if NOT new data, then this flag tells grid to check if rows already
+     * exist for the nodes (matching by node id) and reuses the row if it does.
+     */
+    keepRenderedRows?: boolean;
+
+    /**
+     * if true, rows that are kept are animated to the new position
+     */
+    animate?: boolean;
+
+    /** true if this update is due to columns changing, ie no rows were changed */
     afterColumnsChanged?: boolean;
 
-    // true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks
+    /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
     keepUndoRedoStack?: boolean;
 }

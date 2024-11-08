@@ -1,3 +1,8 @@
+/* stylelint-disable selector-max-specificity -- cell and column borders have
+    lots of overlapping rules defined in different files that rely on different
+    specificities to work, one day it would be good to tackle this and properly
+    refactor border styles to be less specific */
+
 .ag-cell-range-selected:not(.ag-cell-focus),
 .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {
     background-color: var(--ag-range-selection-background-color);
@@ -50,20 +55,23 @@
         border-top-color: var(--ag-range-selection-border-color);
         border-top-style: var(--ag-range-selection-border-style);
     }
+
     &.ag-cell-range-right {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-right-color: var(--ag-range-selection-border-color);
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-right-style: var(--ag-range-selection-border-style);
     }
+
     &.ag-cell-range-bottom {
         border-bottom-color: var(--ag-range-selection-border-color);
         border-bottom-style: var(--ag-range-selection-border-style);
     }
+
     &.ag-cell-range-left {
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-left-color: var(--ag-range-selection-border-color);
-        /*rtl:ignore*/
+        /* rtl:ignore */
         border-left-style: var(--ag-range-selection-border-style);
     }
 }
