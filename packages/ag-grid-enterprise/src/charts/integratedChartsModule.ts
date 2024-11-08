@@ -34,20 +34,6 @@ import {
 import { gridChartsModuleCSS } from './integratedChartsModule.css-GENERATED';
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
-/**
- * @feature Integrated Charts
- */
-export const GridChartsModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GridChartsModule'),
-    validate: () => {
-        return {
-            isValid: false,
-            message:
-                'AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule" instead.',
-        };
-    },
-};
-
 type IntegratedChartsModuleType = {
     with: (params: IntegratedChartModule) => _ModuleWithApi<_GridChartsGridApi>;
 } & _ModuleWithApi<_GridChartsGridApi>;
@@ -57,7 +43,8 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message: 'AG Grid: Integrated Charts module must be initialised with a version of the charts library',
+            message:
+                'AG Grid: IntegratedChartsModule must be initialised with an AG Charts module. i.e `IntegratedChartsModule.with(ChartEnterpriseModule)`',
         };
     },
     beans: [
@@ -107,6 +94,21 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     },
     dependsOn: [CellSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
     css: [gridChartsModuleCSS],
+};
+
+/**
+ * @feature Integrated Charts
+ */
+export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
+    ...baseEnterpriseModule('GridChartsModule'),
+    ...baseIntegratedChartsModule,
+    validate: () => {
+        return {
+            isValid: false,
+            message:
+                'AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule" instead.',
+        };
+    },
 };
 
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
