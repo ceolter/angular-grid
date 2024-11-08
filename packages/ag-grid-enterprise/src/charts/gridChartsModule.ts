@@ -110,15 +110,14 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
 
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
     with: (params) => {
-        const AgCharts = (params as any).AgCharts;
-        AgCharts.setGridContext(true);
-        // init agChartsContext bean to provide chart things to the grid
-        if (params.isEnterprise) {
-            // warn about passing enterprise charts into community integrated charts
-            LicenseManager.setChartsLicenseManager(AgCharts as ILicenseManager);
-        }
-
         params.setup();
+        params.setGridContext(true);
+        if (params.isEnterprise) {
+            const chartsManager: ILicenseManager = {
+                setLicenseKey: params.setLicenseKey,
+            };
+            LicenseManager.setChartsLicenseManager(chartsManager);
+        }
 
         return {
             ...baseIntegratedChartsModule,
@@ -139,16 +138,14 @@ export class AgChartsContext extends BeanStub implements NamedBean {
     beanName = 'agChartsContext' as const;
 
     isEnterprise = false;
-    createChart: IntegratedChartModule['create'];
+    create: IntegratedChartModule['create'];
     _Theme: IntegratedChartModule['_Theme'];
-    _Scene: any; // IntegratedChartModule['_Scene'];
+    _Scene: any; // types not exposed as only used for mini charts
     _Util: IntegratedChartModule['_Util'];
-    AgCharts: any; // AgChartsModule;
 
     constructor(params: IntegratedChartModule) {
         super();
-        this.AgCharts = (params as any).AgCharts;
-        this.createChart = params.create;
+        this.create = params.create;
         this._Theme = params._Theme;
         this._Scene = params._Scene;
         this.isEnterprise = params.isEnterprise;

@@ -33,7 +33,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             } as AgSparklineOptions;
 
             // create new sparkline
-            this.sparklineInstance = params.__createSparkline!(this.sparklineOptions);
+            this.sparklineInstance = params.createSparkline!(this.sparklineOptions);
             return true;
         } else if (this.sparklineInstance) {
             const data = params?.value;

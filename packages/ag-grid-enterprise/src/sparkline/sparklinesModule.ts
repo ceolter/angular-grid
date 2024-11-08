@@ -27,7 +27,6 @@ const baseSparklinesModule: _ModuleWithoutApi = {
 export const SparklinesModule: SparklineChartsModuleType = {
     with: (params) => {
         params.setup();
-        const AgCharts = (params as any).AgCharts;
 
         return {
             ...baseSparklinesModule,
@@ -35,7 +34,7 @@ export const SparklinesModule: SparklineChartsModuleType = {
                 agSparklineCellRenderer: {
                     classImp: SparklineCellRenderer,
                     /** Default params for provided components */
-                    params: { __createSparkline: AgCharts.__createSparkline.bind(AgCharts) },
+                    params: { createSparkline: params.create },
                 },
             },
             validate: () => {

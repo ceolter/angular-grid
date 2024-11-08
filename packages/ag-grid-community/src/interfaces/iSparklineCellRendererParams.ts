@@ -5,5 +5,5 @@ import type { ICellRendererParams } from '../rendering/cellRenderers/iCellRender
 export interface ISparklineCellRendererParams<TData = any, TContext = any>
     extends ICellRendererParams<TData, TContext> {
     sparklineOptions?: AgSparklineOptions;
-    __createSparkline?: (options: AgSparklineOptions) => AgChartInstance<AgSparklineOptions>;
+    createSparkline?: (options: AgSparklineOptions) => AgChartInstance<AgSparklineOptions>;
 }
