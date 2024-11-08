@@ -1,6 +1,6 @@
 import type { IntegratedChartModule } from 'ag-charts-types';
 
-import type { _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import type { _GridChartsGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { DragAndDropModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -93,7 +93,7 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
         restoreChart,
     },
     dependsOn: [CellSelectionModule, EnterpriseCoreModule, DragAndDropModule, PopupModule, MenuItemModule],
-    css: [gridChartsModuleCSS],
+    css: [integratedChartsModuleCSS],
 };
 
 /**

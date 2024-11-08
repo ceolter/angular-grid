@@ -16,7 +16,7 @@ const baseSparklinesModule: _ModuleWithoutApi = {
     validate: () => {
         return {
             isValid: false,
-            message: 'AG Grid: SparklinesModule must be initialised with the AG Charts Sparklines library',
+            message: `AG Grid: SparklinesModule must be initialised with the AG Charts (ag-charts-community) sparkline module i.e 'SparklinesModule.with(SparklineModule)'`,
         };
     },
 };
