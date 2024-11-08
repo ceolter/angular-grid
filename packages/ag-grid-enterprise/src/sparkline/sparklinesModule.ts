@@ -1,5 +1,6 @@
 import type { IntegratedSparklineModule } from 'ag-charts-types';
 
+import { _errMsg } from 'ag-grid-community';
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -16,7 +17,7 @@ const baseSparklinesModule: _ModuleWithoutApi = {
     validate: () => {
         return {
             isValid: false,
-            message: `AG Grid: SparklinesModule must be initialised with the AG Charts (ag-charts-community) sparkline module i.e 'SparklinesModule.with(SparklineModule)'`,
+            message: _errMsg(257),
         };
     },
 };

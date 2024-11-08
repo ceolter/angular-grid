@@ -1,7 +1,7 @@
 import type { IntegratedChartModule } from 'ag-charts-types';
 
 import type { _GridChartsGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { DragAndDropModule, PopupModule } from 'ag-grid-community';
+import { DragAndDropModule, PopupModule, _errMsg } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import type { ILicenseManager } from '../license/shared/licenseManager';
@@ -43,20 +43,9 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message:
-                'AG Grid: IntegratedChartsModule must be initialised with an AG Charts module. i.e `IntegratedChartsModule.with(ChartEnterpriseModule)`',
+            message: _errMsg(256),
         };
     },
-    beans: [
-        ChartService,
-        ChartTranslationService,
-        ChartCrossFilterService,
-        ChartMenuListFactory,
-        ChartMenuService,
-        // Include enterprise beans for now for all users as tiny compared to charts bundle size
-        EnterpriseChartProxyFactory,
-        AdvancedSettingsMenuFactory,
-    ],
     icons: {
         // shown on top right of chart when chart is linked to range data (click to unlink)
         linked: 'linked',
@@ -130,8 +119,18 @@ export const IntegratedChartsModule: IntegratedChartsModuleType = {
                     chartsVersion: params.VERSION,
                 });
             },
-            // bind the params to the constructor to avoid the need for static properties
-            beans: [...baseIntegratedChartsModule.beans!, AgChartsContext.bind(null, params)],
+            beans: [
+                // bind the params to the constructor to avoid the need for static properties
+                AgChartsContext.bind(null, params),
+                ChartService,
+                ChartTranslationService,
+                ChartCrossFilterService,
+                ChartMenuListFactory,
+                ChartMenuService,
+                // Include enterprise beans for now for all users as tiny compared to charts bundle size
+                EnterpriseChartProxyFactory,
+                AdvancedSettingsMenuFactory,
+            ],
         };
     },
     ...baseIntegratedChartsModule,

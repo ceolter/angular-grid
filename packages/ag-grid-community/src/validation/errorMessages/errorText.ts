@@ -531,6 +531,23 @@ export const AG_GRID_ERRORS = {
     254: () => 'Cannot create chart: no chart themes available.' as const,
     255: ({ point }: { point: number }) =>
         `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
+    256: () =>
+        `IntegratedChartsModule must be initialised with an AG Charts module. One of 'ChartCommunityModule' / 'ChartEnterpriseModule'.
+
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { ModuleRegistry } from 'ag-grid-community';
+import { IntegratedChartsModule } from 'ag-grid-enterprise';
+    
+ModuleRegistry.registerModules([IntegratedChartsModule.with(ChartEnterpriseModule)]);
+    ` as const,
+    257: () =>
+        `SparklinesModule must be initialised with the AG Charts SparklineModule.
+
+import { SparklineModule } from 'ag-charts-community/modules';
+import { ModuleRegistry } from 'ag-grid-community';
+import { SparklinesModule } from 'ag-grid-enterprise';
+    
+ModuleRegistry.registerModules([SparklinesModule.with(SparklineModule)]);` as const,
 } as const;
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
