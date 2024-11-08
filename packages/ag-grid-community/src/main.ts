@@ -912,6 +912,7 @@ export {
     IMenuItemComp,
     BaseMenuItem,
     BaseMenuItemParams,
+    DefaultMenuItem,
 } from './interfaces/menuItem';
 export { IWatermark } from './interfaces/iWatermark';
 export { IRowChildrenService } from './interfaces/iRowChildrenService';

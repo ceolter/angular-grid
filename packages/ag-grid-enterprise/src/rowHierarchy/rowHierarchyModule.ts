@@ -1,9 +1,9 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
+import { ValueColsSvc } from '../aggregation/valueColsSvc';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { PivotColsSvc } from '../pivot/pivotColsSvc';
-import { ValueColsSvc } from '../pivot/valueColsSvc';
 import { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
 import { AutoColService } from './autoColService';
 import { ClientSideExpansionService } from './clientSideExpansionService';

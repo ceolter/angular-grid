@@ -49,7 +49,7 @@ export {
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
     ServerSideRowModelCoreModule,
-    ServerSideRowModelRowGroupingModule,
+    ServerSideRowModelHierarchyModule,
     ServerSideRowModelRowSelectionModule,
     ServerSideRowModelSortModule,
 } from './serverSideRowModel/serverSideRowModelModule';

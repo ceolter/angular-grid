@@ -1,5 +1,6 @@
 import type {
     BeanCollection,
+    DefaultChartMenuItem,
     IAfterGuiAttachedParams,
     IconName,
     MenuItemDef,
@@ -99,10 +100,10 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     private getMenuItems(
         chartController: ChartController,
         areChartToolPanelsEnabled: boolean
-    ): (MenuItemDef | string)[] {
-        const defaultItems = [
-            ...(areChartToolPanelsEnabled ? ['chartEdit'] : []),
-            ...(chartController.isEnterprise() ? ['chartAdvancedSettings'] : []),
+    ): (MenuItemDef | DefaultChartMenuItem)[] {
+        const defaultItems: DefaultChartMenuItem[] = [
+            ...(areChartToolPanelsEnabled ? (['chartEdit'] as const) : []),
+            ...(chartController.isEnterprise() ? (['chartAdvancedSettings'] as const) : []),
             chartController.isChartLinked() ? 'chartUnlink' : 'chartLink',
             'chartDownload',
         ];
@@ -121,7 +122,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     }
 
     private mapWithStockItems(
-        originalList: (MenuItemDef | string)[],
+        originalList: (MenuItemDef | DefaultChartMenuItem)[],
         chartMenuContext: ChartMenuContext,
         showMenu: () => void,
         eventSource: HTMLElement,
@@ -152,7 +153,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
             const { subMenu } = result;
             if (Array.isArray(subMenu)) {
                 result.subMenu = this.mapWithStockItems(
-                    subMenu,
+                    subMenu as (DefaultChartMenuItem | MenuItemDef)[],
                     chartMenuContext,
                     showMenu,
                     eventSource,
@@ -167,7 +168,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     }
 
     private getStockMenuItem(
-        key: string,
+        key: DefaultChartMenuItem,
         chartMenuContext: ChartMenuContext,
         showMenu: () => void,
         eventSource: HTMLElement,
@@ -224,7 +225,7 @@ class ChartMenuList extends Component {
     private hidePopupFunc: () => void;
     private mainMenuList: AgMenuList;
 
-    constructor(private readonly menuItems: (MenuItemDef | string)[]) {
+    constructor(private readonly menuItems: MenuItemDef[]) {
         super(/* html */ `
             <div data-ref="eChartsMenu" role="presentation" class="ag-menu ag-chart-menu-popup"></div>
         `);

@@ -8,6 +8,7 @@ import type {
     ComponentEvent,
     ContainerType,
     CtrlsService,
+    DefaultMenuItem,
     FilterManager,
     FocusService,
     IAfterGuiAttachedParams,
@@ -614,7 +615,7 @@ class ColumnContextMenu extends Component implements EnterpriseColumnMenu {
     private mainMenuList: AgMenuList;
 
     constructor(
-        private readonly menuItems: (string | MenuItemDef)[],
+        private readonly menuItems: (DefaultMenuItem | MenuItemDef)[],
         private readonly column: AgColumn | undefined,
         private readonly restoreFocusParams: MenuRestoreFocusParams,
         private readonly sourceElement?: HTMLElement

@@ -285,19 +285,7 @@ export class AgSideBar extends Component implements ISideBar {
             return false;
         }
 
-        // helpers, in case user doesn't have the right module loaded
-        if (def.toolPanel === 'agColumnsToolPanel') {
-            const moduleMissing = !this.gos.assertModuleRegistered('ColumnsToolPanelCoreModule', 11);
-            if (moduleMissing) {
-                return false;
-            }
-        }
-
         if (def.toolPanel === 'agFiltersToolPanel') {
-            const moduleMissing = !this.gos.assertModuleRegistered('FiltersToolPanelModule', 12);
-            if (moduleMissing) {
-                return false;
-            }
             if (this.filterManager?.isAdvancedFilterEnabled()) {
                 _warn(213);
                 return false;
@@ -315,17 +303,19 @@ export class AgSideBar extends Component implements ISideBar {
         if (!this.validateDef(def)) {
             return;
         }
-        const button = this.sideBarButtons.addButtonComp(def);
         let wrapper: ToolPanelWrapper;
         if (existingToolPanelWrapper) {
             wrapper = existingToolPanelWrapper;
         } else {
             wrapper = this.createBean(new ToolPanelWrapper());
 
-            wrapper.setToolPanelDef(def, {
+            const created = wrapper.setToolPanelDef(def, {
                 initialState,
                 onStateUpdated: () => this.dispatchSideBarUpdated(),
             });
+            if (!created) {
+                return;
+            }
         }
         wrapper.setDisplayed(false);
 
@@ -333,6 +323,8 @@ export class AgSideBar extends Component implements ISideBar {
         this.appendChild(wrapperGui);
 
         this.toolPanelWrappers.push(wrapper);
+
+        const button = this.sideBarButtons.addButtonComp(def);
 
         _setAriaControls(button.getButtonElement(), wrapperGui);
     }
