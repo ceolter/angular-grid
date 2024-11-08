@@ -1,7 +1,6 @@
 import { transform } from 'sucrase';
 import ts from 'typescript';
 
-import { getEnterprisePackageName, integratedChartsUsesChartsEnterprise } from '../constants';
 import type { BindingImport, ExampleConfig, InternalFramework, ParsedBindings } from '../types';
 
 export function readAsJsFile(srcFile, internalFramework: InternalFramework) {
@@ -244,14 +243,14 @@ export function extractImportStatements(srcFile: ts.SourceFile): BindingImport[]
 
 export function addLicenseManager(imports: any[], exampleConfig: ExampleConfig) {
     if (exampleConfig.licenseKey) {
-        imports.push(`import { LicenseManager } from '${getEnterprisePackageName()}';`);
+        imports.push(`import { LicenseManager } from 'ag-grid-enterprise';`);
     }
 }
 
 export function addEnterprisePackage(imports: any[], bindings: ParsedBindings) {
     const isEnterprise = bindings.imports.some((i) => i.module.includes('-enterprise'));
     if (isEnterprise) {
-        imports.push(`import '${getEnterprisePackageName()}';`);
+        imports.push(`import 'ag-grid-enterprise';`);
     }
 }
 
@@ -458,13 +457,7 @@ export function getPropertyInterfaces(properties) {
  *  Add the imports from the parsed file
  * We ignore any component files as those imports are generated for each framework.
  */
-export function addBindingImports(
-    bindingImports: any,
-    imports: string[],
-    convertToPackage: boolean,
-    ignoreTsImports: boolean
-) {
-    convertToPackage = true;
+export function addBindingImports(bindingImports: any, imports: string[], ignoreTsImports: boolean) {
     const workingImports = {};
     const namespacedImports = [];
 
@@ -508,7 +501,7 @@ export function addBindingImports(
     Object.entries(workingImports).forEach(([k, v]: [string, { namedImport: string; imports: string[] }]) => {
         const unique = [...new Set([...v.imports])].sort();
 
-        if (convertToPackage && k.includes('ag-grid')) {
+        if (k.includes('ag-grid')) {
             // Remove module related imports
             // unique = unique.filter((i) => !i.includes('Module') || i == 'AgGridModule');
             hasEnterpriseModules = hasEnterpriseModules || k.includes('enterprise');
@@ -518,13 +511,7 @@ export function addBindingImports(
             const namedImport = v.namedImport ? v.namedImport : '';
             const importStr = unique.length > 0 ? `{ ${unique.join(', ')} }` : '';
             const joiningComma = namedImport && importStr ? ', ' : '';
-            let fullImportStr = `import ${namedImport}${joiningComma}${importStr} from ${k};`;
-            if (!integratedChartsUsesChartsEnterprise && !convertToPackage) {
-                fullImportStr = fullImportStr.replace(
-                    /@ag-grid-enterprise\/charts-enterprise/g,
-                    '@ag-grid-enterprise/charts'
-                );
-            }
+            const fullImportStr = `import ${namedImport}${joiningComma}${importStr} from ${k};`;
             imports.push(fullImportStr);
         }
     });

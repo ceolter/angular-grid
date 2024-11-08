@@ -3,7 +3,7 @@ import path from 'path';
 import prettier from 'prettier';
 
 import { readFile, readJSONFile, writeFile } from '../../executors-utils';
-import { SOURCE_ENTRY_FILE_NAME, getEnterprisePackageName } from './generator/constants';
+import { SOURCE_ENTRY_FILE_NAME } from './generator/constants';
 import gridVanillaSrcParser from './generator/transformation-scripts/grid-vanilla-src-parser';
 import {
     DARK_INTEGRATED_START,
@@ -271,9 +271,9 @@ async function convertModulesToPackages(fileContent: any, isDev: boolean, intern
     if (isEnterprise) {
         const communityImportRegex = /import ['"]ag-grid-community/;
         if (communityImportRegex.test(fileContent)) {
-            fileContent = fileContent.replace(communityImportRegex, `import '${getEnterprisePackageName()}';\n$&`);
+            fileContent = fileContent.replace(communityImportRegex, `import 'ag-grid-enterprise';\n$&`);
         } else {
-            fileContent = `import '${getEnterprisePackageName()}';\n${fileContent}`;
+            fileContent = `import 'ag-grid-enterprise';\n${fileContent}`;
         }
     }
 

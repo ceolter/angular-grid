@@ -36,7 +36,7 @@ function getModuleImports(bindings: ParsedBindings): string[] {
     });
 
     if (bImports.length > 0) {
-        addBindingImports(bImports, imports, false, false);
+        addBindingImports(bImports, imports, false);
     }
 
     addGenericInterfaceImport(imports, bindings.tData, bindings);
