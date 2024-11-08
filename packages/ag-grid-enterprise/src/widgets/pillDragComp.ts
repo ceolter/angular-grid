@@ -78,7 +78,7 @@ export abstract class PillDragComp<TItem> extends Component<PillDragCompEvent> {
         this.eButton.appendChild(_createIconNoSpan('cancel', this.beans)!);
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
             } as ITooltipCtrl)
         );

@@ -72,7 +72,7 @@ const GroupCellRenderer = forwardRef((props: GroupCellRendererParams, ref) => {
             setCheckboxVisible: (visible) => setCheckboxCssClasses((prev) => prev.setClass('ag-invisible', !visible)),
         };
 
-        const groupCellRendererCtrl = registry.createDynamicBean<IGroupCellRendererCtrl>('groupCellRendererCtrl');
+        const groupCellRendererCtrl = registry.createDynamicBean<IGroupCellRendererCtrl>('groupCellRendererCtrl', true);
         if (groupCellRendererCtrl) {
             ctrlRef.current = context.createBean(groupCellRendererCtrl);
             ctrlRef.current.init(

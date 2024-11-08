@@ -27,19 +27,17 @@ import {
 } from 'ag-grid-community';
 
 import type { ColumnModelItem } from './columnModelItem';
-import type { ModelItemUtils } from './modelItemUtils';
+import { createPivotState, setAllColumns, updateColumns } from './modelItemUtils';
 import { ToolPanelContextMenu } from './toolPanelContextMenu';
 
 export class ToolPanelColumnComp extends Component {
     private colModel: ColumnModel;
     private dragAndDrop: DragAndDropService;
-    private modelItemUtils: ModelItemUtils;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.dragAndDrop = beans.dragAndDrop!;
-        this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
         this.registry = beans.registry;
     }
 
@@ -95,7 +93,7 @@ export class ToolPanelColumnComp extends Component {
         this.getGui().style.setProperty('--ag-indentation-level', String(indent));
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'columnToolPanelColumn',
                 getColDef: () => this.column.getColDef(),
@@ -195,7 +193,7 @@ export class ToolPanelColumnComp extends Component {
             return;
         }
 
-        this.modelItemUtils.setColumn(this.column, nextState, 'toolPanelUi');
+        setAllColumns(this.beans, [this.column], nextState, 'toolPanelUi');
     }
 
     private refreshAriaLabel(): void {
@@ -239,7 +237,7 @@ export class ToolPanelColumnComp extends Component {
             onGridEnter: (dragItem: DragItem | null) => {
                 if (hideColumnOnExit) {
                     // when dragged into the grid, restore the state that was active pre-drag
-                    this.modelItemUtils.updateColumns({
+                    updateColumns(this.beans, {
                         columns: [this.column],
                         visibleState: dragItem?.visibleState,
                         pivotState: dragItem?.pivotState,
@@ -263,7 +261,7 @@ export class ToolPanelColumnComp extends Component {
     private createDragItem() {
         const colId = this.column.getColId();
         const visibleState = { [colId]: this.column.isVisible() };
-        const pivotState = { [colId]: this.modelItemUtils.createPivotState(this.column) };
+        const pivotState = { [colId]: createPivotState(this.column) };
         return {
             columns: [this.column],
             visibleState,

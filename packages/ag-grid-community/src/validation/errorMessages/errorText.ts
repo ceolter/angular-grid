@@ -531,6 +531,7 @@ export const AG_GRID_ERRORS = {
     254: () => 'Cannot create chart: no chart themes available.' as const,
     255: ({ point }: { point: number }) =>
         `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
+    256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
 } as const;
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

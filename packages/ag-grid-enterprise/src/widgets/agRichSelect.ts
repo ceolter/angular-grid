@@ -120,7 +120,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
 
     public override postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 shouldDisplayTooltip: () => this.shouldDisplayTooltip?.() ?? true,
             } as ITooltipCtrl)

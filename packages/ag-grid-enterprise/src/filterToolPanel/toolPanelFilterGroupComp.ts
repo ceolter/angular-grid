@@ -85,7 +85,7 @@ export class ToolPanelFilterGroupComp extends Component {
         });
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'filterToolPanelColumnGroup',
                 shouldDisplayTooltip: _getShouldDisplayTooltip(
