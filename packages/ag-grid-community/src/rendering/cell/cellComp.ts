@@ -84,6 +84,9 @@ export class CellComp extends Component {
         eGui.setAttribute('col-id', cellCtrl.colIdSanitised);
 
         const compProxy: ICellComp = {
+            setLeft(left) {
+                eGui.style.left = left + 'px';
+            },
             addOrRemoveCssClass: (cssClassName, on) => this.addOrRemoveCssClass(cssClassName, on),
             setUserStyles: (styles: CellStyle) => _addStylesToElement(eGui, styles),
             getFocusableElement: () => this.getFocusableElement(),

@@ -250,7 +250,7 @@ const CellComp = ({
 
     // if RenderDetails changed, need to call refresh. This is not our preferred way (the preferred
     // way for React is just allow the new props to propagate down to the React Cell Renderer)
-    // however we do this for backwards compatibility, as having refresh used to be supported.
+    // however we do this for backwards compatibility, as having refresh used to be supported
     const lastRenderDetails = useRef<RenderDetails>();
     useLayoutEffect(() => {
         const oldDetails = lastRenderDetails.current;
@@ -383,6 +383,8 @@ const CellComp = ({
             return;
         }
 
+        cellCtrl.addManagedListeners(cellCtrl, {});
+
         const compProxy: ICellComp = {
             addOrRemoveCssClass: (name, on) => cssClassManager.current!.addOrRemoveCssClass(name, on),
             setUserStyles: (styles: CellStyle) => setUserStyles(styles),
@@ -408,6 +410,10 @@ const CellComp = ({
                         return prev;
                     }
                 });
+            },
+            setLeft: (left: string) => {
+                //eGui.current!.style.left = left + 'px';
+                // setUserStyles((prev) => ({ ...prev, left }));
             },
 
             setEditDetails: (compDetails, popup, popupPosition, reactiveCustomComponents) => {

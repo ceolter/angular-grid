@@ -53,6 +53,8 @@ export interface ICellComp {
     setIncludeRowDrag(include: boolean): void;
     setIncludeDndSource(include: boolean): void;
 
+    setLeft(left: string): void;
+
     getCellEditor(): ICellEditor | null;
     getCellRenderer(): ICellRenderer | null;
     getParentOfValue(): HTMLElement | null;
@@ -133,6 +135,10 @@ export class CellCtrl extends BeanStub {
 
         this.createCellPosition();
         this.updateAndFormatValue(false);
+    }
+
+    public setLeft(left: string): void {
+        this.comp.setLeft(left);
     }
 
     public shouldRestoreFocus(): boolean {

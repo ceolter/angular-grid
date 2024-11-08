@@ -141,6 +141,7 @@ export class CellPositionFeature extends BeanStub {
         }
         const left = this.modifyLeftForPrintLayout(this.getCellLeft());
         this.eGui.style.left = left + 'px';
+        this.cellCtrl.setLeft(left + 'px');
     }
 
     private getCellLeft(): number | null {

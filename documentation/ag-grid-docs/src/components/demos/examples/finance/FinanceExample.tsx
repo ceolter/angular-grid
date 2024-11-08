@@ -93,7 +93,6 @@ export const FinanceExample: React.FC<Props> = ({
             {
                 field: 'ticker',
                 cellRenderer: TickerCellRenderer,
-                minWidth: 380,
             },
             {
                 field: 'instrument',
