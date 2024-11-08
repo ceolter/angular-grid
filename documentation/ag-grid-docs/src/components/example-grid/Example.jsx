@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { useDarkmode } from '@utils/hooks/useDarkmode';
+import { SparklineModule } from 'ag-charts-community/modules';
 import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
 import classnames from 'classnames';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
@@ -583,7 +584,7 @@ const ExampleInner = ({ darkMode }) => {
             SetFilterModule,
             SideBarModule,
             StatusBarModule,
-            SparklinesModule,
+            SparklinesModule.with(SparklineModule),
         ],
         []
     );

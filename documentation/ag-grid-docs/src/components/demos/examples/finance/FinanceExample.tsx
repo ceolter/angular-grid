@@ -1,3 +1,4 @@
+import { SparklineModule } from 'ag-charts-community/modules';
 import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -51,7 +52,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,
-    SparklinesModule,
+    SparklinesModule.with(SparklineModule),
 ]);
 
 const numberFormatter: ValueFormatterFunc = ({ value }) => {
