@@ -1,3 +1,4 @@
+import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
@@ -16,7 +17,7 @@ import {
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule,
     MenuModule,
     RangeSelectionModule,
     RichSelectModule,
@@ -43,7 +44,7 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(ChartEnterpriseModule),
     MenuModule,
     RangeSelectionModule,
     RowGroupingModule,
