@@ -847,6 +847,7 @@ export {
     TabToNextCellParams,
     GetContextMenuItemsParams,
     GetMainMenuItemsParams,
+    GetChartMenuItemsParams,
     PostProcessPopupParams,
     IsExternalFilterPresentParams,
     InitialGroupOrderComparatorParams,
