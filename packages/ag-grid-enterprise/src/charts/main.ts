@@ -5,9 +5,17 @@ export { GridChartsModule } from './gridChartsModule';
 
 export * from 'ag-charts-types';
 
-setupCommunityModules();
+declare const process: any;
 
-export const agCharts = {
-    time,
-    AgCharts,
-};
+let agChartsDynamic: any;
+if (process.env.NODE_ENV !== 'production') {
+    agChartsDynamic = (globalThis as any).agCharts;
+}
+
+if (agChartsDynamic != null) {
+    agChartsDynamic.setupCommunityModules();
+} else {
+    setupCommunityModules();
+}
+
+export const agCharts = agChartsDynamic ?? { time, AgCharts };

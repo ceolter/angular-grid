@@ -1,4 +1,4 @@
-import { AgCharts, _ModuleSupport, _Theme } from 'ag-charts-community';
+import { _ModuleSupport, _Theme } from 'ag-charts-community';
 import type {
     AgChartInstance,
     AgChartOptions,
@@ -12,11 +12,14 @@ import type {
 import type { ChartType, SeriesChartType, SeriesGroupType } from 'ag-grid-community';
 
 import type { CrossFilteringContext } from '../../chartService';
+import { agCharts } from '../../main';
 import { deproxy } from '../utils/integration';
 import { get } from '../utils/object';
 import type { ChartSeriesType } from '../utils/seriesTypeMapper';
 import { getSeriesType } from '../utils/seriesTypeMapper';
 import { createAgChartTheme, lookupCustomChartTheme } from './chartTheme';
+
+const { AgCharts } = agCharts;
 
 export interface ChartProxyParams {
     chartInstance?: AgChartInstance;
