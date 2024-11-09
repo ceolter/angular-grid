@@ -144,7 +144,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
         });
 
         this.validationTooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.eApplyFilterButton,
                 getLocation: () => 'advancedFilter',
                 getTooltipValue: () => this.validationMessage,

@@ -3,13 +3,12 @@ import type {
     BeanCollection,
     CellCtrl,
     CellPosition,
-    ColumnModel,
     CtrlsService,
+    DefaultMenuItem,
     EventShowContextMenuParams,
     FocusService,
     IAfterGuiAttachedParams,
     IContextMenuService,
-    IRangeService,
     MenuItemDef,
     MouseShowContextMenuParams,
     NamedBean,
@@ -49,9 +48,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
     private popupSvc: PopupService;
     private ctrlsSvc: CtrlsService;
-    private colModel: ColumnModel;
     private menuUtils: MenuUtils;
-    private rangeSvc?: IRangeService;
     private focusSvc: FocusService;
     private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
@@ -61,9 +58,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
         this.ctrlsSvc = beans.ctrlsSvc;
-        this.colModel = beans.colModel;
         this.menuUtils = beans.menuUtils as MenuUtils;
-        this.rangeSvc = beans.rangeSvc;
         this.focusSvc = beans.focusSvc;
         this.valueSvc = beans.valueSvc;
         this.rowRenderer = beans.rowRenderer;
@@ -80,35 +75,35 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         column: AgColumn | null,
         value: any,
         mouseEvent: MouseEvent | Touch
-    ): (string | MenuItemDef<any, any>)[] | Promise<(string | MenuItemDef<any, any>)[]> | undefined {
-        const defaultMenuOptions: string[] = [];
+    ): (DefaultMenuItem | MenuItemDef<any, any>)[] | Promise<(DefaultMenuItem | MenuItemDef<any, any>)[]> | undefined {
+        const defaultMenuOptions: DefaultMenuItem[] = [];
 
-        if (_exists(node) && this.gos.isModuleRegistered('ClipboardModule')) {
+        const { clipboardSvc, chartSvc, csvCreator, excelCreator, colModel, rangeSvc, gos } = this.beans;
+
+        if (_exists(node) && clipboardSvc) {
             if (column) {
                 // only makes sense if column exists, could have originated from a row
-                if (!this.gos.get('suppressCutToClipboard')) {
+                if (!gos.get('suppressCutToClipboard')) {
                     defaultMenuOptions.push('cut');
                 }
                 defaultMenuOptions.push('copy', 'copyWithHeaders', 'copyWithGroupHeaders', 'paste', 'separator');
             }
         }
 
-        if (this.gos.get('enableCharts') && this.gos.isModuleRegistered('GridChartsModule')) {
-            if (this.colModel.isPivotMode()) {
+        if (gos.get('enableCharts') && chartSvc) {
+            if (colModel.isPivotMode()) {
                 defaultMenuOptions.push('pivotChart');
             }
 
-            if (this.rangeSvc && !this.rangeSvc.isEmpty()) {
+            if (rangeSvc && !rangeSvc.isEmpty()) {
                 defaultMenuOptions.push('chartRange');
             }
         }
 
         if (_exists(node)) {
             // if user clicks a cell
-            const csvModuleMissing = !this.gos.isModuleRegistered('CsvExportModule');
-            const excelModuleMissing = !this.gos.isModuleRegistered('ExcelExportModule');
-            const suppressExcel = this.gos.get('suppressExcelExport') || excelModuleMissing;
-            const suppressCsv = this.gos.get('suppressCsvExport') || csvModuleMissing;
+            const suppressExcel = gos.get('suppressExcelExport') || !excelCreator;
+            const suppressCsv = gos.get('suppressCsvExport') || !csvCreator;
             const onIPad = _isIOSUserAgent();
             const anyExport: boolean = !onIPad && (!suppressExcel || !suppressCsv);
             if (anyExport) {
@@ -125,7 +120,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         if (typeof columnContextMenuItems === 'function') {
             return columnContextMenuItems(
-                this.gos.addGridCommonParams({
+                gos.addGridCommonParams({
                     column,
                     node,
                     value,
@@ -135,7 +130,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             );
         }
 
-        const userFunc = this.gos.getCallback('getContextMenuItems');
+        const userFunc = gos.getCallback('getContextMenuItems');
 
         if (userFunc) {
             return userFunc({ column, node, value, defaultItems, event: mouseEvent });
@@ -238,7 +233,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     ): boolean {
         const menuItems = this.getMenuItems(node, column, value, mouseEvent);
 
-        if (_isPromise<(string | MenuItemDef)[]>(menuItems)) {
+        if (_isPromise<(DefaultMenuItem | MenuItemDef)[]>(menuItems)) {
             this.promiseCount++;
             if (!this.destroyLoadingSpinner) {
                 this.createLoadingIcon(mouseEvent);
@@ -314,7 +309,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     private createContextMenu(params: {
-        menuItems: (string | MenuItemDef<any, any>)[];
+        menuItems: (DefaultMenuItem | MenuItemDef<any, any>)[];
         node: RowNode | null;
         column: AgColumn | null;
         value: any;
@@ -479,7 +474,7 @@ class ContextMenu extends Component<ContextMenuEvent> {
     private focusedCell: CellPosition | null = null;
 
     constructor(
-        private readonly menuItems: (MenuItemDef | string)[],
+        private readonly menuItems: (MenuItemDef | DefaultMenuItem)[],
         private readonly column: AgColumn | null,
         private readonly node: RowNode | null,
         private readonly value: any

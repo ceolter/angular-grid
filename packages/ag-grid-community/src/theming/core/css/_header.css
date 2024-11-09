@@ -57,8 +57,6 @@
 
 .ag-header-cell,
 .ag-header-group-cell {
-    /* without this the ag-header-row becomes scrollable */
-    overflow: hidden;
     align-items: center;
     position: absolute;
     height: 100%;

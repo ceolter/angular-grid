@@ -110,56 +110,52 @@ function toConstrainedNum(
  */
 const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
-        sideBar: { module: 'SideBarModule' },
-        statusBar: { module: 'StatusBarCoreModule' },
-        enableCharts: { module: 'GridChartsModule' },
-        getMainMenuItems: { module: 'ColumnMenuModule' },
-        getContextMenuItems: { module: 'ContextMenuModule' },
         allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
-        enableAdvancedFilter: { module: 'AdvancedFilterModule' },
-        treeData: {
-            supportedRowModels: ['clientSide', 'serverSide'],
-            module: 'TreeDataCoreModule',
+        autoGroupColumnDef: () => COL_DEF_VALIDATORS,
+        autoSizePadding: {
+            validate({ autoSizePadding }) {
+                return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
+            },
+        },
+        cacheBlockSize: {
+            supportedRowModels: ['serverSide', 'infinite'],
+            validate({ cacheBlockSize }) {
+                return toConstrainedNum('cacheBlockSize', cacheBlockSize, 1);
+            },
+        },
+        cacheOverflowSize: {
+            validate({ cacheOverflowSize }) {
+                return toConstrainedNum('cacheOverflowSize', cacheOverflowSize, 1);
+            },
+        },
+        cellSelection: {
+            module: 'CellSelectionCoreModule',
+            dependencies: {
+                rowDragEntireRow: { required: [false, undefined] },
+            },
+        },
+        columnDefs: () => COL_DEF_VALIDATORS,
+        datasource: {
+            supportedRowModels: ['infinite'],
+            module: 'InfiniteRowModelCoreModule',
+        },
+        defaultColDef: () => COL_DEF_VALIDATORS,
+        defaultColGroupDef: () => COL_DEF_VALIDATORS,
+        domLayout: {
             validate: (options) => {
-                const rowModel = options.rowModelType ?? 'clientSide';
-                switch (rowModel) {
-                    case 'clientSide': {
-                        const csrmWarning = `treeData requires 'treeDataChildrenField' or 'getDataPath' in the ${rowModel} row model.`;
-                        return options.treeDataChildrenField || options.getDataPath ? null : csrmWarning;
-                    }
-                    case 'serverSide': {
-                        const ssrmWarning = `treeData requires 'isServerSideGroup' and 'getServerSideGroupKey' in the ${rowModel} row model.`;
-                        return options.isServerSideGroup && options.getServerSideGroupKey ? null : ssrmWarning;
-                    }
+                const domLayout = options.domLayout;
+                const validLayouts: DomLayoutType[] = ['autoHeight', 'normal', 'print'];
+                if (domLayout && !validLayouts.includes(domLayout)) {
+                    return `domLayout must be one of [${validLayouts.join()}], currently it's ${domLayout}`;
                 }
                 return null;
             },
         },
-        pivotMode: {
+        enableAdvancedFilter: { module: 'AdvancedFilterModule' },
+        enableCharts: { module: 'GridChartsModule' },
+        enableFillHandle: {
             dependencies: {
-                treeData: {
-                    required: [false, undefined],
-                    reason: 'Pivot Mode is not supported with Tree Data.',
-                },
-            },
-        },
-        rowDragManaged: {
-            supportedRowModels: ['clientSide'],
-            dependencies: {
-                treeData: {
-                    required: [false, undefined],
-                },
-                pagination: {
-                    required: [false, undefined],
-                },
-            },
-        },
-        masterDetail: { module: 'MasterDetailCoreModule' },
-
-        enableRangeSelection: {
-            module: 'CellSelectionCoreModule',
-            dependencies: {
-                rowDragEntireRow: { required: [false, undefined] },
+                enableRangeSelection: { required: [true] },
             },
         },
         enableRangeHandle: {
@@ -167,12 +163,14 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 enableRangeSelection: { required: [true] },
             },
         },
-        enableFillHandle: {
+        enableRangeSelection: {
+            module: 'CellSelectionCoreModule',
             dependencies: {
-                enableRangeSelection: { required: [true] },
+                rowDragEntireRow: { required: [false, undefined] },
             },
         },
-
+        getMainMenuItems: { module: 'ColumnMenuModule' },
+        getContextMenuItems: { module: 'ContextMenuModule' },
         groupDefaultExpanded: {
             supportedRowModels: ['clientSide'],
         },
@@ -191,16 +189,16 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 groupHideOpenParents: { required: [undefined, false] },
             },
         },
-        groupRemoveSingleChildren: {
-            dependencies: {
-                groupHideOpenParents: { required: [undefined, false] },
-                groupRemoveLowestSingleChildren: { required: [undefined, false] },
-            },
-        },
         groupRemoveLowestSingleChildren: {
             dependencies: {
                 groupHideOpenParents: { required: [undefined, false] },
                 groupRemoveSingleChildren: { required: [undefined, false] },
+            },
+        },
+        groupRemoveSingleChildren: {
+            dependencies: {
+                groupHideOpenParents: { required: [undefined, false] },
+                groupRemoveLowestSingleChildren: { required: [undefined, false] },
             },
         },
         groupSelectsChildren: {
@@ -208,31 +206,24 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 rowSelection: { required: ['multiple'] },
             },
         },
-
-        treeDataChildrenField: {
-            module: 'TreeDataCoreModule',
-        },
-        viewportDatasource: {
-            supportedRowModels: ['viewport'],
-            module: 'ViewportRowModelCoreModule',
-        },
-        serverSideDatasource: {
-            supportedRowModels: ['serverSide'],
-            module: 'ServerSideRowModelCoreModule',
-        },
-        cacheBlockSize: {
-            supportedRowModels: ['serverSide', 'infinite'],
-            validate({ cacheBlockSize }) {
-                return toConstrainedNum('cacheBlockSize', cacheBlockSize, 1);
+        infiniteInitialRowCount: {
+            validate({ infiniteInitialRowCount }) {
+                return toConstrainedNum('infiniteInitialRowCount', infiniteInitialRowCount, 1);
             },
         },
-        datasource: {
-            supportedRowModels: ['infinite'],
-            module: 'InfiniteRowModelCoreModule',
-        },
-        rowData: {
+        initialGroupOrderComparator: {
             supportedRowModels: ['clientSide'],
-            module: 'ClientSideRowModelCoreModule',
+        },
+        keepDetailRowsCount: {
+            validate({ keepDetailRowsCount }) {
+                return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
+            },
+        },
+        masterDetail: { module: 'MasterDetailCoreModule' },
+        paginationPageSize: {
+            validate({ paginationPageSize }) {
+                return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
+            },
         },
         paginationPageSizeSelector: {
             validate: (options) => {
@@ -247,37 +238,20 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-
-        rowSelection: {
-            validate({ rowSelection }) {
-                if (rowSelection && typeof rowSelection === 'string') {
-                    return 'As of version 32.2.1, using `rowSelection` with the values "single" or "multiple" has been deprecated. Use the object value instead.';
-                }
-                if (rowSelection && typeof rowSelection !== 'object') {
-                    return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
-                }
-                return null;
-            },
-        },
-        cellSelection: {
-            module: 'CellSelectionCoreModule',
+        pivotMode: {
             dependencies: {
-                rowDragEntireRow: { required: [false, undefined] },
+                treeData: {
+                    required: [false, undefined],
+                    reason: 'Pivot Mode is not supported with Tree Data.',
+                },
             },
         },
         quickFilterText: {
             supportedRowModels: ['clientSide'],
         },
-        initialGroupOrderComparator: {
-            supportedRowModels: ['clientSide'],
-        },
-        rowStyle: {
-            validate: (options) => {
-                const rowStyle = options.rowStyle;
-                if (rowStyle && typeof rowStyle === 'function') {
-                    return 'rowStyle should be an object of key/value styles, not be a function, use getRowStyle() instead';
-                }
-                return null;
+        rowBuffer: {
+            validate({ rowBuffer }) {
+                return toConstrainedNum('rowBuffer', rowBuffer, 0);
             },
         },
         rowClass: {
@@ -289,23 +263,59 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-
-        tooltipShowDelay: {
-            validate: (options) => {
-                if (options.tooltipShowDelay && options.tooltipShowDelay < 0) {
-                    return 'tooltipShowDelay should not be lower than 0';
+        rowData: {
+            supportedRowModels: ['clientSide'],
+            module: 'ClientSideRowModelCoreModule',
+        },
+        rowDragManaged: {
+            supportedRowModels: ['clientSide'],
+            dependencies: {
+                treeData: {
+                    required: [false, undefined],
+                },
+                pagination: {
+                    required: [false, undefined],
+                },
+            },
+        },
+        rowSelection: {
+            validate({ rowSelection }) {
+                if (rowSelection && typeof rowSelection === 'string') {
+                    return 'As of version 32.2.1, using `rowSelection` with the values "single" or "multiple" has been deprecated. Use the object value instead.';
+                }
+                if (rowSelection && typeof rowSelection !== 'object') {
+                    return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
                 return null;
             },
         },
-        tooltipHideDelay: {
+        rowStyle: {
             validate: (options) => {
-                if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
-                    return 'tooltipHideDelay should not be lower than 0';
+                const rowStyle = options.rowStyle;
+                if (rowStyle && typeof rowStyle === 'function') {
+                    return 'rowStyle should be an object of key/value styles, not be a function, use getRowStyle() instead';
                 }
                 return null;
             },
         },
+        selectionColumnDef: () => COL_DEF_VALIDATORS,
+        serverSideDatasource: {
+            supportedRowModels: ['serverSide'],
+            module: 'ServerSideRowModelCoreModule',
+        },
+        serverSideInitialRowCount: {
+            supportedRowModels: ['serverSide'],
+            validate({ serverSideInitialRowCount }) {
+                return toConstrainedNum('serverSideInitialRowCount', serverSideInitialRowCount, 1);
+            },
+        },
+        serverSideOnlyRefreshFilteredGroups: {
+            supportedRowModels: ['serverSide'],
+        },
+        serverSideSortAllLevels: {
+            supportedRowModels: ['serverSide'],
+        },
+        sideBar: { module: 'SideBarModule' },
         sortingOrder: {
             validate: (_options) => {
                 const sortingOrder = _options.sortingOrder;
@@ -321,57 +331,51 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-        domLayout: {
+        statusBar: { module: 'StatusBarCoreModule' },
+        tooltipHideDelay: {
             validate: (options) => {
-                const domLayout = options.domLayout;
-                const validLayouts: DomLayoutType[] = ['autoHeight', 'normal', 'print'];
-                if (domLayout && !validLayouts.includes(domLayout)) {
-                    return `domLayout must be one of [${validLayouts.join()}], currently it's ${domLayout}`;
+                if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
+                    return 'tooltipHideDelay should not be lower than 0';
                 }
                 return null;
             },
         },
-        serverSideSortAllLevels: {
-            supportedRowModels: ['serverSide'],
-        },
-        serverSideOnlyRefreshFilteredGroups: {
-            supportedRowModels: ['serverSide'],
-        },
-
-        paginationPageSize: {
-            validate({ paginationPageSize }) {
-                return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
+        tooltipShowDelay: {
+            validate: (options) => {
+                if (options.tooltipShowDelay && options.tooltipShowDelay < 0) {
+                    return 'tooltipShowDelay should not be lower than 0';
+                }
+                return null;
             },
         },
-        autoSizePadding: {
-            validate({ autoSizePadding }) {
-                return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
+        treeData: {
+            supportedRowModels: ['clientSide', 'serverSide'],
+            module: 'TreeDataCoreModule',
+            validate: (options) => {
+                const rowModel = options.rowModelType ?? 'clientSide';
+                switch (rowModel) {
+                    case 'clientSide': {
+                        const csrmWarning = `treeData requires 'treeDataChildrenField' or 'getDataPath' in the ${rowModel} row model.`;
+                        return options.treeDataChildrenField || options.getDataPath ? null : csrmWarning;
+                    }
+                    case 'serverSide': {
+                        const ssrmWarning = `treeData requires 'isServerSideGroup' and 'getServerSideGroupKey' in the ${rowModel} row model.`;
+                        return options.isServerSideGroup && options.getServerSideGroupKey ? null : ssrmWarning;
+                    }
+                }
+                return null;
             },
         },
-        keepDetailRowsCount: {
-            validate({ keepDetailRowsCount }) {
-                return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
-            },
+        treeDataChildrenField: {
+            module: 'TreeDataCoreModule',
         },
-        rowBuffer: {
-            validate({ rowBuffer }) {
-                return toConstrainedNum('rowBuffer', rowBuffer, 0);
-            },
+        viewportDatasource: {
+            supportedRowModels: ['viewport'],
+            module: 'ViewportRowModelCoreModule',
         },
-        infiniteInitialRowCount: {
-            validate({ infiniteInitialRowCount }) {
-                return toConstrainedNum('infiniteInitialRowCount', infiniteInitialRowCount, 1);
-            },
-        },
-        cacheOverflowSize: {
-            validate({ cacheOverflowSize }) {
-                return toConstrainedNum('cacheOverflowSize', cacheOverflowSize, 1);
-            },
-        },
-        serverSideInitialRowCount: {
-            supportedRowModels: ['serverSide'],
-            validate({ serverSideInitialRowCount }) {
-                return toConstrainedNum('serverSideInitialRowCount', serverSideInitialRowCount, 1);
+        viewportRowModelBufferSize: {
+            validate({ viewportRowModelBufferSize }) {
+                return toConstrainedNum('viewportRowModelBufferSize', viewportRowModelBufferSize, 0);
             },
         },
         viewportRowModelPageSize: {
@@ -379,17 +383,6 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return toConstrainedNum('viewportRowModelPageSize', viewportRowModelPageSize, 1);
             },
         },
-        viewportRowModelBufferSize: {
-            validate({ viewportRowModelBufferSize }) {
-                return toConstrainedNum('viewportRowModelBufferSize', viewportRowModelBufferSize, 0);
-            },
-        },
-
-        columnDefs: () => COL_DEF_VALIDATORS,
-        defaultColDef: () => COL_DEF_VALIDATORS,
-        defaultColGroupDef: () => COL_DEF_VALIDATORS,
-        autoGroupColumnDef: () => COL_DEF_VALIDATORS,
-        selectionColumnDef: () => COL_DEF_VALIDATORS,
     };
     const validations: Validations<GridOptions> = {};
     _BOOLEAN_GRID_OPTIONS.forEach((key) => {
@@ -410,4 +403,5 @@ export const GRID_OPTIONS_VALIDATORS: () => OptionsValidator<GridOptions> = () =
     docsUrl: 'grid-options/',
     deprecations: GRID_OPTION_DEPRECATIONS(),
     validations: GRID_OPTION_VALIDATIONS(),
+    mandatoryKeys: new Set(['suppressContextMenu']),
 });

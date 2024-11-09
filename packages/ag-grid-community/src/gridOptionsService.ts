@@ -12,11 +12,12 @@ import { _getCallbackForEvent } from './gridOptionsUtils';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
 import type { ModuleName } from './interfaces/iModule';
 import { LocalEventService } from './localEventService';
-import { _isModuleRegistered } from './modules/moduleRegistry';
+import { _areModulesGridScoped, _isModuleRegistered } from './modules/moduleRegistry';
 import type { AnyGridOptions } from './propertyKeys';
 import { _logIfDebug } from './utils/function';
 import { _exists } from './utils/generic';
 import type { MissingModuleErrors } from './validation/errorMessages/errorText';
+import { _error } from './validation/logging';
 import type { ValidationService } from './validation/validationService';
 
 type GetKeys<T, U> = {
@@ -263,10 +264,12 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         TId extends keyof MissingModuleErrors,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         TShowMessageAtCallLocation = MissingModuleErrors[TId],
-    >(moduleName: ModuleName, reasonOrId: string | TId): boolean {
-        const registered = this.isModuleRegistered(moduleName);
+    >(moduleName: ModuleName | ModuleName[], reasonOrId: string | TId): boolean {
+        const registered = Array.isArray(moduleName)
+            ? moduleName.some((modName) => this.isModuleRegistered(modName))
+            : this.isModuleRegistered(moduleName);
         if (!registered) {
-            this.validation?.missingModule(moduleName, reasonOrId, this.gridId);
+            _error(200, { gridId: this.gridId, gridScoped: _areModulesGridScoped(), moduleName, reasonOrId });
         }
         return registered;
     }

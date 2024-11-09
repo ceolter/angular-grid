@@ -143,3 +143,34 @@ export interface IMenuItem extends BaseMenuItem {
 export interface IMenuItemComp<TData = any, TContext = any>
     extends IComponent<IMenuItemParams<TData, TContext>>,
         IMenuItem {}
+
+export type DefaultMenuItem =
+    | 'pinSubMenu'
+    | 'pinLeft'
+    | 'pinRight'
+    | 'clearPinned'
+    | 'valueAggSubMenu'
+    | 'autoSizeThis'
+    | 'autoSizeAll'
+    | 'rowGroup'
+    | 'rowUnGroup'
+    | 'resetColumns'
+    | 'expandAll'
+    | 'contractAll'
+    | 'copy'
+    | 'copyWithHeaders'
+    | 'copyWithGroupHeaders'
+    | 'cut'
+    | 'paste'
+    | 'export'
+    | 'csvExport'
+    | 'excelExport'
+    | 'separator'
+    | 'pivotChart'
+    | 'chartRange'
+    | 'columnFilter'
+    | 'columnChooser'
+    | 'sortAscending'
+    | 'sortDescending'
+    | 'sortUnSort'
+    | 'separator';

@@ -1,14 +1,15 @@
 import type { CellPosition } from './iCellPosition';
-import type { ChartToolbarMenuItemOptions } from './iChartOptions';
+import type { ChartToolbarMenuItemOptions, DefaultChartMenuItem } from './iChartOptions';
 import type { Column, ProvidedColumnGroup } from './iColumn';
 import type { AgGridCommon } from './iCommon';
 import type { HeaderPosition } from './iHeaderPosition';
 import type { IRowNode, RowPinnedType } from './iRowNode';
+import type { DefaultMenuItem } from './menuItem';
 import type { ServerSideTransaction } from './serverSideTransaction';
 
 export interface GetContextMenuItemsParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
     /** Names of the items that would be provided by default. */
-    defaultItems: string[] | undefined;
+    defaultItems: DefaultMenuItem[] | undefined;
     /** The column, if a cell was clicked, otherwise null. */
     column: Column | null;
     /** The row node, if a cell was clicked, otherwise null. */
@@ -25,12 +26,12 @@ export interface GetMainMenuItemsParams<TData = any, TContext = any> extends AgG
     /** The column group that was clicked. Will be `null` if clicking on a column or empty header space. */
     columnGroup: ProvidedColumnGroup | null;
     /** List of the items that would be displayed by default */
-    defaultItems: string[];
+    defaultItems: DefaultMenuItem[];
 }
 
 export interface GetChartMenuItemsParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
     /** List of the items that would be displayed by default */
-    defaultItems: string[];
+    defaultItems: DefaultChartMenuItem[];
 }
 
 export interface ProcessUnpinnedColumnsParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {

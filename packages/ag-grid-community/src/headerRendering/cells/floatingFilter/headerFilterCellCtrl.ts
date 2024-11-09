@@ -401,6 +401,10 @@ export class HeaderFilterCellCtrl extends AbstractHeaderCellCtrl<IHeaderFilterCe
         });
     }
 
+    protected override addResizeAndMoveKeyboardListeners(): void {
+        // do nothing
+    }
+
     public override destroy(): void {
         super.destroy();
 
