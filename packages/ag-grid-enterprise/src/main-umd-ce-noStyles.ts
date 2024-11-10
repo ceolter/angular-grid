@@ -24,7 +24,6 @@ import {
     ServerSideRowModelModule,
     SetFilterModule,
     SideBarModule,
-    SparklinesModule,
     StatusBarModule,
     ViewportRowModelModule,
 } from './main';
@@ -48,7 +47,6 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     SetFilterModule,
     SideBarModule,
-    SparklinesModule,
     StatusBarModule,
     ViewportRowModelModule,
 ]);
