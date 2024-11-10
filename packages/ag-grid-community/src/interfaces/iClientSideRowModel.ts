@@ -2,7 +2,6 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
 import type { IRowModel } from './iRowModel';
-import type { IRowNode } from './iRowNode';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -58,6 +57,15 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
 }
 
 export interface IChangedRowNodes<TData = any> {
+    /** The CSRM rootNode */
+    readonly rootNode: RowNode<TData>;
+
+    /** The list of transactions that are being executed. */
+    rowNodeTransactions: RowNodeTransaction<TData>[] | null;
+
+    /** The ChangedPath containing the changed parent nodes in DFS order. */
+    readonly changedPath: ChangedPath;
+
     /**
      * The set of removed nodes.
      * Mutually exclusive, if a node is here, it cannot be in the updates map.
@@ -71,22 +79,10 @@ export interface IChangedRowNodes<TData = any> {
     readonly updates: ReadonlyMap<RowNode<TData>, boolean>;
 
     /** true if rows were inserted in the middle of something else and not just appended or removed. */
-    rowsInserted: boolean;
+    readonly rowsInserted: boolean;
 
     /** true if the order of root.allLeafChildren has changed. */
-    rowsOrderChanged: boolean;
-
-    /** Marks a row as removed. Order of operations is: remove, update, add */
-    remove(node: IRowNode<TData>): void;
-
-    /** Marks a row as updated. Order of operations is: remove, update, add */
-    update(node: IRowNode<TData>): void;
-
-    /** Marks a row as added. Order of operation is: remove, update, add */
-    add(node: IRowNode<TData>): void;
-
-    /** Returns true if there are changes */
-    hasChanges(): boolean;
+    readonly rowsOrderChanged: boolean;
 }
 
 export interface RefreshModelParams<TData = any> {
@@ -95,11 +91,6 @@ export interface RefreshModelParams<TData = any> {
 
     /** The set of changed grid options, if any */
     changedProps?: Set<keyof GridOptions<TData>>;
-
-    /**
-     * true if the row data changed, due to a setRowData, immutable row data or a transaction, or an update of the row data.
-     */
-    rowDataUpdated?: boolean;
 
     /**
      * Indicates a completely new rowData array is loaded.
@@ -114,12 +105,6 @@ export interface RefreshModelParams<TData = any> {
 
     /** The changedPath, if any */
     changedPath?: ChangedPath;
-
-    /**
-     * List of transactions being executed for a delta update.
-     * To see the affected nodes for a delta update, use `changedRowNodes` instead.
-     */
-    rowNodeTransactions?: RowNodeTransaction<TData>[];
 
     /**
      * if NOT new data, then this flag tells grid to check if rows already

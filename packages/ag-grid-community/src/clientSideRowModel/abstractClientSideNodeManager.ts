@@ -3,11 +3,11 @@ import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
-import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
+import type { ChangedRowNodes } from './changedRowNodes';
 
 const ROOT_NODE_ID = 'ROOT_NODE_ID';
 
@@ -122,15 +122,12 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.rootNode!.allLeafChildren = rowData?.map((dataItem, index) => this.createRowNode(dataItem, index)) ?? [];
     }
 
-    public setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
+    public setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean {
         // convert the setRowData data into a transaction object by working out adds, removes and updates
-
         const rowDataTransaction = this.createTransactionForRowData(rowData);
 
-        const changedRowNodes = params.changedRowNodes!;
-
         // Apply the transaction
-        const rowNodeTransaction = this.updateRowData(rowDataTransaction, changedRowNodes);
+        this.updateRowData(rowDataTransaction, changedRowNodes);
 
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
         if (!this.gos.get('suppressMaintainUnsortedOrder')) {
@@ -140,36 +137,63 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
         }
 
-        if (changedRowNodes.hasChanges()) {
-            params.step = 'group';
-            params.rowDataUpdated = true;
-            params.rowNodeTransactions = [rowNodeTransaction];
-        }
+        return changedRowNodes.hasChanges();
     }
 
     public updateRowData(
         rowDataTran: RowDataTransaction<TData>,
-        changedRowNodes: IChangedRowNodes<TData>
+        changedRowNodes: ChangedRowNodes<TData>
     ): RowNodeTransaction<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
-        const nodesToUnselect: RowNode[] = [];
-
         const getRowIdFunc = _getRowIdCallback(this.gos);
 
-        const remove = this.executeRemove(changedRowNodes, rowDataTran.remove, nodesToUnselect, getRowIdFunc);
-        const update = this.executeUpdate(changedRowNodes, rowDataTran.update, nodesToUnselect, getRowIdFunc);
+        const remove = this.executeRemove(changedRowNodes, rowDataTran.remove, getRowIdFunc);
+        const update = this.executeUpdate(changedRowNodes, rowDataTran.update, getRowIdFunc);
         const add = this.executeAdd(changedRowNodes, rowDataTran.addIndex, rowDataTran.add);
+
+        const rowNodeTran: RowNodeTransaction<TData> = { remove, update, add };
+
+        // Add the transaction to the ChangedRowNodes list of transactions
+        (changedRowNodes.rowNodeTransactions ??= []).push(rowNodeTran);
+
+        const nodesToUnselect: RowNode[] = [];
+        for (const removedNode of changedRowNodes.removals) {
+            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
+            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
+            if (removedNode.isSelected()) {
+                nodesToUnselect.push(removedNode);
+            }
+        }
+
+        for (const updatedNode of changedRowNodes.updates.keys()) {
+            if (!updatedNode.selectable && updatedNode.isSelected()) {
+                nodesToUnselect.push(updatedNode);
+            }
+        }
 
         this.deselectNodes(nodesToUnselect);
 
-        return { remove, update, add };
+        return rowNodeTran;
+    }
+
+    /** Called when a node needs to be deleted */
+    protected rowNodeDeleted(node: RowNode<TData>): void {
+        // so row renderer knows to fade row out (and not reposition it)
+        node.clearRowTopAndRowIndex();
+
+        node.groupData = null;
+
+        const id = node.id!;
+        const allNodesMap = this.allNodesMap;
+        if (allNodesMap[id] === node) {
+            delete allNodesMap[id];
+        }
     }
 
     protected executeRemove(
-        changedRowNodes: IChangedRowNodes<TData>,
+        changedRowNodes: ChangedRowNodes<TData>,
         remove: TData[] | null | undefined,
-        nodesToUnselect: RowNode<TData>[],
         getRowIdFunc: GetRowIdFunc<TData> | undefined
     ): RowNode<TData>[] {
         const result: RowNode<TData>[] = [];
@@ -194,18 +218,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         for (let i = 0, len = oldAllLeafChildren.length; i < len; i++) {
             const node = oldAllLeafChildren[i];
             if (removals.has(node)) {
-                // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
-                // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
-                if (node.isSelected()) {
-                    nodesToUnselect.push(node);
-                }
-
-                // so row renderer knows to fade row out (and not reposition it)
-                node.clearRowTopAndRowIndex();
-
-                // removeFromArray(this.rootNode.allLeafChildren, rowNode);
-                delete this.allNodesMap[node.id!];
-
+                this.rowNodeDeleted(node);
                 result.push(node);
             } else {
                 // Append the node and update its index
@@ -223,9 +236,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected executeUpdate(
-        changedRowNodes: IChangedRowNodes<TData>,
+        changedRowNodes: ChangedRowNodes<TData>,
         update: TData[] | null | undefined,
-        nodesToUnselect: RowNode<TData>[],
         getRowIdFunc: GetRowIdFunc<TData> | undefined
     ): RowNode<TData>[] {
         const updateLen = update?.length;
@@ -238,24 +250,19 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         for (let i = 0; i < updateLen; i++) {
             const item = update[i];
             const rowNode = this.lookupRowNode(getRowIdFunc, item);
-            if (!rowNode) {
-                continue;
-            }
+            if (rowNode) {
+                rowNode.updateData(item);
 
-            rowNode.updateData(item);
-            if (!rowNode.selectable && rowNode.isSelected()) {
-                nodesToUnselect.push(rowNode);
+                result.push(rowNode);
+                changedRowNodes.update(rowNode);
             }
-
-            result.push(rowNode);
-            changedRowNodes.update(rowNode);
         }
 
         return result;
     }
 
     protected executeAdd(
-        changedRowNodes: IChangedRowNodes<TData>,
+        changedRowNodes: ChangedRowNodes<TData>,
         addIndex: number | null | undefined,
         add: TData[] | null | undefined
     ): RowNode<TData>[] {
@@ -292,8 +299,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const newNodes = new Array<RowNode<TData>>(addLength);
         for (let i = 0; i < addLength; ++i) {
             const newNode = this.createRowNode(add[i], addIndex + i);
-            newNodes[i] = newNode;
             changedRowNodes.add(newNode);
+            newNodes[i] = newNode;
         }
 
         const rootNode = this.rootNode!;

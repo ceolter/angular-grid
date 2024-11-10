@@ -18,7 +18,7 @@ export interface IClientSideNodeManager<TData = any> {
 
     setNewRowData(rowData: TData[]): void;
 
-    setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void;
+    setImmutableRowData(changedRowNodes: IChangedRowNodes<TData>, rowData: TData[]): boolean;
 
     updateRowData(
         rowDataTran: RowDataTransaction<TData>,

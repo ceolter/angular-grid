@@ -59,7 +59,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         }
 
-        if (params.rowDataUpdated) {
+        if (params.newData || params.changedRowNodes) {
             this.setMasters(params.changedRowNodes);
         }
     }

@@ -1,5 +1,11 @@
-import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
-import { ChangedPath, _error, _getRowIdCallback } from 'ag-grid-community';
+import type {
+    ChangedRowNodes,
+    IClientSideNodeManager,
+    NamedBean,
+    RefreshModelParams,
+    RowNode,
+} from 'ag-grid-community';
+import { _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import { makeFieldPathGetter } from './fieldAccess';
@@ -83,7 +89,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.treeCommit();
     }
 
-    public override setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
+    public override setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean {
         const gos = this.gos;
         const treeRoot = this.treeRoot!;
         const rootNode = this.rootNode!;
@@ -92,11 +98,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
         const canReorder = !gos.get('suppressMaintainUnsortedOrder');
 
         const processedDataSet = new Set<TData>();
-
-        const changedPath = new ChangedPath(false, rootNode);
-        params.changedPath = changedPath;
-
-        const changedRowNodes = params.changedRowNodes!;
 
         const oldAllLeafChildren = rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
@@ -218,16 +219,13 @@ export class ClientSideChildrenTreeNodeManager<TData>
             this.deselectNodes(nodesToUnselect);
         }
 
-        this.treeCommit(changedPath);
+        this.treeCommit(changedRowNodes.changedPath);
 
         if (orderChanged) {
             changedRowNodes.rowsOrderChanged = true;
         }
 
-        if (treeChanged || changedRowNodes.hasChanges()) {
-            params.step = 'group';
-            params.rowDataUpdated = true;
-        }
+        return treeChanged || changedRowNodes.hasChanges();
     }
 
     public override refreshModel(params: RefreshModelParams<TData>): void {

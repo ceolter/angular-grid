@@ -503,9 +503,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         // We execute this only if the row was committed at least once before, and not already deleted.
         // this is important for transition, see rowComp removeFirstPassFuncs. when doing animation and
         // remove, if rowTop is still present, the rowComp thinks it's just moved position.
-        row.clearRowTopAndRowIndex();
-
-        row.groupData = null;
+        this.rowNodeDeleted(row);
     }
 
     /**
