@@ -67,12 +67,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     ): number {
         if (this.isRowSelectionBlocked(rowNode)) return 0;
 
-        const selection = this.getNodeSelectionsFromMouseEvent(
-            rowNode,
-            event.shiftKey,
-            event.metaKey || event.ctrlKey,
-            source
-        );
+        const selection = this.inferNodeSelections(rowNode, event.shiftKey, event.metaKey || event.ctrlKey, source);
 
         if (selection == null) {
             return 0;

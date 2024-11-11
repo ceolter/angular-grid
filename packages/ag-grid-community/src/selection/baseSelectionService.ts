@@ -256,7 +256,7 @@ export abstract class BaseSelectionService extends BeanStub {
         }
     }
 
-    protected getNodeSelectionsFromMouseEvent(
+    protected inferNodeSelections(
         rowNode: RowNode,
         shiftKey: boolean,
         metaKey: boolean,
@@ -269,7 +269,6 @@ export abstract class BaseSelectionService extends BeanStub {
         const { gos, selectionCtx } = this;
         const currentSelection = node.isSelected();
         const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
-        const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
         const enableClickSelection = _getEnableSelection(gos);
         const enableDeselection = _getEnableDeselection(gos);
         const isRowClicked = source === 'rowClicked';
@@ -285,6 +284,8 @@ export abstract class BaseSelectionService extends BeanStub {
         if (isRowClicked && !(enableClickSelection || enableDeselection)) return null;
 
         if (shiftKey && metaKey && this.isMultiSelect()) {
+            // SHIFT+CTRL or SHIFT+CMD is used for bulk deselection, except where the selection root
+            // is still selected, in which case we default to normal bulk selection behaviour
             const root = selectionCtx.getRoot();
             if (root && !root.isSelected()) {
                 // range deselection mode
@@ -306,26 +307,18 @@ export abstract class BaseSelectionService extends BeanStub {
                 };
             }
         } else if (shiftKey && this.isMultiSelect()) {
-            // range selection
+            // SHIFT is used for bulk selection
             const root = selectionCtx.getRoot();
             const partition = selectionCtx.isInRange(node)
                 ? selectionCtx.truncate(node)
                 : selectionCtx.extend(node, groupSelectsDescendants);
-            if (root && !root.isSelected()) {
-                return {
-                    select: partition.keep,
-                    deselect: partition.discard,
-                    reset: true,
-                };
-            } else {
-                return {
-                    select: partition.keep,
-                    deselect: partition.discard,
-                    reset: false,
-                };
-            }
+            return {
+                select: partition.keep,
+                deselect: partition.discard,
+                reset: !!(root && !root.isSelected()),
+            };
         } else if (metaKey) {
-            // multi-selection + deselection
+            // CTRL is used for deselection of a single node
             selectionCtx.setRoot(node);
 
             if (isRowClicked && currentSelection && !enableDeselection) {
@@ -338,9 +331,10 @@ export abstract class BaseSelectionService extends BeanStub {
                 clearSelection: !this.isMultiSelect(),
             };
         } else {
-            // selection
+            // Otherwise we just do normal selection of a single node
             selectionCtx.setRoot(node);
             const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+            const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
             const shouldClear = isRowClicked && (!enableSelectionWithoutKeys || !enableClickSelection);
 
             // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'` in CSRM.

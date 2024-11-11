@@ -77,12 +77,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
         let updatedRows = 0;
 
-        const selection = this.getNodeSelectionsFromMouseEvent(
-            rowNode,
-            event.shiftKey,
-            event.metaKey || event.ctrlKey,
-            source
-        );
+        const selection = this.inferNodeSelections(rowNode, event.shiftKey, event.metaKey || event.ctrlKey, source);
 
         if (selection == null) {
             return 0;
