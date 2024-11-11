@@ -43,7 +43,7 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message: _errMsg(256),
+            message: _errMsg(257),
         };
     },
     icons: {

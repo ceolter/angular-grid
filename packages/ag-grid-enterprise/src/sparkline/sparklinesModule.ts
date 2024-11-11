@@ -17,7 +17,7 @@ const baseSparklinesModule: _ModuleWithoutApi = {
     validate: () => {
         return {
             isValid: false,
-            message: _errMsg(257),
+            message: _errMsg(258),
         };
     },
 };
