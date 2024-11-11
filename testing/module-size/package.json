@@ -1,13 +1,15 @@
 {
   "name": "module-size",
   "private": true,
-  "version": "0.0.0",
+  "version": "32.2.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "module-stats": "ts-node moduleCombinations.ts"
+    "module-stats": "ts-node moduleCombinations.ts && npm run module-validate",
+    "module-validate": "ts-node moduleValidator.ts",
+    "test": "npm run module-stats"
   },
   "dependencies": {
     "ag-grid-react": "32.2.0",

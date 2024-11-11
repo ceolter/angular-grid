@@ -1,19 +1,10 @@
-import { AllCommunityModules, AllEnterpriseModules } from './moduleDefinitions';
+import { moduleCombinations } from './moduleDefinitions';
 
 const fs = require('fs');
 const { exec } = require('child_process');
 const path = require('path');
 
-const allCommunityModules = Object.keys(AllCommunityModules)
-    .map((m) => [m])
-    .slice(0, 3);
-const allEnterpriseModules = Object.keys(AllEnterpriseModules)
-    .map((m) => [m])
-    .slice(0, 3);
-
-const moduleCombinations = [[], ...allCommunityModules, ...allEnterpriseModules];
-
-const results: { modules: string[]; selfSize: number; fileSize: number; gzipSize: number }[] = [];
+const results: { modules: string[]; expectedSize: number; selfSize: number; fileSize: number; gzipSize: number }[] = [];
 const updateModulesScript = path.join(__dirname, 'moduleUpdater.ts');
 let baseSize = 0;
 
@@ -25,7 +16,7 @@ function runCombination(index) {
         return;
     }
 
-    const modules = moduleCombinations[index];
+    const { modules, expectedSize } = moduleCombinations[index];
     const command = `ts-node ${updateModulesScript} ${modules.join(' ')}`;
 
     exec(command, (err, stdout, stderr) => {
@@ -58,6 +49,7 @@ function runCombination(index) {
                 selfSize,
                 fileSize,
                 gzipSize,
+                expectedSize,
             });
         }
 

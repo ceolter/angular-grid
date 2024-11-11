@@ -4,5 +4,5 @@
   "sourceRoot": "testing/module-size",
   "projectType": "app",
   "targets": {},
-  "tags": []
+  "tags": ["module", "testing"]
 }

@@ -6,7 +6,7 @@ const { exec } = require('child_process');
 const { globSync } = require('glob');
 const zlib = require('zlib');
 
-const distFilePattern = path.join(__dirname, 'dist/assets/agGridCommunity*.js');
+const distFilePattern = path.join(__dirname, 'dist/assets/agGridCommunityEnterprise*.js');
 const filePath = path.join(__dirname, 'src/App.tsx');
 const placeholderStartRgx = '/\\*\\* __PLACEHOLDER__START__ \\*/';
 const placeholderEndRgx = '/\\*\\* __PLACEHOLDER__END__ \\*/';
@@ -26,8 +26,8 @@ fs.readFile(filePath, 'utf8', (err, data) => {
         console.error('Error reading file:', err);
         return;
     }
-    const communityModules = modules.filter((module) => AllEnterpriseModules[module] !== 1);
-    const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] === 1);
+    const communityModules = modules.filter((module) => !AllEnterpriseModules[module]);
+    const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] > 0);
 
     const replacement = communityModules.join(', ');
     const regex = new RegExp(`${placeholderStartRgx}[\\s\\S]*?${placeholderEndRgx}`, 'g');
@@ -52,8 +52,8 @@ fs.readFile(filePath, 'utf8', (err, data) => {
                 return;
             }
 
-            console.log(stdout);
-            console.error(stderr);
+            // console.log(stdout);
+            // console.error(stderr);
 
             // Get the size of the dist file using globSync
             const files = globSync(distFilePattern);
