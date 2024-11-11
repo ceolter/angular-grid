@@ -57,7 +57,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             shouldDisplayTooltip,
         };
 
-        let tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', tooltipCtrl);
+        let tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl);
         if (tooltipFeature) {
             tooltipFeature = ctrl.createBean(tooltipFeature);
             ctrl.setRefreshFunction('tooltip', () => tooltipFeature!.refreshTooltip());
@@ -97,7 +97,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             tooltipCtrl.getColDef = () => colGroupDef;
         }
 
-        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', tooltipCtrl);
+        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl);
         return tooltipFeature ? ctrl.createBean(tooltipFeature) : tooltipFeature;
     }
 
@@ -161,7 +161,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             shouldDisplayTooltip,
         };
 
-        return this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', tooltipCtrl, this.beans);
+        return this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl, this.beans);
     }
 
     public refreshRowTooltip(
@@ -183,6 +183,7 @@ export class TooltipService extends BeanStub implements NamedBean {
 
         const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>(
             'tooltipFeature',
+            false,
             tooltipParams,
             this.beans
         );

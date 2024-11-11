@@ -51,7 +51,6 @@ export const ENTERPRISE_MODULE_NAMES: Record<EnterpriseModuleName, 1> = {
     SetFilterModule: 1,
     SetFloatingFilterModule: 1,
     SideBarModule: 1,
-    SideBarSharedModule: 1,
     SkeletonCellRendererModule: 1,
     SparklinesModule: 1,
     StatusBarCoreModule: 1,

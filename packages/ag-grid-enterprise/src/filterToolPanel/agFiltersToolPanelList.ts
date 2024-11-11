@@ -18,7 +18,7 @@ import {
     isProvidedColumnGroup,
 } from 'ag-grid-community';
 
-import type { ToolPanelColDefService } from '../sideBar/common/toolPanelColDefService';
+import { syncLayoutWithGrid, toolPanelCreateColumnTree } from '../sideBar/common/toolPanelColDefService';
 import { EXPAND_STATE } from './agFiltersToolPanelHeader';
 import type { ToolPanelFiltersCompParams } from './filtersToolPanel';
 import { ToolPanelFilterComp } from './toolPanelFilterComp';
@@ -27,11 +27,9 @@ import { ToolPanelFilterGroupComp } from './toolPanelFilterGroupComp';
 
 export type AgFiltersToolPanelListEvent = 'filterExpanded' | 'groupExpanded';
 export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEvent> {
-    private toolPanelColDefSvc: ToolPanelColDefService;
     private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.toolPanelColDefSvc = beans.toolPanelColDefSvc as ToolPanelColDefService;
         this.colModel = beans.colModel;
     }
 
@@ -106,7 +104,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     }
 
     public syncFilterLayout(): void {
-        this.toolPanelColDefSvc.syncLayoutWithGrid(this.setFiltersLayout.bind(this));
+        syncLayoutWithGrid(this.colModel, this.setFiltersLayout.bind(this));
         this.refreshAriaLabel();
     }
 
@@ -116,7 +114,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     }
 
     public setFiltersLayout(colDefs: AbstractColDef[]): void {
-        const columnTree = this.toolPanelColDefSvc.createColumnTree(colDefs);
+        const columnTree = toolPanelCreateColumnTree(this.colModel, colDefs);
         this.recreateFilters(columnTree);
     }
 

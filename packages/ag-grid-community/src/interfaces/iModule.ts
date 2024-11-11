@@ -209,7 +209,6 @@ export type EnterpriseModuleName =
     | 'SetFilterModule'
     | 'SetFloatingFilterModule'
     | 'SideBarModule'
-    | 'SideBarSharedModule'
     | 'SkeletonCellRendererModule'
     | 'SparklinesModule'
     | 'StatusBarCoreModule'

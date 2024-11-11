@@ -270,7 +270,8 @@ export class CellRangeFeature implements ICellRangeFeature {
 
         if (!this.selectionHandle) {
             const selectionHandle = beans.registry.createDynamicBean<AgFillHandle | AgRangeHandle>(
-                type === SelectionHandleType.FILL ? 'fillHandle' : 'rangeHandle'
+                type === SelectionHandleType.FILL ? 'fillHandle' : 'rangeHandle',
+                false
             );
             if (selectionHandle) {
                 this.selectionHandle = beans.context.createBean(selectionHandle);

@@ -4,6 +4,7 @@ import type { IFrameworkOverrides } from '../interfaces/iFrameworkOverrides';
 
 const AG_GRID_STOP_PROPAGATION = '__ag_Grid_Stop_Propagation';
 const PASSIVE_EVENTS = ['touchstart', 'touchend', 'touchmove', 'touchcancel', 'scroll'];
+const NON_PASSIVE_EVENTS = ['wheel'];
 const supports: { [key: string]: boolean } = {};
 
 /**
@@ -116,8 +117,13 @@ export function _addSafePassiveEventListener(
     event: string,
     listener: (event?: any) => void
 ) {
-    const isPassive = PASSIVE_EVENTS.includes(event);
-    const options = isPassive ? { passive: true } : undefined;
+    const passive = getPassiveStateForEvent(event);
+
+    let options: { passive: boolean } | undefined;
+
+    if (passive != null) {
+        options = { passive };
+    }
 
     // this check is here for certain scenarios where I believe the user must be destroying
     // the grid somehow but continuing for it to be used
@@ -125,3 +131,16 @@ export function _addSafePassiveEventListener(
         frameworkOverrides.addEventListener(eElement, event, listener, options);
     }
 }
+
+export const getPassiveStateForEvent = (event: string): boolean | undefined => {
+    const isPassive = PASSIVE_EVENTS.includes(event);
+    const isNonPassive = NON_PASSIVE_EVENTS.includes(event);
+
+    if (isPassive) {
+        return true;
+    }
+
+    if (isNonPassive) {
+        return false;
+    }
+};
