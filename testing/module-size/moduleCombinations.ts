@@ -13,6 +13,18 @@ function runCombination(index) {
         // Save results to a JSON file
         fs.writeFileSync('results.json', JSON.stringify(results, null, 2));
         console.log('Results saved to results.json');
+
+        // Run the command with no modules to clear the app.tsx file
+        const clearCommand = `ts-node ${updateModulesScript} ${[].join(' ')}`;
+        exec(clearCommand, (err, stdout, stderr) => {
+            if (err) {
+                console.error(`Error clearing App.tsx}:`, err);
+                return;
+            }
+            console.log(stdout);
+            console.error(stderr);
+        });
+
         return;
     }
 

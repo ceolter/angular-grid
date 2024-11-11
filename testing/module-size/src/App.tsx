@@ -10,7 +10,7 @@ import {
     /** __PLACEHOLDER__START__ */  /** __PLACEHOLDER__END__ */
 } from 'ag-grid-community';
 import {
-    /** __ENTERPRISE_PLACEHOLDER__START__ */ CellSelectionCoreModule /** __ENTERPRISE_PLACEHOLDER__END__ */
+    /** __ENTERPRISE_PLACEHOLDER__START__ */  /** __ENTERPRISE_PLACEHOLDER__END__ */
 } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
 ]);
 
 ModuleRegistry.registerModules([
-    /** __ENTERPRISE_PLACEHOLDER__START__ */ CellSelectionCoreModule /** __ENTERPRISE_PLACEHOLDER__END__ */,
+    /** __ENTERPRISE_PLACEHOLDER__START__ */  /** __ENTERPRISE_PLACEHOLDER__END__ */
 ]);
 
 export const App = () => {
