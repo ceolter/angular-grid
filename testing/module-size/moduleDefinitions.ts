@@ -1,3 +1,5 @@
+import { ModuleName } from 'ag-grid-community';
+
 import { CommunityModuleName, EnterpriseModuleName } from '../../packages/ag-grid-community/src/interfaces/iModule';
 
 const AllCommunityModules: Record<CommunityModuleName, number> = {
@@ -149,25 +151,27 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
 };
 
 export interface ModuleTest {
-    modules: string[];
+    modules: ModuleName[];
     expectedSize: number;
 }
 
-const allCommunityModules: ModuleTest[] = Object.entries(AllCommunityModules)
-    .map(([m, s]) => ({
-        modules: [m],
-        expectedSize: s,
-    }))
-    .slice(0, 1);
-const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules)
-    .map(([m, s]) => ({
-        modules: [m],
-        expectedSize: s,
-    }))
-    .slice(0, 1);
+const allCommunityModules: ModuleTest[] = Object.entries(AllCommunityModules).map(([m, s]) => ({
+    modules: [m as ModuleName],
+    expectedSize: s,
+}));
+const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules).map(([m, s]) => ({
+    modules: [m as ModuleName],
+    expectedSize: s,
+}));
+
+const commonFeatureSets: ModuleTest[] = [
+    { modules: ['ClientSideRowModelCoreModule', 'SortModule'], expectedSize: 40 },
+    { modules: ['ClientSideRowModelCoreModule', 'SortModule', 'FilterModule'], expectedSize: 178 },
+];
 
 export const moduleCombinations: ModuleTest[] = [
     { modules: [], expectedSize: 308 },
+    ...commonFeatureSets,
     ...allCommunityModules,
     ...allEnterpriseModules,
 ];
