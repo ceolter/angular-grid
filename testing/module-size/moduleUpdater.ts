@@ -44,7 +44,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
         }
 
         // Run npm run build
-        exec('npm run build', (err, stdout, stderr) => {
+        exec('npm run build-app', (err, stdout, stderr) => {
             if (err) {
                 console.error('Error running build:', err);
                 console.log(stdout);

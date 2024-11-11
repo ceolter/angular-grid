@@ -93,6 +93,15 @@
       },
       "cache": true
     },
+    "test:modules:full": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run-many -t test --projects=tag:community,tag:enterprise,tag:test,tag:module-size --exclude=tag:framework"
+        ]
+      },
+      "cache": true
+    },
     "dev:setup": {
       "executor": "nx:run-commands",
       "options": {
@@ -198,6 +207,7 @@
     "external/ag-website-shared",
     "external/ag-shared",
     "testing/behavioural",
+    "testing/module-size",
     "ag-grid-generate-example-files"
   ],
   "tags": []
