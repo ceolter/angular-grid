@@ -11,7 +11,7 @@ export default defineConfig({
                     react: ['react', 'react-dom'],
                     // agGridCommunity: ['ag-grid-community'],
                     // agGridEnterprise: ['ag-grid-enterprise'],
-                    agGridCommunity: ['ag-grid-community', 'ag-grid-enterprise'],
+                    agGridCommunityEnterprise: ['ag-grid-community', 'ag-grid-enterprise'],
                     agGridReact: ['ag-grid-react'],
                 },
             },
