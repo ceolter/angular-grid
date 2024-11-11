@@ -1,6 +1,7 @@
 import { _warn } from 'ag-grid-community';
 import type {
     ChangedPath,
+    ChangedRowNodes,
     GetDataPath,
     IChangedRowNodes,
     NamedBean,
@@ -17,14 +18,14 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override loadNewRowData(rowData: TData[]): void {
-        const rootNode = this.rootNode!;
+    protected override loadNewRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): void {
+        const rootNode = changedRowNodes.rootNode;
         const treeRoot = this.treeRoot!;
 
         this.treeClear(treeRoot);
         treeRoot.setRow(rootNode);
 
-        super.loadNewRowData(rowData);
+        super.loadNewRowData(changedRowNodes, rowData);
 
         const allLeafChildren = rootNode.allLeafChildren!;
         const getDataPath = this.gos.get('getDataPath');

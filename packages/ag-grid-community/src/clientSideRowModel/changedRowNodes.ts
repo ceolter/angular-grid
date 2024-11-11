@@ -3,6 +3,7 @@ import type { IChangedRowNodes } from '../interfaces/iClientSideRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { ChangedPath } from '../utils/changedPath';
+import type { AbstractClientSideNodeManager } from './abstractClientSideNodeManager';
 
 export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public readonly changedPath: ChangedPath;
@@ -15,7 +16,7 @@ export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public rowsOrderChanged = false;
 
     public constructor(
-        public readonly rootNode: RowNode<TData>,
+        public readonly rootNode: AbstractClientSideNodeManager.RootNode<TData>,
         public readonly newData: boolean
     ) {
         const changedPath = new ChangedPath(false, rootNode);

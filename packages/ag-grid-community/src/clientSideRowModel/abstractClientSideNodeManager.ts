@@ -105,7 +105,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.allNodesMap = {};
         this.nextId = 0;
 
-        this.loadNewRowData(rowData);
+        this.loadNewRowData(changedRowNodes, rowData);
 
         const allLeafChildren = rootNode.allLeafChildren!;
         for (let i = 0, len = allLeafChildren.length; i < len; i++) {
@@ -122,8 +122,9 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         }
     }
 
-    protected loadNewRowData(rowData: TData[]): void {
-        this.rootNode!.allLeafChildren = rowData?.map((dataItem, index) => this.createRowNode(dataItem, index)) ?? [];
+    protected loadNewRowData(changedRowNodes: ChangedRowNodes, rowData: TData[]): void {
+        changedRowNodes.rootNode.allLeafChildren =
+            rowData?.map((dataItem, index) => this.createRowNode(dataItem, index)) ?? [];
     }
 
     public setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean {
@@ -214,7 +215,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
         }
 
-        const rootNode = this.rootNode!;
+        const rootNode = changedRowNodes.rootNode;
         const oldAllLeafChildren = rootNode.allLeafChildren ?? [];
         const newAllLeafChildren: RowNode<TData>[] = [];
 
@@ -270,13 +271,15 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             return [];
         }
 
-        let allLeafChildren = this.rootNode!.allLeafChildren!;
+        const rootNode = changedRowNodes.rootNode;
+
+        let allLeafChildren = (rootNode.allLeafChildren ??= []);
         const allLeafChildrenLen = allLeafChildren.length;
 
         if (typeof addIndex !== 'number') {
             addIndex = allLeafChildrenLen;
         } else {
-            addIndex = this.sanitizeAddIndex(addIndex);
+            addIndex = sanitizeAddIndex(addIndex, allLeafChildrenLen);
             if (addIndex > 0) {
                 // TODO: this code should not be here, see AG-12602
                 // This was a fix for AG-6231, but is not the correct fix
@@ -301,8 +304,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             changedRowNodes.add(newNode);
             newNodes[i] = newNode;
         }
-
-        const rootNode = this.rootNode!;
 
         if (addIndex < allLeafChildrenLen) {
             // Insert at the specified index
@@ -455,19 +456,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         }
     }
 
-    private sanitizeAddIndex(addIndex: number): number {
-        const allChildrenCount = this.rootNode!.allLeafChildren?.length ?? 0;
-        if (addIndex < 0 || addIndex >= allChildrenCount || Number.isNaN(addIndex)) {
-            return allChildrenCount; // Append. Also for negative values, as it was historically the behavior.
-        }
-
-        // Ensure index is a whole number and not a floating point.
-        // Use case: the user want to add a row in the middle, doing addIndex = array.length / 2.
-        // If the array has an odd number of elements, the addIndex need to be rounded up.
-        // Consider that array.slice does round up internally, but we are setting this value to node.sourceRowIndex.
-        return Math.ceil(addIndex);
-    }
-
     protected createRowNode(data: TData, sourceRowIndex: number): RowNode<TData> {
         const node: ClientSideNodeManagerRowNode<TData> = new RowNode<TData>(this.beans);
         node.parent = this.rootNode;
@@ -512,3 +500,15 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         return rowNode || null;
     }
 }
+
+const sanitizeAddIndex = (addIndex: number, allLeafChildrenLen: number): number => {
+    if (addIndex < 0 || addIndex >= allLeafChildrenLen || Number.isNaN(addIndex)) {
+        return allLeafChildrenLen; // Append. Also for negative values, as it was historically the behavior.
+    }
+
+    // Ensure index is a whole number and not a floating point.
+    // Use case: the user want to add a row in the middle, doing addIndex = array.length / 2.
+    // If the array has an odd number of elements, the addIndex need to be rounded up.
+    // Consider that array.slice does round up internally, but we are setting this value to node.sourceRowIndex.
+    return Math.ceil(addIndex);
+};

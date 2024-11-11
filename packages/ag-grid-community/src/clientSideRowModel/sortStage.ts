@@ -103,7 +103,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         sortOptions: SortOption[],
         sortActive: boolean,
         useDeltaSort: boolean,
-        changedRowNodes: IChangedRowNodes | undefined,
+        changedRowNodes: IChangedRowNodes | null | undefined,
         changedPath: ChangedPath | undefined,
         sortContainsGroupColumns: boolean
     ): void {
