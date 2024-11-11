@@ -1147,7 +1147,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return this.nodeManager.getRowNode(id);
     }
 
-    public batchUpdateRowData(
+    public applyTransactionAsync(
         rowDataTransaction: RowDataTransaction,
         callback?: (res: RowNodeTransaction) => void
     ): void {
@@ -1223,7 +1223,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
      * Used to apply transaction changes.
      * Called by gridApi & rowDragFeature
      */
-    public updateRowData(rowDataTran: RowDataTransaction): RowNodeTransaction | null {
+    public applyTransaction(rowDataTran: RowDataTransaction): RowNodeTransaction | null {
         const rootNode = this.rootNode;
         if (!rootNode) {
             return null; // Destroyed

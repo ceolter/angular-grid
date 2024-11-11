@@ -12,7 +12,6 @@ import { TreeNode } from './treeNode';
 import type { TreeRow } from './treeRow';
 import {
     clearTreeRowFlags,
-    isTreeRowCommitted,
     isTreeRowExpandedInitialized,
     isTreeRowKeyChanged,
     isTreeRowPathChanged,
@@ -127,7 +126,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             } else if (!oldRow.data) {
                 // We are replacing a filler row with a real row.
                 node.setRow(newRow);
-                this.destroyRow(oldRow, true); // Delete the filler node
+                this.addRowToDestroy(oldRow); // Delete the filler node
                 invalidate = true;
             } else {
                 // We have a new non-filler row, but we had already one, this is a duplicate
@@ -169,7 +168,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             if (parent) {
                 parent.childrenChanged = true;
             }
-            this.destroyRow(oldRow, !oldRow.data);
+            this.addRowToDestroy(oldRow);
         }
 
         if (invalidate) {
@@ -394,14 +393,6 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     private createFillerRow(node: TreeNode): RowNode {
-        const row = new RowNode(this.beans); // Create a filler node
-        row.key = node.key;
-        row.group = true;
-        row.field = null;
-        row.leafGroup = false;
-        row.rowGroupIndex = null;
-        row.allChildrenCount = null;
-
         // Generate a unique id for the filler row
         let id = node.level + '-' + node.key;
         let p = node.parent;
@@ -413,7 +404,23 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             id = `${p.level}-${p.key}-${id}`;
             p = parent;
         }
-        row.id = _ROW_ID_PREFIX_ROW_GROUP + id;
+        id = _ROW_ID_PREFIX_ROW_GROUP + id;
+
+        const allNodesMap = this.allNodesMap;
+        let row = allNodesMap[id];
+        if (row) {
+            setTreeRowExpandedInitialized(row, false);
+        } else {
+            row = new RowNode(this.beans);
+            row.id = id;
+            row.key = node.key;
+            row.group = true;
+            row.field = null;
+            row.leafGroup = false;
+            row.rowGroupIndex = null;
+            row.allChildrenCount = null;
+            allNodesMap[id] = row;
+        }
 
         return row;
     }
@@ -444,7 +451,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             if (level >= 0) {
                 let row = node.row;
                 while (row !== null && node.removeRow(row)) {
-                    this.destroyRow(row, !row.data);
+                    this.addRowToDestroy(row);
                     row = node.row;
                 }
             }
@@ -460,7 +467,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const { row, level, duplicateRows } = node;
         if (row) {
             if (level >= 0 && !row.data) {
-                this.destroyRow(row, true); // Delete the filler node
+                this.addRowToDestroy(row); // Delete the filler node
             } else {
                 clearTreeRowFlags(row); // Just clear the flags
             }
@@ -468,7 +475,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         if (duplicateRows) {
             for (const row of duplicateRows) {
                 if (level >= 0 && !row.data) {
-                    this.destroyRow(row, true); // Delete filler nodes
+                    this.addRowToDestroy(row); // Delete filler nodes
                 } else {
                     clearTreeRowFlags(row); // Just clear the flags
                 }
@@ -480,30 +487,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         node.destroy();
     }
 
-    /**
-     * Finalizes the deletion of a row.
-     * @param immediate If true, the row is deleted immediately.
-     * If false, the row is marked for deletion, and will be deleted later with this.deleteDeletedRows()
-     */
-    private destroyRow(row: RowNode, immediate: boolean): void {
-        if (row.isSelected()) {
-            immediate = false; // Need to be deleted later as we need to unselect it first
-        } else if (!isTreeRowCommitted(row)) {
-            clearTreeRowFlags(row);
-            return; // Never committed, or already deleted, and not selected. Nothing to do.
-        }
-
-        if (!immediate) {
+    private addRowToDestroy(row: RowNode): void {
+        if (row !== this.rootNode) {
             (this.rowsPendingDestruction ??= new Set()).add(row);
-            return; // We will delete it later with commitDeletedRows
         }
-
-        clearTreeRowFlags(row);
-
-        // We execute this only if the row was committed at least once before, and not already deleted.
-        // this is important for transition, see rowComp removeFirstPassFuncs. when doing animation and
-        // remove, if rowTop is still present, the rowComp thinks it's just moved position.
-        this.rowNodeDeleted(row);
     }
 
     /**
@@ -515,10 +502,13 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         let nodesToUnselect: RowNode[] | null = null;
         if (rowsPendingDestruction !== null) {
             for (const row of rowsPendingDestruction) {
-                this.destroyRow(row, true);
                 if (row.isSelected()) {
                     (nodesToUnselect ??= []).push(row);
                 }
+
+                this.rowNodeDeleted(row);
+
+                clearTreeRowFlags(row);
             }
             this.rowsPendingDestruction = null;
         }

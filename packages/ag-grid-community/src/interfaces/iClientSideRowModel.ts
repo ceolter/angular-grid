@@ -33,8 +33,13 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     readonly rootNode: RowNode | null;
 
     onRowGroupOpened(): void;
-    updateRowData(rowDataTran: RowDataTransaction<TData>): RowNodeTransaction<TData> | null;
     refreshModel(params: RefreshModelParams): void;
+    applyTransaction(rowDataTran: RowDataTransaction<TData>): RowNodeTransaction<TData> | null;
+    applyTransactionAsync(
+        rowDataTransaction: RowDataTransaction<TData>,
+        callback?: (res: RowNodeTransaction<TData>) => void
+    ): void;
+    flushAsyncTransactions(): void;
     forEachLeafNode(callback: (node: RowNode, index: number) => void): void;
     forEachNodeAfterFilter(callback: (node: RowNode, index: number) => void, includeFooterNodes?: boolean): void;
     forEachNodeAfterFilterAndSort(callback: (node: RowNode, index: number) => void, includeFooterNodes?: boolean): void;
@@ -42,11 +47,6 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     resetRowHeights(): void;
     onRowHeightChanged(): void;
     onRowHeightChangedDebounced(): void;
-    batchUpdateRowData(
-        rowDataTransaction: RowDataTransaction<TData>,
-        callback?: (res: RowNodeTransaction<TData>) => void
-    ): void;
-    flushAsyncTransactions(): void;
     doAggregate(changedPath?: ChangedPath): void;
     getTopLevelNodes(): RowNode[] | null;
     ensureRowsAtPixel(rowNode: RowNode[], pixel: number, increment: number): boolean;

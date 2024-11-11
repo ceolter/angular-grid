@@ -5,7 +5,6 @@ import { _getRowIdCallback } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
-import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 import type { ChangedRowNodes } from './changedRowNodes';
 
@@ -240,24 +239,19 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         update: TData[] | null | undefined,
         getRowIdFunc: GetRowIdFunc<TData> | undefined
     ): RowNode<TData>[] {
-        const updateLen = update?.length;
         const result: RowNode<TData>[] = [];
-
-        if (!updateLen) {
-            return result;
-        }
-
-        for (let i = 0; i < updateLen; i++) {
-            const item = update[i];
-            const rowNode = this.lookupRowNode(getRowIdFunc, item);
-            if (rowNode) {
-                rowNode.updateData(item);
-
-                result.push(rowNode);
-                changedRowNodes.update(rowNode);
+        const updateLen = update?.length;
+        if (updateLen) {
+            for (let i = 0; i < updateLen; i++) {
+                const item = update[i];
+                const rowNode = this.lookupRowNode(getRowIdFunc, item);
+                if (rowNode) {
+                    rowNode.updateData(item);
+                    changedRowNodes.update(rowNode);
+                    result.push(rowNode);
+                }
             }
         }
-
         return result;
     }
 
@@ -346,12 +340,13 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const update: TData[] = [];
         const add: TData[] = [];
 
-        if (_exists(rowData)) {
+        if (rowData) {
             // split all the new data in the following:
             // if new, push to 'add'
             // if update, push to 'update'
             // if not changed, do not include in the transaction
-            rowData.forEach((data: TData) => {
+            for (let i = 0, len = rowData.length; i < len; i++) {
+                const data = rowData[i];
                 const id = getRowIdFunc({ data, level: 0 });
                 const existingNode = existingNodesMap[id];
 
@@ -366,13 +361,14 @@ export abstract class AbstractClientSideNodeManager<TData = any>
                 } else {
                     add.push(data);
                 }
-            });
+            }
         }
 
         // at this point, all rows that are left, should be removed
         for (const rowNode of Object.values(existingNodesMap)) {
-            if (rowNode) {
-                remove.push(rowNode.data);
+            const data = rowNode?.data;
+            if (data) {
+                remove.push(data);
             }
         }
 
@@ -477,10 +473,12 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         node.setDataAndId(data, String(this.nextId));
 
-        if (this.allNodesMap[node.id!]) {
-            _warn(2, { nodeId: node.id });
+        const nodeId = node.id!;
+        const allNodesMap = this.allNodesMap;
+        if (allNodesMap[nodeId]) {
+            _warn(2, { nodeId });
         }
-        this.allNodesMap[node.id!] = node;
+        allNodesMap[nodeId] = node;
 
         this.nextId++;
 

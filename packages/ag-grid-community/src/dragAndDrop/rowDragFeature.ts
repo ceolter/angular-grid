@@ -273,7 +273,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
                 addIndex--;
             }
 
-            this.clientSideRowModel.updateRowData({
+            this.clientSideRowModel.applyTransaction({
                 add: rowNodes!
                     .filter(
                         (node) =>

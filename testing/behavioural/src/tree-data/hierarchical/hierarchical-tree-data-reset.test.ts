@@ -577,21 +577,22 @@ describe('ag-grid hierarchical tree data reset', () => {
             └── 6 LEAF selected id:6 label:"6-v2" x:"M"
         `);
 
-        console.log('BEGIN\n\n');
         api.setGridOption('rowData', rowData3);
 
         await new GridRows(api, 'update 2', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
             ├── 100 LEAF id:100 label:"100-v3" x:"a"
-            └─┬ g3 GROUP collapsed id:g3 label:"g-C" x:"C"
-            · └── 3 LEAF hidden id:3 label:"3-v3" x:"D"
+            └─┬ g3 GROUP id:g3 label:"g-C" x:"C"
+            · └── 3 LEAF id:3 label:"3-v3" x:"D"
         `);
+
+        api.setNodesSelected({ nodes: [api.getRowNode('100')!], newValue: true });
 
         api.setGridOption('rowData', rowData4);
 
         await new GridRows(api, 'update 3', gridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
-            ├── 100 LEAF id:100 label:"100-v3" x:"a"
+            ├── 100 LEAF selected id:100 label:"100-v3" x:"a"
             └─┬ g0 GROUP id:g0 label:"g-C" x:"C"
             · └── 3 LEAF id:3 label:"3-v3" x:"D"
         `);
