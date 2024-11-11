@@ -172,6 +172,6 @@ const commonFeatureSets: ModuleTest[] = [
 export const moduleCombinations: ModuleTest[] = [
     { modules: [], expectedSize: 308 },
     ...commonFeatureSets,
-    ...allCommunityModules.slice(0, 3),
-    ...allEnterpriseModules.slice(0, 3),
+    ...allCommunityModules, //.slice(0, 3),
+    ...allEnterpriseModules, //.slice(0, 3),
 ];
