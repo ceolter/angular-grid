@@ -59,7 +59,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         }
 
-        if (params.newData || params.changedRowNodes) {
+        if (params.changedRowNodes) {
             this.setMasters(params.changedRowNodes);
         }
     }
@@ -78,7 +78,9 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             let newMaster = enabled;
 
             if (enabled) {
-                if (created || updated) {
+                if (!row.data) {
+                    newMaster = false; // a filler node
+                } else if (created || updated) {
                     if (isRowMaster) {
                         const data = row.data;
                         newMaster = !!data && !!isRowMaster(data);

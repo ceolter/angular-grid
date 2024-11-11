@@ -14,8 +14,17 @@ export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public rowsInserted = false;
     public rowsOrderChanged = false;
 
-    public constructor(public readonly rootNode: RowNode<TData>) {
-        this.changedPath = new ChangedPath(false, rootNode);
+    public constructor(
+        public readonly rootNode: RowNode<TData>,
+        public readonly newData: boolean
+    ) {
+        const changedPath = new ChangedPath(false, rootNode);
+        this.changedPath = changedPath;
+
+        if (newData) {
+            // We disable the ChangedPath as all paths are new
+            changedPath.active = false;
+        }
     }
 
     public remove(node: IRowNode<TData>): void {
@@ -37,6 +46,6 @@ export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     }
 
     public hasChanges(): boolean {
-        return this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
+        return this.newData || this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
     }
 }

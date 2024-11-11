@@ -60,7 +60,18 @@ export interface IChangedRowNodes<TData = any> {
     /** The CSRM rootNode */
     readonly rootNode: RowNode<TData>;
 
-    /** The list of transactions that are being executed. */
+    /**
+     * Indicates a completely new rowData array is loaded.
+     * If this is true, we consider this a new reload of data from scratch, or a first load of data.
+     * In this case, removals will not contain the previous cleared rows.
+     * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
+     */
+    readonly newData: boolean;
+
+    /**
+     * The list of transactions that are being executed.
+     * Is null if no transactions are being executed, that can happen for newData or for immutable updates.
+     */
     rowNodeTransactions: RowNodeTransaction<TData>[] | null;
 
     /** The ChangedPath containing the changed parent nodes in DFS order. */
@@ -93,15 +104,10 @@ export interface RefreshModelParams<TData = any> {
     changedProps?: Set<keyof GridOptions<TData>>;
 
     /**
-     * Indicates a completely new rowData array is loaded.
-     * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
-     */
-    newData?: boolean;
-
-    /**
      * A data structure that holds the affected row nodes, if this was an update and not a full reload.
+     * If this is set, something changed in the rowData.
      */
-    changedRowNodes?: IChangedRowNodes<TData>;
+    changedRowNodes?: IChangedRowNodes<TData> | null;
 
     /** The changedPath, if any */
     changedPath?: ChangedPath;

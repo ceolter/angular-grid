@@ -83,7 +83,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.rootNode = null;
     }
 
-    public setNewRowData(rowData: TData[]): void {
+    public setNewRowData(changedRowNodes: ChangedRowNodes, rowData: TData[]): void {
         const rootNode = this.rootNode;
         if (!rootNode) {
             return;
@@ -107,6 +107,11 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         this.loadNewRowData(rowData);
 
+        const allLeafChildren = rootNode.allLeafChildren!;
+        for (let i = 0, len = allLeafChildren.length; i < len; i++) {
+            changedRowNodes.add(allLeafChildren[i]);
+        }
+
         if (sibling) {
             sibling.childrenAfterFilter = rootNode.childrenAfterFilter;
             sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
@@ -126,7 +131,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const rowDataTransaction = this.createTransactionForRowData(rowData);
 
         // Apply the transaction
-        this.updateRowData(rowDataTransaction, changedRowNodes);
+        this.applyTransaction(changedRowNodes, rowDataTransaction);
 
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
         if (!this.gos.get('suppressMaintainUnsortedOrder')) {
@@ -139,9 +144,9 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         return changedRowNodes.hasChanges();
     }
 
-    public updateRowData(
-        rowDataTran: RowDataTransaction<TData>,
-        changedRowNodes: ChangedRowNodes<TData>
+    public applyTransaction(
+        changedRowNodes: ChangedRowNodes<TData>,
+        rowDataTran: RowDataTransaction<TData>
     ): RowNodeTransaction<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
