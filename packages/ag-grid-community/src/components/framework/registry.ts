@@ -3,6 +3,7 @@ import { BeanStub } from '../../context/beanStub';
 import type { DynamicBeanName, UserComponentName } from '../../context/context';
 import type { Module } from '../../interfaces/iModule';
 import type { IconName, IconValue } from '../../utils/icon';
+import { _errMsg } from '../../validation/logging';
 import type { AgComponentSelector, ComponentSelector } from '../../widgets/component';
 
 export class Registry extends BeanStub implements NamedBean {
@@ -102,10 +103,13 @@ export class Registry extends BeanStub implements NamedBean {
         return null;
     }
 
-    public createDynamicBean<T>(name: DynamicBeanName, ...args: any[]): T | undefined {
+    public createDynamicBean<T>(name: DynamicBeanName, mandatory: boolean, ...args: any[]): T | undefined {
         const BeanClass = this.dynamicBeans[name];
 
         if (BeanClass == null) {
+            if (mandatory) {
+                throw new Error(_errMsg(256));
+            }
             return undefined;
         }
 

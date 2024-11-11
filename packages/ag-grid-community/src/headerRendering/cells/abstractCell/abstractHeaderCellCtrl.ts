@@ -217,10 +217,6 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected addResizeAndMoveKeyboardListeners(compBean: BeanStub): void {
-        if (!this.resizeFeature) {
-            return;
-        }
-
         compBean.addManagedListeners(this.eGui, {
             keydown: this.onGuiKeyDown.bind(this),
             keyup: this.onGuiKeyUp.bind(this),

@@ -5,7 +5,7 @@ import type { AgGridCommon } from '../interfaces/iCommon';
 import type { IFilterDef } from '../interfaces/iFilter';
 import type { IRowDragItem } from '../interfaces/iRowDragItem';
 import type { IRowNode } from '../interfaces/iRowNode';
-import type { MenuItemDef } from '../interfaces/menuItem';
+import type { DefaultMenuItem, MenuItemDef } from '../interfaces/menuItem';
 import type { ICellRendererParams } from '../rendering/cellRenderers/iCellRenderer';
 import type { ITooltipParams } from '../tooltip/tooltipComponent';
 import type { GetContextMenuItems, GetMainMenuItems, RowClassParams } from './gridOptions';
@@ -111,7 +111,7 @@ export interface ColGroupDef<TData = any> extends AbstractColDef<TData> {
      * Customise the list of menu items available in the column group header context menu (on right-click).
      * The column menu button is not displayed for column groups.
      */
-    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
+    mainMenuItems?: (DefaultMenuItem | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
 }
 
 export interface IAggFunc<TData = any, TValue = any> {
@@ -419,11 +419,11 @@ export interface ColDef<TData = any, TValue = any> extends AbstractColDef<TData,
     /**
      * Customise the list of menu items available in the column menu.
      */
-    mainMenuItems?: (string | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
+    mainMenuItems?: (DefaultMenuItem | MenuItemDef<TData>)[] | GetMainMenuItems<TData>;
     /**
      * Customise the list of menu items available in the context menu.
      */
-    contextMenuItems?: (string | MenuItemDef<TData>)[] | GetContextMenuItems<TData>;
+    contextMenuItems?: (DefaultMenuItem | MenuItemDef<TData>)[] | GetContextMenuItems<TData>;
     /**
      * @deprecated v32.2 Use the new selection API instead. See `GridOptions.rowSelection`
      *

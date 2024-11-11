@@ -129,3 +129,10 @@ export type ComboChartType = 'columnLineCombo' | 'areaColumnCombo' | 'customComb
 export type ChartTypeExCombo = Exclude<ChartType, ComboChartType>;
 
 export type SeriesGroupType = 'grouped' | 'stacked' | 'normalized';
+
+export type DefaultChartMenuItem =
+    | 'chartEdit'
+    | 'chartAdvancedSettings'
+    | 'chartUnlink'
+    | 'chartLink'
+    | 'chartDownload';

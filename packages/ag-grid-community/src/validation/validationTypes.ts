@@ -1,3 +1,4 @@
+import type { BeanCollection } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ModuleName } from '../interfaces/iModule';
 import type { RowModelType } from '../interfaces/iRowModel';
@@ -9,6 +10,8 @@ export interface OptionsValidator<T extends object> {
     docsUrl?: `${string}/`;
     deprecations: Deprecations<T>;
     validations: Validations<T>;
+    /** these will always be validated, even if not in options */
+    mandatoryKeys?: Set<keyof T>;
 }
 
 // Deprecations, if renamed then old value is copied.
@@ -23,7 +26,7 @@ type TypeOfArray<T> = NonNullable<T extends Array<infer U> ? U : T>;
 export type Validations<T extends object> = Partial<{
     [key in keyof T]:
         | (TypeOfArray<T[key]> extends object ? () => OptionsValidator<TypeOfArray<T[key]>> : never)
-        | ((options: T, gridOptions: GridOptions) => OptionsValidation<T> | null)
+        | ((options: T, gridOptions: GridOptions, beans: BeanCollection) => OptionsValidation<T> | null)
         | OptionsValidation<T>
         | undefined;
 }>;
@@ -34,7 +37,7 @@ export interface OptionsValidation<T extends object> {
     module?: ModuleName | ModuleName[];
     supportedRowModels?: RowModelType[];
     dependencies?: RequiredOptions<T>;
-    validate?: (options: T, gridOptions: GridOptions) => string | null;
+    validate?: (options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
     /** Currently only supports boolean or number */
     expectedType?: 'boolean' | 'number';
 }

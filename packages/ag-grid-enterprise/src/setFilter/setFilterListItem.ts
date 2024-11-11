@@ -144,7 +144,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
 
     public postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getColDef: () => this.params.colDef,
                 getColumn: () => this.params.column as AgColumn,

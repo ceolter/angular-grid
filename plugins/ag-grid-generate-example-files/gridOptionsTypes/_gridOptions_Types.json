@@ -799,8 +799,9 @@
     ]
   },
   "chartMenuItems": {
-    "typeName": "(string | MenuItemDef)[] | GetChartMenuItems<TData>",
+    "typeName": "(DefaultChartMenuItem | MenuItemDef)[] | GetChartMenuItems<TData>",
     "typesToInclude": [
+      "DefaultChartMenuItem",
       "MenuItemDef",
       "GetChartMenuItems"
     ]

@@ -1,5 +1,11 @@
-import type { AgColumn, BaseCellDataType, BeanCollection, ColumnAdvancedFilterModel } from 'ag-grid-community';
-import { Component, _exists, _removeFromParent } from 'ag-grid-community';
+import type {
+    AgColumn,
+    BaseCellDataType,
+    BeanCollection,
+    BooleanAdvancedFilterModel,
+    ColumnAdvancedFilterModel,
+} from 'ag-grid-community';
+import { Component, _exists, _removeFromParent, _toStringOrNull } from 'ag-grid-community';
 
 import type { AdvancedFilterExpressionService } from '../advancedFilterExpressionService';
 import type { AutocompleteEntry } from '../autocomplete/autocompleteParams';
@@ -110,10 +116,15 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     }
 
     private createOperandPill(): void {
-        const key = this.getOperandDisplayValue() ?? '';
+        // Date inputs want iso string, so read straight from model. For numbers, convert to string
+        const { filter } = this.filterModel as Exclude<ColumnAdvancedFilterModel, BooleanAdvancedFilterModel>;
+        const key = (typeof filter === 'number' ? _toStringOrNull(filter) : filter) ?? '';
         this.eOperandPill = this.createPill({
             key,
-            displayValue: key,
+            // Convert from the input format to display format.
+            // Input format matches model format except for numbers, but these get stringified anyway
+            valueFormatter: (value) =>
+                this.advFilterExpSvc.getOperandDisplayValue({ ...this.filterModel, filter: value } as any, true),
             baseCellDataType: this.baseCellDataType,
             cssClass: 'ag-advanced-filter-builder-value-pill',
             isSelect: false,
@@ -195,9 +206,9 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
 
     private setOperand(operand: string): void {
         let parsedOperand: string | number = operand;
-        if (this.column) {
-            parsedOperand =
-                this.advFilterExpSvc.getOperandModelValue(operand, this.baseCellDataType, this.column) ?? '';
+        // Number comes back as string from input, so convert. Dates are already in iso string format
+        if (this.baseCellDataType === 'number') {
+            parsedOperand = _exists(operand) ? Number(operand) : '';
         }
         (this.filterModel as any).filter = parsedOperand;
         this.validate();

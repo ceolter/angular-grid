@@ -788,6 +788,7 @@ export class CellCtrl extends BeanStub {
     public createDndSource(): DndSourceComp | undefined {
         const dndSourceComp = this.beans.registry.createDynamicBean<DndSourceComp>(
             'dndSourceComp',
+            false,
             this.rowNode,
             this.column,
             this.eGui

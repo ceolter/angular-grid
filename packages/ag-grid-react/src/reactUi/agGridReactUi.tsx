@@ -371,7 +371,7 @@ const DetailCellRenderer = forwardRef((props: IDetailCellRendererParams, ref: an
             getGui: () => eGuiRef.current!,
         };
 
-        const ctrl = registry.createDynamicBean<IDetailCellRendererCtrl>('detailCellRendererCtrl');
+        const ctrl = registry.createDynamicBean<IDetailCellRendererCtrl>('detailCellRendererCtrl', true);
         if (!ctrl) {
             return;
         } // should never happen, means master/detail module not loaded

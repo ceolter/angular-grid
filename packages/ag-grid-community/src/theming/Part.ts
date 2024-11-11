@@ -56,7 +56,7 @@ export const createPart = (
     variant: string = `customPart${++customPartCounter}`
 ): Part<CoreParams> => /*#__PURE__*/ new PartImpl(feature, variant);
 
-class PartImpl<TParams = unknown> implements Part<TParams> {
+export class PartImpl<TParams = unknown> implements Part<TParams> {
     constructor(
         readonly feature: string,
         readonly variant: string,

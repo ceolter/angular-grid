@@ -6,7 +6,7 @@ import type {
     ClientSideNodeManagerUpdateRowDataResult,
     IClientSideNodeManager,
 } from '../interfaces/iClientSideNodeManager';
-import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
+import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
@@ -130,7 +130,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const rowDataTransaction = this.createTransactionForRowData(rowData);
 
         // Apply the transaction
-        const result = this.updateRowData(rowDataTransaction);
+        const result = this.updateRowData(rowDataTransaction, params.changedRowNodes!);
 
         let rowsOrderChanged = false;
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
@@ -149,10 +149,14 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         }
     }
 
-    public updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData> {
+    public updateRowData(
+        rowDataTran: RowDataTransaction<TData>,
+        changedRowNodes: IChangedRowNodes<TData>
+    ): ClientSideNodeManagerUpdateRowDataResult<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
         const updateRowDataResult: ClientSideNodeManagerUpdateRowDataResult<TData> = {
+            changedRowNodes,
             rowNodeTransaction: { remove: [], update: [], add: [] },
             rowsInserted: false,
         };
@@ -286,8 +290,16 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
         }
 
+        const addLength = add.length;
+
+        const changedRowNodes = result.changedRowNodes;
         // create new row nodes for each data item
-        const newNodes: RowNode[] = add.map((item, index) => this.createRowNode(item, addIndex + index));
+        const newNodes = new Array(addLength);
+        for (let i = 0; i < addLength; i++) {
+            const newNode = this.createRowNode(add[i], addIndex + i);
+            changedRowNodes.add(newNode);
+            newNodes[i] = newNode;
+        }
 
         const rootNode = this.rootNode!;
 
@@ -324,7 +336,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     protected executeRemove(
         getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
-        { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
+        { changedRowNodes, rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
     ): void {
         const { remove } = rowDataTran;
@@ -358,6 +370,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             delete this.allNodesMap[rowNode.id!];
 
             rowNodeTransaction.remove.push(rowNode);
+            changedRowNodes.remove(rowNode);
         });
 
         const rootNode = this.rootNode!;
@@ -378,7 +391,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     protected executeUpdate(
         getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
-        { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
+        { changedRowNodes, rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
     ): void {
         const { update } = rowDataTran;
@@ -399,6 +412,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
 
             rowNodeTransaction.update.push(rowNode);
+            changedRowNodes.update(rowNode);
         });
     }
 

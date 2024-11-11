@@ -1,9 +1,8 @@
 import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import { ColumnMoveModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
-import { ToolPanelColDefService } from '../sideBar/common/toolPanelColDefService';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { ChartMenuItemMapper } from './chartMenuItemMapper';
 import { ColumnChooserFactory } from './columnChooserFactory';
@@ -90,13 +89,13 @@ export const ColumnMenuModule: _ModuleWithoutApi = {
  */
 export const ColumnChooserModule: _ModuleWithApi<_ColumnChooserGridApi> = {
     ...baseEnterpriseModule('ColumnChooserModule'),
-    beans: [ColumnChooserFactory, ToolPanelColDefService],
+    beans: [ColumnChooserFactory],
     icons: COLUMN_SELECT_ICONS,
     apiFunctions: {
         showColumnChooser,
         hideColumnChooser,
     },
-    dependsOn: [MenuCoreModule, DragAndDropModule],
+    dependsOn: [MenuCoreModule, DragAndDropModule, ColumnMoveModule],
 };
 
 /**

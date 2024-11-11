@@ -42,7 +42,7 @@ export class RichSelectRow<TValue> extends Component {
 
     public postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 shouldDisplayTooltip: () => this.shouldDisplayTooltip?.() ?? true,
             } as ITooltipCtrl)

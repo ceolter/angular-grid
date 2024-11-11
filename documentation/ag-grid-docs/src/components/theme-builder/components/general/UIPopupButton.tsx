@@ -9,6 +9,7 @@ import {
     useFloating,
 } from '@floating-ui/react';
 import { type ReactNode, useState } from 'react';
+import type React from 'react';
 
 import { combineClassNames, useClickAwayListener } from '../component-utils';
 import { Card } from './Card';

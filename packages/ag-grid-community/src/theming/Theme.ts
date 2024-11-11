@@ -1,12 +1,11 @@
 import type { GridTheme, GridThemeUseArgs } from '../entities/gridOptions';
 import { _error, _warn } from '../validation/logging';
 import { Params } from './Params';
-import type { Part } from './Part';
-import { asPartImpl } from './Part';
+import type { Part, PartImpl } from './Part';
+import { asPartImpl, createPart } from './Part';
 import type { CoreParams } from './core/core-css';
 import { coreDefaults } from './core/core-css';
 import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './inject';
-import type { CssFragment } from './theme-types';
 import { paramValueToCss } from './theme-types';
 import { paramToVariableName } from './theme-utils';
 
@@ -41,23 +40,34 @@ export const createTheme = (id: string = `customTheme${++customThemeCounter}`): 
 
 let themeClassCounter = 0;
 let uninstalledLegacyCSS = false;
+let paramsPartCounter = 0;
 
 class ThemeImpl<TParams = unknown> implements Theme {
+    readonly parts: readonly PartImpl[];
+
     constructor(
         readonly id: string,
-        readonly dependencies: readonly Part[] = [],
-        readonly params: Params = new Params()
-    ) {}
+        readonly partsMap: Readonly<Record<string, PartImpl>> = {}
+    ) {
+        this.parts = Object.values(partsMap);
+    }
 
     withPart<TPartParams>(part: Part<TPartParams> | (() => Part<TPartParams>)): Theme<TParams & TPartParams> {
         if (typeof part === 'function') {
             part = part();
         }
-        return new ThemeImpl<TParams & TPartParams>(this.id, this.dependencies.concat(part), this.params);
+        const partImpl = asPartImpl(part);
+        const newPartsMap = { ...this.partsMap };
+        // remove any existing part with the same feature before overwriting, so
+        // that the newly added part is ordered at the end of the list
+        delete newPartsMap[partImpl.feature];
+        newPartsMap[partImpl.feature] = partImpl;
+
+        return new ThemeImpl<TParams & TPartParams>(this.id, newPartsMap);
     }
 
     withParams(params: Partial<TParams>, mode?: string): Theme<TParams> {
-        return new ThemeImpl(this.id, this.dependencies, this.params.withParams(params, mode));
+        return this.withPart(createPart(`params${++paramsPartCounter}`).withParams(params, mode));
     }
 
     getParamsCSS(): string {
@@ -102,7 +112,7 @@ class ThemeImpl<TParams = unknown> implements Theme {
         if (this._getParamsCache) return this._getParamsCache;
 
         let mergedParams = new Params().withParams(coreDefaults());
-        for (const part of this._getFlatUnits()) {
+        for (const part of this.parts) {
             mergedParams = mergedParams.mergedWith(part.params);
         }
 
@@ -135,27 +145,6 @@ class ThemeImpl<TParams = unknown> implements Theme {
         }
     }
 
-    private _getFlatUnitsCache?: PartOrTheme[];
-    private _getFlatUnits(): PartOrTheme[] {
-        if (this._getFlatUnitsCache) return this._getFlatUnitsCache;
-
-        const accumulator: Record<string, PartOrTheme> = {};
-        for (const part of this.dependencies) {
-            const partImpl = asPartImpl(part);
-            // remove any existing item before overwriting, so that the newly added
-            // part is ordered at the end of the list
-            delete accumulator[partImpl.feature];
-            accumulator[partImpl.feature] = partImpl;
-        }
-        const flatUnits: PartOrTheme[] = [
-            ...Object.values(accumulator),
-            // add `this` at the end so that CSS and params added to the theme override anything added to parts
-            this,
-        ];
-
-        return (this._getFlatUnitsCache = flatUnits);
-    }
-
     private _getCssChunksCache?: ThemeCssChunk[];
     private _getCSSChunks(): ThemeCssChunk[] {
         if (this._getCssChunksCache) return this._getCssChunksCache;
@@ -164,7 +153,7 @@ class ThemeImpl<TParams = unknown> implements Theme {
 
         chunks.push(makeParamsChunk(this));
 
-        for (const part of this._getFlatUnits()) {
+        for (const part of this.parts) {
             if (part.css && part.css.length > 0) {
                 let css = `/* Part ${part.id} */`;
                 css += part.css.map((p) => (typeof p === 'function' ? p() : p)).join('\n') + '\n';
@@ -185,12 +174,6 @@ export const asThemeImpl = (theme: Theme): ThemeImpl => {
         'expected theme to be an object created by createTheme' +
             (theme && typeof theme === 'object' ? '' : `, got ${theme}`)
     );
-};
-
-type PartOrTheme = {
-    readonly id: string;
-    readonly params: Params;
-    readonly css?: ReadonlyArray<CssFragment>;
 };
 
 const makeParamsChunk = (themeArg: Theme): ThemeCssChunk => {

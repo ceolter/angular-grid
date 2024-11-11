@@ -3,7 +3,7 @@
     display: block;
     width: var(--ag-icon-size);
     height: var(--ag-icon-size);
-    background-color: currentColor;
+    background-color: currentcolor;
     mask-size: contain;
     mask-image: linear-gradient(#0000, #0000);
 }

@@ -2,6 +2,12 @@
     display: flex;
     align-items: center;
 
+    &.ag-disabled {
+        opacity: 0.5;
+    }
+}
+
+:where(.ag-select) {
     .ag-picker-field-wrapper {
         padding-left: calc(var(--ag-cell-horizontal-padding) / 2);
         padding-right: var(--ag-spacing);
@@ -25,9 +31,5 @@
     .ag-picker-field-icon {
         display: flex;
         align-items: center;
-    }
-
-    &.ag-disabled {
-        opacity: 0.5;
     }
 }

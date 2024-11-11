@@ -70,11 +70,10 @@ export const ServerSideRowModelRowSelectionModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Row Grouping
- * @colDef enableRowGroup, rowGroup, rowGroupIndex
+ * @feature Row Grouping -> Opening Groups, Tree Data -> Expanding Groups, Master Detail
  */
-export const ServerSideRowModelRowGroupingModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ServerSideRowModelRowGroupingModule'),
+export const ServerSideRowModelHierarchyModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ServerSideRowModelHierarchyModule'),
     rowModels: ['serverSide'],
     beans: [ServerSideExpansionService],
     dependsOn: [ServerSideRowModelCoreModule],
@@ -122,7 +121,7 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
         ServerSideRowModelApiModule,
         ServerSideRowModelRowSelectionModule,
         ServerSideRowModelSortModule,
-        ServerSideRowModelRowGroupingModule,
+        ServerSideRowModelHierarchyModule,
         LoadingCellRendererModule,
         SkeletonCellRendererModule,
         CommunityFeaturesModule,

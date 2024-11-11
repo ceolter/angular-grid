@@ -432,6 +432,7 @@ export {
     ClientSideRowModelStage,
     ClientSideRowModelStep,
     RefreshModelParams,
+    IChangedRowNodes,
 } from './interfaces/iClientSideRowModel';
 export { IClientSideNodeManager, ClientSideNodeManagerUpdateRowDataResult } from './interfaces/iClientSideNodeManager';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';
@@ -910,6 +911,7 @@ export {
     IMenuItemComp,
     BaseMenuItem,
     BaseMenuItemParams,
+    DefaultMenuItem,
 } from './interfaces/menuItem';
 export { IWatermark } from './interfaces/iWatermark';
 export { IRowChildrenService } from './interfaces/iRowChildrenService';
@@ -1102,6 +1104,8 @@ export { LocaleModule } from './misc/locale/localeModule';
 export { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
 export { SharedExportModule } from './export/exportModule';
 export { AutoWidthModule } from './rendering/autoWidthModule';
+export { AriaModule } from './rendering/ariaModule';
+export { TouchModule } from './misc/touchModule';
 
 //  events
 export * from './events';
