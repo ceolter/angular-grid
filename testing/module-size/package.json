@@ -4,8 +4,7 @@
   "version": "32.2.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
+    "build-app": "vite build",
     "preview": "vite preview",
     "module-stats": "ts-node moduleCombinations.ts && npm run module-validate",
     "module-validate": "ts-node moduleValidator.ts",

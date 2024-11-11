@@ -11,9 +11,5 @@ export default tseslint.config(
             ecmaVersion: 2020,
             globals: globals.browser,
         },
-        rules: {
-            ...reactHooks.configs.recommended.rules,
-            'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-        },
     }
 );
