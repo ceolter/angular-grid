@@ -109,9 +109,6 @@ export interface RefreshModelParams<TData = any> {
      */
     changedRowNodes?: IChangedRowNodes<TData> | null;
 
-    /** The changedPath, if any */
-    changedPath?: ChangedPath;
-
     /**
      * if NOT new data, then this flag tells grid to check if rows already
      * exist for the nodes (matching by node id) and reuses the row if it does.

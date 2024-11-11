@@ -44,7 +44,7 @@ export class ClientSidePathTreeNodeManager<TData>
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const changedRowNodes = params.changedRowNodes;
         if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes, params.changedPath);
+            this.executeTransactions(changedRowNodes, changedRowNodes.changedPath);
         }
 
         super.refreshModel(params);
