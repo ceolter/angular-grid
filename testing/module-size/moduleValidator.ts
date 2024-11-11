@@ -9,6 +9,11 @@ function validateSizes() {
     // Read and parse the module-size-results.json file
     const results = JSON.parse(fs.readFileSync(resultsFilePath, 'utf8'));
 
+    if (results.length === 0) {
+        console.error('No results found in module-size-results.json');
+        process.exit(1);
+    }
+
     // validate that all results their selfSize is less than the expectedSize + 2%
     const failuresTooBig = results.filter((result) => result.selfSize > result.expectedSize * 1.02);
 
@@ -33,7 +38,7 @@ function validateSizes() {
         });
         process.exit(1); // Return a non-zero exit code
     } else {
-        console.log('All modules passed size validation.');
+        console.log(`All modules (${results.length}) passed size validation.`);
     }
 }
 

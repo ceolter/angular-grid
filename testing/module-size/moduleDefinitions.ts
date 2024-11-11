@@ -166,7 +166,7 @@ const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules).
 
 const commonFeatureSets: ModuleTest[] = [
     { modules: ['ClientSideRowModelCoreModule', 'SortModule'], expectedSize: 40 },
-    { modules: ['ClientSideRowModelCoreModule', 'SortModule', 'FilterModule'], expectedSize: 100 },
+    { modules: ['ClientSideRowModelCoreModule', 'SortModule', 'FilterModule'], expectedSize: 178 },
 ];
 
 export const moduleCombinations: ModuleTest[] = [
