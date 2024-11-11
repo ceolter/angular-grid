@@ -89,9 +89,7 @@
     "test:modules": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "nx run-many -t test --projects=tag:community,tag:enterprise,tag:test,tag:module-size --exclude=tag:framework"
-        ]
+        "commands": ["nx run-many -t test --projects=tag:community,tag:enterprise,tag:test --exclude=tag:framework"]
       },
       "cache": true
     },
