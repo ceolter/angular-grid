@@ -141,12 +141,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // Property listeners which call `refreshModel` at different stages
         this.addPropertyListeners();
 
-        this.rootNode = new RowNode(this.beans);
-        this.initRowManager();
+        const rootNode = new RowNode(this.beans);
+        this.rootNode = rootNode;
+        this.nodeManager = this.getNodeManagerToUse();
+        this.nodeManager.activate(rootNode);
     }
 
-    private initRowManager(): void {
-        const { gos, beans, nodeManager: oldNodeManager } = this;
+    private getNodeManagerToUse(): IClientSideNodeManager<any> {
+        const { gos, beans } = this;
 
         const treeData = gos.get('treeData');
         const childrenField = gos.get('treeDataChildrenField');
@@ -162,12 +164,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             nodeManager = beans.csrmNodeSvc!;
         }
 
-        if (oldNodeManager !== nodeManager) {
-            oldNodeManager?.deactivate();
-            this.nodeManager = nodeManager;
-        }
-
-        nodeManager.activate(this.rootNode);
+        return nodeManager;
     }
 
     private addPropertyListeners() {
@@ -211,7 +208,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
-                this.onPropChange(properties);
+                this.refreshModel({ step: 'nothing', changedProps: new Set(properties) });
             }
         });
 
@@ -232,7 +229,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private setInitialData(): void {
         const rowData = this.gos.get('rowData');
         if (rowData) {
-            this.onPropChange(['rowData']);
+            this.refreshModel({ step: 'nothing', changedProps: new Set(['rowData']) });
         }
     }
 
@@ -277,99 +274,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private onPropChange(properties: (keyof GridOptions)[]): RefreshModelParams | null {
-        if (!this.rootNode) {
-            return null; // Destroyed.
-        }
-
-        const gos = this.gos;
-
         const changedProps = new Set(properties);
-        const params: RefreshModelParams = {
-            step: 'nothing',
-            changedProps,
-        };
-
-        const rowDataChanged = changedProps.has('rowData');
-        const treeDataChanged = changedProps.has('treeData');
-        const treeDataChildrenFieldChanged = changedProps.has('treeDataChildrenField');
-
-        const reset = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField'));
-
-        let newRowData: any[] | null | undefined;
-
-        if (treeDataChanged) {
-            params.step = 'group';
-        }
-
-        if (reset || rowDataChanged) {
-            newRowData = gos.get('rowData');
-
-            if (newRowData != null && !Array.isArray(newRowData)) {
-                newRowData = null;
-                _warn(1);
-            }
-        }
-
-        if (reset) {
-            // If we are here, it means that the row manager need to be changed or fully reloaded
-            if (!rowDataChanged) {
-                // No new rowData was passed, so to include user executed transaction we need to extract
-                // the row data from the node manager as it might be different from the original rowData
-                newRowData = this.nodeManager?.extractRowData() ?? newRowData;
-            }
-            this.initRowManager();
-        }
-
-        if (newRowData) {
-            const immutable =
-                !reset &&
-                this.started &&
-                !this.isEmpty() &&
-                newRowData.length > 0 &&
-                gos.exists('getRowId') &&
-                // this property is a backwards compatibility property, for those who want
-                // the old behaviour of Row IDs but NOT Immutable Data.
-                !gos.get('resetRowDataOnUpdate');
-
-            if (immutable) {
-                params.keepRenderedRows = true;
-                params.animate = !this.gos.get('suppressAnimationFrame');
-                const changedRowNodes = new ChangedRowNodes(this.rootNode, false);
-
-                if (this.nodeManager.setImmutableRowData(changedRowNodes, newRowData)) {
-                    params.step = 'group';
-                    params.changedRowNodes = changedRowNodes;
-                }
-            } else {
-                const changedRowNodes = new ChangedRowNodes(this.rootNode, true);
-
-                params.step = 'group';
-                params.changedRowNodes = changedRowNodes;
-
-                // no need to invalidate cache, as the cache is stored on the rowNode,
-                // so new rowNodes means the cache is wiped anyway.
-
-                // - clears selection, done before we set row data to ensure it isn't readded via `selectionSvc.syncInOldRowNode`
-                this.beans.selectionSvc?.reset('rowDataChanged');
-
-                this.rowNodesCountReady = true;
-                this.nodeManager.setNewRowData(changedRowNodes, newRowData);
-            }
-        }
-
-        if (params.step === 'nothing') {
-            for (const { refreshProps, step } of this.orderedStages) {
-                if (properties.some((prop) => refreshProps.has(prop))) {
-                    params.step = step;
-                    break;
-                }
-            }
-        }
-
-        if (params.step === 'nothing') {
-            return null;
-        }
-
+        const params: RefreshModelParams = { step: 'nothing', changedProps };
         this.refreshModel(params);
         return params;
     }
@@ -710,8 +616,107 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public refreshModel(params: RefreshModelParams): void {
-        if (!this.rootNode) {
+        const rootNode = this.rootNode;
+        if (!rootNode) {
             return; // Destroyed
+        }
+
+        const gos = this.gos;
+        const changedProps = params.changedProps;
+
+        const rowDataChanged = changedProps?.has('rowData');
+        const treeDataChanged = changedProps?.has('treeData');
+        const treeDataChildrenFieldChanged = changedProps?.has('treeDataChildrenField');
+
+        let nodeManager = this.nodeManager;
+        const newNodeManager = this.getNodeManagerToUse();
+
+        const reset =
+            nodeManager !== newNodeManager ||
+            treeDataChildrenFieldChanged ||
+            (treeDataChanged && !gos.get('treeDataChildrenField'));
+
+        let newRowData: any[] | null | undefined;
+
+        if (treeDataChanged) {
+            params.step = 'group';
+        }
+
+        if (reset || rowDataChanged) {
+            newRowData = gos.get('rowData');
+
+            if (newRowData != null && !Array.isArray(newRowData)) {
+                newRowData = null;
+                _warn(1);
+            }
+        }
+
+        if (reset && !rowDataChanged) {
+            // No new rowData was passed, so to include user executed transaction we need to extract
+            // the row data from the node manager as it might be different from the original rowData
+            newRowData = nodeManager?.extractRowData() ?? newRowData;
+        }
+
+        if (nodeManager !== newNodeManager) {
+            nodeManager?.deactivate();
+            nodeManager = newNodeManager;
+            this.nodeManager = nodeManager;
+            nodeManager.activate(rootNode);
+        }
+
+        if (reset) {
+            nodeManager.activate(rootNode);
+        }
+
+        if (newRowData) {
+            const immutable =
+                !reset &&
+                this.started &&
+                !this.isEmpty() &&
+                newRowData.length > 0 &&
+                gos.exists('getRowId') &&
+                // this property is a backwards compatibility property, for those who want
+                // the old behaviour of Row IDs but NOT Immutable Data.
+                !gos.get('resetRowDataOnUpdate');
+
+            if (immutable) {
+                params.keepRenderedRows = true;
+                params.animate = !this.gos.get('suppressAnimationFrame');
+                const changedRowNodes = new ChangedRowNodes(rootNode, false);
+
+                if (this.nodeManager.setImmutableRowData(changedRowNodes, newRowData)) {
+                    params.step = 'group';
+                    params.changedRowNodes = changedRowNodes;
+                }
+            } else {
+                const changedRowNodes = new ChangedRowNodes(rootNode, true);
+
+                params.step = 'group';
+                params.changedRowNodes = changedRowNodes;
+
+                // no need to invalidate cache, as the cache is stored on the rowNode,
+                // so new rowNodes means the cache is wiped anyway.
+
+                // - clears selection, done before we set row data to ensure it isn't readded via `selectionSvc.syncInOldRowNode`
+                this.beans.selectionSvc?.reset('rowDataChanged');
+
+                this.rowNodesCountReady = true;
+                this.nodeManager.setNewRowData(changedRowNodes, newRowData);
+            }
+        }
+
+        if (changedProps && params.step === 'nothing') {
+            for (const { refreshProps, step } of this.orderedStages) {
+                for (const prop of changedProps) {
+                    if (refreshProps.has(prop)) {
+                        params.step = step;
+                        break;
+                    }
+                }
+            }
+            if (params.step === 'nothing') {
+                return; // Nothing to do.
+            }
         }
 
         // this goes through the pipeline of stages. what's in my head is similar
@@ -754,7 +759,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         let changedPath = changedRowNodes?.changedPath;
         if (!changedPath) {
-            changedPath = new ChangedPath(false, this.rootNode);
+            changedPath = new ChangedPath(false, rootNode);
             changedPath.active = false; // No changedRowNodes means we consider all paths as changed
         }
 
