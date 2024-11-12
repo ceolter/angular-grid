@@ -53,7 +53,12 @@ function getProjectBuildTargets(project) {
     return buildTargets;
 }
 
+const externalBuildTriggers = [
+    { file: '../ag-charts/node_modules/.cache/ag-build-queue.empty', projects: ['ag-grid-enterprise'] },
+];
+
 module.exports = {
     ignoredProjects: getIgnoredProjects(),
     getProjectBuildTargets,
+    externalBuildTriggers,
 };

@@ -135,6 +135,26 @@
         }
       }
     },
+    "dev:quick": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "ag-grid-docs-src_content_docs_sparklines-bar-customisation__examples_bar-sparkline-customisation_main.ts:generate"
+      ],
+      "inputs": [],
+      "options": {
+        "parallel": true,
+        "commands": ["node external/ag-shared/scripts/watch/watch.js grid", "nx run ag-grid-docs:dev"]
+      },
+      "configurations": {
+        "windows": {
+          "commands": [
+            {
+              "command": "nx run ag-charts-website:dev --configuration watch"
+            }
+          ]
+        }
+      }
+    },
     "format-check": {
       "executor": "nx:run-commands",
       "options": {
