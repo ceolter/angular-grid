@@ -82,6 +82,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ValidationModuleName> = 
         deselectAllOnCurrentPage: 0,
         getSelectedNodes: 0,
         getSelectedRows: 0,
+        getSelectAllState: 0,
     }),
     ...mod<_RowGridApi<any>>('RowApi', {
         redrawRows: 0,

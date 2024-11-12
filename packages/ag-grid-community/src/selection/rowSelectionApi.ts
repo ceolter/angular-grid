@@ -80,3 +80,7 @@ export function getSelectedNodes<TData = any>(beans: BeanCollection): IRowNode<T
 export function getSelectedRows<TData = any>(beans: BeanCollection): TData[] {
     return beans.selectionSvc?.getSelectedRows() ?? [];
 }
+
+export function getSelectAllState({ selectionSvc }: BeanCollection, selectAll?: SelectAllMode): boolean | null {
+    return selectionSvc ? selectionSvc.getSelectAllState(selectAll) : false;
+}
