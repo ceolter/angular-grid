@@ -5,7 +5,7 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager } from '../test-utils';
-import { GROUP_ROW_DATA, fakeFetch } from './data';
+import { GROUP_ROW_DATA, fakeFetch } from './group-data';
 import {
     assertSelectedRowElementsById,
     assertSelectedRowNodes,

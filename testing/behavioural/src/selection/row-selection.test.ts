@@ -5,7 +5,7 @@ import { ClientSideRowModelModule, isColumnSelectionCol } from 'ag-grid-communit
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager } from '../test-utils';
-import { GROUP_ROW_DATA } from './data';
+import { GROUP_ROW_DATA } from './group-data';
 import {
     assertSelectedRowElementsById,
     assertSelectedRowsByIndex,
