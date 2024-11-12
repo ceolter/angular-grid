@@ -1,6 +1,6 @@
 {
   "name": "@ag-grid-community/theming",
-  "version": "32.3.2",
+  "version": "32.3.3",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "scripts": {
     "dev": "vite",
@@ -8,7 +8,7 @@
     "codegen:debug": "tsx scripts/build-css.ts --dev"
   },
   "dependencies": {
-    "@ag-grid-community/core": "32.3.2",
+    "@ag-grid-community/core": "32.3.3",
     "tslib": "^2.6.3"
   },
   "main": "./dist/package/main.cjs.js",

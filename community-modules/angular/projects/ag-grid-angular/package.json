@@ -1,9 +1,9 @@
 {
   "name": "@ag-grid-community/angular",
-  "version": "32.3.2",
+  "version": "32.3.3",
   "license": "MIT",
   "peerDependencies": {
-    "@ag-grid-community/core": "32.3.2",
+    "@ag-grid-community/core": "32.3.3",
     "@angular/common": ">= 16.0.0",
     "@angular/core": ">= 16.0.0"
   },

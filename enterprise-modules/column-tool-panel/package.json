@@ -1,6 +1,6 @@
 {
   "name": "@ag-grid-enterprise/column-tool-panel",
-  "version": "32.3.2",
+  "version": "32.3.3",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
@@ -13,10 +13,10 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@ag-grid-community/core": "32.3.2",
-    "@ag-grid-enterprise/core": "32.3.2",
-    "@ag-grid-enterprise/row-grouping": "32.3.2",
-    "@ag-grid-enterprise/side-bar": "32.3.2"
+    "@ag-grid-community/core": "32.3.3",
+    "@ag-grid-enterprise/core": "32.3.3",
+    "@ag-grid-enterprise/row-grouping": "32.3.3",
+    "@ag-grid-enterprise/side-bar": "32.3.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

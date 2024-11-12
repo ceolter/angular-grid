@@ -1,10 +1,10 @@
 {
   "name": "@ag-grid-community/csv-export",
-  "version": "32.3.2",
+  "version": "32.3.3",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@ag-grid-community/core": "32.3.2"
+    "@ag-grid-community/core": "32.3.3"
   },
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
