@@ -469,7 +469,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             if (level >= 0 && !row.data) {
                 this.addRowToDestroy(row); // Delete the filler node
             } else {
-                clearTreeRowFlags(row); // Just clear the flags
+                (row.treeNode as TreeNode | null)?.destroy();
             }
         }
         if (duplicateRows) {
@@ -477,7 +477,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 if (level >= 0 && !row.data) {
                     this.addRowToDestroy(row); // Delete filler nodes
                 } else {
-                    clearTreeRowFlags(row); // Just clear the flags
+                    (row.treeNode as TreeNode | null)?.destroy();
                 }
             }
         }
@@ -507,8 +507,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 }
 
                 this.rowNodeDeleted(row);
-
                 clearTreeRowFlags(row);
+                (row?.treeNode as TreeNode | null)?.destroy();
             }
             this.rowsPendingDestruction = null;
         }

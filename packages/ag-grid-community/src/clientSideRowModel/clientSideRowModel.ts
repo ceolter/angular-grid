@@ -476,10 +476,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         });
 
         rowNodes.forEach((rowNode: ClientSideRowModelRowNode, index) => {
-            if (rowNode.sourceRowIndex !== index) {
-                rowNode.sourceRowIndex = index; // Update all the sourceRowIndex to reflect the new positions
-                rowNode.treeNode?.invalidateOrder();
-            }
+            rowNode.sourceRowIndex = index;
         });
 
         const changedRowNodes = new ChangedRowNodes(rootNode, false);
