@@ -84,7 +84,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
     public detail: boolean | undefined = undefined;
 
     /** If this row is a master row that was expanded, this points to the associated detail row. */
-    public detailNode: RowNode;
+    public detailNode: RowNode | undefined;
 
     /** If master detail, this contains details about the detail grid */
     public detailGridInfo: DetailGridInfo | null;
