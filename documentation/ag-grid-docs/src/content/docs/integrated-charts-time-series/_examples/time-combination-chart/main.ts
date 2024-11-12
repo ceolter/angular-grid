@@ -1,4 +1,4 @@
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 import type {
     AgAxisCaptionFormatterParams,
     AgCartesianSeriesTooltipRendererParams,
@@ -19,7 +19,7 @@ import { getData } from './data';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

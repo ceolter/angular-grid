@@ -2,7 +2,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import type { ElementRef } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';
@@ -13,7 +13,7 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

@@ -1,4 +1,4 @@
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
 import { ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
@@ -9,7 +9,7 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

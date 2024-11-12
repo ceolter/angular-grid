@@ -1,7 +1,7 @@
 /**
  * Automated Integrated Charts demo
  */
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
@@ -19,7 +19,7 @@ import { createAutomatedIntegratedChartsWithCreateGrid } from './createAutomated
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ClipboardModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
     SideBarModule,

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { useDarkmode } from '@utils/hooks/useDarkmode';
-import { SparklineModule } from 'ag-charts-community/modules';
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 import classnames from 'classnames';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -574,7 +573,6 @@ const ExampleInner = ({ darkMode }) => {
             ColumnsToolPanelModule,
             ExcelExportModule,
             FiltersToolPanelModule,
-            IntegratedChartsModule.with(ChartEnterpriseModule),
             MasterDetailModule,
             MenuModule,
             MultiFilterModule,
@@ -584,7 +582,8 @@ const ExampleInner = ({ darkMode }) => {
             SetFilterModule,
             SideBarModule,
             StatusBarModule,
-            SparklinesModule.with(SparklineModule),
+            IntegratedChartsModule.with(AgChartsEnterpriseModule),
+            SparklinesModule.with(AgChartsEnterpriseModule),
         ],
         []
     );

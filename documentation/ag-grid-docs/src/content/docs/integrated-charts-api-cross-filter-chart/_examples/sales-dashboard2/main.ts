@@ -1,4 +1,4 @@
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import type {
     FirstDataRenderedEvent,
@@ -23,7 +23,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     MultiFilterModule,
     SetFilterModule,

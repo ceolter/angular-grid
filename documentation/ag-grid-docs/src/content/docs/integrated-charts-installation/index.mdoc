@@ -16,9 +16,9 @@ The Integrated Enterprise Charts module, which includes AG Charts Enterprise, ca
 // Import minimal modules required for charts
 import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
 import { IntegratedChartsModule } from "ag-grid-enterprise";
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, IntegratedChartsModule.with(ChartEnterpriseModule)]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, IntegratedChartsModule.with(AgChartsEnterpriseModule)]);
 ```
 
 {% note %}

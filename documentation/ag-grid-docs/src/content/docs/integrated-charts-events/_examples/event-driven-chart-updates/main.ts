@@ -1,4 +1,4 @@
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import type {
     ChartCreatedEvent,
@@ -13,7 +13,7 @@ import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-e
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

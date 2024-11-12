@@ -1,5 +1,4 @@
-import { SparklineModule } from 'ag-charts-community/modules';
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
@@ -45,14 +44,14 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
     MenuModule,
     RangeSelectionModule,
     RowGroupingModule,
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,
-    SparklinesModule.with(SparklineModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
+    SparklinesModule.with(AgChartsEnterpriseModule),
 ]);
 
 const numberFormatter: ValueFormatterFunc = ({ value }) => {

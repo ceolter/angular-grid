@@ -1,4 +1,4 @@
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import type {
     ColDef,
@@ -31,7 +31,7 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     MultiFilterModule,
     RangeSelectionModule,

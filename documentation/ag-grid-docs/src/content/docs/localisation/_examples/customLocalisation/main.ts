@@ -1,5 +1,5 @@
 import { AG_GRID_LOCALE_DE } from '@ag-grid-community/locale';
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 
 import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererParams } from 'ag-grid-community';
 import { ClientSideRowModelModule, CsvExportModule, ModuleRegistry, createGrid } from 'ag-grid-community';
@@ -30,7 +30,7 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     MultiFilterModule,
     RangeSelectionModule,

@@ -1,4 +1,4 @@
-import { SparklineModule } from 'ag-charts-community/modules';
+import { AgChartsCommunityModule } from 'ag-charts-community/modules';
 
 import type {
     AreaSparklineOptions,
@@ -16,7 +16,7 @@ import { SparklinesModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, SparklinesModule.with(SparklineModule)]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, SparklinesModule.with(AgChartsCommunityModule)]);
 
 const palette = {
     blue: 'rgb(20,94,140)',

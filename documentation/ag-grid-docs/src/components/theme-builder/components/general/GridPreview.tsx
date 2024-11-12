@@ -1,7 +1,7 @@
 import { useApplicationConfigAtom } from '@components/theme-builder/model/application-config';
 import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme';
 import styled from '@emotion/styled';
-import { ChartEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
 import { memo, useRef, useState } from 'react';
 import root from 'react-shadow';
 
@@ -38,7 +38,7 @@ ModuleRegistry.registerModules([
     MenuModule,
     RangeSelectionModule,
     RowGroupingModule,
-    IntegratedChartsModule.with(ChartEnterpriseModule),
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,
