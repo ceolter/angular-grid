@@ -94,7 +94,7 @@ const AllCommunityModules: Record<CommunityModuleName, number> = {
 };
 export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
     AdvancedFilterModule: 2713.3,
-    AllEnterpriseModule: 2958.19,
+    AllEnterpriseModule: 3618.99,
     CellSelectionCoreModule: 2569.52,
     CellSelectionFillHandleModule: 2569.52,
     CellSelectionModule: 2569.52,
@@ -106,7 +106,7 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
     ColumnsToolPanelModule: 2822.46,
     ColumnsToolPanelRowGroupingModule: 2717.42,
     ContextMenuModule: 2599.67,
-    EnterpriseDefaultModule: 1874.76,
+    EnterpriseDefaultModule: 2838.52,
     ExcelExportModule: 2637.37,
     FiltersToolPanelModule: 2639.18,
     GridChartsModule: 2569.52,
@@ -130,7 +130,7 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
     RowGroupingPanelModule: 2639.07,
     ServerSideRowModelApiModule: 2650.19,
     ServerSideRowModelCoreModule: 2647.98,
-    ServerSideRowModelDefaultModule: 1727.6,
+    ServerSideRowModelDefaultModule: 2743.42,
     ServerSideRowModelModule: 3048.19,
     ServerSideRowModelHierarchyModule: 2649.85,
     ServerSideRowModelRowSelectionModule: 2648.09,
@@ -147,7 +147,7 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
     TreeDataCoreModule: 2610.41,
     TreeDataModule: 2643.36,
     ViewportRowModelCoreModule: 2579.16,
-    ViewportRowModelDefaultModule: 1657.89,
+    ViewportRowModelDefaultModule: 2673.64,
     ViewportRowModelModule: 2983.81,
 };
 
