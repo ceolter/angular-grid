@@ -1,5 +1,6 @@
 import type { _InfiniteRowModelGridApi } from '../api/gridApi';
 import { SsrmInfiniteSharedApiModule } from '../api/sharedApiModule';
+import { CommunityDefaultModule } from '../communityDefaultModule';
 import { CommunityFeaturesModule } from '../communityFeaturesModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
@@ -29,6 +30,15 @@ export const InfiniteRowModelApiModule: _ModuleWithApi<_InfiniteRowModelGridApi>
         getInfiniteRowCount,
     },
     dependsOn: [InfiniteRowModelCoreModule, SsrmInfiniteSharedApiModule],
+};
+
+/**
+ * @feature Infinite Row Model
+ */
+export const InfiniteRowModelDefaultModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('InfiniteRowModelDefaultModule'),
+    rowModels: ['infinite'],
+    dependsOn: [InfiniteRowModelCoreModule, CommunityDefaultModule],
 };
 
 /**

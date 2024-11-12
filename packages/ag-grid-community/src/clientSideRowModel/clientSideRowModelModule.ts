@@ -1,5 +1,6 @@
 import type { _ClientSideRowModelGridApi } from '../api/gridApi';
 import { CsrmSsrmSharedApiModule } from '../api/sharedApiModule';
+import { CommunityDefaultModule } from '../communityDefaultModule';
 import { CommunityFeaturesModule } from '../communityFeaturesModule';
 import { FilterCoreModule } from '../filter/filterModule';
 import { baseCommunityModule } from '../interfaces/iModule';
@@ -75,6 +76,15 @@ export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGrid
         getBestCostNodeSelection,
     },
     dependsOn: [ClientSideRowModelCoreModule, CsrmSsrmSharedApiModule],
+};
+
+/**
+ * @feature Client-Side Row Model
+ */
+export const ClientSideRowModelDefaultModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('ClientSideRowModelDefaultModule'),
+    rowModels: ['clientSide'],
+    dependsOn: [ClientSideRowModelCoreModule, ClientSideRowModelSortModule, CommunityDefaultModule],
 };
 
 /**

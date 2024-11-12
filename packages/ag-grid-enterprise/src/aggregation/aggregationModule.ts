@@ -11,7 +11,7 @@ import { FooterService } from './footerService';
 import { ValueColsSvc } from './valueColsSvc';
 
 /**
- * @feature Aggregation
+ * @internal
  */
 export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
     ...baseEnterpriseModule('AggregationModule'),

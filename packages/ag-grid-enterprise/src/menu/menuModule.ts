@@ -1,5 +1,5 @@
 import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { ColumnMoveModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import { ColumnMoveCoreModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -71,9 +71,9 @@ const COLUMN_SELECT_ICONS = {
 /**
  * @feature Accessories -> Column Menu
  */
-export const ColumnMenuModule: _ModuleWithoutApi = {
+export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
     ...baseEnterpriseModule('ColumnMenuModule'),
-    beans: [EnterpriseMenuFactory, ColumnMenuFactory],
+    beans: [EnterpriseMenuFactory, ColumnMenuFactory, ColumnChooserFactory],
     icons: {
         // menu tab icon in legacy tabbed enterprise column menu
         legacyMenu: 'menu',
@@ -81,21 +81,11 @@ export const ColumnMenuModule: _ModuleWithoutApi = {
         filterTab: 'filter',
         ...COLUMN_SELECT_ICONS,
     },
-    dependsOn: [MenuCoreModule],
-};
-
-/**
- * @feature Accessories -> Column Menu
- */
-export const ColumnChooserModule: _ModuleWithApi<_ColumnChooserGridApi> = {
-    ...baseEnterpriseModule('ColumnChooserModule'),
-    beans: [ColumnChooserFactory],
-    icons: COLUMN_SELECT_ICONS,
     apiFunctions: {
         showColumnChooser,
         hideColumnChooser,
     },
-    dependsOn: [MenuCoreModule, DragAndDropModule, ColumnMoveModule],
+    dependsOn: [MenuCoreModule, DragAndDropModule, ColumnMoveCoreModule],
 };
 
 /**
@@ -111,9 +101,9 @@ export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
 };
 
 /**
- * @feature Accessories -> Column Menu
+ * @feature Accessories -> Column Menu / Context Menu
  */
 export const MenuModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('MenuModule'),
-    dependsOn: [ColumnMenuModule, ColumnChooserModule, ContextMenuModule],
+    dependsOn: [ColumnMenuModule, ContextMenuModule],
 };

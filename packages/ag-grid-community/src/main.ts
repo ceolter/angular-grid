@@ -1006,7 +1006,7 @@ export { Module, ModuleValidationResult, _ModuleWithApi, _ModuleWithoutApi, Modu
 export { ModuleRegistry, _getGridRegisteredModules } from './modules/moduleRegistry';
 
 export { ValidationModule } from './validation/validationModule';
-export { ColumnMoveModule } from './columnMove/columnMoveModule';
+export { ColumnMoveModule, ColumnAnimationModule, ColumnMoveCoreModule } from './columnMove/columnMoveModule';
 export {
     DragModule,
     HorizontalResizeModule,
@@ -1020,9 +1020,7 @@ export {
     FloatingFilterModule,
     ReadOnlyFloatingFilterModule,
     FilterValueModule,
-    ColumnFilterMenuModule,
     FilterModule,
-    FloatingFilterCoreModule,
     QuickFilterModule,
     SimpleFilterModule,
     SimpleFloatingFilterModule,
@@ -1039,13 +1037,19 @@ export {
     AllCommunityEditorsModule,
 } from './edit/editModule';
 export { StickyRowModule } from './rendering/features/stickyRowModule';
-export { RowSelectionCoreModule, RowSelectionApiModule, RowSelectionModule } from './selection/rowSelectionModule';
+export {
+    RowSelectionCoreModule,
+    RowSelectionApiModule,
+    RowSelectionModule,
+    SelectionColumnModule,
+} from './selection/rowSelectionModule';
 export {
     CsrmSsrmSharedApiModule as _CsrmSsrmSharedApiModule,
     SsrmInfiniteSharedApiModule as _SsrmInfiniteSharedApiModule,
 } from './api/sharedApiModule';
 export { SharedMenuModule } from './misc/menu/sharedMenuModule';
 export { CommunityFeaturesModule } from './communityFeaturesModule';
+export { CommunityDefaultModule } from './communityDefaultModule';
 export { SortModule, SortCoreModule, SortIndicatorCompModule } from './sort/sortModule';
 export { AlignedGridsModule } from './alignedGrids/alignedGridsModule';
 export {
@@ -1054,12 +1058,14 @@ export {
     ClientSideRowModelApiModule,
     ClientSideRowModelFilterModule,
     ClientSideRowModelSortModule,
+    ClientSideRowModelDefaultModule,
 } from './clientSideRowModel/clientSideRowModelModule';
 export { CsvExportModule } from './csvExport/csvExportModule';
 export {
     InfiniteRowModelModule,
     InfiniteRowModelApiModule,
     InfiniteRowModelCoreModule,
+    InfiniteRowModelDefaultModule,
 } from './infiniteRowModel/infiniteRowModelModule';
 export { PopupModule } from './widgets/popupModule';
 export { KeyboardNavigationModule } from './navigation/navigationModule';
@@ -1067,17 +1073,11 @@ export { CellFlashModule } from './rendering/cell/cellFlashModule';
 export { ColumnGroupModule } from './columns/columnGroups/columnGroupModule';
 export { ColumnGroupHeaderCompModule, ColumnHeaderCompModule } from './headerRendering/cells/headerModule';
 export { StateModule } from './misc/state/stateModule';
-export {
-    DataTypeModule,
-    ColumnApiModule,
-    ColumnFlexModule,
-    GetColumnDefsApiModule,
-    SelectionColumnModule,
-} from './columns/columnModule';
+export { DataTypeModule, ColumnApiModule, ColumnFlexModule, GetColumnDefsApiModule } from './columns/columnModule';
 export { PaginationModule } from './pagination/paginationModule';
 export { RowApiModule, ScrollApiModule } from './api/apiModule';
 export { RenderApiModule } from './rendering/renderModule';
-export { ColumnAutosizeModule } from './columnAutosize/columnAutosizeModule';
+export { ColumnAutoSizeModule } from './columnAutosize/columnAutosizeModule';
 export { ColumnResizeModule } from './columnResize/columnResizeModule';
 export { PinnedRowModule } from './pinnedRowModel/pinnedRowModule';
 export { ValueCacheModule, CellApiModule, ChangeDetectionModule, ExpressionModule } from './valueService/valueModule';
@@ -1095,7 +1095,6 @@ export {
 export { CellRendererFunctionModule } from './components/framework/cellRendererFunctionModule';
 export { CellStyleModule, RowStyleModule } from './styling/stylingModule';
 export { ColumnHoverModule } from './columns/columnHover/columnHoverModule';
-export { ColumnAnimationModule } from './rendering/columnAnimationModule';
 export { AnimationFrameModule } from './misc/animationFrameModule';
 export { EventApiModule } from './misc/apiEvents/apiEventModule';
 export { TooltipModule, TooltipCompModule, TooltipCoreModule } from './tooltip/tooltipModule';
@@ -1106,6 +1105,7 @@ export { SharedExportModule } from './export/exportModule';
 export { AutoWidthModule } from './rendering/autoWidthModule';
 export { AriaModule } from './rendering/ariaModule';
 export { TouchModule } from './misc/touchModule';
+export { AllCommunityModule } from './allCommunityModule';
 
 //  events
 export * from './events';

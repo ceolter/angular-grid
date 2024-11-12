@@ -28,7 +28,6 @@ import {
 import { ColumnDefFactory } from './columnDefFactory';
 import { ColumnFlexService } from './columnFlexService';
 import { DataTypeService } from './dataTypeService';
-import { SelectionColService } from './selectionColService';
 
 /**
  * @feature Cells -> Cell Data Type
@@ -38,15 +37,6 @@ export const DataTypeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DataTypeModule'),
     beans: [DataTypeService],
     dependsOn: [CheckboxCellRendererModule],
-};
-
-/**
- * @feature Selection -> Row Selection
- * @gridOption rowSelection
- */
-export const SelectionColumnModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SelectionColumnModule'),
-    beans: [SelectionColService],
 };
 
 /**

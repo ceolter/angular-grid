@@ -181,7 +181,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getAllDisplayedColumns: 0,
         getAllDisplayedVirtualColumns: 0,
     }),
-    ...mod<_ColumnAutosizeApi>('ColumnAutosizeModule', {
+    ...mod<_ColumnAutosizeApi>('ColumnAutoSizeModule', {
         sizeColumnsToFit: 0,
         autoSizeColumns: 0,
         autoSizeAllColumns: 0,
@@ -199,7 +199,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getRightDisplayedColumnGroups: 0,
         getAllDisplayedColumnGroups: 0,
     }),
-    ...mod<_ColumnMoveApi>('ColumnMoveModule', {
+    ...mod<_ColumnMoveApi>('ColumnMoveCoreModule', {
         moveColumnByIndex: 0,
         moveColumns: 0,
     }),
@@ -337,7 +337,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         showContextMenu: 0,
     }),
 
-    ...mod<_ColumnChooserGridApi>('ColumnChooserModule', {
+    ...mod<_ColumnChooserGridApi>('ColumnMenuModule', {
         showColumnChooser: 0,
         hideColumnChooser: 0,
     }),

@@ -23,6 +23,9 @@ import { RowRenderer } from './rendering/rowRenderer';
 import { SyncService } from './syncService';
 import { ValueService } from './valueService/valueService';
 
+/**
+ * @internal
+ */
 export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
     ...baseCommunityModule('CommunityCoreModule'),
     beans: [
