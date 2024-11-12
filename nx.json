@@ -77,21 +77,21 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"],
     "charts": [
-      { "externalDependencies": ["npm:ag-chart-types"] },
-      { "externalDependencies": ["npm:ag-chart-locale"] },
-      { "externalDependencies": ["npm:ag-chart-community"] },
-      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+      { "externalDependencies": ["npm:ag-charts-types"] },
+      { "externalDependencies": ["npm:ag-charts-locale"] },
+      { "externalDependencies": ["npm:ag-charts-community"] },
+      { "externalDependencies": ["npm:ag-charts-enterprise"] }
     ],
     "chartsPackages": [
-      { "externalDependencies": ["npm:ag-chart-locale"] },
-      { "externalDependencies": ["npm:ag-chart-community"] },
-      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+      { "externalDependencies": ["npm:ag-charts-locale"] },
+      { "externalDependencies": ["npm:ag-charts-community"] },
+      { "externalDependencies": ["npm:ag-charts-enterprise"] }
     ],
     "chartsTypes": [
-      { "externalDependencies": ["npm:ag-chart-types"] },
-      { "externalDependencies": ["npm:ag-chart-locale"] },
-      { "externalDependencies": ["npm:ag-chart-community"] },
-      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+      { "externalDependencies": ["npm:ag-charts-types"] },
+      { "externalDependencies": ["npm:ag-charts-locale"] },
+      { "externalDependencies": ["npm:ag-charts-community"] },
+      { "externalDependencies": ["npm:ag-charts-enterprise"] }
     ]
   },
   "targetDefaults": {
