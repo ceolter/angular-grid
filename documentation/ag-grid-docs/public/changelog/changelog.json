@@ -2,6 +2,32 @@
     {
         "key": "AG-5839",
         "issueType": "Bug",
+        "summary": "Placeholder for 32.3.3",
+        "versions": ["32.3.3"],
+        "status": "Done",
+        "resolution": "Done",
+        "features": null,
+        "moreInformation": null,
+        "deprecationNotes": null,
+        "breakingChangesNotes": null,
+        "documentationUrl": null
+    },
+    {
+        "key": "AG-5839",
+        "issueType": "Bug",
+        "summary": "Placeholder for 32.3.2",
+        "versions": ["32.3.2"],
+        "status": "Done",
+        "resolution": "Done",
+        "features": null,
+        "moreInformation": null,
+        "deprecationNotes": null,
+        "breakingChangesNotes": null,
+        "documentationUrl": null
+    },
+    {
+        "key": "AG-5839",
+        "issueType": "Bug",
         "summary": "Placeholder for 32.3.1",
         "versions": ["32.3.1"],
         "status": "Done",
