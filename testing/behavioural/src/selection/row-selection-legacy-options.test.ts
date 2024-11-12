@@ -5,7 +5,7 @@ import { ClientSideRowModelModule, InfiniteRowModelModule } from 'ag-grid-commun
 import { RowGroupingModule, ServerSideRowModelModule, ViewportRowModelModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager } from '../test-utils';
-import { GROUP_ROW_DATA } from './data';
+import { GROUP_ROW_DATA } from './group-data';
 import {
     assertSelectedRowsByIndex,
     clickRowByIndex,
