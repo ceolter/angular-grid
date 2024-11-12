@@ -19,6 +19,17 @@ export const getGridEnterpriseScriptPath = (sitePrefix?: string) => {
     return pathJoin(sitePrefixUrl, `/files/ag-grid-enterprise/dist/ag-grid-enterprise${getIsDev() ? '' : '.min'}.js`);
 };
 
+export const getChartsEnterpriseScriptPath = (sitePrefix?: string) => {
+    if (USE_PUBLISHED_PACKAGES) {
+        return PUBLISHED_UMD_URLS['ag-charts-enterprise'];
+    }
+    const sitePrefixUrl = sitePrefix ? sitePrefix : '';
+    return pathJoin(
+        sitePrefixUrl,
+        `/files/ag-charts-enterprise/dist/umd/ag-charts-enterprise${getIsDev() ? '' : '.min'}.js`
+    );
+};
+
 export const getGridLocaleScriptPath = (sitePrefix?: string) => {
     if (USE_PUBLISHED_PACKAGES) {
         return PUBLISHED_UMD_URLS['@ag-grid-community/locale'];

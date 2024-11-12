@@ -119,7 +119,7 @@ export async function generateFiles(options: ExecutorOptions) {
         gridOptionsTypes
     );
 
-    const isIntegratedCharts = typedBindings.imports.some((m) => m.module.includes('@ag-grid-enterprise/charts'));
+    const isIntegratedCharts = typedBindings.imports.some((m) => m.module.includes('ag-charts'));
 
     let interfaceFile = undefined;
     if (sourceFileList.includes('interfaces.ts')) {
