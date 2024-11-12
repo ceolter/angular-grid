@@ -330,7 +330,7 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
 
             if (rowNode.sibling) {
                 const siblingRowHeight = _getRowHeightForNode(this.beans, rowNode.sibling);
-                detailNode.setRowHeight(siblingRowHeight.height, siblingRowHeight.estimated);
+                detailNode?.setRowHeight(siblingRowHeight.height, siblingRowHeight.estimated);
             }
             atLeastOne = true;
         });

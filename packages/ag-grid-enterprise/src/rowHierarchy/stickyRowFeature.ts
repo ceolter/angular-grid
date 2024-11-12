@@ -431,7 +431,7 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
 
 function getServerSideLastPixelOfGroup(row: RowNode): number {
     if (row.isExpandable() || row.footer) {
-        if (row.master) {
+        if (row.master && row.detailNode) {
             return row.detailNode.rowTop! + row.detailNode.rowHeight!;
         }
 
@@ -469,7 +469,7 @@ function getClientSideLastPixelOfGroup(row: RowNode): number {
         if (noOrContiguousSiblings) {
             let lastAncestor = row.footer ? row.sibling : row;
             while (lastAncestor.isExpandable() && lastAncestor.expanded) {
-                if (lastAncestor.master) {
+                if (lastAncestor.master && lastAncestor.detailNode) {
                     lastAncestor = lastAncestor.detailNode;
                 } else if (lastAncestor.childrenAfterSort) {
                     // Tree Data will have `childrenAfterSort` without any nodes, but

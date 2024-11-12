@@ -250,7 +250,7 @@ export class BlockUtils extends BeanStub implements NamedBean {
 
         const hasDetailNode = rowNode.master && rowNode.detailNode;
         if (hasDetailNode) {
-            rowNode.detailNode.clearRowTopAndRowIndex();
+            rowNode.detailNode?.clearRowTopAndRowIndex();
         }
     }
 
@@ -344,7 +344,7 @@ export class BlockUtils extends BeanStub implements NamedBean {
         const detailNode = rowNode.detailNode;
 
         if (expandedMasterRow && detailNode && this.isPixelInNodeRange(detailNode, pixel)) {
-            return rowNode.detailNode.rowIndex;
+            return detailNode.rowIndex;
         }
 
         // then check if it's a group row with a child cache with pixel in range

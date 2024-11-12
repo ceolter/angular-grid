@@ -16,9 +16,9 @@ import { DetailFrameworkComponentWrapper } from './detailFrameworkComponentWrapp
 export class DetailCellRenderer extends Component implements ICellRenderer {
     private eDetailGrid: HTMLElement = RefPlaceholder;
 
-    private detailApi: GridApi;
+    private detailApi?: GridApi;
     private params: IDetailCellRendererParams;
-    private ctrl: DetailCellRendererCtrl;
+    private ctrl?: DetailCellRendererCtrl;
     private context: Context;
 
     public wireBeans(beans: BeanCollection): void {
@@ -43,7 +43,7 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
     }
 
     public refresh(): boolean {
-        return this.ctrl && this.ctrl.refresh();
+        return this.ctrl?.refresh() ?? false;
     }
 
     private selectAndSetTemplate(): void {
@@ -95,17 +95,15 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
 
         const api = createGrid(this.eDetailGrid, gridOptions, {
             frameworkOverrides,
-            providedBeanInstances: {
-                frameworkCompWrapper: frameworkCompWrapper,
-            },
+            providedBeanInstances: { frameworkCompWrapper },
             modules: _getGridRegisteredModules(this.params.api.getGridId(), gridOptions.rowModelType ?? 'clientSide'),
         } as GridParams);
 
         this.detailApi = api;
-        this.ctrl.registerDetailWithMaster(api);
+        this.ctrl?.registerDetailWithMaster(api);
 
         this.addDestroyFunc(() => {
-            api?.destroy();
+            api.destroy();
         });
     }
 

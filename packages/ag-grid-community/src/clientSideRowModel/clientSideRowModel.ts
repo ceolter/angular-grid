@@ -410,7 +410,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private clearRowTopAndRowIndex(changedPath: ChangedPath, displayedRowsMapped: Set<string>): void {
         const changedPathActive = changedPath.active;
 
-        const clearIfNotDisplayed = (rowNode: RowNode) => {
+        const clearIfNotDisplayed = (rowNode?: RowNode) => {
             if (rowNode && rowNode.id != null && !displayedRowsMapped.has(rowNode.id)) {
                 rowNode.clearRowTopAndRowIndex();
             }
