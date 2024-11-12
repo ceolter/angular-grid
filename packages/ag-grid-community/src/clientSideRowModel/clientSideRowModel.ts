@@ -727,12 +727,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // let start: number;
         // console.log('======= start =======');
 
-        const changedRowNodes = params.changedRowNodes;
-
-        this.nodeManager.refreshModel?.(params);
+        this.nodeManager.refreshModel(params);
 
         this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', params, started: this.started });
 
+        const changedRowNodes = params.changedRowNodes;
         if (!this.started) {
             if (changedRowNodes) {
                 this.pendingChangedRowNodesBeforeStart = changedRowNodes;

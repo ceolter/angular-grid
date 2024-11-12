@@ -26,5 +26,5 @@ export interface IClientSideNodeManager<TData = any> {
         rowDataTran: RowDataTransaction<TData>
     ): RowNodeTransaction<TData>;
 
-    refreshModel?(params: RefreshModelParams<TData>): void;
+    refreshModel(params: RefreshModelParams<TData>): void;
 }

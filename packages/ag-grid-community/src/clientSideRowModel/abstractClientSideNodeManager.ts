@@ -3,6 +3,7 @@ import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
+import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _error, _warn } from '../validation/logging';
@@ -161,23 +162,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         // Add the transaction to the ChangedRowNodes list of transactions
         (changedRowNodes.rowNodeTransactions ??= []).push(rowNodeTran);
-
-        const nodesToUnselect: RowNode[] = [];
-        for (const removedNode of changedRowNodes.removals) {
-            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
-            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
-            if (removedNode.isSelected()) {
-                nodesToUnselect.push(removedNode);
-            }
-        }
-
-        for (const updatedNode of changedRowNodes.updates.keys()) {
-            if (!updatedNode.selectable && updatedNode.isSelected()) {
-                nodesToUnselect.push(updatedNode);
-            }
-        }
-
-        this.deselectNodes(nodesToUnselect);
 
         return rowNodeTran;
     }
@@ -449,11 +433,27 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         selectionSvc?.updateGroupsFromChildrenSelections?.(source);
 
         if (selectionChanged) {
-            this.eventSvc.dispatchEvent({
-                type: 'selectionChanged',
-                source: source,
-            });
+            this.eventSvc.dispatchEvent({ type: 'selectionChanged', source: source });
         }
+    }
+
+    private deselectNodesAfterUpdate(changedRowNodes: IChangedRowNodes<TData>) {
+        const nodesToUnselect: RowNode[] = [];
+        for (const removedNode of changedRowNodes.removals) {
+            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
+            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
+            if (removedNode.isSelected()) {
+                nodesToUnselect.push(removedNode);
+            }
+        }
+
+        for (const updatedNode of changedRowNodes.updates.keys()) {
+            if (!updatedNode.selectable && updatedNode.isSelected()) {
+                nodesToUnselect.push(updatedNode);
+            }
+        }
+
+        this.deselectNodes(nodesToUnselect);
     }
 
     protected createRowNode(data: TData, sourceRowIndex: number): RowNode<TData> {
@@ -498,6 +498,13 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         }
 
         return rowNode || null;
+    }
+
+    public refreshModel(params: RefreshModelParams<TData>): void {
+        const changedRowNodes = params.changedRowNodes;
+        if (changedRowNodes) {
+            this.deselectNodesAfterUpdate(changedRowNodes);
+        }
     }
 }
 
