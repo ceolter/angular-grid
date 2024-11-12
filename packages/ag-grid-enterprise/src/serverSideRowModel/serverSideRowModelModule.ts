@@ -1,5 +1,6 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _ServerSideRowModelGridApi } from 'ag-grid-community';
 import {
+    CommunityDefaultModule,
     CommunityFeaturesModule,
     SortModule,
     _CsrmSsrmSharedApiModule,
@@ -108,6 +109,15 @@ export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGrid
         getServerSideGroupLevelState,
     },
     dependsOn: [ServerSideRowModelCoreModule, _CsrmSsrmSharedApiModule, _SsrmInfiniteSharedApiModule],
+};
+
+/**
+ * @feature Server-Side Row Model
+ */
+export const ServerSideRowModelDefaultModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ServerSideRowModelDefaultModule'),
+    rowModels: ['serverSide'],
+    dependsOn: [ServerSideRowModelCoreModule, ServerSideRowModelSortModule, CommunityDefaultModule],
 };
 
 /**

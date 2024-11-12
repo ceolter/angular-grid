@@ -46,7 +46,7 @@ export const FilterCoreModule: _ModuleWithApi<_FilterGridApi> = {
 };
 
 /**
- * @feature Filtering
+ * @internal
  */
 export const FilterValueModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FilterValueModule'),
@@ -59,7 +59,7 @@ export const FilterValueModule: _ModuleWithoutApi = {
  */
 export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
     ...baseCommunityModule('ColumnFilterModule'),
-    beans: [ColumnFilterService],
+    beans: [ColumnFilterService, FilterMenuFactory],
     icons: {
         // open filter button - header, floating filter, menu
         filter: 'filter',
@@ -76,34 +76,17 @@ export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
         setColumnFilterModel,
         showColumnFilter,
     },
-    dependsOn: [FilterCoreModule, PopupModule, FilterValueModule],
-};
-
-/**
- * @feature Filtering -> Column Filters
- */
-export const ColumnFilterMenuModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnFilterMenuModule'),
-    beans: [FilterMenuFactory],
-    dependsOn: [ColumnFilterModule, PopupModule, SharedMenuModule],
+    dependsOn: [FilterCoreModule, PopupModule, FilterValueModule, SharedMenuModule],
 };
 
 /**
  * @feature Filtering -> Column Filters
  * @colDef floatingFilter
  */
-export const FloatingFilterCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('FloatingFilterCoreModule'),
-    dynamicBeans: { headerFilterCellCtrl: HeaderFilterCellCtrl as any },
-    dependsOn: [ColumnFilterModule],
-};
-
-/**
- * @feature Filtering -> Column Filters
- */
 export const FloatingFilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FloatingFilterModule'),
-    dependsOn: [FloatingFilterCoreModule, ColumnFilterModule],
+    dynamicBeans: { headerFilterCellCtrl: HeaderFilterCellCtrl as any },
+    dependsOn: [ColumnFilterModule],
 };
 
 /**
@@ -112,7 +95,7 @@ export const FloatingFilterModule: _ModuleWithoutApi = {
 export const ReadOnlyFloatingFilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ReadOnlyFloatingFilterModule'),
     userComponents: { agReadOnlyFloatingFilter: ReadOnlyFloatingFilter },
-    dependsOn: [FloatingFilterCoreModule],
+    dependsOn: [FloatingFilterModule],
 };
 
 /**
@@ -134,7 +117,7 @@ export const SimpleFilterModule: _ModuleWithoutApi = {
  */
 export const SimpleFloatingFilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SimpleFloatingFilterModule'),
-    dependsOn: [SimpleFilterModule, FloatingFilterCoreModule],
+    dependsOn: [SimpleFilterModule, FloatingFilterModule],
     userComponents: {
         agTextColumnFloatingFilter: TextFloatingFilter,
         agNumberColumnFloatingFilter: NumberFloatingFilter,
@@ -163,5 +146,5 @@ export const QuickFilterModule: _ModuleWithApi<_QuickFilterGridApi> = {
  */
 export const FilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FilterModule'),
-    dependsOn: [SimpleFloatingFilterModule, ReadOnlyFloatingFilterModule, QuickFilterModule, ColumnFilterMenuModule],
+    dependsOn: [SimpleFloatingFilterModule, ReadOnlyFloatingFilterModule, QuickFilterModule],
 };

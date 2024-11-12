@@ -60,7 +60,7 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
         return null;
     },
     columnChooserParams: {
-        module: 'ColumnChooserModule',
+        module: 'ColumnMenuModule',
     },
 
     headerCheckboxSelection: {

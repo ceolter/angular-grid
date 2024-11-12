@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
-import { ColumnMoveModule, DragAndDropModule, PopupModule } from 'ag-grid-community';
+import { ColumnMoveCoreModule, DragAndDropModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -37,7 +37,14 @@ export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
         //     others are collapsed
         columnSelectIndeterminate: 'tree-indeterminate',
     },
-    dependsOn: [EnterpriseCoreModule, SideBarModule, ColumnMoveModule, DragAndDropModule, PopupModule, MenuItemModule],
+    dependsOn: [
+        EnterpriseCoreModule,
+        SideBarModule,
+        ColumnMoveCoreModule,
+        DragAndDropModule,
+        PopupModule,
+        MenuItemModule,
+    ],
 };
 
 /**

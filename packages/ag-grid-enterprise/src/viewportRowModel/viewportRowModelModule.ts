@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
-import { CommunityFeaturesModule } from 'ag-grid-community';
+import { CommunityDefaultModule, CommunityFeaturesModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -13,6 +13,15 @@ export const ViewportRowModelCoreModule: _ModuleWithoutApi = {
     rowModels: ['viewport'],
     beans: [ViewportRowModel],
     dependsOn: [EnterpriseCoreModule],
+};
+
+/**
+ * @feature Viewport Row Model
+ */
+export const ViewportRowModelDefaultModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ViewportRowModelDefaultModule'),
+    rowModels: ['viewport'],
+    dependsOn: [ViewportRowModelCoreModule, CommunityDefaultModule],
 };
 
 /**

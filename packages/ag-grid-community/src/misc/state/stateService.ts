@@ -1,3 +1,4 @@
+import type { ColumnAnimationService } from '../../columnMove/columnAnimationService';
 import type { ColumnGroupService } from '../../columns/columnGroups/columnGroupService';
 import type { ColumnModel } from '../../columns/columnModel';
 import { _applyColumnState, _getColumnState } from '../../columns/columnStateUtils';
@@ -42,7 +43,6 @@ import type { ISideBarService } from '../../interfaces/iSideBar';
 import type { SortModelItem } from '../../interfaces/iSortModelItem';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../../interfaces/selectionState';
 import type { PaginationService } from '../../pagination/paginationService';
-import type { ColumnAnimationService } from '../../rendering/columnAnimationService';
 import { _debounce } from '../../utils/function';
 import { _jsonEquals } from '../../utils/generic';
 import { VERSION } from '../../version';

@@ -7,19 +7,14 @@ export type { MultiFilter } from './multiFilter/multiFilter';
 export type { SetFilter } from './setFilter/setFilter';
 
 export { EnterpriseCoreModule } from './agGridEnterpriseModule';
+export { EnterpriseDefaultModule } from './enterpriseDefaultModule';
 export { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
 export {
     ColumnsToolPanelModule,
     ColumnsToolPanelCoreModule,
     ColumnsToolPanelRowGroupingModule,
 } from './columnToolPanel/columnsToolPanelModule';
-export {
-    MenuModule,
-    ColumnChooserModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    MenuCoreModule,
-} from './menu/menuModule';
+export { MenuModule, ColumnMenuModule, ContextMenuModule, MenuCoreModule } from './menu/menuModule';
 export { RichSelectModule } from './richSelect/richSelectModule';
 export { SetFilterModule, SetFilterCoreModule, SetFloatingFilterModule } from './setFilter/setFilterModule';
 export { StatusBarModule, StatusBarCoreModule, StatusBarSelectionModule } from './statusBar/statusBarModule';
@@ -34,7 +29,11 @@ export {
     RowGroupingPanelModule,
 } from './rowGrouping/rowGroupingModule';
 export { SideBarModule } from './sideBar/sideBarModule';
-export { ViewportRowModelModule, ViewportRowModelCoreModule } from './viewportRowModel/viewportRowModelModule';
+export {
+    ViewportRowModelModule,
+    ViewportRowModelCoreModule,
+    ViewportRowModelDefaultModule,
+} from './viewportRowModel/viewportRowModelModule';
 export { ClipboardModule } from './clipboard/clipboardModule';
 export { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
 export { MasterDetailModule, MasterDetailCoreModule } from './masterDetail/masterDetailModule';
@@ -52,6 +51,7 @@ export {
     ServerSideRowModelHierarchyModule,
     ServerSideRowModelRowSelectionModule,
     ServerSideRowModelSortModule,
+    ServerSideRowModelDefaultModule,
 } from './serverSideRowModel/serverSideRowModelModule';
 export { SparklinesModule } from './sparkline/sparklinesModule';
 export { TreeDataModule, TreeDataCoreModule } from './treeData/treeDataModule';
@@ -65,3 +65,5 @@ export {
 export { PivotCoreModule, PivotModule } from './pivot/pivotModule';
 
 export { GridChartsModule, IntegratedChartsModule } from './charts/integratedChartsModule';
+
+export { AllEnterpriseModule } from './allEnterpriseModule';

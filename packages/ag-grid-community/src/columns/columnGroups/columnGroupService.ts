@@ -1,3 +1,4 @@
+import type { ColumnAnimationService } from '../../columnMove/columnAnimationService';
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
@@ -9,7 +10,6 @@ import { isProvidedColumnGroup } from '../../entities/agProvidedColumnGroup';
 import type { ColGroupDef } from '../../entities/colDef';
 import type { ColumnEventType } from '../../events';
 import type { ColumnPinnedType, HeaderColumnId } from '../../interfaces/iColumn';
-import type { ColumnAnimationService } from '../../rendering/columnAnimationService';
 import { _last } from '../../utils/array';
 import { _exists } from '../../utils/generic';
 import { _recursivelyCreateColumns, depthFirstOriginalTreeSearch } from '../columnFactoryUtils';
