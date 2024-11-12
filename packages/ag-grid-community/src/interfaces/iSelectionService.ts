@@ -45,6 +45,7 @@ export interface ISelectionService {
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
     handleSelectionEvent(event: MouseEvent | KeyboardEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
     isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
+    refreshMasterNodeState(node: RowNode, e?: Event): void;
 }
 
 interface ICommonSelectionParams {

@@ -105,7 +105,7 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
 
         const gridInfo: DetailGridInfo = {
             id: rowId,
-            api: api,
+            api,
         };
 
         const rowNode = params.node as RowNode;
@@ -118,6 +118,24 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
 
         // register with node
         rowNode.detailGridInfo = gridInfo;
+
+        const masterNode = rowNode.parent;
+
+        api.addEventListener('selectionChanged', () => {
+            masterNode && this.beans.selectionSvc?.refreshMasterNodeState(masterNode);
+        });
+
+        masterGridApi.addEventListener('rowSelected', (e) => {
+            if (e.node !== masterNode || e.source === 'masterDetail') {
+                return;
+            }
+
+            if (e.node.isSelected()) {
+                api.selectAll();
+            } else {
+                api.deselectAll();
+            }
+        });
 
         this.addDestroyFunc(() => {
             // the gridInfo can be stale if a refresh happens and

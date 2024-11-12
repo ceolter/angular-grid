@@ -305,6 +305,7 @@ export interface PinnedHeightChangedEvent<TData = any, TContext = any>
  * - `uiSelectAll` - select all in header clicked
  * - `uiSelectAllFiltered` - select all in header clicked when `rowSelection.selectAll = 'filtered'`
  * - `uiSelectAllCurrentPage` - select all in header clicked when `rowSelection.selectAll = 'currentPage'`
+ * - `masterDetail` - Syncing selection state between master row and detail grid
  * - 'gridInitializing' - set as part of initial state while the grid is initializing
  */
 export type SelectionEventSourceType =
@@ -322,6 +323,7 @@ export type SelectionEventSourceType =
     | 'uiSelectAll'
     | 'uiSelectAllFiltered'
     | 'uiSelectAllCurrentPage'
+    | 'masterDetail'
     | 'gridInitializing';
 
 export interface SelectionChangedEvent<TData = any, TContext = any>

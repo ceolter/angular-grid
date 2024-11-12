@@ -458,21 +458,19 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         let selectedCount = 0;
         let notSelectedCount = 0;
 
-        const callback = (node: RowNode) => {
+        this.getNodesToSelect(selectAll).forEach((node) => {
             if (this.groupSelectsDescendants && node.group) {
                 return;
             }
 
             if (node.isSelected()) {
                 selectedCount++;
-            } else if (!node.selectable) {
+            } else if (node.selectable) {
                 // don't count non-selectable nodes!
-            } else {
                 notSelectedCount++;
             }
-        };
+        });
 
-        this.getNodesToSelect(selectAll).forEach(callback);
         return { selectedCount, notSelectedCount };
     }
 
@@ -702,10 +700,23 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         if (this.groupSelectsDescendants) {
             const selectionChanged = this.updateGroupsFromChildrenSelections?.('rowGroupChanged', changedPath);
             if (selectionChanged) {
-                this.eventSvc.dispatchEvent({
-                    type: 'selectionChanged',
-                    source: 'rowGroupChanged',
-                });
+                this.dispatchSelectionChanged('rowGroupChanged');
+            }
+        }
+    }
+
+    public refreshMasterNodeState(node: RowNode, e?: Event): void {
+        const detailApi = node.detailNode?.detailGridInfo?.api;
+
+        if (!detailApi) return;
+
+        const isSelectAll = detailApi.getSelectAllState();
+        const current = node.isSelected() ?? null;
+        if (current !== isSelectAll) {
+            const selectionChanged = this.selectRowNode(node, isSelectAll ?? undefined, e, 'masterDetail');
+
+            if (selectionChanged) {
+                this.dispatchSelectionChanged('masterDetail');
             }
         }
     }
