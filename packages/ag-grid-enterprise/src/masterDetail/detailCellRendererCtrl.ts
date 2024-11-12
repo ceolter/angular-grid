@@ -158,7 +158,7 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
             }
         };
 
-        const funcParams: any = {
+        const funcParams = {
             node: params.node,
             // we take data from node, rather than params.data
             // as the data could have been updated with new instance
