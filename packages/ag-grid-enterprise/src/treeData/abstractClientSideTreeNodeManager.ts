@@ -1,5 +1,6 @@
 import type {
     ChangedPath,
+    ChangedRowNodes,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
     RefreshModelParams,
@@ -25,7 +26,7 @@ import {
 
 interface TreeCommitDetails<TData = any> {
     rootNode: AbstractClientSideNodeManager.RootNode<TData>;
-    changedPath: ChangedPath | undefined;
+    activeChangedPath: ChangedPath | null;
     treeData: boolean;
     expandByDefault: number;
     isGroupOpenByDefault: IsGroupOpenByDefaultCallback;
@@ -177,7 +178,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Commit the changes performed to the tree */
-    protected treeCommit(changedPath?: ChangedPath): void {
+    protected treeCommit(changedRowNodes: ChangedRowNodes<TData>): void {
         const { treeRoot, rootNode } = this;
         if (!treeRoot || !rootNode) {
             return;
@@ -185,9 +186,14 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         const treeData = this.treeData;
 
+        let activeChangedPath: ChangedPath | null = changedRowNodes.changedPath;
+        if (!activeChangedPath.active) {
+            activeChangedPath = null;
+        }
+
         const details: TreeCommitDetails<TData> = {
             rootNode,
-            changedPath,
+            activeChangedPath,
             treeData,
             expandByDefault: this.gos.get('groupDefaultExpanded'),
             isGroupOpenByDefault: this.gos.getCallback('isGroupOpenByDefault'),
@@ -207,10 +213,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 }
             }
 
-            if (isTreeRowPathChanged(rootRow)) {
-                if (details.changedPath?.active) {
-                    details.changedPath.addParentNode(rootRow);
-                }
+            if (activeChangedPath && isTreeRowPathChanged(rootRow)) {
+                activeChangedPath.addParentNode(rootRow);
             }
 
             markTreeRowCommitted(rootRow);
@@ -220,7 +224,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows();
 
-        this.beans.selectionSvc?.updateSelectableAfterGrouping(changedPath);
+        this.beans.selectionSvc?.updateSelectableAfterGrouping(changedRowNodes.changedPath);
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */
@@ -356,8 +360,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         if (isTreeRowPathChanged(row)) {
-            if (treeData && details.changedPath?.active) {
-                details.changedPath.addParentNode(row);
+            if (treeData) {
+                details.activeChangedPath?.addParentNode(row);
             } else {
                 markTreeRowPathChanged(details.rootNode);
             }

@@ -1,12 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type {
-    ChangedPath,
-    ChangedRowNodes,
-    GetDataPath,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { ChangedRowNodes, GetDataPath, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -32,7 +25,7 @@ export class ClientSidePathTreeNodeManager<TData>
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
 
-        this.treeCommit();
+        this.treeCommit(changedRowNodes);
     }
 
     public override get treeData(): boolean {
@@ -43,13 +36,13 @@ export class ClientSidePathTreeNodeManager<TData>
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const changedRowNodes = params.changedRowNodes;
         if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes, changedRowNodes.changedPath);
+            this.executeTransactions(changedRowNodes);
         }
 
         super.refreshModel(params);
     }
 
-    private executeTransactions(changedRowNodes: ChangedRowNodes, changedPath: ChangedPath | undefined): void {
+    private executeTransactions(changedRowNodes: ChangedRowNodes): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
@@ -81,7 +74,7 @@ export class ClientSidePathTreeNodeManager<TData>
             }
         }
 
-        this.treeCommit(changedPath); // One single commit for all the transactions
+        this.treeCommit(changedRowNodes); // One single commit for all the transactions
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {

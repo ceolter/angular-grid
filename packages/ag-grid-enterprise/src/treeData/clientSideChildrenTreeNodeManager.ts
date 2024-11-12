@@ -1,10 +1,5 @@
-import type {
-    ChangedRowNodes,
-    IClientSideNodeManager,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
+import { ChangedRowNodes } from 'ag-grid-community';
 import { _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -86,7 +81,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             processChild(treeRoot, rowData[i]);
         }
 
-        this.treeCommit();
+        this.treeCommit(changedRowNodes);
     }
 
     public override setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean {
@@ -211,7 +206,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         rootNode.allLeafChildren = allLeafChildren;
         treeRoot.allLeafChildren = allLeafChildren;
 
-        this.treeCommit(changedRowNodes.changedPath);
+        this.treeCommit(changedRowNodes);
 
         if (orderChanged) {
             changedRowNodes.rowsOrderChanged = true;
@@ -224,6 +219,8 @@ export class ClientSideChildrenTreeNodeManager<TData>
         const { rootNode, treeRoot } = this;
 
         if (treeRoot && !params.changedRowNodes?.newData && params.changedProps?.has('treeData')) {
+            const changedRowNodes = params.changedRowNodes ?? new ChangedRowNodes(rootNode!, false);
+
             treeRoot.setRow(rootNode);
             const allLeafChildren = rootNode?.allLeafChildren;
             if (allLeafChildren) {
@@ -233,7 +230,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
                     row.treeNode?.invalidate();
                 }
             }
-            this.treeCommit();
+            this.treeCommit(changedRowNodes);
+
+            if (!params.changedRowNodes && changedRowNodes.hasChanges()) {
+                params.changedRowNodes = changedRowNodes;
+            }
         }
 
         super.refreshModel(params);
