@@ -8,11 +8,10 @@ function autoRegisterAgCharts() {
     const agChartsDynamic = (globalThis as any)?.agCharts;
     const agChartsModule = agChartsDynamic?.AgChartsEnterpriseModule ?? agChartsDynamic?.AgChartsCommunityModule;
     if (agChartsModule) {
-        ModuleRegistry.registerModules([IntegratedChartsModule.with(agChartsModule)]);
-    }
-    const agChartsSparklinesModule = agChartsDynamic?.SparklineModule;
-    if (agChartsSparklinesModule) {
-        ModuleRegistry.registerModules([SparklinesModule.with(agChartsSparklinesModule)]);
+        ModuleRegistry.registerModules([
+            IntegratedChartsModule.with(agChartsModule),
+            SparklinesModule.with(agChartsModule),
+        ]);
     }
 }
 
