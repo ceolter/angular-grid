@@ -75,7 +75,24 @@
         "externalDependencies": ["npm:typescript", "npm:esbuild"]
       }
     ],
-    "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"]
+    "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"],
+    "charts": [
+      { "externalDependencies": ["npm:ag-chart-types"] },
+      { "externalDependencies": ["npm:ag-chart-locale"] },
+      { "externalDependencies": ["npm:ag-chart-community"] },
+      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+    ],
+    "chartsPackages": [
+      { "externalDependencies": ["npm:ag-chart-locale"] },
+      { "externalDependencies": ["npm:ag-chart-community"] },
+      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+    ],
+    "chartsTypes": [
+      { "externalDependencies": ["npm:ag-chart-types"] },
+      { "externalDependencies": ["npm:ag-chart-locale"] },
+      { "externalDependencies": ["npm:ag-chart-community"] },
+      { "externalDependencies": ["npm:ag-chart-enterprise"] }
+    ]
   },
   "targetDefaults": {
     "build": {

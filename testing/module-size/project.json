@@ -1,0 +1,18 @@
+{
+  "name": "ag-module-size",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "testing/module-size",
+  "projectType": "app",
+  "targets": {
+    "test": {
+      "executor": "nx:run-commands",
+      "inputs": [],
+      "outputs": [],
+      "options": {
+        "cwd": "testing/module-size",
+        "commands": ["npm run test"]
+      }
+    }
+  },
+  "tags": ["module-size"]
+}

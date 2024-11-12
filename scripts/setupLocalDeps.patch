@@ -1,0 +1,15 @@
+diff --git a/packages/ag-grid-enterprise/tsconfig.lib.json b/packages/ag-grid-enterprise/tsconfig.lib.json
+index 1a566f32fc..096f4e6dbc 100644
+--- a/packages/ag-grid-enterprise/tsconfig.lib.json
++++ b/packages/ag-grid-enterprise/tsconfig.lib.json
+@@ -3,8 +3,8 @@
+   "compilerOptions": {
+     "types": [],
+     "baseUrl": "src",
+-    "module": "node16",
+-    "moduleResolution": "node16"
++    "module": "es2020",
++    "moduleResolution": "bundler"
+   },
+   "include": ["src/**/*.ts"],
+   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts", "src/**/test/**", "src/**/test-utils/**"]

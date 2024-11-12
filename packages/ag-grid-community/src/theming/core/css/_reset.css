@@ -2,6 +2,7 @@
    one then don't forget the other */
 
 /* stylelint-disable-next-line selector-disallowed-list  */
+:where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart),
 :where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart) :where([class^='ag-']) {
     box-sizing: border-box;
     outline: none;
