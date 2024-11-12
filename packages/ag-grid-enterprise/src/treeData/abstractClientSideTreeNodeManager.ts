@@ -517,11 +517,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
-    public override refreshModel(params: RefreshModelParams<TData>): void {
-        if (!params.afterColumnsChanged) {
-            return; // nothing to do
-        }
-
+    private afterColumnsChanged(): void {
         // Check if group data need to be recomputed due to group columns change
 
         if (this.treeData) {
@@ -548,6 +544,12 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             }
         } else {
             this.oldGroupDisplayColIds = '';
+        }
+    }
+
+    public override refreshModel(params: RefreshModelParams<TData>): void {
+        if (params.afterColumnsChanged) {
+            this.afterColumnsChanged();
         }
 
         super.refreshModel(params);
