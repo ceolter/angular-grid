@@ -6,7 +6,7 @@ import { IntegratedChartsModule, SparklinesModule } from './main';
 
 function autoRegisterAgCharts() {
     const agChartsDynamic = (globalThis as any)?.agCharts;
-    const agChartsModule = agChartsDynamic?.ChartEnterpriseModule ?? agChartsDynamic?.ChartCommunityModule;
+    const agChartsModule = agChartsDynamic?.AgChartsEnterpriseModule ?? agChartsDynamic?.AgChartsCommunityModule;
     if (agChartsModule) {
         ModuleRegistry.registerModules([IntegratedChartsModule.with(agChartsModule)]);
     }

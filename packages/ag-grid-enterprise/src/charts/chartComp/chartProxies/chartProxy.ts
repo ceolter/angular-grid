@@ -1,5 +1,6 @@
 import type {
     AgChartInstance,
+    AgChartInstanceOptions,
     AgChartOptions,
     AgChartTheme,
     AgChartThemeOverrides,
@@ -20,7 +21,7 @@ import { createAgChartTheme, lookupCustomChartTheme } from './chartTheme';
 
 export interface ChartProxyParams {
     agChartsContext: AgChartsContext;
-    chartInstance?: AgChartInstance;
+    chartInstance?: AgChartInstance<AgChartInstanceOptions>;
     chartType: ChartType;
     customChartThemes?: { [name: string]: AgChartTheme };
     parentElement: HTMLElement;
@@ -71,7 +72,7 @@ export abstract class ChartProxy<
     protected readonly chartType: ChartType;
     protected readonly standaloneChartType: TSeries;
 
-    protected readonly chart: AgChartInstance;
+    protected readonly chart: AgChartInstance<AgChartInstanceOptions>;
     protected readonly crossFiltering: boolean;
     protected readonly crossFilterCallback: (event: any, reset?: boolean) => void;
 
@@ -128,7 +129,7 @@ export abstract class ChartProxy<
         return this.getChart().getCanvasDataURL(type);
     }
 
-    private getChartOptions(): AgChartOptions {
+    private getChartOptions(): AgChartInstanceOptions {
         return this.chart.getOptions();
     }
 
@@ -254,7 +255,7 @@ export abstract class ChartProxy<
         return inUseTheme?.overrides ?? {};
     }
 
-    public destroy({ keepChartInstance = false } = {}): AgChartInstance | undefined {
+    public destroy({ keepChartInstance = false } = {}): AgChartInstance<AgChartInstanceOptions> | undefined {
         if (keepChartInstance) {
             // Reset Charts animation state, so that future updates to this re-used chart instance
             // behave as-if the chart is brand new. When switching chartTypes, this means we hide

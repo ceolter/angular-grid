@@ -1,4 +1,4 @@
-import type { IntegratedChartModule } from 'ag-charts-types';
+import type { IntegratedModule } from 'ag-charts-types';
 
 import type { NamedBean } from 'ag-grid-community';
 import { BeanStub } from 'ag-grid-community';
@@ -7,12 +7,12 @@ export class AgChartsContext extends BeanStub implements NamedBean {
     beanName = 'agChartsContext' as const;
 
     isEnterprise = false;
-    create: IntegratedChartModule['create'];
-    _Theme: IntegratedChartModule['_Theme'];
+    create: IntegratedModule['create'];
+    _Theme: IntegratedModule['_Theme'];
     _Scene: any; // types not exposed as only used for mini charts
-    _Util: IntegratedChartModule['_Util'];
+    _Util: IntegratedModule['_Util'];
 
-    constructor(params: IntegratedChartModule) {
+    constructor(params: IntegratedModule) {
         super();
         this.create = params.create;
         this._Theme = params._Theme;

@@ -1,4 +1,9 @@
-import type { AgChartInstance, AgChartThemeOverrides, AgChartThemePalette } from 'ag-charts-types';
+import type {
+    AgChartInstance,
+    AgChartInstanceOptions,
+    AgChartThemeOverrides,
+    AgChartThemePalette,
+} from 'ag-charts-types';
 
 import type {
     BeanCollection,
@@ -184,7 +189,7 @@ export class GridChartComp extends Component {
 
     private createChart(): void {
         // if chart already exists, destroy it and remove it from DOM
-        let chartInstance: AgChartInstance | undefined = undefined;
+        let chartInstance: AgChartInstance<AgChartInstanceOptions> | undefined = undefined;
         if (this.chartProxy) {
             chartInstance = this.chartProxy.destroy({ keepChartInstance: true });
         }

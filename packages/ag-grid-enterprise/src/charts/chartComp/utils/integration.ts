@@ -1,6 +1,12 @@
-import type { AgCartesianAxisType, AgChartCaptionOptions, AgChartInstance, AgPolarAxisOptions } from 'ag-charts-types';
+import type {
+    AgCartesianAxisType,
+    AgChartCaptionOptions,
+    AgChartInstance,
+    AgChartInstanceOptions,
+    AgPolarAxisOptions,
+} from 'ag-charts-types';
 
-export function deproxy(chartOrProxy: AgChartInstance): AgChartActual {
+export function deproxy(chartOrProxy: AgChartInstance<AgChartInstanceOptions>): AgChartActual {
     if ((chartOrProxy as any).chart != null) {
         return (chartOrProxy as any).chart;
     }

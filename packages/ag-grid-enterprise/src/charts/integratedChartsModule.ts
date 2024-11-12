@@ -1,4 +1,4 @@
-import type { IntegratedChartModule } from 'ag-charts-types';
+import type { IntegratedModule } from 'ag-charts-types';
 
 import type { _GridChartsGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { DragAndDropModule, PopupModule, _errMsg } from 'ag-grid-community';
@@ -35,7 +35,7 @@ import { integratedChartsModuleCSS } from './integratedChartsModule.css-GENERATE
 import { validGridChartsVersion } from './utils/validGridChartsVersion';
 
 type IntegratedChartsModuleType = {
-    with: (params: IntegratedChartModule) => _ModuleWithApi<_GridChartsGridApi>;
+    with: (params: IntegratedModule) => _ModuleWithApi<_GridChartsGridApi>;
 } & _ModuleWithApi<_GridChartsGridApi>;
 
 const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
