@@ -5,8 +5,12 @@ function escapeQuotes(value: string): string {
     return value.replaceAll(/(['"])/g, '\\$1');
 }
 
-export function getRowByIndex(index: number): HTMLElement | null {
-    return document.getElementById('myGrid')!.querySelector(`[row-index="${index}"]`);
+export function getRowByIndex(index: number, gridId?: string): HTMLElement | null {
+    let root = document.getElementById('myGrid')!;
+    if (gridId) {
+        root = root!.querySelector(`[grid-id="${gridId}"]`)!;
+    }
+    return root!.querySelector(`[row-index="${index}"]`);
 }
 
 export function getRowById(id: string): HTMLElement | null {
@@ -40,12 +44,16 @@ export function selectRowsByIndex(indices: number[], click: boolean, api: GridAp
     assertSelectedRowsByIndex(indices, api);
 }
 
+export function clickEvent(opts?: MouseEventInit): MouseEvent {
+    return new MouseEvent('click', { ...opts, bubbles: true });
+}
+
 export function clickRowByIndex(index: number, opts?: MouseEventInit): void {
-    getRowByIndex(index)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+    getRowByIndex(index)?.dispatchEvent(clickEvent(opts));
 }
 
 export function toggleCheckboxByIndex(index: number, opts?: MouseEventInit): void {
-    getCheckboxByIndex(index)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+    getCheckboxByIndex(index)?.dispatchEvent(clickEvent(opts));
 }
 
 export function toggleCheckboxById(id: string, opts?: MouseEventInit): void {
@@ -53,13 +61,11 @@ export function toggleCheckboxById(id: string, opts?: MouseEventInit): void {
 }
 
 export function toggleHeaderCheckboxByIndex(index: number, opts?: MouseEventInit): void {
-    getHeaderCheckboxByIndex(index)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+    getHeaderCheckboxByIndex(index)?.dispatchEvent(clickEvent(opts));
 }
 
 export function clickExpandGroupRowByIndex(index: number, opts?: MouseEventInit): void {
-    getRowByIndex(index)
-        ?.querySelector<HTMLElement>('.ag-group-contracted')
-        ?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+    getRowByIndex(index)?.querySelector<HTMLElement>('.ag-group-contracted')?.dispatchEvent(clickEvent(opts));
 }
 
 export async function expandGroupRowByIndex(api: GridApi, index: number, opts?: MouseEventInit): Promise<void> {
