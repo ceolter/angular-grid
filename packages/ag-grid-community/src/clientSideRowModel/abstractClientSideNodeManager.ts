@@ -3,7 +3,7 @@ import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
-import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
+import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _error, _warn } from '../validation/logging';
@@ -437,7 +437,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         }
     }
 
-    private deselectNodesAfterUpdate(changedRowNodes: IChangedRowNodes<TData>) {
+    private deselectNodesAfterUpdate(changedRowNodes: ChangedRowNodes<TData>) {
         const nodesToUnselect: RowNode[] = [];
         for (const removedNode of changedRowNodes.removals) {
             // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for

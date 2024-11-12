@@ -2,8 +2,8 @@ import type {
     BeanCollection,
     BeanName,
     BeforeRefreshModelEvent,
+    ChangedRowNodes,
     DetailGridInfo,
-    IChangedRowNodes,
     IColsService,
     IMasterDetailService,
     IRowModel,
@@ -64,7 +64,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         }
     }
 
-    private setMasters(changedRowNodes: IChangedRowNodes | null | undefined): void {
+    private setMasters(changedRowNodes: ChangedRowNodes | null | undefined): void {
         const enabled = this.isEnabled();
         this.enabled = enabled;
 

@@ -10,7 +10,6 @@ import { _getGroupSelectsDescendants, _getRowHeightForNode, _isAnimateRows, _isD
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
     ClientSideRowModelStage,
-    IChangedRowNodes,
     IClientSideRowModel,
     RefreshModelParams,
 } from '../interfaces/iClientSideRowModel';
@@ -95,7 +94,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     /** Has the start method been called */
     private started: boolean = false;
     /** E.g. data has been set into the node manager already */
-    private pendingChangedRowNodesBeforeStart: IChangedRowNodes | null = null;
+    private pendingChangedRowNodesBeforeStart: ChangedRowNodes | null = null;
     /**
      * This is to prevent refresh model being called when it's already being called.
      * E.g. the group stage can trigger initial state filter model to be applied. This fires onFilterChanged,
@@ -1052,7 +1051,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private doSort(changedRowNodes: IChangedRowNodes | null | undefined, changedPath: ChangedPath) {
+    private doSort(changedRowNodes: ChangedRowNodes | null | undefined, changedPath: ChangedPath) {
         const { groupHideOpenParentsSvc } = this.beans;
         if (this.sortStage) {
             this.sortStage.execute({
@@ -1076,7 +1075,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private doRowGrouping(
-        changedRowNodes: IChangedRowNodes | null | undefined,
+        changedRowNodes: ChangedRowNodes | null | undefined,
         changedPath: ChangedPath,
         afterColumnsChanged: boolean
     ) {
@@ -1254,7 +1253,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
      * @param rowNodeTrans - the transactions to apply
      * @param orderChanged - whether the order of the rows has changed, either via generated transaction or user provided addIndex
      */
-    private commitTransactions(changedRowNodes: IChangedRowNodes): void {
+    private commitTransactions(changedRowNodes: ChangedRowNodes): void {
         this.refreshModel({
             step: 'group',
             keepRenderedRows: true,

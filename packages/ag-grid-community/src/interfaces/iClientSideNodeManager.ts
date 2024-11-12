@@ -1,6 +1,6 @@
 import type { ChangedRowNodes } from '../clientSideRowModel/changedRowNodes';
 import type { RowNode } from '../entities/rowNode';
-import type { IChangedRowNodes, RefreshModelParams } from './iClientSideRowModel';
+import type { RefreshModelParams } from './iClientSideRowModel';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -22,7 +22,7 @@ export interface IClientSideNodeManager<TData = any> {
     setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean;
 
     applyTransaction(
-        changedRowNodes: IChangedRowNodes<TData>,
+        changedRowNodes: ChangedRowNodes<TData>,
         rowDataTran: RowDataTransaction<TData>
     ): RowNodeTransaction<TData>;
 

@@ -3,7 +3,6 @@ import type {
     ChangedPath,
     ChangedRowNodes,
     GetDataPath,
-    IChangedRowNodes,
     NamedBean,
     RefreshModelParams,
     RowNode,
@@ -50,7 +49,7 @@ export class ClientSidePathTreeNodeManager<TData>
         super.refreshModel(params);
     }
 
-    private executeTransactions(changedRowNodes: IChangedRowNodes, changedPath: ChangedPath | undefined): void {
+    private executeTransactions(changedRowNodes: ChangedRowNodes, changedPath: ChangedPath | undefined): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active

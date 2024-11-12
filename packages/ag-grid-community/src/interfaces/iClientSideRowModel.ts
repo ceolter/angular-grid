@@ -1,3 +1,4 @@
+import type { ChangedRowNodes } from '../clientSideRowModel/changedRowNodes';
 import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
@@ -56,46 +57,6 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     isRowDataLoaded(): boolean;
 }
 
-export interface IChangedRowNodes<TData = any> {
-    /** The CSRM rootNode */
-    readonly rootNode: RowNode<TData>;
-
-    /**
-     * Indicates a completely new rowData array is loaded.
-     * If this is true, we consider this a new reload of data from scratch, or a first load of data.
-     * In this case, removals will not contain the previous cleared rows.
-     * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
-     */
-    readonly newData: boolean;
-
-    /**
-     * The list of transactions that are being executed.
-     * Is null if no transactions are being executed, that can happen for newData or for immutable updates.
-     */
-    rowNodeTransactions: RowNodeTransaction<TData>[] | null;
-
-    /** The ChangedPath containing the changed parent nodes in DFS order. */
-    readonly changedPath: ChangedPath;
-
-    /**
-     * The set of removed nodes.
-     * Mutually exclusive, if a node is here, it cannot be in the updates map.
-     */
-    readonly removals: ReadonlySet<RowNode<TData>>;
-
-    /**
-     * Map of row nodes that have been updated.
-     * The value is true if the row node is a new node. is false if it was just updated.
-     */
-    readonly updates: ReadonlyMap<RowNode<TData>, boolean>;
-
-    /** true if rows were inserted in the middle of something else and not just appended or removed. */
-    readonly rowsInserted: boolean;
-
-    /** true if the order of root.allLeafChildren has changed. */
-    readonly rowsOrderChanged: boolean;
-}
-
 export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
@@ -107,7 +68,7 @@ export interface RefreshModelParams<TData = any> {
      * A data structure that holds the affected row nodes, if this was an update and not a full reload.
      * If this is set, something changed in the rowData.
      */
-    changedRowNodes?: IChangedRowNodes<TData> | null;
+    changedRowNodes?: ChangedRowNodes<TData> | null;
 
     /**
      * if NOT new data, then this flag tells grid to check if rows already
