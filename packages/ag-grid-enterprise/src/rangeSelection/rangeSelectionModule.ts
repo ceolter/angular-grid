@@ -32,6 +32,7 @@ export const CellSelectionCoreModule: _ModuleWithApi<_CellSelectionGridApi> = {
 export const CellSelectionFillHandleModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('CellSelectionFillHandleModule'),
     dynamicBeans: { fillHandle: AgFillHandle },
+    dependsOn: [CellSelectionCoreModule],
 };
 
 /**
@@ -40,6 +41,7 @@ export const CellSelectionFillHandleModule: _ModuleWithoutApi = {
 export const CellSelectionRangeHandleModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('CellSelectionRangeHandleModule'),
     dynamicBeans: { rangeHandle: AgRangeHandle },
+    dependsOn: [CellSelectionCoreModule],
 };
 
 /**
