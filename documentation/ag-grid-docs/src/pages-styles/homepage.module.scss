@@ -100,7 +100,7 @@ body {
 
     @media screen and (min-width: $breakpoint-hero-large) {
         height: 416px;
-        padding: $spacing-size-8;
+        margin-top: $spacing-size-12;
     }
 
     .loadingLogoContainer {
@@ -140,7 +140,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
-    margin-top: $spacing-size-32;
+    margin-top: 200px;
 
     @media screen and (min-width: 640px) {
         flex-direction: row;
@@ -152,6 +152,7 @@ body {
 }
 
 .frameworksLabel {
+    font-weight: 500;
     @media screen and (min-width: 1020px) {
         --font-size: var(--text--fs-xl);
     }
@@ -184,9 +185,10 @@ body {
     text-align: center;
 
     p {
-        max-width: 420px;
         margin-left: auto;
         margin-right: auto;
+        color: var(--color-text-tertiary);
+        opacity: 0.6;
     }
 }
 
@@ -219,12 +221,12 @@ body {
 
     &::before {
         left: 0;
-        background-image: linear-gradient(90deg, var(--color-util-gray-50), transparent);
+        background-image: linear-gradient(90deg, var(--color-white), transparent);
     }
 
     &::after {
         right: 0;
-        background-image: linear-gradient(90deg, transparent, var(--color-util-gray-50));
+        background-image: linear-gradient(90deg, transparent, var(--color-white));
     }
 
     @media screen and (max-width: $breakpoint-hero-small) {
@@ -549,7 +551,8 @@ body {
     display: flex;
     justify-content: center;
     gap: $spacing-size-4;
-    margin-bottom: $spacing-size-12;
+    margin-bottom: $spacing-size-16;
+    margin-top: $spacing-size-4;
 
     a {
         height: 48px;
