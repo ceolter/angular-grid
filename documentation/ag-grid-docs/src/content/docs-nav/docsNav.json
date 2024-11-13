@@ -114,64 +114,58 @@
                         },
                         {
                             "type": "item",
-                            "title": "Customisation",
-                            "children": [
-                                {
-                                    "type": "item",
-                                    "title": "Colors & Dark Mode",
-                                    "path": "theming-colors"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Fonts",
-                                    "path": "theming-fonts"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Borders",
-                                    "path": "theming-borders"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Compactness & Row Height",
-                                    "path": "theming-compactness"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Selections",
-                                    "path": "theming-selections"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Headers",
-                                    "path": "theming-headers"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Icons",
-                                    "path": "custom-icons"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Tool Panels",
-                                    "path": "theming-tool-panels"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Inputs & Widgets",
-                                    "path": "theming-widgets"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Menus & Popups",
-                                    "path": "theming-popups"
-                                },
-                                {
-                                    "type": "item",
-                                    "title": "Extending with CSS",
-                                    "path": "theming-css"
-                                }
-                            ]
+                            "title": "Colors & Dark Mode",
+                            "path": "theming-colors"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Fonts",
+                            "path": "theming-fonts"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Borders",
+                            "path": "theming-borders"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Compactness & Row Height",
+                            "path": "theming-compactness"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Selections",
+                            "path": "theming-selections"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Headers",
+                            "path": "theming-headers"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Icons",
+                            "path": "custom-icons"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Tool Panels",
+                            "path": "theming-tool-panels"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Inputs & Widgets",
+                            "path": "theming-widgets"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Menus & Popups",
+                            "path": "theming-popups"
+                        },
+                        {
+                            "type": "item",
+                            "title": "Extending with CSS",
+                            "path": "theming-css"
                         },
                         {
                             "type": "item",

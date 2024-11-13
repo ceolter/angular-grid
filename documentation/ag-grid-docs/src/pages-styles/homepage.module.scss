@@ -16,6 +16,7 @@ body {
 .homepageHero {
     padding-top: $spacing-size-10;
     background-color: var(--color-bg-site-header);
+    height: 566px;
 
     @media screen and (min-width: $breakpoint-hero-small) {
         padding-top: $spacing-size-16;
@@ -31,10 +32,7 @@ body {
     display: flex;
     flex-direction: column;
     text-align: center;
-
-    @media screen and (min-width: $breakpoint-hero-large) {
-        text-align: unset;
-    }
+    justify-content: center;
 
     h1,
     h2 {
@@ -62,13 +60,15 @@ body {
         margin-right: auto;
         margin-left: auto;
         margin-bottom: 1.4em;
+        font-weight: var(--text-normal);
+        line-height: 150%;
 
         @media screen and (min-width: $breakpoint-hero-small) {
             font-size: 22px;
         }
 
         @media screen and (min-width: $breakpoint-hero-large) {
-            font-size: min(1.9vw, 30px);
+            font-size: 18px;
             max-width: unset;
         }
     }
@@ -89,10 +89,18 @@ body {
     flex-direction: row-reverse;
     height: 320px;
     overflow: hidden;
+    width: 100%;
+    position: absolute;
+    padding: $spacing-size-8;
+    justify-content: center;
 
     @media screen and (min-width: $breakpoint-hero-large) {
-        width: 860px;
         height: 416px;
+        margin-top: $spacing-size-12;
+        top: 375px;
+    }
+    @media screen and (max-width: 500px) {
+        top: 450px;
     }
 
     .loadingLogoContainer {
@@ -113,7 +121,6 @@ body {
 }
 
 .homepageFrameworks {
-    background-color: var(--color-util-brand-100);
     padding-top: $spacing-size-4;
     padding-bottom: $spacing-size-12;
 
@@ -133,6 +140,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
+    margin-top: 200px;
 
     @media screen and (min-width: 640px) {
         flex-direction: row;
@@ -144,6 +152,7 @@ body {
 }
 
 .frameworksLabel {
+    font-weight: 500;
     @media screen and (min-width: 1020px) {
         --font-size: var(--text--fs-xl);
     }
@@ -156,7 +165,6 @@ body {
 .homepageQuotes {
     padding-top: $spacing-size-16;
     padding-bottom: $spacing-size-2;
-    background-color: var(--color-util-gray-50);
 
     @media screen and (min-width: 940px) {
         padding-top: $spacing-size-24;
@@ -165,7 +173,6 @@ body {
 }
 
 .homepageCustomers {
-    background-color: var(--color-util-gray-50);
     padding-bottom: $spacing-size-2;
     padding-top: $spacing-size-12;
 
@@ -178,9 +185,10 @@ body {
     text-align: center;
 
     p {
-        max-width: 420px;
         margin-left: auto;
         margin-right: auto;
+        color: var(--color-text-tertiary);
+        opacity: 0.6;
     }
 }
 
@@ -213,12 +221,12 @@ body {
 
     &::before {
         left: 0;
-        background-image: linear-gradient(90deg, var(--color-util-gray-50), transparent);
+        background-image: linear-gradient(90deg, var(--color-white), transparent);
     }
 
     &::after {
         right: 0;
-        background-image: linear-gradient(90deg, transparent, var(--color-util-gray-50));
+        background-image: linear-gradient(90deg, transparent, var(--color-white));
     }
 
     @media screen and (max-width: $breakpoint-hero-small) {
@@ -537,4 +545,45 @@ body {
         transform-origin: center left;
         transform: translate(-30px, 0) scale(0.5);
     }
+}
+
+.heroSectionbuttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-size-4;
+    margin-bottom: $spacing-size-16;
+    margin-top: $spacing-size-4;
+
+    a {
+        height: 48px;
+        align-items: center;
+        display: flex;
+    }
+
+    @media screen and (max-width: $breakpoint-landing-page-medium) {
+        flex-direction: column;
+    }
+}
+
+.heroSectioncta2 {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    height: 48px;
+    padding: $spacing-size-3;
+}
+
+.heroSectioncta1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.heroSectioncta1 svg {
+    height: 24px;
+    width: 24px;
+    fill: var(--color-fg-secondary);
+    opacity: 0.8;
 }

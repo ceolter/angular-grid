@@ -206,11 +206,6 @@
         margin-bottom: $spacing-size-1;
     }
 
-    // Style for 'section headers'
-    &:not([href]) {
-        color: var(--color-fg-quinary) !important;
-    }
-
     .groupChildren & {
         margin-left: calc(var(--indent-size) - var(--indent-border-offset));
         padding-left: calc(var(--indent-initial-offset) + var(--indent-border-offset));

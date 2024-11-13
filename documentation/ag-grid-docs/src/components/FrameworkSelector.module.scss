@@ -5,6 +5,13 @@
     --icon-size: #{$spacing-size-6};
     --x-padding: 10px;
 
+    svg {
+        height: 24px;
+        width: 24px;
+        fill: var(--color-fg-secondary);
+        opacity: 0.8;
+    }
+
     display: flex;
     width: 100%;
     border-radius: var(--radius-sm);

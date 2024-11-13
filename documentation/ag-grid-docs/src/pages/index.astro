@@ -4,11 +4,13 @@ import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
 import FrameworkSelector from '@components/FrameworkSelector';
+import InstallText from '@components/framework-landing-pages/InstallText';
 import ChartsLogo from '@ag-website-shared/images/inline-svgs/ag-charts-logo.svg?react';
 import HeroGrid from '@components/hero-grid/HeroGrid.astro';
 import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { Image } from 'astro:assets';
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 
 const frameworksData = [
     {
@@ -55,12 +57,26 @@ const frameworksData = [
             <section class={styles.heroHeadings}>
                 <h1 class="text-xl">The&nbsp;Best&nbsp;JavaScript Grid&nbsp;in&nbsp;the&nbsp;World</h1>
                 <h2 class="text-base normal-weight-text">
-                    The professional choice for developers building enterprise&nbsp;applications
+                    Fully customisable and framework agnostic Data Grid that <br /> can handle millions of cells out of the
+                    box, for free.
                 </h2>
+                <div class={styles.heroSectionbuttonContainer}>
+                    <a
+                        class:list={[
+                            'button-secondary',
+                            styles.heroSectioncta1,
+                            'plausible-event-name=react-table-get-started',
+                        ]}
+                        href={urlWithBaseUrl('./example')}>See demos <Icon name="chevronRight" /></a
+                    >
+                    <div class={styles.heroSectioncta2}>
+                        <InstallText client:load />
+                    </div>
+                </div>
             </section>
-            <section class={styles.heroGrid}>
-                <HeroGrid />
-            </section>
+        </section>
+        <section class={styles.heroGrid}>
+            <HeroGrid />
         </section>
     </div>
 
@@ -74,11 +90,10 @@ const frameworksData = [
 
     <div class={styles.homepageCustomers}>
         <div class:list={[styles.customersInner, 'layout-max-width-small']}>
-            <h2>Used by 90% of the Fortune 500</h2>
+            <div class={styles.customerLogos}></div>
             <p class="text-tertiary">
                 Trusted by the finest teams globally, an unmatched experience for developers and users alike.
             </p>
-            <div class={styles.customerLogos}></div>
         </div>
     </div>
 
