@@ -1,10 +1,12 @@
 .installText {
     font-size: var(--text-fs-base);
-    color: var(--color-fg-primary);
+    color: var(--color-white);
+    font-family: monospace; // refactor to use design system class
 }
 
 .copyToClipboardIcon {
-    --icon-color: var(--color-fg-secondary);
+    --icon-color: var(--color-white);
+    opacity: 0.8;
 
     width: var(--icon-size);
     height: var(--icon-size);
@@ -12,6 +14,7 @@
     cursor: pointer;
 
     &:hover {
-        --icon-color: var(--color-link-hover);
+        --icon-color: var(--color-white);
+        opacity: 1;
     }
 }
