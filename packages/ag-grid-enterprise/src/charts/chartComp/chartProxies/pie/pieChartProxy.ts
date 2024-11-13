@@ -144,8 +144,8 @@ export class PieChartProxy extends ChartProxy<AgPolarChartOptions, 'pie' | 'donu
 
     private changeOpacity(fills: string[], alpha: number) {
         return fills.map((fill) => {
-            const c = this.agChartsContext._Util.Color.fromString(fill);
-            return new this.agChartsContext._Util.Color(c.r, c.g, c.b, alpha).toHexString();
+            const c = this.agChartsExports._Util.Color.fromString(fill);
+            return new this.agChartsExports._Util.Color(c.r, c.g, c.b, alpha).toHexString();
         });
     }
 }

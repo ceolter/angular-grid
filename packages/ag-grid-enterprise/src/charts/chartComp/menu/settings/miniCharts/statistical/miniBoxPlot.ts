@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
@@ -11,13 +11,13 @@ export class MiniBoxPlot extends MiniChartWithAxes {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, agChartsContext, 'boxPlotTooltip');
+        super(container, agChartsExports, 'boxPlotTooltip');
 
         const padding = this.padding;
         const size = this.size;
@@ -29,14 +29,14 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         const q1Ratio = 0.9;
         const minRatio = 0.8;
 
-        const yScale = new this.agChartsContext._Scene.LinearScale();
+        const yScale = new this.agChartsExports._Scene.LinearScale();
         yScale.domain = [
             data.reduce((a, b) => Math.min(a, b), Infinity) * minRatio,
             data.reduce((a, b) => Math.max(a, b), 0) * maxRatio,
         ];
         yScale.range = [size - 1.5 * padding, padding];
 
-        const xScale = new this.agChartsContext._Scene.BandScale();
+        const xScale = new this.agChartsExports._Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.4;
@@ -62,14 +62,14 @@ export class MiniBoxPlot extends MiniChartWithAxes {
             const max = Math.round(yScale.convert(maxValue));
             const whiskerX = left + halfBandWidth;
 
-            const boxPlotGroup = new this.agChartsContext._Scene.Group();
+            const boxPlotGroup = new this.agChartsExports._Scene.Group();
 
-            const box = new this.agChartsContext._Scene.Rect();
-            const median = new this.agChartsContext._Scene.Line();
-            const topWhisker = new this.agChartsContext._Scene.Line();
-            const bottomWhisker = new this.agChartsContext._Scene.Line();
-            const topCap = new this.agChartsContext._Scene.Line();
-            const bottomCap = new this.agChartsContext._Scene.Line();
+            const box = new this.agChartsExports._Scene.Rect();
+            const median = new this.agChartsExports._Scene.Line();
+            const topWhisker = new this.agChartsExports._Scene.Line();
+            const bottomWhisker = new this.agChartsExports._Scene.Line();
+            const topCap = new this.agChartsExports._Scene.Line();
+            const bottomCap = new this.agChartsExports._Scene.Line();
 
             box.x = left;
             box.y = top;
@@ -100,7 +100,7 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         isCustomTheme?: boolean
     ) {
         const themeBackgroundColor = themeTemplateParameters?.get(
-            this.agChartsContext._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
+            this.agChartsExports._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
         );
         const backgroundFill =
             (Array.isArray(themeBackgroundColor) ? themeBackgroundColor[0] : themeBackgroundColor) ?? 'white';
@@ -110,7 +110,7 @@ export class MiniBoxPlot extends MiniChartWithAxes {
                 const fill = fills[i % fills.length];
                 node.fill = isCustomTheme
                     ? fill
-                    : this.agChartsContext._Util.interpolateColor(fill, backgroundFill)(0.7);
+                    : this.agChartsExports._Util.interpolateColor(fill, backgroundFill)(0.7);
                 node.stroke = strokes[i % strokes.length];
             }
         });

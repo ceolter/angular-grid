@@ -34,7 +34,7 @@ import {
 } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
-import type { AgChartsContext } from '../agChartsContext';
+import type { AgChartsExports } from '../agChartsExports';
 import type { CrossFilteringContext } from '../chartService';
 import { ChartController, DEFAULT_THEMES } from './chartController';
 import { AreaChartProxy } from './chartProxies/cartesian/areaChartProxy';
@@ -86,7 +86,7 @@ export class GridChartComp extends Component {
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
     private environment: Environment;
-    private agChartsContext: AgChartsContext;
+    private agChartsExports: AgChartsExports;
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
@@ -96,7 +96,7 @@ export class GridChartComp extends Component {
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
         this.environment = beans.environment;
-        this.agChartsContext = beans.agChartsContext as AgChartsContext;
+        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
@@ -205,7 +205,7 @@ export class GridChartComp extends Component {
 
         const chartType = this.chartController.getChartType();
         const chartProxyParams: ChartProxyParams = {
-            agChartsContext: this.agChartsContext,
+            agChartsExports: this.agChartsExports,
             chartType,
             chartInstance,
             getChartThemeName: this.getChartThemeName.bind(this),

@@ -3,7 +3,7 @@ import type { IColor, _IUtil } from 'ag-charts-types';
 import type { BeanCollection } from 'ag-grid-community';
 import { Component, KeyCode, RefPlaceholder, _exists, _setDisplayed } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../agChartsContext';
+import type { AgChartsExports } from '../agChartsExports';
 import type { AgColorInput } from './agColorInput';
 import { AgColorInputSelector } from './agColorInput';
 import type { AgColorPicker } from './agColorPicker';
@@ -72,7 +72,7 @@ export class AgColorPanel extends Component {
     }
 
     public wireBeans(beans: BeanCollection): void {
-        this._Color = (beans.agChartsContext as AgChartsContext)._Util.Color;
+        this._Color = (beans.agChartsExports as AgChartsExports)._Util.Color;
     }
 
     public postConstruct() {

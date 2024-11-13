@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniRangeBar extends MiniChartWithAxes {
@@ -8,8 +8,8 @@ export class MiniRangeBar extends MiniChartWithAxes {
 
     private readonly bars: any[];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'rangeBarTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'rangeBarTooltip');
         const data = [3, 3.5, 3];
 
         this.bars = this.createRangeBar(this.root, data, this.size, this.padding, 'vertical');
@@ -33,7 +33,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const barAlongX = direction === 'horizontal';
         const scalePadding = 2 * padding;
 
-        const xScale = new this.agChartsContext._Scene.BandScale();
+        const xScale = new this.agChartsExports._Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.3;
@@ -42,7 +42,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const lowRatio = 0.7;
         const highRatio = 1.3;
 
-        const yScale = new this.agChartsContext._Scene.LinearScale();
+        const yScale = new this.agChartsExports._Scene.LinearScale();
         yScale.domain = [
             data.reduce((a, b) => Math.min(a, b), Infinity) * lowRatio,
             data.reduce((a, b) => Math.max(a, b), 0) * highRatio,
@@ -58,7 +58,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
             const y = yScale.convert(low);
             const height = yScale.convert(high) - y;
 
-            const rect = new this.agChartsContext._Scene.Rect();
+            const rect = new this.agChartsExports._Scene.Rect();
             rect.x = barAlongX ? y : x;
             rect.y = barAlongX ? x : y;
             rect.width = barAlongX ? height : width;

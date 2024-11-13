@@ -1,4 +1,4 @@
-import type { AgChartsContext } from '../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../services/chartTranslationService';
 import { MiniChart } from './miniChart';
 
@@ -8,8 +8,8 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
     protected showRadiusAxisLine: boolean = true;
     protected showAngleAxisLines: boolean = true;
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, tooltipName: ChartTranslationKey) {
-        super(container, agChartsContext, tooltipName);
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, tooltipName: ChartTranslationKey) {
+        super(container, agChartsExports, tooltipName);
     }
 
     public override postConstruct() {
@@ -22,7 +22,7 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
             ? [axisLineRadius, axisLineRadius * 0.8, axisLineRadius * 0.6, axisLineRadius * 0.4]
             : [];
 
-        const radiusAxisLine = new this.agChartsContext._Scene.Line();
+        const radiusAxisLine = new this.agChartsExports._Scene.Line();
         radiusAxisLine.x1 = size / 2;
         radiusAxisLine.y1 = padding;
         radiusAxisLine.x2 = size / 2;
@@ -35,7 +35,7 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
 
         const x = padding + axisLineRadius;
         this.gridLines = gridRadii.map((radius, index) => {
-            const gridLine = new this.agChartsContext._Scene.Path();
+            const gridLine = new this.agChartsExports._Scene.Path();
             gridLine.path.arc(x, x, radius, 0, 2 * Math.PI);
             gridLine.strokeWidth = 1;
             gridLine.stroke = this.stroke;

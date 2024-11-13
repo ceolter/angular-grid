@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
@@ -10,13 +10,13 @@ export class MiniTreemap extends MiniChart {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplate: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, agChartsContext, 'treemapTooltip');
+        super(container, agChartsExports, 'treemapTooltip');
 
         const { size, padding } = this;
 
@@ -50,7 +50,7 @@ export class MiniTreemap extends MiniChart {
 
             let previousY = range[0];
             const xRects = d.map((ratio) => {
-                const rect = new this.agChartsContext._Scene.Rect();
+                const rect = new this.agChartsExports._Scene.Rect();
 
                 const height = (availableHeight * ratio) / rowParts;
 
@@ -74,15 +74,15 @@ export class MiniTreemap extends MiniChart {
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
-        const rectGroup = new this.agChartsContext._Scene.Group();
-        rectGroup.setClipRect(new this.agChartsContext._Scene.BBox(padding, padding, size - padding, size - padding));
+        const rectGroup = new this.agChartsExports._Scene.Group();
+        rectGroup.setClipRect(new this.agChartsExports._Scene.BBox(padding, padding, size - padding, size - padding));
         rectGroup.append(this.rects);
         this.root.append(rectGroup);
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
         const defaultBackgroundColor = themeTemplate?.get(
-            this.agChartsContext._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
+            this.agChartsExports._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
         );
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';

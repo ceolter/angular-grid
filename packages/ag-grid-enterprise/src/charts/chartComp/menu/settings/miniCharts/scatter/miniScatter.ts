@@ -1,14 +1,14 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniScatter extends MiniChartWithAxes {
     static chartType: ChartType = 'scatter';
     private readonly points: any[];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'scatterTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'scatterTooltip');
 
         const size = this.size;
         const padding = this.padding;
@@ -29,11 +29,11 @@ export class MiniScatter extends MiniChartWithAxes {
             ],
         ];
 
-        const xScale = new this.agChartsContext._Scene.LinearScale();
+        const xScale = new this.agChartsExports._Scene.LinearScale();
         xScale.domain = [-0.5, 4];
         xScale.range = [padding * 2, size - padding];
 
-        const yScale = new this.agChartsContext._Scene.LinearScale();
+        const yScale = new this.agChartsExports._Scene.LinearScale();
         yScale.domain = [-0.5, 3.5];
         yScale.range = [size - padding, padding];
 
@@ -41,7 +41,7 @@ export class MiniScatter extends MiniChartWithAxes {
 
         data.forEach((series) => {
             series.forEach(([x, y]) => {
-                const arc = new this.agChartsContext._Scene.Arc();
+                const arc = new this.agChartsExports._Scene.Arc();
                 arc.strokeWidth = 0;
                 arc.centerX = xScale.convert(x);
                 arc.centerY = yScale.convert(y);
@@ -53,9 +53,9 @@ export class MiniScatter extends MiniChartWithAxes {
         this.points = points;
         this.updateColors(fills, strokes);
 
-        const pointsGroup = new this.agChartsContext._Scene.Group();
+        const pointsGroup = new this.agChartsExports._Scene.Group();
         pointsGroup.setClipRect(
-            new this.agChartsContext._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
+            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
         );
         pointsGroup.append(this.points);
         this.root.append(pointsGroup);

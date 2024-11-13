@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
@@ -11,7 +11,7 @@ export class MiniDonut extends MiniChart {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -19,11 +19,11 @@ export class MiniDonut extends MiniChart {
         centerRadiusScaler = 0.6,
         tooltipName: ChartTranslationKey = 'donutTooltip'
     ) {
-        super(container, agChartsContext, tooltipName);
+        super(container, agChartsExports, tooltipName);
 
         const radius = (this.size - this.padding * 2) / 2;
         const center = radius + this.padding;
-        const toRadians = agChartsContext._Scene.toRadians;
+        const toRadians = agChartsExports._Scene.toRadians;
         const angles = [
             [toRadians(-90), toRadians(30)],
             [toRadians(30), toRadians(120)],
@@ -34,7 +34,7 @@ export class MiniDonut extends MiniChart {
         ];
 
         this.sectors = angles.map(([startAngle, endAngle]) => {
-            const sector = new this.agChartsContext._Scene.Sector();
+            const sector = new this.agChartsExports._Scene.Sector();
             sector.centerX = center;
             sector.centerY = center;
             sector.innerRadius = radius * centerRadiusScaler;

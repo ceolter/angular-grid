@@ -3,7 +3,7 @@ import type { IColor, _IUtil } from 'ag-charts-types';
 import type { AgInputTextFieldParams, BeanCollection, ComponentSelector } from 'ag-grid-community';
 import { AgInputTextField, RefPlaceholder } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../agChartsContext';
+import type { AgChartsExports } from '../agChartsExports';
 import type { ChartTranslationService } from '../chartComp/services/chartTranslationService';
 
 export type AgColorInputEvent = 'colorChanged';
@@ -13,7 +13,7 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
-        this.color = (beans.agChartsContext as AgChartsContext)._Util.Color;
+        this.color = (beans.agChartsExports as AgChartsExports)._Util.Color;
     }
     private readonly eColor: HTMLElement = RefPlaceholder;
 

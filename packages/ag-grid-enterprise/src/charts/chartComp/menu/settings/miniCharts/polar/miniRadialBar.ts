@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { accumulateData } from '../miniChartHelpers';
 import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
@@ -14,8 +14,8 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         [5, 4, 2],
     ];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'radialBarTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'radialBarTooltip');
 
         this.showRadiusAxisLine = false;
 
@@ -23,7 +23,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         const innerRadiusRatio = 0.4;
         const innerRadius = radius * innerRadiusRatio;
 
-        const radiusScale = new this.agChartsContext._Scene.BandScale();
+        const radiusScale = new this.agChartsExports._Scene.BandScale();
         radiusScale.domain = this.data[0].map((_, index) => index);
         radiusScale.range = [innerRadius, radius];
         radiusScale.paddingInner = 0.5;
@@ -32,7 +32,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
 
         const { processedData, max } = accumulateData(this.data);
 
-        const angleScale = new this.agChartsContext._Scene.LinearScale();
+        const angleScale = new this.agChartsExports._Scene.LinearScale();
         angleScale.domain = [0, Math.ceil(max * 1.5)];
         const start = (3 / 2) * Math.PI;
         const end = start + 2 * Math.PI;
@@ -42,7 +42,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         this.series = processedData.map((series, index) => {
             const previousSeries = index < 0 ? undefined : processedData[index - 1];
 
-            const seriesGroup = new this.agChartsContext._Scene.Group({ zIndex: 1000_000 });
+            const seriesGroup = new this.agChartsExports._Scene.Group({ zIndex: 1000_000 });
             const seriesSectors = series.map((datum: number, i: number) => {
                 const previousDatum = previousSeries?.[i] ?? 0;
 
@@ -51,7 +51,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
                 const startAngle = angleScale.convert(previousDatum);
                 const endAngle = angleScale.convert(datum);
 
-                const sector = new this.agChartsContext._Scene.Sector();
+                const sector = new this.agChartsExports._Scene.Sector();
                 sector.centerX = center;
                 sector.centerY = center;
                 sector.innerRadius = innerRadius;

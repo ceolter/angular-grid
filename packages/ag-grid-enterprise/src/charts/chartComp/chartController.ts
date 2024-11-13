@@ -18,7 +18,7 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, _warn } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../agChartsContext';
+import type { AgChartsExports } from '../agChartsExports';
 import type { ChartProxy, FieldDefinition, UpdateParams } from './chartProxies/chartProxy';
 import { isStockTheme } from './chartProxies/chartTheme';
 import type { ChartDataModel, ChartModelParams, ColState } from './model/chartDataModel';
@@ -43,11 +43,11 @@ export type ChartControllerEvent =
     | 'chartLinkedChanged';
 export class ChartController extends BeanStub<ChartControllerEvent> {
     private rangeSvc: IRangeService;
-    private agChartsContext: AgChartsContext;
+    private agChartsExports: AgChartsExports;
 
     public wireBeans(beans: BeanCollection) {
         this.rangeSvc = beans.rangeSvc!;
-        this.agChartsContext = beans.agChartsContext as AgChartsContext;
+        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     private chartProxy: ChartProxy;
@@ -82,7 +82,7 @@ export class ChartController extends BeanStub<ChartControllerEvent> {
 
     public update(params: UpdateChartParams): boolean {
         if (!this.validUpdateType(params)) return false;
-        const validationResult = ChartParamsValidator.validateUpdateParams(params, this.agChartsContext.isEnterprise);
+        const validationResult = ChartParamsValidator.validateUpdateParams(params, this.agChartsExports.isEnterprise);
         if (!validationResult) return false;
         const validParams = validationResult === true ? params : validationResult;
         this.applyValidatedChartParams(validParams);
@@ -387,9 +387,9 @@ export class ChartController extends BeanStub<ChartControllerEvent> {
         const themeNames = this.getThemeNames();
 
         return themeNames.map((themeName) => {
-            const stockTheme = isStockTheme(themeName, this.agChartsContext._Theme);
+            const stockTheme = isStockTheme(themeName, this.agChartsExports._Theme);
             const theme = stockTheme ? themeName : this.chartProxy.lookupCustomChartTheme(themeName);
-            return this.agChartsContext._Theme.getChartTheme(theme);
+            return this.agChartsExports._Theme.getChartTheme(theme);
         });
     }
 
@@ -563,7 +563,7 @@ export class ChartController extends BeanStub<ChartControllerEvent> {
         return getSeriesType(ct);
     }
 
-    public isEnterprise = () => this.agChartsContext.isEnterprise;
+    public isEnterprise = () => this.agChartsExports.isEnterprise;
 
     private getCellRanges(): CellRange[] {
         return [this.model.dimensionCellRange!, this.model.valueCellRange!].filter((r) => r);

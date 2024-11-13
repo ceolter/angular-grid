@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects, createLinePaths } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -15,8 +15,8 @@ export class MiniColumnLineCombo extends MiniChartWithAxes {
 
     private lineData = [[5, 4, 6, 5, 4]];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'columnLineComboTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'columnLineComboTooltip');
 
         const { root, columnData, lineData, size, padding } = this;
 
@@ -33,7 +33,7 @@ export class MiniColumnLineCombo extends MiniChartWithAxes {
 
         root.append(this.columns);
 
-        this.lines = createLinePaths(this.agChartsContext, root, lineData, size, padding);
+        this.lines = createLinePaths(this.agChartsExports, root, lineData, size, padding);
 
         this.updateColors(fills, strokes);
     }

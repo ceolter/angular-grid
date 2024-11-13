@@ -2,7 +2,7 @@ import type { AgPickerFieldParams, BeanCollection, ComponentSelector } from 'ag-
 import { AgPickerField, _getDocument } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
-import type { AgChartsContext } from '../agChartsContext';
+import type { AgChartsExports } from '../agChartsExports';
 import { AgColorPanel } from './agColorPanel';
 
 export interface AgColorPickerParams
@@ -16,7 +16,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
     private isDestroyingPicker: boolean;
     private eDisplayFieldColor: HTMLElement;
     private eDisplayFieldText: HTMLElement;
-    private agChartsContext: AgChartsContext;
+    private agChartsExports: AgChartsExports;
 
     constructor(config?: AgColorPickerParams) {
         super({
@@ -31,7 +31,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
 
     public override wireBeans(beans: BeanCollection): void {
         super.wireBeans(beans);
-        this.agChartsContext = beans.agChartsContext as AgChartsContext;
+        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     public override postConstruct() {
@@ -119,7 +119,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
         }
 
         this.eDisplayFieldColor.style.backgroundColor = color;
-        this.eDisplayFieldText.textContent = this.agChartsContext._Util.Color.fromString(color)
+        this.eDisplayFieldText.textContent = this.agChartsExports._Util.Color.fromString(color)
             .toHexString()
             .toUpperCase();
 

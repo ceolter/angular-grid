@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { normalizeStackData } from '../miniChartHelpers';
@@ -13,7 +13,7 @@ export class MiniNormalizedArea extends MiniStackedArea {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
@@ -21,6 +21,6 @@ export class MiniNormalizedArea extends MiniStackedArea {
         data: number[][] = MiniNormalizedArea.data,
         tooltipName: ChartTranslationKey = 'normalizedAreaTooltip'
     ) {
-        super(container, agChartsContext, fills, strokes, themeTemplateParameters, isCustomTheme, data, tooltipName);
+        super(container, agChartsExports, fills, strokes, themeTemplateParameters, isCustomTheme, data, tooltipName);
     }
 }

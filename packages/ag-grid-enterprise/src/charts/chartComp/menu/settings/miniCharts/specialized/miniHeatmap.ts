@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
@@ -10,13 +10,13 @@ export class MiniHeatmap extends MiniChart {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplate: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, agChartsContext, 'heatmapTooltip');
+        super(container, agChartsExports, 'heatmapTooltip');
 
         const { size, padding } = this;
 
@@ -27,13 +27,13 @@ export class MiniHeatmap extends MiniChart {
         );
         const domain = data.map((_, index) => index);
 
-        const xScale = new this.agChartsContext._Scene.BandScale();
+        const xScale = new this.agChartsExports._Scene.BandScale();
         xScale.domain = domain;
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.01;
         xScale.paddingOuter = 0.1;
 
-        const yScale = new this.agChartsContext._Scene.BandScale();
+        const yScale = new this.agChartsExports._Scene.BandScale();
         yScale.domain = domain;
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.01;
@@ -45,7 +45,7 @@ export class MiniHeatmap extends MiniChart {
         this.rects = data.reduce((rects, d: [], index) => {
             rects ??= [];
             const xRects = d.map((_, yIndex) => {
-                const rect = new this.agChartsContext._Scene.Rect();
+                const rect = new this.agChartsExports._Scene.Rect();
                 rect.x = xScale.convert(index);
                 rect.y = yScale.convert(yIndex);
                 rect.width = width;
@@ -63,18 +63,18 @@ export class MiniHeatmap extends MiniChart {
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
-        const rectGroup = new this.agChartsContext._Scene.Group();
-        rectGroup.setClipRect(new this.agChartsContext._Scene.BBox(padding, padding, size - padding, size - padding));
+        const rectGroup = new this.agChartsExports._Scene.Group();
+        rectGroup.setClipRect(new this.agChartsExports._Scene.BBox(padding, padding, size - padding, size - padding));
         rectGroup.append(this.rects);
         this.root.append(rectGroup);
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
         const defaultColorRange = themeTemplate?.get(
-            this.agChartsContext._Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE
+            this.agChartsExports._Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE
         );
         const defaultBackgroundColor = themeTemplate?.get(
-            this.agChartsContext._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
+            this.agChartsExports._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
         );
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
@@ -82,7 +82,7 @@ export class MiniHeatmap extends MiniChart {
         const colorRange = isCustomTheme ? [fills[0], fills[1]] : defaultColorRange;
         const stroke = isCustomTheme ? strokes[0] : backgroundFill;
 
-        const fillFn = this.agChartsContext._Util.interpolateColor(colorRange[0], colorRange[1]);
+        const fillFn = this.agChartsExports._Util.interpolateColor(colorRange[0], colorRange[1]);
         this.rects.forEach((rect, i) => {
             rect.fill = fillFn(i * 0.2);
             rect.stroke = stroke;

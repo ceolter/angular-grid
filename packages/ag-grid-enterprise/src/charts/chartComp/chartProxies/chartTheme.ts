@@ -22,9 +22,9 @@ export function createAgChartTheme(
     chartThemeDefaults?: AgChartThemeOverrides,
     updatedOverrides?: AgChartThemeOverrides
 ): AgChartTheme {
-    const { chartOptionsToRestore, chartPaletteToRestore, chartThemeToRestore, agChartsContext } = chartProxyParams;
+    const { chartOptionsToRestore, chartPaletteToRestore, chartThemeToRestore, agChartsExports } = chartProxyParams;
     const themeName = getSelectedTheme(chartProxyParams);
-    const stockTheme = isStockTheme(themeName, agChartsContext._Theme);
+    const stockTheme = isStockTheme(themeName, agChartsExports._Theme);
 
     const rootTheme = stockTheme
         ? { baseTheme: themeName as AgChartThemeName }
@@ -77,7 +77,7 @@ export function createAgChartTheme(
     // Avoid explicitly setting the `theme.palette` property unless we're using the restored theme
     // AND the palette is actually different.
     if (chartPaletteToRestore && themeName === chartThemeToRestore) {
-        const rootThemePalette = chartProxyParams.agChartsContext._Theme.getChartTheme(rootTheme).palette;
+        const rootThemePalette = chartProxyParams.agChartsExports._Theme.getChartTheme(rootTheme).palette;
         if (!isIdenticalPalette(chartPaletteToRestore, rootThemePalette)) {
             theme.palette = chartPaletteToRestore;
         }

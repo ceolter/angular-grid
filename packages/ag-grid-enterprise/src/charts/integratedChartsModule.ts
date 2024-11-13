@@ -10,7 +10,7 @@ import { baseEnterpriseModule } from '../moduleUtils';
 import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
 import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
-import { AgChartsContext } from './agChartsContext';
+import { AgChartsExports } from './agChartsExports';
 import { EnterpriseChartProxyFactory } from './chartComp/chartProxies/enterpriseChartProxyFactory';
 import { AdvancedSettingsMenuFactory } from './chartComp/menu/advancedSettings/advancedSettingsMenuFactory';
 import { ChartMenuListFactory } from './chartComp/menu/chartMenuList';
@@ -121,7 +121,7 @@ export const IntegratedChartsModule: IntegratedChartsModuleType = {
             },
             beans: [
                 // bind the params to the constructor to avoid the need for static properties
-                AgChartsContext.bind(null, params),
+                AgChartsExports.bind(null, params),
                 ChartService,
                 ChartTranslationService,
                 ChartCrossFilterService,

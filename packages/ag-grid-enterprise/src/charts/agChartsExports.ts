@@ -3,8 +3,9 @@ import type { IntegratedModule } from 'ag-charts-types';
 import type { NamedBean } from 'ag-grid-community';
 import { BeanStub } from 'ag-grid-community';
 
-export class AgChartsContext extends BeanStub implements NamedBean {
-    beanName = 'agChartsContext' as const;
+/** Bean to expose the AG Charts apis from a single location and not require a code dependency on ag-charts-community */
+export class AgChartsExports extends BeanStub implements NamedBean {
+    beanName = 'agChartsExports' as const;
 
     isEnterprise = false;
     create: IntegratedModule['create'];

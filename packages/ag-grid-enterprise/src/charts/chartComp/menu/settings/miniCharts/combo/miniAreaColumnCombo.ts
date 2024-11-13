@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -19,8 +19,8 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
 
     private areaData = [[5, 4, 6, 5, 4]];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'areaColumnComboTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'areaColumnComboTooltip');
 
         const { root, columnData, areaData, size, padding } = this;
 
@@ -36,13 +36,13 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         } as CreateColumnRectsParams);
 
         // scale for area series
-        const xScale = new this.agChartsContext._Scene.BandScale();
+        const xScale = new this.agChartsExports._Scene.BandScale();
         xScale.range = [padding, size - padding];
         xScale.domain = [0, 1, 2, 3, 4];
         xScale.paddingInner = 1;
         xScale.paddingOuter = 0;
 
-        const yScale = new this.agChartsContext._Scene.LinearScale();
+        const yScale = new this.agChartsExports._Scene.LinearScale();
         yScale.range = [size - padding, padding];
         yScale.domain = [0, 6];
 
@@ -77,7 +77,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         });
 
         this.areas = pathData.map((points) => {
-            const area = new this.agChartsContext._Scene.Path();
+            const area = new this.agChartsExports._Scene.Path();
             area.strokeWidth = 0;
             area.fillOpacity = 0.8;
 
@@ -87,14 +87,14 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
             return area;
         });
 
-        const areaGroup = new this.agChartsContext._Scene.Group();
+        const areaGroup = new this.agChartsExports._Scene.Group();
         areaGroup.setClipRect(
-            new this.agChartsContext._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
+            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
         );
 
-        const columnGroup = new this.agChartsContext._Scene.Group();
+        const columnGroup = new this.agChartsExports._Scene.Group();
         columnGroup.setClipRect(
-            new this.agChartsContext._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
+            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
         );
 
         areaGroup.append(this.areas);

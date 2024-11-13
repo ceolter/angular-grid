@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniHistogram extends MiniChartWithAxes {
@@ -8,8 +8,8 @@ export class MiniHistogram extends MiniChartWithAxes {
 
     private readonly bars: any[];
 
-    constructor(container: HTMLElement, agChartsContext: AgChartsContext, fills: string[], strokes: string[]) {
-        super(container, agChartsContext, 'histogramTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'histogramTooltip');
 
         const padding = this.padding;
         const size = this.size;
@@ -17,11 +17,11 @@ export class MiniHistogram extends MiniChartWithAxes {
         // approx normal curve
         const data = [2, 5, 11, 13, 10, 6, 1];
 
-        const xScale = new this.agChartsContext._Scene.LinearScale();
+        const xScale = new this.agChartsExports._Scene.LinearScale();
         xScale.domain = [0, data.length];
         xScale.range = [padding, size - padding];
 
-        const yScale = new this.agChartsContext._Scene.LinearScale();
+        const yScale = new this.agChartsExports._Scene.LinearScale();
         yScale.domain = [0, data.reduce((a, b) => Math.max(a, b), 0)];
         yScale.range = [size - padding, padding];
 
@@ -32,7 +32,7 @@ export class MiniHistogram extends MiniChartWithAxes {
             const left = xScale.convert(i);
             const right = xScale.convert(i + 1);
 
-            const rect = new this.agChartsContext._Scene.Rect();
+            const rect = new this.agChartsExports._Scene.Rect();
             rect.x = left;
             rect.y = top;
             rect.width = right - left;

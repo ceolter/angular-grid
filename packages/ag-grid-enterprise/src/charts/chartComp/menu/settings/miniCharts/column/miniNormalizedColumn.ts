@@ -1,6 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../../../../agChartsContext';
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniStackedColumn } from './miniStackedColumn';
 
@@ -14,7 +14,7 @@ export class MiniNormalizedColumn extends MiniStackedColumn {
 
     constructor(
         container: HTMLElement,
-        agChartsContext: AgChartsContext,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
@@ -22,7 +22,7 @@ export class MiniNormalizedColumn extends MiniStackedColumn {
     ) {
         super(
             container,
-            agChartsContext,
+            agChartsExports,
             fills,
             strokes,
             themeTemplateParameters,

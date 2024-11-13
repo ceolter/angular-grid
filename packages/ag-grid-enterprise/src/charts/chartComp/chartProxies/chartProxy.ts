@@ -11,7 +11,7 @@ import type {
 
 import type { ChartType, SeriesChartType, SeriesGroupType } from 'ag-grid-community';
 
-import type { AgChartsContext } from '../../agChartsContext';
+import type { AgChartsExports } from '../../agChartsExports';
 import type { CrossFilteringContext } from '../../chartService';
 import { deproxy } from '../utils/integration';
 import { get } from '../utils/object';
@@ -20,7 +20,7 @@ import { getSeriesType } from '../utils/seriesTypeMapper';
 import { createAgChartTheme, lookupCustomChartTheme } from './chartTheme';
 
 export interface ChartProxyParams {
-    agChartsContext: AgChartsContext;
+    agChartsExports: AgChartsExports;
     chartInstance?: AgChartInstance<AgChartInstanceOptions>;
     chartType: ChartType;
     customChartThemes?: { [name: string]: AgChartTheme };
@@ -68,7 +68,7 @@ export abstract class ChartProxy<
     TOptions extends AgChartOptions = AgChartOptions,
     TSeries extends ChartSeriesType = ChartSeriesType,
 > {
-    protected readonly agChartsContext: AgChartsContext;
+    protected readonly agChartsExports: AgChartsExports;
     protected readonly chartType: ChartType;
     protected readonly standaloneChartType: TSeries;
 
@@ -79,7 +79,7 @@ export abstract class ChartProxy<
     protected clearThemeOverrides = false;
 
     protected constructor(protected readonly chartProxyParams: ChartProxyParams) {
-        this.agChartsContext = chartProxyParams.agChartsContext;
+        this.agChartsExports = chartProxyParams.agChartsExports;
         this.chart = chartProxyParams.chartInstance!;
         this.chartType = chartProxyParams.chartType;
         this.crossFiltering = chartProxyParams.crossFiltering;
@@ -87,7 +87,7 @@ export abstract class ChartProxy<
         this.standaloneChartType = getSeriesType(this.chartType) as TSeries;
 
         if (this.chart == null) {
-            this.chart = chartProxyParams.agChartsContext.create(this.getCommonChartOptions());
+            this.chart = chartProxyParams.agChartsExports.create(this.getCommonChartOptions());
         } else {
             // On chart change, reset formatting panel changes.
             this.clearThemeOverrides = true;
@@ -139,7 +139,7 @@ export abstract class ChartProxy<
     }
 
     public getChartPalette(): AgChartThemePalette | undefined {
-        return this.agChartsContext._Theme.getChartTheme(this.getChartOptions().theme).palette;
+        return this.agChartsExports._Theme.getChartTheme(this.getChartOptions().theme).palette;
     }
 
     public setPaired(paired: boolean) {
@@ -186,7 +186,7 @@ export abstract class ChartProxy<
         const theme = createAgChartTheme(
             this.chartProxyParams,
             this,
-            this.agChartsContext.isEnterprise,
+            this.agChartsExports.isEnterprise,
             this.getChartThemeDefaults(),
             updatedOverrides ?? formattingPanelOverrides
         );
@@ -214,7 +214,7 @@ export abstract class ChartProxy<
                 enabled: false,
             },
         };
-        const common: AgCommonThemeableChartOptions = this.agChartsContext.isEnterprise
+        const common: AgCommonThemeableChartOptions = this.agChartsExports.isEnterprise
             ? {
                   zoom: {
                       enabled: true,
