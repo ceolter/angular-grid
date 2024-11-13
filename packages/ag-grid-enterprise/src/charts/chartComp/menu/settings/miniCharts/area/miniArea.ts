@@ -26,7 +26,7 @@ export class MiniArea extends MiniChartWithAxes {
     ) {
         super(container, agChartsExports, tooltipName);
 
-        this.areas = createAreaPaths(this.agChartsExports, this.root, data, this.size, this.padding, stacked);
+        this.areas = createAreaPaths(agChartsExports._Scene, this.root, data, this.size, this.padding, stacked);
 
         this.updateColors(fills, strokes);
     }

@@ -64,13 +64,15 @@ export class MiniRangeArea extends MiniChartWithAxes {
             -Infinity
         );
 
-        const xScale = new this.agChartsExports._Scene.LinearScale();
+        const { _Scene } = this.agChartsExports;
+
+        const xScale = new _Scene.LinearScale();
         xScale.domain = [xMin, xMax];
         xScale.range = [padding, size - padding];
 
         const scalePadding = 2 * padding;
 
-        const yScale = new this.agChartsExports._Scene.LinearScale();
+        const yScale = new _Scene.LinearScale();
         yScale.domain = [yMin, yMax];
         yScale.range = [size - scalePadding, scalePadding];
 
@@ -78,9 +80,9 @@ export class MiniRangeArea extends MiniChartWithAxes {
         const areas: any[] = [];
 
         const lowPoints = data.map((series) => {
-            const highLine = new this.agChartsExports._Scene.Path();
-            const lowLine = new this.agChartsExports._Scene.Path();
-            const area = new this.agChartsExports._Scene.Path();
+            const highLine = new _Scene.Path();
+            const lowLine = new _Scene.Path();
+            const area = new _Scene.Path();
 
             lines.push([highLine, lowLine]);
             areas.push(area);

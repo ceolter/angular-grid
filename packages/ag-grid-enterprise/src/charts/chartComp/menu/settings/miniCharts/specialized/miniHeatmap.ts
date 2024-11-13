@@ -18,7 +18,11 @@ export class MiniHeatmap extends MiniChart {
     ) {
         super(container, agChartsExports, 'heatmapTooltip');
 
-        const { size, padding } = this;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         const heatmapSize = 3;
 
@@ -27,13 +31,13 @@ export class MiniHeatmap extends MiniChart {
         );
         const domain = data.map((_, index) => index);
 
-        const xScale = new this.agChartsExports._Scene.BandScale();
+        const xScale = new _Scene.BandScale();
         xScale.domain = domain;
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.01;
         xScale.paddingOuter = 0.1;
 
-        const yScale = new this.agChartsExports._Scene.BandScale();
+        const yScale = new _Scene.BandScale();
         yScale.domain = domain;
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.01;
@@ -45,7 +49,7 @@ export class MiniHeatmap extends MiniChart {
         this.rects = data.reduce((rects, d: [], index) => {
             rects ??= [];
             const xRects = d.map((_, yIndex) => {
-                const rect = new this.agChartsExports._Scene.Rect();
+                const rect = new _Scene.Rect();
                 rect.x = xScale.convert(index);
                 rect.y = yScale.convert(yIndex);
                 rect.width = width;
@@ -63,26 +67,23 @@ export class MiniHeatmap extends MiniChart {
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
-        const rectGroup = new this.agChartsExports._Scene.Group();
-        rectGroup.setClipRect(new this.agChartsExports._Scene.BBox(padding, padding, size - padding, size - padding));
+        const rectGroup = new _Scene.Group();
+        rectGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding, size - padding));
         rectGroup.append(this.rects);
         this.root.append(rectGroup);
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
-        const defaultColorRange = themeTemplate?.get(
-            this.agChartsExports._Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE
-        );
-        const defaultBackgroundColor = themeTemplate?.get(
-            this.agChartsExports._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
-        );
+        const { _Theme, _Util } = this.agChartsExports;
+        const defaultColorRange = themeTemplate?.get(_Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE);
+        const defaultBackgroundColor = themeTemplate?.get(_Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR);
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
 
         const colorRange = isCustomTheme ? [fills[0], fills[1]] : defaultColorRange;
         const stroke = isCustomTheme ? strokes[0] : backgroundFill;
 
-        const fillFn = this.agChartsExports._Util.interpolateColor(colorRange[0], colorRange[1]);
+        const fillFn = _Util.interpolateColor(colorRange[0], colorRange[1]);
         this.rects.forEach((rect, i) => {
             rect.fill = fillFn(i * 0.2);
             rect.stroke = stroke;

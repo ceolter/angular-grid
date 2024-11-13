@@ -28,16 +28,17 @@ export class MiniStackedBar extends MiniChartWithAxes {
     ) {
         super(container, agChartsExports, tooltipName);
 
+        const { _Scene } = agChartsExports;
         const size = this.size;
         const padding = this.padding;
 
-        const yScale = new this.agChartsExports._Scene.BandScale();
+        const yScale = new _Scene.BandScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
         yScale.paddingOuter = 0.3;
 
-        const xScale = new this.agChartsExports._Scene.LinearScale();
+        const xScale = new _Scene.LinearScale();
         xScale.domain = xScaleDomain;
         xScale.range = [size - padding, padding];
 
@@ -46,7 +47,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
 
         this.bars = data.map((series) =>
             series.map((datum, i) => {
-                const rect = new this.agChartsExports._Scene.Rect();
+                const rect = new _Scene.Rect();
                 rect.x = padding;
                 rect.y = yScale.convert(i);
                 rect.width = bottom - xScale.convert(datum);

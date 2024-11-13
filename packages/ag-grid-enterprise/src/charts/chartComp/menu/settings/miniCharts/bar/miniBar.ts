@@ -9,18 +9,19 @@ export class MiniBar extends MiniChartWithAxes {
 
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'groupedBarTooltip');
+        const { _Scene } = agChartsExports;
 
         const padding = this.padding;
         const size = this.size;
         const data = [2, 3, 4];
 
-        const yScale = new this.agChartsExports._Scene.BandScale();
+        const yScale = new _Scene.BandScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
         yScale.paddingOuter = 0.3;
 
-        const xScale = new this.agChartsExports._Scene.LinearScale();
+        const xScale = new _Scene.LinearScale();
         xScale.domain = [0, 4];
         xScale.range = [size - padding, padding];
 
@@ -28,7 +29,7 @@ export class MiniBar extends MiniChartWithAxes {
         const height = yScale.bandwidth;
 
         this.bars = data.map((datum, i) => {
-            const rect = new this.agChartsExports._Scene.Rect();
+            const rect = new _Scene.Rect();
             rect.x = padding;
             rect.y = yScale.convert(i);
             rect.width = bottom - xScale.convert(datum);

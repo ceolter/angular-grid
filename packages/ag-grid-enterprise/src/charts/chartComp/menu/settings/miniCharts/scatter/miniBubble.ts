@@ -10,8 +10,11 @@ export class MiniBubble extends MiniChartWithAxes {
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'bubbleTooltip');
 
-        const size = this.size;
-        const padding = this.padding;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         // [x, y, radius] triples
         const data = [
@@ -26,11 +29,11 @@ export class MiniBubble extends MiniChartWithAxes {
             ],
         ];
 
-        const xScale = new this.agChartsExports._Scene.LinearScale();
+        const xScale = new _Scene.LinearScale();
         xScale.domain = [0, 1];
         xScale.range = [padding * 2, size - padding];
 
-        const yScale = new this.agChartsExports._Scene.LinearScale();
+        const yScale = new _Scene.LinearScale();
         yScale.domain = [0, 1];
         yScale.range = [size - padding, padding];
 
@@ -38,7 +41,7 @@ export class MiniBubble extends MiniChartWithAxes {
 
         data.forEach((series) => {
             series.forEach(([x, y, radius]) => {
-                const arc = new this.agChartsExports._Scene.Arc();
+                const arc = new _Scene.Arc();
                 arc.strokeWidth = 0;
                 arc.centerX = xScale.convert(x);
                 arc.centerY = yScale.convert(y);
@@ -51,10 +54,8 @@ export class MiniBubble extends MiniChartWithAxes {
         this.points = points;
         this.updateColors(fills, strokes);
 
-        const pointsGroup = new this.agChartsExports._Scene.Group();
-        pointsGroup.setClipRect(
-            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
-        );
+        const pointsGroup = new _Scene.Group();
+        pointsGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding * 2, size - padding * 2));
         pointsGroup.append(this.points);
         this.root.append(pointsGroup);
     }

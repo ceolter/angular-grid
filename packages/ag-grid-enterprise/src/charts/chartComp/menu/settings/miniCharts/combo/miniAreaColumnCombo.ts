@@ -22,7 +22,14 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'areaColumnComboTooltip');
 
-        const { root, columnData, areaData, size, padding } = this;
+        const {
+            root,
+            columnData,
+            areaData,
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         this.columns = createColumnRects({
             stacked: false,
@@ -36,13 +43,13 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         } as CreateColumnRectsParams);
 
         // scale for area series
-        const xScale = new this.agChartsExports._Scene.BandScale();
+        const xScale = new _Scene.BandScale();
         xScale.range = [padding, size - padding];
         xScale.domain = [0, 1, 2, 3, 4];
         xScale.paddingInner = 1;
         xScale.paddingOuter = 0;
 
-        const yScale = new this.agChartsExports._Scene.LinearScale();
+        const yScale = new _Scene.LinearScale();
         yScale.range = [size - padding, padding];
         yScale.domain = [0, 6];
 
@@ -77,7 +84,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         });
 
         this.areas = pathData.map((points) => {
-            const area = new this.agChartsExports._Scene.Path();
+            const area = new _Scene.Path();
             area.strokeWidth = 0;
             area.fillOpacity = 0.8;
 
@@ -87,15 +94,11 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
             return area;
         });
 
-        const areaGroup = new this.agChartsExports._Scene.Group();
-        areaGroup.setClipRect(
-            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
-        );
+        const areaGroup = new _Scene.Group();
+        areaGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding * 2, size - padding * 2));
 
-        const columnGroup = new this.agChartsExports._Scene.Group();
-        columnGroup.setClipRect(
-            new this.agChartsExports._Scene.BBox(padding, padding, size - padding * 2, size - padding * 2)
-        );
+        const columnGroup = new _Scene.Group();
+        columnGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding * 2, size - padding * 2));
 
         areaGroup.append(this.areas);
         columnGroup.append(this.columns);

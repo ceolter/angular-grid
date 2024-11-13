@@ -11,17 +11,20 @@ export class MiniHistogram extends MiniChartWithAxes {
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'histogramTooltip');
 
-        const padding = this.padding;
-        const size = this.size;
+        const {
+            padding,
+            size,
+            agChartsExports: { _Scene },
+        } = this;
 
         // approx normal curve
         const data = [2, 5, 11, 13, 10, 6, 1];
 
-        const xScale = new this.agChartsExports._Scene.LinearScale();
+        const xScale = new _Scene.LinearScale();
         xScale.domain = [0, data.length];
         xScale.range = [padding, size - padding];
 
-        const yScale = new this.agChartsExports._Scene.LinearScale();
+        const yScale = new _Scene.LinearScale();
         yScale.domain = [0, data.reduce((a, b) => Math.max(a, b), 0)];
         yScale.range = [size - padding, padding];
 
@@ -32,7 +35,7 @@ export class MiniHistogram extends MiniChartWithAxes {
             const left = xScale.convert(i);
             const right = xScale.convert(i + 1);
 
-            const rect = new this.agChartsExports._Scene.Rect();
+            const rect = new _Scene.Rect();
             rect.x = left;
             rect.y = top;
             rect.width = right - left;

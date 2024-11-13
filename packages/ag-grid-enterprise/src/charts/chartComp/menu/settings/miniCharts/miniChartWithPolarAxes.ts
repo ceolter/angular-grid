@@ -13,6 +13,7 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
     }
 
     public override postConstruct() {
+        const { _Scene } = this.agChartsExports;
         const size = this.size;
         const padding = this.padding;
         const combinedPadding = padding * 2;
@@ -22,7 +23,7 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
             ? [axisLineRadius, axisLineRadius * 0.8, axisLineRadius * 0.6, axisLineRadius * 0.4]
             : [];
 
-        const radiusAxisLine = new this.agChartsExports._Scene.Line();
+        const radiusAxisLine = new _Scene.Line();
         radiusAxisLine.x1 = size / 2;
         radiusAxisLine.y1 = padding;
         radiusAxisLine.x2 = size / 2;
@@ -35,7 +36,7 @@ export abstract class MiniChartWithPolarAxes extends MiniChart {
 
         const x = padding + axisLineRadius;
         this.gridLines = gridRadii.map((radius, index) => {
-            const gridLine = new this.agChartsExports._Scene.Path();
+            const gridLine = new _Scene.Path();
             gridLine.path.arc(x, x, radius, 0, 2 * Math.PI);
             gridLine.strokeWidth = 1;
             gridLine.stroke = this.stroke;

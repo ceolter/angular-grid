@@ -33,7 +33,9 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const barAlongX = direction === 'horizontal';
         const scalePadding = 2 * padding;
 
-        const xScale = new this.agChartsExports._Scene.BandScale();
+        const { _Scene } = this.agChartsExports;
+
+        const xScale = new _Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.3;
@@ -42,7 +44,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
         const lowRatio = 0.7;
         const highRatio = 1.3;
 
-        const yScale = new this.agChartsExports._Scene.LinearScale();
+        const yScale = new _Scene.LinearScale();
         yScale.domain = [
             data.reduce((a, b) => Math.min(a, b), Infinity) * lowRatio,
             data.reduce((a, b) => Math.max(a, b), 0) * highRatio,
@@ -58,7 +60,7 @@ export class MiniRangeBar extends MiniChartWithAxes {
             const y = yScale.convert(low);
             const height = yScale.convert(high) - y;
 
-            const rect = new this.agChartsExports._Scene.Rect();
+            const rect = new _Scene.Rect();
             rect.x = barAlongX ? y : x;
             rect.y = barAlongX ? x : y;
             rect.width = barAlongX ? height : width;

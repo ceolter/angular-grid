@@ -25,8 +25,10 @@ export abstract class MiniChart extends Component {
     ) {
         super();
 
-        this.root = new agChartsExports._Scene.Group();
-        const scene = new agChartsExports._Scene.Scene({
+        const { _Scene } = agChartsExports;
+
+        this.root = new _Scene.Group();
+        const scene = new _Scene.Scene({
             width: this.size,
             height: this.size,
         });

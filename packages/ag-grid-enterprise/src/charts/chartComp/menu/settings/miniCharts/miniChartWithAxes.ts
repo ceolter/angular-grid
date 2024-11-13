@@ -11,17 +11,18 @@ export abstract class MiniChartWithAxes extends MiniChart {
     }
 
     public override postConstruct() {
+        const { _Scene } = this.agChartsExports;
         const size = this.size;
         const padding = this.padding;
 
-        const leftAxis = new this.agChartsExports._Scene.Line();
+        const leftAxis = new _Scene.Line();
         leftAxis.x1 = padding;
         leftAxis.y1 = padding;
         leftAxis.x2 = padding;
         leftAxis.y2 = size - padding + this.axisOvershoot;
         leftAxis.stroke = this.stroke;
 
-        const bottomAxis = new this.agChartsExports._Scene.Line();
+        const bottomAxis = new _Scene.Line();
         bottomAxis.x1 = padding - this.axisOvershoot + 1;
         bottomAxis.y1 = size - padding;
         bottomAxis.x2 = size - padding + 1;

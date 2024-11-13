@@ -19,30 +19,37 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
 
         this.showRadiusAxisLine = false;
 
-        const radius = (this.size - this.padding) / 2;
+        const {
+            size,
+            padding,
+            data,
+            agChartsExports: { _Scene },
+        } = this;
+
+        const radius = (size - padding) / 2;
         const innerRadiusRatio = 0.4;
         const innerRadius = radius * innerRadiusRatio;
 
-        const radiusScale = new this.agChartsExports._Scene.BandScale();
-        radiusScale.domain = this.data[0].map((_, index) => index);
+        const radiusScale = new _Scene.BandScale();
+        radiusScale.domain = data[0].map((_, index) => index);
         radiusScale.range = [innerRadius, radius];
         radiusScale.paddingInner = 0.5;
         radiusScale.paddingOuter = 0;
         const bandwidth = radiusScale.bandwidth;
 
-        const { processedData, max } = accumulateData(this.data);
+        const { processedData, max } = accumulateData(data);
 
-        const angleScale = new this.agChartsExports._Scene.LinearScale();
+        const angleScale = new _Scene.LinearScale();
         angleScale.domain = [0, Math.ceil(max * 1.5)];
         const start = (3 / 2) * Math.PI;
         const end = start + 2 * Math.PI;
         angleScale.range = [start, end];
 
-        const center = this.size / 2;
+        const center = size / 2;
         this.series = processedData.map((series, index) => {
             const previousSeries = index < 0 ? undefined : processedData[index - 1];
 
-            const seriesGroup = new this.agChartsExports._Scene.Group({ zIndex: 1000_000 });
+            const seriesGroup = new _Scene.Group({ zIndex: 1000_000 });
             const seriesSectors = series.map((datum: number, i: number) => {
                 const previousDatum = previousSeries?.[i] ?? 0;
 
@@ -51,7 +58,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
                 const startAngle = angleScale.convert(previousDatum);
                 const endAngle = angleScale.convert(datum);
 
-                const sector = new this.agChartsExports._Scene.Sector();
+                const sector = new _Scene.Sector();
                 sector.centerX = center;
                 sector.centerY = center;
                 sector.innerRadius = innerRadius;

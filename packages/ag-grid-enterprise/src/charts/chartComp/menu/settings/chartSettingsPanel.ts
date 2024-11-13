@@ -34,7 +34,6 @@ export class ChartSettingsPanel extends Component {
     private themes: string[] = [];
 
     private isAnimating: boolean;
-    private agChartsExports: AgChartsExports;
 
     constructor(private readonly chartController: ChartController) {
         super(/* html */ `<div class="ag-chart-settings-wrapper">
@@ -49,10 +48,6 @@ export class ChartSettingsPanel extends Component {
                 </div>
             </div>
         </div>`);
-    }
-
-    public wireBeans(beans: BeanCollection): void {
-        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     public postConstruct() {
@@ -117,7 +112,7 @@ export class ChartSettingsPanel extends Component {
             const isActivePalette = this.activePaletteIndex === index;
             const { fills = [], strokes = [] } = palette;
             const themeName = themes[index];
-            const isCustomTheme = !isStockTheme(themeName, this.agChartsExports._Theme);
+            const isCustomTheme = !isStockTheme(themeName, (this.beans.agChartsExports as AgChartsExports)._Theme);
             const miniChartsContainer = this.createBean(
                 new MiniChartsContainer(
                     this.chartController,

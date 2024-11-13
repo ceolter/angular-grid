@@ -21,9 +21,14 @@ export class MiniDonut extends MiniChart {
     ) {
         super(container, agChartsExports, tooltipName);
 
-        const radius = (this.size - this.padding * 2) / 2;
-        const center = radius + this.padding;
-        const toRadians = agChartsExports._Scene.toRadians;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
+        const radius = (size - padding * 2) / 2;
+        const center = radius + padding;
+        const toRadians = _Scene.toRadians;
         const angles = [
             [toRadians(-90), toRadians(30)],
             [toRadians(30), toRadians(120)],
@@ -34,7 +39,7 @@ export class MiniDonut extends MiniChart {
         ];
 
         this.sectors = angles.map(([startAngle, endAngle]) => {
-            const sector = new this.agChartsExports._Scene.Sector();
+            const sector = new _Scene.Sector();
             sector.centerX = center;
             sector.centerY = center;
             sector.innerRadius = radius * centerRadiusScaler;

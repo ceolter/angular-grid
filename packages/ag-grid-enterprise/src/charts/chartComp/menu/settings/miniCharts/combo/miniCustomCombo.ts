@@ -18,7 +18,14 @@ export class MiniCustomCombo extends MiniChart {
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'customComboTooltip');
 
-        const { root, columnData, lineData, size, padding } = this;
+        const {
+            root,
+            columnData,
+            lineData,
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         this.columns = createColumnRects({
             stacked: false,
@@ -38,21 +45,21 @@ export class MiniCustomCombo extends MiniChart {
         const axisStroke = 'grey';
         const axisOvershoot = 3;
 
-        const leftAxis = new this.agChartsExports._Scene.Line();
+        const leftAxis = new _Scene.Line();
         leftAxis.x1 = padding;
         leftAxis.y1 = padding;
         leftAxis.x2 = padding;
         leftAxis.y2 = size - padding + axisOvershoot;
         leftAxis.stroke = axisStroke;
 
-        const bottomAxis = new this.agChartsExports._Scene.Line();
+        const bottomAxis = new _Scene.Line();
         bottomAxis.x1 = padding - axisOvershoot + 1;
         bottomAxis.y1 = size - padding;
         bottomAxis.x2 = size - padding + 1;
         bottomAxis.y2 = size - padding;
         bottomAxis.stroke = axisStroke;
 
-        const penIcon = new this.agChartsExports._Scene.Path();
+        const penIcon = new _Scene.Path();
         this.buildPenIconPath(penIcon);
         penIcon.fill = 'whitesmoke';
         penIcon.stroke = 'darkslategrey';

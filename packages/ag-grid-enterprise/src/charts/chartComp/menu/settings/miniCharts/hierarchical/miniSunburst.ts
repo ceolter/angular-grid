@@ -25,7 +25,14 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
         this.showRadiusAxisLine = false;
         this.showAngleAxisLines = false;
 
-        const { data, size, padding, angleOffset, innerRadiusRatio } = this;
+        const {
+            data,
+            size,
+            padding,
+            angleOffset,
+            innerRadiusRatio,
+            agChartsExports: { _Scene },
+        } = this;
 
         const radius = (size - padding * 2) / 2;
 
@@ -66,7 +73,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
             data.forEach((child, childIndex, children) => {
                 let childGroup = group;
                 if (!childGroup) {
-                    childGroup = new this.agChartsExports._Scene.Group();
+                    childGroup = new _Scene.Group();
                     this.series.push(childGroup);
                 }
 
@@ -77,7 +84,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
                 const start = previousAngle;
                 const end = start + availableAngle * angleRatio;
 
-                const sector = new this.agChartsExports._Scene.Sector();
+                const sector = new _Scene.Sector();
                 sector.centerX = center;
                 sector.centerY = center;
                 sector.innerRadius = innerRadius;

@@ -86,7 +86,6 @@ export class GridChartComp extends Component {
     private popupSvc: PopupService;
     private enterpriseChartProxyFactory?: EnterpriseChartProxyFactory;
     private environment: Environment;
-    private agChartsExports: AgChartsExports;
 
     public wireBeans(beans: BeanCollection): void {
         this.crossFilterService = beans.chartCrossFilterSvc as ChartCrossFilterService;
@@ -96,7 +95,6 @@ export class GridChartComp extends Component {
         this.popupSvc = beans.popupSvc!;
         this.enterpriseChartProxyFactory = beans.enterpriseChartProxyFactory as EnterpriseChartProxyFactory;
         this.environment = beans.environment;
-        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
@@ -205,7 +203,7 @@ export class GridChartComp extends Component {
 
         const chartType = this.chartController.getChartType();
         const chartProxyParams: ChartProxyParams = {
-            agChartsExports: this.agChartsExports,
+            agChartsExports: this.beans.agChartsExports as AgChartsExports,
             chartType,
             chartInstance,
             getChartThemeName: this.getChartThemeName.bind(this),

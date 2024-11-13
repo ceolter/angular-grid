@@ -19,12 +19,17 @@ export class MiniRadialColumn extends MiniChartWithPolarAxes {
 
         this.showRadiusAxisLine = false;
 
-        const { padding, size, data } = this;
+        const {
+            padding,
+            size,
+            data,
+            agChartsExports: { _Scene },
+        } = this;
         const radius = (size - padding * 2) / 2;
         const innerRadiusRatio = 0.4;
         const axisInnerRadius = radius * innerRadiusRatio;
 
-        const angleScale = new this.agChartsExports._Scene.BandScale();
+        const angleScale = new _Scene.BandScale();
         angleScale.domain = data[0].map((_, index) => index);
         angleScale.range = [0, 2 * Math.PI];
         angleScale.paddingInner = 0;
@@ -33,7 +38,7 @@ export class MiniRadialColumn extends MiniChartWithPolarAxes {
 
         const { processedData, max } = accumulateData(data);
 
-        const radiusScale = new this.agChartsExports._Scene.LinearScale();
+        const radiusScale = new _Scene.LinearScale();
         radiusScale.domain = [0, max];
         radiusScale.range = [axisInnerRadius, radius];
 
@@ -42,7 +47,7 @@ export class MiniRadialColumn extends MiniChartWithPolarAxes {
             const firstSeries = seriesIndex === 0;
             const previousSeries = firstSeries ? undefined : processedData[seriesIndex - 1];
 
-            const seriesGroup = new this.agChartsExports._Scene.TranslatableGroup({ zIndex: 1000_000 });
+            const seriesGroup = new _Scene.TranslatableGroup({ zIndex: 1000_000 });
             const seriesColumns = series.map((datum: number, i: number) => {
                 const previousDatum = previousSeries?.[i];
                 const outerRadius = radiusScale.convert(datum);
@@ -50,15 +55,9 @@ export class MiniRadialColumn extends MiniChartWithPolarAxes {
                 const startAngle = angleScale.convert(i);
                 const endAngle = startAngle + bandwidth;
 
-                const columnWidth = this.agChartsExports._Scene.getRadialColumnWidth(
-                    startAngle,
-                    endAngle,
-                    radius,
-                    0.5,
-                    0.5
-                );
+                const columnWidth = _Scene.getRadialColumnWidth(startAngle, endAngle, radius, 0.5, 0.5);
 
-                const column = new this.agChartsExports._Scene.RadialColumnShape();
+                const column = new _Scene.RadialColumnShape();
 
                 column.columnWidth = columnWidth;
                 column.innerRadius = innerRadius;

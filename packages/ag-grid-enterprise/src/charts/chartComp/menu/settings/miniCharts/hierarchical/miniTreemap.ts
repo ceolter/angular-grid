@@ -18,7 +18,11 @@ export class MiniTreemap extends MiniChart {
     ) {
         super(container, agChartsExports, 'treemapTooltip');
 
-        const { size, padding } = this;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         const data: number[][] = [
             [1, 1],
@@ -50,7 +54,7 @@ export class MiniTreemap extends MiniChart {
 
             let previousY = range[0];
             const xRects = d.map((ratio) => {
-                const rect = new this.agChartsExports._Scene.Rect();
+                const rect = new _Scene.Rect();
 
                 const height = (availableHeight * ratio) / rowParts;
 
@@ -74,8 +78,8 @@ export class MiniTreemap extends MiniChart {
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
-        const rectGroup = new this.agChartsExports._Scene.Group();
-        rectGroup.setClipRect(new this.agChartsExports._Scene.BBox(padding, padding, size - padding, size - padding));
+        const rectGroup = new _Scene.Group();
+        rectGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding, size - padding));
         rectGroup.append(this.rects);
         this.root.append(rectGroup);
     }
