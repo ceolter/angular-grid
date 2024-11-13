@@ -4,7 +4,7 @@
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "dependencies": {
     "tslib": "^2.3.0",
-    "ag-charts-types": "10.3.3-beta.20241112.1638"
+    "ag-charts-types": "10.3.3"
   },
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
