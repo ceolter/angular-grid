@@ -2,7 +2,7 @@ const shouldBuildFrameworks = process.env.BUILD_FWS === '1';
 
 const BASE_IGNORED_PROJECTS = ['all', 'ag-grid-docs'];
 const FRAMEWORK_PROJECTS = ['ag-grid-angular', 'ag-grid-react', 'ag-grid-vue3'];
-const PACKAGE_PROJECTS = ['ag-grid-community', 'ag-grid-enterprise', 'ag-grid-charts-enterprise'];
+const PACKAGE_PROJECTS = ['ag-grid-community', 'ag-grid-enterprise'];
 
 function getIgnoredProjects() {
     const ignoredProjects = [...BASE_IGNORED_PROJECTS];
@@ -30,18 +30,13 @@ function getProjectBuildTargets(project) {
                 buildTargets.push(['ag-grid-enterprise', ['build:css']]);
             }
 
-            buildTargets.push(
-                ['ag-grid-community', ['build'], 'watch'],
-                ['ag-grid-enterprise', ['build'], 'watch'],
-                ['ag-grid-charts-enterprise', ['build'], 'watch']
-            );
+            buildTargets.push(['ag-grid-community', ['build'], 'watch'], ['ag-grid-enterprise', ['build'], 'watch']);
         } else if (project.startsWith('@ag-grid')) {
             // For locale and styles
             buildTargets.push(
                 [project, ['build'], 'watch'],
                 ['ag-grid-community', ['build'], 'watch'],
-                ['ag-grid-enterprise', ['build'], 'watch'],
-                ['ag-grid-charts-enterprise', ['build'], 'watch']
+                ['ag-grid-enterprise', ['build'], 'watch']
             );
         }
 

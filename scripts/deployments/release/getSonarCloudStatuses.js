@@ -33,7 +33,6 @@ const getQualityGateStatuses = (projectIds) => {
     const projectStatuses = await getQualityGateStatuses([
         'ag-grid-community',
         'ag-grid-enterprise',
-        'ag-grid-charts-enterprise',
         'ag-charts-community',
     ]);
 

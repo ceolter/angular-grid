@@ -72,11 +72,6 @@
                 defaultExtension: 'js',
                 format: 'cjs',
             },
-            'ag-grid-charts-enterprise': {
-                main: './dist/package/main.cjs.js',
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
             'ag-grid-angular': {
                 main: './fesm2022/ag-grid-angular.mjs',
                 defaultExtension: 'mjs',

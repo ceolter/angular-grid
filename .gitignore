@@ -37,7 +37,6 @@ dist
 
 packages/ag-grid-community/styles/**
 packages/ag-grid-enterprise/styles/**
-packages/ag-grid-charts-enterprise/styles/**
 
 # compiled CSS files
 community-modules/styles/*.css

@@ -29,7 +29,7 @@ const path = require('path');
 const glob = require('glob');
 const prettier = require('prettier');
 const rootReadme = fs.readFileSync('./README.md').toString();
-const libraries = ['ag-grid-community', 'ag-grid-enterprise', 'ag-grid-charts-enterprise'];
+const libraries = ['ag-grid-community', 'ag-grid-enterprise'];
 const packageReadmeList = patterns.flatMap((pattern) => glob.sync(pattern));
 
 function titleCase(name) {
