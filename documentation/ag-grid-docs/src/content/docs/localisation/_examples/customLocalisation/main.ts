@@ -1,5 +1,5 @@
 import { AG_GRID_LOCALE_DE } from '@ag-grid-community/locale';
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererParams } from 'ag-grid-community';
 import { ClientSideRowModelModule, CsvExportModule, ModuleRegistry, createGrid } from 'ag-grid-community';

@@ -16,8 +16,6 @@ export default defineConfig({
                         'ag-grid-enterprise',
                         'ag-charts-enterprise',
                         'ag-charts-community',
-                        'ag-charts-enterprise/modules',
-                        'ag-charts-community/modules',
                     ],
                     agGridReact: ['ag-grid-react'],
                 },

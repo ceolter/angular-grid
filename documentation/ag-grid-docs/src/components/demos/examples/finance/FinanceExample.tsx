@@ -1,4 +1,4 @@
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {

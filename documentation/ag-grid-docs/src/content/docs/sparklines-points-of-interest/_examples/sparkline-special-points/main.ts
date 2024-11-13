@@ -1,4 +1,4 @@
-import { AgChartsCommunityModule } from 'ag-charts-community/modules';
+import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type {
     AreaSparklineOptions,

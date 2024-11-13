@@ -2,7 +2,7 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import type { ElementRef } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';

@@ -2,7 +2,7 @@
  * Hero Grid demo
  */
 import { createGenerator } from '@utils/grid/generator-utils';
-import { AgChartsCommunityModule } from 'ag-charts-community/modules';
+import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type { GetRowIdParams, GridApi, GridOptions, GridSizeChangedEvent, ISetFilter } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';

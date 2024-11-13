@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useDarkmode } from '@utils/hooks/useDarkmode';
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import classnames from 'classnames';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 

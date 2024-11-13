@@ -1,4 +1,4 @@
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
 import { ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';

@@ -2,7 +2,7 @@
  * Automated Row Grouping demo
  */
 import { Easing, Group } from '@tweenjs/tween.js';
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { ColDef, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';

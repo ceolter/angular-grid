@@ -44,8 +44,6 @@ const localBuildAndArchiveConfiguration: Configuration = {
         'ag-charts-types': `${localPrefix}/ag-charts-types/dist/package/main.cjs.js`,
         'ag-charts-community': `${localPrefix}/ag-charts-community/dist/package/main.cjs.js`,
         'ag-charts-enterprise': `${localPrefix}/ag-charts-enterprise/dist/package/main.cjs.js`,
-        'ag-charts-community/modules': `${localPrefix}/ag-charts-community/dist/package/main-modules.cjs.js`,
-        'ag-charts-enterprise/modules': `${localPrefix}/ag-charts-enterprise/dist/package/main-modules.cjs.js`,
         '@ag-grid-community/locale': `${localPrefix}/@ag-grid-community/locale/dist/package/main.cjs.js`,
     },
 };

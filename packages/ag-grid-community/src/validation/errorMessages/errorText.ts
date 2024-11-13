@@ -42,7 +42,7 @@ ${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '
 const missingChartsWithModule = (gridModule: 'IntegratedChartsModule' | 'SparklinesModule') => {
     return `${gridModule} must be initialised with an AG Charts module. One of 'AgChartsCommunityModule' / 'AgChartsEnterpriseModule'.
 
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { ModuleRegistry } from 'ag-grid-community';
 import { ${gridModule} } from 'ag-grid-enterprise';
     

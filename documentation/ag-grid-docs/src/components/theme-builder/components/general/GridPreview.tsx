@@ -1,7 +1,7 @@
 import { useApplicationConfigAtom } from '@components/theme-builder/model/application-config';
 import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme';
 import styled from '@emotion/styled';
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise/modules';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { memo, useRef, useState } from 'react';
 import root from 'react-shadow';
 

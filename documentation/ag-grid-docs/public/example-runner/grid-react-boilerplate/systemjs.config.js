@@ -59,14 +59,6 @@
                 defaultExtension: 'js',
                 format: 'cjs',
             },
-            'ag-charts-community/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
-            'ag-charts-enterprise/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
             'ag-charts-community': {
                 defaultExtension: 'js',
                 format: 'cjs',
