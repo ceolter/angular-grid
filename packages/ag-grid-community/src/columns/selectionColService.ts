@@ -7,10 +7,9 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
-import { _applyColumnState } from '../main-umd-noStyles';
 import type { ColumnGroupService } from './columnGroups/columnGroupService';
 import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
-import { _getColumnState } from './columnStateUtils';
+import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
     _areColIdsEqual,
     _columnsMatch,
