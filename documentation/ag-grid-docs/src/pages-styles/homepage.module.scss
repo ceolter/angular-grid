@@ -16,7 +16,7 @@ body {
 .homepageHero {
     padding-top: $spacing-size-10;
     background-color: var(--color-bg-site-header);
-    height: 666px;
+    height: 566px;
 
     @media screen and (min-width: $breakpoint-hero-small) {
         padding-top: $spacing-size-16;
@@ -140,6 +140,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
+    margin-top: $spacing-size-32;
 
     @media screen and (min-width: 640px) {
         flex-direction: row;

@@ -3,6 +3,7 @@
 :global(#heroGrid) {
     box-shadow: var(--shadow-sm);
     border-radius: var(--radius-md);
+    max-width: 1000px;
 }
 :global(#heroGrid.ag-theme-quartz) {
     position: relative;
