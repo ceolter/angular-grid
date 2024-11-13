@@ -289,18 +289,19 @@ export class AgColorPanel extends Component {
     }
 
     private update(suppressColorInputUpdate?: boolean) {
-        const hue = this.H * 360;
-        const color = this._Color.fromHSB(hue, this.S, this.B, this.A);
+        const { A, S, B, H, _Color } = this;
+        const hue = H * 360;
+        const color = _Color.fromHSB(hue, S, B, A);
         const rgbaColor = color.toRgbaString();
-        const colorWithoutAlpha = this._Color.fromHSB(hue, this.S, this.B);
+        const colorWithoutAlpha = _Color.fromHSB(hue, S, B);
         const rgbaColorWithoutAlpha = colorWithoutAlpha.toRgbaString();
-        const spectrumColor = this._Color.fromHSB(hue, 1, 1);
+        const spectrumColor = _Color.fromHSB(hue, 1, 1);
         const spectrumRgbaColor = spectrumColor.toRgbaString();
 
         // the recent color list needs to know color has actually changed
         const colorPicker = this.picker as AgColorPicker;
 
-        const existingColor = this._Color.fromString(colorPicker.getValue());
+        const existingColor = _Color.fromString(colorPicker.getValue());
         if (existingColor.toRgbaString() !== rgbaColor) {
             this.colorChanged = true;
         }
@@ -314,7 +315,7 @@ export class AgColorPanel extends Component {
 
         this.spectrumAlpha.style.setProperty(
             '--ag-internal-spectrum-alpha-color-from',
-            this._Color.fromHSB(hue, this.S, this.B, 0).toRgbaString()
+            _Color.fromHSB(hue, S, B, 0).toRgbaString()
         );
         this.spectrumAlpha.style.setProperty('--ag-internal-spectrum-alpha-color-to', rgbaColorWithoutAlpha);
         this.spectrumAlpha.style.setProperty('--ag-internal-spectrum-alpha-color', rgbaColor);

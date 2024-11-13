@@ -29,15 +29,17 @@ export class MiniWaterfall extends MiniChartWithAxes {
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
         const {
             data,
-            agChartsExports: { _Theme },
+            agChartsExports: {
+                _Theme: { themeSymbols },
+            },
         } = this;
         const positive = {
-            fill: isCustomTheme ? fills[0] : themeTemplate?.get(_Theme.themeSymbols.PALETTE_ALT_UP_FILL),
-            stroke: isCustomTheme ? strokes[0] : themeTemplate?.get(_Theme.themeSymbols.PALETTE_ALT_UP_STROKE),
+            fill: isCustomTheme ? fills[0] : themeTemplate?.get(themeSymbols.PALETTE_ALT_UP_FILL),
+            stroke: isCustomTheme ? strokes[0] : themeTemplate?.get(themeSymbols.PALETTE_ALT_UP_STROKE),
         };
         const negative = {
-            fill: isCustomTheme ? fills[1] : themeTemplate?.get(_Theme.themeSymbols.PALETTE_ALT_DOWN_FILL),
-            stroke: isCustomTheme ? strokes[1] : themeTemplate?.get(_Theme.themeSymbols.PALETTE_ALT_DOWN_STROKE),
+            fill: isCustomTheme ? fills[1] : themeTemplate?.get(themeSymbols.PALETTE_ALT_DOWN_FILL),
+            stroke: isCustomTheme ? strokes[1] : themeTemplate?.get(themeSymbols.PALETTE_ALT_DOWN_STROKE),
         };
         this.bars.forEach((bar, i) => {
             const isPositive = data[i] >= 0;

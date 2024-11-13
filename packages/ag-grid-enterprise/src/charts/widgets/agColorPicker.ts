@@ -16,7 +16,6 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
     private isDestroyingPicker: boolean;
     private eDisplayFieldColor: HTMLElement;
     private eDisplayFieldText: HTMLElement;
-    private agChartsExports: AgChartsExports;
 
     constructor(config?: AgColorPickerParams) {
         super({
@@ -31,7 +30,6 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
 
     public override wireBeans(beans: BeanCollection): void {
         super.wireBeans(beans);
-        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     public override postConstruct() {
@@ -119,7 +117,9 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
         }
 
         this.eDisplayFieldColor.style.backgroundColor = color;
-        this.eDisplayFieldText.textContent = this.agChartsExports._Util.Color.fromString(color)
+        this.eDisplayFieldText.textContent = (this.beans.agChartsExports as AgChartsExports)._Util.Color.fromString(
+            color
+        )
             .toHexString()
             .toUpperCase();
 

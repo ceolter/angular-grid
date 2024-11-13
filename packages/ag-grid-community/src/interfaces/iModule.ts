@@ -68,7 +68,6 @@ export type InternalModuleName =
     | 'DragModule'
     | 'EnterpriseCoreModule'
     | 'FilterValueModule'
-    | 'GridChartsEnterpriseFeaturesModule'
     | 'GroupColumnModule'
     | 'HorizontalResizeModule'
     | 'MenuCoreModule'

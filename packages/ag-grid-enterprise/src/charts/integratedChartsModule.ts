@@ -86,7 +86,7 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
 };
 
 /**
- * @feature Integrated Charts
+ * @deprecated v33 Deprecated as of v33, please use `IntegratedChartsModule` instead.
  */
 export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     ...baseIntegratedChartsModule,
@@ -100,6 +100,9 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     },
 };
 
+/**
+ * @feature Integrated Charts
+ */
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
     with: (params) => {
         params.setup();

@@ -33,7 +33,7 @@ export class MiniColumnLineCombo extends MiniChartWithAxes {
 
         root.append(this.columns);
 
-        this.lines = createLinePaths(this.agChartsExports, root, lineData, size, padding);
+        this.lines = createLinePaths(agChartsExports, root, lineData, size, padding);
 
         this.updateColors(fills, strokes);
     }

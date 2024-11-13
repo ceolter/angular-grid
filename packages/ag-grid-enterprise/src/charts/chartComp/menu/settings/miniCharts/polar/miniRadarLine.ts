@@ -21,14 +21,16 @@ export class MiniRadarLine extends MiniChartWithPolarAxes {
 
         this.showRadiusAxisLine = false;
 
-        const radius = (this.size - this.padding * 2) / 2;
+        const { size, padding, root, data } = this;
+
+        const radius = (size - padding * 2) / 2;
         const innerRadius = 0;
 
         const { paths, markers } = createPolarPaths(
-            this.agChartsExports,
-            this.root,
-            this.data,
-            this.size,
+            agChartsExports,
+            root,
+            data,
+            size,
             radius,
             innerRadius,
             this.markerSize

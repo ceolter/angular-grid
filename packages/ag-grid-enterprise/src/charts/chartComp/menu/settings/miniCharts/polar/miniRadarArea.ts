@@ -17,12 +17,13 @@ export class MiniRadarArea extends MiniChartWithPolarAxes {
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'radarAreaTooltip');
 
+        const { size, padding, root, data } = this;
         this.showRadiusAxisLine = false;
 
-        const radius = (this.size - this.padding * 2) / 2;
-        const innerRadius = radius - this.size * 0.3;
+        const radius = (size - padding * 2) / 2;
+        const innerRadius = radius - size * 0.3;
 
-        this.areas = createPolarPaths(this.agChartsExports, this.root, this.data, this.size, radius, innerRadius).paths;
+        this.areas = createPolarPaths(agChartsExports, root, data, size, radius, innerRadius).paths;
 
         this.updateColors(fills, strokes);
     }

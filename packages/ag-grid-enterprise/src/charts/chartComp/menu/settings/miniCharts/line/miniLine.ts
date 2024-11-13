@@ -29,7 +29,8 @@ export class MiniLine extends MiniChartWithAxes {
     ) {
         super(container, agChartsExports, tooltipName);
 
-        this.lines = createLinePaths(this.agChartsExports, this.root, data, this.size, this.padding);
+        const { size, padding, root } = this;
+        this.lines = createLinePaths(agChartsExports, root, data, size, padding);
 
         this.updateColors(fills, strokes);
     }
