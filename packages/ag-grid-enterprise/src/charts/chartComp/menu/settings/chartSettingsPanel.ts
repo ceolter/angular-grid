@@ -1,6 +1,5 @@
 import type { AgChartThemePalette } from 'ag-charts-types';
 
-import type { BeanCollection } from 'ag-grid-community';
 import {
     Component,
     RefPlaceholder,
