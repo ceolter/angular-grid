@@ -38,7 +38,7 @@ export class DragAndDropImageComponent extends Component implements IDragAndDrop
     }
 
     public postConstruct(): void {
-        const create = (iconName: IconName) => _createIcon(iconName, this.gos, null);
+        const create = (iconName: IconName) => _createIcon(iconName, this.beans, null);
         this.dropIconMap = {
             pinned: create('columnMovePin'),
             hide: create('columnMoveHide'),
@@ -71,7 +71,7 @@ export class DragAndDropImageComponent extends Component implements IDragAndDrop
         super.destroy();
     }
 
-    public setIcon(iconName: DragAndDropIcon | null, shake = false): void {
+    public setIcon(iconName: DragAndDropIcon | null, shake: boolean): void {
         _clearElement(this.eIcon);
 
         let eIcon: Element | null = null;

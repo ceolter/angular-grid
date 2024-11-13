@@ -37,10 +37,11 @@ export const logWarning = (warning: any) => {
         fs.mkdirSync(dirName, { recursive: true });
     }
 
+    const contents = `${JSON.stringify(warning, null, 2)}\n`;
     if (fs.existsSync(fileName)) {
-        fs.appendFileSync(fileName, JSON.stringify(warning, null, 2));
+        fs.appendFileSync(fileName, contents);
     } else {
-        fs.writeFileSync(fileName, JSON.stringify(warning, null, 2));
+        fs.writeFileSync(fileName, contents);
     }
 };
 

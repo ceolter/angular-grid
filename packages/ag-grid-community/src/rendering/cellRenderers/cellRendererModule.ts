@@ -4,6 +4,10 @@ import { AnimateShowChangeCellRenderer } from './animateShowChangeCellRenderer';
 import { AnimateSlideCellRenderer } from './animateSlideCellRenderer';
 import { CheckboxCellRenderer } from './checkboxCellRenderer';
 
+/**
+ * @feature Cells -> Highlighting Changes
+ * @colDef cellRenderer
+ */
 export const AnimateShowChangeCellRendererModule: _ModuleWithoutApi = {
     ...baseCommunityModule('AnimateShowChangeCellRendererModule'),
     userComponents: {
@@ -11,6 +15,10 @@ export const AnimateShowChangeCellRendererModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @feature Cells -> Highlighting Changes
+ * @colDef cellRenderer
+ */
 export const AnimateSlideCellRendererModule: _ModuleWithoutApi = {
     ...baseCommunityModule('AnimateSlideCellRendererModule'),
     userComponents: {
@@ -18,6 +26,10 @@ export const AnimateSlideCellRendererModule: _ModuleWithoutApi = {
     },
 };
 
+/**
+ * @feature Cells -> Cell Data Types
+ * @colDef cellDataType
+ */
 export const CheckboxCellRendererModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CheckboxCellRendererModule'),
     userComponents: {

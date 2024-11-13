@@ -15,9 +15,9 @@ import type { ColumnEventType } from '../events';
 import type { FocusService } from '../focusService';
 import type { Column, ColumnPinnedType } from '../interfaces/iColumn';
 import type { DragItem } from '../interfaces/iDragItem';
-import type { ColumnAnimationService } from '../rendering/columnAnimationService';
 import { _last, _moveInArray, _removeFromArray } from '../utils/array';
 import { _warn } from '../validation/logging';
+import type { ColumnAnimationService } from './columnAnimationService';
 import { BodyDropTarget } from './columnDrag/bodyDropTarget';
 import { doesMovePassMarryChildren } from './columnMoveUtils';
 import { attemptMoveColumns, normaliseX, setColumnsMoving } from './internalColumnMoveUtils';
@@ -196,7 +196,7 @@ export class ColumnMoveService extends BeanStub implements NamedBean {
             targetColumn = column;
         }
 
-        ctrlsSvc.getGridBodyCtrl().getScrollFeature().ensureColumnVisible(targetColumn, 'auto');
+        ctrlsSvc.getScrollFeature().ensureColumnVisible(targetColumn, 'auto');
 
         if ((!bean.isAlive() || gos.get('ensureDomOrder')) && headerPosition) {
             let restoreFocusColumn: AgColumn | AgColumnGroup | undefined;

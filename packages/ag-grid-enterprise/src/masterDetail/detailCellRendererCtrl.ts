@@ -2,7 +2,6 @@ import type {
     BeanCollection,
     DetailGridInfo,
     Environment,
-    FocusService,
     FullWidthRowFocusedEvent,
     GridApi,
     IDetailCellRenderer,
@@ -10,14 +9,12 @@ import type {
     IDetailCellRendererParams,
     RowNode,
 } from 'ag-grid-community';
-import { BeanStub, _isSameRow, _missing, _warn } from 'ag-grid-community';
+import { BeanStub, _focusInto, _isSameRow, _missing, _warn } from 'ag-grid-community';
 
 export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRendererCtrl {
-    private focusSvc: FocusService;
     private environment: Environment;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
         this.environment = beans.environment;
     }
 
@@ -57,7 +54,7 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
             return;
         }
 
-        this.focusSvc.focusInto(this.comp.getGui(), e.fromBelow);
+        _focusInto(this.comp.getGui(), e.fromBelow);
     }
 
     private setAutoHeightClasses(): void {
@@ -90,7 +87,7 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
     private addThemeToDetailGrid(): void {
         // this is needed by environment service of the child grid, the class needs to be on
         // the grid div itself - the browser's CSS on the other hand just inherits from the parent grid theme.
-        const themeClass = this.environment.getThemeClass();
+        const { themeClass } = this.environment;
         if (themeClass) {
             this.comp.addOrRemoveDetailGridCssClass(themeClass, true);
         }

@@ -79,6 +79,7 @@ export const INITIAL_GRID_OPTION_KEYS = {
     reactiveCustomComponents: true,
     columnMenu: true,
     suppressSetFilterByDefault: true,
+    getDataPath: true,
 };
 
 type InitialGridOptionKey = keyof typeof INITIAL_GRID_OPTION_KEYS;

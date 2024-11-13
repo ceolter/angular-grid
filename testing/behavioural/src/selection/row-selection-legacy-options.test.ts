@@ -748,7 +748,9 @@ describe('Row Selection Legacy Grid Options', () => {
             });
         });
 
-        describe('Group checkbox selection', () => {
+        // Skipped because tests in this block fail on an intermittent basis on CI with no obvious cause
+        // and no easy way to diagnose, since they pass consistently locally. To be investigated.
+        describe.skip('Group checkbox selection', () => {
             const groupGridOptions: Partial<GridOptions> = {
                 columnDefs: [
                     { field: 'country', rowGroup: true, hide: true },

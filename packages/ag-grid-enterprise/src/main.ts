@@ -7,26 +7,66 @@ export type { MultiFilter } from './multiFilter/multiFilter';
 export type { SetFilter } from './setFilter/setFilter';
 
 export { EnterpriseCoreModule } from './agGridEnterpriseModule';
+export { EnterpriseDefaultModule } from './enterpriseDefaultModule';
 export { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
-export { ColumnsToolPanelModule } from './columnToolPanel/columnsToolPanelModule';
-export { MenuModule } from './menu/menuModule';
+export {
+    ColumnsToolPanelModule,
+    ColumnsToolPanelCoreModule,
+    ColumnsToolPanelRowGroupingModule,
+} from './columnToolPanel/columnsToolPanelModule';
+export { MenuModule, ColumnMenuModule, ContextMenuModule, MenuCoreModule } from './menu/menuModule';
 export { RichSelectModule } from './richSelect/richSelectModule';
-export { SetFilterModule } from './setFilter/setFilterModule';
-export { StatusBarModule } from './statusBar/statusBarModule';
+export { SetFilterModule, SetFilterCoreModule, SetFloatingFilterModule } from './setFilter/setFilterModule';
+export { StatusBarModule, StatusBarCoreModule, StatusBarSelectionModule } from './statusBar/statusBarModule';
 export { ExcelExportModule } from './excelExport/excelExportModule';
-export { MultiFilterModule } from './multiFilter/multiFilterModule';
+export { MultiFilterModule, MultiFilterCoreModule, MultiFloatingFilterModule } from './multiFilter/multiFilterModule';
 export { RowGroupingModule } from './rowGrouping/rowGroupingBundleModule';
+export {
+    GroupFilterModule,
+    GroupFloatingFilterModule,
+    RowGroupingCoreModule,
+    RowGroupingOnlyModule,
+    RowGroupingPanelModule,
+} from './rowGrouping/rowGroupingModule';
 export { SideBarModule } from './sideBar/sideBarModule';
-export { ViewportRowModelModule } from './viewportRowModel/viewportRowModelModule';
+export {
+    ViewportRowModelModule,
+    ViewportRowModelCoreModule,
+    ViewportRowModelDefaultModule,
+} from './viewportRowModel/viewportRowModelModule';
 export { ClipboardModule } from './clipboard/clipboardModule';
 export { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
-export { MasterDetailModule } from './masterDetail/masterDetailModule';
-export { RangeSelectionModule } from './rangeSelection/rangeSelectionModule';
-export { ServerSideRowModelModule } from './serverSideRowModel/serverSideRowModelModule';
+export { MasterDetailModule, MasterDetailCoreModule } from './masterDetail/masterDetailModule';
+export {
+    CellSelectionModule,
+    CellSelectionCoreModule,
+    CellSelectionFillHandleModule,
+    CellSelectionRangeHandleModule,
+    RangeSelectionModule,
+} from './rangeSelection/rangeSelectionModule';
+export {
+    ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
+    ServerSideRowModelCoreModule,
+    ServerSideRowModelHierarchyModule,
+    ServerSideRowModelRowSelectionModule,
+    ServerSideRowModelSortModule,
+    ServerSideRowModelDefaultModule,
+} from './serverSideRowModel/serverSideRowModelModule';
 export { SparklinesModule } from './sparkline/sparklinesModule';
-export { TreeDataModule } from './treeData/treeDataModule';
+export { TreeDataModule, TreeDataCoreModule } from './treeData/treeDataModule';
+export { AggregationModule } from './aggregation/aggregationModule';
+export { LoadingCellRendererModule, SkeletonCellRendererModule } from './cellRenderers/enterpriseCellRendererModule';
+export {
+    GroupCellRendererModule,
+    GroupColumnModule,
+    ClientSideRowModelHierarchyModule,
+} from './rowHierarchy/rowHierarchyModule';
+export { PivotCoreModule, PivotModule } from './pivot/pivotModule';
 
 // tbd - having these here means all charts will be enterprise
 // once we have independent module imports this issue will go away
-export { GridChartsModule } from './charts/gridChartsModule';
+export { GridChartsModule, GridChartsEnterpriseFeaturesModule } from './charts/gridChartsModule';
 export { GridChartsModule as GridChartsEnterpriseModule } from './charts-enterprise/gridChartsEnterpriseModule';
+
+export { AllEnterpriseModule } from './allEnterpriseModule';

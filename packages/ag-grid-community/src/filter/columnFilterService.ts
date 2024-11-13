@@ -28,7 +28,7 @@ import type { UserCompDetails } from '../interfaces/iUserCompDetails';
 import type { RowRenderer } from '../rendering/rowRenderer';
 import { _exists, _jsonEquals } from '../utils/generic';
 import { AgPromise } from '../utils/promise';
-import { _warn } from '../validation/logging';
+import { _error, _warn } from '../validation/logging';
 import type { ValueService } from '../valueService/valueService';
 import type { FilterManager } from './filterManager';
 import type { FilterValueService } from './filterValueService';
@@ -120,7 +120,12 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     public postConstruct(): void {
         this.addManagedEventListeners({
             gridColumnsChanged: this.onColumnsChanged.bind(this),
-            rowDataUpdated: () => this.onNewRowsLoaded('rowDataUpdated'),
+            beforeRefreshModel: ({ params }) => {
+                // We listen to both row data updated and treeData changed as the SetFilter needs it
+                if (params.rowDataUpdated || params.changedProps?.has('treeData')) {
+                    this.onNewRowsLoaded('rowDataUpdated');
+                }
+            },
             dataTypesInferred: this.processFilterModelUpdateQueue.bind(this),
         });
 
@@ -335,7 +340,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         additionalEventAttributes?: any
     ): AgPromise<(void | null)[]> {
         return this.forEachColumnFilter((filter, filterWrapper) =>
-            filterWrapper.column.setFilterActive(filter!.isFilterActive(), source, additionalEventAttributes)
+            this.setColFilterActive(filterWrapper.column, filter!.isFilterActive(), source, additionalEventAttributes)
         );
     }
 
@@ -363,7 +368,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
             if (typeof filter.doesFilterPass !== 'function') {
                 // because users can do custom filters, give nice error message
-                throw new Error('Filter is missing method doesFilterPass');
+                _error(91);
+                continue;
             }
 
             if (!filter.doesFilterPass({ node, data: targetedData })) {
@@ -440,9 +446,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private onNewRowsLoaded(source: ColumnEventType): void {
         this.forEachColumnFilter((filter) => {
-            if (filter!.onNewRowsLoaded) {
-                filter!.onNewRowsLoaded();
-            }
+            filter!.onNewRowsLoaded?.();
         })
             .then(() => this.updateFilterFlagInColumns(source, { afterDataChange: true }))
             .then(() => this.updateActiveFilters());
@@ -546,14 +550,12 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         return {
             filterPromise: () => {
                 const filterPromise = compDetails.newAgStackInstance();
-                if (filterPromise != null) {
-                    filterPromise.then((r) => {
-                        filterInstance = r!;
-                        if (filterWrapper) {
-                            filterWrapper.filter = r;
-                        }
-                    });
-                }
+                filterPromise.then((r) => {
+                    filterInstance = r!;
+                    if (filterWrapper) {
+                        filterWrapper.filter = r ?? undefined;
+                    }
+                });
                 return filterPromise;
             },
             compDetails,
@@ -731,7 +733,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         filterWrapper.filterPromise!.then((filter) => {
             this.destroyBean(filter);
 
-            filterWrapper.column.setFilterActive(false, 'filterDestroyed');
+            this.setColFilterActive(filterWrapper.column, false, 'filterDestroyed');
 
             this.allColumnFilters.delete(filterWrapper.column.getColId());
 
@@ -1040,6 +1042,20 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 break;
             }
         }
+    }
+
+    // additionalEventAttributes is used by provided simple floating filter, so it can add 'floatingFilter=true' to the event
+    public setColFilterActive(
+        column: AgColumn,
+        active: boolean,
+        source: ColumnEventType,
+        additionalEventAttributes?: any
+    ): void {
+        if (column.filterActive !== active) {
+            column.filterActive = active;
+            column.dispatchColEvent('filterActiveChanged', source);
+        }
+        column.dispatchColEvent('filterChanged', source, additionalEventAttributes);
     }
 
     public override destroy() {

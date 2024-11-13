@@ -1,8 +1,5 @@
-import type { BeanCollection } from '../context/context';
 import { _isCellSelectionEnabled, _isMultiRowSelection } from '../gridOptionsUtils';
 import { GridHeaderSelector } from '../headerRendering/gridHeaderComp';
-import type { IRangeService } from '../interfaces/IRangeService';
-import type { OverlayService } from '../rendering/overlays/overlayService';
 import { LayoutCssClasses } from '../styling/layoutFeature';
 import { _setAriaColCount, _setAriaMultiSelectable, _setAriaRowCount } from '../utils/aria';
 import { _observeResize } from '../utils/dom';
@@ -57,14 +54,6 @@ function getGridBodyTemplate(includeOverlay?: boolean): {
 }
 
 export class GridBodyComp extends Component {
-    private rangeSvc?: IRangeService;
-    private overlays?: OverlayService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rangeSvc = beans.rangeSvc;
-        this.overlays = beans.overlays;
-    }
-
     private readonly eBodyViewport: HTMLElement = RefPlaceholder;
     private readonly eStickyTop: HTMLElement = RefPlaceholder;
     private readonly eStickyBottom: HTMLElement = RefPlaceholder;
@@ -75,7 +64,8 @@ export class GridBodyComp extends Component {
     private ctrl: GridBodyCtrl;
 
     public postConstruct() {
-        const overlaySelector = this.overlays?.getOverlayWrapperSelector();
+        const { overlays, rangeSvc } = this.beans;
+        const overlaySelector = overlays?.getOverlayWrapperSelector();
 
         const { paramsMap, template } = getGridBodyTemplate(!!overlaySelector);
 
@@ -132,7 +122,7 @@ export class GridBodyComp extends Component {
             setAlwaysVerticalScrollClass: (cssClass, on) =>
                 this.eBodyViewport.classList.toggle(CSS_CLASS_FORCE_VERTICAL_SCROLL, on),
             registerBodyViewportResizeListener: (listener) => {
-                const unsubscribeFromResize = _observeResize(this.gos, this.eBodyViewport, listener);
+                const unsubscribeFromResize = _observeResize(this.beans, this.eBodyViewport, listener);
                 this.addDestroyFunc(() => unsubscribeFromResize());
             },
             setPinnedTopBottomOverflowY: (overflow) =>
@@ -156,7 +146,7 @@ export class GridBodyComp extends Component {
             this.eStickyBottom
         );
 
-        if ((this.rangeSvc && _isCellSelectionEnabled(this.gos)) || _isMultiRowSelection(this.gos)) {
+        if ((rangeSvc && _isCellSelectionEnabled(this.gos)) || _isMultiRowSelection(this.gos)) {
             _setAriaMultiSelectable(this.getGui(), true);
         }
     }
@@ -165,10 +155,6 @@ export class GridBodyComp extends Component {
         const bodyViewportClassList = this.eBodyViewport.classList;
         bodyViewportClassList.toggle('ag-row-animation' as RowAnimationCssClasses, animateRows);
         bodyViewportClassList.toggle('ag-row-no-animation' as RowAnimationCssClasses, !animateRows);
-    }
-
-    public getFloatingTopBottom(): HTMLElement[] {
-        return [this.eTop, this.eBottom];
     }
 }
 export const GridBodySelector: ComponentSelector = {

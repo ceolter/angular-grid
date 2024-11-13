@@ -103,15 +103,14 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
         this.ctrlsSvc.whenReady(this, (p) => {
             const gridBodyCtrl = p.gridBodyCtrl;
             this.autoScrollService = new AutoScrollService({
-                scrollContainer: gridBodyCtrl.getBodyViewportElement()!,
+                scrollContainer: gridBodyCtrl.eBodyViewport!,
                 scrollAxis: 'xy',
-                getVerticalPosition: () => gridBodyCtrl.getScrollFeature().getVScrollPosition().top,
-                setVerticalPosition: (position) => gridBodyCtrl.getScrollFeature().setVerticalScrollPosition(position),
-                getHorizontalPosition: () => gridBodyCtrl.getScrollFeature().getHScrollPosition().left,
-                setHorizontalPosition: (position) =>
-                    gridBodyCtrl.getScrollFeature().setHorizontalScrollPosition(position),
+                getVerticalPosition: () => gridBodyCtrl.scrollFeature.getVScrollPosition().top,
+                setVerticalPosition: (position) => gridBodyCtrl.scrollFeature.setVerticalScrollPosition(position),
+                getHorizontalPosition: () => gridBodyCtrl.scrollFeature.getHScrollPosition().left,
+                setHorizontalPosition: (position) => gridBodyCtrl.scrollFeature.setHorizontalScrollPosition(position),
                 shouldSkipVerticalScroll: () => !_isDomLayout(this.gos, 'normal'),
-                shouldSkipHorizontalScroll: () => !gridBodyCtrl.getScrollFeature().isHorizontalScrollShowing(),
+                shouldSkipHorizontalScroll: () => !gridBodyCtrl.scrollFeature.isHorizontalScrollShowing(),
             });
         });
     }
@@ -753,7 +752,9 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
             this.cellRanges.push(this.draggingRange);
         }
 
-        this.ctrlsSvc.getGridBodyCtrl().addScrollEventListener(this.bodyScrollListener);
+        this.ctrlsSvc
+            .getGridBodyCtrl()
+            .eBodyViewport.addEventListener('scroll', this.bodyScrollListener, { passive: true });
 
         this.dispatchChangedEvent(true, false, this.draggingRange.id);
     }
@@ -861,7 +862,7 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
 
     private updateValuesOnMove(eventTarget: EventTarget | null) {
         const cellCtrl = _getCellCtrlForEventTarget(this.gos, eventTarget);
-        const cell = cellCtrl?.getCellPosition();
+        const cell = cellCtrl?.cellPosition;
 
         this.cellHasChanged = false;
 
@@ -869,7 +870,7 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
             return;
         }
 
-        if (cellCtrl?.isEditing()) {
+        if (cellCtrl?.editing) {
             this.dragSvc.cancelDrag(eventTarget as HTMLElement);
             return;
         }
@@ -930,7 +931,7 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
 
         this.autoScrollService.ensureCleared();
 
-        this.ctrlsSvc.getGridBodyCtrl().removeScrollEventListener(this.bodyScrollListener);
+        this.ctrlsSvc.getGridBodyCtrl().eBodyViewport.removeEventListener('scroll', this.bodyScrollListener);
         this.lastMouseEvent = null;
         this.dragging = false;
         this.draggingRange = undefined;

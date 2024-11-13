@@ -1,5 +1,6 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _ServerSideRowModelGridApi } from 'ag-grid-community';
 import {
+    CommunityDefaultModule,
     CommunityFeaturesModule,
     SortModule,
     _CsrmSsrmSharedApiModule,
@@ -35,6 +36,9 @@ import { StoreFactory } from './stores/storeFactory';
 import { StoreUtils } from './stores/storeUtils';
 import { TransactionManager } from './transactionManager';
 
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelCoreModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelCoreModule'),
     rowModels: ['serverSide'],
@@ -55,6 +59,10 @@ export const ServerSideRowModelCoreModule: _ModuleWithoutApi = {
     dependsOn: [EnterpriseCoreModule],
 };
 
+/**
+ * @feature Selection -> Row Selection
+ * @gridOption rowSelection
+ */
 export const ServerSideRowModelRowSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelRowSelectionModule'),
     rowModels: ['serverSide'],
@@ -62,13 +70,20 @@ export const ServerSideRowModelRowSelectionModule: _ModuleWithoutApi = {
     dependsOn: [ServerSideRowModelCoreModule],
 };
 
-export const ServerSideRowModelRowGroupingModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ServerSideRowModelRowGroupingModule'),
+/**
+ * @feature Row Grouping -> Opening Groups, Tree Data -> Expanding Groups, Master Detail
+ */
+export const ServerSideRowModelHierarchyModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ServerSideRowModelHierarchyModule'),
     rowModels: ['serverSide'],
     beans: [ServerSideExpansionService],
     dependsOn: [ServerSideRowModelCoreModule],
 };
 
+/**
+ * @feature Rows -> Row Sorting
+ * @colDef sortable, sort, sortIndex
+ */
 export const ServerSideRowModelSortModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelSortModule'),
     rowModels: ['serverSide'],
@@ -76,6 +91,9 @@ export const ServerSideRowModelSortModule: _ModuleWithoutApi = {
     dependsOn: [ServerSideRowModelCoreModule, SortModule],
 };
 
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGridApi<any>> = {
     ...baseEnterpriseModule('ServerSideRowModelApiModule'),
     rowModels: ['serverSide'],
@@ -93,6 +111,18 @@ export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGrid
     dependsOn: [ServerSideRowModelCoreModule, _CsrmSsrmSharedApiModule, _SsrmInfiniteSharedApiModule],
 };
 
+/**
+ * @feature Server-Side Row Model
+ */
+export const ServerSideRowModelDefaultModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ServerSideRowModelDefaultModule'),
+    rowModels: ['serverSide'],
+    dependsOn: [ServerSideRowModelCoreModule, ServerSideRowModelSortModule, CommunityDefaultModule],
+};
+
+/**
+ * @feature Server-Side Row Model
+ */
 export const ServerSideRowModelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ServerSideRowModelModule'),
     rowModels: ['serverSide'],
@@ -101,7 +131,7 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
         ServerSideRowModelApiModule,
         ServerSideRowModelRowSelectionModule,
         ServerSideRowModelSortModule,
-        ServerSideRowModelRowGroupingModule,
+        ServerSideRowModelHierarchyModule,
         LoadingCellRendererModule,
         SkeletonCellRendererModule,
         CommunityFeaturesModule,

@@ -38,7 +38,7 @@ const generateCSSEmbed = async (entry: string) => {
         return;
     }
     const outputFile = join(dir, `${entryName}.css-GENERATED.ts`);
-    const cssString = await loadAndProcessCSSFile(entry);
+    const cssString = (DEV_MODE ? '\n' : '') + (await loadAndProcessCSSFile(entry));
     const exportName = camelCase(entryName) + 'CSS';
     const result = `export const ${exportName} = /*css*/ \`${cssString.replace(/`/g, '\\`')}\`;\n`;
 
@@ -57,9 +57,9 @@ const loadAndProcessCSSFile = async (cssPath: string) => {
         cssAutoPrefix(),
         // auto RTL support
         cssRtl({
-            ltrPrefix: `.ag-ltr`,
-            rtlPrefix: `.ag-rtl`,
-            bothPrefix: `:is(.ag-ltr, .ag-rtl)`,
+            ltrPrefix: `:where(.ag-ltr)`,
+            rtlPrefix: `:where(.ag-rtl)`,
+            bothPrefix: `:where(.ag-ltr, .ag-rtl)`,
         }),
         cssNano({
             preset: [

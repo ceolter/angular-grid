@@ -14,7 +14,6 @@ import type {
     CreatePivotChartParams,
     CreateRangeChartParams,
     Environment,
-    FocusService,
     GetChartImageDataUrlParams,
     IAggFunc,
     IChartService,
@@ -27,7 +26,7 @@ import type {
     UpdateChartParams,
     VisibleColsService,
 } from 'ag-grid-community';
-import { BeanStub, _warn } from 'ag-grid-community';
+import { BeanStub, _focusInto, _warn } from 'ag-grid-community';
 
 import { VERSION as GRID_VERSION } from '../version';
 import type { GridChartParams } from './chartComp/gridChartComp';
@@ -60,13 +59,11 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     private visibleCols: VisibleColsService;
     private rangeSvc?: IRangeService;
     private environment: Environment;
-    private focusSvc: FocusService;
 
     public wireBeans(beans: BeanCollection): void {
         this.visibleCols = beans.visibleCols;
         this.rangeSvc = beans.rangeSvc;
         this.environment = beans.environment;
-        this.focusSvc = beans.focusSvc;
     }
 
     // we destroy all charts bound to this grid when grid is destroyed. activeCharts contains all charts, including
@@ -283,8 +280,11 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
 
         if (chartContainer) {
             // if container exists, means developer initiated chart create via API, so place in provided container
-            chartContainer.appendChild(chartComp.getGui());
-            this.environment.applyThemeClasses(chartContainer);
+            const themeEl = document.createElement('div');
+            themeEl.style.height = '100%';
+            chartComp.setThemeEl(themeEl);
+            themeEl.appendChild(chartComp.getGui());
+            chartContainer.appendChild(themeEl);
         } else if (createChartContainerFunc) {
             // otherwise, user created chart via grid UI, check if developer provides containers (e.g. if the application
             // is using its own dialogs rather than the grid provided dialogs)
@@ -310,7 +310,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
                 }
             },
             focusChart: () => {
-                this.focusSvc.focusInto(chartComp.getGui());
+                _focusInto(chartComp.getGui());
             },
             chartElement: chartComp.getGui(),
             chart: chartComp.getUnderlyingChart(),

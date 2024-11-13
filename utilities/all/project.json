@@ -93,6 +93,15 @@
       },
       "cache": true
     },
+    "test:modules:full": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run-many -t test --projects=tag:community,tag:enterprise,tag:test,tag:module-size --exclude=tag:framework"
+        ]
+      },
+      "cache": true
+    },
     "dev:setup": {
       "executor": "nx:run-commands",
       "options": {
@@ -111,6 +120,26 @@
     "dev": {
       "executor": "nx:run-commands",
       "dependsOn": ["dev:setup"],
+      "inputs": [],
+      "options": {
+        "parallel": true,
+        "commands": ["node external/ag-shared/scripts/watch/watch.js grid", "nx run ag-grid-docs:dev"]
+      },
+      "configurations": {
+        "windows": {
+          "commands": [
+            {
+              "command": "nx run ag-charts-website:dev --configuration watch"
+            }
+          ]
+        }
+      }
+    },
+    "dev:quick": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "ag-grid-docs-src_content_docs_sparklines-bar-customisation__examples_bar-sparkline-customisation_main.ts:generate"
+      ],
       "inputs": [],
       "options": {
         "parallel": true,
@@ -184,6 +213,12 @@
         "staging": {},
         "production": {}
       }
+    },
+    "link": {
+      "command": "./scripts/setupLocalDeps.sh"
+    },
+    "unlink": {
+      "command": "./scripts/removeLocalDeps.sh"
     }
   },
   "implicitDependencies": [
@@ -198,6 +233,7 @@
     "external/ag-website-shared",
     "external/ag-shared",
     "testing/behavioural",
+    "testing/module-size",
     "ag-grid-generate-example-files"
   ],
   "tags": []

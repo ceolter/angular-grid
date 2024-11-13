@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Component } from 'react';
+import type React from 'react';
 import type { PropsWithChildren } from 'react';
 
 type ErrorBoundaryState = {

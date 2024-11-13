@@ -1,8 +1,9 @@
-import type { BeanCollection, FocusService } from 'ag-grid-community';
 import {
     Component,
     KeyCode,
     _clearElement,
+    _findFocusableElements,
+    _findNextFocusableElement,
     _getActiveDomElement,
     _getDocument,
     _setAriaPosInSet,
@@ -20,13 +21,8 @@ export interface PillRendererParams<TValue> {
 }
 
 export class AgPillContainer<TValue> extends Component {
-    private focusSvc: FocusService;
     private params: PillRendererParams<TValue>;
     private pills: AgPill[] = [];
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-    }
 
     constructor() {
         super(/* html */ `
@@ -90,12 +86,12 @@ export class AgPillContainer<TValue> extends Component {
 
         e.preventDefault();
 
-        const activeEl = _getActiveDomElement(this.gos);
+        const { params, beans } = this;
+        const activeEl = _getActiveDomElement(beans);
         const eGui = this.getGui();
-        const { params, focusSvc } = this;
 
         if (eGui.contains(activeEl)) {
-            const nextFocusableEl = focusSvc.findNextFocusableElement(eGui, false, key === KeyCode.LEFT);
+            const nextFocusableEl = _findNextFocusableElement(beans, eGui, false, key === KeyCode.LEFT);
 
             if (nextFocusableEl) {
                 nextFocusableEl.focus();
@@ -103,7 +99,7 @@ export class AgPillContainer<TValue> extends Component {
                 params.eWrapper.focus();
             }
         } else {
-            const focusableElements = focusSvc.findFocusableElements(eGui);
+            const focusableElements = _findFocusableElements(eGui);
             if (focusableElements.length > 0) {
                 focusableElements[key === KeyCode.RIGHT ? 0 : focusableElements.length - 1].focus();
             }
@@ -113,7 +109,7 @@ export class AgPillContainer<TValue> extends Component {
     private clearPills(): void {
         const eGui = this.getGui();
 
-        if (eGui.contains(_getActiveDomElement(this.gos)) && this.params.eWrapper) {
+        if (eGui.contains(_getActiveDomElement(this.beans)) && this.params.eWrapper) {
             this.params.eWrapper.focus();
         }
 
@@ -135,7 +131,7 @@ export class AgPillContainer<TValue> extends Component {
 
         e.preventDefault();
 
-        const eDoc = _getDocument(this.gos);
+        const eDoc = _getDocument(this.beans);
         const pillIndex = this.pills.findIndex((pill) => pill.getGui().contains(eDoc.activeElement));
 
         if (pillIndex === -1) {

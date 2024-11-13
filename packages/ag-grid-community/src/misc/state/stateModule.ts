@@ -1,23 +1,17 @@
 import type { _StateGridApi } from '../../api/gridApi';
 import { baseCommunityModule } from '../../interfaces/iModule';
-import type { _ModuleWithApi, _ModuleWithoutApi } from '../../interfaces/iModule';
+import type { _ModuleWithApi } from '../../interfaces/iModule';
 import { getState } from './stateApi';
 import { StateService } from './stateService';
 
-export const StateCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('StateCoreModule'),
+/**
+ * @feature API -> Grid State
+ * @gridOption initialState
+ */
+export const StateModule: _ModuleWithApi<_StateGridApi> = {
+    ...baseCommunityModule('StateModule'),
     beans: [StateService],
-};
-
-export const StateApiModule: _ModuleWithApi<_StateGridApi> = {
-    ...baseCommunityModule('StateApiModule'),
     apiFunctions: {
         getState,
     },
-    dependsOn: [StateCoreModule],
-};
-
-export const StateModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('StateModule'),
-    dependsOn: [StateCoreModule, StateApiModule],
 };

@@ -1,5 +1,5 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _StatusBarGridApi } from 'ag-grid-community';
-import { KeyboardNavigationCoreModule } from 'ag-grid-community';
+import { KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -12,7 +12,11 @@ import { TotalRowsComp } from './providedPanels/totalRowsComp';
 import { getStatusPanel } from './statusBarApi';
 import { StatusBarService } from './statusBarService';
 
-export const StatusBarCoreModule: _ModuleWithoutApi = {
+/**
+ * @feature Accessories -> Status Bar
+ * @gridOption statusBar
+ */
+export const StatusBarCoreModule: _ModuleWithApi<_StatusBarGridApi> = {
     ...baseEnterpriseModule('StatusBarCoreModule'),
     beans: [StatusBarService],
     userComponents: {
@@ -22,24 +26,25 @@ export const StatusBarCoreModule: _ModuleWithoutApi = {
         agTotalAndFilteredRowCountComponent: TotalAndFilteredRowsComp,
     },
     selectors: [AgStatusBarSelector],
-    dependsOn: [EnterpriseCoreModule, KeyboardNavigationCoreModule],
+    apiFunctions: {
+        getStatusPanel,
+    },
+    dependsOn: [EnterpriseCoreModule, KeyboardNavigationModule],
 };
 
+/**
+ * @feature Accessories -> Status Bar
+ */
 export const StatusBarSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('StatusBarSelectionModule'),
     userComponents: { agSelectedRowCountComponent: SelectedRowsComp },
     dependsOn: [StatusBarCoreModule],
 };
 
-export const StatusBarApiModule: _ModuleWithApi<_StatusBarGridApi> = {
-    ...baseEnterpriseModule('StatusBarApiModule'),
-    apiFunctions: {
-        getStatusPanel,
-    },
-    dependsOn: [StatusBarCoreModule],
-};
-
+/**
+ * @feature Accessories -> Status Bar
+ */
 export const StatusBarModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('StatusBarModule'),
-    dependsOn: [StatusBarCoreModule, StatusBarApiModule, StatusBarSelectionModule],
+    dependsOn: [StatusBarCoreModule, StatusBarSelectionModule],
 };

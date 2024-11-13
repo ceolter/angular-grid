@@ -8,13 +8,23 @@
 
 .ag-disabled,
 .ag-column-select-column-group-readonly,
+.ag-column-select-column-readonly,
 [disabled] {
     .ag-icon {
         opacity: 0.5;
     }
+
+    &.ag-icon-grip {
+        opacity: 0.35;
+    }
 }
 
-.ag-column-select-column-readonly.ag-icon-grip,
-.ag-column-select-column-readonly .ag-icon-grip {
-    opacity: 0.35;
+.ag-column-select-column-readonly {
+    .ag-icon-grip {
+        opacity: 0.35;
+    }
+
+    &.ag-icon-grip {
+        opacity: 0.35;
+    }
 }

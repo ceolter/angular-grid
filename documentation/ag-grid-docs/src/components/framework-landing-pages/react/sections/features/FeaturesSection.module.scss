@@ -70,11 +70,12 @@
 }
 
 .featureNavIcon {
-    fill: var(--color-fg-primary);
+    --icon-color: var(--color-fg-secondary);
+
+    cursor: pointer;
 
     &:hover {
-        cursor: pointer;
-        fill: var(--color-util-brand-400);
+        --icon-color: var(--color-link-hover);
     }
 }
 

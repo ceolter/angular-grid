@@ -7,7 +7,7 @@ import { ValuesDropZonePanel } from '../rowGrouping/columnDropZones/valueDropZon
 import { PivotModePanel } from './pivotModePanel';
 
 export class ColumnToolPanelFactory extends BeanStub implements NamedBean {
-    beanName: BeanName = 'columnToolPanelFactory';
+    beanName: BeanName = 'colToolPanelFactory';
 
     public setPanelVisible<C extends RowGroupDropZonePanel | ValuesDropZonePanel | PivotDropZonePanel | PivotModePanel>(
         existingPanel: C | undefined,

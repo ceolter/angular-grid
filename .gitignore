@@ -51,3 +51,6 @@ community-modules/styles/_css-content.scss
 
 # Astro generated file
 src/env.d.ts
+
+# test results file
+testing/module-size/module-size-results.json

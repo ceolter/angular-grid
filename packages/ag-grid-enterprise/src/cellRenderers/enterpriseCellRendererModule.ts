@@ -1,19 +1,32 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
+import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { LoadingCellRenderer } from './loadingCellRenderer';
 import { SkeletonCellRenderer } from './skeletonCellRenderer';
 
+/**
+ * @feature Server-Side Row Model -> Loading Cell Renderer
+ */
 export const LoadingCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('LoadingCellRendererModule'),
     userComponents: {
         agLoadingCellRenderer: LoadingCellRenderer,
     },
+    icons: {
+        // rotating spinner shown by the loading cell renderer
+        groupLoading: 'loading',
+    },
+    dependsOn: [EnterpriseCoreModule],
 };
 
+/**
+ * @feature Server-Side Row Model -> Loading Cell Renderer
+ */
 export const SkeletonCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SkeletonCellRendererModule'),
     userComponents: {
         agSkeletonCellRenderer: SkeletonCellRenderer,
     },
+    dependsOn: [EnterpriseCoreModule],
 };

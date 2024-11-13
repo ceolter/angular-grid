@@ -5,6 +5,7 @@ import type {
     ColumnNameService,
     FilterOpenedEvent,
     ITooltipCtrl,
+    IconName,
     Registry,
     TooltipFeature,
 } from 'ag-grid-community';
@@ -84,7 +85,7 @@ export class ToolPanelFilterGroupComp extends Component {
         });
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'filterToolPanelColumnGroup',
                 shouldDisplayTooltip: _getShouldDisplayTooltip(
@@ -98,7 +99,7 @@ export class ToolPanelFilterGroupComp extends Component {
         this.addExpandCollapseListeners();
         this.addFilterChangedListeners();
         this.setupTooltip();
-        this.addInIcon('filter');
+        this.addInIcon('filterActive');
     }
 
     private setupTooltip(): void {
@@ -161,8 +162,8 @@ export class ToolPanelFilterGroupComp extends Component {
         this.setDisplayed(!hide);
     }
 
-    private addInIcon(iconName: string): void {
-        const eIcon = _createIconNoSpan(iconName, this.gos)!;
+    private addInIcon(iconName: IconName): void {
+        const eIcon = _createIconNoSpan(iconName, this.beans)!;
         if (eIcon) {
             eIcon.classList.add('ag-filter-toolpanel-group-instance-header-icon');
         }

@@ -1,9 +1,8 @@
 import { BASE_URL } from './baseUrl';
 import type { FrameworkOverridesIncomingSource, IFrameworkOverrides } from './interfaces/iFrameworkOverrides';
+import { getPassiveStateForEvent } from './utils/event';
 import { AgPromise } from './utils/promise';
 import { setValidationDocLink } from './validation/logging';
-
-const PASSIVE_EVENTS = ['touchstart', 'touchend', 'touchmove', 'touchcancel'];
 
 /** The base frameworks, eg React & Angular, override this bean with implementations specific to their requirement. */
 export class VanillaFrameworkOverrides implements IFrameworkOverrides {
@@ -26,10 +25,25 @@ export class VanillaFrameworkOverrides implements IFrameworkOverrides {
         element: HTMLElement,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        useCapture?: boolean
+        options?: boolean | AddEventListenerOptions
     ): void {
-        const isPassive = PASSIVE_EVENTS.includes(type);
-        element.addEventListener(type, listener, { capture: !!useCapture, passive: isPassive });
+        let eventListenerOptions: AddEventListenerOptions = {};
+
+        if (typeof options === 'object') {
+            eventListenerOptions = options;
+        } else if (typeof options === 'boolean') {
+            eventListenerOptions = { capture: options };
+        }
+
+        if (eventListenerOptions.passive == null) {
+            const passive = getPassiveStateForEvent(type);
+
+            if (passive != null) {
+                eventListenerOptions.passive = passive;
+            }
+        }
+
+        element.addEventListener(type, listener, eventListenerOptions);
     }
 
     wrapIncoming: <T>(callback: () => T, source?: FrameworkOverridesIncomingSource) => T = (callback) => callback();

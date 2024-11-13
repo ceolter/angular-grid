@@ -3,11 +3,18 @@ import { ColumnFilterModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
-import { SideBarModule, SideBarSharedModule } from '../sideBar/sideBarModule';
+import { SideBarModule } from '../sideBar/sideBarModule';
 import { FiltersToolPanel } from './filtersToolPanel';
 
+/**
+ * @feature Accessories -> Filters Tool Panel
+ */
 export const FiltersToolPanelModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('FiltersToolPanelModule'),
     userComponents: { agFiltersToolPanel: FiltersToolPanel },
-    dependsOn: [SideBarModule, EnterpriseCoreModule, ColumnFilterModule, SideBarSharedModule],
+    icons: {
+        // filter tool panel tab
+        filtersToolPanel: 'filter',
+    },
+    dependsOn: [SideBarModule, EnterpriseCoreModule, ColumnFilterModule],
 };

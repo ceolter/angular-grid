@@ -551,7 +551,8 @@
                 "name": "Advanced Filter",
                 "url": "./filter-advanced/#configuring-advanced-filter-builder"
             }
-        }
+        },
+        "alwaysPassFilter": {}
     },
     "charts": {
         "meta": {

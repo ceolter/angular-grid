@@ -82,7 +82,7 @@ export function _unRegisterGridModules(gridId: string): void {
 
 export function _isModuleRegistered(moduleName: ModuleName, gridId: string, rowModel: RowModelType): boolean {
     const isRegisteredForRowModel = (model: RowModelType | 'all') =>
-        !!globalModulesMap[model]?.[moduleName] || !!gridModulesMap[gridId][model]?.[moduleName];
+        !!globalModulesMap[model]?.[moduleName] || !!gridModulesMap[gridId]?.[model]?.[moduleName];
     return isRegisteredForRowModel(rowModel) || isRegisteredForRowModel('all');
 }
 

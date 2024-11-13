@@ -1,5 +1,12 @@
 import { _warn } from 'ag-grid-community';
-import type { ChangedPath, NamedBean, RefreshModelParams, RowNode, RowNodeTransaction } from 'ag-grid-community';
+import type {
+    ChangedPath,
+    GetDataPath,
+    IChangedRowNodes,
+    NamedBean,
+    RefreshModelParams,
+    RowNode,
+} from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -19,39 +26,60 @@ export class ClientSidePathTreeNodeManager<TData>
 
         super.loadNewRowData(rowData);
 
-        this.addOrUpdateRows(rootNode.allLeafChildren, false);
+        const allLeafChildren = rootNode.allLeafChildren!;
+        const getDataPath = this.gos.get('getDataPath');
+        for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
+            this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
+        }
 
         this.treeCommit();
     }
 
+    public override get treeData(): boolean {
+        const gos = this.gos;
+        return gos.get('treeData') && !!gos.get('getDataPath');
+    }
+
     public override refreshModel(params: RefreshModelParams<TData>): void {
-        const transactions = params.rowNodeTransactions;
-        if (transactions?.length) {
-            this.executeTransactions(transactions, params.changedPath);
+        const changedRowNodes = params.changedRowNodes;
+        if (changedRowNodes) {
+            this.executeTransactions(changedRowNodes, params.changedPath, params.rowNodesOrderChanged);
         }
 
         super.refreshModel(params);
     }
 
-    private executeTransactions(transactions: RowNodeTransaction<TData>[], changedPath: ChangedPath | undefined): void {
-        this.treeRoot?.setRow(this.rootNode);
-
-        for (const { remove, update, add } of transactions) {
-            // the order of [add, remove, update] is the same as in ClientSideNodeManager.
-            // Order is important when a record with the same id is added and removed in the same transaction.
-            this.removeRows(remove as RowNode[] | null);
-            this.addOrUpdateRows(update as RowNode[] | null, true);
-            this.addOrUpdateRows(add as RowNode[] | null, false);
+    private executeTransactions(
+        changedRowNodes: IChangedRowNodes,
+        changedPath: ChangedPath | undefined,
+        rowNodesOrderMaybeChanged: boolean | undefined
+    ): void {
+        const treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            return; // Destroyed or not active
         }
 
-        if (transactions) {
-            const rows = this.treeRoot?.row?.allLeafChildren;
-            if (rows) {
-                for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
-                    const node = rows[rowIdx].treeNode as TreeNode | null;
-                    if (node && node.oldSourceRowIndex !== rowIdx) {
-                        node.invalidateOrder(); // Order might have changed
-                    }
+        treeRoot.setRow(this.rootNode);
+
+        for (const row of changedRowNodes.removals) {
+            const node = row.treeNode as TreeNode | null;
+            if (node) {
+                this.treeRemove(node, row);
+            }
+        }
+
+        const updates = changedRowNodes.updates;
+        const getDataPath = this.gos.get('getDataPath');
+        for (const row of updates.keys()) {
+            this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+        }
+
+        const rows = treeRoot.row?.allLeafChildren;
+        if (rowNodesOrderMaybeChanged && rows) {
+            for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
+                const node = rows[rowIdx].treeNode as TreeNode | null;
+                if (node && node.sourceIdx !== rowIdx) {
+                    node.invalidateOrder(); // Order might have changed
                 }
             }
         }
@@ -59,39 +87,27 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeCommit(changedPath); // One single commit for all the transactions
     }
 
-    /** Transactional removal */
-    private removeRows(rows: RowNode[] | null | undefined): void {
-        for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
-            const row = rows![i];
-            const node = row.treeNode as TreeNode | null;
-            if (node) {
-                this.treeRemove(node, row);
-            }
-        }
-    }
-
-    /** Transactional add/update */
-    private addOrUpdateRows(rows: RowNode[] | null, update: boolean): void {
-        const treeRoot = this.treeRoot;
-        if (!treeRoot) {
+    private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {
+        const treeRoot = this.treeRoot!;
+        if (!this.treeData) {
+            // We assume that the data is flat and we use id as the key for the tree nodes.
+            // This happens when treeData is false and getDataPath is undefined/null.
+            this.treeSetRow(treeRoot.upsertKey(row.id!), row, created);
             return;
         }
-        const getDataPath = this.gos.get('getDataPath');
-        for (let i = 0, len = rows?.length ?? 0; i < len; ++i) {
-            const row = rows![i];
-            const path = getDataPath?.(row.data);
-            const pathLength = path?.length;
-            if (!pathLength) {
-                _warn(185, { data: row.data });
-            } else {
-                // Gets the last node of a path. Inserts filler nodes where needed.
-                let level = 0;
-                let node = treeRoot;
-                do {
-                    node = node.upsertKey(path[level++]);
-                } while (level < pathLength);
-                this.treeSetRow(node, row, update);
-            }
+
+        const path = getDataPath?.(row.data);
+        const pathLength = path?.length;
+        if (!pathLength) {
+            _warn(185, { data: row.data });
+        } else {
+            // Gets the last node of a path. Inserts filler nodes where needed.
+            let level = 0;
+            let node = treeRoot;
+            do {
+                node = node.upsertKey(path[level++]);
+            } while (level < pathLength);
+            this.treeSetRow(node, row, created);
         }
     }
 }

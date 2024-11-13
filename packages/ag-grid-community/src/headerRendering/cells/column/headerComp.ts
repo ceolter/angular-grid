@@ -9,12 +9,10 @@ import type { MenuService } from '../../../misc/menu/menuService';
 import type { SortIndicatorComp } from '../../../sort/sortIndicatorComp';
 import type { SortService } from '../../../sort/sortService';
 import { _removeFromParent, _setDisplayed } from '../../../utils/dom';
-import { _exists } from '../../../utils/generic';
+import type { IconName } from '../../../utils/icon';
 import { _createIconNoSpan } from '../../../utils/icon';
 import { _escapeString } from '../../../utils/string';
 import { Component, RefPlaceholder } from '../../../widgets/component';
-import type { LongTapEvent, TapEvent, TouchListenerEvent } from '../../../widgets/touchListener';
-import { TouchListener } from '../../../widgets/touchListener';
 
 export interface IHeaderParams<TData = any, TContext = any> extends AgGridCommon<TData, TContext> {
     /** The column the header is for. */
@@ -120,9 +118,9 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private eFilter: HTMLElement = RefPlaceholder;
-    private eFilterButton?: HTMLElement = RefPlaceholder;
+    public eFilterButton?: HTMLElement = RefPlaceholder;
     private eSortIndicator: SortIndicatorComp = RefPlaceholder;
-    private eMenu?: HTMLElement = RefPlaceholder;
+    public eMenu?: HTMLElement = RefPlaceholder;
     private eLabel: HTMLElement = RefPlaceholder;
     private eText: HTMLElement = RefPlaceholder;
 
@@ -135,7 +133,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     private readonly eSortMixed: HTMLElement = RefPlaceholder;
     private readonly eSortNone: HTMLElement = RefPlaceholder;
 
-    private params: IHeaderParams;
+    public params: IHeaderParams;
 
     private currentDisplayName: string;
     private currentTemplate: string | null | undefined;
@@ -185,7 +183,7 @@ export class HeaderComp extends Component implements IHeaderComp {
 
         this.currentTemplate = this.workOutTemplate();
         this.setTemplate(this.currentTemplate, this.sortSvc ? [this.sortSvc.getSortIndicatorSelector()] : undefined);
-        this.setupTap();
+        this.beans.touchSvc?.setupForHeader(this);
         this.setMenu();
         this.setupSort();
         this.setupFilterIcon();
@@ -203,65 +201,14 @@ export class HeaderComp extends Component implements IHeaderComp {
         }
     }
 
-    private addInIcon(iconName: string, eParent: HTMLElement, column: AgColumn): void {
+    private addInIcon(iconName: IconName, eParent: HTMLElement, column: AgColumn): void {
         if (eParent == null) {
             return;
         }
 
-        const eIcon = _createIconNoSpan(iconName, this.gos, column);
+        const eIcon = _createIconNoSpan(iconName, this.beans, column);
         if (eIcon) {
             eParent.appendChild(eIcon);
-        }
-    }
-
-    private setupTap(): void {
-        const { gos } = this;
-
-        if (gos.get('suppressTouch')) {
-            return;
-        }
-
-        const touchListener = new TouchListener(this.getGui(), true);
-        const suppressMenuHide = this.shouldSuppressMenuHide();
-        const tapMenuButton = suppressMenuHide && _exists(this.eMenu);
-        const menuTouchListener = tapMenuButton ? new TouchListener(this.eMenu!, true) : touchListener;
-
-        if (this.params.enableMenu) {
-            const eventType: TouchListenerEvent = tapMenuButton ? 'tap' : 'longTap';
-            const showMenuFn = (event: TapEvent | LongTapEvent) =>
-                this.params.showColumnMenuAfterMouseClick(event.touchStart);
-            this.addManagedListeners(menuTouchListener, { [eventType]: showMenuFn });
-        }
-
-        if (this.params.enableSorting) {
-            const tapListener = (event: TapEvent) => {
-                const target = event.touchStart.target as HTMLElement;
-                // When suppressMenuHide is true, a tap on the menu icon or filter button will bubble up
-                // to the header container, in that case we should not sort
-                if (suppressMenuHide && (this.eMenu?.contains(target) || this.eFilterButton?.contains(target))) {
-                    return;
-                }
-
-                this.sortSvc?.progressSort(this.params.column as AgColumn, false, 'uiColumnSorted');
-            };
-
-            this.addManagedListeners(touchListener, { tap: tapListener });
-        }
-
-        if (this.params.enableFilterButton) {
-            const filterButtonTouchListener = new TouchListener(this.eFilterButton!, true);
-            this.addManagedListeners(filterButtonTouchListener, {
-                tap: () => this.params.showFilter(this.eFilterButton!),
-            });
-            this.addDestroyFunc(() => filterButtonTouchListener.destroy());
-        }
-
-        // if tapMenuButton is true `touchListener` and `menuTouchListener` are different
-        // so we need to make sure to destroy both listeners here
-        this.addDestroyFunc(() => touchListener.destroy());
-
-        if (tapMenuButton) {
-            this.addDestroyFunc(() => menuTouchListener.destroy());
         }
     }
 
@@ -269,7 +216,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         return this.params.enableMenu && !!this.menuSvc?.isHeaderMenuButtonEnabled();
     }
 
-    private shouldSuppressMenuHide(): boolean {
+    public shouldSuppressMenuHide(): boolean {
         return !!this.menuSvc?.isHeaderMenuButtonAlwaysShowEnabled();
     }
 
@@ -349,7 +296,12 @@ export class HeaderComp extends Component implements IHeaderComp {
         if (!this.eFilter) {
             return;
         }
-        this.configureFilter(this.params.enableFilterIcon, this.eFilter, this.onFilterChangedIcon.bind(this));
+        this.configureFilter(
+            this.params.enableFilterIcon,
+            this.eFilter,
+            this.onFilterChangedIcon.bind(this),
+            'filterActive'
+        );
     }
 
     private setupFilterButton(): void {
@@ -359,7 +311,8 @@ export class HeaderComp extends Component implements IHeaderComp {
         const configured = this.configureFilter(
             this.params.enableFilterButton,
             this.eFilterButton,
-            this.onFilterChangedButton.bind(this)
+            this.onFilterChangedButton.bind(this),
+            'filter'
         );
         if (configured) {
             this.addManagedElementListeners(this.eFilterButton, {
@@ -370,14 +323,19 @@ export class HeaderComp extends Component implements IHeaderComp {
         }
     }
 
-    private configureFilter(enabled: boolean, element: HTMLElement, filterChangedCallback: () => void): boolean {
+    private configureFilter(
+        enabled: boolean,
+        element: HTMLElement,
+        filterChangedCallback: () => void,
+        icon: IconName
+    ): boolean {
         if (!enabled) {
             _removeFromParent(element);
             return false;
         }
 
         const column = this.params.column as AgColumn;
-        this.addInIcon('filter', element, column);
+        this.addInIcon(icon, element, column);
 
         this.addManagedListeners(column, { filterChanged: filterChangedCallback });
         filterChangedCallback();

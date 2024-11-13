@@ -391,8 +391,8 @@ class DefaultTitleBar extends Component<ExpandedChangedEventType> {
     }
 
     private setupExpandContract(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.gos, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.gos, null));
+        this.eGroupClosedIcon.appendChild(_createIcon('accordionClosed', this.beans, null));
+        this.eGroupOpenedIcon.appendChild(_createIcon('accordionOpen', this.beans, null));
         this.addManagedElementListeners(this.getGui(), {
             click: () => this.dispatchExpandChanged(),
             keydown: (e: KeyboardEvent) => {

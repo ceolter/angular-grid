@@ -2,6 +2,7 @@ import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import { _clearElement, _setDisplayed } from '../utils/dom';
+import type { IconName } from '../utils/icon';
 import { _createIconNoSpan } from '../utils/icon';
 import type { ComponentSelector } from '../widgets/component';
 import { Component, RefPlaceholder } from '../widgets/component';
@@ -84,12 +85,12 @@ export class SortIndicatorComp extends Component {
         this.onSortChanged();
     }
 
-    private addInIcon(iconName: string, eParent: HTMLElement, column: AgColumn): void {
+    private addInIcon(iconName: IconName, eParent: HTMLElement, column: AgColumn): void {
         if (eParent == null) {
             return;
         }
 
-        const eIcon = _createIconNoSpan(iconName, this.gos, column);
+        const eIcon = _createIconNoSpan(iconName, this.beans, column);
         if (eIcon) {
             eParent.appendChild(eIcon);
         }

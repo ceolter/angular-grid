@@ -19,14 +19,13 @@ import type {
 import {
     BeanStub,
     ServerSideTransactionResultStatus,
-    _createRowNodeFooter,
-    _destroyRowNodeFooter,
     _getGroupTotalRowCallback,
     _getRowHeightAsNumber,
     _getRowIdCallback,
     _warn,
 } from 'ag-grid-community';
 
+import { _createRowNodeFooter, _destroyRowNodeFooter } from '../../../aggregation/footerUtils';
 import type { BlockUtils } from '../../blocks/blockUtils';
 import type { SSRMParams } from '../../serverSideRowModel';
 import type { StoreUtils } from '../storeUtils';
@@ -425,7 +424,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
             }
         }
 
-        const defaultRowHeight = _getRowHeightAsNumber(this.gos);
+        const defaultRowHeight = _getRowHeightAsNumber(this.beans);
         // if node after this, can calculate backwards (and ignore detail/grouping)
         if (nextNode) {
             const numberOfRowDiff = (nextNode.node.rowIndex! - displayIndex) * defaultRowHeight;
@@ -512,7 +511,7 @@ export class LazyStore extends BeanStub implements IServerSideStore {
             }
         }
 
-        const defaultRowHeight = _getRowHeightAsNumber(this.gos);
+        const defaultRowHeight = _getRowHeightAsNumber(this.beans);
         // if node after this, can calculate backwards (and ignore detail/grouping)
         if (nextNode) {
             const nextTop = nextNode.rowTop!;

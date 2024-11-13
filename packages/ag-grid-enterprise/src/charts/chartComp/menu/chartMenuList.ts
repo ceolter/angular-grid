@@ -1,12 +1,20 @@
 import type {
     BeanCollection,
-    FocusService,
+    DefaultChartMenuItem,
     IAfterGuiAttachedParams,
+    IconName,
     MenuItemDef,
     NamedBean,
     PopupService,
 } from 'ag-grid-community';
-import { BeanStub, Component, RefPlaceholder, _createIconNoSpan, _isNothingFocused } from 'ag-grid-community';
+import {
+    BeanStub,
+    Component,
+    RefPlaceholder,
+    _createIconNoSpan,
+    _focusInto,
+    _isNothingFocused,
+} from 'ag-grid-community';
 
 import { AgMenuList } from '../../../widgets/agMenuList';
 import type { ChartController } from '../chartController';
@@ -18,13 +26,13 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     beanName = 'chartMenuListFactory' as const;
 
     private popupSvc: PopupService;
-    private chartMenuService: ChartMenuService;
-    private chartTranslationService: ChartTranslationService;
+    private chartMenuSvc: ChartMenuService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
-        this.chartMenuService = beans.chartMenuService as ChartMenuService;
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartMenuSvc = beans.chartMenuSvc as ChartMenuService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
 
     private activeChartMenuList?: ChartMenuList;
@@ -35,9 +43,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
         chartMenuContext: ChartMenuContext;
     }): void {
         const { eventSource, showMenu, chartMenuContext } = params;
-        const areChartToolPanelsEnabled = this.chartMenuService.doChartToolPanelsExist(
-            chartMenuContext.chartController
-        );
+        const areChartToolPanelsEnabled = this.chartMenuSvc.doChartToolPanelsExist(chartMenuContext.chartController);
         const menuItems = this.mapWithStockItems(
             this.getMenuItems(chartMenuContext.chartController, areChartToolPanelsEnabled),
             chartMenuContext,
@@ -68,7 +74,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
             closedCallback: () => {
                 this.destroyBean(chartMenuList);
                 this.activeChartMenuList = undefined;
-                if (_isNothingFocused(this.gos)) {
+                if (_isNothingFocused(this.beans)) {
                     eventSource.focus({ preventScroll: true });
                 }
             },
@@ -94,10 +100,10 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     private getMenuItems(
         chartController: ChartController,
         areChartToolPanelsEnabled: boolean
-    ): (MenuItemDef | string)[] {
-        const defaultItems = [
-            ...(areChartToolPanelsEnabled ? ['chartEdit'] : []),
-            ...(chartController.isEnterprise() ? ['chartAdvancedSettings'] : []),
+    ): (MenuItemDef | DefaultChartMenuItem)[] {
+        const defaultItems: DefaultChartMenuItem[] = [
+            ...(areChartToolPanelsEnabled ? (['chartEdit'] as const) : []),
+            ...(chartController.isEnterprise() ? (['chartAdvancedSettings'] as const) : []),
             chartController.isChartLinked() ? 'chartUnlink' : 'chartLink',
             'chartDownload',
         ];
@@ -116,7 +122,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     }
 
     private mapWithStockItems(
-        originalList: (MenuItemDef | string)[],
+        originalList: (MenuItemDef | DefaultChartMenuItem)[],
         chartMenuContext: ChartMenuContext,
         showMenu: () => void,
         eventSource: HTMLElement,
@@ -147,7 +153,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
             const { subMenu } = result;
             if (Array.isArray(subMenu)) {
                 result.subMenu = this.mapWithStockItems(
-                    subMenu,
+                    subMenu as (DefaultChartMenuItem | MenuItemDef)[],
                     chartMenuContext,
                     showMenu,
                     eventSource,
@@ -162,7 +168,7 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
     }
 
     private getStockMenuItem(
-        key: string,
+        key: DefaultChartMenuItem,
         chartMenuContext: ChartMenuContext,
         showMenu: () => void,
         eventSource: HTMLElement,
@@ -171,42 +177,38 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
         switch (key) {
             case 'chartEdit':
                 return areChartToolPanelsEnabled
-                    ? this.createMenuItem(
-                          this.chartTranslationService.translate('chartEdit'),
-                          'chartsMenuEdit',
-                          showMenu
-                      )
+                    ? this.createMenuItem(this.chartTranslation.translate('chartEdit'), 'chartsMenuEdit', showMenu)
                     : null;
             case 'chartAdvancedSettings':
                 return this.createMenuItem(
-                    this.chartTranslationService.translate('chartAdvancedSettings'),
+                    this.chartTranslation.translate('chartAdvancedSettings'),
                     'chartsMenuAdvancedSettings',
-                    () => this.chartMenuService.openAdvancedSettings(chartMenuContext, eventSource)
+                    () => this.chartMenuSvc.openAdvancedSettings(chartMenuContext, eventSource)
                 );
             case 'chartUnlink':
                 return chartMenuContext.chartController.isChartLinked()
-                    ? this.createMenuItem(this.chartTranslationService.translate('chartUnlink'), 'unlinked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                    ? this.createMenuItem(this.chartTranslation.translate('chartUnlink'), 'unlinked', () =>
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartLink':
                 return !chartMenuContext.chartController.isChartLinked()
-                    ? this.createMenuItem(this.chartTranslationService.translate('chartLink'), 'linked', () =>
-                          this.chartMenuService.toggleLinked(chartMenuContext)
+                    ? this.createMenuItem(this.chartTranslation.translate('chartLink'), 'linked', () =>
+                          this.chartMenuSvc.toggleLinked(chartMenuContext)
                       )
                     : null;
             case 'chartDownload':
-                return this.createMenuItem(this.chartTranslationService.translate('chartDownload'), 'save', () =>
-                    this.chartMenuService.downloadChart(chartMenuContext)
+                return this.createMenuItem(this.chartTranslation.translate('chartDownload'), 'chartsDownload', () =>
+                    this.chartMenuSvc.downloadChart(chartMenuContext)
                 );
         }
         return null;
     }
 
-    private createMenuItem(name: string, iconName: string, action: () => void): MenuItemDef {
+    private createMenuItem(name: string, iconName: IconName, action: () => void): MenuItemDef {
         return {
             name,
-            icon: _createIconNoSpan(iconName, this.gos, null),
+            icon: _createIconNoSpan(iconName, this.beans, null),
             action,
         };
     }
@@ -218,18 +220,12 @@ export class ChartMenuListFactory extends BeanStub implements NamedBean {
 }
 
 class ChartMenuList extends Component {
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-    }
-
     private readonly eChartsMenu: HTMLElement = RefPlaceholder;
 
     private hidePopupFunc: () => void;
     private mainMenuList: AgMenuList;
 
-    constructor(private readonly menuItems: (MenuItemDef | string)[]) {
+    constructor(private readonly menuItems: MenuItemDef[]) {
         super(/* html */ `
             <div data-ref="eChartsMenu" role="presentation" class="ag-menu ag-chart-menu-popup"></div>
         `);
@@ -251,6 +247,6 @@ class ChartMenuList extends Component {
             this.hidePopupFunc = hidePopup;
             this.addDestroyFunc(hidePopup);
         }
-        this.focusSvc.focusInto(this.mainMenuList.getGui());
+        _focusInto(this.mainMenuList.getGui());
     }
 }

@@ -4,6 +4,7 @@ import type { BeanCollection } from '../../context/context';
 import type { CellEditorSelectorFunc, CellEditorSelectorResult, CellRendererSelectorFunc } from '../../entities/colDef';
 import type { GridOptions } from '../../entities/gridOptions';
 import type { AgGridCommon } from '../../interfaces/iCommon';
+import type { IComponent } from '../../interfaces/iComponent';
 import type { IFrameworkOverrides } from '../../interfaces/iFrameworkOverrides';
 import type { ComponentType, UserCompDetails } from '../../interfaces/iUserCompDetails';
 import { _mergeDeep } from '../../utils/object';
@@ -46,7 +47,7 @@ export function _getUserCompKeys<TDefinition>(
     // there are two types of js comps, class based and func based. we can only check for
     // class based, by checking if getGui() exists. no way to differentiate js func based vs eg react func based
     // const isJsClassComp = (comp: any) => doesImplementIComponent(comp);
-    // const fwActive = this.frameworkComponentWrapper != null;
+    // const fwActive = this.frameworkCompWrapper != null;
 
     // pull from defObject if available
     if (defObject) {
@@ -87,36 +88,35 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
     beanName = 'userCompFactory' as const;
 
     private gridOptions: GridOptions;
-    private agComponentUtils?: AgComponentUtils;
+    private agCompUtils?: AgComponentUtils;
     private registry: Registry;
-    private frameworkComponentWrapper?: FrameworkComponentWrapper;
+    private frameworkCompWrapper?: FrameworkComponentWrapper;
 
     public wireBeans(beans: BeanCollection): void {
-        this.agComponentUtils = beans.agComponentUtils;
+        this.agCompUtils = beans.agCompUtils;
         this.registry = beans.registry;
-        this.frameworkComponentWrapper = beans.frameworkComponentWrapper;
+        this.frameworkCompWrapper = beans.frameworkCompWrapper;
         this.gridOptions = beans.gridOptions;
     }
 
     public getCompDetailsFromGridOptions(
         type: ComponentType,
-        defaultName: string | null | undefined,
+        defaultName: string | undefined,
         params: any,
         mandatory = false
     ): UserCompDetails | undefined {
         return this.getCompDetails(this.gridOptions, type, defaultName, params, mandatory);
     }
 
-    public getCompDetails<TDefinition>(
+    public getCompDetails<TDefinition, TComp extends IComponent<any>>(
         defObject: TDefinition,
         type: ComponentType,
-        defaultName: string | null | undefined,
+        defaultName: string | undefined,
         params: any,
         mandatory = false
-    ): UserCompDetails | undefined {
+    ): UserCompDetails<TComp> | undefined {
         const { name, cellRenderer } = type;
 
-        // eslint-disable-next-line prefer-const
         let { compName, jsComp, fwComp, paramsFromSelector, popupFromSelector, popupPositionFromSelector } =
             _getUserCompKeys(this.beans.frameworkOverrides, defObject, type, params);
 
@@ -144,26 +144,34 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
 
         // if we have a comp option, and it's a function, replace it with an object equivalent adaptor
         if (jsComp && cellRenderer && !doesImplementIComponent(jsComp)) {
-            jsComp = this.agComponentUtils?.adaptFunction(type, jsComp);
+            jsComp = this.agCompUtils?.adaptFunction(type, jsComp);
         }
 
         if (!jsComp && !fwComp) {
-            if (mandatory) {
-                _error(50, { compName });
+            const { validation } = this.beans;
+            if (mandatory && (compName !== defaultName || !defaultName)) {
+                // expecting the user to provide a component with this name
+                if (compName) {
+                    // If we have validation and this is a grid comp without a default (e.g. filters tool panel),
+                    // we will have already warned about this
+                    if (!validation?.isProvidedUserComp(compName)) {
+                        _error(50, { compName });
+                    }
+                } else {
+                    _error(216, { name });
+                }
+            } else if (defaultName && !validation) {
+                // Grid should be providing this component.
+                // Validation service will have already warned about this with the correct module name if it was present.
+                _error(146, { comp: defaultName });
             }
             return;
         }
 
-        const paramsMerged = this.mergeParamsWithApplicationProvidedParams(
-            defObject,
-            type,
-            params,
-            paramsFromSelector,
-            defaultCompParams
-        );
+        const paramsMerged = this.mergeParams(defObject, type, params, paramsFromSelector, defaultCompParams);
 
         const componentFromFramework = jsComp == null;
-        const componentClass = jsComp ? jsComp : fwComp;
+        const componentClass = jsComp ?? fwComp;
 
         return {
             componentFromFramework,
@@ -177,21 +185,21 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         };
     }
 
-    private newAgStackInstance(
+    private newAgStackInstance<TComp extends IComponent<any>>(
         ComponentClass: any,
         componentFromFramework: boolean,
         params: any,
         type: ComponentType
-    ): AgPromise<any> {
+    ): AgPromise<TComp> {
         const jsComponent = !componentFromFramework;
         // using javascript component
-        let instance: any;
+        let instance: TComp;
 
         if (jsComponent) {
             instance = new ComponentClass();
         } else {
             // Using framework component
-            instance = this.frameworkComponentWrapper!.wrap(
+            instance = this.frameworkCompWrapper!.wrap(
                 ComponentClass,
                 type.mandatoryMethods,
                 type.optionalMethods,
@@ -199,16 +207,20 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
             );
         }
 
-        const deferredInit = this.initComponent(instance, params);
-
+        this.createBean(instance);
+        const deferredInit = instance.init?.(params);
         if (deferredInit == null) {
             return AgPromise.resolve(instance);
         }
+
         return deferredInit.then(() => instance);
     }
 
-    // used by Floating Filter
-    public mergeParamsWithApplicationProvidedParams<TDefinition>(
+    /**
+     * merges params with application provided params
+     * used by Floating Filter
+     */
+    public mergeParams<TDefinition>(
         defObject: TDefinition,
         type: ComponentType,
         paramsFromGrid: any,
@@ -238,13 +250,5 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
         _mergeDeep(params, paramsFromSelector);
 
         return params;
-    }
-
-    private initComponent(component: any, params: any): AgPromise<void> | void {
-        this.createBean(component);
-        if (component.init == null) {
-            return;
-        }
-        return component.init(params);
     }
 }

@@ -6,15 +6,15 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { Environment } from '../environment';
-import type { MouseEventService } from '../gridBodyComp/mouseEventService';
-import { _getDocument, _getRootNode } from '../gridOptionsUtils';
+import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
+import { _getDocument, _getPageBody, _getRootNode } from '../gridOptionsUtils';
 import type { AgGridCommon } from '../interfaces/iCommon';
 import type { DragItem } from '../interfaces/iDragItem';
 import { _removeFromArray } from '../utils/array';
 import { _getElementRectWithOffset } from '../utils/dom';
 import type { AgPromise } from '../utils/promise';
 import { _warn } from '../validation/logging';
-import type { DragAndDropImageComponent } from './dragAndDropImageComponent';
+import type { IDragAndDropImageComponent } from './dragAndDropImageComponent';
 import type { DragListenerParams, DragService } from './dragService';
 import type { RowDropZoneParams } from './rowDragFeature';
 
@@ -148,14 +148,12 @@ export class DragAndDropService extends BeanStub implements NamedBean {
 
     private ctrlsSvc: CtrlsService;
     private dragSvc: DragService;
-    private mouseEventSvc: MouseEventService;
     private environment: Environment;
     private userCompFactory: UserComponentFactory;
 
     public wireBeans(beans: BeanCollection): void {
         this.ctrlsSvc = beans.ctrlsSvc;
         this.dragSvc = beans.dragSvc!;
-        this.mouseEventSvc = beans.mouseEventSvc;
         this.environment = beans.environment;
         this.userCompFactory = beans.userCompFactory;
     }
@@ -168,8 +166,8 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     private dragging: boolean;
 
     private dragAndDropImageComp: {
-        promise: AgPromise<DragAndDropImageComponent>;
-        comp?: DragAndDropImageComponent;
+        promise: AgPromise<IDragAndDropImageComponent>;
+        comp?: IDragAndDropImageComponent;
     } | null;
     private dragAndDropImageParent: HTMLElement | ShadowRoot;
 
@@ -191,7 +189,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         this.dragSvc.addDragSource(params);
     }
 
-    public getDragAndDropImageComponent(): DragAndDropImageComponent | null {
+    public getDragAndDropImageComponent(): IDragAndDropImageComponent | null {
         const { dragAndDropImageComp } = this;
         if (!dragAndDropImageComp || !dragAndDropImageComp.comp) {
             return null;
@@ -291,11 +289,11 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             if (dropTarget && this.dragAndDropImageComp) {
                 const { comp, promise } = this.dragAndDropImageComp;
                 if (comp) {
-                    comp.setIcon(dropTarget.getIconName ? dropTarget.getIconName() : null);
+                    comp.setIcon(dropTarget.getIconName ? dropTarget.getIconName() : null, false);
                 } else {
                     promise.then((resolvedComponent) => {
                         if (resolvedComponent) {
-                            resolvedComponent.setIcon(dropTarget.getIconName ? dropTarget.getIconName() : null);
+                            resolvedComponent.setIcon(dropTarget.getIconName ? dropTarget.getIconName() : null, false);
                         }
                     });
                 }
@@ -363,7 +361,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             return validDropTargets[0];
         }
 
-        const rootNode = _getRootNode(this.gos);
+        const rootNode = _getRootNode(this.beans);
 
         // elementsFromPoint return a list of elements under
         // the mouseEvent sorted from topMost to bottomMost
@@ -433,7 +431,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         const dragAndDropImageComponent = this.getDragAndDropImageComponent();
 
         if (dragAndDropImageComponent) {
-            dragAndDropImageComponent.setIcon(null);
+            dragAndDropImageComponent.setIcon(null, false);
         }
     }
 
@@ -457,7 +455,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
 
     public isDropZoneWithinThisGrid(draggingEvent: DraggingEvent): boolean {
         const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
-        const gridGui = gridBodyCon.getGui();
+        const gridGui = gridBodyCon.eGridBody;
         const { dropZoneTarget } = draggingEvent;
 
         return gridGui.contains(dropZoneTarget);
@@ -539,7 +537,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         let top = clientY - offsetParentSize.top - height / 2;
         let left = clientX - offsetParentSize.left - 10;
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const win = eDocument.defaultView || window;
         const windowScrollY = win.pageYOffset || eDocument.documentElement.scrollTop;
         const windowScrollX = win.pageXOffset || eDocument.documentElement.scrollLeft;
@@ -590,8 +588,11 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         const userCompDetails = _getDragAndDropImageCompDetails(this.userCompFactory, {
             dragSource,
         });
+        if (!userCompDetails) {
+            return;
+        }
 
-        const promise: AgPromise<DragAndDropImageComponent> = userCompDetails.newAgStackInstance();
+        const promise = userCompDetails.newAgStackInstance()!;
         this.dragAndDropImageComp = {
             promise,
         };
@@ -606,8 +607,8 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         });
     }
 
-    private processDragAndDropImageComponent(dragAndDropImageComponent: DragAndDropImageComponent): void {
-        const { dragSource, mouseEventSvc, environment } = this;
+    private processDragAndDropImageComponent(dragAndDropImageComponent: IDragAndDropImageComponent): void {
+        const { dragSource, environment } = this;
 
         if (!dragSource) {
             return;
@@ -617,9 +618,9 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.setProperty('position', 'absolute');
         eGui.style.setProperty('z-index', '9999');
 
-        mouseEventSvc.stampTopLevelGridCompWithGridInstance(eGui);
+        _stampTopLevelGridCompWithGridInstance(this.gos, eGui);
         environment.applyThemeClasses(eGui);
-        dragAndDropImageComponent.setIcon(null);
+        dragAndDropImageComponent.setIcon(null, false);
 
         let { dragItemName } = dragSource;
 
@@ -632,30 +633,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         eGui.style.top = '20px';
         eGui.style.left = '20px';
 
-        const eDocument = _getDocument(this.gos);
-        let rootNode: Document | ShadowRoot | HTMLElement | null = null;
-        let targetEl: HTMLElement | ShadowRoot | null = null;
-
-        try {
-            rootNode = eDocument.fullscreenElement as HTMLElement;
-        } catch (e) {
-            // some environments like SalesForce will throw errors
-            // simply by trying to read the fullscreenElement property
-        } finally {
-            if (!rootNode) {
-                rootNode = _getRootNode(this.gos);
-            }
-            const body = rootNode.querySelector('body');
-            if (body) {
-                targetEl = body;
-            } else if (rootNode instanceof ShadowRoot) {
-                targetEl = rootNode;
-            } else if (rootNode instanceof Document) {
-                targetEl = rootNode?.documentElement;
-            } else {
-                targetEl = rootNode;
-            }
-        }
+        const targetEl = _getPageBody(this.beans);
 
         this.dragAndDropImageParent = targetEl;
 

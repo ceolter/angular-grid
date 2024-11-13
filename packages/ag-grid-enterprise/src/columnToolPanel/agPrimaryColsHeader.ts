@@ -71,10 +71,6 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
 
         this.eFilterTextField.setAutoComplete(false).onValueChange(() => this.onFilterTextChanged());
 
-        this.addManagedElementListeners(this.eFilterTextField.getInputElement(), {
-            keydown: this.onMiniFilterKeyDown.bind(this),
-        });
-
         this.addManagedEventListeners({ newColumnsLoaded: this.showOrHideOptions.bind(this) });
 
         const translate = this.getLocaleTextFunc();
@@ -104,12 +100,12 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
     }
 
     private createExpandIcons() {
-        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.gos)!));
+        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.beans)!));
 
-        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.gos)!));
+        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.beans)!));
 
         this.eExpand.appendChild(
-            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.gos)!)
+            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.beans)!)
         );
 
         this.setExpandState(ExpandState.EXPANDED);
@@ -143,14 +139,6 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
         }
 
         this.onFilterTextChangedDebounced();
-    }
-
-    private onMiniFilterKeyDown(e: KeyboardEvent): void {
-        if (e.key === KeyCode.ENTER) {
-            // we need to add a delay that corresponds to the filter text debounce delay to ensure
-            // the text filtering has happened, otherwise all columns will be deselected
-            setTimeout(() => this.onSelectClicked(), DEBOUNCE_DELAY);
-        }
     }
 
     private onSelectClicked(): void {

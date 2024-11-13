@@ -1,7 +1,5 @@
 import type { VisibleColsService } from '../columns/visibleColsService';
 import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
-import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import { _getScrollLeft, _isVisible, _setFixedHeight, _setFixedWidth, _setScrollLeft } from '../utils/dom';
 import type { ComponentSelector } from '../widgets/component';
 import { RefPlaceholder } from '../widgets/component';
@@ -11,14 +9,10 @@ import type { ScrollVisibleService } from './scrollVisibleService';
 
 export class FakeHScrollComp extends AbstractFakeScrollComp {
     private visibleCols: VisibleColsService;
-    private pinnedRowModel?: PinnedRowModel;
-    private ctrlsSvc: CtrlsService;
     private scrollVisibleSvc: ScrollVisibleService;
 
     public wireBeans(beans: BeanCollection): void {
         this.visibleCols = beans.visibleCols;
-        this.pinnedRowModel = beans.pinnedRowModel;
-        this.ctrlsSvc = beans.ctrlsSvc;
         this.scrollVisibleSvc = beans.scrollVisibleSvc;
     }
 
@@ -49,12 +43,12 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
         this.addManagedEventListeners({
             displayedColumnsChanged: spacerWidthsListener,
             displayedColumnsWidthChanged: spacerWidthsListener,
-            pinnedRowDataChanged: this.onPinnedRowDataChanged.bind(this),
+            pinnedRowDataChanged: this.refreshCompBottom.bind(this),
         });
 
         this.addManagedPropertyListener('domLayout', spacerWidthsListener);
 
-        this.ctrlsSvc.register('fakeHScrollComp', this);
+        this.beans.ctrlsSvc.register('fakeHScrollComp', this);
         this.createManagedBean(new CenterWidthFeature((width) => (this.eContainer.style.width = `${width}px`)));
 
         this.addManagedPropertyListeners(['suppressHorizontalScroll'], this.onScrollVisibilityChanged.bind(this));
@@ -78,15 +72,11 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
         }
     }
 
-    private onPinnedRowDataChanged(): void {
-        this.refreshCompBottom();
-    }
-
     private refreshCompBottom(): void {
         if (!this.invisibleScrollbar) {
             return;
         }
-        const bottomPinnedHeight = this.pinnedRowModel?.getPinnedBottomTotalHeight() ?? 0;
+        const bottomPinnedHeight = this.beans.pinnedRowModel?.getPinnedBottomTotalHeight() ?? 0;
 
         this.getGui().style.bottom = `${bottomPinnedHeight}px`;
     }
@@ -97,7 +87,7 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
     }
 
     private setFakeHScrollSpacerWidths(): void {
-        const vScrollShowing = this.scrollVisibleSvc.isVerticalScrollShowing();
+        const vScrollShowing = this.scrollVisibleSvc.verticalScrollShowing;
 
         // we pad the right based on a) if cols are pinned to the right and
         // b) if v scroll is showing on the right (normal position of scroll)
@@ -127,7 +117,7 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
     private setScrollVisibleDebounce = 0;
 
     protected setScrollVisible(): void {
-        const hScrollShowing = this.scrollVisibleSvc.isHorizontalScrollShowing();
+        const hScrollShowing = this.scrollVisibleSvc.horizontalScrollShowing;
         const invisibleScrollbar = this.invisibleScrollbar;
         const isSuppressHorizontalScroll = this.gos.get('suppressHorizontalScroll');
         const scrollbarWidth = hScrollShowing ? this.scrollVisibleSvc.getScrollbarWidth() || 0 : 0;
@@ -154,14 +144,14 @@ export class FakeHScrollComp extends AbstractFakeScrollComp {
     }
 
     public getScrollPosition(): number {
-        return _getScrollLeft(this.getViewportElement(), this.enableRtl);
+        return _getScrollLeft(this.eViewport, this.enableRtl);
     }
 
     public setScrollPosition(value: number): void {
-        if (!_isVisible(this.getViewportElement())) {
+        if (!_isVisible(this.eViewport)) {
             this.attemptSettingScrollPosition(value);
         }
-        _setScrollLeft(this.getViewportElement(), value, this.enableRtl);
+        _setScrollLeft(this.eViewport, value, this.enableRtl);
     }
 }
 

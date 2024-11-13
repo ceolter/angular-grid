@@ -1,0 +1,33 @@
+{
+  "name": "ag-module-size",
+  "private": true,
+  "version": "32.2.0",
+  "scripts": {
+    "dev": "vite",
+    "build-app": "vite build",
+    "preview": "vite preview",
+    "module-stats": "ts-node moduleCombinations.ts && npm run module-validate",
+    "module-validate": "ts-node moduleValidator.ts",
+    "test": "npm run module-stats"
+  },
+  "dependencies": {
+    "ag-grid-react": "32.2.0",
+    "ag-grid-community": "32.2.0",
+    "ag-grid-enterprise": "32.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^9.9.0",
+    "glob": "^11.0.0",
+    "globals": "^15.9.0",
+    "terser": "^5.36.0",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.0.1",
+    "vite": "^5.4.1"
+  }
+}

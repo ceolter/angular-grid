@@ -27,11 +27,13 @@ export type CreatePillParams = CreateInputPillParams | CreateSelectPillParams;
 
 interface CreateInputPillParams extends BaseCreatePillParams {
     isSelect: false;
+    valueFormatter: (value: string) => string;
     baseCellDataType: BaseCellDataType;
 }
 
 interface CreateSelectPillParams extends BaseCreatePillParams {
     isSelect: true;
+    displayValue: string;
     getEditorParams: () => { values?: any[] };
     pickerAriaLabelKey: string;
     pickerAriaLabelValue: string;
@@ -39,7 +41,6 @@ interface CreateSelectPillParams extends BaseCreatePillParams {
 
 interface BaseCreatePillParams {
     key: string;
-    displayValue: string;
     cssClass: string;
     update: (key: string) => void;
     ariaLabel: string;

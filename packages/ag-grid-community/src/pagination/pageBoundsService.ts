@@ -1,54 +1,51 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { IRowModel, RowBounds } from '../interfaces/iRowModel';
-import { _exists, _missing } from '../utils/generic';
+import type { RowBounds } from '../interfaces/iRowModel';
 
 // note that everything in this service is used even when pagination is off
 export class PageBoundsService extends BeanStub implements NamedBean {
     beanName = 'pageBounds' as const;
 
-    private rowModel: IRowModel;
-
-    private topRowBounds: RowBounds;
-    private bottomRowBounds: RowBounds;
+    private topRowBounds?: Required<RowBounds> | null;
+    private bottomRowBounds?: Required<RowBounds> | null;
     private pixelOffset = 0;
 
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-    }
-
     public getFirstRow(): number {
-        return this.topRowBounds ? this.topRowBounds.rowIndex! : -1;
+        return this.topRowBounds?.rowIndex ?? -1;
     }
 
     public getLastRow(): number {
-        return this.bottomRowBounds ? this.bottomRowBounds.rowIndex! : -1;
+        return this.bottomRowBounds?.rowIndex ?? -1;
     }
 
     public getCurrentPageHeight(): number {
-        if (_missing(this.topRowBounds) || _missing(this.bottomRowBounds)) {
+        const { topRowBounds, bottomRowBounds } = this;
+        if (!topRowBounds || !bottomRowBounds) {
             return 0;
         }
-        return Math.max(this.bottomRowBounds.rowTop + this.bottomRowBounds.rowHeight - this.topRowBounds.rowTop, 0);
+        return Math.max(bottomRowBounds.rowTop + bottomRowBounds.rowHeight - topRowBounds.rowTop, 0);
     }
 
     public getCurrentPagePixelRange(): { pageFirstPixel: number; pageLastPixel: number } {
-        const pageFirstPixel = this.topRowBounds ? this.topRowBounds.rowTop : 0;
-        const pageLastPixel = this.bottomRowBounds ? this.bottomRowBounds.rowTop + this.bottomRowBounds.rowHeight : 0;
+        const { topRowBounds, bottomRowBounds } = this;
+        const pageFirstPixel = topRowBounds?.rowTop ?? 0;
+        const pageLastPixel = bottomRowBounds ? bottomRowBounds.rowTop + bottomRowBounds.rowHeight : 0;
         return { pageFirstPixel, pageLastPixel };
     }
 
     public calculateBounds(topDisplayedRowIndex: number, bottomDisplayedRowIndex: number): void {
-        this.topRowBounds = this.rowModel.getRowBounds(topDisplayedRowIndex)!;
-        if (this.topRowBounds) {
-            this.topRowBounds.rowIndex = topDisplayedRowIndex;
+        const { rowModel } = this.beans;
+        const topRowBounds = rowModel.getRowBounds(topDisplayedRowIndex)!;
+        if (topRowBounds) {
+            topRowBounds.rowIndex = topDisplayedRowIndex;
         }
+        this.topRowBounds = topRowBounds as Required<RowBounds> | null;
 
-        this.bottomRowBounds = this.rowModel.getRowBounds(bottomDisplayedRowIndex)!;
-        if (this.bottomRowBounds) {
-            this.bottomRowBounds.rowIndex = bottomDisplayedRowIndex;
+        const bottomRowBounds = rowModel.getRowBounds(bottomDisplayedRowIndex)!;
+        if (bottomRowBounds) {
+            bottomRowBounds.rowIndex = bottomDisplayedRowIndex;
         }
+        this.bottomRowBounds = bottomRowBounds as Required<RowBounds> | null;
 
         this.calculatePixelOffset();
     }
@@ -58,7 +55,7 @@ export class PageBoundsService extends BeanStub implements NamedBean {
     }
 
     private calculatePixelOffset(): void {
-        const value = _exists(this.topRowBounds) ? this.topRowBounds.rowTop : 0;
+        const value = this.topRowBounds?.rowTop ?? 0;
 
         if (this.pixelOffset === value) {
             return;

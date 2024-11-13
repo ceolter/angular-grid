@@ -1,0 +1,5 @@
+# Ignore everything by default
+**/*.css
+
+# Enable Stylelint for grid source
+!packages/*/src/**/*.css

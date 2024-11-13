@@ -192,8 +192,12 @@ export class OverlayService extends BeanStub implements NamedBean {
         this.updateExclusive();
     }
 
-    private showOverlay(compDetails: UserCompDetails, wrapperCssClass: string, gridOption: keyof GridOptions): void {
-        const promise = compDetails.newAgStackInstance();
+    private showOverlay(
+        compDetails: UserCompDetails | undefined,
+        wrapperCssClass: string,
+        gridOption: keyof GridOptions
+    ): void {
+        const promise = compDetails?.newAgStackInstance() ?? null;
         this.overlayWrapperComp?.showOverlay(promise, wrapperCssClass, this.isExclusive(), gridOption);
         this.refreshWrapperPadding();
     }
@@ -221,7 +225,7 @@ export class OverlayService extends BeanStub implements NamedBean {
 
         if (this.state === OverlayServiceState.NoRows) {
             const headerCtrl = this.ctrlsSvc.get('gridHeaderCtrl');
-            const headerHeight = headerCtrl?.getHeaderHeight() || 0;
+            const headerHeight = headerCtrl?.headerHeight || 0;
 
             newPadding = headerHeight;
         } else if (this.wrapperPadding !== 0) {

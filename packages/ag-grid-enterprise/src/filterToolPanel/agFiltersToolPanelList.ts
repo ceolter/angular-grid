@@ -18,7 +18,7 @@ import {
     isProvidedColumnGroup,
 } from 'ag-grid-community';
 
-import type { ToolPanelColDefService } from '../sideBar/common/toolPanelColDefService';
+import { syncLayoutWithGrid, toolPanelCreateColumnTree } from '../sideBar/common/toolPanelColDefService';
 import { EXPAND_STATE } from './agFiltersToolPanelHeader';
 import type { ToolPanelFiltersCompParams } from './filtersToolPanel';
 import { ToolPanelFilterComp } from './toolPanelFilterComp';
@@ -27,11 +27,9 @@ import { ToolPanelFilterGroupComp } from './toolPanelFilterGroupComp';
 
 export type AgFiltersToolPanelListEvent = 'filterExpanded' | 'groupExpanded';
 export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEvent> {
-    private toolPanelColDefService: ToolPanelColDefService;
     private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection) {
-        this.toolPanelColDefService = beans.toolPanelColDefService as ToolPanelColDefService;
         this.colModel = beans.colModel;
     }
 
@@ -106,7 +104,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     }
 
     public syncFilterLayout(): void {
-        this.toolPanelColDefService.syncLayoutWithGrid(this.setFiltersLayout.bind(this));
+        syncLayoutWithGrid(this.colModel, this.setFiltersLayout.bind(this));
         this.refreshAriaLabel();
     }
 
@@ -116,14 +114,14 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
     }
 
     public setFiltersLayout(colDefs: AbstractColDef[]): void {
-        const columnTree = this.toolPanelColDefService.createColumnTree(colDefs);
+        const columnTree = toolPanelCreateColumnTree(this.colModel, colDefs);
         this.recreateFilters(columnTree);
     }
 
     private recreateFilters(columnTree: (AgColumn | AgProvidedColumnGroup)[]): void {
         // Underlying filter comp/element won't get recreated if the column still exists (the element just gets detached/re-attached).
         // We can therefore restore focus if an element in the filter tool panel was focused.
-        const activeElement = _getActiveDomElement(this.gos) as HTMLElement;
+        const activeElement = _getActiveDomElement(this.beans) as HTMLElement;
 
         if (!this.hasLoadedInitialState) {
             this.hasLoadedInitialState = true;

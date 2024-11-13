@@ -15,10 +15,10 @@ import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 export class PaddingPanel extends Component {
     private readonly paddingTopSlider: AgSlider = RefPlaceholder;
 
-    private chartTranslationService: ChartTranslationService;
+    private chartTranslation: ChartTranslationService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.chartTranslationService = beans.chartTranslationService as ChartTranslationService;
+        this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     constructor(
         private readonly chartMenuUtils: ChartMenuParamsFactory,
@@ -32,7 +32,7 @@ export class PaddingPanel extends Component {
             cssIdentifier: 'charts-format-sub-level',
             direction: 'vertical',
             suppressOpenCloseIcons: true,
-            title: this.chartTranslationService.translate('padding'),
+            title: this.chartTranslation.translate('padding'),
             suppressEnabledCheckbox: true,
         };
         const getSliderParams = (property: keyof AgChartPaddingOptions) =>

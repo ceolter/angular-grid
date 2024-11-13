@@ -11,6 +11,7 @@ import { isColumnGroup } from '../entities/agColumnGroup';
 import type { FocusService } from '../focusService';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 import { _getDocument } from '../gridOptionsUtils';
+import { getFocusHeaderRowCount } from '../headerRendering/headerUtils';
 import type { HeaderRowType } from '../headerRendering/row/headerRowComp';
 import type { Column, ColumnGroup } from '../interfaces/iColumn';
 import type { HeaderPosition } from '../interfaces/iHeaderPosition';
@@ -55,14 +56,14 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
     private ctrlsSvc: CtrlsService;
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
 
     public wireBeans(beans: BeanCollection): void {
         this.focusSvc = beans.focusSvc;
         this.ctrlsSvc = beans.ctrlsSvc;
         this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     private gridBodyCon: GridBodyCtrl;
@@ -73,7 +74,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             this.gridBodyCon = p.gridBodyCtrl;
         });
 
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         this.addManagedElementListeners(eDocument, { mousedown: () => this.setCurrentHeaderRowWithoutSpan(-1) });
     }
 
@@ -86,7 +87,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         if (typeof colKey === 'string') {
             column = this.colModel.getCol(colKey);
             if (!column) {
-                column = this.columnGroupSvc?.getColumnGroup(colKey) ?? null;
+                column = this.colGroupSvc?.getColumnGroup(colKey) ?? null;
             }
         } else {
             column = colKey as AgColumn | AgColumnGroup;
@@ -98,8 +99,8 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
 
         const centerHeaderContainer = this.ctrlsSvc.getHeaderRowContainerCtrl();
         const allCtrls = centerHeaderContainer?.getAllCtrls();
-        const isFloatingFilterVisible = _last(allCtrls || []).getType() === 'filter';
-        const headerRowCount = this.focusSvc.getHeaderRowCount() - 1;
+        const isFloatingFilterVisible = _last(allCtrls || []).type === 'filter';
+        const headerRowCount = getFocusHeaderRowCount(this.beans) - 1;
 
         let row = -1;
         let col: AgColumn | AgColumnGroup | null = column;
@@ -142,13 +143,12 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
 
         const { headerRowIndex } = fromHeader;
         const column = fromHeader.column as AgColumn;
-        const rowLen = this.focusSvc.getHeaderRowCount();
+        const rowLen = getFocusHeaderRowCount(this.beans);
         const isUp = direction === 'UP';
 
         let {
             headerRowIndex: nextRow,
             column: nextFocusColumn,
-            // eslint-disable-next-line prefer-const
             headerRowIndexWithoutSpan,
         } = isUp
             ? this.getColumnVisibleParent(column, headerRowIndex)
@@ -253,7 +253,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             }
         } else {
             nextRowIndex = currentIndex + 1;
-            if (this.currentHeaderRowWithoutSpan < this.focusSvc.getHeaderRowCount()) {
+            if (this.currentHeaderRowWithoutSpan < getFocusHeaderRowCount(this.beans)) {
                 this.currentHeaderRowWithoutSpan += 1;
             } else {
                 this.setCurrentHeaderRowWithoutSpan(-1);
@@ -293,7 +293,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
             columnToScrollTo = column;
         }
 
-        this.gridBodyCon.getScrollFeature().ensureColumnVisible(columnToScrollTo);
+        this.gridBodyCon.scrollFeature.ensureColumnVisible(columnToScrollTo);
     }
 
     private findHeader(focusedHeader: HeaderPosition, direction: 'Before' | 'After'): HeaderPosition | undefined {
@@ -301,7 +301,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         let getColMethod: 'getColBefore' | 'getColAfter';
 
         if (isColumnGroup(focusedHeader.column)) {
-            nextColumn = this.columnGroupSvc?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
+            nextColumn = this.colGroupSvc?.getGroupAtDirection(focusedHeader.column, direction) ?? undefined;
         } else {
             getColMethod = `getCol${direction}` as any;
             nextColumn = this.visibleCols[getColMethod](focusedHeader.column as AgColumn)!;
@@ -424,7 +424,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
         const type = childContainer?.getRowType(level);
 
         if (type == 'group') {
-            const columnGroup = this.columnGroupSvc?.getColGroupAtLevel(column, level);
+            const columnGroup = this.colGroupSvc?.getColGroupAtLevel(column, level);
             return {
                 headerRowIndex: level,
                 column: columnGroup!,

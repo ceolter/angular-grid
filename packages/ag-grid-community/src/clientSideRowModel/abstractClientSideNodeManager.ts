@@ -1,12 +1,12 @@
 import { BeanStub } from '../context/beanStub';
+import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
-import type { SelectionEventSourceType } from '../events';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type {
     ClientSideNodeManagerUpdateRowDataResult,
     IClientSideNodeManager,
 } from '../interfaces/iClientSideNodeManager';
-import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
+import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
@@ -130,24 +130,33 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const rowDataTransaction = this.createTransactionForRowData(rowData);
 
         // Apply the transaction
-        const result = this.updateRowData(rowDataTransaction);
+        const result = this.updateRowData(rowDataTransaction, params.changedRowNodes!);
 
         let rowsOrderChanged = false;
-
         // If true, we will not apply the new order specified in the rowData, but keep the old order.
         if (!this.gos.get('suppressMaintainUnsortedOrder')) {
             // we need to reorder the nodes to match the new data order
             rowsOrderChanged = this.updateRowOrderFromRowData(rowData);
         }
 
-        params.rowNodeTransactions = [result.rowNodeTransaction];
-        params.rowNodesOrderChanged = result.rowsInserted || rowsOrderChanged;
+        const { rowNodeTransaction, rowsInserted } = result;
+        const { add, remove, update } = rowNodeTransaction;
+        if (rowsInserted || rowsOrderChanged || add.length || remove.length || update.length) {
+            params.step = 'group';
+            params.rowDataUpdated = true;
+            params.rowNodeTransactions = [rowNodeTransaction];
+            params.rowNodesOrderChanged = rowsInserted || rowsOrderChanged;
+        }
     }
 
-    public updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData> {
+    public updateRowData(
+        rowDataTran: RowDataTransaction<TData>,
+        changedRowNodes: IChangedRowNodes<TData>
+    ): ClientSideNodeManagerUpdateRowDataResult<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
         const updateRowDataResult: ClientSideNodeManagerUpdateRowDataResult<TData> = {
+            changedRowNodes,
             rowNodeTransaction: { remove: [], update: [], add: [] },
             rowsInserted: false,
         };
@@ -159,7 +168,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.executeUpdate(getRowIdFunc, rowDataTran, updateRowDataResult, nodesToUnselect);
         this.executeAdd(rowDataTran, updateRowDataResult);
 
-        this.updateSelection(nodesToUnselect, 'rowDataChanged');
+        this.deselectNodes(nodesToUnselect);
 
         return updateRowDataResult;
     }
@@ -281,8 +290,16 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
         }
 
+        const addLength = add.length;
+
+        const changedRowNodes = result.changedRowNodes;
         // create new row nodes for each data item
-        const newNodes: RowNode[] = add.map((item, index) => this.createRowNode(item, addIndex + index));
+        const newNodes = new Array(addLength);
+        for (let i = 0; i < addLength; i++) {
+            const newNode = this.createRowNode(add[i], addIndex + i);
+            changedRowNodes.add(newNode);
+            newNodes[i] = newNode;
+        }
 
         const rootNode = this.rootNode!;
 
@@ -317,9 +334,9 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected executeRemove(
-        getRowIdFunc: ((data: any) => string) | undefined,
+        getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
-        { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
+        { changedRowNodes, rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
     ): void {
         const { remove } = rowDataTran;
@@ -353,6 +370,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             delete this.allNodesMap[rowNode.id!];
 
             rowNodeTransaction.remove.push(rowNode);
+            changedRowNodes.remove(rowNode);
         });
 
         const rootNode = this.rootNode!;
@@ -371,9 +389,9 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     protected executeUpdate(
-        getRowIdFunc: ((data: any) => string) | undefined,
+        getRowIdFunc: GetRowIdFunc<TData> | undefined,
         rowDataTran: RowDataTransaction,
-        { rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
+        { changedRowNodes, rowNodeTransaction }: ClientSideNodeManagerUpdateRowDataResult<TData>,
         nodesToUnselect: RowNode<TData>[]
     ): void {
         const { update } = rowDataTran;
@@ -394,6 +412,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             }
 
             rowNodeTransaction.update.push(rowNode);
+            changedRowNodes.update(rowNode);
         });
     }
 
@@ -404,7 +423,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         });
     }
 
-    protected updateSelection(nodesToUnselect: RowNode<TData>[], source: SelectionEventSourceType): void {
+    protected deselectNodes(nodesToUnselect: RowNode<TData>[]): void {
+        const source = 'rowDataChanged';
         const selectionSvc = this.beans.selectionSvc;
         const selectionChanged = nodesToUnselect.length > 0;
         if (selectionChanged) {

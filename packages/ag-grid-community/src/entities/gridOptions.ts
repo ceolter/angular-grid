@@ -150,7 +150,11 @@ import type {
     TabToNextHeaderParams,
 } from '../interfaces/iCallbackParams';
 import type { CellPosition } from '../interfaces/iCellPosition';
-import type { ChartToolPanelsDef, ChartToolbarMenuItemOptions } from '../interfaces/iChartOptions';
+import type {
+    ChartToolPanelsDef,
+    ChartToolbarMenuItemOptions,
+    DefaultChartMenuItem,
+} from '../interfaces/iChartOptions';
 import type { Column } from '../interfaces/iColumn';
 import type { AgGridCommon } from '../interfaces/iCommon';
 import type { IDatasource } from '../interfaces/iDatasource';
@@ -164,7 +168,7 @@ import type { IServerSideDatasource } from '../interfaces/iServerSideDatasource'
 import type { SideBarDef } from '../interfaces/iSideBar';
 import type { StatusPanelDef } from '../interfaces/iStatusPanel';
 import type { IViewportDatasource } from '../interfaces/iViewportDatasource';
-import type { MenuItemDef } from '../interfaces/menuItem';
+import type { DefaultMenuItem, MenuItemDef } from '../interfaces/menuItem';
 import type { CheckboxSelectionCallback, ColDef, ColGroupDef, ColTypeDef, IAggFunc, SortDirection } from './colDef';
 import type { DataTypeDefinition } from './dataType';
 
@@ -590,6 +594,12 @@ export interface GridOptions<TData = any> {
      * @default false
      */
     enableAdvancedFilter?: boolean;
+    /**
+     * Allows rows to always be displayed, even if they don't match the applied filtering.
+     * Return `true` for the provided row to always be displayed.
+     * Only works with the Client-Side Row Model.
+     */
+    alwaysPassFilter?: (rowNode: IRowNode<TData>) => boolean;
 
     /**
      * Hidden columns are excluded from the Advanced Filter by default.
@@ -652,7 +662,7 @@ export interface GridOptions<TData = any> {
     /**
      * Get chart menu items. Only applies when using AG Charts Enterprise.
      */
-    chartMenuItems?: (string | MenuItemDef)[] | GetChartMenuItems<TData>;
+    chartMenuItems?: (DefaultChartMenuItem | MenuItemDef)[] | GetChartMenuItems<TData>;
 
     // *** Loading Cell Renderers *** //
     /**
@@ -1799,6 +1809,7 @@ export interface GridOptions<TData = any> {
     processPivotResultColGroupDef?: (colGroupDef: ColGroupDef<TData>) => void;
     /**
      * Callback to be used when working with Tree Data when `treeData = true`.
+     * @initial
      */
     getDataPath?: GetDataPath<TData>;
 
@@ -2417,19 +2428,28 @@ export interface GridTheme {
     getCssClass(): string;
 }
 
+type MenuCallbackReturn<TMenuItem extends string, TData = any, TContext = any> = (
+    | TMenuItem
+    | MenuItemDef<TData, TContext>
+)[];
+
 export interface GetContextMenuItems<TData = any, TContext = any> {
-    (params: GetContextMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (
+        params: GetContextMenuItemsParams<TData, TContext>
+    ):
+        | MenuCallbackReturn<DefaultMenuItem, TData, TContext>
+        | Promise<MenuCallbackReturn<DefaultMenuItem, TData, TContext>>;
 }
 export interface GetChartToolbarItems {
     (params: GetChartToolbarItemsParams): ChartToolbarMenuItemOptions[];
 }
 
 export interface GetMainMenuItems<TData = any, TContext = any> {
-    (params: GetMainMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (params: GetMainMenuItemsParams<TData, TContext>): MenuCallbackReturn<DefaultMenuItem, TData, TContext>;
 }
 
 export interface GetChartMenuItems<TData = any, TContext = any> {
-    (params: GetChartMenuItemsParams<TData, TContext>): (string | MenuItemDef<TData, TContext>)[];
+    (params: GetChartMenuItemsParams<TData, TContext>): MenuCallbackReturn<DefaultChartMenuItem, TData, TContext>;
 }
 
 export interface GetRowNodeIdFunc<TData = any> {

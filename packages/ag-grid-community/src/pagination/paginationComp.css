@@ -4,12 +4,11 @@
     justify-content: flex-end;
     gap: calc(var(--ag-spacing) * 4);
     padding: 0 var(--ag-cell-horizontal-padding);
-
     height: max(var(--ag-row-height), 22px);
     border-top: var(--ag-footer-row-border);
 }
 
-.ag-paging-page-size .ag-wrapper {
+:where(.ag-paging-page-size) .ag-wrapper {
     min-width: 50px;
 }
 
@@ -26,10 +25,6 @@
 .ag-paging-button {
     position: relative;
     cursor: pointer;
-
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
-    }
 
     &.ag-disabled {
         cursor: default;

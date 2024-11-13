@@ -2,7 +2,8 @@ import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { ColDef, ColGroupDef, HeaderLocation } from '../entities/colDef';
 import type { Column, ColumnPinnedType } from '../interfaces/iColumn';
-import type { ApplyColumnStateParams, ColumnState } from './columnStateService';
+import { _applyColumnState, _getColumnState, _resetColumnState } from './columnStateUtils';
+import type { ApplyColumnStateParams, ColumnState } from './columnStateUtils';
 
 export type ColumnChangedEventType = 'columnValueChanged' | 'columnPivotChanged' | 'columnRowGroupChanged';
 
@@ -37,15 +38,15 @@ export function getColumns(beans: BeanCollection): Column[] | null {
 }
 
 export function applyColumnState(beans: BeanCollection, params: ApplyColumnStateParams): boolean {
-    return beans.colState.applyColumnState(params, 'api');
+    return _applyColumnState(beans, params, 'api');
 }
 
 export function getColumnState(beans: BeanCollection): ColumnState[] {
-    return beans.colState.getColumnState();
+    return _getColumnState(beans);
 }
 
 export function resetColumnState(beans: BeanCollection): void {
-    beans.colState.resetColumnState('api');
+    _resetColumnState(beans, 'api');
 }
 
 export function isPinning(beans: BeanCollection): boolean {

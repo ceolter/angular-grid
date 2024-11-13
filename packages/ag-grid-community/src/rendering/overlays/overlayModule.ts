@@ -6,21 +6,23 @@ import { NoRowsOverlayComponent } from './noRowsOverlayComponent';
 import { hideOverlay, showLoadingOverlay, showNoRowsOverlay } from './overlayApi';
 import { OverlayService } from './overlayService';
 
-export const OverlayCoreModule: _ModuleWithoutApi = {
+/**
+ * @feature Accessories -> Overlays
+ * @gridOption loading, overlayLoadingTemplate, loadingOverlayComponent, overlayNoRowsTemplate, noRowsOverlayComponent
+ */
+export const OverlayCoreModule: _ModuleWithApi<_OverlayGridApi> = {
     ...baseCommunityModule('OverlayCoreModule'),
-    beans: [OverlayService],
-};
-
-export const OverlayApiModule: _ModuleWithApi<_OverlayGridApi> = {
-    ...baseCommunityModule('OverlayApiModule'),
     apiFunctions: {
         showLoadingOverlay,
         showNoRowsOverlay,
         hideOverlay,
     },
-    dependsOn: [OverlayCoreModule],
+    beans: [OverlayService],
 };
 
+/**
+ * @feature Accessories -> Overlays
+ */
 export const LoadingOverlayModule: _ModuleWithoutApi = {
     ...baseCommunityModule('LoadingOverlayModule'),
     userComponents: {
@@ -29,6 +31,9 @@ export const LoadingOverlayModule: _ModuleWithoutApi = {
     dependsOn: [OverlayCoreModule],
 };
 
+/**
+ * @feature Accessories -> Overlays
+ */
 export const NoRowsOverlayModule: _ModuleWithoutApi = {
     ...baseCommunityModule('NoRowsOverlayModule'),
     userComponents: {
@@ -37,7 +42,10 @@ export const NoRowsOverlayModule: _ModuleWithoutApi = {
     dependsOn: [OverlayCoreModule],
 };
 
+/**
+ * @feature Accessories -> Overlays
+ */
 export const OverlayModule: _ModuleWithoutApi = {
     ...baseCommunityModule('OverlayModule'),
-    dependsOn: [OverlayCoreModule, OverlayApiModule, LoadingOverlayModule, NoRowsOverlayModule],
+    dependsOn: [OverlayCoreModule, LoadingOverlayModule, NoRowsOverlayModule],
 };

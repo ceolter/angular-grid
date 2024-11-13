@@ -1,4 +1,4 @@
-import type { _EditGridApi } from '../api/gridApi';
+import type { _EditGridApi, _UndoRedoGridApi } from '../api/gridApi';
 import type { DefaultProvidedCellEditorParams } from '../interfaces/iCellEditor';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
@@ -25,47 +25,59 @@ import {
 import { EditService } from './editService';
 import { RowEditService } from './rowEditService';
 
-export const EditCoreModule: _ModuleWithoutApi = {
+/**
+ * @feature Editing
+ * @colDef editable
+ */
+export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
     ...baseCommunityModule('EditCoreModule'),
     beans: [EditService],
-    dependsOn: [PopupModule],
-
-    css: [cellEditingCSS],
-};
-
-export const EditApiModule: _ModuleWithApi<_EditGridApi<any>> = {
-    ...baseCommunityModule('EditApiModule'),
     apiFunctions: {
-        undoCellEditing,
-        redoCellEditing,
         getCellEditorInstances,
         getEditingCells,
         stopEditing,
         startEditingCell,
+    },
+    dependsOn: [PopupModule],
+    css: [cellEditingCSS],
+};
+
+/**
+ * @feature Editing -> Undo / Redo Edits
+ */
+export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
+    ...baseCommunityModule('UndoRedoEditModule'),
+    beans: [UndoRedoService],
+    apiFunctions: {
+        undoCellEditing,
+        redoCellEditing,
         getCurrentUndoSize,
         getCurrentRedoSize,
     },
     dependsOn: [EditCoreModule],
 };
 
-export const UndoRedoEditModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('UndoRedoEditModule'),
-    beans: [UndoRedoService],
-    dependsOn: [EditCoreModule],
-};
-
+/**
+ * @feature Editing -> Full Row
+ */
 export const FullRowEditModule: _ModuleWithoutApi = {
     ...baseCommunityModule('FullRowEditModule'),
     beans: [RowEditService],
     dependsOn: [EditCoreModule],
 };
 
+/**
+ * @feature Editing
+ */
 export const DefaultEditorModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DefaultEditorModule'),
     userComponents: { agCellEditor: TextCellEditor },
     dependsOn: [EditCoreModule],
 };
 
+/**
+ * @feature Editing
+ */
 export const DataTypeEditorsModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DataTypeEditorsModule'),
     userComponents: {
@@ -84,24 +96,36 @@ export const DataTypeEditorsModule: _ModuleWithoutApi = {
     dependsOn: [DefaultEditorModule],
 };
 
+/**
+ * @feature Editing -> Select Editor
+ */
 export const SelectEditorModule: _ModuleWithoutApi = {
     ...baseCommunityModule('SelectEditorModule'),
     userComponents: { agSelectCellEditor: SelectCellEditor },
     dependsOn: [EditCoreModule],
 };
 
+/**
+ * @feature Editing -> Large Text Editor
+ */
 export const LargeTextEditorModule: _ModuleWithoutApi = {
     ...baseCommunityModule('LargeTextEditorModule'),
     userComponents: { agLargeTextCellEditor: LargeTextCellEditor },
     dependsOn: [EditCoreModule],
 };
 
-const AllCommunityEditorsModule: _ModuleWithoutApi = {
+/**
+ * @feature Editing
+ */
+export const AllCommunityEditorsModule: _ModuleWithoutApi = {
     ...baseCommunityModule('AllCommunityEditorsModule'),
     dependsOn: [DefaultEditorModule, DataTypeEditorsModule, SelectEditorModule, LargeTextEditorModule],
 };
 
+/**
+ * @feature Editing
+ */
 export const EditModule: _ModuleWithoutApi = {
     ...baseCommunityModule('EditModule'),
-    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule, EditApiModule],
+    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule],
 };

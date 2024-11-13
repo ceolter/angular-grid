@@ -3,17 +3,14 @@
     align-items: center;
     cursor: move;
     white-space: nowrap;
-
     height: var(--ag-header-height);
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     transform: translateY(calc(var(--ag-spacing) * 2));
-
     background-color: var(--ag-drag-and-drop-image-background-color);
     color: var(--ag-text-color);
     font-weight: 500;
-
     border: var(--ag-drag-and-drop-image-border);
     border-radius: var(--ag-border-radius);
     box-shadow: var(--ag-drag-and-drop-image-shadow);

@@ -1,8 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { createPart, createTheme } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid, createPart, createTheme } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
@@ -65,18 +62,16 @@ const rowData: any[] = (() => {
     return rowData;
 })();
 
-const defaultColDef = {
-    editable: true,
-    flex: 1,
-    minWidth: 100,
-    filter: true,
-};
-
 const gridOptions: GridOptions<IOlympicData> = {
     theme: myCustomTheme,
     columnDefs,
     rowData,
-    defaultColDef,
+    defaultColDef: {
+        editable: true,
+        flex: 1,
+        minWidth: 100,
+        filter: true,
+    },
     initialState: {
         rowSelection: ['1', '2', '3'],
     },

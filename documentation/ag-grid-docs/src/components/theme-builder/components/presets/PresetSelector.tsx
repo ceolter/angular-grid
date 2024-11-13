@@ -1,7 +1,7 @@
 import { getChangedModelItemCount } from '@components/theme-builder/model/changed-model-items';
 import styled from '@emotion/styled';
 import { useStore } from 'jotai';
-import { type RefObject, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { type RefObject, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import { colorSchemeLight, themeQuartz } from 'ag-grid-community';
 
@@ -33,7 +33,7 @@ const SelectButton = ({ preset, scrollerRef }: SelectButtonProps) => {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const [themeClass, setThemeClass] = useState<string | undefined>();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const wrapper = wrapperRef.current;
         if (wrapper) {
             let theme = themeQuartz.withPart(colorSchemeLight);

@@ -35,7 +35,7 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'ag-theme-quartz',
+    theme: 'legacy',
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {

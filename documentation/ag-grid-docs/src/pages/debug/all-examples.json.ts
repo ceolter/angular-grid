@@ -1,4 +1,4 @@
-import { getDocsExamplePages } from '@features/docs/utils/pageData';
+import { getDocsExamplePages } from '@components/docs/utils/pageData';
 import { getCollection } from 'astro:content';
 
 export async function getAllExamples() {

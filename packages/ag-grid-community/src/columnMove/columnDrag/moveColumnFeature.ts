@@ -429,7 +429,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             position = ColumnHighlightPosition.After;
         }
 
-        targetColumn.setHighlighted(position);
+        setColumnHighlighted(targetColumn, position);
         this.lastHighlightedColumn = { column: targetColumn, position };
     }
 
@@ -590,7 +590,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             return;
         }
 
-        this.lastHighlightedColumn.column.setHighlighted(null);
+        setColumnHighlighted(this.lastHighlightedColumn.column, null);
         this.lastHighlightedColumn = null;
     }
 
@@ -639,7 +639,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         window.clearInterval(this.movingIntervalId);
         this.movingIntervalId = null;
         this.failedMoveAttempts = 0;
-        this.dragAndDrop.getDragAndDropImageComponent()?.setIcon(this.getIconName());
+        this.dragAndDrop.getDragAndDropImageComponent()?.setIcon(this.getIconName(), false);
     }
 
     private moveInterval(): void {
@@ -653,7 +653,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         }
 
         let pixelsMoved: number | null = null;
-        const scrollFeature = this.gridBodyCon.getScrollFeature();
+        const scrollFeature = this.gridBodyCon.scrollFeature;
 
         if (this.needToMoveLeft) {
             pixelsMoved = scrollFeature.scrollHorizontally(-pixelsToMove);
@@ -673,7 +673,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
                 return;
             }
 
-            this.dragAndDrop.getDragAndDropImageComponent()?.setIcon('pinned');
+            this.dragAndDrop.getDragAndDropImageComponent()?.setIcon('pinned', false);
 
             if (!this.gos.get('suppressMoveWhenColumnDragging')) {
                 const columns = this.lastDraggingEvent?.dragItem.columns as AgColumn[] | undefined;
@@ -723,4 +723,13 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         this.clearHighlighted();
         this.lastMovedInfo = null;
     }
+}
+
+function setColumnHighlighted(column: AgColumn, highlighted: ColumnHighlightPosition | null): void {
+    if (column.highlighted === highlighted) {
+        return;
+    }
+
+    column.highlighted = highlighted;
+    column.dispatchColEvent('headerHighlightChanged', 'uiColumnMoved');
 }

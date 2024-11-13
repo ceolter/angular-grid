@@ -42,11 +42,11 @@ export class ViewportRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     public postConstruct(): void {
-        this.rowHeight = _getRowHeightAsNumber(this.gos);
+        this.rowHeight = _getRowHeightAsNumber(this.beans);
         this.addManagedEventListeners({ viewportChanged: this.onViewportChanged.bind(this) });
         this.addManagedPropertyListener('viewportDatasource', () => this.updateDatasource());
         this.addManagedPropertyListener('rowHeight', () => {
-            this.rowHeight = _getRowHeightAsNumber(this.gos);
+            this.rowHeight = _getRowHeightAsNumber(this.beans);
             this.updateRowHeights();
         });
     }

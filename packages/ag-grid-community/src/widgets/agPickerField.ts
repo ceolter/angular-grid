@@ -4,9 +4,11 @@ import { _isNothingFocused } from '../gridOptionsUtils';
 import type { AgPickerFieldParams } from '../interfaces/agFieldParams';
 import { _setAriaExpanded, _setAriaRole } from '../utils/aria';
 import { _formatSize, _getAbsoluteWidth, _getInnerHeight, _setElementWidth } from '../utils/dom';
+import type { IconName } from '../utils/icon';
 import { _createIconNoSpan } from '../utils/icon';
 import type { AgAbstractFieldEvent } from './agAbstractField';
 import { AgAbstractField } from './agAbstractField';
+import { agPickerFieldCSS } from './agPickerField.css-GENERATED';
 import type { Component } from './component';
 import { RefPlaceholder } from './component';
 import type { AddPopupParams, PopupService } from './popupService';
@@ -62,6 +64,7 @@ export abstract class AgPickerField<
             config?.agComponents || [],
             config?.className
         );
+        this.registerCSS(agPickerFieldCSS);
 
         this.ariaRole = config?.ariaRole;
         this.onPickerFocusIn = this.onPickerFocusIn.bind(this);
@@ -109,7 +112,7 @@ export abstract class AgPickerField<
         const { pickerIcon, inputWidth } = this.config;
 
         if (pickerIcon) {
-            const icon = _createIconNoSpan(pickerIcon, this.gos);
+            const icon = _createIconNoSpan(pickerIcon as IconName, this.beans);
             if (icon) {
                 this.eIcon.appendChild(icon);
             }
@@ -221,7 +224,7 @@ export abstract class AgPickerField<
             eChild: ePicker,
             closeOnEsc: true,
             closedCallback: () => {
-                const shouldRestoreFocus = _isNothingFocused(this.gos);
+                const shouldRestoreFocus = _isNothingFocused(this.beans);
                 this.beforeHidePicker();
 
                 if (shouldRestoreFocus && this.isAlive()) {

@@ -16,7 +16,7 @@ import { _exists } from '../utils/generic';
 import type { ColumnChangedEventType } from './columnApi';
 import { dispatchColumnChangedEvent } from './columnEventUtils';
 import type { ColKey, ColumnModel, Maybe } from './columnModel';
-import type { ColumnState, ColumnStateParams } from './columnStateService';
+import type { ColumnState, ColumnStateParams } from './columnStateUtils';
 import type { VisibleColsService } from './visibleColsService';
 
 export abstract class BaseColsService extends BeanStub implements IColsService {

@@ -3,8 +3,7 @@ import type { ITreeNode, RowNode } from 'ag-grid-community';
 
 import type { TreeRow } from './treeRow';
 
-const treeNodePositionComparer = (a: RowNode, b: RowNode): number =>
-    a.treeNode!.oldSourceRowIndex - b.treeNode!.oldSourceRowIndex;
+const treeNodePositionComparer = (a: RowNode, b: RowNode): number => a.treeNode!.sourceIdx - b.treeNode!.sourceIdx;
 
 /** An empty iterator, to avoid null checking when we iterate the children map */
 const EMPTY_CHILDREN = (_EmptyArray as TreeNode[]).values();
@@ -81,7 +80,7 @@ export class TreeNode implements ITreeNode {
      * in this case the row.allLeafChildren will be the same as one of the childrenAfterGroup[x].allLeafChildren,
      * to get the allLeafChildren if is null, do node.allLeafChildren ?? node.row.allLeafChildren.
      */
-    private allLeafChildren: TreeRow[] | null = _EmptyArray;
+    public allLeafChildren: TreeRow[] | null = _EmptyArray;
 
     /** Indicates whether childrenAfterGroup might need to be recomputed and sorted. Reset during commit. */
     public childrenChanged: boolean = false;
@@ -93,7 +92,7 @@ export class TreeNode implements ITreeNode {
     public duplicateRowsWarned?: boolean;
 
     /** The ordering this node had in the previous commit. */
-    public oldSourceRowIndex: number = -1;
+    public sourceIdx: number = -1;
 
     public constructor(
         /** The parent node of this node. Is null if destroyed or if is the root. */
@@ -123,6 +122,8 @@ export class TreeNode implements ITreeNode {
     /**
      * Gets a node a key in the given parent. If the node does not exists, creates a filler node, with null row.
      * We cast to string just to be sure the user passed a string correctly and not a number or something else.
+     * @param key - The key of the node to get.
+     * @param append - If true, the node will be moved to the end of the children list.
      * @returns the node at the given key, or a new filler node inserted there if it does not exist.
      */
     public upsertKey(key: string | number): TreeNode {
@@ -131,6 +132,23 @@ export class TreeNode implements ITreeNode {
         }
         let node = this.children?.get(key);
         if (!node) {
+            node = new TreeNode(this, key, this.level + 1);
+            (this.children ??= new Map())?.set(node.key, node); // Add to the map
+        }
+        return node;
+    }
+
+    /** Same as upsertKey, but moves the node to the end no matter what. */
+    public appendKey(key: string | number): TreeNode {
+        const children = this.children;
+        if (typeof key !== 'string') {
+            key = String(key);
+        }
+        let node = children?.get(key);
+        if (node) {
+            children!.delete(key); // Remove from the map
+            children!.set(key, node); // Reinsert to the map
+        } else {
             node = new TreeNode(this, key, this.level + 1);
             (this.children ??= new Map())?.set(node.key, node); // Add to the map
         }
@@ -329,13 +347,13 @@ export class TreeNode implements ITreeNode {
      * as it assumes children's childrenAfterGroup is already updated.
      * @returns the rowPosition the node should have.
      */
-    public getRowPosition(): number {
+    public getNewSourceIdx(): number {
         const row = this.row;
         if (row?.data) {
             return row.sourceRowIndex;
         }
         // This is a filler node, return the rowPosition of the first child
-        return this.childrenAfterGroup[0]?.treeNode?.oldSourceRowIndex ?? this.oldSourceRowIndex;
+        return this.childrenAfterGroup[0]?.treeNode?.sourceIdx ?? this.sourceIdx;
     }
 
     /**
@@ -381,12 +399,12 @@ export class TreeNode implements ITreeNode {
         let prevPosition = -1;
         let needSort = false;
         for (const child of this.enumChildren()) {
-            const nextPosition = child.getRowPosition();
+            const nextPosition = child.getNewSourceIdx();
             if (nextPosition < prevPosition) {
                 needSort = true;
             }
             prevPosition = nextPosition;
-            child.oldSourceRowIndex = nextPosition;
+            child.sourceIdx = nextPosition;
             const row = child.row;
             if (childrenAfterGroup[index] !== row) {
                 childrenAfterGroup[index] = row!;

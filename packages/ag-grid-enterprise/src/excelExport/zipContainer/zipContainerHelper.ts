@@ -1,3 +1,5 @@
+import { _errMsg } from 'ag-grid-community';
+
 import { deflateLocalFile } from './compress';
 import { convertDate, convertDecToHex, convertTime } from './convert';
 import { getCrcFromCrc32Table } from './crcTable';
@@ -58,7 +60,7 @@ function _utf8_encode(s: string | null): string {
 
     function checkScalarValue(point: number) {
         if (point >= 0xd800 && point <= 0xdfff) {
-            throw Error('Lone surrogate U+' + point.toString(16).toUpperCase() + ' is not a scalar value');
+            throw Error(_errMsg(255, { point }));
         }
     }
 

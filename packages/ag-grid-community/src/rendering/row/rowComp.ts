@@ -75,10 +75,6 @@ export class RowComp extends Component {
         // if not in cache, create new one
         const res = compDetails.newAgStackInstance();
 
-        if (res == null) {
-            return;
-        }
-
         res.then(callback);
     }
 
@@ -122,9 +118,9 @@ export class RowComp extends Component {
         const cellComp = new CellComp(
             this.beans,
             cellCtrl,
-            this.rowCtrl.isPrintLayout(),
+            this.rowCtrl.printLayout,
             this.getGui(),
-            this.rowCtrl.isEditing()
+            this.rowCtrl.editing
         );
         this.cellComps[cellCtrl.instanceId] = cellComp;
         this.getGui().appendChild(cellComp.getGui());
@@ -155,7 +151,7 @@ export class RowComp extends Component {
             }
 
             // check cellComp belongs in this container
-            const instanceId = cellComp.getCtrl().instanceId;
+            const instanceId = cellComp.cellCtrl.instanceId;
             if (this.cellComps[instanceId] !== cellComp) {
                 return;
             }

@@ -144,7 +144,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
 
     public postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getColDef: () => this.params.colDef,
                 getColumn: () => this.params.column as AgColumn,
@@ -199,14 +199,14 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private setupExpansion(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('setFilterGroupClosed', this.gos, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('setFilterGroupOpen', this.gos, null));
+        this.eGroupClosedIcon.appendChild(_createIcon('setFilterGroupClosed', this.beans, null));
+        this.eGroupOpenedIcon.appendChild(_createIcon('setFilterGroupOpen', this.beans, null));
         const listener = this.onExpandOrContractClicked.bind(this);
         this.addManagedElementListeners(this.eGroupClosedIcon, { click: listener });
         this.addManagedElementListeners(this.eGroupOpenedIcon, { click: listener });
 
         if (this.hasIndeterminateExpandState) {
-            this.eGroupIndeterminateIcon.appendChild(_createIcon('setFilterGroupIndeterminate', this.gos, null));
+            this.eGroupIndeterminateIcon.appendChild(_createIcon('setFilterGroupIndeterminate', this.beans, null));
             this.addManagedElementListeners(this.eGroupIndeterminateIcon, {
                 click: listener,
             });
@@ -403,7 +403,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
             this.params,
             this.cellRendererParams
         );
-        const cellRendererPromise = compDetails ? compDetails.newAgStackInstance() : undefined;
+        const cellRendererPromise = compDetails?.newAgStackInstance();
 
         if (cellRendererPromise == null) {
             this.renderCellWithoutCellRenderer();

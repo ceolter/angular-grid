@@ -2,16 +2,18 @@ import type {
     BeanCollection,
     BeanName,
     BeforeRefreshModelEvent,
+    DetailGridInfo,
+    IChangedRowNodes,
     IColsService,
     IMasterDetailService,
     IRowModel,
     NamedBean,
     RowCtrl,
-    RowNodeTransaction,
 } from 'ag-grid-community';
-import { RowNode, _exists } from 'ag-grid-community';
 import {
     BeanStub,
+    RowNode,
+    _exists,
     _getClientSideRowModel,
     _isClientSideRowModel,
     _isServerSideRowModel,
@@ -20,6 +22,8 @@ import {
 
 export class MasterDetailService extends BeanStub implements NamedBean, IMasterDetailService {
     beanName: BeanName = 'masterDetailSvc' as const;
+
+    public store: { [id: string]: DetailGridInfo | undefined } = {};
 
     private enabled: boolean;
     private rowModel: IRowModel;
@@ -56,11 +60,11 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         }
 
         if (params.rowDataUpdated) {
-            this.setMasters(params.rowNodeTransactions);
+            this.setMasters(params.changedRowNodes);
         }
     }
 
-    private setMasters(transactions: RowNodeTransaction[] | null | undefined): void {
+    private setMasters(changedRowNodes: IChangedRowNodes | null | undefined): void {
         const enabled = this.isEnabled();
         this.enabled = enabled;
 
@@ -105,15 +109,11 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         };
 
-        if (transactions) {
-            for (let i = 0, len = transactions.length; i < len; ++i) {
-                const { update, add } = transactions[i];
-                for (let j = 0, len = add.length; j < len; ++j) {
-                    setMaster(add[j] as RowNode, true, false);
-                }
-                for (let j = 0, len = update.length; j < len; ++j) {
-                    setMaster(update[j] as RowNode, false, true);
-                }
+        if (changedRowNodes) {
+            const updates = changedRowNodes.updates;
+            for (const node of updates.keys()) {
+                const created = updates.get(node)!;
+                setMaster(node, created, !created);
             }
         } else {
             const allLeafChildren = _getClientSideRowModel(this.beans)?.rootNode?.allLeafChildren;
@@ -153,7 +153,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     }
 
     public setupDetailRowAutoHeight(rowCtrl: RowCtrl, eDetailGui: HTMLElement): void {
-        const { gos } = this;
+        const { gos, beans } = this;
         if (!gos.get('detailRowAutoHeight')) {
             return;
         }
@@ -170,7 +170,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                 // doing another update
                 const updateRowHeightFunc = () => {
                     const { rowModel } = this;
-                    const rowNode = rowCtrl.getRowNode();
+                    const { rowNode } = rowCtrl;
                     rowNode.setRowHeight(clientHeight);
                     if (_isClientSideRowModel(gos, rowModel) || _isServerSideRowModel(gos, rowModel)) {
                         rowModel.onRowHeightChanged();
@@ -180,10 +180,15 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         };
 
-        const resizeObserverDestroyFunc = _observeResize(gos, eDetailGui, checkRowSizeFunc);
+        const resizeObserverDestroyFunc = _observeResize(beans, eDetailGui, checkRowSizeFunc);
 
         rowCtrl.addDestroyFunc(resizeObserverDestroyFunc);
 
         checkRowSizeFunc();
+    }
+
+    public override destroy(): void {
+        this.store = {};
+        super.destroy();
     }
 }

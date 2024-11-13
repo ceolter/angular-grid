@@ -1,6 +1,8 @@
+import type { ColumnAnimationService } from '../../columnMove/columnAnimationService';
 import type { ColumnGroupService } from '../../columns/columnGroups/columnGroupService';
 import type { ColumnModel } from '../../columns/columnModel';
-import type { ColumnState, ColumnStateParams, ColumnStateService } from '../../columns/columnStateService';
+import { _applyColumnState, _getColumnState } from '../../columns/columnStateUtils';
+import type { ColumnState, ColumnStateParams } from '../../columns/columnStateUtils';
 import type { VisibleColsService } from '../../columns/visibleColsService';
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
@@ -41,7 +43,6 @@ import type { ISideBarService } from '../../interfaces/iSideBar';
 import type { SortModelItem } from '../../interfaces/iSortModelItem';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../../interfaces/selectionState';
 import type { PaginationService } from '../../pagination/paginationService';
-import type { ColumnAnimationService } from '../../rendering/columnAnimationService';
 import { _debounce } from '../../utils/function';
 import { _jsonEquals } from '../../utils/generic';
 import { VERSION } from '../../version';
@@ -60,11 +61,10 @@ export class StateService extends BeanStub implements NamedBean {
     private selectionSvc?: ISelectionService;
     private expansionSvc?: IExpansionService;
     private colAnimation?: ColumnAnimationService;
-    private colState: ColumnStateService;
     private sideBar?: ISideBarService;
     private rangeSvc?: IRangeService;
     private rowModel: IRowModel;
-    private columnGroupSvc?: ColumnGroupService;
+    private colGroupSvc?: ColumnGroupService;
     private updateRowGroupExpansionStateTimer: ReturnType<typeof setTimeout> | number = 0;
 
     public wireBeans(beans: BeanCollection): void {
@@ -78,11 +78,10 @@ export class StateService extends BeanStub implements NamedBean {
         this.selectionSvc = beans.selectionSvc;
         this.expansionSvc = beans.expansionSvc;
         this.colAnimation = beans.colAnimation;
-        this.colState = beans.colState;
         this.sideBar = beans.sideBar;
         this.rangeSvc = beans.rangeSvc;
         this.rowModel = beans.rowModel;
-        this.columnGroupSvc = beans.columnGroupSvc;
+        this.colGroupSvc = beans.colGroupSvc;
     }
 
     private isClientSideRowModel: boolean;
@@ -330,7 +329,7 @@ export class StateService extends BeanStub implements NamedBean {
         const columns: string[] = [];
 
         let defaultSortIndex = 0;
-        const columnState = this.colState.getColumnState();
+        const columnState = _getColumnState(this.beans);
         for (let i = 0; i < columnState.length; i++) {
             const {
                 colId,
@@ -485,7 +484,8 @@ export class StateService extends BeanStub implements NamedBean {
 
         if (columnStates.length) {
             this.columnStates = columnStates;
-            this.colState.applyColumnState(
+            _applyColumnState(
+                this.beans,
                 {
                     state: columnStates,
                     applyOrder,
@@ -514,7 +514,8 @@ export class StateService extends BeanStub implements NamedBean {
                 }
             }
 
-            this.colState.applyColumnState(
+            _applyColumnState(
+                this.beans,
                 {
                     state: secondaryColumnStates,
                     applyOrder,
@@ -525,15 +526,15 @@ export class StateService extends BeanStub implements NamedBean {
 
         if (columnGroupStates) {
             // no easy/performant way of knowing which column groups are pivot column groups
-            this.columnGroupSvc?.setColumnGroupState(columnGroupStates, 'gridInitializing');
+            this.colGroupSvc?.setColumnGroupState(columnGroupStates, 'gridInitializing');
         }
     }
 
     private getColumnGroupState(): ColumnGroupState | undefined {
-        if (!this.columnGroupSvc) {
+        if (!this.colGroupSvc) {
             return undefined;
         }
-        const columnGroupState = this.columnGroupSvc.getColumnGroupState();
+        const columnGroupState = this.colGroupSvc.getColumnGroupState();
         const openColumnGroups: string[] = [];
         columnGroupState.forEach(({ groupId, open }) => {
             if (open) {
@@ -544,12 +545,12 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private setColumnGroupState(initialState: GridState): void {
-        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.columnGroupSvc) {
+        if (!Object.prototype.hasOwnProperty.call(initialState, 'columnGroup') || !this.colGroupSvc) {
             return;
         }
 
         const openColumnGroups = new Set(initialState.columnGroup?.openColumnGroupIds);
-        const existingColumnGroupState = this.columnGroupSvc.getColumnGroupState();
+        const existingColumnGroupState = this.colGroupSvc.getColumnGroupState();
         const stateItems = existingColumnGroupState.map(({ groupId }) => {
             const open = openColumnGroups.has(groupId);
             if (open) {
@@ -570,7 +571,7 @@ export class StateService extends BeanStub implements NamedBean {
         if (stateItems.length) {
             this.columnGroupStates = stateItems;
         }
-        this.columnGroupSvc.setColumnGroupState(stateItems, 'gridInitializing');
+        this.colGroupSvc.setColumnGroupState(stateItems, 'gridInitializing');
     }
 
     private getFilterState(): FilterState | undefined {
@@ -648,7 +649,7 @@ export class StateService extends BeanStub implements NamedBean {
             // can't restore, so don't provide
             return undefined;
         }
-        const scrollFeature = this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature();
+        const scrollFeature = this.ctrlsSvc.getScrollFeature();
         const { left } = scrollFeature?.getHScrollPosition() ?? { left: 0 };
         const { top } = scrollFeature?.getVScrollPosition() ?? { top: 0 };
         return top || left
@@ -664,7 +665,13 @@ export class StateService extends BeanStub implements NamedBean {
             return;
         }
         const { top, left } = scrollState;
-        this.ctrlsSvc.getGridBodyCtrl()?.getScrollFeature().setScrollPosition(top, left);
+        const { frameworkOverrides, rowRenderer, animationFrameSvc } = this.beans;
+        frameworkOverrides.wrapIncoming(() => {
+            this.ctrlsSvc.get('center').setCenterViewportScrollLeft(left);
+            this.ctrlsSvc.getScrollFeature()?.setVerticalScrollPosition(top);
+            rowRenderer.redraw({ afterScroll: true });
+            animationFrameSvc?.flushAllFrames();
+        });
     }
 
     private getSideBarState(): SideBarState | undefined {

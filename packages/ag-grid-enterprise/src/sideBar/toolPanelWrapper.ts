@@ -8,7 +8,7 @@ import type {
     UserComponentFactory,
     WithoutGridCommon,
 } from 'ag-grid-community';
-import { Component, _warn } from 'ag-grid-community';
+import { Component } from 'ag-grid-community';
 
 import { AgHorizontalResize } from './agHorizontalResize';
 
@@ -16,8 +16,8 @@ function getToolPanelCompDetails(
     userCompFactory: UserComponentFactory,
     toolPanelDef: ToolPanelDef,
     params: WithoutGridCommon<IToolPanelParams>
-): UserCompDetails {
-    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, null, params, true)!;
+): UserCompDetails<IToolPanelComp> | undefined {
+    return userCompFactory.getCompDetails(toolPanelDef, ToolPanelComponent, undefined, params, true);
 }
 
 const ToolPanelComponent: ComponentType = {
@@ -56,21 +56,20 @@ export class ToolPanelWrapper extends Component {
         return this.toolPanelId;
     }
 
-    public setToolPanelDef(toolPanelDef: ToolPanelDef, params: WithoutGridCommon<IToolPanelParams>): void {
+    public setToolPanelDef(toolPanelDef: ToolPanelDef, params: WithoutGridCommon<IToolPanelParams>): boolean {
         const { id, minWidth, maxWidth, width } = toolPanelDef;
 
         this.toolPanelId = id;
         this.width = width;
 
         const compDetails = getToolPanelCompDetails(this.userCompFactory, toolPanelDef, params);
-        const componentPromise = compDetails.newAgStackInstance();
+        if (compDetails == null) {
+            return false;
+        }
 
+        const componentPromise = compDetails.newAgStackInstance();
         this.params = compDetails.params;
 
-        if (componentPromise == null) {
-            _warn(216, { id });
-            return;
-        }
         componentPromise.then(this.setToolPanelComponent.bind(this));
 
         if (minWidth != null) {
@@ -80,6 +79,8 @@ export class ToolPanelWrapper extends Component {
         if (maxWidth != null) {
             this.resizeBar.setMaxWidth(maxWidth);
         }
+
+        return true;
     }
 
     private setToolPanelComponent(compInstance: IToolPanelComp): void {

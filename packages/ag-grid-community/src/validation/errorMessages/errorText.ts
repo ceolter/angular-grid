@@ -1,31 +1,43 @@
 import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
-import type { ModuleName } from '../../interfaces/iModule';
+import type { EnterpriseModuleName, ModuleName } from '../../interfaces/iModule';
+import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
+import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
 
+export const moduleImportMsg = (moduleName: ModuleName | ModuleName[]) => {
+    const moduleNames = Array.isArray(moduleName) ? moduleName : [moduleName];
+    const imports = moduleNames
+        .map(
+            (modName) =>
+                `import { ${modName} } from '${ENTERPRISE_MODULE_NAMES[modName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
+        )
+        .join(' \n');
+    return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
+};
+
 const missingModule = ({
-    reason,
+    reasonOrId,
     moduleName,
     gridScoped,
     gridId,
-    isEnterprise,
+    additionalText,
 }: {
-    reason: string;
-    moduleName: ModuleName;
+    reasonOrId: string | keyof MissingModuleErrors;
+    moduleName: ModuleName | ModuleName[];
     gridScoped: boolean;
     gridId: string;
-    isEnterprise?: boolean;
-}) =>
-    `Unable to use ${reason} as ${moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
-import { ModuleRegistry } from 'ag-grid-community';
-import { ${moduleName} } from '${isEnterprise ? 'ag-grid-enterprise' : 'ag-grid-community'}';
-
-ModuleRegistry.registerModules([ ${moduleName} ]);
-
-For more info see: ${BASE_URL}/javascript-grid/modules/`;
+    additionalText?: string;
+}) => {
+    const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
+    return (
+        `Unable to use ${reason} as ${Array.isArray(moduleName) ? 'one of ' + moduleName.join(', ') : moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '')
+    );
+};
 
 const clipboardApiError = (method: string) =>
     `AG Grid: Unable to use the Clipboard API (navigator.clipboard.${method}()). ` +
@@ -116,14 +128,16 @@ export const AG_GRID_ERRORS = {
         `Column type definitions 'columnTypes' with a 'type' attribute are not supported because a column type cannot refer to another column type. Only column definitions 'columnDefs' can use the 'type' attribute to refer to a column type.` as const,
     36: ({ t }: { t: string }) => "colDef.type '" + t + "' does not correspond to defined gridOptions.columnTypes",
     37: () => `Changing the column pinning status is not allowed with domLayout='print'` as const,
-    // 38: () => '' as const,
+    38: ({ iconName }: { iconName: string }) =>
+        `provided icon '${iconName}' needs to be a string or a function` as const,
     39: () =>
         'Applying column order broke a group where columns should be married together. Applying new order has been discarded.' as const,
     40: ({ e, method }: { e: any; method: string }) => `${e}\n${clipboardApiError(method)}` as const,
     41: () =>
         "Browser did not allow document.execCommand('copy'). Ensure 'api.copySelectedRowsToClipboard() is invoked via a user event, i.e. button click, otherwise the browser will prevent it for security reasons." as const,
     42: () => "Browser does not support document.execCommand('copy') for clipboard operations" as const,
-    // 43: () => '' as const,
+    43: ({ iconName }: { iconName: string }) =>
+        `As of v33, icon '${iconName}' is deprecated. Use the icon CSS name instead.` as const,
     44: () =>
         'Data type definition hierarchies (via the "extendsDataType" property) cannot contain circular references.' as const,
     45: ({ parentCellDataType }: { parentCellDataType: string }) =>
@@ -139,11 +153,11 @@ export const AG_GRID_ERRORS = {
     51: () => `Export cancelled. Export is not allowed as per your configuration.` as const,
     52: () => 'There is no `window` associated with the current `document`' as const,
     53: () => `unknown value type during csv conversion` as const,
-    54: () => 'Could not find document body, it is needed for drag and drop.' as const,
+    54: () => 'Could not find document body, it is needed for drag and drop and context menu.' as const,
     55: () => 'addRowDropZone - A container target needs to be provided' as const,
     56: () =>
         'addRowDropZone - target already exists in the list of DropZones. Use `removeRowDropZone` before adding it again.' as const,
-    // 57: () => '' as const,
+    57: () => 'unable to show popup filter, filter instantiation failed' as const,
     58: () => 'no values found for select cellEditor' as const,
     59: () => 'cannot select pinned rows' as const,
     60: () => 'cannot select node until it has finished loading' as const,
@@ -193,7 +207,7 @@ export const AG_GRID_ERRORS = {
     89: () =>
         `A template was provided for Header Group Comp - templates are only supported for Header Comps (not groups)` as const,
     90: () => `datasource is missing getRows method` as const,
-    // 91: () => '' as const,
+    91: () => 'Filter is missing method doesFilterPass' as const,
     92: ({ methodName }: { methodName: string }) =>
         `AnimationFrameService.${methodName} called but animation frames are off` as const,
     93: () => 'cannot add multiple ranges when `cellSelection.suppressMultiRanges = true`' as const,
@@ -230,7 +244,8 @@ export const AG_GRID_ERRORS = {
         'popup cellEditor does not work with fullRowEdit - you cannot use them both - either turn off fullRowEdit, or stop using popup editors.' as const,
     99: () =>
         'Since v32, `api.hideOverlay()` does not hide the loading overlay when `loading=true`. Set `loading=false` instead.' as const,
-    // 100: () => '' as const,
+    100: ({ rowModelType }: { rowModelType: RowModelType }) =>
+        `selectAll only available when rowModelType='clientSide', ie not ${rowModelType}` as const,
     101: ({
         propertyName,
         componentName,
@@ -291,8 +306,8 @@ export const AG_GRID_ERRORS = {
     116: () => 'Invalid selection state. The state must conform to `IServerSideSelectionState`.' as const,
     117: () => 'selectAll must be of boolean type.' as const,
     118: () => 'Infinite scrolling must be enabled in order to set the row count.' as const,
-    // 119: () => '',
-    // 120: () => '',
+    119: () => 'Unable to instantiate filter',
+    120: () => 'MultiFloatingFilterComp expects MultiFilter as its parent',
     121: () =>
         'a column you are grouping or pivoting by has objects as values. If you want to group by complex objects then either a) use a colDef.keyCreator (see AG Grid docs) or b) to toString() on the object to return a key' as const,
     122: () => 'could not find the document, document is empty' as const,
@@ -309,9 +324,10 @@ export const AG_GRID_ERRORS = {
         `${feature} is only available if using 'clientSide' or 'serverSide' rowModelType, you are using ${rowModel}.` as const,
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
     131: () => 'cannot range select while selecting multiple rows' as const,
-    132: () => `cannot multi select unless selection mode is 'multiRow'` as const,
-    133: () => 'iconRenderer should return back a string or a dom object' as const,
-    134: ({ iconName }: { iconName: string }) => `Did not find icon ${iconName}` as const,
+    132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
+    133: ({ iconName }: { iconName: string }) =>
+        `icon '${iconName}' function should return back a string or a dom object` as const,
+    134: ({ iconName }: { iconName: string }) => `Did not find icon '${iconName}'` as const,
     135: () => `Data type of the new value does not match the cell data type of the column` as const,
     136: () =>
         `Unable to update chart as the 'type' is missing. It must be either 'rangeChartUpdate', 'pivotChartUpdate', or 'crossFilterChartUpdate'.` as const,
@@ -328,8 +344,8 @@ export const AG_GRID_ERRORS = {
     144: ({ type }: { type: string }) => `Invalid charts data panel group name supplied: '${type}'` as const,
     145: ({ group }: { group: string }) =>
         `As of v32, only one charts customize panel group can be expanded at a time. '${group}' will not be expanded.` as const,
-    146: () =>
-        `'navigator' is now displayed in the charts advanced settings instead of the customize panel, and this setting will be ignored.` as const,
+    146: ({ comp }: { comp: string }) =>
+        `Unable to instantiate component '${comp}' as its module hasn't been loaded. Add 'ValidationModule' to see which module is required.` as const,
     147: ({ group }: { group: string }) => `Invalid charts customize panel group name supplied: '${group}'` as const,
     148: ({ group }: { group: string }) => `invalid chartGroupsDef config '${group}'` as const,
     149: ({ group, chartType }: { group: string; chartType: string }) =>
@@ -459,8 +475,7 @@ export const AG_GRID_ERRORS = {
     214: ({ key }: { key: string }) => `unable to lookup Tool Panel as invalid key supplied: ${key}` as const,
     215: ({ key, defaultByKey }: { key: string; defaultByKey: object }) =>
         `the key ${key} is not a valid key for specifying a tool panel, valid keys are: ${Object.keys(defaultByKey).join(',')}` as const,
-    216: ({ id }: { id: string }) =>
-        `error processing tool panel component ${id}. You need to specify 'toolPanel'` as const,
+    216: ({ name }: { name: string }) => `Missing component for '${name}'` as const,
     217: ({ invalidColIds }: { invalidColIds: any[] }) =>
         ['unable to find grid columns for the supplied colDef(s):', invalidColIds] as const,
     218: ({ property, defaultOffset }: { property: string; defaultOffset: number | undefined }) =>
@@ -491,11 +506,32 @@ export const AG_GRID_ERRORS = {
         'Group Column Filter does not work with the colDef property "filterParams". This property will be ignored.' as const,
     237: () =>
         'Group Column Filter does not work with Tree Data enabled. Please disable Tree Data, or use a different filter.' as const,
-    238: ({ message }: { message: string }) => ['Failed to deserialize state with error ', message] as const,
+    238: () => 'setRowCount can only accept a positive row count.' as const,
     239: () =>
         'Invalid mixing of Theming API and CSS File Themes in the same page. No value was provided to the `theme` grid option so it defaulted to themeQuartz, but the file (ag-grid.css) is also included and will cause styling issues. Pass the string "legacy" to the theme grid option to use v32 style themes, or remove ag-grid.css from the page.' as const,
     240: ({ theme }: { theme: any }) =>
         `theme grid option must be a Theming API theme object or the string "legacy", received: ${theme}` as const,
+    241: () => `cannot select multiple rows when rowSelection.mode is set to 'singleRow'` as const,
+    242: () => 'cannot select multiple rows when using rangeSelect' as const,
+    243: () => 'Failed to deserialize state - each provided state object must be an object.' as const,
+    244: () => 'Failed to deserialize state - `selectAllChildren` must be a boolean value or undefined.' as const,
+    245: () => 'Failed to deserialize state - `toggledNodes` must be an array.' as const,
+    246: () => 'Failed to deserialize state - Every `toggledNode` requires an associated string id.' as const,
+    247: () =>
+        `Row selection state could not be parsed due to invalid data. Ensure all child state has toggledNodes or does not conform with the parent rule. \nPlease rebuild the selection state and reapply it.` as const,
+    248: () => 'SetFloatingFilter expects SetFilter as its parent' as const,
+    249: () => 'Must supply a Value Formatter in Set Filter params when using a Key Creator' as const,
+    250: () =>
+        'Must supply a Key Creator in Set Filter params when `treeList = true` on a group column, and Tree Data or Row Grouping is enabled.' as const,
+    251: ({ chartType }: { chartType: string }) =>
+        `AG Grid: Unable to create chart as an invalid chartType = '${chartType}' was supplied.` as const,
+    252: () =>
+        'cannot get grid to draw rows when it is in the middle of drawing rows. \nYour code probably called a grid API method while the grid was in the render stage. \nTo overcome this, put the API call into a timeout, e.g. instead of api.redrawRows(), call setTimeout(function() { api.redrawRows(); }, 0). \nTo see what part of your code that caused the refresh check this stacktrace.' as const,
+    253: ({ version }: { version: string }) => ['Illegal version string: ', version] as const,
+    254: () => 'Cannot create chart: no chart themes available.' as const,
+    255: ({ point }: { point: number }) =>
+        `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
+    256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
 } as const;
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

@@ -3,7 +3,6 @@ import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
 import type { GridOptions } from './entities/gridOptions';
-import type { Environment } from './environment';
 import type { AgEventType } from './eventTypes';
 import type { AgEvent } from './events';
 import { ALWAYS_SYNC_GLOBAL_EVENTS } from './events';
@@ -13,11 +12,12 @@ import { _getCallbackForEvent } from './gridOptionsUtils';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
 import type { ModuleName } from './interfaces/iModule';
 import { LocalEventService } from './localEventService';
-import { _isModuleRegistered } from './modules/moduleRegistry';
+import { _areModulesGridScoped, _isModuleRegistered } from './modules/moduleRegistry';
 import type { AnyGridOptions } from './propertyKeys';
 import { _logIfDebug } from './utils/function';
 import { _exists } from './utils/generic';
 import type { MissingModuleErrors } from './validation/errorMessages/errorText';
+import { _error } from './validation/logging';
 import type { ValidationService } from './validation/validationService';
 
 type GetKeys<T, U> = {
@@ -77,39 +77,41 @@ export type PropertyValueChangedListener<K extends keyof GridOptions> = (event: 
 
 let changeSetId = 0;
 
+// this is added to the main DOM element
+let gridInstanceSequence = 0;
+
 export class GridOptionsService extends BeanStub implements NamedBean {
     beanName = 'gos' as const;
 
     private gridOptions: GridOptions;
-    public eGridDiv: HTMLElement;
     private validation?: ValidationService;
-    public environment: Environment;
     private api: GridApi;
     private gridId: string;
 
     public wireBeans(beans: BeanCollection): void {
         this.gridOptions = beans.gridOptions;
-        this.eGridDiv = beans.eGridDiv;
         this.validation = beans.validation;
-        this.environment = beans.environment;
         this.api = beans.gridApi;
         this.gridId = beans.context.getGridId();
     }
     private domDataKey = '__AG_' + Math.random().toString();
+
+    /** This is only used for the main DOM element */
+    public readonly gridInstanceId = gridInstanceSequence++;
 
     // This is quicker then having code call gridOptionsService.get('context')
     private get gridOptionsContext() {
         return this.gridOptions['context'];
     }
 
-    private propertyEventService: LocalEventService<keyof GridOptions> = new LocalEventService();
+    private propEventSvc: LocalEventService<keyof GridOptions> = new LocalEventService();
 
     public postConstruct(): void {
         this.eventSvc.addGlobalListener(this.globalEventHandlerFactory().bind(this), true);
         this.eventSvc.addGlobalListener(this.globalEventHandlerFactory(true).bind(this), false);
 
         // Ensure the propertyEventService has framework overrides set so that it can fire events outside of angular
-        this.propertyEventService.setFrameworkOverrides(this.beans.frameworkOverrides);
+        this.propEventSvc.setFrameworkOverrides(this.beans.frameworkOverrides);
 
         this.addManagedEventListeners({
             gridOptionsChanged: ({ options }) => {
@@ -155,11 +157,7 @@ export class GridOptionsService extends BeanStub implements NamedBean {
     ): ((params: WithoutGridCommon<P>) => T) | undefined {
         if (callback) {
             const wrapped = (callbackParams: WithoutGridCommon<P>): T => {
-                const mergedParams = callbackParams as P;
-                mergedParams.api = this.api;
-                mergedParams.context = this.gridOptionsContext;
-
-                return callback(mergedParams);
+                return callback(this.addGridCommonParams(callbackParams));
             };
             return wrapped;
         }
@@ -178,14 +176,15 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         const changeSet: PropertyChangeSet = { id: changeSetId++, properties: [] };
         // all events are fired after grid options has finished updating.
         const events: PropertyValueChangedEvent<keyof GridOptions>[] = [];
+        const { gridOptions, validation } = this;
         Object.entries(options).forEach(([key, value]) => {
-            this.validation?.warnOnInitialPropertyUpdate(source, key);
+            validation?.warnOnInitialPropertyUpdate(source, key);
 
             const shouldForce = force || (typeof value === 'object' && source === 'api'); // force objects as they could have been mutated.
 
-            const previousValue = this.gridOptions[key as keyof GridOptions];
+            const previousValue = gridOptions[key as keyof GridOptions];
             if (shouldForce || previousValue !== value) {
-                this.gridOptions[key as keyof GridOptions] = value;
+                gridOptions[key as keyof GridOptions] = value;
                 const event: PropertyValueChangedEvent<keyof GridOptions> = {
                     type: key as keyof GridOptions,
                     currentValue: value,
@@ -197,22 +196,22 @@ export class GridOptionsService extends BeanStub implements NamedBean {
             }
         });
 
-        this.validation?.processGridOptions(this.gridOptions);
+        validation?.processGridOptions(this.gridOptions);
 
         // changeSet should just include the properties that have changed.
         changeSet.properties = events.map((event) => event.type);
 
         events.forEach((event) => {
             _logIfDebug(this, `Updated property ${event.type} from`, event.previousValue, ` to `, event.currentValue);
-            this.propertyEventService.dispatchEvent(event);
+            this.propEventSvc.dispatchEvent(event);
         });
     }
 
     addPropertyEventListener<K extends keyof GridOptions>(key: K, listener: PropertyValueChangedListener<K>): void {
-        this.propertyEventService.addEventListener(key, listener as any);
+        this.propEventSvc.addEventListener(key, listener as any);
     }
     removePropertyEventListener<K extends keyof GridOptions>(key: K, listener: PropertyValueChangedListener<K>): void {
-        this.propertyEventService.removeEventListener(key, listener as any);
+        this.propEventSvc.removeEventListener(key, listener as any);
     }
 
     // responsible for calling the onXXX functions on gridOptions
@@ -265,10 +264,12 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         TId extends keyof MissingModuleErrors,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         TShowMessageAtCallLocation = MissingModuleErrors[TId],
-    >(moduleName: ModuleName, reasonOrId: string | TId): boolean {
-        const registered = this.isModuleRegistered(moduleName);
+    >(moduleName: ModuleName | ModuleName[], reasonOrId: string | TId): boolean {
+        const registered = Array.isArray(moduleName)
+            ? moduleName.some((modName) => this.isModuleRegistered(modName))
+            : this.isModuleRegistered(moduleName);
         if (!registered) {
-            this.validation?.missingModule(moduleName, reasonOrId, this.gridId);
+            _error(200, { gridId: this.gridId, gridScoped: _areModulesGridScoped(), moduleName, reasonOrId });
         }
         return registered;
     }

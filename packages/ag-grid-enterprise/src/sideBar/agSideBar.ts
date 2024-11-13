@@ -2,7 +2,6 @@ import type {
     BeanCollection,
     ComponentSelector,
     FilterManager,
-    FocusService,
     ISideBar,
     IToolPanel,
     IToolPanelParams,
@@ -16,12 +15,16 @@ import {
     ManagedFocusFeature,
     RefPlaceholder,
     _addFocusableContainerListener,
+    _findNextFocusableElement,
+    _focusInto,
+    _focusNextGridCoreContainer,
     _getActiveDomElement,
     _removeFromParent,
     _setAriaControls,
     _warn,
 } from 'ag-grid-community';
 
+import { findFocusableElementBeforeTabGuard, isTargetUnderManagedComponent } from '../misc/enterpriseFocusUtils';
 import { agSideBarCSS } from './agSideBar.css-GENERATED';
 import type { AgSideBarButtons, SideBarButtonClickedEvent } from './agSideBarButtons';
 import { AgSideBarButtonsSelector } from './agSideBarButtons';
@@ -30,12 +33,10 @@ import type { SideBarService } from './sideBarService';
 import { ToolPanelWrapper } from './toolPanelWrapper';
 
 export class AgSideBar extends Component implements ISideBar {
-    private focusSvc: FocusService;
     private filterManager?: FilterManager;
     private sideBarSvc: SideBarService;
 
     public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
         this.filterManager = beans.filterManager;
         this.sideBarSvc = beans.sideBar as SideBarService;
     }
@@ -76,7 +77,7 @@ export class AgSideBar extends Component implements ISideBar {
             })
         );
 
-        _addFocusableContainerListener(this, eGui, this.focusSvc);
+        _addFocusableContainerListener(this.beans, this, eGui);
     }
 
     protected onTabKeyDown(e: KeyboardEvent) {
@@ -84,19 +85,19 @@ export class AgSideBar extends Component implements ISideBar {
             return;
         }
 
-        const { focusSvc, sideBarButtons } = this;
+        const { beans, sideBarButtons } = this;
         const eGui = this.getGui();
         const sideBarGui = sideBarButtons.getGui();
-        const activeElement = _getActiveDomElement(this.gos) as HTMLElement;
+        const activeElement = _getActiveDomElement(beans) as HTMLElement;
         const openPanel = eGui.querySelector('.ag-tool-panel-wrapper:not(.ag-hidden)') as HTMLElement;
         const target = e.target as HTMLElement;
 
         if (!openPanel) {
-            return focusSvc.focusNextGridCoreContainer(e.shiftKey, true);
+            return _focusNextGridCoreContainer(beans, e.shiftKey, true);
         }
 
         if (sideBarGui.contains(activeElement)) {
-            if (focusSvc.focusInto(openPanel, e.shiftKey)) {
+            if (_focusInto(openPanel, e.shiftKey)) {
                 e.preventDefault();
             }
             return;
@@ -110,9 +111,9 @@ export class AgSideBar extends Component implements ISideBar {
         let nextEl: HTMLElement | null = null;
 
         if (openPanel.contains(activeElement)) {
-            nextEl = this.focusSvc.findNextFocusableElement(openPanel, undefined, true);
-        } else if (focusSvc.isTargetUnderManagedComponent(openPanel, target) && e.shiftKey) {
-            nextEl = this.focusSvc.findFocusableElementBeforeTabGuard(openPanel, target);
+            nextEl = _findNextFocusableElement(beans, openPanel, undefined, true);
+        } else if (isTargetUnderManagedComponent(openPanel, target) && e.shiftKey) {
+            nextEl = findFocusableElementBeforeTabGuard(openPanel, target);
         }
 
         if (!nextEl) {
@@ -126,7 +127,7 @@ export class AgSideBar extends Component implements ISideBar {
     }
 
     protected handleKeyDown(e: KeyboardEvent): void {
-        const currentButton = _getActiveDomElement(this.gos);
+        const currentButton = _getActiveDomElement(this.beans);
 
         if (!this.sideBarButtons.getGui().contains(currentButton)) {
             return;
@@ -284,19 +285,7 @@ export class AgSideBar extends Component implements ISideBar {
             return false;
         }
 
-        // helpers, in case user doesn't have the right module loaded
-        if (def.toolPanel === 'agColumnsToolPanel') {
-            const moduleMissing = !this.gos.assertModuleRegistered('ColumnsToolPanelCoreModule', 11);
-            if (moduleMissing) {
-                return false;
-            }
-        }
-
         if (def.toolPanel === 'agFiltersToolPanel') {
-            const moduleMissing = !this.gos.assertModuleRegistered('FiltersToolPanelModule', 12);
-            if (moduleMissing) {
-                return false;
-            }
             if (this.filterManager?.isAdvancedFilterEnabled()) {
                 _warn(213);
                 return false;
@@ -314,17 +303,19 @@ export class AgSideBar extends Component implements ISideBar {
         if (!this.validateDef(def)) {
             return;
         }
-        const button = this.sideBarButtons.addButtonComp(def);
         let wrapper: ToolPanelWrapper;
         if (existingToolPanelWrapper) {
             wrapper = existingToolPanelWrapper;
         } else {
             wrapper = this.createBean(new ToolPanelWrapper());
 
-            wrapper.setToolPanelDef(def, {
+            const created = wrapper.setToolPanelDef(def, {
                 initialState,
                 onStateUpdated: () => this.dispatchSideBarUpdated(),
             });
+            if (!created) {
+                return;
+            }
         }
         wrapper.setDisplayed(false);
 
@@ -332,6 +323,8 @@ export class AgSideBar extends Component implements ISideBar {
         this.appendChild(wrapperGui);
 
         this.toolPanelWrappers.push(wrapper);
+
+        const button = this.sideBarButtons.addButtonComp(def);
 
         _setAriaControls(button.getButtonElement(), wrapperGui);
     }

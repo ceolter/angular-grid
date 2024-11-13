@@ -14,7 +14,7 @@ export class RowGroupDropZonePanel extends BaseDropZonePanel {
         const title = localeTextFunc('groups', 'Row Groups');
 
         super.init({
-            icon: _createIconNoSpan('rowGroupPanel', this.gos, null)!,
+            icon: _createIconNoSpan('rowGroupPanel', this.beans, null)!,
             emptyMessage: emptyMessage,
             title,
         });

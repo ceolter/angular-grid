@@ -1,5 +1,5 @@
 import type { RowNode } from '../entities/rowNode';
-import type { RefreshModelParams } from './iClientSideRowModel';
+import type { IChangedRowNodes, RefreshModelParams } from './iClientSideRowModel';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
@@ -7,6 +7,8 @@ export type RowDataChildrenGetter<TData = any> = (data: TData | null | undefined
 
 /** Result of IClientSideNodeManager.updateRowData method */
 export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
+    changedRowNodes: IChangedRowNodes<TData>;
+
     /** The RowNodeTransaction containing all the removals, updates and additions */
     rowNodeTransaction: RowNodeTransaction<TData>;
 
@@ -29,7 +31,10 @@ export interface IClientSideNodeManager<TData = any> {
 
     setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void;
 
-    updateRowData(rowDataTran: RowDataTransaction<TData>): ClientSideNodeManagerUpdateRowDataResult<TData>;
+    updateRowData(
+        rowDataTran: RowDataTransaction<TData>,
+        changedRowNodes: IChangedRowNodes<TData>
+    ): ClientSideNodeManagerUpdateRowDataResult<TData>;
 
     refreshModel?(params: RefreshModelParams<TData>): void;
 }

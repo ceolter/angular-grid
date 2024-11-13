@@ -27,11 +27,6 @@ const now = new Date();
 const todayStr = now.toISOString().split('T')[0].replaceAll('-', '');
 
 const [tag = 'beta', dateStr, timeStr] = oldSuffix?.split('.') ?? [];
-if (dateStr !== todayStr) {
-    console.log(`${semverPart}-${tag}.${todayStr}`);
-    process.exit(0);
-}
-
 const h = now.getUTCHours();
 const m = now.getUTCMinutes();
 const time = `${h < 10 ? '0' : ''}${h}${m < 10 ? '0' : ''}${m}`;

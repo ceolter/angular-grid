@@ -1,4 +1,4 @@
-import type { ToolPanelDef } from 'ag-grid-community';
+import type { IconName, ToolPanelDef } from 'ag-grid-community';
 import { Component, RefPlaceholder, _createIconNoSpan, _setAriaExpanded } from 'ag-grid-community';
 
 export type SideBarButtonCompEvent = 'toggleButtonClicked';
@@ -48,7 +48,10 @@ export class SideBarButtonComp extends Component<SideBarButtonCompEvent> {
     }
 
     private setIcon(): void {
-        this.eIconWrapper.insertAdjacentElement('afterbegin', _createIconNoSpan(this.toolPanelDef.iconKey, this.gos)!);
+        this.eIconWrapper.insertAdjacentElement(
+            'afterbegin',
+            _createIconNoSpan(this.toolPanelDef.iconKey as IconName, this.beans)!
+        );
     }
 
     private onButtonPressed(): void {

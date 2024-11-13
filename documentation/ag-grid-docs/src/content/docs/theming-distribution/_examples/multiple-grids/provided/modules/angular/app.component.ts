@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 
 import './styles.css';
 

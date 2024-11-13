@@ -33,8 +33,11 @@ export class ChangedPath {
     // a CSRM refresh for other reasons (after sort or filter, or user calling
     // setRowData() without delta mode) then we are not active. we are also
     // marked as not active if secondary columns change in pivot (as this impacts
-    // aggregations)
-    private active = true;
+    // aggregations).
+    // can be set inactive by:
+    // a) ClientSideRowModel, if no transactions or
+    // b) PivotService, if secondary columns changed
+    public active = true;
 
     // for each node in the change path, we also store which columns need
     // to be re-aggregated.
@@ -53,24 +56,14 @@ export class ChangedPath {
         this.mapToItems[rootNode.id!] = this.pathRoot;
     }
 
-    // can be set inactive by:
-    // a) ClientSideRowModel, if no transactions or
-    // b) PivotService, if secondary columns changed
-    public setInactive(): void {
-        this.active = false;
-    }
-
-    public isActive(): boolean {
-        return this.active;
-    }
-
     private depthFirstSearchChangedPath(pathItem: PathItem, callback: (rowNode: RowNode) => void): void {
-        if (pathItem.children) {
-            for (let i = 0; i < pathItem.children.length; i++) {
-                this.depthFirstSearchChangedPath(pathItem.children[i], callback);
+        const { rowNode, children } = pathItem;
+        if (children) {
+            for (let i = 0; i < children.length; ++i) {
+                this.depthFirstSearchChangedPath(children[i], callback);
             }
         }
-        callback(pathItem.rowNode);
+        callback(rowNode);
     }
 
     private depthFirstSearchEverything(
@@ -78,11 +71,12 @@ export class ChangedPath {
         callback: (rowNode: RowNode) => void,
         traverseEverything: boolean
     ): void {
-        if (rowNode.childrenAfterGroup) {
-            for (let i = 0; i < rowNode.childrenAfterGroup.length; i++) {
-                const childNode = rowNode.childrenAfterGroup[i];
+        const childrenAfterGroup = rowNode.childrenAfterGroup;
+        if (childrenAfterGroup) {
+            for (let i = 0, len = childrenAfterGroup.length; i < len; ++i) {
+                const childNode = childrenAfterGroup[i];
                 if (childNode.childrenAfterGroup) {
-                    this.depthFirstSearchEverything(rowNode.childrenAfterGroup[i], callback, traverseEverything);
+                    this.depthFirstSearchEverything(childNode, callback, traverseEverything);
                 } else if (traverseEverything) {
                     callback(childNode);
                 }

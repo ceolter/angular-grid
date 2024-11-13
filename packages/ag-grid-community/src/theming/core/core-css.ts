@@ -143,6 +143,16 @@ export type CoreParams = {
     dialogShadow: ShadowValue;
 
     /**
+     * Border around cells being edited
+     */
+    cellEditingBorder: BorderValue;
+
+    /**
+     * Shadow for cells being edited
+     */
+    cellEditingShadow: ShadowValue;
+
+    /**
      * Background color of the drag and drop image component element when dragging columns
      */
     dragAndDropImageBackgroundColor: ColorValue;
@@ -598,21 +608,30 @@ export type CoreParams = {
     wrapperBorderRadius: LengthValue;
 };
 
-export const coreDefaults = (): CoreParams => ({
-    backgroundColor: '#FFF',
+export const defaultLightColorSchemeParams = {
+    backgroundColor: '#fff',
     foregroundColor: '#181d1f',
+    borderColor: {
+        ref: 'foregroundColor',
+        mix: 0.15,
+    },
+    chromeBackgroundColor: {
+        ref: 'foregroundColor',
+        mix: 0.02,
+        onto: 'backgroundColor',
+    },
+    browserColorScheme: 'light',
+} as const;
+
+export const coreDefaults = (): CoreParams => ({
+    ...defaultLightColorSchemeParams,
     textColor: {
         ref: 'foregroundColor',
     },
     accentColor: '#2196f3',
     invalidColor: '#e02525',
-    borderColor: {
-        ref: 'foregroundColor',
-        mix: 0.15,
-    },
     wrapperBorder: true,
     rowBorder: true,
-    browserColorScheme: 'light',
     headerRowBorder: {
         ref: 'rowBorder',
     },
@@ -640,11 +659,6 @@ export const coreDefaults = (): CoreParams => ({
         'Helvetica Neue',
         'sans-serif',
     ],
-    chromeBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.02,
-        onto: 'backgroundColor',
-    },
     headerBackgroundColor: {
         ref: 'chromeBackgroundColor',
     },
@@ -843,6 +857,15 @@ export const coreDefaults = (): CoreParams => ({
     },
     dialogShadow: {
         ref: 'popupShadow',
+    },
+    cellEditingBorder: {
+        color: { ref: 'accentColor' },
+    },
+    cellEditingShadow: {
+        radius: 4,
+        spread: 1,
+        offsetY: 1,
+        color: '#babfc766',
     },
     dialogBorder: {
         color: {

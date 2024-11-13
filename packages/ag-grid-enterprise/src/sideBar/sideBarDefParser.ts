@@ -5,7 +5,7 @@ const DEFAULT_COLUMN_COMP: ToolPanelDef = {
     id: 'columns',
     labelDefault: 'Columns',
     labelKey: 'columns',
-    iconKey: 'columns',
+    iconKey: 'columnsToolPanel',
     toolPanel: 'agColumnsToolPanel',
 };
 
@@ -13,7 +13,7 @@ const DEFAULT_FILTER_COMP: ToolPanelDef = {
     id: 'filters',
     labelDefault: 'Filters',
     labelKey: 'filters',
-    iconKey: 'filter',
+    iconKey: 'filtersToolPanel',
     toolPanel: 'agFiltersToolPanel',
 };
 

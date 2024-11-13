@@ -2,7 +2,6 @@ import type {
     BeanCollection,
     ChartGroupsDef,
     ChartType,
-    GridOptionsService,
     IChartService,
     LocaleTextFunc,
     MenuItemDef,
@@ -19,21 +18,21 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
         this.chartSvc = beans.chartSvc;
     }
 
-    public getChartItems(key: 'pivotChart' | 'chartRange'): MenuItemDef | undefined {
+    public getChartItems(key: 'pivotChart' | 'chartRange'): MenuItemDef | null {
         const isPivot = key === 'pivotChart';
         if (!this.chartSvc) {
-            this.gos.assertModuleRegistered('GridChartsCoreModule', isPivot ? 2 : 3);
-            return undefined;
+            this.gos.assertModuleRegistered('GridChartsModule', isPivot ? 2 : 3);
+            return null;
         }
 
         const getLocaleTextFunc = this.getLocaleTextFunc.bind(this);
         const builder = isPivot
-            ? new PivotMenuItemMapper(this.gos, this.chartSvc, getLocaleTextFunc)
-            : new RangeMenuItemMapper(this.gos, this.chartSvc, getLocaleTextFunc);
+            ? new PivotMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc)
+            : new RangeMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc);
 
         const isEnterprise = this.chartSvc.isEnterprise();
 
-        let topLevelMenuItem: MenuItemDefWithKey | undefined = builder.getMenuItem();
+        let topLevelMenuItem: MenuItemDefWithKey | null = builder.getMenuItem();
 
         if (topLevelMenuItem && topLevelMenuItem.subMenu && !isEnterprise) {
             // Filter out enterprise-only menu items if 'Community Integrated'
@@ -56,12 +55,12 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
     }
 
     // Remove our internal _key and _enterprise properties so this does not leak out of the class on the menu items.
-    private cleanInternals(menuItem: MenuItemDefWithKey | undefined): MenuItemDef | undefined {
+    private cleanInternals(menuItem: MenuItemDefWithKey | null): MenuItemDef | null {
         if (!menuItem) {
             return menuItem;
         }
 
-        const removeKeys = (m: MenuItemDefWithKey | undefined) => {
+        const removeKeys = (m: MenuItemDefWithKey | null) => {
             delete m?._key;
             delete m?._enterprise;
             m?.subMenu?.forEach((s) => removeKeys(s));
@@ -90,7 +89,7 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
         topLevelMenuItem: MenuItemDefWithKey<TKeys>,
         chartGroupsDef: ChartGroupsDef,
         configLookup: ChartDefToMenuItems<TKeys>
-    ): MenuItemDefWithKey<TKeys> | undefined {
+    ): MenuItemDefWithKey<TKeys> | null {
         const menuItemLookup = this.buildLookup(topLevelMenuItem);
         const orderedAndFiltered: MenuItemDefWithKey = { ...topLevelMenuItem, subMenu: [] };
 
@@ -102,7 +101,7 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
 
             if (chartConfigGroup == undefined) {
                 _warn(173, { group });
-                return undefined;
+                return;
             }
 
             const menuItem = menuItemLookup[chartConfigGroup._key];
@@ -130,7 +129,7 @@ export class ChartMenuItemMapper extends BeanStub implements NamedBean {
             }
         });
         if (orderedAndFiltered.subMenu?.length == 0) {
-            return undefined;
+            return null;
         }
         return orderedAndFiltered;
     }
@@ -190,7 +189,7 @@ export type PivotMenuOptionName =
 
 class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
     constructor(
-        private gos: GridOptionsService,
+        private beans: BeanCollection,
         private chartSvc: IChartService,
         private getLocaleTextFunc: () => LocaleTextFunc
     ) {}
@@ -296,7 +295,7 @@ class PivotMenuItemMapper implements MenuItemBuilder<PivotMenuOptionName> {
                     ],
                 },
             ],
-            icon: _createIconNoSpan('chart', this.gos, undefined),
+            icon: _createIconNoSpan('chart', this.beans, undefined),
         };
     }
 
@@ -410,7 +409,7 @@ export type RangeMenuOptionName =
 
 class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
     constructor(
-        private gos: GridOptionsService,
+        private beans: BeanCollection,
         private chartSvc: IChartService,
         private getLocaleTextFunc: () => LocaleTextFunc
     ) {}
@@ -543,7 +542,7 @@ class RangeMenuItemMapper implements MenuItemBuilder<RangeMenuOptionName> {
                     _key: 'rangeCombinationChart',
                 },
             ],
-            icon: _createIconNoSpan('chart', this.gos, undefined),
+            icon: _createIconNoSpan('chart', this.beans, undefined),
         };
     }
 

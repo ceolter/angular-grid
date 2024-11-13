@@ -8,6 +8,7 @@ import type { RowNode } from '../entities/rowNode';
 import { _isGroupRowsSticky } from '../gridOptionsUtils';
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { IRowModel } from '../interfaces/iRowModel';
+import type { IRowNode } from '../interfaces/iRowNode';
 import type { RowPosition } from '../interfaces/iRowPosition';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
 import type { PaginationService } from '../pagination/paginationService';
@@ -135,7 +136,7 @@ export class CellNavigationService extends BeanStub implements NamedBean {
             return false;
         }
 
-        const suppressNavigable = column.isSuppressNavigable(rowNode);
+        const suppressNavigable = this.isSuppressNavigable(column, rowNode);
         return !suppressNavigable;
     }
 
@@ -225,25 +226,25 @@ export class CellNavigationService extends BeanStub implements NamedBean {
 
         const isTopCtrls = this.rowRenderer
             .getStickyTopRowCtrls()
-            .some((ctrl) => ctrl.getRowNode().rowIndex === rowNode.rowIndex);
+            .some((ctrl) => ctrl.rowNode.rowIndex === rowNode.rowIndex);
 
         let stickyRowCtrls: RowCtrl[] = [];
         if (isTopCtrls) {
             stickyRowCtrls = [...this.rowRenderer.getStickyTopRowCtrls()].sort(
-                (a, b) => a.getRowNode().rowIndex! - b.getRowNode().rowIndex!
+                (a, b) => a.rowNode.rowIndex! - b.rowNode.rowIndex!
             );
         } else {
             stickyRowCtrls = [...this.rowRenderer.getStickyBottomRowCtrls()].sort(
-                (a, b) => b.getRowNode().rowIndex! - a.getRowNode().rowIndex!
+                (a, b) => b.rowNode.rowIndex! - a.rowNode.rowIndex!
             );
         }
 
         const diff = up ? -1 : 1;
-        const idx = stickyRowCtrls.findIndex((ctrl) => ctrl.getRowNode().rowIndex === rowNode.rowIndex);
+        const idx = stickyRowCtrls.findIndex((ctrl) => ctrl.rowNode.rowIndex === rowNode.rowIndex);
         const nextCtrl = stickyRowCtrls[idx + diff];
 
         if (nextCtrl) {
-            return { rowIndex: nextCtrl.getRowNode().rowIndex!, rowPinned: null };
+            return { rowIndex: nextCtrl.rowNode.rowIndex!, rowPinned: null };
         }
     }
 
@@ -426,5 +427,22 @@ export class CellNavigationService extends BeanStub implements NamedBean {
         }
 
         return { rowIndex: newRowIndex, column: newColumn, rowPinned: newFloating } as CellPosition;
+    }
+
+    public isSuppressNavigable(column: AgColumn, rowNode: IRowNode): boolean {
+        const { suppressNavigable } = column.colDef;
+        // if boolean set, then just use it
+        if (typeof suppressNavigable === 'boolean') {
+            return suppressNavigable;
+        }
+
+        // if function, then call the function to find out
+        if (typeof suppressNavigable === 'function') {
+            const params = column.createColumnFunctionCallbackParams(rowNode);
+            const userFunc = suppressNavigable;
+            return userFunc(params);
+        }
+
+        return false;
     }
 }

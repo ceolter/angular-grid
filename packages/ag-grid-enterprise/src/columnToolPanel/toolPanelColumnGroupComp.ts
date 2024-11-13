@@ -31,19 +31,17 @@ import {
 } from 'ag-grid-community';
 
 import type { ColumnModelItem } from './columnModelItem';
-import type { ModelItemUtils } from './modelItemUtils';
+import { createPivotState, selectAllChildren, updateColumns } from './modelItemUtils';
 import { ToolPanelContextMenu } from './toolPanelContextMenu';
 
 export class ToolPanelColumnGroupComp extends Component {
     private colModel: ColumnModel;
     private dragAndDrop: DragAndDropService;
-    private modelItemUtils: ModelItemUtils;
     private registry: Registry;
 
     public wireBeans(beans: BeanCollection) {
         this.colModel = beans.colModel;
         this.dragAndDrop = beans.dragAndDrop!;
-        this.modelItemUtils = beans.modelItemUtils as ModelItemUtils;
         this.registry = beans.registry;
     }
 
@@ -91,7 +89,7 @@ export class ToolPanelColumnGroupComp extends Component {
             [AgCheckboxSelector]
         );
 
-        this.eDragHandle = _createIconNoSpan('columnDrag', this.gos)!;
+        this.eDragHandle = _createIconNoSpan('columnDrag', this.beans)!;
         this.eDragHandle.classList.add('ag-drag-handle', 'ag-column-select-column-group-drag-handle');
 
         const checkboxGui = this.cbSelect.getGui();
@@ -107,7 +105,7 @@ export class ToolPanelColumnGroupComp extends Component {
         this.getGui().style.setProperty('--ag-indentation-level', String(this.columnDept));
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'columnToolPanelColumnGroup',
                 shouldDisplayTooltip: _getShouldDisplayTooltip(this.gos, () => this.eLabel),
@@ -233,7 +231,7 @@ export class ToolPanelColumnGroupComp extends Component {
             onGridEnter: (dragItem: DragItem | null) => {
                 if (hideColumnOnExit) {
                     // when dragged into the grid, restore the state that was active pre-drag
-                    this.modelItemUtils.updateColumns({
+                    updateColumns(this.beans, {
                         columns: this.columnGroup.getLeafColumns(),
                         visibleState: dragItem?.visibleState,
                         pivotState: dragItem?.pivotState,
@@ -267,7 +265,7 @@ export class ToolPanelColumnGroupComp extends Component {
         columns.forEach((col) => {
             const colId = col.getId();
             visibleState[colId] = col.isVisible();
-            pivotState[colId] = this.modelItemUtils.createPivotState(col);
+            pivotState[colId] = createPivotState(col);
         });
 
         return {
@@ -278,8 +276,8 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private setupExpandContract(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.gos, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.gos, null));
+        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.beans, null));
+        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.beans, null));
 
         const listener = this.onExpandOrContractClicked.bind(this);
         this.addManagedElementListeners(this.eGroupClosedIcon, { click: listener });
@@ -327,7 +325,7 @@ export class ToolPanelColumnGroupComp extends Component {
             return;
         }
 
-        this.modelItemUtils.selectAllChildren(this.modelItem.getChildren(), nextState, this.eventType);
+        selectAllChildren(this.beans, this.modelItem.getChildren(), nextState, this.eventType);
     }
 
     private refreshAriaLabel(): void {

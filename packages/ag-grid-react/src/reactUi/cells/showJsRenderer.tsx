@@ -64,9 +64,6 @@ const useJsCellRenderer = (
         }
 
         const promise = compDetails!.newAgStackInstance();
-        if (promise == null) {
-            return;
-        }
 
         promise.then((comp) => {
             if (!comp) {

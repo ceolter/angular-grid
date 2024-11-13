@@ -39,7 +39,6 @@ const gridOptions: GridOptions = {
         minWidth: 280,
         cellRenderer: 'agGroupCellRenderer',
         cellRendererParams: {
-            checkbox: true,
             suppressCount: true,
         },
     },
@@ -48,7 +47,7 @@ const gridOptions: GridOptions = {
     getDataPath: (data) => data.path,
     rowSelection: {
         mode: 'multiRow',
-        checkboxes: false,
+        checkboxLocation: 'autoGroupColumn',
         headerCheckbox: false,
     },
     groupDefaultExpanded: -1,

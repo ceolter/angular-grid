@@ -1,20 +1,13 @@
-import type { BeanCollection, ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
+import { AgCharts } from 'ag-charts-community';
+import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
+
+import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
 
-import type { SparklineFactoryOptions } from './agSparkline';
-import { createAgSparkline } from './agSparkline';
-import type { SparklineTooltipSingleton } from './tooltip/sparklineTooltipSingleton';
-
 export class SparklineCellRenderer extends Component implements ICellRenderer {
-    private sparklineTooltipSingleton!: SparklineTooltipSingleton;
-
-    public wireBeans(beans: BeanCollection) {
-        this.sparklineTooltipSingleton = beans.sparklineTooltipSingleton as SparklineTooltipSingleton;
-    }
-
     private readonly eSparkline: HTMLElement = RefPlaceholder;
-
-    private sparkline?: any;
+    private sparklineInstance?: AgChartInstance<any>;
+    private sparklineOptions: AgSparklineOptions;
 
     constructor() {
         super(/* html */ `<div class="ag-sparkline-wrapper">
@@ -23,56 +16,41 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     public init(params: ISparklineCellRendererParams): void {
-        let firstTimeIn = true;
-        const updateSparkline = () => {
-            const { clientWidth, clientHeight } = this.getGui();
-            if (clientWidth === 0 || clientHeight === 0) {
-                return;
-            }
-
-            if (firstTimeIn) {
-                const options: SparklineFactoryOptions = {
-                    data: params.value,
-                    width: clientWidth,
-                    height: clientHeight,
-                    context: {
-                        data: params.data,
-                    },
-                    ...params.sparklineOptions,
-                };
-
-                // create new instance of sparkline
-                this.sparkline = createAgSparkline(options, this.sparklineTooltipSingleton.getSparklineTooltip());
-
-                // append sparkline canvas to cell renderer element
-                this.eSparkline!.appendChild(this.sparkline.canvasElement);
-
-                firstTimeIn = false;
-            } else {
-                this.sparkline.width = clientWidth;
-                this.sparkline.height = clientHeight;
-            }
-        };
-
-        const unsubscribeFromResize = _observeResize(this.gos, this.getGui(), updateSparkline);
+        const unsubscribeFromResize = _observeResize(this.beans, this.getGui(), () => this.refresh(params));
         this.addDestroyFunc(() => unsubscribeFromResize());
     }
 
-    public refresh(params: ISparklineCellRendererParams): boolean {
-        if (this.sparkline) {
-            this.sparkline.data = params.value;
-            this.sparkline.context = {
-                data: params.data,
-            };
+    public refresh(params?: ISparklineCellRendererParams): boolean {
+        const { clientWidth: width, clientHeight: height } = this.getGui();
+
+        if (!this.sparklineInstance && params && width > 0 && height) {
+            this.sparklineOptions = {
+                background: { visible: false },
+                container: this.eSparkline,
+                width,
+                height,
+                ...params.sparklineOptions,
+                data: params.value,
+            } as AgSparklineOptions;
+
+            // create new sparkline
+            this.sparklineInstance = AgCharts.__createSparkline(this.sparklineOptions);
+            return true;
+        } else if (this.sparklineInstance) {
+            const data = params?.value;
+            this.sparklineOptions.width = width;
+            this.sparklineOptions.height = height;
+            this.sparklineOptions.data = data;
+
+            this.sparklineInstance.updateDelta(this.sparklineOptions);
+
             return true;
         }
         return false;
     }
 
     public override destroy() {
-        if (this.sparkline) {
-            this.sparkline.destroy();
-        }
         super.destroy();
+        this.sparklineInstance?.destroy();
     }
 }

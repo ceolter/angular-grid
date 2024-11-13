@@ -79,9 +79,7 @@ class ColumnParser implements Parser {
         return this.valid
             ? null
             : {
-                  message: this.params.advancedFilterExpressionService.translate(
-                      'advancedFilterValidationInvalidColumn'
-                  ),
+                  message: this.params.advFilterExpSvc.translate('advancedFilterValidationInvalidColumn'),
                   startPosition: this.startPosition,
                   endPosition: this.endPosition ?? this.params.expression.length - 1,
               };
@@ -89,7 +87,7 @@ class ColumnParser implements Parser {
 
     private parseColumn(fromComplete: boolean, endPosition: number): boolean {
         this.endPosition = endPosition;
-        const colValue = this.params.advancedFilterExpressionService.getColId(this.colName);
+        const colValue = this.params.advFilterExpSvc.getColId(this.colName);
         if (colValue && this.hasStartChar) {
             this.colId = colValue.colId;
             checkAndUpdateExpression(this.params, this.colName, colValue.columnName, endPosition - 1);
@@ -145,9 +143,7 @@ class OperatorParser implements Parser {
         return this.valid
             ? null
             : {
-                  message: this.params.advancedFilterExpressionService.translate(
-                      'advancedFilterValidationInvalidOption'
-                  ),
+                  message: this.params.advFilterExpSvc.translate('advancedFilterValidationInvalidOption'),
                   startPosition: this.startPosition,
                   endPosition: this.endPosition ?? this.params.expression.length - 1,
               };
@@ -162,9 +158,7 @@ class OperatorParser implements Parser {
     }
 
     private parseOperator(fromComplete: boolean, endPosition: number): boolean {
-        const operatorForType = this.params.advancedFilterExpressionService.getDataTypeExpressionOperator(
-            this.baseCellDataType
-        )!;
+        const operatorForType = this.params.advFilterExpSvc.getDataTypeExpressionOperator(this.baseCellDataType)!;
         const parsedOperator = operatorForType.findOperator(this.operator);
         this.endPosition = endPosition;
         if (parsedOperator) {
@@ -250,22 +244,18 @@ class OperandParser implements Parser {
     }
 
     private parseOperand(fromComplete: boolean, position: number): void {
-        const { advancedFilterExpressionService } = this.params;
+        const { advFilterExpSvc } = this.params;
         this.endPosition = position;
         this.modelValue = this.operand;
         if (fromComplete && this.quotes) {
             // missing end quote
             this.valid = false;
-            this.validationMessage = advancedFilterExpressionService.translate('advancedFilterValidationMissingQuote');
+            this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationMissingQuote');
         } else if (this.modelValue === '') {
             this.valid = false;
-            this.validationMessage = advancedFilterExpressionService.translate('advancedFilterValidationMissingValue');
+            this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationMissingValue');
         } else {
-            const modelValue = advancedFilterExpressionService.getOperandModelValue(
-                this.operand,
-                this.baseCellDataType,
-                this.column!
-            );
+            const modelValue = advFilterExpSvc.getOperandModelValue(this.operand, this.baseCellDataType, this.column!);
             if (modelValue != null) {
                 this.modelValue = modelValue;
             }
@@ -273,18 +263,14 @@ class OperandParser implements Parser {
                 case 'number':
                     if (this.quotes || isNaN(this.modelValue as number)) {
                         this.valid = false;
-                        this.validationMessage = advancedFilterExpressionService.translate(
-                            'advancedFilterValidationNotANumber'
-                        );
+                        this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationNotANumber');
                     }
                     break;
                 case 'date':
                 case 'dateString':
                     if (modelValue == null) {
                         this.valid = false;
-                        this.validationMessage = advancedFilterExpressionService.translate(
-                            'advancedFilterValidationInvalidDate'
-                        );
+                        this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationInvalidDate');
                     }
                     break;
             }
@@ -379,7 +365,7 @@ export class ColFilterExpressionParser {
         }
         if (translateKey) {
             return {
-                message: this.params.advancedFilterExpressionService.translate(translateKey),
+                message: this.params.advFilterExpSvc.translate(translateKey),
                 startPosition: endPosition,
                 endPosition,
             };
@@ -433,7 +419,7 @@ export class ColFilterExpressionParser {
                 this.columnParser?.getColId()
                     ? this.columnParser!.endPosition!
                     : findEndPosition(expression, position).endPosition,
-                this.params.advancedFilterExpressionService.getColumnValue(updateEntry),
+                this.params.advFilterExpSvc.getColumnValue(updateEntry),
                 true
             );
         } else if (this.isOperatorPosition(position)) {
@@ -506,13 +492,12 @@ export class ColFilterExpressionParser {
         const colId = this.columnParser!.getColId();
         const operator = this.operatorParser?.getOperatorKey();
         const { operators, evaluatorParams, operands } = params;
-        const operatorForColumn = this.params.advancedFilterExpressionService.getExpressionOperator(
+        const operatorForColumn = this.params.advFilterExpSvc.getExpressionOperator(
             this.columnParser!.baseCellDataType,
             operator
         );
         const operatorIndex = this.addToListAndGetIndex(operators, operatorForColumn);
-        const evaluatorParamsForColumn =
-            this.params.advancedFilterExpressionService.getExpressionEvaluatorParams(colId);
+        const evaluatorParamsForColumn = this.params.advFilterExpSvc.getExpressionEvaluatorParams(colId);
         const evaluatorParamsIndex = this.addToListAndGetIndex(evaluatorParams, evaluatorParamsForColumn);
         const operandIndex =
             this.operatorParser?.expectedNumOperands === 0
@@ -577,8 +562,8 @@ export class ColFilterExpressionParser {
     }
 
     private getColumnAutocompleteListParams(position: number): AutocompleteListParams {
-        return this.params.advancedFilterExpressionService.generateAutocompleteListParams(
-            this.params.advancedFilterExpressionService.getColumnAutocompleteEntries(),
+        return this.params.advFilterExpSvc.generateAutocompleteListParams(
+            this.params.advFilterExpSvc.getColumnAutocompleteEntries(),
             'column',
             this.getColumnSearchString(position)
         );
@@ -616,8 +601,8 @@ export class ColFilterExpressionParser {
                           ? this.params.expression.length
                           : this.operatorParser.endPosition + 1
                   );
-        return this.params.advancedFilterExpressionService.generateAutocompleteListParams(
-            this.params.advancedFilterExpressionService.getOperatorAutocompleteEntries(column, baseCellDataType),
+        return this.params.advFilterExpSvc.generateAutocompleteListParams(
+            this.params.advFilterExpSvc.getOperatorAutocompleteEntries(column, baseCellDataType),
             `operator-${baseCellDataType}`,
             searchString
         );
@@ -631,8 +616,7 @@ export class ColFilterExpressionParser {
         return (
             !baseCellDataType ||
             !operator ||
-            (this.params.advancedFilterExpressionService.getExpressionOperator(baseCellDataType, operator)
-                ?.numOperands ?? 0) > 0
+            (this.params.advFilterExpSvc.getExpressionOperator(baseCellDataType, operator)?.numOperands ?? 0) > 0
         );
     }
 

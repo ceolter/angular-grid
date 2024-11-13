@@ -799,8 +799,9 @@
     ]
   },
   "chartMenuItems": {
-    "typeName": "(string | MenuItemDef)[] | GetChartMenuItems<TData>",
+    "typeName": "(DefaultChartMenuItem | MenuItemDef)[] | GetChartMenuItems<TData>",
     "typesToInclude": [
+      "DefaultChartMenuItem",
       "MenuItemDef",
       "GetChartMenuItems"
     ]
@@ -809,6 +810,12 @@
     "typeName": "'top' | 'bottom' | UseGroupTotalRow<TData>",
     "typesToInclude": [
       "UseGroupTotalRow"
+    ]
+  },
+  "alwaysPassFilter": {
+    "typeName": "(rowNode: IRowNode<TData>) => boolean",
+    "typesToInclude": [
+      "IRowNode"
     ]
   },
   "suppressMakeColumnVisibleAfterUnGroup": {

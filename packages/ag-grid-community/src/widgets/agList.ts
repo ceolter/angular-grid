@@ -152,7 +152,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
     }
 
     private renderOption(value: TValue, text: string): void {
-        const eDocument = _getDocument(this.gos);
+        const eDocument = _getDocument(this.beans);
         const itemEl = eDocument.createElement('div');
 
         _setAriaRole(itemEl, 'option');
@@ -179,7 +179,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         });
 
         this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', {
+            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getTooltipValue: () => text,
                 getGui: () => itemEl,
                 getLocation: () => 'UNKNOWN',

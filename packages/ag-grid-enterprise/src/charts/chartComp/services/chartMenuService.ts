@@ -27,12 +27,12 @@ export const CHART_TOOL_PANEL_MENU_OPTIONS: { [key in ChartToolPanelName]: Chart
 };
 
 export class ChartMenuService extends BeanStub implements NamedBean {
-    beanName = 'chartMenuService' as const;
+    beanName = 'chartMenuSvc' as const;
 
-    private advancedSettingsMenuFactory?: AdvancedSettingsMenuFactory;
+    private advSettingsMenuFactory?: AdvancedSettingsMenuFactory;
 
     public wireBeans(beans: BeanCollection) {
-        this.advancedSettingsMenuFactory = beans.advancedSettingsMenuFactory as AdvancedSettingsMenuFactory;
+        this.advSettingsMenuFactory = beans.advSettingsMenuFactory as AdvancedSettingsMenuFactory;
     }
 
     public downloadChart(
@@ -49,11 +49,11 @@ export class ChartMenuService extends BeanStub implements NamedBean {
     }
 
     public openAdvancedSettings(chartMenuContext: ChartMenuContext, eventSource?: HTMLElement): void {
-        this.advancedSettingsMenuFactory?.showMenu(chartMenuContext, eventSource);
+        this.advSettingsMenuFactory?.showMenu(chartMenuContext, eventSource);
     }
 
     public hideAdvancedSettings(): void {
-        this.advancedSettingsMenuFactory?.hideMenu();
+        this.advSettingsMenuFactory?.hideMenu();
     }
 
     public getChartToolbarOptions(): ChartToolbarMenuItemOptions[] {

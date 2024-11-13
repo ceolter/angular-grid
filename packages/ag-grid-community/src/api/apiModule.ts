@@ -1,7 +1,6 @@
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { baseCommunityModule } from '../interfaces/iModule';
-import { destroy, getGridId, getGridOption, isDestroyed, setGridOption, updateGridOptions } from './coreApi';
-import type { _CoreGridApi, _RowGridApi, _ScrollGridApi } from './gridApi';
+import type { _RowGridApi, _ScrollGridApi } from './gridApi';
 import {
     addRenderedRowListener,
     forEachNode,
@@ -22,18 +21,9 @@ import {
     getVerticalPixelRange,
 } from './scrollApi';
 
-export const CoreApiModule: _ModuleWithApi<_CoreGridApi> = {
-    ...baseCommunityModule('CoreApiModule'),
-    apiFunctions: {
-        getGridId,
-        destroy,
-        isDestroyed,
-        getGridOption,
-        setGridOption,
-        updateGridOptions,
-    },
-};
-
+/**
+ * @feature Rows
+ */
 export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
     ...baseCommunityModule('RowApiModule'),
     apiFunctions: {
@@ -50,6 +40,9 @@ export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
     },
 };
 
+/**
+ * @feature Scrolling
+ */
 export const ScrollApiModule: _ModuleWithApi<_ScrollGridApi<any>> = {
     ...baseCommunityModule('ScrollApiModule'),
     apiFunctions: {

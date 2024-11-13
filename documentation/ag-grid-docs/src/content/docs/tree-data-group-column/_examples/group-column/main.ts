@@ -34,9 +34,6 @@ const gridOptions: GridOptions = {
     autoGroupColumnDef: {
         headerName: 'My Group',
         minWidth: 340,
-        cellRendererParams: {
-            checkbox: true,
-        },
     },
     rowData: getData(),
     treeData: true,

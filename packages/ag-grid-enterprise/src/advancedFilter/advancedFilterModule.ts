@@ -1,4 +1,4 @@
-import type { _AdvancedFilterGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
+import type { _AdvancedFilterGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { DragAndDropModule, FilterCoreModule, FilterValueModule, PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -13,25 +13,39 @@ import {
 import { AdvancedFilterExpressionService } from './advancedFilterExpressionService';
 import { AdvancedFilterService } from './advancedFilterService';
 
-export const AdvancedFilterCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AdvancedFilterCoreModule'),
+/**
+ * @feature Filtering -> Advanced Filter
+ * @gridOption enableAdvanced Filter
+ */
+export const AdvancedFilterModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
+    ...baseEnterpriseModule('AdvancedFilterModule'),
     beans: [AdvancedFilterService, AdvancedFilterExpressionService],
-    dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
-    css: [advancedFilterCSS],
-};
-
-export const AdvancedFilterApiModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
-    ...baseEnterpriseModule('AdvancedFilterApiModule'),
+    icons: {
+        // Builder button in Advanced Filter
+        advancedFilterBuilder: 'group',
+        // drag handle used to pick up Advanced Filter Builder rows
+        advancedFilterBuilderDrag: 'grip',
+        // Advanced Filter Builder row validation error
+        advancedFilterBuilderInvalid: 'not-allowed',
+        // shown on Advanced Filter Builder rows to move them up
+        advancedFilterBuilderMoveUp: 'up',
+        // shown on Advanced Filter Builder rows to move them down
+        advancedFilterBuilderMoveDown: 'down',
+        // shown on Advanced Filter Builder rows to add new rows
+        advancedFilterBuilderAdd: 'plus',
+        // shown on Advanced Filter Builder rows to remove row
+        advancedFilterBuilderRemove: 'minus',
+        // shown on Advanced Filter Builder selection pills
+        advancedFilterBuilderSelectOpen: 'small-down',
+        // remove for rich select editor pills
+        richSelectRemove: 'cancel',
+    },
     apiFunctions: {
         getAdvancedFilterModel,
         setAdvancedFilterModel,
         showAdvancedFilterBuilder,
         hideAdvancedFilterBuilder,
     },
-    dependsOn: [AdvancedFilterCoreModule],
-};
-
-export const AdvancedFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AdvancedFilterModule'),
-    dependsOn: [AdvancedFilterCoreModule, AdvancedFilterApiModule],
+    dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
+    css: [advancedFilterCSS],
 };

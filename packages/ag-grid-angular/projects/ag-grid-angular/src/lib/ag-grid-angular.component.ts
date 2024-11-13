@@ -70,6 +70,7 @@ import type {
     CutEndEvent,
     CutStartEvent,
     DataTypeDefinition,
+    DefaultChartMenuItem,
     DisplayedColumnsChangedEvent,
     DomLayoutType,
     DragCancelledEvent,
@@ -231,7 +232,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
         elementDef: ElementRef,
         private _viewContainerRef: ViewContainerRef,
         private _angularFrameworkOverrides: AngularFrameworkOverrides,
-        private _frameworkComponentWrapper: AngularFrameworkComponentWrapper
+        private _frameworkCompWrapper: AngularFrameworkComponentWrapper
     ) {
         this._nativeElement = elementDef.nativeElement;
         this._fullyReady.then(() => {
@@ -244,10 +245,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
     ngAfterViewInit(): void {
         // Run the setup outside of angular so all the event handlers that are created do not trigger change detection
         this._angularFrameworkOverrides.runOutsideAngular(() => {
-            this._frameworkComponentWrapper.setViewContainerRef(
-                this._viewContainerRef,
-                this._angularFrameworkOverrides
-            );
+            this._frameworkCompWrapper.setViewContainerRef(this._viewContainerRef, this._angularFrameworkOverrides);
 
             // Get all the inputs that are valid GridOptions
             const gridOptionKeys = Object.entries(this)
@@ -265,10 +263,10 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
             const mergedGridOps = _combineAttributesAndGridOptions(this.gridOptions, this, gridOptionKeys);
 
             const gridParams: GridParams = {
-                globalEventListener: this.globalEventListener.bind(this),
+                globalListener: this.globalListener.bind(this),
                 frameworkOverrides: this._angularFrameworkOverrides,
                 providedBeanInstances: {
-                    frameworkComponentWrapper: this._frameworkComponentWrapper,
+                    frameworkCompWrapper: this._frameworkCompWrapper,
                 },
                 modules: (this.modules || []) as any,
                 setThemeOnGridDiv: true,
@@ -326,7 +324,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
         return hasEmitter || hasGridOptionListener;
     }
 
-    private globalEventListener(eventType: string, event: any): void {
+    private globalListener(eventType: string, event: any): void {
         // if we are tearing down, don't emit angular events, as this causes
         // problems with the angular router
         if (this._destroyed) {
@@ -686,6 +684,11 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      * @default false
      */
     @Input({ transform: booleanAttribute }) public enableAdvancedFilter: boolean | undefined = undefined;
+    /** Allows rows to always be displayed, even if they don't match the applied filtering.
+     * Return `true` for the provided row to always be displayed.
+     * Only works with the Client-Side Row Model.
+     */
+    @Input() public alwaysPassFilter: ((rowNode: IRowNode<TData>) => boolean) | undefined = undefined;
     /** Hidden columns are excluded from the Advanced Filter by default.
      * To include hidden columns, set to `true`.
      * @default false
@@ -735,7 +738,8 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
     @Input() public chartToolPanelsDef: ChartToolPanelsDef | undefined = undefined;
     /** Get chart menu items. Only applies when using AG Charts Enterprise.
      */
-    @Input() public chartMenuItems: (string | MenuItemDef)[] | GetChartMenuItems<TData> | undefined = undefined;
+    @Input() public chartMenuItems: (DefaultChartMenuItem | MenuItemDef)[] | GetChartMenuItems<TData> | undefined =
+        undefined;
     /** Provide your own loading cell renderer to use when data is loading via a DataSource.
      * See [Loading Cell Renderer](https://www.ag-grid.com/javascript-data-grid/component-loading-cell-renderer/) for framework specific implementation details.
      */
@@ -1598,6 +1602,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      */
     @Input() public processPivotResultColGroupDef: ((colGroupDef: ColGroupDef<TData>) => void) | undefined = undefined;
     /** Callback to be used when working with Tree Data when `treeData = true`.
+     * @initial
      */
     @Input() public getDataPath: GetDataPath<TData> | undefined = undefined;
     /** Allows setting the child count for a group row.

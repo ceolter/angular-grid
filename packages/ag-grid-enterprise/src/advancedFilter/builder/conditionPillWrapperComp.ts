@@ -1,5 +1,11 @@
-import type { AgColumn, BaseCellDataType, BeanCollection, ColumnAdvancedFilterModel } from 'ag-grid-community';
-import { Component, _exists, _removeFromParent } from 'ag-grid-community';
+import type {
+    AgColumn,
+    BaseCellDataType,
+    BeanCollection,
+    BooleanAdvancedFilterModel,
+    ColumnAdvancedFilterModel,
+} from 'ag-grid-community';
+import { Component, _exists, _removeFromParent, _toStringOrNull } from 'ag-grid-community';
 
 import type { AdvancedFilterExpressionService } from '../advancedFilterExpressionService';
 import type { AutocompleteEntry } from '../autocomplete/autocompleteParams';
@@ -12,10 +18,10 @@ import type { InputPillComp } from './inputPillComp';
 import type { SelectPillComp } from './selectPillComp';
 
 export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEvents> {
-    private advancedFilterExpressionService: AdvancedFilterExpressionService;
+    private advFilterExpSvc: AdvancedFilterExpressionService;
 
     public wireBeans(beans: BeanCollection) {
-        this.advancedFilterExpressionService = beans.advancedFilterExpressionService as AdvancedFilterExpressionService;
+        this.advFilterExpSvc = beans.advFilterExpSvc as AdvancedFilterExpressionService;
     }
 
     private item: AdvancedFilterBuilderItem;
@@ -51,12 +57,12 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
 
     public getDragName(): string {
         return this.filterModel.colId
-            ? this.advancedFilterExpressionService.parseColumnFilterModel(this.filterModel)
+            ? this.advFilterExpSvc.parseColumnFilterModel(this.filterModel)
             : this.getDefaultColumnDisplayValue();
     }
 
     public getAriaLabel(): string {
-        return `${this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderFilterItem')} ${this.getDragName()}`;
+        return `${this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderFilterItem')} ${this.getDragName()}`;
     }
 
     public getValidationMessage(): string | null {
@@ -68,7 +74,7 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     }
 
     private setupColumnCondition(filterModel: ColumnAdvancedFilterModel): void {
-        const columnDetails = this.advancedFilterExpressionService.getColumnDetails(filterModel.colId);
+        const columnDetails = this.advFilterExpSvc.getColumnDetails(filterModel.colId);
         this.baseCellDataType = columnDetails.baseCellDataType;
         this.column = columnDetails.column;
         this.numOperands = this.getNumOperands(this.getOperatorKey());
@@ -78,11 +84,11 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
             displayValue: this.getColumnDisplayValue() ?? this.getDefaultColumnDisplayValue(),
             cssClass: 'ag-advanced-filter-builder-column-pill',
             isSelect: true,
-            getEditorParams: () => ({ values: this.advancedFilterExpressionService.getColumnAutocompleteEntries() }),
+            getEditorParams: () => ({ values: this.advFilterExpSvc.getColumnAutocompleteEntries() }),
             update: (key) => this.setColumnKey(key),
             pickerAriaLabelKey: 'ariaLabelAdvancedFilterBuilderColumnSelectField',
             pickerAriaLabelValue: 'Advanced Filter Builder Column Select Field',
-            ariaLabel: this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderColumn'),
+            ariaLabel: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderColumn'),
         });
         this.getGui().appendChild(this.eColumnPill.getGui());
 
@@ -104,21 +110,26 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
             update: (key) => this.setOperatorKey(key),
             pickerAriaLabelKey: 'ariaLabelAdvancedFilterBuilderOptionSelectField',
             pickerAriaLabelValue: 'Advanced Filter Builder Option Select Field',
-            ariaLabel: this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderOption'),
+            ariaLabel: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderOption'),
         });
         this.eColumnPill.getGui().insertAdjacentElement('afterend', this.eOperatorPill.getGui());
     }
 
     private createOperandPill(): void {
-        const key = this.getOperandDisplayValue() ?? '';
+        // Date inputs want iso string, so read straight from model. For numbers, convert to string
+        const { filter } = this.filterModel as Exclude<ColumnAdvancedFilterModel, BooleanAdvancedFilterModel>;
+        const key = (typeof filter === 'number' ? _toStringOrNull(filter) : filter) ?? '';
         this.eOperandPill = this.createPill({
             key,
-            displayValue: key,
+            // Convert from the input format to display format.
+            // Input format matches model format except for numbers, but these get stringified anyway
+            valueFormatter: (value) =>
+                this.advFilterExpSvc.getOperandDisplayValue({ ...this.filterModel, filter: value } as any, true),
             baseCellDataType: this.baseCellDataType,
             cssClass: 'ag-advanced-filter-builder-value-pill',
             isSelect: false,
             update: (key) => this.setOperand(key),
-            ariaLabel: this.advancedFilterExpressionService.translate('ariaAdvancedFilterBuilderValue'),
+            ariaLabel: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderValue'),
         });
         this.getGui().appendChild(this.eOperandPill.getGui());
     }
@@ -128,7 +139,7 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     }
 
     private getColumnDisplayValue(): string | undefined {
-        return this.advancedFilterExpressionService.getColumnDisplayValue(this.filterModel);
+        return this.advFilterExpSvc.getColumnDisplayValue(this.filterModel);
     }
 
     private getOperatorKey(): string {
@@ -136,11 +147,11 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     }
 
     private getOperatorDisplayValue(): string | undefined {
-        return this.advancedFilterExpressionService.getOperatorDisplayValue(this.filterModel);
+        return this.advFilterExpSvc.getOperatorDisplayValue(this.filterModel);
     }
 
     private getOperandDisplayValue(): string {
-        return this.advancedFilterExpressionService.getOperandDisplayValue(this.filterModel, true);
+        return this.advFilterExpSvc.getOperandDisplayValue(this.filterModel, true);
     }
 
     private hasOperand(): boolean {
@@ -149,7 +160,7 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
 
     private getOperatorAutocompleteEntries(): AutocompleteEntry[] {
         return this.column
-            ? this.advancedFilterExpressionService.getOperatorAutocompleteEntries(this.column, this.baseCellDataType)
+            ? this.advFilterExpSvc.getOperatorAutocompleteEntries(this.column, this.baseCellDataType)
             : [];
     }
 
@@ -158,7 +169,7 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
             this.createOperatorPill();
         }
 
-        const newColumnDetails = this.advancedFilterExpressionService.getColumnDetails(colId);
+        const newColumnDetails = this.advFilterExpSvc.getColumnDetails(colId);
         this.column = newColumnDetails.column;
         const newBaseCellDataType = newColumnDetails.baseCellDataType;
         if (this.baseCellDataType !== newBaseCellDataType) {
@@ -195,23 +206,16 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
 
     private setOperand(operand: string): void {
         let parsedOperand: string | number = operand;
-        if (this.column) {
-            parsedOperand =
-                this.advancedFilterExpressionService.getOperandModelValue(
-                    operand,
-                    this.baseCellDataType,
-                    this.column
-                ) ?? '';
+        // Number comes back as string from input, so convert. Dates are already in iso string format
+        if (this.baseCellDataType === 'number') {
+            parsedOperand = _exists(operand) ? Number(operand) : '';
         }
         (this.filterModel as any).filter = parsedOperand;
         this.validate();
     }
 
     private getNumOperands(operator: string): number {
-        return (
-            this.advancedFilterExpressionService.getExpressionOperator(this.baseCellDataType, operator)?.numOperands ??
-            0
-        );
+        return this.advFilterExpSvc.getExpressionOperator(this.baseCellDataType, operator)?.numOperands ?? 0;
     }
 
     private destroyOperandPill(): void {
@@ -224,17 +228,11 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     private validate(): void {
         let validationMessage = null;
         if (!_exists(this.getColumnKey())) {
-            validationMessage = this.advancedFilterExpressionService.translate(
-                'advancedFilterBuilderValidationSelectColumn'
-            );
+            validationMessage = this.advFilterExpSvc.translate('advancedFilterBuilderValidationSelectColumn');
         } else if (!_exists(this.getOperatorKey())) {
-            validationMessage = this.advancedFilterExpressionService.translate(
-                'advancedFilterBuilderValidationSelectOption'
-            );
+            validationMessage = this.advFilterExpSvc.translate('advancedFilterBuilderValidationSelectOption');
         } else if (this.numOperands > 0 && !_exists(this.getOperandDisplayValue())) {
-            validationMessage = this.advancedFilterExpressionService.translate(
-                'advancedFilterBuilderValidationEnterValue'
-            );
+            validationMessage = this.advFilterExpSvc.translate('advancedFilterBuilderValidationEnterValue');
         }
 
         this.item.valid = !validationMessage;
@@ -247,10 +245,10 @@ export class ConditionPillWrapperComp extends Component<AdvancedFilterBuilderEve
     }
 
     private getDefaultColumnDisplayValue(): string {
-        return this.advancedFilterExpressionService.translate('advancedFilterBuilderSelectColumn');
+        return this.advFilterExpSvc.translate('advancedFilterBuilderSelectColumn');
     }
 
     private getDefaultOptionSelectValue(): string {
-        return this.advancedFilterExpressionService.translate('advancedFilterBuilderSelectOption');
+        return this.advFilterExpSvc.translate('advancedFilterBuilderSelectOption');
     }
 }
