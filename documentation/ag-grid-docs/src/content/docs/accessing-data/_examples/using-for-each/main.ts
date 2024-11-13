@@ -6,7 +6,13 @@ import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, MenuModule, RowGroupingModule, SetFilterModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    MenuModule,
+    RowGroupingModule,
+    SetFilterModule,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 
