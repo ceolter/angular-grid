@@ -32,6 +32,7 @@ export {
     _columnsMatch,
 } from './columns/columnUtils';
 export { IAutoColService } from './interfaces/iAutoColService';
+export type { SelectionColService } from './columns/selectionColService';
 export {
     SizeColumnsToFitGridColumnLimits,
     SizeColumnsToContentStrategy,

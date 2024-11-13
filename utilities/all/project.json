@@ -216,6 +216,9 @@
     },
     "link": {
       "command": "./scripts/setupLocalDeps.sh"
+    },
+    "unlink": {
+      "command": "./scripts/removeLocalDeps.sh"
     }
   },
   "implicitDependencies": [

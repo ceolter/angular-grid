@@ -16,6 +16,7 @@
       "inputs": [
         "tsDefaults",
         "styleOutputs",
+        "charts",
         {
           "dependentTasksOutputFiles": "**/*.js",
           "transitive": true

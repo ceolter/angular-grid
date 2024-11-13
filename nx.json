@@ -76,22 +76,21 @@
       }
     ],
     "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"],
-    "charts": [
-      { "externalDependencies": ["npm:ag-charts-types"] },
-      { "externalDependencies": ["npm:ag-charts-locale"] },
-      { "externalDependencies": ["npm:ag-charts-community"] },
-      { "externalDependencies": ["npm:ag-charts-enterprise"] }
-    ],
+    "charts": ["chartsPackages", "chartsTypes"],
     "chartsPackages": [
-      { "externalDependencies": ["npm:ag-charts-locale"] },
-      { "externalDependencies": ["npm:ag-charts-community"] },
-      { "externalDependencies": ["npm:ag-charts-enterprise"] }
+      { "externalDependencies": ["ag-charts-locale", "ag-charts-community", "ag-charts-enterprise"] },
+      { "runtime": "date -r ./node_modules/ag-charts-locale/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-community/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-enterprise/dist \"+%Y-%m-%d %H:%M:%S\"" }
     ],
     "chartsTypes": [
-      { "externalDependencies": ["npm:ag-charts-types"] },
-      { "externalDependencies": ["npm:ag-charts-locale"] },
-      { "externalDependencies": ["npm:ag-charts-community"] },
-      { "externalDependencies": ["npm:ag-charts-enterprise"] }
+      {
+        "externalDependencies": ["ag-charts-types", "ag-charts-locale", "ag-charts-community", "ag-charts-enterprise"]
+      },
+      { "runtime": "date -r ./node_modules/ag-charts-locale/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-types/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-community/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-enterprise/dist \"+%Y-%m-%d %H:%M:%S\"" }
     ]
   },
   "targetDefaults": {

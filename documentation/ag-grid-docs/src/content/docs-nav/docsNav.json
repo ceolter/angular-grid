@@ -1293,7 +1293,7 @@
                                 },
                                 {
                                     "type": "item",
-                                    "title": "Loading Cell Renderer",
+                                    "title": "Loading Component",
                                     "path": "component-loading-cell-renderer",
                                     "isEnterprise": true
                                 },

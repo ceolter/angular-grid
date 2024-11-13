@@ -65,6 +65,8 @@ function setAllVisible(beans: BeanCollection, columns: AgColumn[], visible: bool
     if (colStateItems.length > 0) {
         _applyColumnState(beans, { state: colStateItems }, eventType);
     }
+
+    beans.selectionColSvc?.refreshVisibility(eventType);
 }
 
 function setAllPivot(beans: BeanCollection, columns: AgColumn[], value: boolean, eventType: ColumnEventType): void {
