@@ -1,5 +1,5 @@
 import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { ColumnMoveCoreModule, DragAndDropModule, PopupModule, SharedMenuModule } from 'ag-grid-community';
+import { _ColumnMoveModule, _DragAndDropModule, _PopupModule, _SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -54,19 +54,9 @@ export const MenuCoreModule: _ModuleWithoutApi = {
         // show on column header when column has no sort, only when enabled with gridOptions.unSortIcon=true
         sortUnSort: 'none',
     },
-    dependsOn: [EnterpriseCoreModule, PopupModule, SharedMenuModule, MenuItemModule],
+    dependsOn: [EnterpriseCoreModule, _PopupModule, _SharedMenuModule, MenuItemModule],
     css: [menuCSS],
 };
-
-const COLUMN_SELECT_ICONS = {
-    // column tool panel column group contracted (click to expand)
-    columnSelectClosed: 'tree-closed',
-    // column tool panel column group expanded (click to contract)
-    columnSelectOpen: 'tree-open',
-    // column tool panel header expand/collapse all button, shown when some children are expanded and
-    //     others are collapsed
-    columnSelectIndeterminate: 'tree-indeterminate',
-} as const;
 
 /**
  * @feature Accessories -> Column Menu
@@ -79,13 +69,19 @@ export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
         legacyMenu: 'menu',
         // filter tab icon in legacy tabbed enterprise column menu
         filterTab: 'filter',
-        ...COLUMN_SELECT_ICONS,
+        // column tool panel column group contracted (click to expand)
+        columnSelectClosed: 'tree-closed',
+        // column tool panel column group expanded (click to contract)
+        columnSelectOpen: 'tree-open',
+        // column tool panel header expand/collapse all button, shown when some children are expanded and
+        //     others are collapsed
+        columnSelectIndeterminate: 'tree-indeterminate',
     },
     apiFunctions: {
         showColumnChooser,
         hideColumnChooser,
     },
-    dependsOn: [MenuCoreModule, DragAndDropModule, ColumnMoveCoreModule],
+    dependsOn: [MenuCoreModule, _DragAndDropModule, _ColumnMoveModule],
 };
 
 /**

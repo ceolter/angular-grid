@@ -1,7 +1,14 @@
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid, createTheme, iconSetMaterial } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    CommunityFeaturesModule,
+    ModuleRegistry,
+    createGrid,
+    createTheme,
+    iconSetMaterial,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 const myCustomTheme = createTheme().withPart(iconSetMaterial).withParams({
     accentColor: 'red',

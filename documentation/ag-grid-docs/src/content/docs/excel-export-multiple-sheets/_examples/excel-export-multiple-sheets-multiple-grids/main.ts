@@ -8,11 +8,11 @@ import type {
     ICellRendererComp,
     ICellRendererParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, createGrid } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, MenuModule, ExcelExportModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, MenuModule, ExcelExportModule]);
 
 class SportRenderer implements ICellRendererComp {
     eGui!: HTMLElement;

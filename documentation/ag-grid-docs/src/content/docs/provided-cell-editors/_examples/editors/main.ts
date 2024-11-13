@@ -9,13 +9,13 @@ import type {
     ITextCellEditorParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
 import { colors } from './colors';
 import { ColourCellRenderer } from './colourCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, RichSelectModule]);
 
 const columnDefs: ColDef[] = [
     {

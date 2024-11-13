@@ -129,7 +129,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         cellSelection: {
-            module: 'CellSelectionCoreModule',
+            module: 'CellSelectionModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
@@ -137,7 +137,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         columnDefs: () => COL_DEF_VALIDATORS,
         datasource: {
             supportedRowModels: ['infinite'],
-            module: 'InfiniteRowModelCoreModule',
+            module: 'InfiniteRowModelModule',
         },
         defaultColDef: () => COL_DEF_VALIDATORS,
         defaultColGroupDef: () => COL_DEF_VALIDATORS,
@@ -164,7 +164,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         enableRangeSelection: {
-            module: 'CellSelectionCoreModule',
+            module: 'CellSelectionModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
@@ -219,7 +219,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
             },
         },
-        masterDetail: { module: 'MasterDetailCoreModule' },
+        masterDetail: { module: 'SharedMasterDetailModule' },
         paginationPageSize: {
             validate({ paginationPageSize }) {
                 return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
@@ -265,7 +265,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         rowData: {
             supportedRowModels: ['clientSide'],
-            module: 'ClientSideRowModelCoreModule',
+            module: 'ClientSideRowModelModule',
         },
         rowDragManaged: {
             supportedRowModels: ['clientSide'],
@@ -301,7 +301,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         selectionColumnDef: () => COL_DEF_VALIDATORS,
         serverSideDatasource: {
             supportedRowModels: ['serverSide'],
-            module: 'ServerSideRowModelCoreModule',
+            module: 'ServerSideRowModelModule',
         },
         serverSideInitialRowCount: {
             supportedRowModels: ['serverSide'],
@@ -331,7 +331,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-        statusBar: { module: 'StatusBarCoreModule' },
+        statusBar: { module: 'StatusBarModule' },
         tooltipHideDelay: {
             validate: (options) => {
                 if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
@@ -350,7 +350,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
-            module: 'TreeDataCoreModule',
+            module: 'SharedTreeDataModule',
             validate: (options) => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
@@ -367,11 +367,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         treeDataChildrenField: {
-            module: 'TreeDataCoreModule',
+            module: 'SharedTreeDataModule',
         },
         viewportDatasource: {
             supportedRowModels: ['viewport'],
-            module: 'ViewportRowModelCoreModule',
+            module: 'ViewportRowModelModule',
         },
         viewportRowModelBufferSize: {
             validate({ viewportRowModelBufferSize }) {

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
     ClientSideRowModelModule,
     type ColDef,
+    CommunityFeaturesModule,
     type GetRowIdFunc,
     type GetRowIdParams,
     ModuleRegistry,
@@ -38,6 +39,7 @@ interface Props {
 }
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ColumnsToolPanelModule,

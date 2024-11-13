@@ -12,12 +12,12 @@ import type {
     GridReadyEvent,
     HeaderFocusedParams,
 } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 const GridExample = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);

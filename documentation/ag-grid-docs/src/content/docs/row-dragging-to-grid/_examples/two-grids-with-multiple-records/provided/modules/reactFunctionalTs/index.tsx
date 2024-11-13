@@ -10,13 +10,13 @@ import type {
     RowDragEndEvent,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 const SportRenderer = (props: CustomCellRendererProps) => {
     return (

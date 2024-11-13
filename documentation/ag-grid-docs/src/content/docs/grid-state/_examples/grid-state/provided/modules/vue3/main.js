@@ -1,7 +1,7 @@
 import { createApp, ref, shallowRef } from 'vue';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { RangeSelectionModule } from 'ag-grid-enterprise';
@@ -11,6 +11,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
 
     ColumnsToolPanelModule,

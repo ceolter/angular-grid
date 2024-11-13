@@ -14,7 +14,7 @@ import type {
     ValueSetterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { CsvExportModule } from 'ag-grid-community';
 import { GridChartsModule } from 'ag-grid-enterprise';
 import { ClipboardModule } from 'ag-grid-enterprise';
@@ -25,7 +25,7 @@ import { MenuModule } from 'ag-grid-enterprise';
 import { MultiFilterModule } from 'ag-grid-enterprise';
 import { RangeSelectionModule } from 'ag-grid-enterprise';
 import { RichSelectModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 import { SideBarModule } from 'ag-grid-enterprise';
 import { StatusBarModule } from 'ag-grid-enterprise';
@@ -35,6 +35,7 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -50,6 +51,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     SideBarModule,
     StatusBarModule,
+    RowGroupingPanelModule,
 ]);
 
 const colNames = [

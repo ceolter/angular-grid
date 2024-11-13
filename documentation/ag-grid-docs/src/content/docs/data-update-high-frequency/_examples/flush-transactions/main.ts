@@ -8,12 +8,17 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 
 import { getData, globalRowData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    RowGroupingPanelModule,
+]);
 
 const UPDATE_COUNT = 20;
 

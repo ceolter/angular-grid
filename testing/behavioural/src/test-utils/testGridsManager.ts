@@ -1,5 +1,7 @@
 import type { GridApi, GridOptions, Module, Params } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
+import { CommunityFeaturesModule, createGrid } from 'ag-grid-community';
+
+import { ServerSideRowModelApiModule } from '../../../../packages/ag-grid-enterprise/src/main';
 
 export interface TestGridManagerOptions {
     /** The modules to register when a grid gets created */
@@ -106,7 +108,9 @@ export class TestGridsManager {
 
         console.error = consoleErrorImpl;
         try {
-            const modules = unique(this.modulesToRegister ?? []).concat(params?.modules ?? []);
+            const modules = unique(this.modulesToRegister ?? [])
+                .concat(params?.modules ?? [])
+                .concat([CommunityFeaturesModule, ServerSideRowModelApiModule]);
             api = createGrid(
                 element,
                 { ...TestGridsManager.defaultGridOptions, ...gridOptions },

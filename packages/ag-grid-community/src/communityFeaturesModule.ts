@@ -1,13 +1,21 @@
 import { AlignedGridsModule } from './alignedGrids/alignedGridsModule';
 import { RowApiModule, ScrollApiModule } from './api/apiModule';
+import { ClientSideRowModelApiModule } from './clientSideRowModel/clientSideRowModelModule';
 import { ColumnAutoSizeModule } from './columnAutosize/columnAutosizeModule';
 import { ColumnHoverModule } from './columns/columnHover/columnHoverModule';
 import { ColumnApiModule, ColumnFlexModule, GetColumnDefsApiModule } from './columns/columnModule';
-import { CommunityDefaultModule } from './communityDefaultModule';
 import { CellRendererFunctionModule } from './components/framework/cellRendererFunctionModule';
 import { NativeDragModule, RowDragModule } from './dragAndDrop/dragModule';
-import { EditModule } from './edit/editModule';
-import { FilterModule } from './filter/filterModule';
+import {
+    CustomEditorModule,
+    DataTypeEditorsModule,
+    DefaultEditorModule,
+    FullRowEditModule,
+    LargeTextEditorModule,
+    SelectEditorModule,
+    UndoRedoEditModule,
+} from './edit/editModule';
+import { CustomFilterModule, ExternalFilterModule, QuickFilterModule, SimpleFilterModule } from './filter/filterModule';
 import type { _ModuleWithoutApi } from './interfaces/iModule';
 import { baseCommunityModule } from './interfaces/iModule';
 import { EventApiModule } from './misc/apiEvents/apiEventModule';
@@ -19,9 +27,7 @@ import { CellFlashModule } from './rendering/cell/cellFlashModule';
 import {
     AnimateShowChangeCellRendererModule,
     AnimateSlideCellRendererModule,
-    CheckboxCellRendererModule,
 } from './rendering/cellRenderers/cellRendererModule';
-import { StickyRowModule } from './rendering/features/stickyRowModule';
 import { RenderApiModule } from './rendering/renderModule';
 import { RowAutoHeightModule } from './rendering/row/rowAutoHeightModule';
 import { RowSelectionModule } from './selection/rowSelectionModule';
@@ -34,10 +40,18 @@ import { PopupModule } from './widgets/popupModule';
 export const CommunityFeaturesModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CommunityFeaturesModule'),
     dependsOn: [
-        CommunityDefaultModule,
         ValidationModule,
-        EditModule,
-        FilterModule,
+        DefaultEditorModule,
+        DataTypeEditorsModule,
+        SelectEditorModule,
+        LargeTextEditorModule,
+        CustomEditorModule,
+        FullRowEditModule,
+        UndoRedoEditModule,
+        SimpleFilterModule,
+        CustomFilterModule,
+        QuickFilterModule,
+        ExternalFilterModule,
         StateModule,
         AlignedGridsModule,
         PaginationModule,
@@ -48,13 +62,11 @@ export const CommunityFeaturesModule: _ModuleWithoutApi = {
         ColumnAutoSizeModule,
         RowDragModule,
         PinnedRowModule,
-        StickyRowModule,
         RowSelectionModule,
         ValueCacheModule,
         ExpressionModule,
         AnimateShowChangeCellRendererModule,
         AnimateSlideCellRendererModule,
-        CheckboxCellRendererModule,
         CellRendererFunctionModule,
         PopupModule,
         CellStyleModule,
@@ -69,5 +81,6 @@ export const CommunityFeaturesModule: _ModuleWithoutApi = {
         LocaleModule,
         RowAutoHeightModule,
         NativeDragModule,
+        ClientSideRowModelApiModule,
     ],
 };

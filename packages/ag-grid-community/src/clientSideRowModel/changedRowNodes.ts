@@ -1,6 +1,6 @@
 import type { RowNode } from '../entities/rowNode';
 import type { IChangedRowNodes } from '../interfaces/iClientSideRowModel';
-import type { IRowNode } from '../main-umd-noStyles';
+import type { IRowNode } from '../interfaces/iRowNode';
 
 export class ChangedRowNodes<TData = any> implements IChangedRowNodes<TData> {
     public readonly removals = new Set<RowNode<TData>>();

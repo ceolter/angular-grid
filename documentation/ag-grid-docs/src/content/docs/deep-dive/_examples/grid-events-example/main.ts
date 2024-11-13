@@ -9,9 +9,9 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import { SelectionChangedEvent, createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 // Grid API: Access to Grid API methods
 let gridApi: GridApi;

@@ -2,7 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RichSelectModule } from 'ag-grid-enterprise';
@@ -13,7 +13,13 @@ import MoodEditor from './moodEditor.jsx';
 import NumericCellEditor from './numericCellEditor.jsx';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, MenuModule, ColumnsToolPanelModule, RichSelectModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    MenuModule,
+    ColumnsToolPanelModule,
+    RichSelectModule,
+]);
 
 const cellEditorSelector = (params) => {
     if (params.data.type === 'age') {

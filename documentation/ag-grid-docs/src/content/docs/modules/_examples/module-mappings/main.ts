@@ -1,4 +1,4 @@
-import { ClientSideRowModelModule, RowSelectionModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ColumnFlexModule, RowSelectionModule } from 'ag-grid-community';
 import type {
     GetRowIdParams,
     GridApi,
@@ -9,17 +9,19 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { AllEnterpriseModule, ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 
 import { modules } from './modules';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     TreeDataModule,
     RowSelectionModule,
     ContextMenuModule,
     ClipboardModule,
+    ColumnFlexModule,
 ]);
 
 let gridApi: GridApi;

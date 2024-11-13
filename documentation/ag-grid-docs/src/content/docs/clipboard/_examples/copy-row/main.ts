@@ -1,11 +1,17 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule, RangeSelectionModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ClipboardModule, MenuModule, RangeSelectionModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    ClipboardModule,
+    MenuModule,
+    RangeSelectionModule,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

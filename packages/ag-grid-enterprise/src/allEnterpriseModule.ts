@@ -13,7 +13,7 @@ import { baseEnterpriseModule } from './moduleUtils';
 import { MultiFilterModule } from './multiFilter/multiFilterModule';
 import { CellSelectionModule } from './rangeSelection/rangeSelectionModule';
 import { RichSelectModule } from './richSelect/richSelectModule';
-import { RowGroupingModule } from './rowGrouping/rowGroupingBundleModule';
+import { GroupFilterModule, RowGroupingModule, RowGroupingPanelModule } from './rowGrouping/rowGroupingModule';
 import { ServerSideRowModelModule } from './serverSideRowModel/serverSideRowModelModule';
 import { SetFilterModule } from './setFilter/setFilterModule';
 import { SideBarModule } from './sideBar/sideBarModule';
@@ -36,6 +36,8 @@ export const AllEnterpriseModule: _ModuleWithoutApi = {
         CellSelectionModule,
         RichSelectModule,
         RowGroupingModule,
+        RowGroupingPanelModule,
+        GroupFilterModule,
         ServerSideRowModelModule,
         SetFilterModule,
         MultiFilterModule,

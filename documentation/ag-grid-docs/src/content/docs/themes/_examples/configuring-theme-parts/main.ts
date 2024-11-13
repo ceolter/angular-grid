@@ -1,6 +1,7 @@
 import type { ColDef, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CommunityFeaturesModule,
     ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
@@ -21,6 +22,7 @@ import {
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,

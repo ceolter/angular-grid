@@ -1,7 +1,7 @@
 import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
@@ -12,6 +12,7 @@ import MenuItem from './menuItemVue.js';
 import './style.css';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
 
     MenuModule,

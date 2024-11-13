@@ -73,7 +73,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
     ...mod<_StateGridApi>('StateModule', {
         getState: 0,
     }),
-    ...mod<_RowSelectionGridApi<any>>('RowSelectionApiModule', {
+    ...mod<_RowSelectionGridApi<any>>('SharedRowSelectionModule', {
         setNodesSelected: 0,
         selectAll: 0,
         deselectAll: 0,
@@ -127,7 +127,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         showColumnMenu: 0,
         hidePopupMenu: 0,
     }),
-    ...mod<_SortGridApi>('SortCoreModule', {
+    ...mod<_SortGridApi>('SortModule', {
         onSortChanged: 0,
     }),
     ...mod<_PinnedRowGridApi>('PinnedRowModule', {
@@ -199,7 +199,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getRightDisplayedColumnGroups: 0,
         getAllDisplayedColumnGroups: 0,
     }),
-    ...mod<_ColumnMoveApi>('ColumnMoveCoreModule', {
+    ...mod<_ColumnMoveApi>('ColumnMoveModule', {
         moveColumnByIndex: 0,
         moveColumns: 0,
     }),
@@ -282,7 +282,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         exportDataAsCsv: 0,
     }),
 
-    ...mod<_InfiniteRowModelGridApi>('InfiniteRowModelApiModule', {
+    ...mod<_InfiniteRowModelGridApi>('InfiniteRowModelModule', {
         refreshInfiniteCache: 0,
         purgeInfiniteCache: 0,
         getInfiniteRowCount: 0,
@@ -326,7 +326,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         exportMultipleSheetsAsExcel: 0,
     }),
 
-    ...mod<_MasterDetailGridApi>('MasterDetailCoreModule', {
+    ...mod<_MasterDetailGridApi>('SharedMasterDetailModule', {
         addDetailGridInfo: 0,
         removeDetailGridInfo: 0,
         getDetailGridInfo: 0,
@@ -342,14 +342,14 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         hideColumnChooser: 0,
     }),
 
-    ...mod<_CellSelectionGridApi>('CellSelectionCoreModule', {
+    ...mod<_CellSelectionGridApi>('CellSelectionModule', {
         getCellRanges: 0,
         addCellRange: 0,
         clearRangeSelection: 0,
         clearCellSelection: 0,
     }),
 
-    ...mod<_RowGroupingGridApi>('RowGroupingCoreModule', {
+    ...mod<_RowGroupingGridApi>('SharedRowGroupingModule', {
         setRowGroupColumns: 0,
         removeRowGroupColumns: 0,
         addRowGroupColumns: 0,
@@ -357,13 +357,13 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         moveRowGroupColumn: 0,
     }),
 
-    ...mod<_AggregationGridApi<any>>('AggregationModule', {
+    ...mod<_AggregationGridApi<any>>('SharedAggregationModule', {
         addAggFuncs: 0,
         clearAggFuncs: 0,
         setColumnAggFunc: 0,
     }),
 
-    ...mod<_PivotGridApi<any>>('PivotCoreModule', {
+    ...mod<_PivotGridApi<any>>('SharedPivotModule', {
         isPivotMode: 0,
         getPivotResultColumn: 0,
         setValueColumns: 0,
@@ -403,7 +403,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getSideBar: 0,
     }),
 
-    ...mod<_StatusBarGridApi>('StatusBarCoreModule', {
+    ...mod<_StatusBarGridApi>('StatusBarModule', {
         getStatusPanel: 0,
     }),
 };

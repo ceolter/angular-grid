@@ -262,10 +262,10 @@ export class GridCoreCreator {
     ): SingletonBean[] | undefined {
         // assert that the relevant module has been loaded
         const rowModelModuleNames: Record<RowModelType, ModuleName> = {
-            clientSide: 'ClientSideRowModelCoreModule',
-            infinite: 'InfiniteRowModelCoreModule',
-            serverSide: 'ServerSideRowModelCoreModule',
-            viewport: 'ViewportRowModelCoreModule',
+            clientSide: 'ClientSideRowModelModule',
+            infinite: 'InfiniteRowModelModule',
+            serverSide: 'ServerSideRowModelModule',
+            viewport: 'ViewportRowModelModule',
         };
 
         const rowModuleModelName = rowModelModuleNames[rowModelType];

@@ -2,7 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { RangeSelectionModule } from 'ag-grid-enterprise';
 import { StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact, getInstance } from 'ag-grid-react';
@@ -10,7 +10,12 @@ import { AgGridReact, getInstance } from 'ag-grid-react';
 import ClickableStatusBarComponent from './clickableStatusBarComponent.jsx';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, StatusBarModule, RangeSelectionModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    StatusBarModule,
+    RangeSelectionModule,
+]);
 
 const rowSelection = {
     mode: 'multiRow',

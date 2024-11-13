@@ -3,6 +3,7 @@ import {
     CellKeyDownEvent,
     ClientSideRowModelModule,
     ColDef,
+    CommunityFeaturesModule,
     GridApi,
     GridOptions,
     ModuleRegistry,
@@ -12,7 +13,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { CustomGroupCellRenderer } from './customGroupCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, RowGroupingModule]);
 
 const columnDefs: ColDef[] = [
     {

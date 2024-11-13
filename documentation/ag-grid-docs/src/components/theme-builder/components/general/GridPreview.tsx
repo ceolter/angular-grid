@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { memo, useRef, useState } from 'react';
 import root from 'react-shadow';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, CommunityFeaturesModule } from 'ag-grid-community';
 import { type GridState, ModuleRegistry } from 'ag-grid-community';
 import { AdvancedFilterModule } from 'ag-grid-enterprise';
 import { GridChartsModule } from 'ag-grid-enterprise';
@@ -28,6 +28,7 @@ import { withErrorBoundary } from './ErrorBoundary';
 import { InfoTooltip } from './Tooltip';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ClipboardModule,

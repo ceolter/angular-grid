@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { ClientSideRowModelModule } from '../clientSideRowModel/clientSideRowModelModule';
+import { CommunityFeaturesModule } from '../communityFeaturesModule';
 import type { ColDef, ColGroupDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { GridReadyEvent } from '../events';
@@ -33,7 +34,7 @@ describe('getColumnDefs', () => {
             },
         };
         createGrid(document.createElement('div'), options, {
-            modules: [ClientSideRowModelModule],
+            modules: [ClientSideRowModelModule, CommunityFeaturesModule],
         });
     });
 
@@ -47,7 +48,7 @@ describe('getColumnDefs', () => {
             },
         };
         createGrid(document.createElement('div'), options, {
-            modules: [ClientSideRowModelModule],
+            modules: [ClientSideRowModelModule, CommunityFeaturesModule],
         });
     });
 });

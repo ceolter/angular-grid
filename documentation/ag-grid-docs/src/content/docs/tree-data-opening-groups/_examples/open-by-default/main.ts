@@ -1,12 +1,12 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, IsGroupOpenByDefaultParams } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, TreeDataModule]);
 
 let gridApi: GridApi;
 

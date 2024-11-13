@@ -1,16 +1,17 @@
-import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { CtrlsService } from '../../ctrlsService';
-import type { RowNode } from '../../entities/rowNode';
-import type { GridBodyCtrl } from '../../gridBodyComp/gridBodyCtrl';
-import { _getRowHeightForNode, _isClientSideRowModel, _isGroupRowsSticky } from '../../gridOptionsUtils';
-import type { IRowModel } from '../../interfaces/iRowModel';
-import type { PageBoundsService } from '../../pagination/pageBoundsService';
-import { _last } from '../../utils/array';
-import type { RowCtrl } from '../row/rowCtrl';
-import type { RowCtrlByRowNodeIdMap, RowRenderer } from '../rowRenderer';
+import type {
+    BeanCollection,
+    CtrlsService,
+    GridBodyCtrl,
+    IRowModel,
+    IStickyRowFeature,
+    PageBoundsService,
+    RowCtrl,
+    RowNode,
+    RowRenderer,
+} from 'ag-grid-community';
+import { BeanStub, _getRowHeightForNode, _isClientSideRowModel, _isGroupRowsSticky, _last } from 'ag-grid-community';
 
-export class StickyRowFeature extends BeanStub {
+export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
     private rowModel: IRowModel;
     private rowRenderer: RowRenderer;
     private ctrlsSvc: CtrlsService;
@@ -37,7 +38,7 @@ export class StickyRowFeature extends BeanStub {
     constructor(
         private readonly createRowCon: (rowNode: RowNode, animate: boolean, afterScroll: boolean) => RowCtrl,
         private readonly destroyRowCtrls: (
-            rowCtrlsMap: RowCtrlByRowNodeIdMap | null | undefined,
+            rowCtrlsMap: Record<string, RowCtrl> | null | undefined,
             animate: boolean
         ) => void
     ) {
@@ -351,7 +352,7 @@ export class StickyRowFeature extends BeanStub {
         const previousCtrls = isTop ? this.stickyTopRowCtrls : this.stickyBottomRowCtrls;
 
         // find removed ctrls and remaining ctrls
-        const removedCtrlsMap: RowCtrlByRowNodeIdMap = {};
+        const removedCtrlsMap: Record<string, RowCtrl> = {};
         const remainingCtrls: RowCtrl[] = [];
         for (let i = 0; i < previousCtrls.length; i++) {
             const node = previousCtrls[i].rowNode;

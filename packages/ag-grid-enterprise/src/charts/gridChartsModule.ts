@@ -1,7 +1,7 @@
 import { VERSION as CHARTS_VERSION } from 'ag-charts-community';
 
 import type { _GridChartsGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { DragAndDropModule, PopupModule } from 'ag-grid-community';
+import { _DragAndDropModule, _PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -90,8 +90,8 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     dependsOn: [
         CellSelectionModule,
         EnterpriseCoreModule,
-        DragAndDropModule,
-        PopupModule,
+        _DragAndDropModule,
+        _PopupModule,
         MenuItemModule,
         GridChartsEnterpriseFeaturesModule,
     ],

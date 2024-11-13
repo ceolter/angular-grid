@@ -1,8 +1,8 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, ValueGetterParams } from 'ag-grid-community';
-import { ModuleRegistry, createGrid } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 function hashValueGetter(params: ValueGetterParams) {
     return params.node ? Number(params.node.id) : null;

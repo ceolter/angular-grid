@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, RowSelectionOptions, StatusPanelDef } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { RangeSelectionModule } from 'ag-grid-enterprise';
 import { StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
@@ -12,7 +12,12 @@ import ClickableStatusBarComponent from './clickableStatusBarComponent';
 import CountStatusBarComponent from './countStatusBarComponent';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, StatusBarModule, RangeSelectionModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    StatusBarModule,
+    RangeSelectionModule,
+]);
 
 const rowSelection: RowSelectionOptions = {
     mode: 'multiRow',

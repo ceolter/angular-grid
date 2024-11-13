@@ -35,14 +35,14 @@ const SSRM_CSRM_REQUIRES_MODULE = (module: ModuleName) => (_options: never, grid
 
 const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
     // supported on all row models, but need module for client side / server side.
-    enableRowGroup: SSRM_CSRM_REQUIRES_MODULE('RowGroupingCoreModule'),
-    rowGroup: SSRM_CSRM_REQUIRES_MODULE('RowGroupingCoreModule'),
-    rowGroupIndex: SSRM_CSRM_REQUIRES_MODULE('RowGroupingCoreModule'),
-    enablePivot: SSRM_CSRM_REQUIRES_MODULE('PivotCoreModule'),
-    enableValue: SSRM_CSRM_REQUIRES_MODULE('PivotCoreModule'),
-    pivot: SSRM_CSRM_REQUIRES_MODULE('PivotCoreModule'),
-    pivotIndex: SSRM_CSRM_REQUIRES_MODULE('PivotCoreModule'),
-    aggFunc: SSRM_CSRM_REQUIRES_MODULE('AggregationModule'),
+    enableRowGroup: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
+    rowGroup: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
+    rowGroupIndex: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
+    enablePivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
+    enableValue: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
+    pivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
+    pivotIndex: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
+    aggFunc: SSRM_CSRM_REQUIRES_MODULE('SharedAggregationModule'),
 
     cellEditor: (options) => {
         if (options.cellEditor === 'agRichSelect' || options.cellEditor === 'agRichSelectCellEditor') {

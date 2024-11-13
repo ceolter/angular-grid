@@ -8,9 +8,9 @@ import type {
     RowDragLeaveEvent,
     RowDragMoveEvent,
 } from 'ag-grid-community';
-import { ModuleRegistry, createGrid } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 let gridApi: GridApi<IOlympicData>;
 

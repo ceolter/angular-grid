@@ -1,9 +1,9 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 let gridApi: GridApi;
 

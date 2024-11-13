@@ -1,7 +1,11 @@
 import { ApiFunctionService } from './api/apiFunctionService';
 import { destroy, getGridId, getGridOption, isDestroyed, setGridOption, updateGridOptions } from './api/coreApi';
 import type { _CoreGridApi } from './api/gridApi';
+import { ColumnMoveModule } from './columnMove/columnMoveModule';
+import { ColumnResizeModule } from './columnResize/columnResizeModule';
+import { ColumnGroupModule } from './columns/columnGroups/columnGroupModule';
 import { ColumnModel } from './columns/columnModel';
+import { DataTypeModule } from './columns/columnModule';
 import { ColumnNameService } from './columns/columnNameService';
 import { ColumnViewportService } from './columns/columnViewportService';
 import { VisibleColsService } from './columns/visibleColsService';
@@ -14,13 +18,22 @@ import { FocusService } from './focusService';
 import { ScrollVisibleService } from './gridBodyComp/scrollVisibleService';
 import { GridDestroyService } from './gridDestroyService';
 import { GridOptionsService } from './gridOptionsService';
+import { ColumnGroupHeaderCompModule, ColumnHeaderCompModule } from './headerRendering/cells/headerModule';
 import type { _ModuleWithApi } from './interfaces/iModule';
 import { baseCommunityModule } from './interfaces/iModule';
+import { AnimationFrameModule } from './misc/animationFrameModule';
+import { TouchModule } from './misc/touchModule';
+import { KeyboardNavigationModule } from './navigation/navigationModule';
 import { PageBoundsListener } from './pagination/pageBoundsListener';
 import { PageBoundsService } from './pagination/pageBoundsService';
+import { PinnedColumnModule } from './pinnedColumns/pinnedColumnModule';
+import { AriaModule } from './rendering/ariaModule';
+import { OverlayModule } from './rendering/overlays/overlayModule';
 import { RowContainerHeightService } from './rendering/rowContainerHeightService';
 import { RowRenderer } from './rendering/rowRenderer';
+import { SortModule } from './sort/sortModule';
 import { SyncService } from './syncService';
+import { ChangeDetectionModule } from './valueService/valueModule';
 import { ValueService } from './valueService/valueService';
 
 /**
@@ -83,4 +96,20 @@ export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
         setGridOption,
         updateGridOptions,
     },
+    dependsOn: [
+        DataTypeModule,
+        ColumnMoveModule,
+        ColumnResizeModule,
+        SortModule,
+        ColumnHeaderCompModule,
+        ColumnGroupModule,
+        ColumnGroupHeaderCompModule,
+        OverlayModule,
+        ChangeDetectionModule,
+        AnimationFrameModule,
+        KeyboardNavigationModule,
+        PinnedColumnModule,
+        AriaModule,
+        TouchModule,
+    ],
 };

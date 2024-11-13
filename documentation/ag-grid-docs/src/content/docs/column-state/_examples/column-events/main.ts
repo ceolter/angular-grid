@@ -13,10 +13,10 @@ import type {
     SortChangedEvent,
 } from 'ag-grid-community';
 import { Column, createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, PivotModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },

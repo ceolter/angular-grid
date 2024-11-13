@@ -1,10 +1,8 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
-import { ColumnMoveCoreModule, DragAndDropModule, PopupModule } from 'ag-grid-community';
+import { _ColumnMoveModule, _DragAndDropModule, _PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
-import { RowGroupingModule } from '../rowGrouping/rowGroupingBundleModule';
-import { RowGroupingCoreModule } from '../rowGrouping/rowGroupingModule';
 import { SideBarModule } from '../sideBar/sideBarModule';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { ColumnToolPanel } from './columnToolPanel';
@@ -13,8 +11,9 @@ import { ColumnToolPanelFactory } from './columnToolPanelFactory';
 /**
  * @feature Accessories -> Columns Tool Panel
  */
-export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ColumnsToolPanelCoreModule'),
+export const ColumnsToolPanelModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('ColumnsToolPanelModule'),
+    beans: [ColumnToolPanelFactory],
     userComponents: { agColumnsToolPanel: ColumnToolPanel },
     icons: {
         // column tool panel tab
@@ -40,26 +39,9 @@ export const ColumnsToolPanelCoreModule: _ModuleWithoutApi = {
     dependsOn: [
         EnterpriseCoreModule,
         SideBarModule,
-        ColumnMoveCoreModule,
-        DragAndDropModule,
-        PopupModule,
+        _ColumnMoveModule,
+        _DragAndDropModule,
+        _PopupModule,
         MenuItemModule,
     ],
-};
-
-/**
- * @feature Accessories -> Columns Tool Panel
- */
-export const ColumnsToolPanelRowGroupingModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ColumnsToolPanelRowGroupingModule'),
-    beans: [ColumnToolPanelFactory],
-    dependsOn: [ColumnsToolPanelCoreModule, RowGroupingCoreModule],
-};
-
-/**
- * @feature Accessories -> Columns Tool Panel
- */
-export const ColumnsToolPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ColumnsToolPanelModule'),
-    dependsOn: [ColumnsToolPanelCoreModule, ColumnsToolPanelRowGroupingModule, RowGroupingModule],
 };

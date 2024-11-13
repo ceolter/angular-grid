@@ -26,8 +26,7 @@ import { EditService } from './editService';
 import { RowEditService } from './rowEditService';
 
 /**
- * @feature Editing
- * @colDef editable
+ * @internal
  */
 export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
     ...baseCommunityModule('EditCoreModule'),
@@ -71,7 +70,7 @@ export const FullRowEditModule: _ModuleWithoutApi = {
  */
 export const DefaultEditorModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DefaultEditorModule'),
-    userComponents: { agCellEditor: TextCellEditor },
+    userComponents: { agCellEditor: TextCellEditor, agTextCellEditor: TextCellEditor },
     dependsOn: [EditCoreModule],
 };
 
@@ -81,8 +80,6 @@ export const DefaultEditorModule: _ModuleWithoutApi = {
 export const DataTypeEditorsModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DataTypeEditorsModule'),
     userComponents: {
-        agTextCellEditor: TextCellEditor,
-
         agNumberCellEditor: {
             classImp: NumberCellEditor,
             params: {
@@ -93,7 +90,7 @@ export const DataTypeEditorsModule: _ModuleWithoutApi = {
         agDateStringCellEditor: DateStringCellEditor,
         agCheckboxCellEditor: CheckboxCellEditor,
     },
-    dependsOn: [DefaultEditorModule],
+    dependsOn: [EditCoreModule],
 };
 
 /**
@@ -117,15 +114,7 @@ export const LargeTextEditorModule: _ModuleWithoutApi = {
 /**
  * @feature Editing
  */
-export const AllCommunityEditorsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AllCommunityEditorsModule'),
-    dependsOn: [DefaultEditorModule, DataTypeEditorsModule, SelectEditorModule, LargeTextEditorModule],
-};
-
-/**
- * @feature Editing
- */
-export const EditModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('EditModule'),
-    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule],
+export const CustomEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('CustomEditorModule'),
+    dependsOn: [EditCoreModule],
 };

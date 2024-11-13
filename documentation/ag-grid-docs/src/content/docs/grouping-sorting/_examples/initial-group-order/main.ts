@@ -1,5 +1,6 @@
 import {
     ClientSideRowModelModule,
+    CommunityFeaturesModule,
     GridApi,
     GridOptions,
     InitialGroupOrderComparatorParams,
@@ -9,6 +10,7 @@ import {
 import { ColumnsToolPanelModule, MenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     MenuModule,

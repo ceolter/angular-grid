@@ -1,13 +1,13 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellDoubleClickedEvent, CellKeyDownEvent, ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
 import { CustomGroupCellRenderer } from './customGroupCellRenderer_typescript';
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, TreeDataModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'created' },

@@ -7,7 +7,7 @@ import type {
     GridOptions,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
@@ -16,6 +16,7 @@ import { RangeSelectionModule } from 'ag-grid-enterprise';
 import { MenuItem } from './menuItem_typescript';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,

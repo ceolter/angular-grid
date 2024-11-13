@@ -23,6 +23,7 @@ import type { IEventListener } from '../interfaces/iEventEmitter';
 import type { IRowModel } from '../interfaces/iRowModel';
 import type { IRowNode, RowPinnedType } from '../interfaces/iRowNode';
 import type { RowPosition } from '../interfaces/iRowPosition';
+import type { IStickyRowFeature } from '../interfaces/iStickyRows';
 import type { PageBoundsService } from '../pagination/pageBoundsService';
 import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import { _removeFromArray } from '../utils/array';
@@ -30,14 +31,13 @@ import { _exists } from '../utils/generic';
 import { _errMsg } from '../validation/logging';
 import type { CellCtrl } from './cell/cellCtrl';
 import { DOM_DATA_KEY_CELL_CTRL } from './cell/cellCtrl';
-import type { StickyRowFeature } from './features/stickyRowFeature';
 import type { RowCtrlInstanceId } from './row/rowCtrl';
 import { DOM_DATA_KEY_ROW_CTRL, RowCtrl } from './row/rowCtrl';
 import type { RowContainerHeightService } from './rowContainerHeightService';
 
 type RowCtrlIdMap = Record<RowCtrlInstanceId, RowCtrl>;
 type RowCtrlByRowIndex = Record<number, RowCtrl>;
-export type RowCtrlByRowNodeIdMap = Record<string, RowCtrl>;
+type RowCtrlByRowNodeIdMap = Record<string, RowCtrl>;
 
 interface RowNodeMap {
     [id: string]: IRowNode;
@@ -97,7 +97,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
     private printLayout: boolean;
     private embedFullWidthRows: boolean;
-    private stickyRowFeature?: StickyRowFeature;
+    private stickyRowFeature?: IStickyRowFeature;
 
     private dataFirstRenderedFired = false;
 

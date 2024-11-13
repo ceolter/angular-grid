@@ -8,11 +8,11 @@ import {
     colorSchemeLightCold,
     colorSchemeLightWarm,
 } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
 import { themeQuartz } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
 
 const themeLightWarm = themeQuartz.withPart(colorSchemeLightWarm);
 const themeLightCold = themeQuartz.withPart(colorSchemeLightCold);

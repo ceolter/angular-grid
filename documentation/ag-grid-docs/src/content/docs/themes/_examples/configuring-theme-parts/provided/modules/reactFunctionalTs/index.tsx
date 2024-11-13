@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    CommunityFeaturesModule,
     ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
@@ -23,6 +24,7 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'a
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
     ClientSideRowModelModule,
 
     SideBarModule,

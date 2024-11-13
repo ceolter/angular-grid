@@ -1,5 +1,5 @@
 import type { _CellSelectionGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { DragModule, KeyboardNavigationModule } from 'ag-grid-community';
+import { _DragModule, _KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -13,48 +13,22 @@ import { RangeService } from './rangeService';
  * @feature Selection -> Cell Selection
  * @gridOption cellSelection
  */
-export const CellSelectionCoreModule: _ModuleWithApi<_CellSelectionGridApi> = {
-    ...baseEnterpriseModule('CellSelectionCoreModule'),
+export const CellSelectionModule: _ModuleWithApi<_CellSelectionGridApi> = {
+    ...baseEnterpriseModule('CellSelectionModule'),
     beans: [RangeService],
+    dynamicBeans: { fillHandle: AgFillHandle, rangeHandle: AgRangeHandle },
     apiFunctions: {
         getCellRanges,
         addCellRange,
         clearRangeSelection,
         clearCellSelection: clearRangeSelection,
     },
-    dependsOn: [EnterpriseCoreModule, KeyboardNavigationModule, DragModule],
+    dependsOn: [EnterpriseCoreModule, _KeyboardNavigationModule, _DragModule],
     css: [rangeSelectionCSS],
 };
 
 /**
- * @feature Selection -> Fill Handle
- */
-export const CellSelectionFillHandleModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('CellSelectionFillHandleModule'),
-    dynamicBeans: { fillHandle: AgFillHandle },
-    dependsOn: [CellSelectionCoreModule],
-};
-
-/**
- * @feature Selection -> Range Handle
- */
-export const CellSelectionRangeHandleModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('CellSelectionRangeHandleModule'),
-    dynamicBeans: { rangeHandle: AgRangeHandle },
-    dependsOn: [CellSelectionCoreModule],
-};
-
-/**
- * @feature Selection -> Cell Selection
- */
-export const CellSelectionModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('CellSelectionModule'),
-    dependsOn: [CellSelectionCoreModule, CellSelectionFillHandleModule, CellSelectionRangeHandleModule],
-};
-
-// legacy name
-/**
- * @feature Selection -> Cell Selection
+ * @deprecated v33 Use `CellSelectionModule` instead
  */
 export const RangeSelectionModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('RangeSelectionModule'),
