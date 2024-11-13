@@ -89,8 +89,8 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
  * @feature Integrated Charts
  */
 export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
-    ...baseEnterpriseModule('GridChartsModule'),
     ...baseIntegratedChartsModule,
+    ...baseEnterpriseModule('GridChartsModule'),
     validate: () => {
         return {
             isValid: false,
