@@ -578,3 +578,16 @@ body {
     height: 48px;
     padding: $spacing-size-3;
 }
+
+.heroSectioncta1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+.heroSectioncta1 svg {
+    height: 24px;
+    width: 24px;
+    fill: var(--color-fg-secondary);
+    opacity: 0.8;
+}
