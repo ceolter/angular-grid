@@ -257,15 +257,11 @@ export abstract class BaseSelectionService extends BeanStub {
     }
 
     protected inferNodeSelections(
-        rowNode: RowNode,
+        node: RowNode,
         shiftKey: boolean,
         metaKey: boolean,
         source: SelectionEventSourceType
     ): null | NodeSelection {
-        // if node is a footer, we don't do selection, just pass the info
-        // to the sibling (the parent of the group)
-        const node = rowNode.footer ? rowNode.sibling : rowNode;
-
         const { gos, selectionCtx } = this;
         const currentSelection = node.isSelected();
         const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
@@ -279,7 +275,7 @@ export abstract class BaseSelectionService extends BeanStub {
         // the children (as the default behaviour when clicking is to unselect other rows) which results
         // in the group getting unselected (as all children are unselected). the correct thing would be
         // to change this, so that children of the selected group are not then subsequently un-selected.
-        if (isRowClicked && groupSelectsDescendants && rowNode.group) return null;
+        if (isRowClicked && groupSelectsDescendants && node.group) return null;
 
         if (isRowClicked && !(enableClickSelection || enableDeselection)) return null;
 

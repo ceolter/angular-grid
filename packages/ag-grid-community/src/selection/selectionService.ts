@@ -103,7 +103,11 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
         let updatedCount = 0;
         for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
+            const rowNode = nodes[i];
+            // if node is a footer, we don't do selection, just pass the info
+            // to the sibling (the parent of the group)
+            const node = rowNode.footer ? rowNode.sibling : rowNode;
+
             // when groupSelectsFiltered, then this node may end up indeterminate despite
             // trying to set it to true / false. this group will be calculated further on
             // down when we call updateGroupsFromChildrenSelections(). we need to skip it
