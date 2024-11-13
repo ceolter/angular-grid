@@ -212,7 +212,7 @@ export const modules = {
             ],
         },
         {
-            name: 'Row Grouping',
+            name: 'Row Grouping ',
             children: [
                 {
                     moduleName: 'RowGroupingModule',
@@ -232,7 +232,7 @@ export const modules = {
             ],
         },
         {
-            name: 'Pivoting',
+            name: 'Pivoting ',
             children: [
                 {
                     moduleName: 'PivotModule',
@@ -242,7 +242,7 @@ export const modules = {
             ],
         },
         {
-            name: 'Tree Data',
+            name: 'Tree Data ',
             children: [
                 {
                     moduleName: 'TreeDataModule',
@@ -252,7 +252,7 @@ export const modules = {
             ],
         },
         {
-            name: 'Master Detail',
+            name: 'Master Detail ',
             children: [
                 {
                     moduleName: 'MasterDetailModule',
