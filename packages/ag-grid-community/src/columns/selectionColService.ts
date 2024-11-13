@@ -7,9 +7,10 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
 import type { IAutoColService } from '../interfaces/iAutoColService';
+import { _applyColumnState } from '../main-umd-noStyles';
 import type { ColumnGroupService } from './columnGroups/columnGroupService';
 import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
-import type { ColumnStateService } from './columnStateService';
+import { _getColumnState } from './columnStateUtils';
 import {
     _areColIdsEqual,
     _columnsMatch,
@@ -29,7 +30,6 @@ export class SelectionColService extends BeanStub implements NamedBean {
     private autoColSvc?: IAutoColService;
     private colModel: ColumnModel;
     private visibleCols: VisibleColsService;
-    private colState: ColumnStateService;
     // selection checkbox columns
     public selectionCols: ColumnCollections | null;
 
@@ -38,7 +38,6 @@ export class SelectionColService extends BeanStub implements NamedBean {
         this.autoColSvc = beans.autoColSvc;
         this.colModel = beans.colModel;
         this.visibleCols = beans.visibleCols;
-        this.colState = beans.colState;
     }
 
     public postConstruct(): void {
@@ -215,17 +214,18 @@ export class SelectionColService extends BeanStub implements NamedBean {
                 return;
             }
 
-            this.colState.applyColumnState({ state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
+            _applyColumnState(this.beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
 
             return;
         }
 
         // case 2: multiple columns showing -- none are selection column
         if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
-            const existingState = this.colState.getColumnState().find((state) => isColumnSelectionCol(state.colId));
+            const existingState = _getColumnState(this.beans).find((state) => isColumnSelectionCol(state.colId));
 
             if (existingState) {
-                this.colState.applyColumnState(
+                _applyColumnState(
+                    this.beans,
                     {
                         state: [{ colId: existingState.colId, hide: !existingState.hide }],
                     },
