@@ -95,12 +95,16 @@ body {
     overflow: hidden;
     width: 100%;
     position: absolute;
-    top: 375px;
+    padding: $spacing-size-8;
     justify-content: center;
 
     @media screen and (min-width: $breakpoint-hero-large) {
         height: 416px;
         margin-top: $spacing-size-12;
+        top: 375px;
+    }
+    @media screen and (max-width: 500px) {
+        top: 450px;
     }
 
     .loadingLogoContainer {
