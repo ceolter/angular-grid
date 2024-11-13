@@ -32,23 +32,28 @@ export class ChangedRowNodes<TData = any> {
     /** true if the order of root.allLeafChildren has changed. */
     public rowsOrderChanged = false;
 
+    public get rowDataUpdated(): boolean {
+        return this.newData || this.deltaUpdate;
+    }
+
     public constructor(
         /** The CSRM rootNode */
         public readonly rootNode: AbstractClientSideNodeManager.RootNode<TData>,
-
         /**
          * Indicates a completely new rowData array is loaded.
          * If this is true, we consider this a new reload of data from scratch, or a first load of data.
          * In this case, removals will not contain the previous cleared rows.
          * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
          */
-        public readonly newData: boolean
+        public readonly newData: boolean,
+        /** True if the changes were initiated by a delta update (immutable row data) or new data (reload of row data) */
+        public readonly deltaUpdate: boolean
     ) {
         const changedPath = new ChangedPath(false, rootNode);
         this.changedPath = changedPath;
 
-        if (newData) {
-            // We disable the ChangedPath as all paths are new
+        if (!deltaUpdate) {
+            // This is not a delta update, so changed path is disabled
             changedPath.active = false;
         }
     }

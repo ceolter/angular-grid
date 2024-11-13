@@ -10,10 +10,8 @@ import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel'
 import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
-import type { IRowNode } from '../interfaces/iRowNode';
 import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
 import type { SortOption } from '../interfaces/iSortOption';
-import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
 import type { SortService } from '../sort/sortService';
 import type { ChangedPath } from '../utils/changedPath';
@@ -76,7 +74,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
         const deltaSort =
             sortActive &&
-            !!params.changedRowNodes &&
+            !!params.changedRowNodes?.deltaUpdate &&
             // in time we can remove this check, so that delta sort is always
             // on if transactions are present. it's off for now so that we can
             // selectively turn it on and test it with some select users before
@@ -145,8 +143,8 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             } else if (!sortActive || skipSortingPivotLeafs) {
                 // if there's no sort to make, skip this step
                 rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-            } else if (useDeltaSort && changedRowNodes) {
-                rowNode.childrenAfterSort = this.doDeltaSort(rowNode, changedRowNodes, changedPath, sortOptions);
+            } else if (useDeltaSort) {
+                rowNode.childrenAfterSort = this.doDeltaSort(rowNode, changedRowNodes!, changedPath, sortOptions);
             } else {
                 rowNode.childrenAfterSort = this.rowNodeSorter.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
             }
@@ -160,27 +158,6 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         };
 
         changedPath?.forEachChangedNodeDepthFirst(callback);
-    }
-
-    private calculateDirtyNodes(rowNodeTransactions?: RowNodeTransaction[] | null): { [nodeId: string]: true } {
-        const dirtyNodes: { [nodeId: string]: true } = {};
-
-        const addNodesFunc = (rowNodes: IRowNode[]) => {
-            if (rowNodes) {
-                rowNodes.forEach((rowNode) => (dirtyNodes[rowNode.id!] = true));
-            }
-        };
-
-        // all leaf level nodes in the transaction were impacted
-        if (rowNodeTransactions) {
-            rowNodeTransactions.forEach((tran) => {
-                addNodesFunc(tran.add);
-                addNodesFunc(tran.update);
-                addNodesFunc(tran.remove);
-            });
-        }
-
-        return dirtyNodes;
     }
 
     private doDeltaSort(

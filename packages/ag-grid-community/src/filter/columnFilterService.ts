@@ -120,9 +120,9 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     public postConstruct(): void {
         this.addManagedEventListeners({
             gridColumnsChanged: this.onColumnsChanged.bind(this),
-            beforeRefreshModel: ({ params, started }) => {
+            beforeRefreshModel: ({ state }) => {
                 // We listen to both row data updated and treeData changed as the SetFilter needs it
-                if (started && (params.changedRowNodes || params.changedProps?.has('treeData'))) {
+                if (state.started && (state.changedRowNodes.rowDataUpdated || state.changedProps?.has('treeData'))) {
                     this.onNewRowsLoaded('rowDataUpdated');
                 }
             },

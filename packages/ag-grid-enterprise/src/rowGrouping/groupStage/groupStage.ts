@@ -47,7 +47,7 @@ interface GroupingDetails {
     rootNode: RowNode;
     groupedCols: AgColumn[];
     groupedColCount: number;
-    transactions: RowNodeTransaction[];
+    transactions: RowNodeTransaction[] | null | undefined;
     rowNodesOrderChanged: boolean;
 
     groupAllowUnbalanced: boolean;
@@ -139,7 +139,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private createGroupingDetails(params: StageExecuteParams): GroupingDetails {
-        const { rowNode, changedPath, rowNodeTransactions, rowNodesOrderChanged } = params;
+        const { rowNode, changedRowNodes, changedPath, rowNodesOrderChanged } = params;
 
         const groupedCols = this.rowGroupColsSvc?.columns;
 
@@ -149,7 +149,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
             rootNode: rowNode,
             pivotMode: this.colModel.isPivotMode(),
             groupedColCount: groupedCols?.length ?? 0,
-            transactions: rowNodeTransactions!,
+            transactions: changedRowNodes?.rowNodeTransactions,
             rowNodesOrderChanged: !!rowNodesOrderChanged,
             // if no transaction, then it's shotgun, changed path would be 'not active' at this point anyway
             changedPath: changedPath!,
@@ -163,7 +163,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private handleTransaction(details: GroupingDetails): void {
-        details.transactions.forEach((tran) => {
+        details.transactions!.forEach((tran) => {
             const batchRemover = new BatchRemover();
 
             // the order here of [add, remove, update] needs to be the same as in ClientSideNodeManager,

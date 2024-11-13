@@ -78,7 +78,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
             recursiveExpandOrCollapse(rootNode.childrenAfterGroup);
         }
 
-        this.rowModel.refreshModel({ step: 'map' });
+        this.rowModel.refreshAfterRowGroupOpened(false);
 
         this.eventSvc.dispatchEvent({
             type: 'expandOrCollapseAll',
@@ -91,7 +91,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
         // calling rowNode.setExpanded(boolean) - this way we do a 'keepRenderedRows=false' so that the whole
         // grid gets refreshed again - otherwise the row with the rowNodes that were changed won't get updated,
         // and thus the expand icon in the group cell won't get 'opened' or 'closed'.
-        this.rowModel.refreshModel({ step: 'map' });
+        this.rowModel.refreshAfterRowGroupOpened(false);
     }
 
     // because the user can call rowNode.setExpanded() many times in one VM turn,
@@ -109,7 +109,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
         this.events.push(event);
 
         const func = () => {
-            this.rowModel.onRowGroupOpened();
+            this.rowModel.refreshAfterRowGroupOpened(true);
             this.events.forEach((e) => this.eventSvc.dispatchEvent(e));
             this.events = [];
         };

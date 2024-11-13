@@ -3,7 +3,7 @@ import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import { _getRowIdCallback } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
-import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
+import type { RefreshModelState } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _error, _warn } from '../validation/logging';
@@ -85,10 +85,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     public setNewRowData(changedRowNodes: ChangedRowNodes, rowData: TData[]): void {
-        const rootNode = this.rootNode;
-        if (!rootNode) {
-            return;
-        }
+        const rootNode = changedRowNodes.rootNode;
 
         this.dispatchRowDataUpdateStartedEvent(rowData);
 
@@ -292,7 +289,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         if (addIndex < allLeafChildrenLen) {
             // Insert at the specified index
 
-            changedRowNodes.rowsInserted = true; // Mark as rows inserted
+            changedRowNodes.rowsInserted = true;
 
             const nodesBefore = allLeafChildren.slice(0, addIndex);
             const nodesAfter = allLeafChildren.slice(addIndex, allLeafChildren.length);
@@ -500,9 +497,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         return rowNode || null;
     }
 
-    public refreshModel(params: RefreshModelParams<TData>): void {
-        const changedRowNodes = params.changedRowNodes;
-        if (changedRowNodes) {
+    public refreshModel({ changedRowNodes }: RefreshModelState<TData>): void {
+        if (changedRowNodes.deltaUpdate || changedRowNodes.hasChanges()) {
             this.deselectNodesAfterUpdate(changedRowNodes);
         }
     }

@@ -3,7 +3,7 @@ import type {
     ChangedRowNodes,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
-    RefreshModelParams,
+    RefreshModelState,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { AbstractClientSideNodeManager, RowNode, _ROW_ID_PREFIX_ROW_GROUP, _warn } from 'ag-grid-community';
@@ -521,6 +521,14 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
+    public override refreshModel(params: RefreshModelState<TData>): void {
+        if (params.afterColumnsChanged) {
+            this.afterColumnsChanged();
+        }
+
+        super.refreshModel(params);
+    }
+
     private afterColumnsChanged(): void {
         // Check if group data need to be recomputed due to group columns change
 
@@ -549,13 +557,5 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         } else {
             this.oldGroupDisplayColIds = '';
         }
-    }
-
-    public override refreshModel(params: RefreshModelParams<TData>): void {
-        if (params.afterColumnsChanged) {
-            this.afterColumnsChanged();
-        }
-
-        super.refreshModel(params);
     }
 }

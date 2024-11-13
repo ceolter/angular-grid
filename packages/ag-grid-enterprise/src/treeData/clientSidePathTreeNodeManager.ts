@@ -1,5 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type { ChangedRowNodes, GetDataPath, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
+import type { ChangedRowNodes, GetDataPath, NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -33,16 +33,16 @@ export class ClientSidePathTreeNodeManager<TData>
         return gos.get('treeData') && !!gos.get('getDataPath');
     }
 
-    public override refreshModel(params: RefreshModelParams<TData>): void {
+    public override refreshModel(params: RefreshModelState<TData>): void {
         const changedRowNodes = params.changedRowNodes;
-        if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes);
+        if (changedRowNodes.hasChanges()) {
+            this.executeUpdates(changedRowNodes);
         }
 
         super.refreshModel(params);
     }
 
-    private executeTransactions(changedRowNodes: ChangedRowNodes): void {
+    private executeUpdates(changedRowNodes: ChangedRowNodes): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
@@ -60,7 +60,9 @@ export class ClientSidePathTreeNodeManager<TData>
         const updates = changedRowNodes.updates;
         const getDataPath = this.gos.get('getDataPath');
         for (const row of updates.keys()) {
-            this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+            if (row.data) {
+                this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+            }
         }
 
         const rows = treeRoot.row?.allLeafChildren;
