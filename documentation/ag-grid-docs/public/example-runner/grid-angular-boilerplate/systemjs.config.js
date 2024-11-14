@@ -77,12 +77,10 @@
                 defaultExtension: 'mjs',
             },
             'ag-charts-community': {
-                main: './dist/package/main.cjs.js',
                 defaultExtension: 'js',
                 format: 'cjs',
             },
             'ag-charts-enterprise': {
-                main: './dist/package/main.cjs.js',
                 defaultExtension: 'js',
                 format: 'cjs',
             },
