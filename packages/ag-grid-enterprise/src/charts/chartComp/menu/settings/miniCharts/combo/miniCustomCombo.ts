@@ -2,7 +2,6 @@ import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChart } from '../miniChart';
-import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects, createLinePaths } from '../miniChartHelpers';
 
 export class MiniCustomCombo extends MiniChart {
@@ -36,7 +35,8 @@ export class MiniCustomCombo extends MiniChart {
             xScaleDomain: [0, 1],
             yScaleDomain: [0, 4],
             xScalePadding: 0.5,
-        } as CreateColumnRectsParams);
+            agChartsExports,
+        });
 
         root.append(this.columns);
 

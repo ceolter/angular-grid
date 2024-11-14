@@ -1,7 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
-import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
@@ -40,7 +39,8 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
             xScaleDomain: [0, 1],
             yScaleDomain: [0, 6],
             xScalePadding: 0.5,
-        } as CreateColumnRectsParams);
+            agChartsExports,
+        });
 
         // scale for area series
         const xScale = new _Scene.BandScale();

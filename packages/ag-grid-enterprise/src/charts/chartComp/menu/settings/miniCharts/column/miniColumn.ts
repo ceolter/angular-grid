@@ -1,7 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
-import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
@@ -26,7 +25,8 @@ export class MiniColumn extends MiniChartWithAxes {
             xScaleDomain: [0, 1, 2],
             yScaleDomain: [0, 4],
             xScalePadding: 0.3,
-        } as CreateColumnRectsParams);
+            agChartsExports,
+        });
 
         root.append(this.columns);
 

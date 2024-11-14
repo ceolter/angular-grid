@@ -3,7 +3,6 @@ import type { ChartType } from 'ag-grid-community';
 import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
-import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
@@ -42,7 +41,8 @@ export class MiniStackedColumn extends MiniChartWithAxes {
             xScaleDomain: [0, 1, 2],
             yScaleDomain,
             xScalePadding: 0.3,
-        } as CreateColumnRectsParams);
+            agChartsExports,
+        });
 
         root.append(([] as any[]).concat.apply([], this.stackedColumns));
 

@@ -3,7 +3,7 @@ import { _last } from 'ag-grid-community';
 import type { AgChartsExports } from '../../../../agChartsExports';
 import type { CommandSegment } from './miniChartApi';
 
-export interface CreateColumnRectsParams {
+interface CreateColumnRectsParams {
     agChartsExports: AgChartsExports;
     stacked: boolean;
     root: any;
