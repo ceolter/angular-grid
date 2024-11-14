@@ -30,6 +30,7 @@ export const useLicenseDebug = ({
         const isDebug = url.searchParams.get('debug') === 'true';
 
         if (isDebug) {
+            // eslint-disable-next-line no-console
             console.log({
                 licenseDetails,
                 chartsLicenseDetails,
