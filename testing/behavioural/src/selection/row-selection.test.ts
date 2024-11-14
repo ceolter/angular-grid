@@ -12,6 +12,7 @@ import {
     clickRowByIndex,
     getRowByIndex,
     selectRowsByIndex,
+    toggleCheckboxById,
     toggleCheckboxByIndex,
     toggleHeaderCheckboxByIndex,
     waitForEvent,
@@ -1085,7 +1086,7 @@ describe('Row Selection Grid Options', () => {
             });
         });
 
-        describe('Group checkbox selection', () => {
+        describe('Group selection', () => {
             const groupGridOptions: Partial<GridOptions> = {
                 columnDefs: [
                     { field: 'country', rowGroup: true, hide: true },
@@ -1299,6 +1300,20 @@ describe('Row Selection Grid Options', () => {
                 expect(applied).toBeTruthy();
 
                 assertSelectedRowElementsById(['0', '1', '2', '3', '6', '7', '8', '9', '11', '18'], api);
+            });
+
+            test('selecting footer node selects sibling (i.e. group node)', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    groupTotalRow: 'bottom',
+                    rowSelection: {
+                        mode: 'multiRow',
+                    },
+                });
+
+                toggleCheckboxById('rowGroupFooter_row-group-country-United States-sport-Swimming');
+
+                assertSelectedRowElementsById(['row-group-country-United States-sport-Swimming'], api);
             });
 
             describe('Range selection behaviour', () => {

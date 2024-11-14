@@ -1,8 +1,17 @@
 import type { AgPublicEventType, GridApi, IRowNode } from 'ag-grid-community';
 import { KeyCode, _areEqual } from 'ag-grid-community';
 
+function escapeQuotes(value: string): string {
+    return value.replaceAll(/(['"])/g, '\\$1');
+}
+
 export function getRowByIndex(index: number): HTMLElement | null {
     return document.getElementById('myGrid')!.querySelector(`[row-index="${index}"]`);
+}
+
+export function getRowById(id: string): HTMLElement | null {
+    console.log('finding', escapeQuotes(id));
+    return document.getElementById('myGrid')!.querySelector(`[row-id="${escapeQuotes(id)}"]`);
 }
 
 export function getCellByPosition(rowIndex: number, colId: string): HTMLElement | null {
@@ -11,6 +20,10 @@ export function getCellByPosition(rowIndex: number, colId: string): HTMLElement 
 
 export function getCheckboxByIndex(index: number): HTMLElement | null {
     return getRowByIndex(index)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null;
+}
+
+export function getCheckboxById(id: string): HTMLElement | null {
+    return getRowById(id)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null;
 }
 
 export function getHeaderCheckboxByIndex(index: number): HTMLElement | null {
@@ -34,6 +47,10 @@ export function clickRowByIndex(index: number, opts?: MouseEventInit): void {
 
 export function toggleCheckboxByIndex(index: number, opts?: MouseEventInit): void {
     getCheckboxByIndex(index)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
+}
+
+export function toggleCheckboxById(id: string, opts?: MouseEventInit): void {
+    getCheckboxById(id)?.dispatchEvent(new MouseEvent('click', { ...opts, bubbles: true }));
 }
 
 export function toggleHeaderCheckboxByIndex(index: number, opts?: MouseEventInit): void {
@@ -107,13 +124,15 @@ export function assertSelectedCellRanges(cellRanges: CellRangeSpec[], api: GridA
 
 export function waitForEvent(event: AgPublicEventType, api: GridApi, n = 1): Promise<void> {
     let count = n;
-    return new Promise((resolve) =>
-        api.addEventListener(event, () => {
+    return new Promise((resolve) => {
+        function listener() {
             if (--count === 0) {
+                api.removeEventListener(event, listener);
                 resolve();
             }
-        })
-    );
+        }
+        api.addEventListener(event, listener);
+    });
 }
 
 export function pressSpaceKey(element: HTMLElement, opts?: KeyboardEventInit): void {

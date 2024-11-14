@@ -27,6 +27,9 @@ export interface GridRowsOptions<TData = any> {
     /** If false, the id will not be shown in the diagram. Default is true */
     printIds?: boolean;
 
+    /** If true, will print row indices. Default is false. */
+    printRowIndices?: boolean;
+
     /** If true, the diagram will show hidden rows, like the children of collapsed groups, also if they do not appear in the displayed rows. Default is true */
     printHiddenRows?: boolean;
 
