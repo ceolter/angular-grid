@@ -1,10 +1,11 @@
 ---
-import { LicenseSetup } from '@ag-website-shared/components/license-setup/components/LicenseSetup';
+import { LicenseSetup } from '@components/license-setup/components/LicenseSetup';
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
-import seedRepos from '@ag-website-shared/content/seed-projects/grid-seed-projects.json';
+import { getEntry } from 'astro:content';
 
 const { pathname } = Astro.url;
 const framework = getFrameworkFromPath(pathname);
+const { data: seedRepos } = await getEntry('seed-projects', 'grid-seed-projects');
 ---
 
 <LicenseSetup client:only="react" library="grid" framework={framework} path={pathname} seedRepos={seedRepos} />

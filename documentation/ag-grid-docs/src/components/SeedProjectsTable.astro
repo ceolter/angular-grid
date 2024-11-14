@@ -1,7 +1,9 @@
 ---
-import seedProjects from '@ag-website-shared/content/seed-projects/grid-seed-projects.json';
+import { getEntry } from 'astro:content';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import styles from '@ag-website-shared/components/license-setup/components/LicenseSetup.module.scss';
+import styles from '@components/license-setup/components/LicenseSetup.module.scss';
+
+const { data: seedProjects } = await getEntry('seed-projects', 'grid-seed-projects');
 ---
 
 <table class={styles.reposTable} role="grid">
