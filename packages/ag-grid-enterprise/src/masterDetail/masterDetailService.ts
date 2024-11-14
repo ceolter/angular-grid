@@ -2,8 +2,8 @@ import type {
     BeanCollection,
     BeanName,
     BeforeRefreshModelEvent,
+    ChangedRowNodes,
     DetailGridInfo,
-    IChangedRowNodes,
     IColsService,
     IMasterDetailService,
     IRowModel,
@@ -59,12 +59,12 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         }
 
-        if (params.rowDataUpdated) {
+        if (params.changedRowNodes) {
             this.setMasters(params.changedRowNodes);
         }
     }
 
-    private setMasters(changedRowNodes: IChangedRowNodes | null | undefined): void {
+    private setMasters(changedRowNodes: ChangedRowNodes | null | undefined): void {
         const enabled = this.isEnabled();
         this.enabled = enabled;
 
@@ -78,7 +78,9 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             let newMaster = enabled;
 
             if (enabled) {
-                if (created || updated) {
+                if (!row.data) {
+                    newMaster = false; // a filler node
+                } else if (created || updated) {
                     if (isRowMaster) {
                         const data = row.data;
                         newMaster = !!data && !!isRowMaster(data);

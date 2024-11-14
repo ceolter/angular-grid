@@ -27,9 +27,6 @@ const enum Flags {
     PathChanged = 0x10,
 }
 
-/** We set this on the first time the node is committed. We unset this if the row gets deleted. */
-export const isTreeRowCommitted = (row: RowNode): boolean => (row.treeNodeFlags & Flags.Committed) !== 0;
-
 /** Check if the expanded state needs to be initialized, first time for a node, or again if the node was removed */
 export const isTreeRowExpandedInitialized = (row: RowNode): boolean =>
     (row.treeNodeFlags & Flags.ExpandedInitialized) !== 0;

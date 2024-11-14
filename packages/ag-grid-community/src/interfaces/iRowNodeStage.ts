@@ -1,14 +1,15 @@
+import type { ChangedRowNodes } from '../clientSideRowModel/changedRowNodes';
 import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
-import type { ClientSideRowModelStage, IChangedRowNodes } from './iClientSideRowModel';
+import type { ClientSideRowModelStage } from './iClientSideRowModel';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
 export interface StageExecuteParams<TData = any> {
     rowNode: RowNode<TData>;
 
     // used in sort stage, as sort stage looks at all transactions in one go
-    changedRowNodes?: IChangedRowNodes<TData>;
+    changedRowNodes?: ChangedRowNodes<TData> | null;
 
     // used in group stage
     rowNodeTransactions?: RowNodeTransaction<TData>[] | null;

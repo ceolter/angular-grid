@@ -1,20 +1,10 @@
+import type { ChangedRowNodes } from '../clientSideRowModel/changedRowNodes';
 import type { RowNode } from '../entities/rowNode';
-import type { IChangedRowNodes, RefreshModelParams } from './iClientSideRowModel';
+import type { RefreshModelParams } from './iClientSideRowModel';
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
 export type RowDataChildrenGetter<TData = any> = (data: TData | null | undefined) => TData[] | null | undefined;
-
-/** Result of IClientSideNodeManager.updateRowData method */
-export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
-    changedRowNodes: IChangedRowNodes<TData>;
-
-    /** The RowNodeTransaction containing all the removals, updates and additions */
-    rowNodeTransaction: RowNodeTransaction<TData>;
-
-    /** True if at least one row was inserted (and not just appended) */
-    rowsInserted: boolean;
-}
 
 export interface IClientSideNodeManager<TData = any> {
     readonly treeData: boolean;
@@ -27,14 +17,14 @@ export interface IClientSideNodeManager<TData = any> {
 
     extractRowData(): (TData | undefined)[] | null | undefined;
 
-    setNewRowData(rowData: TData[]): void;
+    setNewRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): void;
 
-    setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void;
+    setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean;
 
-    updateRowData(
-        rowDataTran: RowDataTransaction<TData>,
-        changedRowNodes: IChangedRowNodes<TData>
-    ): ClientSideNodeManagerUpdateRowDataResult<TData>;
+    applyTransaction(
+        changedRowNodes: ChangedRowNodes<TData>,
+        rowDataTran: RowDataTransaction<TData>
+    ): RowNodeTransaction<TData>;
 
-    refreshModel?(params: RefreshModelParams<TData>): void;
+    refreshModel(params: RefreshModelParams<TData>): void;
 }

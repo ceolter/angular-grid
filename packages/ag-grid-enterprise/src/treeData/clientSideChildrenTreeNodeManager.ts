@@ -1,5 +1,6 @@
 import type { IClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
-import { ChangedPath, _error, _getRowIdCallback } from 'ag-grid-community';
+import { ChangedRowNodes } from 'ag-grid-community';
+import { _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import { makeFieldPathGetter } from './fieldAccess';
@@ -41,9 +42,9 @@ export class ClientSideChildrenTreeNodeManager<TData>
         super.activate(rootNode);
     }
 
-    protected override loadNewRowData(rowData: TData[]): void {
+    protected override loadNewRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): void {
         const treeRoot = this.treeRoot!;
-        const rootNode = this.rootNode!;
+        const rootNode = changedRowNodes.rootNode;
         const childrenGetter = this.childrenGetter;
 
         const processedDataSet = new Set<TData>();
@@ -80,10 +81,10 @@ export class ClientSideChildrenTreeNodeManager<TData>
             processChild(treeRoot, rowData[i]);
         }
 
-        this.treeCommit();
+        this.treeCommit(changedRowNodes);
     }
 
-    public override setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
+    public override setImmutableRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): boolean {
         const gos = this.gos;
         const treeRoot = this.treeRoot!;
         const rootNode = this.rootNode!;
@@ -93,17 +94,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const processedDataSet = new Set<TData>();
 
-        const changedPath = new ChangedPath(false, rootNode);
-        params.changedPath = changedPath;
-
-        const changedRowNodes = params.changedRowNodes!;
-
         const oldAllLeafChildren = rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
-        const nodesToUnselect: TreeRow<TData>[] = [];
 
         let orderChanged = false;
-        let rowsChanged = false;
+        let treeChanged = false;
 
         const processChildrenNoReorder = (node: TreeNode, children: TData[]): void => {
             for (let i = 0, len = children.length; i < len; ++i) {
@@ -151,9 +146,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 if (row.data !== data) {
                     changedRowNodes.update(row);
                     row.updateData(data);
-                    if (!row.selectable && row.isSelected()) {
-                        nodesToUnselect.push(row);
-                    }
                 }
             } else {
                 row = this.createRowNode(data, -1);
@@ -173,7 +165,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             }
 
             if (this.treeSetRow(node, row, created)) {
-                rowsChanged = true;
+                treeChanged = true;
             }
 
             const children = childrenGetter?.(data);
@@ -214,26 +206,21 @@ export class ClientSideChildrenTreeNodeManager<TData>
         rootNode.allLeafChildren = allLeafChildren;
         treeRoot.allLeafChildren = allLeafChildren;
 
-        if (nodesToUnselect.length) {
-            this.deselectNodes(nodesToUnselect);
+        this.treeCommit(changedRowNodes);
+
+        if (orderChanged) {
+            changedRowNodes.rowsOrderChanged = true;
         }
 
-        this.treeCommit(changedPath);
-
-        if (rowsChanged || orderChanged) {
-            params.step = 'group';
-            params.rowDataUpdated = true;
-            params.rowNodesOrderChanged = orderChanged;
-        }
+        return treeChanged || changedRowNodes.hasChanges();
     }
 
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const { rootNode, treeRoot } = this;
-        if (!treeRoot) {
-            return; // Not active, destroyed
-        }
 
-        if (params.changedProps?.has('treeData') && !params.newData) {
+        if (treeRoot && !params.changedRowNodes?.newData && params.changedProps?.has('treeData')) {
+            const changedRowNodes = params.changedRowNodes ?? new ChangedRowNodes(rootNode!, false);
+
             treeRoot.setRow(rootNode);
             const allLeafChildren = rootNode?.allLeafChildren;
             if (allLeafChildren) {
@@ -243,7 +230,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
                     row.treeNode?.invalidate();
                 }
             }
-            this.treeCommit();
+            this.treeCommit(changedRowNodes);
+
+            if (!params.changedRowNodes && changedRowNodes.hasChanges()) {
+                params.changedRowNodes = changedRowNodes;
+            }
         }
 
         super.refreshModel(params);

@@ -62,7 +62,7 @@ export function applyTransaction<TData = any>(
     rowDataTransaction: RowDataTransaction<TData>
 ): RowNodeTransaction<TData> | null | undefined {
     return beans.frameworkOverrides.wrapIncoming(() =>
-        _getClientSideRowModel(beans)?.updateRowData(rowDataTransaction)
+        _getClientSideRowModel(beans)?.applyTransaction(rowDataTransaction)
     );
 }
 
@@ -72,7 +72,7 @@ export function applyTransactionAsync<TData = any>(
     callback?: (res: RowNodeTransaction<TData>) => void
 ): void {
     beans.frameworkOverrides.wrapIncoming(() =>
-        _getClientSideRowModel(beans)?.batchUpdateRowData(rowDataTransaction, callback)
+        _getClientSideRowModel(beans)?.applyTransactionAsync(rowDataTransaction, callback)
     );
 }
 

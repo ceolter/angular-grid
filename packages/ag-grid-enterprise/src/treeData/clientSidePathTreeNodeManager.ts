@@ -1,12 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type {
-    ChangedPath,
-    GetDataPath,
-    IChangedRowNodes,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { ChangedRowNodes, GetDataPath, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -17,14 +10,14 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override loadNewRowData(rowData: TData[]): void {
-        const rootNode = this.rootNode!;
+    protected override loadNewRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): void {
+        const rootNode = changedRowNodes.rootNode;
         const treeRoot = this.treeRoot!;
 
         this.treeClear(treeRoot);
         treeRoot.setRow(rootNode);
 
-        super.loadNewRowData(rowData);
+        super.loadNewRowData(changedRowNodes, rowData);
 
         const allLeafChildren = rootNode.allLeafChildren!;
         const getDataPath = this.gos.get('getDataPath');
@@ -32,7 +25,7 @@ export class ClientSidePathTreeNodeManager<TData>
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
 
-        this.treeCommit();
+        this.treeCommit(changedRowNodes);
     }
 
     public override get treeData(): boolean {
@@ -43,17 +36,13 @@ export class ClientSidePathTreeNodeManager<TData>
     public override refreshModel(params: RefreshModelParams<TData>): void {
         const changedRowNodes = params.changedRowNodes;
         if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes, params.changedPath, params.rowNodesOrderChanged);
+            this.executeTransactions(changedRowNodes);
         }
 
         super.refreshModel(params);
     }
 
-    private executeTransactions(
-        changedRowNodes: IChangedRowNodes,
-        changedPath: ChangedPath | undefined,
-        rowNodesOrderMaybeChanged: boolean | undefined
-    ): void {
+    private executeTransactions(changedRowNodes: ChangedRowNodes): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
@@ -75,7 +64,8 @@ export class ClientSidePathTreeNodeManager<TData>
         }
 
         const rows = treeRoot.row?.allLeafChildren;
-        if (rowNodesOrderMaybeChanged && rows) {
+
+        if (rows && (changedRowNodes.rowsOrderChanged || changedRowNodes.rowsInserted)) {
             for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
                 const node = rows[rowIdx].treeNode as TreeNode | null;
                 if (node && node.sourceIdx !== rowIdx) {
@@ -84,7 +74,7 @@ export class ClientSidePathTreeNodeManager<TData>
             }
         }
 
-        this.treeCommit(changedPath); // One single commit for all the transactions
+        this.treeCommit(changedRowNodes); // One single commit for all the transactions
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {
