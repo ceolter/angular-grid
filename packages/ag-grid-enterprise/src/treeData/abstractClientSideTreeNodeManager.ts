@@ -1,6 +1,5 @@
 import type {
     ChangedPath,
-    ChangedRowNodes,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
     RefreshModelState,
@@ -178,7 +177,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Commit the changes performed to the tree */
-    protected treeCommit(changedRowNodes: ChangedRowNodes<TData>): void {
+    protected treeCommit(refreshModelState: RefreshModelState<TData>): void {
         const { treeRoot, rootNode } = this;
         if (!treeRoot || !rootNode) {
             return;
@@ -186,7 +185,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         const treeData = this.treeData;
 
-        let activeChangedPath: ChangedPath | null = changedRowNodes.changedPath;
+        let activeChangedPath: ChangedPath | null = refreshModelState.changedPath;
         if (!activeChangedPath.active) {
             activeChangedPath = null;
         }
@@ -224,7 +223,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows();
 
-        this.beans.selectionSvc?.updateSelectableAfterGrouping(changedRowNodes.changedPath);
+        this.beans.selectionSvc?.updateSelectableAfterGrouping(refreshModelState.changedPath);
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */

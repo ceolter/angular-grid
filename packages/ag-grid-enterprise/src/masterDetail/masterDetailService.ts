@@ -48,7 +48,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         }
     }
 
-    private beforeRefreshModel({ state: { changedRowNodes } }: BeforeRefreshModelEvent) {
+    private beforeRefreshModel({ state }: BeforeRefreshModelEvent) {
         const enabled = this.isEnabled();
         let enabledChanged = false;
         if (enabled !== this.enabled) {
@@ -99,20 +99,19 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             }
         };
 
-        const updates = changedRowNodes.updates;
-        if (!enabledChanged && changedRowNodes.deltaUpdate) {
+        const updates = state.updates;
+        if (!enabledChanged && state.deltaUpdate) {
             for (const node of updates.keys()) {
                 const created = updates.get(node)!;
                 setMaster(node, created, !created);
             }
         } else {
-            const allLeafChildren = changedRowNodes.rootNode.allLeafChildren;
+            const allLeafChildren = state.rootNode.allLeafChildren;
             if (allLeafChildren) {
-                const newData = changedRowNodes.newData;
                 for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
                     const node = allLeafChildren[i];
-                    const createdOrUpdated = newData || updates.get(node);
-                    setMaster(node, enabledChanged || !!createdOrUpdated, createdOrUpdated === false);
+                    const createdOrUpdated = updates.get(node);
+                    setMaster(node, enabledChanged || createdOrUpdated === true, createdOrUpdated === false);
                 }
             }
         }

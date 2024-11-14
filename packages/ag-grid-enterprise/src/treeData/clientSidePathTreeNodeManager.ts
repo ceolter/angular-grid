@@ -1,5 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type { ChangedRowNodes, GetDataPath, NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
+import type { GetDataPath, NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -10,14 +10,14 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override loadNewRowData(changedRowNodes: ChangedRowNodes<TData>, rowData: TData[]): void {
-        const rootNode = changedRowNodes.rootNode;
+    protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {
+        const rootNode = refreshModelState.rootNode;
         const treeRoot = this.treeRoot!;
 
         this.treeClear(treeRoot);
         treeRoot.setRow(rootNode);
 
-        super.loadNewRowData(changedRowNodes, rowData);
+        super.loadNewRowData(refreshModelState, rowData);
 
         const allLeafChildren = rootNode.allLeafChildren!;
         const getDataPath = this.gos.get('getDataPath');
@@ -25,7 +25,7 @@ export class ClientSidePathTreeNodeManager<TData>
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
 
-        this.treeCommit(changedRowNodes);
+        this.treeCommit(refreshModelState);
     }
 
     public override get treeData(): boolean {
@@ -33,16 +33,15 @@ export class ClientSidePathTreeNodeManager<TData>
         return gos.get('treeData') && !!gos.get('getDataPath');
     }
 
-    public override refreshModel(params: RefreshModelState<TData>): void {
-        const changedRowNodes = params.changedRowNodes;
-        if (changedRowNodes.hasChanges()) {
-            this.executeUpdates(changedRowNodes);
+    public override refreshModel(state: RefreshModelState<TData>): void {
+        if (state.hasChanges()) {
+            this.executeUpdates(state);
         }
 
-        super.refreshModel(params);
+        super.refreshModel(state);
     }
 
-    private executeUpdates(changedRowNodes: ChangedRowNodes): void {
+    private executeUpdates(state: RefreshModelState<TData>): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
@@ -50,14 +49,14 @@ export class ClientSidePathTreeNodeManager<TData>
 
         treeRoot.setRow(this.rootNode);
 
-        for (const row of changedRowNodes.removals) {
+        for (const row of state.removals) {
             const node = row.treeNode as TreeNode | null;
             if (node) {
                 this.treeRemove(node, row);
             }
         }
 
-        const updates = changedRowNodes.updates;
+        const updates = state.updates;
         const getDataPath = this.gos.get('getDataPath');
         for (const row of updates.keys()) {
             if (row.data) {
@@ -67,7 +66,7 @@ export class ClientSidePathTreeNodeManager<TData>
 
         const rows = treeRoot.row?.allLeafChildren;
 
-        if (rows && (changedRowNodes.rowsOrderChanged || changedRowNodes.rowsInserted)) {
+        if (rows && (state.rowsOrderChanged || state.rowsInserted)) {
             for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
                 const node = rows[rowIdx].treeNode as TreeNode | null;
                 if (node && node.sourceIdx !== rowIdx) {
@@ -76,7 +75,7 @@ export class ClientSidePathTreeNodeManager<TData>
             }
         }
 
-        this.treeCommit(changedRowNodes); // One single commit for all the transactions
+        this.treeCommit(state); // One single commit for all the transactions
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {

@@ -427,16 +427,9 @@ export { ICheckboxCellRendererParams } from './rendering/cellRenderers/checkboxC
 export type { PinnedRowModel } from './pinnedRowModel/pinnedRowModel';
 export { RowNodeTransaction } from './interfaces/rowNodeTransaction';
 export { RowDataTransaction } from './interfaces/rowDataTransaction';
-export {
-    IClientSideRowModel,
-    ClientSideRowModelStage,
-    ClientSideRowModelStep,
-    RefreshModelState,
-    RefreshModelParams,
-} from './interfaces/iClientSideRowModel';
-export { IClientSideNodeManager } from './interfaces/iClientSideNodeManager';
+export { IClientSideRowModel, ClientSideRowModelStage, ClientSideRowModelStep } from './interfaces/iClientSideRowModel';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';
-export type { ChangedRowNodes } from './clientSideRowModel/changedRowNodes';
+export type { RefreshModelState } from './clientSideRowModel/refreshModelState';
 export { IGroupHideOpenParentsService } from './interfaces/iGroupHideOpenParentsService';
 export type { RowAutoHeightService } from './rendering/row/rowAutoHeightService';
 

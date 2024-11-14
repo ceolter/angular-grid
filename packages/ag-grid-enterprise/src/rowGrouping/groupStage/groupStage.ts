@@ -139,7 +139,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private createGroupingDetails(params: StageExecuteParams): GroupingDetails {
-        const { rowNode, changedRowNodes, changedPath, rowNodesOrderChanged } = params;
+        const { rowNode, refreshModelState, changedPath, rowNodesOrderChanged } = params;
 
         const groupedCols = this.rowGroupColsSvc?.columns;
 
@@ -149,7 +149,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
             rootNode: rowNode,
             pivotMode: this.colModel.isPivotMode(),
             groupedColCount: groupedCols?.length ?? 0,
-            transactions: changedRowNodes?.rowNodeTransactions,
+            transactions: refreshModelState?.deltaUpdateTransactions,
             rowNodesOrderChanged: !!rowNodesOrderChanged,
             // if no transaction, then it's shotgun, changed path would be 'not active' at this point anyway
             changedPath: changedPath!,

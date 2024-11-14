@@ -1,5 +1,4 @@
-import type { ChangedRowNodes } from '../clientSideRowModel/changedRowNodes';
-import type { GridOptions } from '../entities/gridOptions';
+import type { RefreshModelParams } from '../clientSideRowModel/refreshModelState';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
 import type { IRowModel } from './iRowModel';
@@ -56,38 +55,3 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     getLastHighlightedRowNode(): RowNode | null;
     isRowDataLoaded(): boolean;
 }
-
-export interface RefreshModelState<TData = any> {
-    /** how much of the pipeline to execute */
-    step: ClientSideRowModelStage;
-
-    /** The set of changed grid options, if any */
-    changedProps: Set<keyof GridOptions<TData>> | undefined;
-
-    /** A data structure that holds the affected rows. */
-    changedRowNodes: ChangedRowNodes<TData>;
-
-    /**
-     * if NOT new data, then this flag tells grid to check if rows already
-     * exist for the nodes (matching by node id) and reuses the row if it does.
-     */
-    keepRenderedRows: boolean;
-
-    /**
-     * if true, rows that are kept are animated to the new position
-     */
-    animate: boolean;
-
-    /** true if this update is due to columns changing, ie no rows were changed */
-    afterColumnsChanged: boolean;
-
-    /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
-    keepUndoRedoStack: boolean;
-
-    /** True if the CSRM is fully started and active, as there is an initialization phase this might be false when the grid is being created */
-    started: boolean;
-}
-
-export type RefreshModelParams<TData = any> = Partial<RefreshModelState<TData>> & {
-    step: ClientSideRowModelStage;
-};

@@ -1,6 +1,7 @@
 import type { AlignedGridsService } from '../alignedGrids/alignedGridsService';
 import type { ApiFunctionService } from '../api/apiFunctionService';
 import type { GridApi } from '../api/gridApi';
+import type { AbstractClientSideNodeManager } from '../clientSideRowModel/abstractClientSideNodeManager';
 import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeService';
 import type { ColumnMoveService } from '../columnMove/columnMoveService';
 import type { ColumnResizeService } from '../columnResize/columnResizeService';
@@ -44,7 +45,6 @@ import type { IAdvancedFilterService } from '../interfaces/iAdvancedFilterServic
 import type { IAggColumnNameService } from '../interfaces/iAggColumnNameService';
 import type { IAggFuncService } from '../interfaces/iAggFuncService';
 import type { IAutoColService } from '../interfaces/iAutoColService';
-import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type { IClipboardService } from '../interfaces/iClipboardService';
 import type { IColsService } from '../interfaces/iColsService';
 import type { IContextMenuService } from '../interfaces/iContextMenu';
@@ -289,9 +289,9 @@ export interface CoreBeanCollection {
     stickyRowSvc?: StickyRowService;
     groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
     filterValueSvc?: FilterValueService;
-    csrmNodeSvc?: IClientSideNodeManager;
-    csrmPathTreeNodeSvc?: IClientSideNodeManager;
-    csrmChildrenTreeNodeSvc?: IClientSideNodeManager;
+    csrmNodeSvc?: AbstractClientSideNodeManager;
+    csrmPathTreeNodeSvc?: AbstractClientSideNodeManager;
+    csrmChildrenTreeNodeSvc?: AbstractClientSideNodeManager;
     cellFlashSvc?: CellFlashService;
     masterDetailSvc?: IMasterDetailService;
     tooltipSvc?: TooltipService;
