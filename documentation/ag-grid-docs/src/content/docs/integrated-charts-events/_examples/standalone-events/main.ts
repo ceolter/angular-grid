@@ -1,17 +1,14 @@
-import type { AgChartLegendClickEvent, AgSeriesNodeClickEvent } from 'ag-charts-community';
+import type { AgChartLegendClickEvent, AgNodeClickEvent } from 'ag-charts-community';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);
@@ -38,7 +35,7 @@ const gridOptions: GridOptions = {
                 },
             },
             listeners: {
-                seriesNodeClick: (e: AgSeriesNodeClickEvent<any>) => console.log('seriesNodeClick', e),
+                seriesNodeClick: (e: AgNodeClickEvent<any, any>) => console.log('seriesNodeClick', e),
             },
         },
     },

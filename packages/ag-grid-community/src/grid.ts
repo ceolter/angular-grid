@@ -112,6 +112,7 @@ export function _getGlobalGridOption<K extends keyof GridOptions>(gridOption: K)
     return GlobalGridOptions.gridOptions?.[gridOption];
 }
 
+// **NOTE** If updating this JsDoc please also update the re-exported createGrid in main-umd-shared.ts
 /**
  * Creates a grid inside the provided HTML element.
  * @param eGridDiv Parent element to contain the grid.

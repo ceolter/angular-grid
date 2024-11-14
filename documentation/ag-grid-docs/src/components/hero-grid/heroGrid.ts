@@ -2,6 +2,7 @@
  * Hero Grid demo
  */
 import { createGenerator } from '@utils/grid/generator-utils';
+import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type { GetRowIdParams, GridApi, GridOptions, GridSizeChangedEvent, ISetFilter } from 'ag-grid-community';
 import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
@@ -16,7 +17,7 @@ import { fixtureData } from './rowDataFixture';
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    SparklinesModule,
+    SparklinesModule.with(AgChartsCommunityModule),
     SetFilterModule,
     ClipboardModule,
     MenuModule,

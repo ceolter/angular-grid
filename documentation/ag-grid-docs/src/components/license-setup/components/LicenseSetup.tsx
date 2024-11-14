@@ -62,6 +62,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
             getDependenciesSnippet({
                 library,
                 framework,
+                isIntegratedCharts,
             }),
         [library, framework, isIntegratedCharts]
     );
@@ -70,8 +71,9 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
             getNpmInstallSnippet({
                 library,
                 framework,
+                isIntegratedCharts,
             }),
-        [framework, isIntegratedCharts]
+        [library, framework, isIntegratedCharts]
     );
     const bootstrapSnippet = useMemo(
         () =>
@@ -93,8 +95,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                 }),
         [seedRepos, isIntegratedCharts, framework]
     );
-    const isGrid = library === 'grid';
-    const productName = isGrid ? 'AG Grid' : 'AG Charts';
+    const productName = 'AG Grid';
 
     return (
         <>
@@ -144,48 +145,44 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         </div>
                     )}
 
-                    {isGrid && (
-                        <>
-                            <div>
-                                <h3 id="configure-your-application">Configure Your Application</h3>
+                    <div>
+                        <h3 id="configure-your-application">Configure Your Application</h3>
 
-                                <div className={styles.icQuestion}>
-                                    <label
-                                        className={classnames(styles.licensedProduct, styles.integratedProduct, {
-                                            [styles.valid]: licensedProducts.grid && licensedProducts.charts,
-                                            [styles.trial]:
-                                                userLicenseIsTrial && licensedProducts.grid && licensedProducts.charts,
-                                            [styles.expired]:
-                                                (userLicenseIsExpired || userLicenseTrialIsExpired) &&
-                                                licensedProducts.grid &&
-                                                licensedProducts.charts,
-                                        })}
-                                    >
-                                        Are you using Integrated Charts?{' '}
-                                        <input
-                                            type="checkbox"
-                                            name="products"
-                                            value="integratedEnterprise"
-                                            checked={isIntegratedCharts}
-                                            onChange={() => {
-                                                updateIsIntegratedChartsWithUrlUpdate(!isIntegratedCharts);
-                                            }}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                            {licenseState.integratedChartsNoChartsError && (
-                                <Warning>
-                                    {licenseState.integratedChartsNoChartsError}. <EmailSales />
-                                </Warning>
-                            )}
-
-                            <div className={styles.frameworkContainer}>
-                                <label>Framework</label>
-                                <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
-                            </div>
-                        </>
+                        <div className={styles.icQuestion}>
+                            <label
+                                className={classnames(styles.licensedProduct, styles.integratedProduct, {
+                                    [styles.valid]: licensedProducts.grid && licensedProducts.charts,
+                                    [styles.trial]:
+                                        userLicenseIsTrial && licensedProducts.grid && licensedProducts.charts,
+                                    [styles.expired]:
+                                        (userLicenseIsExpired || userLicenseTrialIsExpired) &&
+                                        licensedProducts.grid &&
+                                        licensedProducts.charts,
+                                })}
+                            >
+                                Are you using Integrated Charts?{' '}
+                                <input
+                                    type="checkbox"
+                                    name="products"
+                                    value="integratedEnterprise"
+                                    checked={isIntegratedCharts}
+                                    onChange={() => {
+                                        updateIsIntegratedChartsWithUrlUpdate(!isIntegratedCharts);
+                                    }}
+                                />
+                            </label>
+                        </div>
+                    </div>
+                    {licenseState.integratedChartsNoChartsError && (
+                        <Warning>
+                            {licenseState.integratedChartsNoChartsError}. <EmailSales />
+                        </Warning>
                     )}
+
+                    <div className={styles.frameworkContainer}>
+                        <label>Framework</label>
+                        <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
+                    </div>
                 </div>
 
                 <div className={styles.results}>
@@ -210,13 +207,11 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         <Snippet framework={framework} content={dependenciesSnippet} copyToClipboard />
                     )}
 
-                    {isGrid && (
-                        <Note>
-                            If you are using an older version of AG Grid, before v33.0.0, please see the relevant{' '}
-                            <a href={urlWithBaseUrl('/documentation-archive')}>documentation</a> for help on installing
-                            your license key
-                        </Note>
-                    )}
+                    <Note>
+                        If you are using an older version of AG Grid, before v33.0.0, please see the relevant{' '}
+                        <a href={urlWithBaseUrl('/documentation-archive')}>documentation</a> for help on installing your
+                        license key
+                    </Note>
 
                     <p>Or install using npm:</p>
 
@@ -247,57 +242,50 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         copyToClipboard
                     />
 
-                    {isGrid && (
+                    <h2 id="seed-repos">Seed Repositories</h2>
+
+                    {selectedSeedRepos.length ? (
                         <>
-                            <h2 id="seed-repos">Seed Repositories</h2>
+                            <p>Here are some seed code repositories to get you started:</p>
 
-                            {selectedSeedRepos.length ? (
-                                <>
-                                    <p>Here are some seed code repositories to get you started:</p>
-
-                                    <table className={styles.reposTable} role="grid">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Github Repo</th>
-                                                <th scope="col">Framework</th>
-                                                <th scope="col">Development Environment</th>
+                            <table className={styles.reposTable} role="grid">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Github Repo</th>
+                                        <th scope="col">Framework</th>
+                                        <th scope="col">Development Environment</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {selectedSeedRepos.map(({ name, url, framework, devEnvironment }) => {
+                                        return (
+                                            <tr key={url}>
+                                                <td>
+                                                    <a
+                                                        className={classnames(styles.repoButton, 'button-secondary')}
+                                                        href={url}
+                                                    >
+                                                        <Icon name="github" />
+                                                        {name}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <img
+                                                        className={styles.frameworkLogo}
+                                                        src={fwLogos[framework]}
+                                                        alt={framework}
+                                                    />{' '}
+                                                    {framework}
+                                                </td>
+                                                <td>{devEnvironment}</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedSeedRepos.map(({ name, url, framework, devEnvironment }) => {
-                                                return (
-                                                    <tr key={url}>
-                                                        <td>
-                                                            <a
-                                                                className={classnames(
-                                                                    styles.repoButton,
-                                                                    'button-secondary'
-                                                                )}
-                                                                href={url}
-                                                            >
-                                                                <Icon name="github" />
-                                                                {name}
-                                                            </a>
-                                                        </td>
-                                                        <td>
-                                                            <img
-                                                                className={styles.frameworkLogo}
-                                                                src={fwLogos[framework]}
-                                                                alt={framework}
-                                                            />{' '}
-                                                            {framework}
-                                                        </td>
-                                                        <td>{devEnvironment}</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </>
-                            ) : (
-                                <p>Select your enterprise products above to view seed repositories.</p>
-                            )}
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
                         </>
+                    ) : (
+                        <p>Select your enterprise products above to view seed repositories.</p>
                     )}
                 </div>
             </form>

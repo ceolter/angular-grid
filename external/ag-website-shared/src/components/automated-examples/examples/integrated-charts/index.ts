@@ -1,8 +1,16 @@
 /**
  * Automated Integrated Charts demo
  */
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
 import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import { ClipboardModule, GridChartsModule, MenuModule, RowGroupingModule, SideBarModule } from 'ag-grid-enterprise';
+import {
+    ClipboardModule,
+    IntegratedChartsModule,
+    MenuModule,
+    RowGroupingModule,
+    SideBarModule,
+} from 'ag-grid-enterprise';
 
 import type { AutomatedExample } from '../../types.d';
 import type { CreateAutomatedIntegratedChartsParams } from './createAutomatedIntegratedChartsWithCreateGrid';
@@ -12,7 +20,7 @@ ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
     ClipboardModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
     SideBarModule,

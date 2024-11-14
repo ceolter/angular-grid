@@ -1,4 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
 import type {
     ColDef,
     GetLocaleTextParams,
@@ -7,21 +8,28 @@ import type {
     ICellRendererComp,
     ICellRendererParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { CsvExportModule } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { MultiFilterModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
-import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
-import { StatusBarModule } from 'ag-grid-enterprise';
+import {
+    ClientSideRowModelModule,
+    CommunityFeaturesModule,
+    CsvExportModule,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
+import {
+    CellSelectionModule,
+    ClipboardModule,
+    ColumnsToolPanelModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    IntegratedChartsModule,
+    MenuModule,
+    MultiFilterModule,
+    RowGroupingModule,
+    RowGroupingPanelModule,
+    SetFilterModule,
+    SideBarModule,
+    StatusBarModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
@@ -31,10 +39,10 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     MultiFilterModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     RowGroupingModule,
     SetFilterModule,
     SideBarModule,

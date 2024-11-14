@@ -2,7 +2,7 @@ import { ModuleName } from 'ag-grid-community';
 
 import { CommunityModuleName, EnterpriseModuleName } from '../../packages/ag-grid-community/src/interfaces/iModule';
 
-const AllCommunityModules: Record<CommunityModuleName, number> = {
+export const AllCommunityModules: Record<CommunityModuleName, number> = {
     AlignedGridsModule: 3.06,
     AllCommunityModule: 546.49,
     AnimateShowChangeCellRendererModule: 1.73,
@@ -61,6 +61,7 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
     ExcelExportModule: 2637.37,
     FiltersToolPanelModule: 2639.18,
     GridChartsModule: 2569.52,
+    IntegratedChartsModule: 432,
     GroupFilterModule: 2657.24,
     MasterDetailModule: 2625.17,
     MenuModule: 2676.84,
@@ -102,6 +103,22 @@ const commonFeatureSets: ModuleTest[] = [
 export const moduleCombinations: ModuleTest[] = [
     { modules: [], expectedSize: 445.89 },
     ...commonFeatureSets,
+    {
+        modules: ['AgChartsCommunityModule' as any, 'IntegratedChartsModule'],
+        expectedSize: 1172,
+    },
+    {
+        modules: ['AgChartsEnterpriseModule' as any, 'IntegratedChartsModule'],
+        expectedSize: 1840,
+    },
+    {
+        modules: ['AgChartsCommunityModule' as any, 'SparklinesModule'],
+        expectedSize: 786,
+    },
+    {
+        modules: ['AgChartsEnterpriseModule' as any, 'SparklinesModule'],
+        expectedSize: 1452,
+    },
     ...allCommunityModules, //.slice(0, 3),
     ...allEnterpriseModules, //.slice(0, 3),
 ];

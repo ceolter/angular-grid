@@ -65,20 +65,12 @@
                 defaultExtension: 'js',
                 format: 'cjs',
             },
-            'ag-charts-community/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
-            'ag-charts-enterprise/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
             'ag-charts-community': {
                 main: './dist/package/main.cjs.js',
                 defaultExtension: 'js',
                 format: 'cjs',
             },
-            'ag-enterprise-community': {
+            'ag-charts-enterprise': {
                 main: './dist/package/main.cjs.js',
                 defaultExtension: 'js',
                 format: 'cjs',

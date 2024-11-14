@@ -1,12 +1,10 @@
-import React, { StrictMode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { StrictMode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
@@ -14,7 +12,7 @@ import './styles.css';
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

@@ -5,7 +5,6 @@ import type {
     AgPolarSeriesOptions,
 } from 'ag-charts-types';
 
-import { changeOpacity } from '../../utils/color';
 import type { ChartProxyParams, FieldDefinition, UpdateParams } from '../chartProxy';
 import { ChartProxy } from '../chartProxy';
 
@@ -122,8 +121,8 @@ export class PieChartProxy extends ChartProxy<AgPolarChartOptions, 'pie' | 'donu
             return {
                 ...primaryOpts,
                 radiusKey: angleKey + '-filtered-out',
-                fills: changeOpacity(seriesOptions.fills ?? palette?.fills ?? [], 0.3),
-                strokes: changeOpacity(seriesOptions.strokes ?? palette?.strokes ?? [], 0.3),
+                fills: this.changeOpacity(seriesOptions.fills ?? palette?.fills ?? [], 0.3),
+                strokes: this.changeOpacity(seriesOptions.strokes ?? palette?.strokes ?? [], 0.3),
                 showInLegend: false,
             };
         };
@@ -141,5 +140,13 @@ export class PieChartProxy extends ChartProxy<AgPolarChartOptions, 'pie' | 'donu
     private getFields(params: UpdateParams): FieldDefinition[] {
         // pie charts only support a single series, donut charts support multiple series
         return this.chartType === 'pie' ? params.fields.slice(0, 1) : params.fields;
+    }
+
+    private changeOpacity(fills: string[], alpha: number) {
+        const Color = this.agChartsExports._Util.Color;
+        return fills.map((fill) => {
+            const c = Color.fromString(fill);
+            return new Color(c.r, c.g, c.b, alpha).toHexString();
+        });
     }
 }

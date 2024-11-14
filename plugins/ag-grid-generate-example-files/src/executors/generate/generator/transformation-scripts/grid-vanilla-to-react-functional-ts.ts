@@ -51,7 +51,7 @@ function getModuleImports(
     addLicenseManager(imports, exampleConfig);
 
     if (bImports.length > 0) {
-        addBindingImports(bImports, imports, false, true);
+        addBindingImports(bImports, imports, true);
     }
 
     if (componentFilenames) {

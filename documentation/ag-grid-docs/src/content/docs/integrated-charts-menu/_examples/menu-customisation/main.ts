@@ -1,4 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
 import type {
     FirstDataRenderedEvent,
     GetChartMenuItemsParams,
@@ -7,14 +8,17 @@ import type {
     GridReadyEvent,
     MenuItemDef,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IntegratedChartsModule, MenuModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, GridChartsModule, MenuModule]);
+ModuleRegistry.registerModules([
+    CommunityFeaturesModule,
+    ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
+    MenuModule,
+]);
 
 let gridApi: GridApi;
 

@@ -1,19 +1,19 @@
-import { _Scene } from 'ag-charts-community';
-
+import type { AgChartsExports } from '../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../services/chartTranslationService';
 import { MiniChart } from './miniChart';
 
 export abstract class MiniChartWithPolarAxes extends MiniChart {
     private readonly stroke = 'gray';
-    private gridLines: _Scene.Path[];
+    private gridLines: any[];
     protected showRadiusAxisLine: boolean = true;
     protected showAngleAxisLines: boolean = true;
 
-    constructor(container: HTMLElement, tooltipName: ChartTranslationKey) {
-        super(container, tooltipName);
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, tooltipName: ChartTranslationKey) {
+        super(container, agChartsExports, tooltipName);
     }
 
     public override postConstruct() {
+        const { _Scene } = this.agChartsExports;
         const size = this.size;
         const padding = this.padding;
         const combinedPadding = padding * 2;

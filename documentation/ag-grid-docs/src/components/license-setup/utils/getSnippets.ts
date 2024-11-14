@@ -4,10 +4,19 @@ import { agLibraryVersion } from '@constants';
 import { getDependencies } from './getDependencies';
 import { CHARTS_LICENSE_TEMPLATES, GRID_LICENSE_TEMPLATES } from './templates';
 
-export const getDependenciesSnippet = ({ library, framework }: { library: Library; framework: Framework }) => {
+export const getDependenciesSnippet = ({
+    library,
+    framework,
+    isIntegratedCharts,
+}: {
+    library: Library;
+    framework: Framework;
+    isIntegratedCharts: boolean;
+}) => {
     const dependencies = getDependencies({
         library,
         framework,
+        isIntegratedCharts,
     });
 
     const depObject: Record<string, string> = {};
@@ -18,10 +27,19 @@ export const getDependenciesSnippet = ({ library, framework }: { library: Librar
     return dependencies.length > 0 ? `dependencies: ${JSON.stringify(depObject, null, 4)}` : undefined;
 };
 
-export const getNpmInstallSnippet = ({ library, framework }: { library: Library; framework: Framework }) => {
+export const getNpmInstallSnippet = ({
+    library,
+    framework,
+    isIntegratedCharts,
+}: {
+    library: Library;
+    framework: Framework;
+    isIntegratedCharts: boolean;
+}) => {
     const dependencies = getDependencies({
         library,
         framework,
+        isIntegratedCharts,
     });
     const dependenciesStr = dependencies.join(' ');
 

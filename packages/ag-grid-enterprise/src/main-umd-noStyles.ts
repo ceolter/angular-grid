@@ -9,7 +9,6 @@ import {
     ModuleRegistry,
 } from 'ag-grid-community';
 
-import { GridChartsModule } from './charts/main';
 import {
     AdvancedFilterModule,
     CellSelectionModule,
@@ -30,7 +29,6 @@ import {
     SetFilterModule,
     SideBarModule,
     SkeletonCellRendererModule,
-    SparklinesModule,
     StatusBarModule,
     TreeDataModule,
     ViewportRowModelModule,
@@ -42,7 +40,6 @@ ModuleRegistry.registerModules([
     InfiniteRowModelModule,
     CsvExportModule,
     AdvancedFilterModule,
-    GridChartsModule,
     CellSelectionModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -61,7 +58,6 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     SideBarModule,
     SkeletonCellRendererModule,
-    SparklinesModule,
     StatusBarModule,
     TreeDataModule,
     ViewportRowModelModule,
@@ -69,3 +65,5 @@ ModuleRegistry.registerModules([
 
 export * from 'ag-grid-community';
 export * from './main';
+// Export the overridden createGrid function which automatically registers AG Charts modules if present
+export { createGrid } from './main-umd-shared';

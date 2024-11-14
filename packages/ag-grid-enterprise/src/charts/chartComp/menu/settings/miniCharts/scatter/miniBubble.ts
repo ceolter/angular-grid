@@ -1,18 +1,20 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniBubble extends MiniChartWithAxes {
     static chartType: ChartType = 'bubble';
-    private readonly points: _Scene.Shape[];
+    private readonly points: any[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'bubbleTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'bubbleTooltip');
 
-        const size = this.size;
-        const padding = this.padding;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         // [x, y, radius] triples
         const data = [
@@ -35,7 +37,7 @@ export class MiniBubble extends MiniChartWithAxes {
         yScale.domain = [0, 1];
         yScale.range = [size - padding, padding];
 
-        const points: _Scene.Shape[] = [];
+        const points: any[] = [];
 
         data.forEach((series) => {
             series.forEach(([x, y, radius]) => {

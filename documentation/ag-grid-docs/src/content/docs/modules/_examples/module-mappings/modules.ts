@@ -10,7 +10,7 @@ export const modules = {
             isEnterprise: true,
         },
         {
-            moduleName: 'GridChartsModule',
+            moduleName: 'IntegratedChartsModule',
             name: 'Integrated Charts',
             isEnterprise: true,
         },

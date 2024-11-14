@@ -1,7 +1,6 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -9,12 +8,12 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniColumn extends MiniChartWithAxes {
     static chartType: ChartType = 'groupedColumn';
 
-    private readonly columns: _Scene.Rect[];
+    private readonly columns: any[];
 
     private columnData = [2, 3, 4];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'groupedColumnTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'groupedColumnTooltip');
 
         const { root, columnData, size, padding } = this;
 
@@ -35,7 +34,7 @@ export class MiniColumn extends MiniChartWithAxes {
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.columns.forEach((column: _Scene.Rect, i) => {
+        this.columns.forEach((column: any, i) => {
             column.fill = fills[i];
             column.stroke = strokes[i];
         });

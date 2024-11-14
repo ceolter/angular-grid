@@ -66,7 +66,7 @@ export default defineMarkdocConfig({
         enterpriseIcon,
         video,
         licenseSetup: {
-            render: component('./src/components/license-setup/LicenseSetup.astro'),
+            render: component('./src/components/license-setup/components/LicenseSetup.astro'),
         },
         gridExampleRunner: {
             render: component('./src/components/docs/components/DocsExampleRunner.astro'),

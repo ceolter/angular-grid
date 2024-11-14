@@ -1,7 +1,6 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects, createLinePaths } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -9,15 +8,15 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniColumnLineCombo extends MiniChartWithAxes {
     static chartType: ChartType = 'columnLineCombo';
 
-    private columns: _Scene.Rect[];
-    private lines: _Scene.Path[];
+    private columns: any[];
+    private lines: any[];
 
     private columnData = [3, 4];
 
     private lineData = [[5, 4, 6, 5, 4]];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'columnLineComboTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'columnLineComboTooltip');
 
         const { root, columnData, lineData, size, padding } = this;
 
@@ -34,18 +33,18 @@ export class MiniColumnLineCombo extends MiniChartWithAxes {
 
         root.append(this.columns);
 
-        this.lines = createLinePaths(root, lineData, size, padding);
+        this.lines = createLinePaths(agChartsExports, root, lineData, size, padding);
 
         this.updateColors(fills, strokes);
     }
 
     updateColors(fills: string[], strokes: string[]) {
-        this.columns.forEach((bar: _Scene.Rect, i: number) => {
+        this.columns.forEach((bar: any, i: number) => {
             bar.fill = fills[i];
             bar.stroke = strokes[i];
         });
 
-        this.lines.forEach((line: _Scene.Path, i: number) => {
+        this.lines.forEach((line: any, i: number) => {
             line.stroke = fills[i + 2];
         });
     }

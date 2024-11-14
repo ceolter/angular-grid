@@ -1,6 +1,6 @@
-import { AgCharts, _ModuleSupport, _Theme } from 'ag-charts-community';
 import type {
     AgChartInstance,
+    AgChartInstanceOptions,
     AgChartOptions,
     AgChartTheme,
     AgChartThemeOverrides,
@@ -11,6 +11,7 @@ import type {
 
 import type { ChartType, SeriesChartType, SeriesGroupType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../agChartsExports';
 import type { CrossFilteringContext } from '../../chartService';
 import { deproxy } from '../utils/integration';
 import { get } from '../utils/object';
@@ -19,7 +20,8 @@ import { getSeriesType } from '../utils/seriesTypeMapper';
 import { createAgChartTheme, lookupCustomChartTheme } from './chartTheme';
 
 export interface ChartProxyParams {
-    chartInstance?: AgChartInstance;
+    agChartsExports: AgChartsExports;
+    chartInstance?: AgChartInstance<AgChartInstanceOptions>;
     chartType: ChartType;
     customChartThemes?: { [name: string]: AgChartTheme };
     parentElement: HTMLElement;
@@ -66,18 +68,18 @@ export abstract class ChartProxy<
     TOptions extends AgChartOptions = AgChartOptions,
     TSeries extends ChartSeriesType = ChartSeriesType,
 > {
-    private readonly isEnterpriseCharts: boolean;
+    protected readonly agChartsExports: AgChartsExports;
     protected readonly chartType: ChartType;
     protected readonly standaloneChartType: TSeries;
 
-    protected readonly chart: AgChartInstance;
+    protected readonly chart: AgChartInstance<AgChartInstanceOptions>;
     protected readonly crossFiltering: boolean;
     protected readonly crossFilterCallback: (event: any, reset?: boolean) => void;
 
     protected clearThemeOverrides = false;
 
     protected constructor(protected readonly chartProxyParams: ChartProxyParams) {
-        this.isEnterpriseCharts = _ModuleSupport.enterpriseModule.isEnterprise;
+        this.agChartsExports = chartProxyParams.agChartsExports;
         this.chart = chartProxyParams.chartInstance!;
         this.chartType = chartProxyParams.chartType;
         this.crossFiltering = chartProxyParams.crossFiltering;
@@ -85,7 +87,7 @@ export abstract class ChartProxy<
         this.standaloneChartType = getSeriesType(this.chartType) as TSeries;
 
         if (this.chart == null) {
-            this.chart = AgCharts.create(this.getCommonChartOptions());
+            this.chart = chartProxyParams.agChartsExports.create(this.getCommonChartOptions());
         } else {
             // On chart change, reset formatting panel changes.
             this.clearThemeOverrides = true;
@@ -127,7 +129,7 @@ export abstract class ChartProxy<
         return this.getChart().getCanvasDataURL(type);
     }
 
-    private getChartOptions(): AgChartOptions {
+    private getChartOptions(): AgChartInstanceOptions {
         return this.chart.getOptions();
     }
 
@@ -137,7 +139,7 @@ export abstract class ChartProxy<
     }
 
     public getChartPalette(): AgChartThemePalette | undefined {
-        return _Theme.getChartTheme(this.getChartOptions().theme).palette;
+        return this.agChartsExports._Theme.getChartTheme(this.getChartOptions().theme).palette;
     }
 
     public setPaired(paired: boolean) {
@@ -184,7 +186,7 @@ export abstract class ChartProxy<
         const theme = createAgChartTheme(
             this.chartProxyParams,
             this,
-            this.isEnterpriseCharts,
+            this.agChartsExports.isEnterprise,
             this.getChartThemeDefaults(),
             updatedOverrides ?? formattingPanelOverrides
         );
@@ -212,7 +214,7 @@ export abstract class ChartProxy<
                 enabled: false,
             },
         };
-        const common: AgCommonThemeableChartOptions = this.isEnterpriseCharts
+        const common: AgCommonThemeableChartOptions = this.agChartsExports.isEnterprise
             ? {
                   zoom: {
                       enabled: true,
@@ -253,7 +255,7 @@ export abstract class ChartProxy<
         return inUseTheme?.overrides ?? {};
     }
 
-    public destroy({ keepChartInstance = false } = {}): AgChartInstance | undefined {
+    public destroy({ keepChartInstance = false } = {}): AgChartInstance<AgChartInstanceOptions> | undefined {
         if (keepChartInstance) {
             // Reset Charts animation state, so that future updates to this re-used chart instance
             // behave as-if the chart is brand new. When switching chartTypes, this means we hide

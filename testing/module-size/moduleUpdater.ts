@@ -1,4 +1,4 @@
-import { AllEnterpriseModules } from './moduleDefinitions';
+import { AllCommunityModules, AllEnterpriseModules } from './moduleDefinitions';
 
 const fs = require('fs');
 const path = require('path');
@@ -18,24 +18,49 @@ const entPlaceholderEndRgx = '/\\*\\* __ENTERPRISE_PLACEHOLDER__END__ \\*/';
 const entPlaceholderStart = '/** __ENTERPRISE_PLACEHOLDER__START__ */';
 const entPlaceholderEnd = '/** __ENTERPRISE_PLACEHOLDER__END__ */';
 
+const chartsPlaceholderStartRgx = '/\\*\\* __CHARTS_PLACEHOLDER__START__ \\*/';
+const chartsPlaceholderEndRgx = '/\\*\\* __CHARTS_PLACEHOLDER__END__ \\*/';
+const chartsPlaceholderStart = '/** __CHARTS_PLACEHOLDER__START__ */';
+const chartsPlaceholderEnd = '/** __CHARTS_PLACEHOLDER__END__ */';
+
 // Get modules from command line arguments
 const modules = process.argv.slice(2);
+
+function reverseWords(str) {
+    return str.split(' ').reverse().join(' ');
+}
 
 fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
         console.error('Error reading file:', err);
         return;
     }
-    const communityModules = modules.filter((module) => !AllEnterpriseModules[module]);
-    const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] > 0);
+    const communityModules = modules.filter((module) => AllCommunityModules[module] >= 0);
+    const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] >= 0);
 
     const replacement = communityModules.join(', ');
     const regex = new RegExp(`${placeholderStartRgx}[\\s\\S]*?${placeholderEndRgx}`, 'g');
-    let result = data.replace(regex, `${placeholderStart} ${replacement} ${placeholderEnd}`);
+    let result: string = data.replace(regex, `${placeholderStart} ${replacement} ${placeholderEnd}`);
 
     const entReplacement = enterpriseModules.join(', ');
     const entRegex = new RegExp(`${entPlaceholderStartRgx}[\\s\\S]*?${entPlaceholderEndRgx}`, 'g');
     result = result.replace(entRegex, `${entPlaceholderStart} ${entReplacement} ${entPlaceholderEnd}`);
+
+    if (modules[0] === 'AgChartsCommunityModule' || modules[0] === 'AgChartsEnterpriseModule') {
+        const chartsModule = modules[0];
+        const chartsReplacement = `import {${chartsModule}} from 'ag-charts-${chartsModule.includes('Enterprise') ? 'enterprise' : 'community'}/modules';`;
+        const chartsRegex = new RegExp(`${chartsPlaceholderStartRgx}[\\s\\S]*?${chartsPlaceholderEndRgx}`, 'g');
+        result = result.replace(chartsRegex, `${chartsPlaceholderStart} ${chartsReplacement} ${chartsPlaceholderEnd}`);
+        result = reverseWords(
+            reverseWords(result).replace('IntegratedChartsModule', `IntegratedChartsModule.with(${chartsModule})`)
+        );
+        result = reverseWords(
+            reverseWords(result).replace('SparklinesModule', `SparklinesModule.with(${chartsModule})`)
+        );
+    } else {
+        const chartsRegex = new RegExp(`${chartsPlaceholderStartRgx}[\\s\\S]*?${chartsPlaceholderEndRgx}`, 'g');
+        result = result.replace(chartsRegex, `${chartsPlaceholderStart}  ${chartsPlaceholderEnd}`);
+    }
 
     fs.writeFile(filePath, result, 'utf8', (err) => {
         if (err) {

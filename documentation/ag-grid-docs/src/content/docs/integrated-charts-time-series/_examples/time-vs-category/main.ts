@@ -1,4 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
 import type {
     ColDef,
     FirstDataRenderedEvent,
@@ -7,18 +8,15 @@ import type {
     GridReadyEvent,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

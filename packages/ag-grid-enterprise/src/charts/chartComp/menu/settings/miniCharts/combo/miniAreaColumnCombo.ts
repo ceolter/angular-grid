@@ -1,7 +1,6 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { CreateColumnRectsParams } from '../miniChartHelpers';
 import { createColumnRects } from '../miniChartHelpers';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -13,17 +12,24 @@ export interface Coordinate {
 export class MiniAreaColumnCombo extends MiniChartWithAxes {
     static chartType: ChartType = 'areaColumnCombo';
 
-    private columns: _Scene.Rect[];
-    private areas: _Scene.Path[];
+    private columns: any[];
+    private areas: any[];
 
     private columnData = [3, 4.5];
 
     private areaData = [[5, 4, 6, 5, 4]];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'areaColumnComboTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'areaColumnComboTooltip');
 
-        const { root, columnData, areaData, size, padding } = this;
+        const {
+            root,
+            columnData,
+            areaData,
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         this.columns = createColumnRects({
             stacked: false,
@@ -37,7 +43,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
         } as CreateColumnRectsParams);
 
         // scale for area series
-        const xScale = new _Scene.BandScale<number>();
+        const xScale = new _Scene.BandScale();
         xScale.range = [padding, size - padding];
         xScale.domain = [0, 1, 2, 3, 4];
         xScale.paddingInner = 1;
@@ -109,7 +115,7 @@ export class MiniAreaColumnCombo extends MiniChartWithAxes {
             area.stroke = strokes[i];
         });
 
-        this.columns.forEach((bar: _Scene.Rect, i: number) => {
+        this.columns.forEach((bar: any, i: number) => {
             bar.fill = fills[i + 1];
             bar.stroke = strokes[i + 1];
         });

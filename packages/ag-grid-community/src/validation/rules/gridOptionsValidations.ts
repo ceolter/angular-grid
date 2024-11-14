@@ -152,7 +152,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         enableAdvancedFilter: { module: 'AdvancedFilterModule' },
-        enableCharts: { module: 'GridChartsModule' },
+        enableCharts: { module: 'IntegratedChartsModule' },
         enableFillHandle: {
             dependencies: {
                 enableRangeSelection: { required: [true] },

@@ -1,19 +1,21 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniHistogram extends MiniChartWithAxes {
     static chartType: ChartType = 'histogram';
 
-    private readonly bars: _Scene.Rect[];
+    private readonly bars: any[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'histogramTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'histogramTooltip');
 
-        const padding = this.padding;
-        const size = this.size;
+        const {
+            padding,
+            size,
+            agChartsExports: { _Scene },
+        } = this;
 
         // approx normal curve
         const data = [2, 5, 11, 13, 10, 6, 1];

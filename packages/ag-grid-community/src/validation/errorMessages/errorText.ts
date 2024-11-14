@@ -39,6 +39,17 @@ ${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '
     );
 };
 
+const missingChartsWithModule = (gridModule: 'IntegratedChartsModule' | 'SparklinesModule') => {
+    return `${gridModule} must be initialised with an AG Charts module. One of 'AgChartsCommunityModule' / 'AgChartsEnterpriseModule'.
+
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ${gridModule} } from 'ag-grid-enterprise';
+    
+ModuleRegistry.registerModules([${gridModule}.with(AgChartsEnterpriseModule)]);
+    ` as const;
+};
+
 const clipboardApiError = (method: string) =>
     `AG Grid: Unable to use the Clipboard API (navigator.clipboard.${method}()). ` +
     'The reason why it could not be used has been logged in the previous line. ' +
@@ -532,7 +543,9 @@ export const AG_GRID_ERRORS = {
     255: ({ point }: { point: number }) =>
         `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
     256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
-} as const;
+    257: () => missingChartsWithModule('IntegratedChartsModule'),
+    258: () => missingChartsWithModule('SparklinesModule'),
+};
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
 export type ErrorId = keyof ErrorMap;

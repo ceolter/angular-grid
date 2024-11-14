@@ -1,15 +1,16 @@
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import type { AgAxisCaptionFormatterParams } from 'ag-charts-types';
 
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import { GridChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

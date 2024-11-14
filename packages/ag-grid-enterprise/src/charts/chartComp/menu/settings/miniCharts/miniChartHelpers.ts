@@ -1,12 +1,12 @@
-import { _Scene } from 'ag-charts-community';
-
 import { _last } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../agChartsExports';
 import type { CommandSegment } from './miniChartApi';
 
 export interface CreateColumnRectsParams {
+    agChartsExports: AgChartsExports;
     stacked: boolean;
-    root: _Scene.Group;
+    root: any;
     data: any;
     size: number;
     padding: number;
@@ -16,9 +16,17 @@ export interface CreateColumnRectsParams {
 }
 
 export function createColumnRects(params: CreateColumnRectsParams) {
-    const { stacked, size, padding, xScalePadding, xScaleDomain, yScaleDomain } = params;
+    const {
+        stacked,
+        size,
+        padding,
+        xScalePadding,
+        xScaleDomain,
+        yScaleDomain,
+        agChartsExports: { _Scene },
+    } = params;
 
-    const xScale = new _Scene.BandScale<number>();
+    const xScale = new _Scene.BandScale();
     xScale.domain = xScaleDomain;
     xScale.range = [padding, size - padding];
     xScale.paddingInner = xScalePadding;
@@ -28,7 +36,7 @@ export function createColumnRects(params: CreateColumnRectsParams) {
     yScale.domain = yScaleDomain;
     yScale.range = [size - padding, padding];
 
-    const createBars = (series: number[], xScale: _Scene.BandScale<number>, yScale: _Scene.LinearScale) => {
+    const createBars = (series: number[], xScale: any, yScale: any) => {
         return series.map((datum: number, i: number) => {
             const top = yScale.convert(datum);
             const rect = new _Scene.Rect();
@@ -50,7 +58,7 @@ export function createColumnRects(params: CreateColumnRectsParams) {
     return createBars(params.data, xScale, yScale);
 }
 
-export function prepareLinearScene(data: number[][], size: number, padding: number) {
+export function prepareLinearScene(_Scene: AgChartsExports['_Scene'], data: number[][], size: number, padding: number) {
     const xDomain = [0, data[0].length - 1];
     const yDomain = data.reduce(
         (acc, curr) => {
@@ -83,11 +91,7 @@ export function prepareLinearScene(data: number[][], size: number, padding: numb
     return { xScale, yScale };
 }
 
-export function createPathCommands(
-    data: number[][],
-    xScale: _Scene.LinearScale,
-    yScale: _Scene.LinearScale
-): CommandSegment[][] {
+export function createPathCommands(data: number[][], xScale: any, yScale: any): CommandSegment[][] {
     return data.map((series) =>
         series.map((datum: number, i: number) => [
             i > 0 ? 'lineTo' : 'moveTo',
@@ -97,7 +101,7 @@ export function createPathCommands(
     );
 }
 
-export function createPath(commands: CommandSegment[]): _Scene.Path {
+export function createPath(_Scene: AgChartsExports['_Scene'], commands: CommandSegment[]): any {
     const path = new _Scene.Path();
     commands.forEach(([command, x, y]: CommandSegment) => path.path[command](x, y));
     return path;
@@ -105,7 +109,7 @@ export function createPath(commands: CommandSegment[]): _Scene.Path {
 
 export function createAreaPathCommands(
     commands: CommandSegment[][],
-    yScale: _Scene.LinearScale,
+    yScale: any,
     stacked: boolean
 ): CommandSegment[][] {
     return commands.map((pathCommands: CommandSegment[], index, all) => {
@@ -130,24 +134,30 @@ export function createAreaPathCommands(
     });
 }
 
-export function closePathViaPreviousSeries(all: CommandSegment[][], index: number, yScale: _Scene.LinearScale) {
+export function closePathViaPreviousSeries(all: CommandSegment[][], index: number, yScale: any) {
     if (index === 0) {
         return closePathViaOrigin(all[index], yScale);
     }
     return [...all[index - 1]];
 }
 
-export function closePathViaOrigin(pathCommands: CommandSegment[], yScale: _Scene.LinearScale) {
+export function closePathViaOrigin(pathCommands: CommandSegment[], yScale: any) {
     return pathCommands.map(([c, x]) => [c, x, yScale.convert(0)]);
 }
 
-export function createLinePaths(root: _Scene.Group, data: number[][], size: number, padding: number): _Scene.Path[] {
-    const { xScale, yScale } = prepareLinearScene(data, size, padding);
+export function createLinePaths(
+    { _Scene }: AgChartsExports,
+    root: any,
+    data: number[][],
+    size: number,
+    padding: number
+): any[] {
+    const { xScale, yScale } = prepareLinearScene(_Scene, data, size, padding);
 
     const pathCommands = createPathCommands(data, xScale, yScale);
 
-    const paths: _Scene.Path[] = pathCommands.map((commands) => {
-        const path = createPath(commands);
+    const paths: any[] = pathCommands.map((commands) => {
+        const path = createPath(_Scene, commands);
         path.strokeWidth = 3;
         path.lineCap = 'round';
         path.fill = undefined;
@@ -163,20 +173,21 @@ export function createLinePaths(root: _Scene.Group, data: number[][], size: numb
 }
 
 export function createAreaPaths(
-    root: _Scene.Group,
+    _Scene: AgChartsExports['_Scene'],
+    root: any,
     data: number[][],
     size: number,
     padding: number,
     stacked = false
-): _Scene.Path[] {
-    const { xScale, yScale } = prepareLinearScene(data, size, padding);
+): any[] {
+    const { xScale, yScale } = prepareLinearScene(_Scene, data, size, padding);
 
     const pathCommands = createAreaPathCommands(createPathCommands(data, xScale, yScale), yScale, stacked);
 
     const areasGroup = new _Scene.Group();
     areasGroup.setClipRect(new _Scene.BBox(padding, padding, size - padding * 2, size - padding * 2));
 
-    const paths: _Scene.Path[] = pathCommands.map((commands) => createPath(commands));
+    const paths: any[] = pathCommands.map((commands) => createPath(_Scene, commands));
     areasGroup.append(paths);
     root.append(areasGroup);
 
@@ -195,13 +206,16 @@ export function normalizeStackData(data: number[][]): number[][] {
 }
 
 export function createPolarPaths(
-    root: _Scene.Group,
+    agChartsExports: AgChartsExports,
+    root: any,
     data: number[][],
     size: number,
     radius: number,
     innerRadius: number,
     markerSize: number = 0
-): { paths: _Scene.Path[]; markers: _Scene.Circle[] } {
+): { paths: any[]; markers: any[] } {
+    const { _Scene } = agChartsExports;
+
     const angleScale = new _Scene.LinearScale();
     angleScale.domain = [0, 7];
     angleScale.range = [-Math.PI, Math.PI].map((angle) => angle + Math.PI / 2);
@@ -210,10 +224,10 @@ export function createPolarPaths(
     radiusScale.domain = [0, 10];
     radiusScale.range = [radius, innerRadius];
 
-    const markers: _Scene.Circle[] = [];
+    const markers: any[] = [];
     const center = size / 2;
 
-    const paths: _Scene.Path[] = data.map((series) => {
+    const paths: any[] = data.map((series) => {
         const path = new _Scene.Path();
         path.strokeWidth = 1;
         path.strokeOpacity = 0.5;

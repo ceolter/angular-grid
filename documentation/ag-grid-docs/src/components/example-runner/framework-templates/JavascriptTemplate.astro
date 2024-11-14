@@ -6,6 +6,7 @@ interface Props {
     modifiedTimeMs: number;
     isEnterprise: boolean;
     isLocale: boolean;
+    isIntegratedCharts: boolean;
     /**
      * All script file names
      */
@@ -24,6 +25,7 @@ const {
     modifiedTimeMs,
     isEnterprise,
     isLocale,
+    isIntegratedCharts,
     styleFiles,
     scriptFiles,
     indexFragment,
@@ -43,6 +45,7 @@ import {
     getCacheBustingUrl,
     getGridEnterpriseScriptPath,
     getGridScriptPath,
+    getChartsEnterpriseScriptPath,
     getGridLocaleScriptPath,
 } from '@utils/gridLibraryPaths';
 
@@ -50,6 +53,7 @@ const siteUrl = Astro.site ? pathJoin(Astro.site, SITE_BASE_URL) : '/';
 
 const gridScriptPath = getCacheBustingUrl(getGridScriptPath(siteUrl), modifiedTimeMs);
 const gridScriptEnterprisePath = getCacheBustingUrl(getGridEnterpriseScriptPath(siteUrl), modifiedTimeMs);
+const chartsScriptEnterprisePath = getCacheBustingUrl(getChartsEnterpriseScriptPath(siteUrl), modifiedTimeMs);
 const gridScriptLocalePath = getCacheBustingUrl(getGridLocaleScriptPath(siteUrl), modifiedTimeMs);
 ---
 
@@ -78,6 +82,7 @@ const gridScriptLocalePath = getCacheBustingUrl(getGridLocaleScriptPath(siteUrl)
         >
             window.__basePath = appLocation;
         </script>
+        {isIntegratedCharts && <script src={chartsScriptEnterprisePath} />}
         <script src={isEnterprise ? gridScriptEnterprisePath : gridScriptPath}></script>
         {isLocale && <script src={gridScriptLocalePath} />}
         <Scripts baseUrl={appLocation} files={scriptFiles} />

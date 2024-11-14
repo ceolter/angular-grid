@@ -1,5 +1,4 @@
-import { _Scene } from 'ag-charts-community';
-
+import type { AgChartsExports } from '../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../services/chartTranslationService';
 import { MiniChart } from './miniChart';
 
@@ -7,11 +6,12 @@ export abstract class MiniChartWithAxes extends MiniChart {
     private readonly stroke = 'gray';
     private readonly axisOvershoot = 3;
 
-    constructor(container: HTMLElement, tooltipName: ChartTranslationKey) {
-        super(container, tooltipName);
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, tooltipName: ChartTranslationKey) {
+        super(container, agChartsExports, tooltipName);
     }
 
     public override postConstruct() {
+        const { _Scene } = this.agChartsExports;
         const size = this.size;
         const padding = this.padding;
 

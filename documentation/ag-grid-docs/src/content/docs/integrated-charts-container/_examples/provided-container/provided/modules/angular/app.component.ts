@@ -2,18 +2,19 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import type { ElementRef } from '@angular/core';
 import { Component, ViewChild } from '@angular/core';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { GridChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
+import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
     CommunityFeaturesModule,
     ClientSideRowModelModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     MenuModule,
     RowGroupingModule,
 ]);

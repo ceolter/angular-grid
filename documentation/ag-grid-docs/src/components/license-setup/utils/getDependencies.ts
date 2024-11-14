@@ -1,6 +1,12 @@
 import type { Framework, Library } from '@ag-grid-types';
 
-const getGridDependencies = ({ framework }: { framework: Framework }) => {
+const getGridDependencies = ({
+    framework,
+    isIntegratedCharts,
+}: {
+    framework: Framework;
+    isIntegratedCharts: boolean;
+}) => {
     const dependencies: string[] = [];
 
     if (framework === 'react') {
@@ -12,6 +18,10 @@ const getGridDependencies = ({ framework }: { framework: Framework }) => {
     }
 
     dependencies.push('ag-grid-community', 'ag-grid-enterprise');
+
+    if (isIntegratedCharts) {
+        dependencies.push('ag-charts-enterprise');
+    }
 
     return dependencies;
 };
@@ -31,10 +41,19 @@ const getChartsDependencies = ({ framework }: { framework: Framework }) => {
     return dependencies;
 };
 
-export const getDependencies = ({ library, framework }: { library: Library; framework: Framework }) => {
+export const getDependencies = ({
+    library,
+    framework,
+    isIntegratedCharts,
+}: {
+    library: Library;
+    framework: Framework;
+    isIntegratedCharts: boolean;
+}) => {
     return library === 'grid'
         ? getGridDependencies({
               framework,
+              isIntegratedCharts,
           })
         : getChartsDependencies({
               framework,
