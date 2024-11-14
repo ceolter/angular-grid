@@ -142,7 +142,6 @@ export class RefreshModelState<TData = any> {
         this.changedPath = changedPath;
 
         this.step = step;
-        this.rowData = gos.get('rowData');
         this.afterColumnsChanged = afterColumnsChanged;
         this.animate = animate;
         this.keepRenderedRows = keepRenderedRows;
@@ -153,15 +152,7 @@ export class RefreshModelState<TData = any> {
         }
     }
 
-    /**
-     * We must handle the case a refreshModel is called inside another refreshModel.
-     * And we want the result to be consistent.
-     * This method will be called if a refresh state is already active in CSRM and we are starting
-     * a new nested refresh state.
-     * In this case, we have to smartly merge the new state with the existing one.
-     * @param param0
-     */
-    public nest({
+    public updateParams({
         step,
         afterColumnsChanged = false,
         animate = false,
@@ -182,13 +173,6 @@ export class RefreshModelState<TData = any> {
             this.addChangedProps(changedPropsArray);
         }
         this.updateStep(step);
-
-        const newRowData = this.gos.get('rowData');
-        if (newRowData !== this.rowData) {
-            // We do this so we can handle the case where the user calls setRowData() inside a refresh model
-            this.rowData = newRowData;
-            (this.changedProps ??= new Set()).add('rowData');
-        }
     }
 
     /**

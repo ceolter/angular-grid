@@ -14,7 +14,7 @@ export class ClientSidePathTreeNodeManager<TData>
         const rootNode = refreshModelState.rootNode;
         const treeRoot = this.treeRoot!;
 
-        this.treeClear(treeRoot);
+        this.treeClear();
         treeRoot.setRow(rootNode);
 
         super.loadNewRowData(refreshModelState, rowData);
@@ -46,8 +46,6 @@ export class ClientSidePathTreeNodeManager<TData>
         if (!treeRoot) {
             return; // Destroyed or not active
         }
-
-        treeRoot.setRow(this.rootNode);
 
         for (const row of state.removals) {
             const node = row.treeNode as TreeNode | null;

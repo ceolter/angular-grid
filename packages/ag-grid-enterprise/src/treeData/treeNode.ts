@@ -306,12 +306,17 @@ export class TreeNode implements ITreeNode {
      * @returns the next child node to be committed, or null if all children were already dequeued.
      */
     public dequeueInvalidated(): TreeNode | null {
-        const node = this.invalidatedHead;
-        if (node !== null) {
+        while (true) {
+            const node = this.invalidatedHead;
+            if (!node) {
+                return null; // Queue empty
+            }
             this.invalidatedHead = node.invalidatedNext ?? null;
             node.invalidatedNext = undefined; // Mark as not invalidated
+            if (node.parent) {
+                return node; // Not deleted
+            }
         }
-        return node;
     }
 
     /**

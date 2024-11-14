@@ -118,11 +118,15 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     private initialFilterModel: FilterModel;
 
     public postConstruct(): void {
+        let treeData = !!this.gos.get('treeData');
         this.addManagedEventListeners({
             gridColumnsChanged: this.onColumnsChanged.bind(this),
             beforeRefreshModel: ({ state }) => {
                 // We listen to both row data updated and treeData changed as the SetFilter needs it
-                if (state.started && (state.rowDataUpdated || state.changedProps?.has('treeData'))) {
+                const newTreeData = !!this.gos.get('treeData');
+                const treeDataChanged = treeData !== newTreeData;
+                treeData = newTreeData;
+                if (state.started && (state.rowDataUpdated || treeDataChanged)) {
                     this.onNewRowsLoaded('rowDataUpdated');
                 }
             },

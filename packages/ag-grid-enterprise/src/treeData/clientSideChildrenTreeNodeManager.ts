@@ -51,7 +51,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         rootNode.allLeafChildren = allLeafChildren;
 
-        this.treeClear(treeRoot);
+        this.treeClear();
         treeRoot.setRow(rootNode);
 
         const processChild = (node: TreeNode, data: TData) => {

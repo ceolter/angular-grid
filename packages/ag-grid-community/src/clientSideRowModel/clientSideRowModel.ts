@@ -206,18 +206,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     public start(): void {
         this.started = true;
-        if (this.currentRefreshModelState) {
-            this.refreshModel({ step: 'group' });
-        } else {
-            this.setInitialData();
-        }
-    }
-
-    private setInitialData(): void {
-        const rowData = this.gos.get('rowData');
-        if (rowData) {
-            this.refreshModel({ step: 'nothing', changedPropsArray: ['rowData'] });
-        }
+        this.refreshModel({ step: 'nothing' });
     }
 
     public ensureRowHeightsValid(
@@ -336,6 +325,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     // returns false if row was moved, otherwise true
     public ensureRowsAtPixel(rowNodes: RowNode[], pixel: number, increment: number = 0): boolean {
+        const allLeafChildren = this.rootNode?.allLeafChildren;
+        if (!allLeafChildren) {
+            return false;
+        }
+
         const indexAtPixelNow = this.getRowIndexAtPixel(pixel);
         if (indexAtPixelNow < 0) {
             return false;
@@ -343,12 +337,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         const rowNodeAtPixelNow = this.getRow(indexAtPixelNow);
         if (rowNodeAtPixelNow === rowNodes[0]) {
-            return false;
-        }
-
-        const rootNode = this.rootNode;
-        const allLeafChildren = rootNode?.allLeafChildren;
-        if (!allLeafChildren) {
             return false;
         }
 
@@ -596,27 +584,38 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         let state = this.currentRefreshModelState;
 
-        let stateCreated = false;
+        let newRowData: any[] | null | undefined;
+        let rowDataChanged: boolean;
+        let ownsState = false;
+        const rowData = this.gos.get('rowData');
         if (!state) {
-            stateCreated = true;
+            ownsState = true;
             state = new RefreshModelState(gos, rootNode, params);
             this.currentRefreshModelState = state;
+            rowDataChanged = !!state.changedProps?.has('rowData') || (!this.started && !!rowData);
+            state.rowData = rowData;
         } else {
-            state.nest(params);
+            rowDataChanged = rowData !== state.rowData;
+            state.rowData = rowData;
+            state.updateParams(params);
         }
-        state.started = this.started;
+
+        if (!state.started && this.started) {
+            state.started = true;
+            ownsState = true; // This was caused by the start() method
+        }
 
         const oldNodeManager = this.nodeManager;
         const nodeManager = this.getNodeManagerToUse();
 
         const changedProps = state.changedProps;
-        const rowDataChanged = changedProps?.has('rowData');
+
+        // TODO: don't use changedProps and remove it
+
         const treeDataChanged = changedProps?.has('treeData');
         const treeDataChildrenFieldChanged = changedProps?.has('treeDataChildrenField');
 
         const reset = oldNodeManager !== nodeManager || treeDataChildrenFieldChanged;
-
-        let newRowData: any[] | null | undefined;
 
         if (treeDataChanged) {
             state.updateStep('group');
@@ -639,7 +638,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
 
             if (oldNodeManager !== nodeManager) {
-                nodeManager?.deactivate();
+                oldNodeManager?.deactivate();
                 this.nodeManager = nodeManager;
             }
 
@@ -670,22 +669,15 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         if (state.hasChanges()) {
             state.updateStep('group');
-        } else if (changedProps && state.step !== 'group') {
-            for (const { refreshProps, step } of this.orderedStages) {
-                for (const prop of changedProps) {
-                    if (refreshProps.has(prop)) {
-                        state.updateStep(step);
-                        break;
-                    }
-                }
-            }
         }
 
         this.nodeManager.refreshModel(state);
 
-        const stepsExecuted = this.executeRefreshSteps(state, stateCreated);
+        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
 
-        if (stateCreated) {
+        let stepsExecuted = false;
+        if (ownsState && this.started) {
+            stepsExecuted = this.executeRefreshSteps(state);
             this.currentRefreshModelState = null;
         }
 
@@ -701,19 +693,25 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private executeRefreshSteps(state: RefreshModelState, stateCreated: boolean): boolean {
-        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
-
-        if (!state.started) {
-            return false; // Not started yet
-        }
-
+    private executeRefreshSteps(state: RefreshModelState): boolean {
         if (state.rowDataUpdated) {
             this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
         }
 
-        if (stateCreated && state.changedProps && state.step === 'nothing') {
-            return false; // This resulted from a property change and there is nothing else to do.
+        const changedProps = state.changedProps;
+        if (changedProps && state.step !== 'group') {
+            for (const { refreshProps, step } of this.orderedStages) {
+                for (const prop of changedProps) {
+                    if (refreshProps.has(prop)) {
+                        state.updateStep(step);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (state.step === 'nothing') {
+            return false;
         }
 
         if (this.colModel.changeEventsDispatching || this.isSuppressModelUpdateAfterUpdateTransaction(state)) {
@@ -1303,7 +1301,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private onGridReady(): void {
         if (!this.started) {
             // App can start using API to add transactions, so need to add data into the node manager if not started
-            this.setInitialData();
+            this.refreshModel({ step: 'nothing' });
         }
     }
 

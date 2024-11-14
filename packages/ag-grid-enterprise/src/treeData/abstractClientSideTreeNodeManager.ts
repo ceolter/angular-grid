@@ -158,7 +158,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const { parent, level } = node;
 
         if (level < 0) {
-            return; // Cannot overwrite a null node or the root row
+            return; // Cannot remove the root node
         }
 
         let invalidate = false;
@@ -245,7 +245,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     /** Commit the changes performed to a node and its children */
     private treeCommitChild(details: TreeCommitDetails, node: TreeNode, collapsed: boolean): void {
         if (node.isEmptyFillerNode()) {
-            this.treeClear(node);
+            this.treeClearSubtree(node);
             return; // Removed. No need to process children.
         }
 
@@ -253,7 +253,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         this.treeCommitChildren(details, node, collapsed);
 
         if (node.isEmptyFillerNode()) {
-            this.treeClear(node);
+            this.treeClearSubtree(node);
             return; // Removed. No need to process further
         }
 
@@ -441,13 +441,23 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
+    protected treeClear(): void {
+        const treeRoot = this.treeRoot;
+        if (treeRoot) {
+            for (const child of treeRoot.enumChildren()) {
+                this.treeClearSubtree(child);
+            }
+        }
+    }
+
     /** Called to clear a subtree. */
-    public treeClear(node: TreeNode): void {
+    private treeClearSubtree(node: TreeNode): void {
         const { parent, oldRow, row, level } = node;
         if (parent !== null && oldRow !== null) {
             parent.childrenChanged = true;
-            if (parent.row !== null) {
-                markTreeRowPathChanged(parent.row);
+            const parentRow = parent.row;
+            if (parentRow !== null) {
+                markTreeRowPathChanged(parentRow);
             }
         }
         if (row !== null) {
@@ -460,7 +470,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             }
         }
         for (const child of node.enumChildren()) {
-            this.treeClear(child);
+            this.treeClearSubtree(child);
         }
         node.destroy();
     }
