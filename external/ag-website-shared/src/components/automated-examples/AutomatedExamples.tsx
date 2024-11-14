@@ -35,7 +35,7 @@ export const AutomatedExamples: FunctionComponent = () => {
     return (
         <>
             <section className={styles.automatedRowGroupingOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+                <div className={classNames(styles.homepageExample)}>
                     <div className={styles.automatedRowGrouping}>
                         <AutomatedRowGrouping
                             automatedExampleManager={automatedExampleManager}
@@ -49,7 +49,7 @@ export const AutomatedExamples: FunctionComponent = () => {
             </section>
 
             <section className={styles.automatedIntegratedChartsOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+                <div className={classNames(styles.homepageExample)}>
                     <div className={styles.automatedIntegratedCharts}>
                         <AutomatedIntegratedCharts
                             automatedExampleManager={automatedExampleManager}
@@ -57,11 +57,20 @@ export const AutomatedExamples: FunctionComponent = () => {
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
                         >
-                            <h2 className="text-3xl">Fully Integrated Charting</h2>
-                            <p className="text-xl">
-                                With a complete suite of integrated charting tools, your users can visualise their data
-                                any way they choose.
-                            </p>
+                            <div class={styles.sectionContent}>
+                                <header class={styles.headingContainer}>
+                                    <h2 class={styles.tag}>Fully Integrated Charting</h2>
+                                    <h3 class={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
+                                    <h4 class={styles.subHeading}>
+                                        Let your users visualise their data in charts directly from your Data Grid.
+                                        Multiple chart types, themes, customisations and more, all in one place.
+                                    </h4>
+                                    <a href="/react-data-grid/getting-started/" class={['button-tertiary']}>
+                                        Learn more
+                                    </a>
+                                </header>
+                                <div class={styles.blueRectangle}></div>
+                            </div>
                         </AutomatedIntegratedCharts>
                     </div>
                 </div>

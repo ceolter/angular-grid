@@ -4,9 +4,9 @@
 ; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
 ;
 [subrepo]
-	remote = git@github.com:ag-grid/ag-website-shared.git
-	branch = latest
-	commit = 36598097fb3f9a2dd9b4404d0ca3f5aac7aee0e8
-	parent = 7120a993249e722f8f7fed21e67db2caf641f41d
-	method = rebase
-	cmdver = 0.4.6
+remote = git@github.com:ag-grid/ag-website-shared.git
+branch = latest
+commit = eca8a1a1007a435dbb87e51a058ccfb1536e9b97
+parent = 7120a993249e722f8f7fed21e67db2caf641f41d
+method = rebase
+cmdver = 0.4.6

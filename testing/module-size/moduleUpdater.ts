@@ -48,7 +48,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
 
     if (modules[0] === 'AgChartsCommunityModule' || modules[0] === 'AgChartsEnterpriseModule') {
         const chartsModule = modules[0];
-        const chartsReplacement = `import {${chartsModule}} from 'ag-charts-${chartsModule.includes('Enterprise') ? 'enterprise' : 'community'}/modules';`;
+        const chartsReplacement = `import {${chartsModule}} from 'ag-charts-${chartsModule.includes('Enterprise') ? 'enterprise' : 'community'}';`;
         const chartsRegex = new RegExp(`${chartsPlaceholderStartRgx}[\\s\\S]*?${chartsPlaceholderEndRgx}`, 'g');
         result = result.replace(chartsRegex, `${chartsPlaceholderStart} ${chartsReplacement} ${chartsPlaceholderEnd}`);
         result = reverseWords(
