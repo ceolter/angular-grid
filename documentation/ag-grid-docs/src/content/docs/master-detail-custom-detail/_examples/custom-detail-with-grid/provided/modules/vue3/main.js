@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
@@ -11,7 +11,7 @@ import DetailCellRenderer from './detailCellRendererVue.js';
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     MasterDetailModule,
     MenuModule,

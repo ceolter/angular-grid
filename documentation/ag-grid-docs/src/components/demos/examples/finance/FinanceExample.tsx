@@ -2,9 +2,9 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
     type ColDef,
-    CommunityFeaturesModule,
     type GetRowIdFunc,
     type GetRowIdParams,
     ModuleRegistry,
@@ -15,12 +15,12 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     AdvancedFilterModule,
+    CellSelectionModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
     MenuModule,
-    RangeSelectionModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -40,14 +40,14 @@ interface Props {
 }
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
     MenuModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     RowGroupingModule,
     SetFilterModule,
     RichSelectModule,

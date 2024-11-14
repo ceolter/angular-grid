@@ -115,7 +115,7 @@
         "shortname": "range",
         "module": "@ag-grid-enterprise/range-selection",
         "enterprise": true,
-        "exported": "RangeSelectionModule"
+        "exported": "CellSelectionModule"
     },
     {
         "title": "Rich Select",

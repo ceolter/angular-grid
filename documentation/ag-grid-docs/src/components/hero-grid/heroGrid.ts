@@ -5,7 +5,7 @@ import { createGenerator } from '@utils/grid/generator-utils';
 import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type { GetRowIdParams, GridApi, GridOptions, GridSizeChangedEvent, ISetFilter } from 'ag-grid-community';
-import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { ClipboardModule, MenuModule, SetFilterModule, SparklinesModule } from 'ag-grid-enterprise';
@@ -15,7 +15,7 @@ import { columnDefs, generateStockUpdate, generateStocks } from './data';
 import { fixtureData } from './rowDataFixture';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     SparklinesModule.with(AgChartsCommunityModule),
     SetFilterModule,

@@ -7,7 +7,7 @@ import type {
     GridReadyEvent,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -20,7 +20,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,

@@ -1,11 +1,11 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import { CustomNoRowsOverlay } from './customNoRowsOverlay_typescript';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 interface IAthlete {
     athlete: string;

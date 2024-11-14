@@ -5,15 +5,15 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { memo, useRef, useState } from 'react';
 import root from 'react-shadow';
 
-import { ClientSideRowModelModule, CommunityFeaturesModule, type GridState, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, type GridState, ModuleRegistry } from 'ag-grid-community';
 import {
     AdvancedFilterModule,
+    CellSelectionModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
     MenuModule,
-    RangeSelectionModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -30,14 +30,14 @@ import { withErrorBoundary } from './ErrorBoundary';
 import { InfoTooltip } from './Tooltip';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     MenuModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     RowGroupingModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SetFilterModule,

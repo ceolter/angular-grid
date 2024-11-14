@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     ModuleRegistry,
     themeAlpine,
     themeBalham,
@@ -12,7 +12,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const VueExample = {
     template: `

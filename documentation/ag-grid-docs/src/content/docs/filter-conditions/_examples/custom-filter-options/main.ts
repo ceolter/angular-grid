@@ -10,11 +10,11 @@ import type {
     ITextFilterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 declare let window: any;
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const filterParams: INumberFilterParams = {
     filterOptions: [

@@ -1,13 +1,13 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellClassParams, GridApi, GridOptions, ProcessRowGroupForExportParams } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     ExcelExportModule,
     MenuModule,

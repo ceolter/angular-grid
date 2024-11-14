@@ -25,7 +25,6 @@ export const ENTERPRISE_MODULE_NAMES: Record<EnterpriseModuleName, 1> = {
     ServerSideRowModelModule: 1,
     SetFilterModule: 1,
     SideBarModule: 1,
-    SkeletonCellRendererModule: 1,
     SparklinesModule: 1,
     StatusBarModule: 1,
     TreeDataModule: 1,

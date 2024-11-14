@@ -91,7 +91,7 @@ export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
 };
 
 /**
- * @feature Filtering -> Column Filters
+ * @feature Filtering -> Custom Column Filters
  */
 export const CustomFilterModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CustomFilterModule'),
@@ -100,18 +100,38 @@ export const CustomFilterModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Filtering -> Column Filters
+ * @feature Filtering -> Text Filter
  */
-export const SimpleFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SimpleFilterModule'),
+export const TextFilterModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('TextFilterModule'),
     dependsOn: [ColumnFilterModule],
     userComponents: {
         agTextColumnFilter: TextFilter,
+        agTextColumnFloatingFilter: TextFloatingFilter,
+    },
+};
+
+/**
+ * @feature Filtering -> Number Filter
+ */
+export const NumberFilterModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('NumberFilterModule'),
+    dependsOn: [ColumnFilterModule],
+    userComponents: {
         agNumberColumnFilter: NumberFilter,
+        agNumberColumnFloatingFilter: NumberFloatingFilter,
+    },
+};
+
+/**
+ * @feature Filtering -> Date Filter
+ */
+export const DateFilterModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('DateFilterModule'),
+    dependsOn: [ColumnFilterModule],
+    userComponents: {
         agDateColumnFilter: DateFilter,
         agDateInput: DefaultDateComponent,
-        agTextColumnFloatingFilter: TextFloatingFilter,
-        agNumberColumnFloatingFilter: NumberFloatingFilter,
         agDateColumnFloatingFilter: DateFloatingFilter,
     },
 };

@@ -1,6 +1,14 @@
 export const modules = {
     groups: [
         {
+            moduleName: 'AllCommunityModule',
+            name: 'All Community Features',
+        },
+        {
+            moduleName: 'AllEnterpriseModule',
+            name: 'All Enterprise Features',
+        },
+        {
             moduleName: 'ValidationModule',
             name: 'Validation (Dev Mode)',
         },
@@ -18,17 +26,8 @@ export const modules = {
             name: 'Columns',
             children: [
                 {
-                    name: 'Column Sizing',
-                    children: [
-                        {
-                            moduleName: 'ColumnAutoSizeModule',
-                            name: 'Column Auto-Sizing',
-                        },
-                        {
-                            moduleName: 'ColumnFlexModule',
-                            name: 'Column Flex',
-                        },
-                    ],
+                    moduleName: 'ColumnAutoSizeModule',
+                    name: 'Column Auto-Sizing',
                 },
                 {
                     moduleName: 'ColumnHoverModule',
@@ -65,42 +64,16 @@ export const modules = {
             name: 'Cells',
             children: [
                 {
-                    name: 'Cell Content',
-                    children: [
-                        {
-                            moduleName: 'CellRendererFunctionModule',
-                            name: 'Cell Renderer Function',
-                        },
-                    ],
-                },
-                {
                     moduleName: 'CellStyleModule',
                     name: 'Styling Cells',
                 },
                 {
+                    moduleName: 'HighlightChangesModule',
                     name: 'Highlighting Changes',
-                    children: [
-                        {
-                            moduleName: 'AnimateShowChangeCellRendererModule',
-                            name: 'Animate Show Change Cell Renderer',
-                        },
-                        {
-                            moduleName: 'AnimateSlideCellRendererModule',
-                            name: 'Animate Slide Cell Renderer',
-                        },
-                        {
-                            moduleName: 'CellFlashModule',
-                            name: 'Cell Flash',
-                        },
-                    ],
                 },
                 {
                     moduleName: 'TooltipModule',
                     name: 'Tooltips',
-                },
-                {
-                    moduleName: 'ExpressionModule',
-                    name: 'Expressions',
                 },
             ],
         },
@@ -111,8 +84,16 @@ export const modules = {
                     name: 'Column Filters',
                     children: [
                         {
-                            moduleName: 'SimpleFilterModule',
-                            name: 'Text Filter / Number Filter / Date Filter',
+                            moduleName: 'TextFilterModule',
+                            name: 'Text Filter',
+                        },
+                        {
+                            moduleName: 'NumberFilterModule',
+                            name: 'Number Filter',
+                        },
+                        {
+                            moduleName: 'DateFilterModule',
+                            name: 'Date Filter',
                         },
                         {
                             moduleName: 'SetFilterModule',
@@ -166,7 +147,7 @@ export const modules = {
                     name: 'Provided Cell Editors',
                     children: [
                         {
-                            moduleName: 'DefaultEditorModule',
+                            moduleName: 'TextEditorModule',
                             name: 'Text Editor',
                         },
                         {
@@ -183,8 +164,16 @@ export const modules = {
                             isEnterprise: true,
                         },
                         {
-                            moduleName: 'DataTypeEditorsModule',
-                            name: 'Number / Date / Checkbox Editors',
+                            moduleName: 'NumberEditorModule',
+                            name: 'Number Editor',
+                        },
+                        {
+                            moduleName: 'DateEditorModule',
+                            name: 'Date Editor',
+                        },
+                        {
+                            moduleName: 'CheckboxEditorModule',
+                            name: 'Checkbox Editor',
                         },
                     ],
                 },
@@ -195,10 +184,6 @@ export const modules = {
                 {
                     moduleName: 'UndoRedoEditModule',
                     name: 'Undo / Redo Edits',
-                },
-                {
-                    moduleName: 'FullRowEditModule',
-                    name: 'Full Row Editing',
                 },
             ],
         },
@@ -232,34 +217,19 @@ export const modules = {
             ],
         },
         {
-            name: 'Pivoting ',
-            children: [
-                {
-                    moduleName: 'PivotModule',
-                    name: 'Pivoting',
-                    isEnterprise: true,
-                },
-            ],
+            moduleName: 'PivotModule',
+            name: 'Pivoting',
+            isEnterprise: true,
         },
         {
-            name: 'Tree Data ',
-            children: [
-                {
-                    moduleName: 'TreeDataModule',
-                    name: 'Tree Data',
-                    isEnterprise: true,
-                },
-            ],
+            moduleName: 'TreeDataModule',
+            name: 'Tree Data',
+            isEnterprise: true,
         },
         {
-            name: 'Master Detail ',
-            children: [
-                {
-                    moduleName: 'MasterDetailModule',
-                    name: 'Master Detail',
-                    isEnterprise: true,
-                },
-            ],
+            moduleName: 'MasterDetailModule',
+            name: 'Master Detail',
+            isEnterprise: true,
         },
         {
             name: 'Accessories',
@@ -303,22 +273,6 @@ export const modules = {
             ],
         },
         {
-            name: 'Server-Side Data',
-            children: [
-                {
-                    name: 'Server-Side Row Model',
-                    isEnterprise: true,
-                    children: [
-                        {
-                            moduleName: 'SkeletonCellRendererModule',
-                            name: 'Skeleton Loading Component',
-                            isEnterprise: true,
-                        },
-                    ],
-                },
-            ],
-        },
-        {
             name: 'Import & Export',
             children: [
                 {
@@ -337,7 +291,7 @@ export const modules = {
                     isEnterprise: true,
                 },
                 {
-                    moduleName: 'NativeDragModule',
+                    moduleName: 'DragAndDropModule',
                     name: 'Drag & Drop',
                 },
             ],
@@ -364,7 +318,7 @@ export const modules = {
             name: 'API',
             children: [
                 {
-                    moduleName: 'StateModule',
+                    moduleName: 'GridStateModule',
                     name: 'Grid State',
                 },
                 {
@@ -386,10 +340,6 @@ export const modules = {
                 {
                     moduleName: 'RenderApiModule',
                     name: 'Rendering API',
-                },
-                {
-                    moduleName: 'GetColumnDefsApiModule',
-                    name: 'Get Column Definitions API',
                 },
                 {
                     moduleName: 'EventApiModule',

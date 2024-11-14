@@ -7,11 +7,11 @@ import type {
     RowDragEndEvent,
     RowDragEnterEvent,
 } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 import { CustomCellRenderer } from './customCellRenderer_typescript';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     {

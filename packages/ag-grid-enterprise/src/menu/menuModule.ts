@@ -1,5 +1,5 @@
 import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
-import { _ColumnMoveModule, _DragAndDropModule, _PopupModule, _SharedMenuModule } from 'ag-grid-community';
+import { _ColumnMoveModule, _PopupModule, _SharedDragAndDropModule, _SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -81,7 +81,7 @@ export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
         showColumnChooser,
         hideColumnChooser,
     },
-    dependsOn: [MenuCoreModule, _DragAndDropModule, _ColumnMoveModule],
+    dependsOn: [MenuCoreModule, _SharedDragAndDropModule, _ColumnMoveModule],
 };
 
 /**

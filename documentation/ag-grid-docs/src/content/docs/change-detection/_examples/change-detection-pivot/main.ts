@@ -8,10 +8,10 @@ import type {
     ValueGetterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, PivotModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, PivotModule]);
 
 interface Student {
     student: number;

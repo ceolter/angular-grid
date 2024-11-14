@@ -8,13 +8,13 @@ import type {
     ServerSideTransaction,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { data, dataObservers, randomUpdates } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

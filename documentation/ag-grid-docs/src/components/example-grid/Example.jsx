@@ -11,6 +11,7 @@ import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
+    CellSelectionModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
@@ -19,7 +20,6 @@ import {
     MasterDetailModule,
     MenuModule,
     MultiFilterModule,
-    RangeSelectionModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -576,7 +576,7 @@ const ExampleInner = ({ darkMode }) => {
             MasterDetailModule,
             MenuModule,
             MultiFilterModule,
-            RangeSelectionModule,
+            CellSelectionModule,
             RichSelectModule,
             RowGroupingModule,
             SetFilterModule,

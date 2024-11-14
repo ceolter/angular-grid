@@ -24,7 +24,6 @@ import type {
     _EventGridApi,
     _ExcelExportGridApi,
     _FilterGridApi,
-    _GetColumnDefsApi,
     _GridChartsGridApi,
     _InfiniteRowModelGridApi,
     _KeyboardNavigationGridApi,
@@ -70,7 +69,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         setGridOption: 0,
         updateGridOptions: 0,
     }),
-    ...mod<_StateGridApi>('StateModule', {
+    ...mod<_StateGridApi>('GridStateModule', {
         getState: 0,
     }),
     ...mod<_RowSelectionGridApi<any>>('SharedRowSelectionModule', {
@@ -156,10 +155,8 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         removeRowDropZone: 0,
         getRowDropZoneParams: 0,
     }),
-    ...mod<_GetColumnDefsApi<any>>('GetColumnDefsApiModule', {
-        getColumnDefs: 0,
-    }),
     ...mod<_ColumnGridApi<any>>('ColumnApiModule', {
+        getColumnDefs: 0,
         getColumnDef: 0,
         getDisplayNameForColumn: 0,
         getColumn: 0,

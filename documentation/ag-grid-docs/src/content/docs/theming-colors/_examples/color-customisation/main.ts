@@ -1,13 +1,13 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     ModuleRegistry,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },

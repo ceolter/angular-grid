@@ -1,13 +1,13 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { PivotModule } from 'ag-grid-enterprise';
 import { SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     PivotModule,
     SideBarModule,

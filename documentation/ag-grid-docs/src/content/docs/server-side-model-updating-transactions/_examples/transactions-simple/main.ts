@@ -9,13 +9,13 @@ import type {
     ServerSideTransactionResult,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { data } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule]);
 
 const columnDefs: ColDef[] = [{ field: 'tradeId' }, { field: 'portfolio' }, { field: 'book' }, { field: 'current' }];
 

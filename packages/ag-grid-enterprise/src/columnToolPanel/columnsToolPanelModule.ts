@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
-import { _ColumnMoveModule, _DragAndDropModule, _PopupModule } from 'ag-grid-community';
+import { _ColumnMoveModule, _PopupModule, _SharedDragAndDropModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -40,7 +40,7 @@ export const ColumnsToolPanelModule: _ModuleWithoutApi = {
         EnterpriseCoreModule,
         SideBarModule,
         _ColumnMoveModule,
-        _DragAndDropModule,
+        _SharedDragAndDropModule,
         _PopupModule,
         MenuItemModule,
     ],

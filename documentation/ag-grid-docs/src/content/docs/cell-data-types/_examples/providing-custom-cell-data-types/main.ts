@@ -1,16 +1,16 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { MenuModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
+import { CellSelectionModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     MenuModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     SetFilterModule,
 ]);
 

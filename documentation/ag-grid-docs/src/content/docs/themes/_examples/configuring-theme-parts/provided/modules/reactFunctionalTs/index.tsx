@@ -2,8 +2,8 @@ import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
@@ -24,7 +24,7 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'a
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
 
     SideBarModule,

@@ -5,10 +5,11 @@ import { ColumnMoveModule } from './columnMove/columnMoveModule';
 import { ColumnResizeModule } from './columnResize/columnResizeModule';
 import { ColumnGroupModule } from './columns/columnGroups/columnGroupModule';
 import { ColumnModel } from './columns/columnModel';
-import { DataTypeModule } from './columns/columnModule';
+import { ColumnFlexModule, DataTypeModule } from './columns/columnModule';
 import { ColumnNameService } from './columns/columnNameService';
 import { ColumnViewportService } from './columns/columnViewportService';
 import { VisibleColsService } from './columns/visibleColsService';
+import { CellRendererFunctionModule } from './components/framework/cellRendererFunctionModule';
 import { Registry } from './components/framework/registry';
 import { UserComponentFactory } from './components/framework/userComponentFactory';
 import { CtrlsService } from './ctrlsService';
@@ -33,7 +34,7 @@ import { RowContainerHeightService } from './rendering/rowContainerHeightService
 import { RowRenderer } from './rendering/rowRenderer';
 import { SortModule } from './sort/sortModule';
 import { SyncService } from './syncService';
-import { ChangeDetectionModule } from './valueService/valueModule';
+import { ChangeDetectionModule, ExpressionModule } from './valueService/valueModule';
 import { ValueService } from './valueService/valueService';
 
 /**
@@ -111,5 +112,8 @@ export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
         PinnedColumnModule,
         AriaModule,
         TouchModule,
+        CellRendererFunctionModule,
+        ColumnFlexModule,
+        ExpressionModule,
     ],
 };

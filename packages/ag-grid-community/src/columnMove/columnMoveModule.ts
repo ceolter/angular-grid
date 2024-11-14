@@ -1,5 +1,5 @@
 import type { _ColumnMoveApi } from '../api/gridApi';
-import { DragAndDropModule } from '../dragAndDrop/dragModule';
+import { SharedDragAndDropModule } from '../dragAndDrop/dragModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { columnMovingCSS } from './column-moving.css-GENERATED';
@@ -17,6 +17,6 @@ export const ColumnMoveModule: _ModuleWithApi<_ColumnMoveApi> = {
         moveColumnByIndex,
         moveColumns,
     },
-    dependsOn: [DragAndDropModule],
+    dependsOn: [SharedDragAndDropModule],
     css: [columnMovingCSS],
 };

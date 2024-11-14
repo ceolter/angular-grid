@@ -1,5 +1,5 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import type { ColDef, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import {
@@ -23,7 +23,7 @@ import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,

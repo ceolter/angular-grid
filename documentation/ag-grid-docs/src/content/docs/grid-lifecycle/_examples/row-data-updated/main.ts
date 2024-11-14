@@ -1,12 +1,12 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import type { FirstDataRenderedEvent, GridApi, GridOptions, RowDataUpdatedEvent } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import { fetchDataAsync } from './data';
 import type { TAthlete } from './data';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const updateRowCount = (id: string) => {
     const element = document.querySelector(`#${id} > .value`);

@@ -21,7 +21,7 @@ export const LoadingCellRendererModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Server-Side Row Model -> Loading Cell Renderer
+ * @internal
  */
 export const SkeletonCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SkeletonCellRendererModule'),

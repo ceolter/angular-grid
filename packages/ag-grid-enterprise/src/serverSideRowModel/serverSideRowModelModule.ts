@@ -7,7 +7,7 @@ import {
 } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { LoadingCellRendererModule } from '../cellRenderers/enterpriseCellRendererModule';
+import { LoadingCellRendererModule, SkeletonCellRendererModule } from '../cellRenderers/enterpriseCellRendererModule';
 import { baseEnterpriseModule } from '../moduleUtils';
 import { SharedPivotModule } from '../pivot/pivotModule';
 import { SharedTreeDataModule } from '../treeData/treeDataModule';
@@ -66,6 +66,7 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
         SharedPivotModule,
         SharedTreeDataModule,
         LoadingCellRendererModule,
+        SkeletonCellRendererModule,
     ],
 };
 
@@ -86,5 +87,5 @@ export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGrid
         refreshServerSide,
         getServerSideGroupLevelState,
     },
-    dependsOn: [_CsrmSsrmSharedApiModule, _SsrmInfiniteSharedApiModule],
+    dependsOn: [EnterpriseCoreModule, _CsrmSsrmSharedApiModule, _SsrmInfiniteSharedApiModule],
 };

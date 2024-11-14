@@ -9,8 +9,8 @@ import type {
     ICellRendererParams,
 } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     CsvExportModule,
     ModuleRegistry,
     createGrid,
@@ -32,7 +32,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,

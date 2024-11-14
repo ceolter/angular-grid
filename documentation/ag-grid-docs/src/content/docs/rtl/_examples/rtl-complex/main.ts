@@ -15,8 +15,8 @@ import type {
     ValueSetterParams,
 } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     CsvExportModule,
     ModuleRegistry,
     createGrid,
@@ -43,7 +43,7 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,

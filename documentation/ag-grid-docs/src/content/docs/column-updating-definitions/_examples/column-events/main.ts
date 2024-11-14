@@ -13,10 +13,10 @@ import type {
     SortChangedEvent,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ClientSideRowModelModule, PivotModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, PivotModule]);
 
 function getColumnDefs(): ColDef[] {
     return [

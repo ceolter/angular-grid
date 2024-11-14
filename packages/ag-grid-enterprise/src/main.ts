@@ -26,7 +26,6 @@ export { ServerSideRowModelModule, ServerSideRowModelApiModule } from './serverS
 export { SparklinesModule } from './sparkline/sparklinesModule';
 export { TreeDataModule } from './treeData/treeDataModule';
 export { AggregationModule } from './aggregation/aggregationModule';
-export { SkeletonCellRendererModule } from './cellRenderers/enterpriseCellRendererModule';
 export { PivotModule } from './pivot/pivotModule';
 
 export { GridChartsModule, IntegratedChartsModule } from './charts/integratedChartsModule';

@@ -16,67 +16,11 @@ import '@ag-grid-community/styles/agGridClassicFont.css';
 import '@ag-grid-community/styles/agGridMaterialFont.css';
 import '@ag-grid-community/styles/agGridQuartzFont.css';
 
-import {
-    ClientSideRowModelModule,
-    CommunityFeaturesModule,
-    CsvExportModule,
-    InfiniteRowModelModule,
-    ModuleRegistry,
-} from 'ag-grid-community';
+import { ModuleRegistry } from 'ag-grid-community';
 
-import {
-    AdvancedFilterModule,
-    CellSelectionModule,
-    ClipboardModule,
-    ColumnsToolPanelModule,
-    ExcelExportModule,
-    FiltersToolPanelModule,
-    GroupFilterModule,
-    MasterDetailModule,
-    MenuModule,
-    MultiFilterModule,
-    PivotModule,
-    RichSelectModule,
-    RowGroupingModule,
-    RowGroupingPanelModule,
-    ServerSideRowModelApiModule,
-    ServerSideRowModelModule,
-    SetFilterModule,
-    SideBarModule,
-    SkeletonCellRendererModule,
-    StatusBarModule,
-    TreeDataModule,
-    ViewportRowModelModule,
-} from './main';
+import { AllEnterpriseModule } from './main';
 
-ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
-    ClientSideRowModelModule,
-    InfiniteRowModelModule,
-    CsvExportModule,
-    AdvancedFilterModule,
-    CellSelectionModule,
-    ClipboardModule,
-    ColumnsToolPanelModule,
-    ExcelExportModule,
-    FiltersToolPanelModule,
-    GroupFilterModule,
-    MasterDetailModule,
-    MenuModule,
-    MultiFilterModule,
-    PivotModule,
-    RichSelectModule,
-    RowGroupingModule,
-    RowGroupingPanelModule,
-    ServerSideRowModelModule,
-    ServerSideRowModelApiModule,
-    SetFilterModule,
-    SideBarModule,
-    SkeletonCellRendererModule,
-    StatusBarModule,
-    TreeDataModule,
-    ViewportRowModelModule,
-]);
+ModuleRegistry.registerModules([AllEnterpriseModule]);
 
 export * from 'ag-grid-community';
 export * from './main';

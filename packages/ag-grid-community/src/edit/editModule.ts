@@ -30,7 +30,7 @@ import { RowEditService } from './rowEditService';
  */
 export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
     ...baseCommunityModule('EditCoreModule'),
-    beans: [EditService],
+    beans: [EditService, RowEditService],
     apiFunctions: {
         getCellEditorInstances,
         getEditingCells,
@@ -57,28 +57,19 @@ export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
 };
 
 /**
- * @feature Editing -> Full Row
+ * @feature Editing -> Text Editor
  */
-export const FullRowEditModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('FullRowEditModule'),
-    beans: [RowEditService],
-    dependsOn: [EditCoreModule],
-};
-
-/**
- * @feature Editing
- */
-export const DefaultEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DefaultEditorModule'),
+export const TextEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('TextEditorModule'),
     userComponents: { agCellEditor: TextCellEditor, agTextCellEditor: TextCellEditor },
     dependsOn: [EditCoreModule],
 };
 
 /**
- * @feature Editing
+ * @feature Editing -> Number Editor
  */
-export const DataTypeEditorsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DataTypeEditorsModule'),
+export const NumberEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('NumberEditorModule'),
     userComponents: {
         agNumberCellEditor: {
             classImp: NumberCellEditor,
@@ -86,8 +77,28 @@ export const DataTypeEditorsModule: _ModuleWithoutApi = {
                 suppressPreventDefault: true,
             } as DefaultProvidedCellEditorParams,
         },
+    },
+    dependsOn: [EditCoreModule],
+};
+
+/**
+ * @feature Editing -> Date Editor
+ */
+export const DateEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('DateEditorModule'),
+    userComponents: {
         agDateCellEditor: DateCellEditor,
         agDateStringCellEditor: DateStringCellEditor,
+    },
+    dependsOn: [EditCoreModule],
+};
+
+/**
+ * @feature Editing -> Checkbox Editor
+ */
+export const CheckboxEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('CheckboxEditorModule'),
+    userComponents: {
         agCheckboxCellEditor: CheckboxCellEditor,
     },
     dependsOn: [EditCoreModule],

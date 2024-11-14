@@ -1,7 +1,7 @@
 import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import type { ColDef, GetDataPath, ValueFormatterFunc, ValueFormatterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
@@ -24,7 +24,7 @@ import { TagCellRenderer } from './cell-renderers/TagCellRenderer';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     ExcelExportModule,
     MasterDetailModule,

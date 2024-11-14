@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
-    CommunityFeaturesModule,
     ModuleRegistry,
     createGrid,
     themeQuartz,
@@ -11,7 +11,7 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'a
 import './style.css';
 
 ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
+    AllCommunityModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,

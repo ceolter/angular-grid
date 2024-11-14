@@ -1,11 +1,11 @@
 import type { ColDef, GridApi, GridOptions, IServerSideDatasource, IServerSideGetRowsRequest } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
-import { ServerSideRowModelModule, SkeletonCellRendererModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { CustomLoadingCellRenderer } from './customLoadingCellRenderer_typescript';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, ServerSideRowModelModule, SkeletonCellRendererModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'id' },

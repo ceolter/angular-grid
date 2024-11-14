@@ -1,9 +1,9 @@
 import type { GridApi, GridOptions, IDatasource, SortModelItem } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { CommunityFeaturesModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { InfiniteRowModelModule } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([CommunityFeaturesModule, InfiniteRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule]);
 
 let gridApi: GridApi<IOlympicData>;
 

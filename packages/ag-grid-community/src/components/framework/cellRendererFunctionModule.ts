@@ -3,8 +3,7 @@ import type { _ModuleWithoutApi } from '../../interfaces/iModule';
 import { AgComponentUtils } from './agComponentUtils';
 
 /**
- * @feature Cells => Cell Content
- * @colDef cellRenderer
+ * @internal
  */
 export const CellRendererFunctionModule: _ModuleWithoutApi = {
     ...baseCommunityModule('CellRendererFunctionModule'),
