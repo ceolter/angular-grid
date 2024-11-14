@@ -4,6 +4,7 @@ import { _makeNull } from '../../../utils/generic';
 import { AgInputTextField } from '../../../widgets/agInputTextField';
 import type { ISimpleFilterModel, ISimpleFilterModelType, Tuple } from '../iSimpleFilter';
 import { SimpleFilter } from '../simpleFilter';
+import { isBlank } from '../simpleFilterUtils';
 import type { TextFilterModel, TextFilterParams, TextFormatter, TextMatcher } from './iTextFilter';
 import { DEFAULT_TEXT_FILTER_OPTIONS } from './textFilterConstants';
 import { TextFilterModelFormatter } from './textFilterModelFormatter';
@@ -53,9 +54,7 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         super('textFilter');
     }
 
-    protected override getDefaultDebounceMs(): number {
-        return 500;
-    }
+    protected override defaultDebounceMs: number = 500;
 
     protected override setParams(params: TextFilterParams): void {
         this.textFilterParams = params;
@@ -178,9 +177,9 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         const { api, colDef, column, context, textFormatter } = this.textFilterParams;
 
         if (filterModel.type === 'blank') {
-            return this.isBlank(cellValue);
+            return isBlank(cellValue);
         } else if (filterModel.type === 'notBlank') {
-            return !this.isBlank(cellValue);
+            return !isBlank(cellValue);
         }
 
         const matcherParams = {

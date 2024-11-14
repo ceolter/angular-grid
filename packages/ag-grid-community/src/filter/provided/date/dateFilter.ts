@@ -8,6 +8,7 @@ import type { FILTER_LOCALE_TEXT } from '../../filterLocaleText';
 import type { Comparator } from '../iScalarFilter';
 import type { ISimpleFilterModel, Tuple } from '../iSimpleFilter';
 import { ScalarFilter } from '../scalarFilter';
+import { removeItems } from '../simpleFilterUtils';
 import { DateCompWrapper } from './dateCompWrapper';
 import { DEFAULT_DATE_FILTER_OPTIONS } from './dateFilterConstants';
 import { DateFilterModelFormatter } from './dateFilterModelFormatter';
@@ -196,12 +197,12 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     protected removeValueElements(startPosition: number, deleteCount?: number): void {
         this.removeDateComps(this.dateConditionFromComps, startPosition, deleteCount);
         this.removeDateComps(this.dateConditionToComps, startPosition, deleteCount);
-        this.removeItems(this.eConditionPanelsFrom, startPosition, deleteCount);
-        this.removeItems(this.eConditionPanelsTo, startPosition, deleteCount);
+        removeItems(this.eConditionPanelsFrom, startPosition, deleteCount);
+        removeItems(this.eConditionPanelsTo, startPosition, deleteCount);
     }
 
     protected removeDateComps(components: DateCompWrapper[], startPosition: number, deleteCount?: number): void {
-        const removedComponents = this.removeItems(components, startPosition, deleteCount);
+        const removedComponents = removeItems(components, startPosition, deleteCount);
         removedComponents.forEach((comp) => comp.destroy());
     }
 

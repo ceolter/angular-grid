@@ -3,6 +3,7 @@ import type { AgInputTextField } from '../../widgets/agInputTextField';
 import type { Comparator, ScalarFilterParams } from './iScalarFilter';
 import type { ISimpleFilterModel, ISimpleFilterModelType, Tuple } from './iSimpleFilter';
 import { SimpleFilter } from './simpleFilter';
+import { isBlank } from './simpleFilterUtils';
 
 export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputTextField> extends SimpleFilter<
     M,
@@ -89,10 +90,10 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
             }
 
             case 'blank':
-                return this.isBlank(cellValue);
+                return isBlank(cellValue);
 
             case 'notBlank':
-                return !this.isBlank(cellValue);
+                return !isBlank(cellValue);
 
             default:
                 _warn(76, { filterModelType: filterModel.type });

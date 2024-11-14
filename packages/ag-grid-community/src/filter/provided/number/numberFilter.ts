@@ -35,9 +35,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         return [this.processValue(filter), this.processValue(filterTo)].slice(0, this.getNumberOfInputs(type));
     }
 
-    protected override getDefaultDebounceMs(): number {
-        return 500;
-    }
+    protected override defaultDebounceMs: number = 500;
 
     protected comparator(): Comparator<number> {
         return (left: number, right: number): number => {
@@ -74,7 +72,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
             !fromFloatingFilter && this.numberFilterParams.numberFormatter
                 ? this.numberFilterParams.numberFormatter(value ?? null)
                 : value;
-        super.setElementValue(element, valueToSet as any);
+        this.setElementValue(element, valueToSet as any);
     }
 
     protected createValueElement(): HTMLElement {

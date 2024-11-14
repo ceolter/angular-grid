@@ -82,7 +82,7 @@ class FloatingFilterNumberInputService extends BeanStub implements FloatingFilte
 }
 
 export class NumberFloatingFilter extends TextInputFloatingFilter<NumberFilterModel> {
-    private filterModelFormatter: SimpleFilterModelFormatter;
+    protected filterModelFormatter: NumberFilterModelFormatter;
     private allowedCharPattern: string | null;
 
     public override init(params: INumberFloatingFilterParams): void {
@@ -103,12 +103,8 @@ export class NumberFloatingFilter extends TextInputFloatingFilter<NumberFilterMo
         this.filterModelFormatter.updateParams({ optionsFactory: this.optionsFactory });
     }
 
-    protected getDefaultFilterOptions(): string[] {
+    protected getDefaultOptions(): string[] {
         return DEFAULT_NUMBER_FILTER_OPTIONS;
-    }
-
-    protected getFilterModelFormatter(): SimpleFilterModelFormatter {
-        return this.filterModelFormatter;
     }
 
     protected createFloatingFilterInputService(params: INumberFloatingFilterParams): FloatingFilterInputService {

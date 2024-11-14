@@ -1,5 +1,3 @@
-import type { ColumnNameService } from '../../../columns/columnNameService';
-import type { BeanCollection } from '../../../context/context';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { IFilter } from '../../../interfaces/iFilter';
 import type { AgInputTextField } from '../../../widgets/agInputTextField';
@@ -11,12 +9,6 @@ import type { IFloatingFilterComp, IFloatingFilterParams, IFloatingFilterParent 
 // they can provide a getModelAsString() method on the filter instead. this class just displays
 // the string returned from getModelAsString()
 export class ReadOnlyFloatingFilter extends Component implements IFloatingFilterComp<IFilter & IFloatingFilterParent> {
-    private colNames: ColumnNameService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colNames = beans.colNames;
-    }
-
     private readonly eFloatingFilterText: AgInputTextField = RefPlaceholder;
 
     private params: IFloatingFilterParams;
@@ -39,11 +31,10 @@ export class ReadOnlyFloatingFilter extends Component implements IFloatingFilter
 
     public init(params: IFloatingFilterParams): void {
         this.params = params;
-        const displayName = this.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
-        const translate = this.getLocaleTextFunc();
+        const displayName = this.beans.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
         this.eFloatingFilterText
             .setDisabled(true)
-            .setInputAriaLabel(`${displayName} ${translate('ariaFilterInput', 'Filter Input')}`);
+            .setInputAriaLabel(`${displayName} ${this.getLocaleTextFunc()('ariaFilterInput', 'Filter Input')}`);
     }
 
     public onParentModelChanged(parentModel: any): void {
@@ -57,8 +48,9 @@ export class ReadOnlyFloatingFilter extends Component implements IFloatingFilter
             // however that is not possible, as React Hooks and VueJS don't attached the methods to the Filter until
             // AFTER the filter is created, not allowing inspection before this (we create floating filters as columns
             // are drawn, but the parent filters are only created when needed).
-            if (filterInstance.getModelAsString) {
-                const modelAsString = filterInstance.getModelAsString(parentModel);
+            const getModelAsString = filterInstance.getModelAsString;
+            if (getModelAsString) {
+                const modelAsString = getModelAsString(parentModel);
                 this.eFloatingFilterText.setValue(modelAsString);
             }
         });
