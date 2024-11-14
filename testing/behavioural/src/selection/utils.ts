@@ -10,7 +10,6 @@ export function getRowByIndex(index: number): HTMLElement | null {
 }
 
 export function getRowById(id: string): HTMLElement | null {
-    console.log('finding', escapeQuotes(id));
     return document.getElementById('myGrid')!.querySelector(`[row-id="${escapeQuotes(id)}"]`);
 }
 

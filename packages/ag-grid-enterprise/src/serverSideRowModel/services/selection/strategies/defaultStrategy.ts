@@ -109,7 +109,8 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
                 _error(241);
                 return 0;
             }
-            const node = nodes[0];
+            const rowNode = nodes[0];
+            const node = rowNode.footer ? rowNode.sibling : rowNode;
             if (newValue && node.selectable) {
                 this.selectedNodes = { [node.id!]: node };
                 this.selectedState = {
@@ -126,7 +127,8 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
             return 1;
         }
 
-        const updateNodeState = (node: RowNode, value = newValue) => {
+        const updateNodeState = (rowNode: RowNode, value = newValue) => {
+            const node = rowNode.footer ? rowNode.sibling : rowNode;
             if (value && node.selectable) {
                 this.selectedNodes[node.id!] = node;
             } else {

@@ -1497,6 +1497,30 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowElementsById([':{"country":"United States"}'], api);
             });
 
+            test('selecting footer node selects sibling (i.e. group node) when `groupSelects = "descendants"`', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    groupTotalRow: 'bottom',
+                    rowSelection: {
+                        mode: 'multiRow',
+                        groupSelects: 'descendants',
+                    },
+                });
+
+                await expandGroupRowByIndex(api, 0);
+
+                toggleCheckboxByIndex(3);
+
+                assertSelectedRowElementsById(
+                    [
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
+                    api
+                );
+            });
+
             describe('Range selection behaviour', () => {
                 test('CTRL-click and CMD-click does not affect ability to select multiple rows', async () => {
                     const api = await createGridAndWait({

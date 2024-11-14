@@ -168,7 +168,8 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             this.deselectAllRowNodes();
         }
 
-        nodes.forEach((node) => {
+        nodes.forEach((rowNode) => {
+            const node = rowNode.footer ? rowNode.sibling : rowNode;
             const idPathToNode = this.getRouteToNode(node);
             this.recursivelySelectNode(idPathToNode, this.selectedState, newValue);
         });
