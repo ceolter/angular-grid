@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
 import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
@@ -9,8 +10,16 @@ import ChartsLogo from '@ag-website-shared/images/inline-svgs/ag-charts-logo.svg
 import HeroGrid from '@components/hero-grid/HeroGrid.astro';
 import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import { Version } from '@ag-website-shared/components/whats-new/components/Version';
 import { Image } from 'astro:assets';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
+import { parseVersion } from '@ag-website-shared/utils/parseVersion';
+import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
+import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
+
+const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
+const { blogPrefix } = whatsNewData['grid'];
 
 const frameworksData = [
     {
@@ -97,69 +106,102 @@ const frameworksData = [
         </div>
     </div>
 
-    <div class={styles.homepageQuotes}>
-        <div class="layout-max-width-small">
-            <Quotes client:load data={quotesData} />
+    <div class={styles.sectionContent}>
+        <header class={styles.headingContainer}>
+            <h2 class={styles.tag}>Performance And Speed First</h2>
+            <h3 class={styles.heading}>The Fastest Data Grid In The World</h3>
+            <h4 class={styles.subHeading}>
+                Handle millions of rows, and thousands of updates per second out of the box, without compromising on
+                performance
+            </h4>
+            <a href="/react-data-grid/getting-started/" class:list={[styles.learnMoreButton, 'button-tertiary']}
+                >Learn more
+            </a>
+        </header>
+
+        <AutomatedExamples client:visible />
+    </div>
+
+    <div class={styles.sectionContent}>
+        <div class={styles.sectionInner}>
+            <div class={styles.headingContainer}>
+                <h2 class={styles.tag}>Where Can I See AG Grid React Tables Being Used?</h2>
+                <h3 class={styles.heading}>Used in Every Industry, for All Types of Data</h3>
+                <h4 class={styles.subHeading}>
+                    Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of
+                    these uses are private, but we've hand-picked a few open-source examples:
+                </h4>
+            </div>
+            <Showcase client:load />
         </div>
     </div>
 
-    <div class={styles.homepageCharts}>
-        <div class:list={[styles.chartsInner, 'layout-max-width-small']}>
-            <div class={styles.chartsCopy}>
-                <span class={styles.chartsLogo}>
-                    <ChartsLogo />
-                </span>
+    <div class:list={[styles.sectionContent, styles.quotesSection]}>
+        <div class={styles.headingContainer}>
+            <h2 class={styles.tag}>Who Builds Data Grids with AG Grid?</h2>
+            <h3 class={styles.heading}>Loved By Developers, Trusted By The Worlds Largest Enterprises</h3>
+            <h4 class={styles.subHeading}>
+                Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000 Stars on
+                GitHub.
+            </h4>
+        </div>
+        <Quotes client:load data={quotesData} />
+    </div>
 
-                <p class="text-lg">
-                    Check out the all new{' '}
-                    <a href="https://ag-grid.com/charts">
-                        <b>AG Charts</b>
-                    </a>
-                    . Experience the power of <b>AG Grid</b>{' '}
-                    <a href="/javascript-data-grid/integrated-charts/">Integrated Charts</a> in a standalone library.
-                </p>
+    <div class:list={[styles.sectionContent, styles.faqSection]}>
+        <div class:list={[styles.latestNewsSectionInner]}>
+            <div class={styles.headingContainer}>
+                <h2 class={styles.tag}>Latest JavaScript Charting Releases from AG Grid</h2>
+                <h3 class={styles.heading}>Regular Releases, <br /> Updates, and&nbsp;Enhancements</h3>
+                <h4 class={styles.subHeading}>
+                    With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of
+                    the newest features and improvements to AG Grid Data Grids.
+                </h4>
             </div>
-            <div class={styles.chartsExample}>
-                <Image
-                    width={720}
-                    height={322}
-                    class={styles.chartsExampleLight}
-                    src={urlWithBaseUrl('images/ag-charts-gallery-light.webp')}
-                    alt="AG Charts"
-                />
-                <Image
-                    width={720}
-                    height={322}
-                    class={styles.chartsExampleDark}
-                    src={urlWithBaseUrl('images/ag-charts-gallery-dark.webp')}
-                    alt="AG Charts"
-                />
+            <div class={styles.latestNewsVersions}>
+                {
+                    versionsData
+                        .filter((versionInfo) => versionInfo.version.endsWith('.0')) // Exclude patch releases
+                        .slice(0, 3)
+                        .map((versionInfo, index) => {
+                            if (versionInfo.highlights) {
+                                const { major, minor } = parseVersion(versionInfo.version);
+                                const blogUrl = `${minor ? `${blogPrefix}${major}-${minor}` : `${blogPrefix}${major}`}/`;
+                                return (
+                                    <Version
+                                        client:load
+                                        isLatest={index === 0}
+                                        blogUrl={blogUrl}
+                                        version={versionInfo.version}
+                                        date={versionInfo.date}
+                                        highlights={versionInfo.highlights}
+                                        notesPath={versionInfo.notesPath}
+                                    />
+                                );
+                            }
+                        })
+                }
+            </div>
+            <div class={styles.ctaButton}>
+                <a
+                    href={urlWithBaseUrl(
+                        '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
+                    )}
+                    class="button">See Whats New</a
+                >
             </div>
         </div>
     </div>
 
-    <AutomatedExamples client:visible />
-
-    <div class={styles.homepageSponsorship}>
-        <section class:list={[styles.sponsorshipInner, 'layout-max-width-small']}>
-            <div>
-                <h2>Supporting Open&nbsp;Source</h2>
-                <h3 class="thin-text">We are proud to sponsor the tools we use and love.</h3>
-            </div>
-
-            <ul class:list={[styles.projectsList, 'list-style-none']}>
-                <li class={styles.project}>
-                    <img src={urlWithBaseUrl('images/webpack.svg')} alt="Webpack" />
-
-                    <h3>Webpack</h3>
-                </li>
-
-                <li class:list={[styles.project, styles.projectPlunker]}>
-                    <img src={urlWithBaseUrl('images/plunker.svg')} alt="Plunker" />
-
-                    <h3>Plunker</h3>
-                </li>
-            </ul>
-        </section>
+    <div class:list={[styles.sectionContent, styles.faqSection]}>
+        <div class={styles.headingContainer}>
+            <h2 class={styles.tag}>Data Grid FAQs</h2>
+            <h3 class={styles.heading}>Frequently Asked Questions</h3>
+            <h4 class={styles.subHeading}>
+                How many rows can AG Grid handle? How fast is AG Grid? Is AG Grid free? Answers to these common
+                questions and more.
+            </h4>
+        </div>
+        <Faqs client:load />
     </div>
 </Layout>

@@ -346,8 +346,6 @@ body {
 
 .automatedIntegratedChartsOuter {
     margin-bottom: $spacing-size-24;
-    background-color: var(--color-util-brand-100);
-
     #{$selector-darkmode} & {
         background-color: var(--color-gray-800);
     }
@@ -577,4 +575,186 @@ body {
     width: 24px;
     fill: var(--color-fg-secondary);
     opacity: 0.8;
+}
+
+.heroButton {
+    width: fit-content;
+    background-color: var(--color-brand-200);
+}
+
+.heroSectionversionTagContainer {
+    display: flex;
+    border-radius: var(--radius-4xl);
+    justify-content: left;
+    align-items: left;
+    cursor: pointer;
+    align-self: left;
+    background-color: var(--color-brand-200);
+    font-weight: var(--text-bold);
+    width: fit-content;
+    gap: $spacing-size-2;
+    padding: $spacing-size-1 $spacing-size-3;
+    margin-bottom: $spacing-size-6;
+    #{$selector-darkmode} & {
+        background-color: var(--color-bg-secondary);
+    }
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+
+    padding: $spacing-size-2 $spacing-size-2;
+    font-weight: 500;
+
+    div {
+        display: flex;
+        gap: 8px;
+        padding-bottom: 8px;
+    }
+    .active {
+        border-bottom: 1.5px solid var(--color-white);
+    }
+    :not(.active) {
+        transition: color opacity 0.5s;
+        color: var(--color-brand-300);
+        img {
+            opacity: 0.5;
+        }
+        &:hover {
+            cursor: pointer;
+            color: var(--color-white);
+            img {
+                opacity: 1;
+            }
+            transition: color opacity 0.5s;
+        }
+    }
+    img {
+        height: 20px;
+    }
+}
+.frameworkSelector {
+    background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-brand-500) 90%);
+    width: 400px;
+    border-radius: $spacing-size-2;
+    color: var(--color-white);
+}
+
+.frameworkCode {
+    background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-brand-500) 80%);
+    font-family: var(--text-monospace-font-family);
+    font-size: var(--text-fs-sm);
+    padding: $spacing-size-3;
+    border-bottom-left-radius: $spacing-size-2;
+    border-bottom-right-radius: $spacing-size-2;
+    display: flex;
+    justify-content: space-between;
+}
+
+.copyToClipboardIcon {
+    fill: var(--color-white) !important;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+.heroSectionfeatureHighlight {
+    font-weight: 500;
+}
+
+.sectionContent {
+    padding-top: $spacing-size-12;
+    width: 100%;
+    max-width: var(--layout-max-width-small);
+
+    padding-right: var(--layout-horizontal-margins);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.tag,
+.heading,
+.subHeading {
+    margin: 0;
+}
+
+.tag {
+    font-size: var(--text-fs-lg);
+    font-weight: var(--text-semibold);
+    color: var(--color-util-brand-600);
+}
+
+.heading {
+    font-size: 40px;
+    font-weight: var(--text-bold);
+    letter-spacing: -1px;
+
+    @media screen and (max-width: $breakpoint-landing-page-medium) {
+        padding: 0;
+    }
+}
+.subHeading {
+    color: var(--color-fg-tertiary);
+    font-weight: var(--text-fs-regular);
+}
+
+.headingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    text-align: left;
+    margin-bottom: $spacing-size-12;
+    gap: $spacing-size-2;
+}
+
+.latestNewsVersions {
+    --versions-gap: #{$spacing-size-4};
+
+    container-type: inline-size;
+    display: flex;
+    gap: var(--versions-gap);
+    margin-top: $spacing-size-8;
+    margin-bottom: $spacing-size-8;
+}
+
+.faqSection {
+    .blueRectangle {
+        transform: translate(-50%, 250px);
+    }
+}
+.customerSubheading {
+    opacity: 0.7;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+.sectionContent a {
+    width: fit-content;
+    margin-top: $spacing-size-3;
+}
+.learnMoreButton {
+    width: fit-content;
+    margin-top: $spacing-size-3;
+}
+
+.quotesSection {
+    padding-bottom: $spacing-size-16;
+}
+
+.faqSection {
+    padding-top: $spacing-size-20;
+    padding-bottom: $spacing-size-16;
+}
+
+.themeBuilder {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    align-items: center;
+    margin-bottom: $spacing-size-16;
 }
