@@ -109,12 +109,12 @@ export class AgAutocompleteList extends PopupComponent {
     }
 
     private runSearch() {
-        const { autocompleteEntries } = this.params;
+        const { autocompleteEntries, useFuzzySearch, forceLastSelection } = this.params;
         const searchStrings = autocompleteEntries.map((v) => v.displayValue ?? v.key);
 
         let matchingStrings: string[];
         let topSuggestion: string | undefined;
-        if (this.params.useFuzzySearch) {
+        if (useFuzzySearch) {
             matchingStrings = _fuzzySuggestions({
                 inputValue: this.searchString,
                 allSuggestions: searchStrings,
@@ -134,7 +134,7 @@ export class AgAutocompleteList extends PopupComponent {
         if (
             !filteredEntries.length &&
             this.selectedValue &&
-            this.params?.forceLastSelection?.(this.selectedValue, this.searchString)
+            forceLastSelection?.(this.selectedValue, this.searchString)
         ) {
             filteredEntries = [this.selectedValue];
         }
@@ -185,10 +185,11 @@ export class AgAutocompleteList extends PopupComponent {
     }
 
     private onMouseMove(mouseEvent: MouseEvent): void {
-        const rect = this.virtualList.getGui().getBoundingClientRect();
-        const scrollTop = this.virtualList.getScrollTop();
+        const { getGui, getScrollTop, getRowHeight } = this.virtualList;
+        const rect = getGui().getBoundingClientRect();
+        const scrollTop = getScrollTop();
         const mouseY = mouseEvent.clientY - rect.top + scrollTop;
-        const row = Math.floor(mouseY / this.virtualList.getRowHeight());
+        const row = Math.floor(mouseY / getRowHeight());
 
         this.checkSetSelectedValue(row);
     }

@@ -20,32 +20,39 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     protected evaluateNullValue(filterType?: ISimpleFilterModelType | null) {
+        const {
+            includeBlanksInEquals,
+            includeBlanksInNotEqual,
+            includeBlanksInGreaterThan,
+            includeBlanksInLessThan,
+            includeBlanksInRange,
+        } = this.scalarFilterParams;
         switch (filterType) {
             case 'equals':
-                if (this.scalarFilterParams.includeBlanksInEquals) {
+                if (includeBlanksInEquals) {
                     return true;
                 }
                 break;
             case 'notEqual':
-                if (this.scalarFilterParams.includeBlanksInNotEqual) {
+                if (includeBlanksInNotEqual) {
                     return true;
                 }
                 break;
             case 'greaterThan':
             case 'greaterThanOrEqual':
-                if (this.scalarFilterParams.includeBlanksInGreaterThan) {
+                if (includeBlanksInGreaterThan) {
                     return true;
                 }
                 break;
 
             case 'lessThan':
             case 'lessThanOrEqual':
-                if (this.scalarFilterParams.includeBlanksInLessThan) {
+                if (includeBlanksInLessThan) {
                     return true;
                 }
                 break;
             case 'inRange':
-                if (this.scalarFilterParams.includeBlanksInRange) {
+                if (includeBlanksInRange) {
                     return true;
                 }
                 break;

@@ -46,8 +46,8 @@ export class FilterListener extends BeanStub implements NamedBean {
         let newModel: FilterModel | AdvancedFilterModel | null;
         let changedColumns: string[];
 
-        if (this.filterManager?.isAdvancedFilterEnabled()) {
-            newModel = this.filterManager.getAdvancedFilterModel();
+        if (this.filterManager?.isAdvFilterEnabled()) {
+            newModel = this.filterManager.getAdvFilterModel();
             // if advancedFilterEnabledChanged, old model is of type `FilterModel`
             const oldColumns = advancedFilterEnabledChanged
                 ? Object.keys(oldModel ?? {})

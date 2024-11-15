@@ -109,20 +109,21 @@ export class AgAutocomplete extends Component<AgAutocompleteEvent> {
 
     private updateAutocompleteList(value: string | null): void {
         const autocompleteListParams = this.listGenerator?.(value, this.lastPosition) ?? { enabled: false };
+        const isListOpen = this.isListOpen;
         if (!autocompleteListParams.type || autocompleteListParams.type !== this.autocompleteListParams?.type) {
-            if (this.isListOpen) {
+            if (isListOpen) {
                 this.closeList();
             }
         }
         this.autocompleteListParams = autocompleteListParams;
-        if (this.autocompleteListParams?.enabled) {
-            if (!this.isListOpen) {
+        if (autocompleteListParams?.enabled) {
+            if (!isListOpen) {
                 this.openList();
             }
-            const { searchString } = this.autocompleteListParams;
+            const { searchString } = autocompleteListParams;
             this.autocompleteList!.setSearch(searchString ?? '');
         } else {
-            if (this.isListOpen) {
+            if (isListOpen) {
                 this.closeList();
             }
         }
@@ -250,13 +251,13 @@ export class AgAutocomplete extends Component<AgAutocompleteEvent> {
         if (!this.validator) {
             return;
         }
-        this.validationMessage = this.validator(value);
-        this.eAutocompleteInput.getInputElement().setCustomValidity(this.validationMessage ?? '');
-        this.valid = !this.validationMessage;
+        const validationMessage = (this.validationMessage = this.validator(value));
+        this.eAutocompleteInput.getInputElement().setCustomValidity(validationMessage ?? '');
+        this.valid = !validationMessage;
         this.dispatchLocalEvent<AutocompleteValidChangedEvent>({
             type: 'eventValidChanged',
             isValid: this.valid,
-            validationMessage: this.validationMessage,
+            validationMessage,
         });
     }
 

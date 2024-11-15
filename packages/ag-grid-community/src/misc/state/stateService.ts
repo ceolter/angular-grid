@@ -579,7 +579,7 @@ export class StateService extends BeanStub implements NamedBean {
         if (filterModel && Object.keys(filterModel).length === 0) {
             filterModel = undefined;
         }
-        const advancedFilterModel = this.filterManager?.getAdvancedFilterModel() ?? undefined;
+        const advancedFilterModel = this.filterManager?.getAdvFilterModel() ?? undefined;
         return filterModel || advancedFilterModel ? { filterModel, advancedFilterModel } : undefined;
     }
 
@@ -589,7 +589,7 @@ export class StateService extends BeanStub implements NamedBean {
             this.filterManager?.setFilterModel(filterModel, 'columnFilter');
         }
         if (advancedFilterModel) {
-            this.filterManager?.setAdvancedFilterModel(advancedFilterModel);
+            this.filterManager?.setAdvFilterModel(advancedFilterModel);
         }
     }
 

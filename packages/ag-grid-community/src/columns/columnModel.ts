@@ -196,7 +196,7 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
         this.positionLockedCols(cols);
         showRowGroupCols?.refresh();
-        quickFilter?.refreshQuickFilterCols();
+        quickFilter?.refreshCols();
 
         this.setColSpanActive();
         rowAutoHeight?.setAutoHeightActive(cols);

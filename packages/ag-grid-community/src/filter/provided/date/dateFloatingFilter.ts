@@ -77,12 +77,8 @@ export class DateFloatingFilter extends SimpleFloatingFilter {
         this.setEditable(allowEditing);
 
         if (allowEditing) {
-            if (model) {
-                const dateModel = model as DateFilterModel;
-                this.dateComp.setDate(_parseDateTimeFromString(dateModel.dateFrom));
-            } else {
-                this.dateComp.setDate(null);
-            }
+            const dateModel = (model as DateFilterModel) ? model.dateFrom : null;
+            this.dateComp.setDate(dateModel);
 
             this.eReadOnlyText.setValue('');
         } else {

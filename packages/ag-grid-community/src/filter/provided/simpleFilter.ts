@@ -118,11 +118,8 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
 
     private setTypeFromFloatingFilter(type?: string | null): void {
         this.eTypes.forEach((eType, position) => {
-            if (position === 0) {
-                eType.setValue(type, true);
-            } else {
-                eType.setValue(this.optionsFactory.getDefaultOption(), true);
-            }
+            const value = position === 0 ? type : this.optionsFactory.defaultOption;
+            eType.setValue(value, true);
         });
     }
 
@@ -134,7 +131,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
 
         if (this.maxNumConditions > 1 && conditions.length > 1) {
             return {
-                filterType: this.getFilterType(),
+                filterType: this.filterType,
                 operator: this.getJoinOperator(),
                 conditions,
             };
@@ -418,9 +415,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     private createFilterListOptions(): void {
-        const filterOptions = this.optionsFactory.getFilterOptions();
-
-        this.filterListOptions = filterOptions.map((option) =>
+        this.filterListOptions = this.optionsFactory.filterOptions.map((option) =>
             typeof option === 'string' ? this.createBoilerplateListOption(option) : this.createCustomListOption(option)
         );
     }
@@ -655,17 +650,18 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     private getPlaceholderText(defaultPlaceholder: keyof typeof FILTER_LOCALE_TEXT, position: number): string {
-        let placeholder = this.translate(defaultPlaceholder);
-        if (typeof this.filterPlaceholder === 'function') {
-            const filterOptionKey = this.eTypes[position].getValue() as ISimpleFilterModelType;
-            const filterOption = this.translate(filterOptionKey);
-            placeholder = this.filterPlaceholder({
+        const { filterPlaceholder, translate, eTypes } = this;
+        let placeholder = translate(defaultPlaceholder);
+        if (typeof filterPlaceholder === 'function') {
+            const filterOptionKey = eTypes[position].getValue() as ISimpleFilterModelType;
+            const filterOption = translate(filterOptionKey);
+            placeholder = filterPlaceholder({
                 filterOptionKey,
                 filterOption,
                 placeholder,
             });
-        } else if (typeof this.filterPlaceholder === 'string') {
-            placeholder = this.filterPlaceholder;
+        } else if (typeof filterPlaceholder === 'string') {
+            placeholder = filterPlaceholder;
         }
 
         return placeholder;
@@ -843,7 +839,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         const translate = this.getLocaleTextFunc();
         const filteringLabel = translate('ariaFilteringOperator', 'Filtering operator');
         eType
-            .setValue(this.optionsFactory.getDefaultOption(), true)
+            .setValue(this.optionsFactory.defaultOption, true)
             .setAriaLabel(filteringLabel)
             .setDisabled(this.isReadOnly() || this.filterListOptions.length <= 1);
     }
@@ -852,7 +848,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         this.resetJoinOperator(
             eJoinOperatorAnd,
             index,
-            this.isDefaultOperator('AND'),
+            this.defaultJoinOperator === 'AND',
             this.translate('andCondition'),
             uniqueGroupId
         );
@@ -862,7 +858,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         this.resetJoinOperator(
             eJoinOperatorOr,
             index,
-            this.isDefaultOperator('OR'),
+            this.defaultJoinOperator === 'OR',
             this.translate('orCondition'),
             uniqueGroupId
         );
@@ -885,8 +881,10 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     private updateJoinOperatorsDisabled(): void {
-        this.eJoinOperatorsAnd.forEach((eJoinOperator, index) => this.updateJoinOperatorDisabled(eJoinOperator, index));
-        this.eJoinOperatorsOr.forEach((eJoinOperator, index) => this.updateJoinOperatorDisabled(eJoinOperator, index));
+        const updater = (eJoinOperator: AgRadioButton, index: number) =>
+            this.updateJoinOperatorDisabled(eJoinOperator, index);
+        this.eJoinOperatorsAnd.forEach(updater);
+        this.eJoinOperatorsOr.forEach(updater);
     }
 
     private updateJoinOperatorDisabled(eJoinOperator: AgRadioButton, index: number): void {
@@ -916,10 +914,6 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         this.forEachInput((element, index, position) => {
             this.setElementValue(element, index === 0 && position === 0 ? value : null, true);
         });
-    }
-
-    private isDefaultOperator(operator: JoinOperator): boolean {
-        return operator === this.defaultJoinOperator;
     }
 
     private addChangedListeners(eType: AgSelect, position: number) {

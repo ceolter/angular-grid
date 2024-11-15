@@ -38,7 +38,7 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     protected setLastTypeFromModel(model: ProvidedFilterModel): void {
         // if no model provided by the parent filter use default
         if (!model) {
-            this.lastType = this.optionsFactory.getDefaultOption();
+            this.lastType = this.optionsFactory.defaultOption;
             return;
         }
 
@@ -84,7 +84,7 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
         this.optionsFactory = optionsFactory;
         optionsFactory.init(params.filterParams as ScalarFilterParams, this.getDefaultOptions());
 
-        const defaultOption = optionsFactory.getDefaultOption();
+        const defaultOption = optionsFactory.defaultOption;
         // Initial call
         if (!update) {
             this.lastType = defaultOption;

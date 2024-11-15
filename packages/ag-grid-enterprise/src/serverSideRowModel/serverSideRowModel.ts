@@ -390,8 +390,8 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
             pivotMode: this.colModel.isPivotMode(),
 
             // sort and filter model
-            filterModel: this.filterManager?.isAdvancedFilterEnabled()
-                ? this.filterManager?.getAdvancedFilterModel()
+            filterModel: this.filterManager?.isAdvFilterEnabled()
+                ? this.filterManager?.getAdvFilterModel()
                 : this.filterManager?.getFilterModel() ?? {},
             sortModel: this.sortSvc?.getSortModel() ?? [],
 

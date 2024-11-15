@@ -2,7 +2,6 @@ import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
 import { _isColumnMenuAnchoringEnabled, _isLegacyMenuEnabled } from '../gridOptionsUtils';
 import type { ContainerType } from '../interfaces/iAfterGuiAttachedParams';
@@ -19,11 +18,9 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
     beanName = 'filterMenuFactory' as const;
 
     private popupSvc?: PopupService;
-    private ctrlsSvc: CtrlsService;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc;
-        this.ctrlsSvc = beans.ctrlsSvc;
     }
 
     private hidePopup: () => void;
@@ -31,9 +28,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
     private activeMenu?: FilterWrapperComp;
 
     public hideActiveMenu(): void {
-        if (this.hidePopup) {
-            this.hidePopup();
-        }
+        this.hidePopup?.();
     }
 
     public showMenuAfterMouseEvent(
@@ -128,7 +123,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         const afterGuiDetached = () => comp?.afterGuiDetached();
 
         const anchorToElement = _isColumnMenuAnchoringEnabled(this.gos)
-            ? eventSource ?? this.ctrlsSvc.getGridBodyCtrl().eGridBody
+            ? eventSource ?? this.beans.ctrlsSvc.getGridBodyCtrl().eGridBody
             : undefined;
         const closedCallback = (e: MouseEvent | TouchEvent | KeyboardEvent) => {
             _setColMenuVisible(column, false, 'contextMenu');
@@ -140,10 +135,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
 
             if (isKeyboardEvent && eventSource && _isVisible(eventSource)) {
                 const focusableEl = _findTabbableParent(eventSource);
-
-                if (focusableEl) {
-                    focusableEl.focus({ preventScroll: true });
-                }
+                focusableEl?.focus({ preventScroll: true });
             }
             afterGuiDetached();
             this.destroyBean(this.activeMenu);

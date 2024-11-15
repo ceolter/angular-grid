@@ -1,8 +1,5 @@
 import type { IFilterOptionDef } from '../../interfaces/iFilter';
-import { _setDisabled, _setDisplayed } from '../../utils/dom';
 import { _warn } from '../../validation/logging';
-import { AgAbstractInputField } from '../../widgets/agAbstractInputField';
-import { Component } from '../../widgets/component';
 import type { JoinOperator, Tuple } from './iSimpleFilter';
 
 export function removeItems<T>(items: T[], startPosition: number, deleteCount?: number): T[] {
@@ -46,29 +43,3 @@ export function validateAndUpdateConditions<M>(conditions: M[], maxNumConditions
     }
     return numConditions;
 }
-
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export function setElementValue<E, V>(element: E, value: V | null, fromFloatingFilter?: boolean): void {
-//     // eslint-disable-next-line no-undef
-//     if (element instanceof AgAbstractInputField) {
-//         element.setValue(value != null ? String(value) : null, true);
-//     }
-// }
-
-// export function setElementDisplayed<E>(element: E, displayed: boolean): void {
-//     if (element instanceof Component) {
-//         _setDisplayed(element.getGui(), displayed);
-//     }
-// }
-
-// export function setElementDisabled<E>(element: E, disabled: boolean): void {
-//     if (element instanceof Component) {
-//         _setDisabled(element.getGui(), disabled);
-//     }
-// }
-
-// export function attachElementOnChange<E>(element: E, listener: () => void): void {
-//     if (element instanceof AgAbstractInputField) {
-//         element.onValueChange(listener);
-//     }
-// }

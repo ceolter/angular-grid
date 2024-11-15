@@ -125,7 +125,7 @@ export class GridBodyCtrl extends BeanStub {
         this.addStopEditingWhenGridLosesFocus();
         this.updateScrollingClasses();
 
-        this.filterManager?.setupAdvancedFilterHeaderComp(eTop);
+        this.filterManager?.setupAdvFilterHeaderComp(eTop);
 
         this.ctrlsSvc.register('gridBodyCtrl', this);
     }
