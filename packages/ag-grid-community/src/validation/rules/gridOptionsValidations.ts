@@ -400,7 +400,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             module: 'SharedTreeDataModule',
         },
         undoRedoCellEditing: { module: 'UndoRedoEditModule' },
-        valueCache: { module: 'ValidationModule' },
+        valueCache: { module: 'ValueCacheModule' },
         viewportDatasource: {
             supportedRowModels: ['viewport'],
             module: 'ViewportRowModelModule',

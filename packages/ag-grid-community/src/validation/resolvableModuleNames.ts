@@ -42,7 +42,7 @@ export const RESOLVABLE_MODULE_NAMES: Record<
     ColumnMoveModule: ['AllCommunityModule'],
     ColumnResizeModule: ['AllCommunityModule'],
     CommunityCoreModule: ['AllCommunityModule'],
-    CsrmSsrmSharedApiModule: [],
+    CsrmSsrmSharedApiModule: ['ClientSideRowModelApiModule', 'ServerSideRowModelApiModule'],
     EnterpriseCoreModule: ['AllEnterpriseModule'],
     FilterCoreModule: [...ALL_COLUMN_FILTERS, 'QuickFilterModule', 'ExternalFilterModule', 'AdvancedFilterModule'],
     GroupCellRendererModule: [
