@@ -537,24 +537,15 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         if (startPosition >= this.getNumConditions()) {
             return;
         }
-        const {
-            removeComponents,
-            removeElements,
-            removeValueElements,
-            eTypes,
-            eConditionBodies,
-            eJoinOperatorPanels,
-            eJoinOperatorsAnd,
-            eJoinOperatorsOr,
-        } = this;
+        const { eTypes, eConditionBodies, eJoinOperatorPanels, eJoinOperatorsAnd, eJoinOperatorsOr } = this;
 
-        removeComponents(eTypes, startPosition, deleteCount);
-        removeElements(eConditionBodies, startPosition, deleteCount);
-        removeValueElements(startPosition, deleteCount);
+        this.removeComponents(eTypes, startPosition, deleteCount);
+        this.removeElements(eConditionBodies, startPosition, deleteCount);
+        this.removeValueElements(startPosition, deleteCount);
         const joinOperatorIndex = Math.max(startPosition - 1, 0);
-        removeElements(eJoinOperatorPanels, joinOperatorIndex, deleteCount);
-        removeComponents(eJoinOperatorsAnd, joinOperatorIndex, deleteCount);
-        removeComponents(eJoinOperatorsOr, joinOperatorIndex, deleteCount);
+        this.removeElements(eJoinOperatorPanels, joinOperatorIndex, deleteCount);
+        this.removeComponents(eJoinOperatorsAnd, joinOperatorIndex, deleteCount);
+        this.removeComponents(eJoinOperatorsOr, joinOperatorIndex, deleteCount);
     }
 
     private removeElements(elements: HTMLElement[], startPosition: number, deleteCount?: number): void {
@@ -650,11 +641,11 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     private getPlaceholderText(defaultPlaceholder: keyof typeof FILTER_LOCALE_TEXT, position: number): string {
-        const { filterPlaceholder, translate, eTypes } = this;
-        let placeholder = translate(defaultPlaceholder);
+        const { filterPlaceholder, eTypes } = this;
+        let placeholder = this.translate(defaultPlaceholder);
         if (typeof filterPlaceholder === 'function') {
             const filterOptionKey = eTypes[position].getValue() as ISimpleFilterModelType;
-            const filterOption = translate(filterOptionKey);
+            const filterOption = this.translate(filterOptionKey);
             placeholder = filterPlaceholder({
                 filterOptionKey,
                 filterOption,

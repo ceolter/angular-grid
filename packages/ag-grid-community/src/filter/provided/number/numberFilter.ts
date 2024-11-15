@@ -72,7 +72,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         // values from floating filter are directly from the input, not from the model
         const { numberFormatter } = this.numberFilterParams;
         const valueToSet = !fromFloatingFilter && numberFormatter ? numberFormatter(value ?? null) : value;
-        this.setElementValue(element, valueToSet as any);
+        super.setElementValue(element, valueToSet as any);
     }
 
     protected createValueElement(): HTMLElement {
