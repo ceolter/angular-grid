@@ -180,12 +180,11 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         let res: boolean;
 
         // otherwise both present, so compare
-        const { areSimpleModelsEqual } = this;
         if (aIsSimple) {
             const aSimple = a as M;
             const bSimple = b as M;
 
-            res = areSimpleModelsEqual(aSimple, bSimple);
+            res = this.areSimpleModelsEqual(aSimple, bSimple);
         } else {
             const aCombined = a as ICombinedSimpleModel<M>;
             const bCombined = b as ICombinedSimpleModel<M>;
@@ -193,7 +192,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
             res =
                 aCombined.operator === bCombined.operator &&
                 _areEqual(aCombined.conditions, bCombined.conditions, (aModel, bModel) =>
-                    areSimpleModelsEqual(aModel, bModel)
+                    this.areSimpleModelsEqual(aModel, bModel)
                 );
         }
 
