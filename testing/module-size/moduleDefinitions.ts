@@ -1,6 +1,8 @@
-import { ModuleName } from 'ag-grid-community';
-
-import { CommunityModuleName, EnterpriseModuleName } from '../../packages/ag-grid-community/src/interfaces/iModule';
+import {
+    CommunityModuleName,
+    EnterpriseModuleName,
+    ModuleName,
+} from '../../packages/ag-grid-community/src/interfaces/iModule';
 
 export const AllCommunityModules: Record<CommunityModuleName, number> = {
     AlignedGridsModule: 3.06,
@@ -93,11 +95,22 @@ const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules).
 
 const commonFeatureSets: ModuleTest[] = [
     { modules: ['ClientSideRowModelModule', 'TextFilterModule'], expectedSize: 155.94 },
+    {
+        modules: [
+            'TextFilterModule',
+            'NumberFilterModule',
+            'DateFilterModule',
+            'SetFilterModule',
+            'MultiFilterModule',
+            'CustomFilterModule',
+            'ExternalFilterModule',
+            'QuickFilterModule',
+        ],
+        expectedSize: 258.92, //258.92
+    },
 ];
 
-export const moduleCombinations: ModuleTest[] = [
-    { modules: [], expectedSize: 445.89 },
-    ...commonFeatureSets,
+const chartModules: ModuleTest[] = [
     {
         modules: ['AgChartsCommunityModule' as any, 'IntegratedChartsModule'],
         expectedSize: 1159.67,
@@ -114,6 +127,12 @@ export const moduleCombinations: ModuleTest[] = [
         modules: ['AgChartsEnterpriseModule' as any, 'SparklinesModule'],
         expectedSize: 1452,
     },
+];
+
+export const moduleCombinations: ModuleTest[] = [
+    { modules: [], expectedSize: 445.89 },
+    ...commonFeatureSets,
+    ...chartModules,
     ...allCommunityModules, //.slice(0, 3),
     ...allEnterpriseModules, //.slice(0, 3),
 ];
