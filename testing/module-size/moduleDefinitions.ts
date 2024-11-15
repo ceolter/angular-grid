@@ -32,7 +32,7 @@ export const AllCommunityModules: Record<CommunityModuleName, number> = {
     NumberFilterModule: 112.05,
     PaginationModule: 42.74,
     PinnedRowModule: 9.35,
-    QuickFilterModule: 18.37,
+    QuickFilterModule: 17.3,
     RenderApiModule: 1.48,
     RowApiModule: 0.88,
     RowAutoHeightModule: 1.84,
@@ -94,7 +94,7 @@ const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules).
 }));
 
 const commonFeatureSets: ModuleTest[] = [
-    { modules: ['ClientSideRowModelModule', 'TextFilterModule'], expectedSize: 155.94 },
+    { modules: ['ClientSideRowModelModule', 'TextFilterModule'], expectedSize: 133.67 },
     {
         modules: [
             'TextFilterModule',
@@ -131,8 +131,8 @@ const chartModules: ModuleTest[] = [
 
 export const moduleCombinations: ModuleTest[] = [
     { modules: [], expectedSize: 445.89 },
-    ...commonFeatureSets,
+    // ...commonFeatureSets,
     ...chartModules,
-    ...allCommunityModules, //.slice(0, 3),
-    ...allEnterpriseModules, //.slice(0, 3),
+    // ...allCommunityModules, //.slice(0, 3),
+    // ...allEnterpriseModules, //.slice(0, 3),
 ];

@@ -29,12 +29,6 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     protected readOnly: boolean;
     protected defaultDebounceMs: number = 0;
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     protected setLastTypeFromModel(model: ProvidedFilterModel): void {
         // if no model provided by the parent filter use default
         if (!model) {
