@@ -102,7 +102,7 @@ export function resolveModuleNames(
                 }
             });
         } else {
-            resolvedModuleNames.push(resolved as CommunityModuleName | EnterpriseModuleName);
+            resolvedModuleNames.push(modName as CommunityModuleName | EnterpriseModuleName);
         }
     });
     return resolvedModuleNames;
