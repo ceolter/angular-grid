@@ -1,9 +1,9 @@
+import type { UserComponentName } from '../../context/context';
 import type { AbstractColDef, ColDef, ColGroupDef, ColumnMenuTab } from '../../entities/colDef';
-import type { GridOptions } from '../../entities/gridOptions';
-import type { ModuleName } from '../../interfaces/iModule';
 import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
+import { USER_COMP_MODULES } from './userCompValidations';
 
 const COLUMN_DEFINITION_DEPRECATIONS: Deprecations<ColDef | ColGroupDef> = {
     checkboxSelection: { version: '32.2', message: 'Use `rowSelection.checkboxes` in `GridOptions` instead.' },
@@ -25,55 +25,79 @@ const COLUMN_DEFINITION_DEPRECATIONS: Deprecations<ColDef | ColGroupDef> = {
     },
 };
 
-const SSRM_CSRM_REQUIRES_MODULE = (module: ModuleName) => (_options: never, gridOptions: GridOptions) => {
-    const rowModel = gridOptions.rowModelType ?? 'clientSide';
-    if (rowModel === 'clientSide' || rowModel === 'serverSide') {
-        return { module };
-    }
-    return null;
-};
-
 const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
-    // supported on all row models, but need module for client side / server side.
-    enableRowGroup: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
-    rowGroup: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
-    rowGroupIndex: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
-    enablePivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
-    enableValue: SSRM_CSRM_REQUIRES_MODULE('SharedAggregationModule'),
-    pivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
-    pivotIndex: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
-    aggFunc: SSRM_CSRM_REQUIRES_MODULE('SharedAggregationModule'),
+    aggFunc: { module: 'SharedAggregationModule' },
+    autoHeight: {
+        supportedRowModels: ['clientSide', 'serverSide'],
+        module: 'RowAutoHeightModule',
+    },
+    cellClass: { module: 'CellStyleModule' },
+    cellClassRules: { module: 'CellStyleModule' },
+    cellEditor: ({ cellEditor }) => {
+        if (typeof cellEditor !== 'string') {
+            return null;
+        }
+        const module = USER_COMP_MODULES[cellEditor as UserComponentName];
+        if (module) {
+            return { module };
+        }
+        return null;
+    },
+    cellRenderer: ({ cellRenderer }) => {
+        if (typeof cellRenderer !== 'string') {
+            return null;
+        }
+        const module = USER_COMP_MODULES[cellRenderer as UserComponentName];
+        if (module) {
+            return { module };
+        }
+        return null;
+    },
+    cellRendererParams: {
+        validate: (colDef) => {
+            const groupColumn =
+                colDef.rowGroup != null ||
+                colDef.rowGroupIndex != null ||
+                colDef.cellRenderer === 'agGroupCellRenderer';
 
-    cellEditor: (options) => {
-        if (options.cellEditor === 'agRichSelect' || options.cellEditor === 'agRichSelectCellEditor') {
-            return { module: 'RichSelectModule' };
-        }
-        return null;
+            if (groupColumn && 'checkbox' in colDef.cellRendererParams) {
+                return 'Since v33.0, `cellRendererParams.checkbox` has been deprecated. Use `rowSelection.checkboxLocation = "autoGroupColumn"` instead.';
+            }
+            return null;
+        },
     },
-    menuTabs: (options) => {
-        const enterpriseMenuTabs: ColumnMenuTab[] = ['columnsMenuTab', 'generalMenuTab'];
-        if (options.menuTabs?.some((tab) => enterpriseMenuTabs.includes(tab))) {
-            return {
-                module: 'ColumnMenuModule',
-            };
-        }
-        return null;
-    },
+    cellStyle: { module: 'CellStyleModule' },
+    children: () => COL_DEF_VALIDATORS,
     columnChooserParams: {
         module: 'ColumnMenuModule',
     },
-
+    contextMenuItems: { module: 'ContextMenuModule' },
+    dndSource: { module: 'DragAndDropModule' },
+    dndSourceOnRowDrag: { module: 'DragAndDropModule' },
+    editable: {
+        module: 'EditCoreModule',
+    },
+    enableCellChangeFlash: { module: 'HighlightChangesModule' },
+    enablePivot: { module: 'SharedPivotModule' },
+    enableRowGroup: { module: 'SharedRowGroupingModule' },
+    enableValue: { module: 'SharedAggregationModule' },
+    filter: ({ filter }) => {
+        if (filter && typeof filter !== 'string' && typeof filter !== 'boolean') {
+            return { module: 'CustomFilterModule' };
+        }
+        if (typeof filter === 'string') {
+            const module = USER_COMP_MODULES[filter as UserComponentName];
+            if (module) {
+                return { module };
+            }
+        }
+        return { module: 'ColumnFilterModule' };
+    },
+    floatingFilter: { module: 'ColumnFilterModule' },
     headerCheckboxSelection: {
         supportedRowModels: ['clientSide', 'serverSide'],
         validate: (_options, { rowSelection }) =>
             rowSelection === 'multiple' ? null : 'headerCheckboxSelection is only supported with rowSelection=multiple',
-    },
-    headerCheckboxSelectionFilteredOnly: {
-        supportedRowModels: ['clientSide'],
-        validate: (_options, { rowSelection }) =>
-            rowSelection === 'multiple'
-                ? null
-                : 'headerCheckboxSelectionFilteredOnly is only supported with rowSelection=multiple',
     },
     headerCheckboxSelectionCurrentPageOnly: {
         supportedRowModels: ['clientSide'],
@@ -82,10 +106,14 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
                 ? null
                 : 'headerCheckboxSelectionCurrentPageOnly is only supported with rowSelection=multiple',
     },
-
-    autoHeight: {
-        supportedRowModels: ['clientSide', 'serverSide'],
+    headerCheckboxSelectionFilteredOnly: {
+        supportedRowModels: ['clientSide'],
+        validate: (_options, { rowSelection }) =>
+            rowSelection === 'multiple'
+                ? null
+                : 'headerCheckboxSelectionFilteredOnly is only supported with rowSelection=multiple',
     },
+    headerTooltip: { module: 'TooltipModule' },
     headerValueGetter: {
         validate: (_options: AbstractColDef) => {
             const headerValueGetter = _options.headerValueGetter;
@@ -95,6 +123,38 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return 'headerValueGetter must be a function or a valid string expression';
         },
     },
+    mainMenuItems: { module: 'ColumnMenuModule' },
+    menuTabs: (options) => {
+        const enterpriseMenuTabs: ColumnMenuTab[] = ['columnsMenuTab', 'generalMenuTab'];
+        if (options.menuTabs?.some((tab) => enterpriseMenuTabs.includes(tab))) {
+            return {
+                module: 'ColumnMenuModule',
+            };
+        }
+        return null;
+    },
+    pivot: { module: 'SharedPivotModule' },
+    pivotIndex: { module: 'SharedPivotModule' },
+    rowDrag: { module: 'RowDragModule' },
+    rowGroup: { module: 'SharedRowGroupingModule' },
+    rowGroupIndex: { module: 'SharedRowGroupingModule' },
+    sortingOrder: {
+        validate: (_options) => {
+            const sortingOrder = _options.sortingOrder;
+
+            if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
+                const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
+                if (invalidItems.length > 0) {
+                    return `sortingOrder must be an array with elements from [${DEFAULT_SORTING_ORDER.map(toStringWithNullUndefined).join()}], currently it includes [${invalidItems.map(toStringWithNullUndefined).join()}]`;
+                }
+            } else if (!Array.isArray(sortingOrder) || sortingOrder.length <= 0) {
+                return `sortingOrder must be an array with at least one element, currently it's ${sortingOrder}`;
+            }
+            return null;
+        },
+    },
+    tooltipField: { module: 'TooltipModule' },
+    tooltipValueGetter: { module: 'TooltipModule' },
     type: {
         validate: (_options) => {
             const type = _options.type;
@@ -113,37 +173,6 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return "colDef.type should be of type 'string' | 'string[]'";
         },
     },
-    sortingOrder: {
-        validate: (_options) => {
-            const sortingOrder = _options.sortingOrder;
-
-            if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
-                const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
-                if (invalidItems.length > 0) {
-                    return `sortingOrder must be an array with elements from [${DEFAULT_SORTING_ORDER.map(toStringWithNullUndefined).join()}], currently it includes [${invalidItems.map(toStringWithNullUndefined).join()}]`;
-                }
-            } else if (!Array.isArray(sortingOrder) || sortingOrder.length <= 0) {
-                return `sortingOrder must be an array with at least one element, currently it's ${sortingOrder}`;
-            }
-            return null;
-        },
-    },
-
-    cellRendererParams: {
-        validate: (colDef) => {
-            const groupColumn =
-                colDef.rowGroup != null ||
-                colDef.rowGroupIndex != null ||
-                colDef.cellRenderer === 'agGroupCellRenderer';
-
-            if (groupColumn && 'checkbox' in colDef.cellRendererParams) {
-                return 'Since v33.0, `cellRendererParams.checkbox` has been deprecated. Use `rowSelection.checkboxLocation = "autoGroupColumn"` instead.';
-            }
-            return null;
-        },
-    },
-
-    children: () => COL_DEF_VALIDATORS,
 };
 
 type ColKey = keyof ColDef | keyof ColGroupDef;

@@ -1,4 +1,4 @@
-import type { ModuleName } from '../interfaces/iModule';
+import type { ValidationModuleName } from '../interfaces/iModule';
 import type {
     GridApi,
     _AdvancedFilterGridApi,
@@ -50,16 +50,16 @@ import type {
 } from './gridApi';
 
 const mod = <TGridApi extends Partial<GridApi>>(
-    moduleName: ModuleName,
+    moduleName: ValidationModuleName,
     input: Record<keyof TGridApi, 0>
-): Record<keyof TGridApi, ModuleName> => {
+): Record<keyof TGridApi, ValidationModuleName> => {
     for (const key of Object.keys(input)) {
         (input as any)[key] = moduleName;
     }
     return input as any;
 };
 
-export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
+export const gridApiFunctionsMap: Record<keyof GridApi, ValidationModuleName> = {
     dispatchEvent: 'CommunityCoreModule', // this is always registered
     ...mod<_CoreGridApi<any>>('CommunityCoreModule', {
         destroy: 0,
@@ -135,7 +135,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getPinnedTopRow: 0,
         getPinnedBottomRow: 0,
     }),
-    ...mod<_OverlayGridApi>('OverlayCoreModule', {
+    ...mod<_OverlayGridApi>('OverlayModule', {
         showLoadingOverlay: 0,
         showNoRowsOverlay: 0,
         hideOverlay: 0,

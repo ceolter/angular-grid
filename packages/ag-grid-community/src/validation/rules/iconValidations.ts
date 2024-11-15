@@ -1,4 +1,4 @@
-import type { ModuleName } from '../../interfaces/iModule';
+import type { ValidationModuleName } from '../../interfaces/iModule';
 import type { IconName, IconValue } from '../../utils/icon';
 
 export const ICON_VALUES: Record<IconValue, 1> = {
@@ -61,7 +61,7 @@ export const ICON_VALUES: Record<IconValue, 1> = {
     eye: 1,
 };
 
-export const ICON_MODULES: Record<IconName, ModuleName | ModuleName[]> = {
+export const ICON_MODULES: Record<IconName, ValidationModuleName | ValidationModuleName[]> = {
     chart: 'MenuCoreModule',
     cancel: 'EnterpriseCoreModule',
     first: 'PaginationModule',

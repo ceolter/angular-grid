@@ -94,6 +94,7 @@ export class ValidationService extends BeanStub implements NamedBean {
                 moduleName,
                 gridScoped: _areModulesGridScoped(),
                 gridId: this.beans.context.getGridId(),
+                rowModelType: this.gos.get('rowModelType'),
                 additionalText: 'Alternatively, use the CSS icon name directly.',
             });
             return;
@@ -113,8 +114,7 @@ export class ValidationService extends BeanStub implements NamedBean {
     }
 
     private processOptions<T extends object>(options: T, validator: OptionsValidator<T>): void {
-        const { validations, deprecations, allProperties, propertyExceptions, objectName, docsUrl, mandatoryKeys } =
-            validator;
+        const { validations, deprecations, allProperties, propertyExceptions, objectName, docsUrl } = validator;
 
         if (allProperties && this.gridOptions.suppressPropertyNamesCheck !== true) {
             this.checkProperties(
@@ -220,20 +220,6 @@ export class ValidationService extends BeanStub implements NamedBean {
                     return;
                 }
             }
-            if (validate) {
-                const warning = validate(options, this.gridOptions, this.beans);
-                if (warning) {
-                    warnings.add(warning);
-                    return;
-                }
-            }
-        });
-        mandatoryKeys?.forEach((key) => {
-            const rules = getRules(key);
-            if (!rules) {
-                return;
-            }
-            const { validate } = rules;
             if (validate) {
                 const warning = validate(options, this.gridOptions, this.beans);
                 if (warning) {

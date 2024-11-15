@@ -1,12 +1,12 @@
-import type { ModuleName } from '../../interfaces/iModule';
+import type { ValidationModuleName } from '../../interfaces/iModule';
 import type { DefaultMenuItem } from '../../interfaces/menuItem';
 
-export const MENU_ITEM_MODULES: Record<DefaultMenuItem, ModuleName | ModuleName[]> = {
+export const MENU_ITEM_MODULES: Record<DefaultMenuItem, ValidationModuleName | ValidationModuleName[]> = {
     pinSubMenu: 'PinnedColumnModule',
     pinLeft: 'PinnedColumnModule',
     pinRight: 'PinnedColumnModule',
     clearPinned: 'PinnedColumnModule',
-    valueAggSubMenu: 'AggregationModule',
+    valueAggSubMenu: 'SharedAggregationModule',
     autoSizeThis: 'ColumnAutoSizeModule',
     autoSizeAll: 'ColumnAutoSizeModule',
     rowGroup: 'SharedRowGroupingModule',

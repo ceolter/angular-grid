@@ -90,11 +90,8 @@ export type InternalModuleName =
     | 'HorizontalResizeModule'
     | 'KeyboardNavigationModule'
     | 'LoadingCellRendererModule'
-    | 'LoadingOverlayModule'
     | 'MenuCoreModule'
     | 'MenuItemModule'
-    | 'NoRowsOverlayModule'
-    | 'OverlayCoreModule'
     | 'OverlayModule'
     | 'PinnedColumnModule'
     | 'PopupModule'
@@ -189,3 +186,42 @@ export type EnterpriseModuleName =
     | 'ViewportRowModelModule';
 
 export type ModuleName = InternalModuleName | CommunityModuleName | EnterpriseModuleName;
+
+/** These are the internal modules that we have mappings for to convert into exported modules */
+export type ResolvableModuleName = Extract<
+    InternalModuleName,
+    | 'EditCoreModule'
+    | 'MenuCoreModule'
+    | 'EnterpriseCoreModule'
+    | 'ColumnHeaderCompModule'
+    | 'ColumnFilterModule'
+    | 'ColumnGroupHeaderCompModule'
+    | 'SharedDragAndDropModule'
+    | 'GroupCellRendererModule'
+    | 'MenuItemModule'
+    | 'CommunityCoreModule'
+    | 'LoadingCellRendererModule'
+    | 'SortModule'
+    | 'SharedRowSelectionModule'
+    | 'KeyboardNavigationModule'
+    | 'SharedMenuModule'
+    | 'ColumnMoveModule'
+    | 'ColumnResizeModule'
+    | 'FilterCoreModule'
+    | 'CsrmSsrmSharedApiModule'
+    | 'SsrmInfiniteSharedApiModule'
+    | 'SharedMasterDetailModule'
+    | 'SharedRowGroupingModule'
+    | 'SharedAggregationModule'
+    | 'SharedPivotModule'
+    | 'ColumnGroupModule'
+    | 'OverlayModule'
+    | 'PinnedColumnModule'
+    | 'ClientSideRowModelHierarchyModule'
+    | 'SkeletonCellRendererModule'
+    | 'CheckboxCellRendererModule'
+    | 'SharedTreeDataModule'
+>;
+
+/** These are the types that we can display validations for */
+export type ValidationModuleName = CommunityModuleName | EnterpriseModuleName | ResolvableModuleName;

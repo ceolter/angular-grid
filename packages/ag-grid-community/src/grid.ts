@@ -8,7 +8,13 @@ import type { GridOptions } from './entities/gridOptions';
 import { GridComp } from './gridComp/gridComp';
 import { CommunityCoreModule } from './gridCoreModule';
 import type { IFrameworkOverrides } from './interfaces/iFrameworkOverrides';
-import type { Module, ModuleName, _ModuleWithApi, _ModuleWithoutApi } from './interfaces/iModule';
+import type {
+    CommunityModuleName,
+    EnterpriseModuleName,
+    Module,
+    _ModuleWithApi,
+    _ModuleWithoutApi,
+} from './interfaces/iModule';
 import type { RowModelType } from './interfaces/iRowModel';
 import {
     _areModulesGridScoped,
@@ -262,7 +268,7 @@ export class GridCoreCreator {
         gridId: string
     ): SingletonBean[] | undefined {
         // assert that the relevant module has been loaded
-        const rowModelModuleNames: Record<RowModelType, ModuleName> = {
+        const rowModelModuleNames: Record<RowModelType, CommunityModuleName | EnterpriseModuleName> = {
             clientSide: 'ClientSideRowModelModule',
             infinite: 'InfiniteRowModelModule',
             serverSide: 'ServerSideRowModelModule',
@@ -285,6 +291,7 @@ export class GridCoreCreator {
                     moduleName: rowModuleModelName,
                     gridScoped: _areModulesGridScoped(),
                     gridId,
+                    rowModelType,
                 },
                 `Missing module ${rowModuleModelName} for rowModelType ${rowModelType}.`
             );

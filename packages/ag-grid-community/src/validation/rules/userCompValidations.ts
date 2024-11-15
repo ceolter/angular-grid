@@ -1,7 +1,7 @@
 import type { UserComponentName } from '../../context/context';
-import type { ModuleName } from '../../interfaces/iModule';
+import type { ValidationModuleName } from '../../interfaces/iModule';
 
-export const USER_COMP_MODULES: Record<UserComponentName, ModuleName> = {
+export const USER_COMP_MODULES: Record<UserComponentName, ValidationModuleName> = {
     agSetColumnFilter: 'SetFilterModule',
     agSetColumnFloatingFilter: 'SetFilterModule',
     agMultiColumnFilter: 'MultiFilterModule',
@@ -23,8 +23,8 @@ export const USER_COMP_MODULES: Record<UserComponentName, ModuleName> = {
     agLoadingCellRenderer: 'LoadingCellRendererModule',
     agSkeletonCellRenderer: 'SkeletonCellRendererModule',
     agCheckboxCellRenderer: 'CheckboxCellRendererModule',
-    agLoadingOverlay: 'LoadingOverlayModule',
-    agNoRowsOverlay: 'NoRowsOverlayModule',
+    agLoadingOverlay: 'OverlayModule',
+    agNoRowsOverlay: 'OverlayModule',
     agTooltipComponent: 'TooltipModule',
     agReadOnlyFloatingFilter: 'CustomFilterModule',
     agTextColumnFilter: 'TextFilterModule',

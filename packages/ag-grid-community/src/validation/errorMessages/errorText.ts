@@ -1,19 +1,19 @@
 import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
-import type { EnterpriseModuleName, ModuleName } from '../../interfaces/iModule';
+import type { EnterpriseModuleName, ModuleName, ValidationModuleName } from '../../interfaces/iModule';
 import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
+import { resolveModuleNames } from '../resolvableModuleNames';
 
-export const moduleImportMsg = (moduleName: ModuleName | ModuleName[]) => {
-    const moduleNames = Array.isArray(moduleName) ? moduleName : [moduleName];
+export const moduleImportMsg = (moduleNames: ModuleName[]) => {
     const imports = moduleNames
         .map(
-            (modName) =>
-                `import { ${modName} } from '${ENTERPRISE_MODULE_NAMES[modName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
+            (moduleName) =>
+                `import { ${moduleName} } from '${ENTERPRISE_MODULE_NAMES[moduleName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
         )
         .join(' \n');
     return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
@@ -24,18 +24,21 @@ const missingModule = ({
     moduleName,
     gridScoped,
     gridId,
+    rowModelType,
     additionalText,
 }: {
     reasonOrId: string | keyof MissingModuleErrors;
-    moduleName: ModuleName | ModuleName[];
+    moduleName: ValidationModuleName | ValidationModuleName[];
     gridScoped: boolean;
     gridId: string;
+    rowModelType: RowModelType;
     additionalText?: string;
 }) => {
+    const resolvedModuleNames = resolveModuleNames(moduleName, rowModelType);
     const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
     return (
-        `Unable to use ${reason} as ${Array.isArray(moduleName) ? 'one of ' + moduleName.join(', ') : moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
-${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '')
+        `Unable to use ${reason} as ${resolvedModuleNames.length > 1 ? 'one of ' + resolvedModuleNames.join(', ') : resolvedModuleNames[0]} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+${moduleImportMsg(resolvedModuleNames)}` + (additionalText ? ` \n\n${additionalText}` : '')
     );
 };
 
