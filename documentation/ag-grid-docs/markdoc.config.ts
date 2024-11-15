@@ -221,5 +221,8 @@ export default defineMarkdocConfig({
         seedProjectsTable: {
             render: component('./src/components/SeedProjectsTable.astro'),
         },
+        moduleMappings: {
+            render: component('./src/components/module-mappings/ModuleMappings.astro'),
+        },
     },
 });

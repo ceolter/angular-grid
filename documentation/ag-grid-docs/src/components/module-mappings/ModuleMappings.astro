@@ -1,0 +1,8 @@
+---
+import { getEntry } from 'astro:content';
+import { ModuleMappings } from './ModuleMappings';
+
+const { data: modules } = await getEntry('module-mappings', 'modules');
+---
+
+<ModuleMappings client:load modules={modules} />
