@@ -233,7 +233,6 @@
     "external/ag-website-shared",
     "external/ag-shared",
     "testing/behavioural",
-    "testing/module-size",
     "ag-grid-generate-example-files"
   ],
   "tags": []
