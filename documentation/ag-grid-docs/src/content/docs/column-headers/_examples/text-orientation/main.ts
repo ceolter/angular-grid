@@ -33,7 +33,6 @@ const columnDefs: ColGroupDef[] = [
                 field: 'year',
                 width: 90,
                 enableRowGroup: true,
-                pivotIndex: 0,
             },
             { field: 'sport', width: 110, enableRowGroup: true },
             {
@@ -84,8 +83,6 @@ const gridOptions: GridOptions<IOlympicData> = {
     groupHeaderHeight: 75,
     headerHeight: 150,
     floatingFiltersHeight: 50,
-    pivotGroupHeaderHeight: 50,
-    pivotHeaderHeight: 100,
 };
 
 // setup the grid after the page has finished loading

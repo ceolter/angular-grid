@@ -46,7 +46,6 @@ const gridOptions: GridOptions = {
     columnDefs: columnDefs,
     defaultColDef: {
         enableRowGroup: true,
-        enablePivot: true,
         enableValue: true,
         filter: true,
     },

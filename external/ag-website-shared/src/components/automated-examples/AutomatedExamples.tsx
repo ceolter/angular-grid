@@ -57,19 +57,19 @@ export const AutomatedExamples: FunctionComponent = () => {
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
                         >
-                            <div class={styles.sectionContent}>
-                                <header class={styles.headingContainer}>
-                                    <h2 class={styles.tag}>Fully Integrated Charting</h2>
-                                    <h3 class={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
-                                    <h4 class={styles.subHeading}>
+                            <div className={styles.sectionContent}>
+                                <header className={styles.headingContainer}>
+                                    <h2 className={styles.tag}>Fully Integrated Charting</h2>
+                                    <h3 className={styles.heading}>Integrated Charts, Powered by AG Charts</h3>
+                                    <h4 className={styles.subHeading}>
                                         Let your users visualise their data in charts directly from your Data Grid.
                                         Multiple chart types, themes, customisations and more, all in one place.
                                     </h4>
-                                    <a href="/react-data-grid/getting-started/" class={['button-tertiary']}>
+                                    <a href="/react-data-grid/getting-started/" className="button-tertiary">
                                         Learn more
                                     </a>
                                 </header>
-                                <div class={styles.blueRectangle}></div>
+                                <div className={styles.blueRectangle}></div>
                             </div>
                         </AutomatedIntegratedCharts>
                     </div>

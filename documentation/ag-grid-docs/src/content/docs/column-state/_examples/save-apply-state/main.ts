@@ -3,7 +3,7 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { PivotModule } from 'ag-grid-enterprise';
 
 declare let window: any;
 
@@ -11,7 +11,7 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
-    RowGroupingModule,
+    PivotModule,
     RowGroupingPanelModule,
 ]);
 
