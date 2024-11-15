@@ -8,6 +8,7 @@ import {
     IntegratedChartsModule,
     MenuModule,
     MultiFilterModule,
+    RowGroupingModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
 
@@ -22,6 +23,7 @@ ModuleRegistry.registerModules([
     MenuModule,
     MultiFilterModule,
     SetFilterModule,
+    RowGroupingModule,
 ]);
 
 let gridApi: GridApi;

@@ -39,7 +39,7 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
     rowGroup: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
     rowGroupIndex: SSRM_CSRM_REQUIRES_MODULE('SharedRowGroupingModule'),
     enablePivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
-    enableValue: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
+    enableValue: SSRM_CSRM_REQUIRES_MODULE('SharedAggregationModule'),
     pivot: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
     pivotIndex: SSRM_CSRM_REQUIRES_MODULE('SharedPivotModule'),
     aggFunc: SSRM_CSRM_REQUIRES_MODULE('SharedAggregationModule'),

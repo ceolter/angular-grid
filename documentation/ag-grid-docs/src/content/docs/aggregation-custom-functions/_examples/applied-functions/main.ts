@@ -34,12 +34,6 @@ const gridOptions: GridOptions<IOlympicData> = {
             hide: true,
             suppressColumnsToolPanel: true,
         },
-        {
-            field: 'year',
-            pivot: true,
-            hide: true,
-            suppressColumnsToolPanel: true,
-        },
         { field: 'gold', aggFunc: 'sum', valueFormatter: numberFormatter },
         { field: 'silver', aggFunc: 'sum', valueFormatter: numberFormatter },
         {

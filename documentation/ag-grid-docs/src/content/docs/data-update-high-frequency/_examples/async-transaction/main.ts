@@ -21,7 +21,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Product',
         field: 'product',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 0,
         hide: true,
     },
@@ -29,7 +28,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Portfolio',
         field: 'portfolio',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 1,
         hide: true,
     },
@@ -37,7 +35,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Book',
         field: 'book',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 2,
         hide: true,
     },
@@ -65,13 +62,11 @@ const columnDefs: ColDef[] = [
     {
         field: 'dealType',
         enableRowGroup: true,
-        enablePivot: true,
     },
     {
         headerName: 'Bid',
         field: 'bidFlag',
         enableRowGroup: true,
-        enablePivot: true,
         width: 100,
     },
     {
@@ -155,7 +150,6 @@ const gridOptions: GridOptions = {
     columnDefs: columnDefs,
     suppressAggFuncInHeader: true,
     rowGroupPanelShow: 'always',
-    pivotPanelShow: 'always',
     getRowId: (params: GetRowIdParams) => String(params.data.trade),
     defaultColDef: {
         width: 120,
