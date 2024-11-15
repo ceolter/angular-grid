@@ -640,18 +640,17 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     private getPlaceholderText(defaultPlaceholder: keyof typeof FILTER_LOCALE_TEXT, position: number): string {
-        const { filterPlaceholder, eTypes } = this;
         let placeholder = this.translate(defaultPlaceholder);
-        if (typeof filterPlaceholder === 'function') {
-            const filterOptionKey = eTypes[position].getValue() as ISimpleFilterModelType;
+        if (typeof this.filterPlaceholder === 'function') {
+            const filterOptionKey = this.eTypes[position].getValue() as ISimpleFilterModelType;
             const filterOption = this.translate(filterOptionKey);
-            placeholder = filterPlaceholder({
+            placeholder = this.filterPlaceholder({
                 filterOptionKey,
                 filterOption,
                 placeholder,
             });
-        } else if (typeof filterPlaceholder === 'string') {
-            placeholder = filterPlaceholder;
+        } else if (typeof this.filterPlaceholder === 'string') {
+            placeholder = this.filterPlaceholder;
         }
 
         return placeholder;
