@@ -44,7 +44,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         });
     }
 
-    public getSelectedState() {
+    public getSelectedState(): IServerSideGroupSelectionState {
         const treeData = this.gos.get('treeData');
         const recursivelySerializeState = (state: SelectionState, level: number, nodeId?: string) => {
             const normalisedState: IServerSideGroupSelectionState = {
