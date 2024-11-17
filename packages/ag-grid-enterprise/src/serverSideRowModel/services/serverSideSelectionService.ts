@@ -319,8 +319,31 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         return _error(194, { method: 'updateSelectableAfterGrouping' }) as undefined;
     }
 
-    public refreshMasterNodeState(node: RowNode<any>, e?: Event | undefined): void {
-        return;
+    public refreshMasterNodeState(node: RowNode<any>, event?: Event | undefined): void {
+        const detailApi = node.detailNode?.detailGridInfo?.api;
+
+        if (!detailApi) return;
+
+        const isSelectAll = detailApi.getSelectAllState();
+        const current = node.isSelected() ?? null;
+        const source: SelectionEventSourceType = 'masterDetail';
+        if (current !== isSelectAll) {
+            if (isSelectAll === null) {
+                const selectionChanged = this.selectRowNode(node, undefined, event, source);
+
+                if (selectionChanged) {
+                    this.dispatchSelectionChanged(source);
+                }
+            } else {
+                this.selectionStrategy.setNodesSelected({
+                    nodes: [node],
+                    newValue: isSelectAll,
+                    source,
+                    event,
+                });
+                this.shotgunResetNodeSelectionState(source);
+            }
+        }
     }
 }
 
