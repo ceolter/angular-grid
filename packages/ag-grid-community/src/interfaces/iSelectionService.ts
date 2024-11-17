@@ -48,7 +48,9 @@ export interface ISelectionService {
     refreshMasterNodeState(node: RowNode, e?: Event): void;
 }
 
-interface ICommonSelectionParams {
+export interface ISetNodesSelectedParams {
+    /** nodes to change selection of */
+    nodes: readonly RowNode[];
     /** true or false, whatever you want to set selection to */
     newValue: boolean;
     /** whether to remove other selections after this selection is done */
@@ -59,9 +61,4 @@ interface ICommonSelectionParams {
     source: SelectionEventSourceType;
     /** originating event */
     event?: Event;
-}
-
-export interface ISetNodesSelectedParams extends ICommonSelectionParams {
-    /** nodes to change selection of */
-    nodes: readonly RowNode[];
 }

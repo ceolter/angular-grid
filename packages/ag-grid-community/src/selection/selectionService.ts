@@ -198,7 +198,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
 
         return this.setNodesSelected({
-            newValue: newValue,
+            newValue,
             clearSelection: false,
             suppressFinishActions: true,
             source,

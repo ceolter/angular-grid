@@ -1,7 +1,4 @@
 import type {
-    BeanCollection,
-    IRowModel,
-    ISelectionService,
     IServerSideGroupSelectionState,
     IServerSideSelectionState,
     ISetNodesSelectedParams,
@@ -17,14 +14,6 @@ interface SelectedState {
 }
 
 export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
-    private rowModel: IRowModel;
-    private selectionSvc?: ISelectionService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.rowModel = beans.rowModel;
-        this.selectionSvc = beans.selectionSvc;
-    }
-
     private selectedState: SelectedState = { selectAll: false, toggledNodes: new Set() };
 
     private selectAllUsed: boolean = false;
