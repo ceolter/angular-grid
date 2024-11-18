@@ -21,8 +21,10 @@ export function getCellByPosition(rowIndex: number, colId: string): HTMLElement 
     return getRowByIndex(rowIndex)?.querySelector(`[col-id="${colId}"]`) ?? null;
 }
 
-export function getCheckboxByIndex(index: number): HTMLElement | null {
-    return getRowByIndex(index)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null;
+export function getCheckboxByIndex(index: number, gridId?: string): HTMLElement | null {
+    return (
+        getRowByIndex(index, gridId)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null
+    );
 }
 
 export function getCheckboxById(id: string): HTMLElement | null {
@@ -138,6 +140,12 @@ export function waitForEvent(event: AgPublicEventType, api: GridApi, n = 1): Pro
         }
         api.addEventListener(event, listener);
     });
+}
+
+export function waitForEventWhile(event: AgPublicEventType, api: GridApi, callback: () => void, n = 1): Promise<void> {
+    const p = waitForEvent(event, api, n);
+    callback();
+    return p;
 }
 
 export function pressSpaceKey(element: HTMLElement, opts?: KeyboardEventInit): void {

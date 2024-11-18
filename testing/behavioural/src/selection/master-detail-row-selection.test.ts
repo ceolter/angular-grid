@@ -4,10 +4,16 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, IDetailCellRendererParams } from 'ag-grid-community';
 import { MasterDetailModule } from 'ag-grid-enterprise';
 
-import { GridRows, TestGridsManager } from '../test-utils';
-import { GridRowsDiagramTree } from '../test-utils/gridRows/gridRowsDiagramTree';
+import { TestGridsManager } from '../test-utils';
 import { DETAIL_COLUMN_DEFS, MASTER_COLUMN_DEFS, MASTER_DETAIL_ROW_DATA } from './master-detail-data';
-import { assertSelectedRowsByIndex, clickEvent, getRowByIndex, waitForEvent } from './utils';
+import {
+    assertSelectedRowsByIndex,
+    clickEvent,
+    getCheckboxByIndex,
+    toggleCheckboxByIndex,
+    waitForEvent,
+    waitForEventWhile,
+} from './utils';
 
 describe('Master Detail', () => {
     let consoleErrorSpy: MockInstance;
@@ -43,7 +49,7 @@ describe('Master Detail', () => {
         consoleWarnSpy.mockRestore();
     });
 
-    test('master detail', async () => {
+    test('master row selection state synced from detail grid', async () => {
         const detailCellRendererParams: Partial<IDetailCellRendererParams> = {
             detailGridOptions: {
                 columnDefs: DETAIL_COLUMN_DEFS,
@@ -59,29 +65,70 @@ describe('Master Detail', () => {
             rowData: MASTER_DETAIL_ROW_DATA,
             masterDetail: true,
             detailCellRendererParams,
-            rowSelection: { mode: 'multiRow', enableClickSelection: true },
+            rowSelection: { mode: 'multiRow' },
         });
 
         api.forEachNode((node) => {
             node.master && node.setExpanded(true);
         });
-
         await waitForEvent('modelUpdated', api);
 
-        getRowByIndex(0, '2')?.dispatchEvent(clickEvent());
-
+        // Selecting row in detail grid should cause master row to become indeterminate
         const detail = api.getDetailGridInfo('detail_0')!;
-
+        await waitForEventWhile('selectionChanged', detail.api!, () => {
+            getCheckboxByIndex(0, '2')?.dispatchEvent(clickEvent());
+        });
         assertSelectedRowsByIndex([0], detail.api!);
         const node = api.getRowNode('0');
-        expect(node?.isSelected()).toBe(undefined);
+        expect(node!.isSelected()).toBe(undefined);
 
-        draw(api);
+        // Deselecting same row in detail grid should cause master row to become deselected again
+        await waitForEventWhile('selectionChanged', detail.api!, () => {
+            getCheckboxByIndex(0, '2')?.dispatchEvent(clickEvent());
+        });
+        assertSelectedRowsByIndex([], detail.api!);
+        expect(node!.isSelected()).toBe(false);
+    });
+
+    test('detail grid selection state synced from master row', async () => {
+        const detailCellRendererParams: Partial<IDetailCellRendererParams> = {
+            detailGridOptions: {
+                columnDefs: DETAIL_COLUMN_DEFS,
+                rowSelection: { mode: 'multiRow', enableClickSelection: true },
+            },
+            getDetailRowData(params) {
+                params.successCallback(params.data.callRecords);
+            },
+        };
+
+        const api = await createGridAndWait({
+            columnDefs: MASTER_COLUMN_DEFS,
+            rowData: MASTER_DETAIL_ROW_DATA,
+            masterDetail: true,
+            detailCellRendererParams,
+            rowSelection: { mode: 'multiRow' },
+        });
+
+        api.forEachNode((node) => {
+            node.master && node.setExpanded(true);
+        });
+        await waitForEvent('modelUpdated', api);
+        const detail = api.getDetailGridInfo('detail_0')!;
+
+        // Selecting master row (and then waiting for "rowSelected" to fire) results in
+        // all detail grid rows being selected
+        await waitForEventWhile('rowSelected', api, () => {
+            toggleCheckboxByIndex(0);
+        });
+        assertSelectedRowsByIndex([0], api);
+        expect(detail.api!.getSelectAllState()).toBe(true);
+
+        // Deselecting row in detail grid (and then waiting for "selectionChanged" to fire) results in
+        // master row having indeterminate state
+        await waitForEventWhile('selectionChanged', api, () => {
+            detail.api?.setNodesSelected({ nodes: [detail.api!.getRowNode('0')!], newValue: false });
+        });
+        assertSelectedRowsByIndex([], api);
+        expect(api.getRowNode('0')!.isSelected()).toBe(undefined);
     });
 });
-
-function draw(api: any) {
-    const gr = new GridRows(api);
-    const tr = new GridRowsDiagramTree(gr);
-    console.log(tr.diagramToString(false, null));
-}

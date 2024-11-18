@@ -222,8 +222,11 @@ export class GridRowsDiagramTree {
             result += this.getNodeType(gridRows, row) + ' ';
         }
 
-        if (row.isSelected()) {
+        const selectionState = row.isSelected();
+        if (selectionState) {
             result += 'selected ';
+        } else if (selectionState === undefined) {
+            result += 'indeterminate ';
         }
         if (row.level >= 0 && !row.expanded && (row.group || row.master)) {
             result += 'collapsed ';
