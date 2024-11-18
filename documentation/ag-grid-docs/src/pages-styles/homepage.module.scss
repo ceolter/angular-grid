@@ -653,7 +653,7 @@ body {
     padding-top: $spacing-size-12;
     width: 100%;
     max-width: var(--layout-max-width-small);
-
+    padding-bottom: $spacing-size-16;
     padding-right: var(--layout-horizontal-margins);
     margin-right: auto;
     margin-left: auto;
@@ -671,7 +671,7 @@ body {
     color: var(--color-util-brand-600);
 
     #{$selector-darkmode} & {
-        color: var(--color-brand-900);
+        color: var(--color-util-brand-900);
     }
 }
 

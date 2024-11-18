@@ -1,98 +1,70 @@
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { useDarkmode } from '@utils/hooks/useDarkmode';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import AIIcon from 'public/community/showcase/ai.svg?react';
+import DashboardIcon from 'public/community/showcase/dashboard.svg?react';
+import FinanceIcon from 'public/community/showcase/finance.svg?react';
+import ModelIcon from 'public/community/showcase/model.svg?react';
+import TerminalIcon from 'public/community/showcase/terminal.svg?react';
 import React from 'react';
 
 import styles from './Showcase.module.scss';
-import showcaseDetails from './showcase.json';
 
 const Showcase: React.FC = () => {
-    const [darkMode] = useDarkmode();
-    const [expanded, setExpanded] = React.useState<number>(0);
-
-    const handleExpand = (index: number) => {
-        setExpanded(index === expanded ? 0 : index);
-    };
-
     return (
         <div className={styles.container}>
-            <div className={styles.columnContainer}>
-                <div className={styles.column}>
-                    <div className={styles.buttonContainer}>
-                        {showcaseDetails.map((item, index) => (
-                            <div key={index} className={styles.button} onClick={() => handleExpand(index)}>
-                                <div className={styles.buttonTitleContainer}>
-                                    <span className={styles.buttonTitle}>{item.title}</span>
-                                    <Icon
-                                        svgClasses={styles.buttonIcon}
-                                        name={expanded === index ? 'chevronDown' : 'chevronRight'}
-                                    />
-                                </div>
-                                {expanded === index && (
-                                    <div className={styles.buttonDetailContainer}>
-                                        <span className={styles.buttonDetail}>{item.detail}</span>
-                                        <div className={styles.buttonFooter}>
-                                            {item.links.map((link, linkIndex) => (
-                                                <a
-                                                    key={linkIndex}
-                                                    href={link.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    {link.name}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+            <div className={styles.gridItem}>
+                <div className={styles.iconWrapper}>
+                    <FinanceIcon className={styles.icon} />
                 </div>
-                <div className={styles.column}>
-                    <div className={styles.imageContainer}>
-                        {showcaseDetails.map((item, index) => {
-                            if (expanded === index) {
-                                return (
-                                    <React.Fragment key={index}>
-                                        <a href={item.url} target="_blank">
-                                            <div
-                                                className={styles.imageTitle}
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                <span style={{ flex: 1, textAlign: 'center' }}>{item.site}</span>
-                                                <Icon svgClasses={styles.newTabIcon} name={'newTab'} />
-                                            </div>
-                                            <img
-                                                src={urlWithBaseUrl(
-                                                    darkMode && item.imageLight ? item.imageLight : item.image
-                                                )}
-                                                alt={item.alt}
-                                                className={styles.stackedImage}
-                                            />
-                                        </a>
-                                    </React.Fragment>
-                                );
-                            }
-                            return null;
-                        })}
-                    </div>
-                </div>
+                <h3 className={styles.title}>Finance</h3>
+                <p className={styles.description}>
+                    Analyse complex financial data, perform calculations and visualise the data in AG Grid, with
+                    standalone charts from AG Charts.
+                </p>
             </div>
-            <div className={styles.communityCta}>
-                <a
-                    className={`
-                                button-secondary 
-                                ${styles.primaryCta} plausible-event-name=react-table-get-started
-                            `}
-                    href={urlWithBaseUrl('./community/showcase/')}
-                >
-                    View More
-                </a>
+
+            <div className={styles.gridItem}>
+                <div className={styles.iconWrapper}>
+                    <AIIcon className={styles.icon} />
+                </div>
+                <h3 className={styles.title}>ML/AI</h3>
+                <p className={styles.description}>
+                    Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to
+                    powers the tables in its dashboard
+                </p>
+            </div>
+
+            <div className={styles.gridItem}>
+                <div className={styles.iconWrapper}>
+                    <ModelIcon className={styles.icon} />
+                </div>
+                <h3 className={styles.title}>Data Modelling</h3>
+                <p className={styles.description}>
+                    Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to
+                    help visualise mission data.
+                </p>
+            </div>
+
+            <div className={styles.gridItem}>
+                <div className={styles.iconWrapper}>
+                    <DashboardIcon className={styles.icon} />
+                </div>
+                <h3 className={styles.title}>Dashboards</h3>
+                <p className={styles.description}>
+                    An open source React library for building dashboards, with AG Grid enterprise support for building
+                    React tables with advanced features.
+                </p>
+            </div>
+
+            <div className={styles.gridItem}>
+                <div className={styles.iconWrapper}>
+                    <TerminalIcon className={styles.icon} />
+                </div>
+                <h3 className={styles.title}>Developer Platforms</h3>
+                <p className={styles.description}>
+                    Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI
+                    builder.
+                </p>
             </div>
         </div>
     );
