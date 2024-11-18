@@ -30,7 +30,7 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
     public setSelectedState(state: IServerSideSelectionState | IServerSideGroupSelectionState): void {
         if (typeof state !== 'object') {
             // The provided selection state should be an object
-            _error(115);
+            _error(116);
             return;
         }
 
@@ -65,7 +65,7 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
 
         const isSelectingMultipleRows = newState.selectAll || newState.toggledNodes.size > 1;
         if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos) && isSelectingMultipleRows) {
-            _warn(198);
+            _warn(130);
             return;
         }
 
@@ -95,7 +95,7 @@ export class DefaultStrategy extends BeanStub implements ISelectionStrategy {
         const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
-                _error(241);
+                _error(130);
                 return 0;
             }
             const rowNode = nodes[0];

@@ -299,7 +299,7 @@ export const AG_GRID_ERRORS = {
         textOutput.push(`If using a custom component check it has been registered correctly.`);
         return textOutput;
     },
-    102: () => "selecting just filtered only works when gridOptions.rowModelType='clientSide'" as const,
+    102: () => "selectAll: 'filtered' only works when gridOptions.rowModelType='clientSide'" as const,
     103: () =>
         'Invalid selection state. When using client-side row model, the state must conform to `string[]`.' as const,
     104: ({ value, param }: { value: number; param: string }) =>
@@ -314,14 +314,14 @@ export const AG_GRID_ERRORS = {
         `unrecognised aggregation function ${aggFuncOrString}` as const,
     110: () => 'groupHideOpenParents only works when specifying specific columns for colDef.showRowGroup' as const,
     111: () =>
-        'Invalid selection state. When `groupSelectsChildren` is enabled, the state must conform to `IServerSideGroupSelectionState`.' as const,
+        'Invalid selection state. When `groupSelects` is either "descendants" or "filteredDescendants", the state must conform to `IServerSideGroupSelectionState`.' as const,
     112: ({ googleFont, googleFontsDomain }: { googleFont: string; googleFontsDomain: string }) =>
         `Theme uses google font ${googleFont} but no value for loadThemeGoogleFonts was provided. Pass true to load fonts from ${googleFontsDomain} or false to silence this warning.` as const,
     113: () =>
         'Set Filter cannot initialise because you are using a row model that does not contain all rows in the browser. Either use a different filter type, or configure Set Filter such that you provide it with values' as const,
     114: ({ component }: { component: string }) =>
         `Could not find component with name of ${component}. Is it in Vue.components?` as const,
-    115: () => 'The provided selection state should be an object.' as const,
+    // 115: () => 'The provided selection state should be an object.' as const,
     116: () => 'Invalid selection state. The state must conform to `IServerSideSelectionState`.' as const,
     117: () => 'selectAll must be of boolean type.' as const,
     118: () => 'Infinite scrolling must be enabled in order to set the row count.' as const,
@@ -342,7 +342,7 @@ export const AG_GRID_ERRORS = {
     129: ({ feature, rowModel }: { feature: string; rowModel: string }) =>
         `${feature} is only available if using 'clientSide' or 'serverSide' rowModelType, you are using ${rowModel}.` as const,
     130: () => 'cannot multi select unless selection mode is "multiRow"' as const,
-    131: () => 'cannot range select while selecting multiple rows' as const,
+    // 131: () => 'cannot range select while selecting multiple rows' as const,
     132: () => 'Row selection features are not available unless `rowSelection` is enabled.' as const,
     133: ({ iconName }: { iconName: string }) =>
         `icon '${iconName}' function should return back a string or a dom object` as const,
@@ -454,16 +454,16 @@ export const AG_GRID_ERRORS = {
             `data is `,
             data,
         ] as const,
-    191: () => `cannot multi select unless selection mode is 'multiRow'` as const,
-    192: () => `cannot use range selection when multi selecting rows` as const,
-    193: () => "cannot multi select unless selection mode is 'multiRow'" as const,
+    // 191: () => `cannot multi select unless selection mode is 'multiRow'` as const,
+    // 192: () => `cannot use range selection when multi selecting rows` as const,
+    // 193: () => "cannot multi select unless selection mode is 'multiRow'" as const,
     194: ({ method }: { method: string }) =>
         `calling gridApi.${method}() is only possible when using rowModelType=\`clientSide\`.` as const,
     195: ({ justCurrentPage }: { justCurrentPage: boolean | undefined }) =>
         `selecting just ${justCurrentPage ? 'current page' : 'filtered'} only works when gridOptions.rowModelType='clientSide'` as const,
     196: ({ key }: { key: string }) => `Provided ids must be of string type. Invalid id provided: ${key}` as const,
     197: () => '`toggledNodes` must be an array of string ids.' as const,
-    198: () => `cannot multi select unless selection mode is 'multiRow'` as const,
+    // 198: () => `cannot multi select unless selection mode is 'multiRow'` as const,
     199: () =>
         `getSelectedNodes and getSelectedRows functions cannot be used with select all functionality with the server-side row model. Use \`api.getServerSideSelectionState()\` instead.` as const,
     200: missingModule,
@@ -530,8 +530,8 @@ export const AG_GRID_ERRORS = {
         'Theming API and CSS File Themes are both used in the same page. In v33 we released the Theming API as the new default method of styling the grid. See the migration docs https://www.ag-grid.com/react-data-grid/theming-migration/. Because no value was provided to the `theme` grid option it defaulted to themeQuartz. But the file (ag-grid.css) is also included and will cause styling issues. Either pass the string "legacy" to the theme grid option to use v32 style themes, or remove ag-grid.css from the page to use Theming API.' as const,
     240: ({ theme }: { theme: any }) =>
         `theme grid option must be a Theming API theme object or the string "legacy", received: ${theme}` as const,
-    241: () => `cannot select multiple rows when rowSelection.mode is set to 'singleRow'` as const,
-    242: () => 'cannot select multiple rows when using rangeSelect' as const,
+    // 241: () => `cannot select multiple rows when rowSelection.mode is set to 'singleRow'` as const,
+    // 242: () => 'cannot select multiple rows when using rangeSelect' as const,
     243: () => 'Failed to deserialize state - each provided state object must be an object.' as const,
     244: () => 'Failed to deserialize state - `selectAllChildren` must be a boolean value or undefined.' as const,
     245: () => 'Failed to deserialize state - `toggledNodes` must be an array.' as const,
