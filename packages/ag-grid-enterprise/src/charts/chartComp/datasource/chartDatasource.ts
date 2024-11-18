@@ -165,17 +165,7 @@ export class ChartDatasource extends BeanStub {
                         // traverse parents to extract group label path
                         const labels = this.getGroupLabels(rowNode, valueString);
 
-                        data[colId] = {
-                            labels,
-                            // this is needed so that standalone can handle animations properly when data updates
-                            id: id++,
-                            toString: function () {
-                                return this.labels
-                                    .filter((l: string) => !!l)
-                                    .reverse()
-                                    .join(' - ');
-                            },
-                        };
+                        data[colId] = labels.slice().reverse();
 
                         // keep track of group node indexes, so they can be padded when other groups are expanded
                         if (rowNode.group) {
