@@ -358,7 +358,7 @@ export class RowContainerCtrl extends BeanStub implements ScrollPartner {
             return;
         }
         const preventScroll = (e: TouchEvent) => {
-            if (dragSvc!.isDragging()) {
+            if (dragSvc!.dragging) {
                 if (e.cancelable) {
                     e.preventDefault();
                 }

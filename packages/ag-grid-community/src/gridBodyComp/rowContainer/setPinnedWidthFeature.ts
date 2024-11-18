@@ -1,25 +1,15 @@
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { PinnedColumnService } from '../../pinnedColumns/pinnedColumnService';
 import { _setDisplayed, _setFixedWidth } from '../../utils/dom';
 
 export class SetPinnedWidthFeature extends BeanStub {
-    private pinnedCols: PinnedColumnService;
-
     public readonly getWidth: () => number;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.pinnedCols = beans.pinnedCols!;
-    }
 
     constructor(
         private readonly element: HTMLElement,
         private readonly isLeft: boolean
     ) {
         super();
-        this.getWidth = isLeft
-            ? () => this.pinnedCols.getPinnedLeftWidth()
-            : () => this.pinnedCols.getPinnedRightWidth();
+        this.getWidth = isLeft ? () => this.beans.pinnedCols!.leftWidth : () => this.beans.pinnedCols!.rightWidth;
     }
 
     public postConstruct(): void {

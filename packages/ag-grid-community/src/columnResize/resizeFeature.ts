@@ -1,55 +1,23 @@
-import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeService';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
-import type { HorizontalResizeService } from '../dragAndDrop/horizontalResizeService';
 import type { AgColumn } from '../entities/agColumn';
 import type { IHeaderResizeFeature } from '../headerRendering/cells/abstractCell/abstractHeaderCellCtrl';
 import type { HeaderCellCtrl, IHeaderCellComp } from '../headerRendering/cells/column/headerCellCtrl';
 import type { ColumnPinnedType } from '../interfaces/iColumn';
-import type { PinnedColumnService } from '../pinnedColumns/pinnedColumnService';
 import { _getInnerWidth, _setDisplayed } from '../utils/dom';
-import type { ColumnResizeService } from './columnResizeService';
 
 export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
-    private horizontalResizeSvc: HorizontalResizeService;
-    private pinnedCols?: PinnedColumnService;
-    private ctrlsSvc: CtrlsService;
-    private colResize?: ColumnResizeService;
-    private colAutosize?: ColumnAutosizeService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.horizontalResizeSvc = beans.horizontalResizeSvc!;
-        this.pinnedCols = beans.pinnedCols;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.colResize = beans.colResize;
-        this.colAutosize = beans.colAutosize;
-    }
-
-    private pinned: ColumnPinnedType;
-    private column: AgColumn;
-    private eResize: HTMLElement;
-    private comp: IHeaderCellComp;
-
     private lastResizeAmount: number;
     private resizeStartWidth: number;
     private resizeWithShiftKey: boolean;
 
-    private ctrl: HeaderCellCtrl;
-
     constructor(
-        pinned: ColumnPinnedType,
-        column: AgColumn,
-        eResize: HTMLElement,
-        comp: IHeaderCellComp,
-        ctrl: HeaderCellCtrl
+        private pinned: ColumnPinnedType,
+        private column: AgColumn,
+        private eResize: HTMLElement,
+        private comp: IHeaderCellComp,
+        private ctrl: HeaderCellCtrl
     ) {
         super();
-        this.pinned = pinned;
-        this.column = column;
-        this.eResize = eResize;
-        this.comp = comp;
-        this.ctrl = ctrl;
     }
 
     public postConstruct(): void {
@@ -65,7 +33,9 @@ export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
                 return;
             }
 
-            const finishedWithResizeFunc = this.horizontalResizeSvc.addResizeBar({
+            const { horizontalResizeSvc, colAutosize } = this.beans;
+
+            const finishedWithResizeFunc = horizontalResizeSvc!.addResizeBar({
                 eResizeBar: this.eResize,
                 onResizeStart: this.onResizeStart.bind(this),
                 onResizing: this.onResizing.bind(this, false),
@@ -73,8 +43,8 @@ export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
             });
             destroyResizeFuncs.push(finishedWithResizeFunc);
 
-            if (canAutosize && this.colAutosize) {
-                destroyResizeFuncs.push(this.colAutosize.addColumnAutosize(this.eResize, this.column));
+            if (canAutosize && colAutosize) {
+                destroyResizeFuncs.push(colAutosize.addColumnAutosize(this.eResize, this.column));
             }
         };
 
@@ -101,17 +71,19 @@ export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
     }
 
     private onResizing(finished: boolean, resizeAmount: number): void {
-        const { column: key, lastResizeAmount, resizeStartWidth } = this;
+        const { column: key, lastResizeAmount, resizeStartWidth, beans } = this;
 
         const resizeAmountNormalised = this.normaliseResizeAmount(resizeAmount);
         const newWidth = resizeStartWidth + resizeAmountNormalised;
 
         const columnWidths = [{ key, newWidth }];
 
+        const { pinnedCols, ctrlsSvc, colResize } = beans;
+
         if (this.column.getPinned()) {
-            const leftWidth = this.pinnedCols?.getPinnedLeftWidth() ?? 0;
-            const rightWidth = this.pinnedCols?.getPinnedRightWidth() ?? 0;
-            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
+            const leftWidth = pinnedCols?.leftWidth ?? 0;
+            const rightWidth = pinnedCols?.rightWidth ?? 0;
+            const bodyWidth = _getInnerWidth(ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
 
             if (leftWidth + rightWidth + (resizeAmountNormalised - lastResizeAmount) > bodyWidth) {
                 return;
@@ -120,7 +92,7 @@ export class ResizeFeature extends BeanStub implements IHeaderResizeFeature {
 
         this.lastResizeAmount = resizeAmountNormalised;
 
-        this.colResize?.setColumnWidths(columnWidths, this.resizeWithShiftKey, finished, 'uiColumnResized');
+        colResize?.setColumnWidths(columnWidths, this.resizeWithShiftKey, finished, 'uiColumnResized');
 
         if (finished) {
             this.toggleColumnResizing(false);

@@ -1,11 +1,7 @@
-import type { ColumnAnimationService } from '../columnMove/columnAnimationService';
 import { dispatchColumnPinnedEvent } from '../columns/columnEventUtils';
-import type { ColKey, ColumnModel } from '../columns/columnModel';
-import type { VisibleColsService } from '../columns/visibleColsService';
+import type { ColKey } from '../columns/columnModel';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColumnEventType } from '../events';
@@ -22,25 +18,13 @@ import { _warn } from '../validation/logging';
 export class PinnedColumnService extends BeanStub implements NamedBean {
     beanName = 'pinnedCols' as const;
 
-    private visibleCols: VisibleColsService;
-    private ctrlsSvc: CtrlsService;
-    private colModel: ColumnModel;
-    private colAnimation?: ColumnAnimationService;
-
     private gridBodyCtrl: GridBodyCtrl;
 
-    public wireBeans(beans: BeanCollection): void {
-        this.visibleCols = beans.visibleCols;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.colModel = beans.colModel;
-        this.colAnimation = beans.colAnimation;
-    }
-
-    private leftWidth: number;
-    private rightWidth: number;
+    public leftWidth: number;
+    public rightWidth: number;
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => {
+        this.beans.ctrlsSvc.whenReady(this, (p) => {
             this.gridBodyCtrl = p.gridBodyCtrl;
         });
         const listener = this.checkContainerWidths.bind(this);
@@ -52,28 +36,21 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
     }
 
     private checkContainerWidths() {
-        const printLayout = _isDomLayout(this.gos, 'print');
+        const { gos, visibleCols, eventSvc } = this.beans;
+        const printLayout = _isDomLayout(gos, 'print');
 
-        const newLeftWidth = printLayout ? 0 : this.visibleCols.getColsLeftWidth();
-        const newRightWidth = printLayout ? 0 : this.visibleCols.getDisplayedColumnsRightWidth();
+        const newLeftWidth = printLayout ? 0 : visibleCols.getColsLeftWidth();
+        const newRightWidth = printLayout ? 0 : visibleCols.getDisplayedColumnsRightWidth();
 
         if (newLeftWidth != this.leftWidth) {
             this.leftWidth = newLeftWidth;
-            this.eventSvc.dispatchEvent({ type: 'leftPinnedWidthChanged' });
+            eventSvc.dispatchEvent({ type: 'leftPinnedWidthChanged' });
         }
 
         if (newRightWidth != this.rightWidth) {
             this.rightWidth = newRightWidth;
-            this.eventSvc.dispatchEvent({ type: 'rightPinnedWidthChanged' });
+            eventSvc.dispatchEvent({ type: 'rightPinnedWidthChanged' });
         }
-    }
-
-    public getPinnedRightWidth(): number {
-        return this.rightWidth;
-    }
-
-    public getPinnedLeftWidth(): number {
-        return this.leftWidth;
     }
 
     public keepPinnedColumnsNarrowerThanViewport(): void {
@@ -108,19 +85,20 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
     }
 
     public setColsPinned(keys: ColKey[], pinned: ColumnPinnedType, source: ColumnEventType): void {
-        if (!this.colModel.cols) {
+        const { colModel, colAnimation, visibleCols, gos } = this.beans;
+        if (!colModel.cols) {
             return;
         }
         if (!keys?.length) {
             return;
         }
 
-        if (_isDomLayout(this.gos, 'print')) {
+        if (_isDomLayout(gos, 'print')) {
             _warn(37);
             return;
         }
 
-        this.colAnimation?.start();
+        colAnimation?.start();
 
         let actualPinned: ColumnPinnedType;
         if (pinned === true || pinned === 'left') {
@@ -137,7 +115,7 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
             if (!key) {
                 return;
             }
-            const column = this.colModel.getCol(key);
+            const column = colModel.getCol(key);
             if (!column) {
                 return;
             }
@@ -149,11 +127,11 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
         });
 
         if (updatedCols.length) {
-            this.visibleCols.refresh(source);
+            visibleCols.refresh(source);
             dispatchColumnPinnedEvent(this.eventSvc, updatedCols, source);
         }
 
-        this.colAnimation?.finish();
+        colAnimation?.finish();
     }
 
     public initCol(column: AgColumn): void {
@@ -189,7 +167,7 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
         ctrl.hidden = true;
 
         const listener = () => {
-            const width = pinningLeft ? this.getPinnedLeftWidth() : this.getPinnedRightWidth();
+            const width = pinningLeft ? this.leftWidth : this.rightWidth;
             if (width == null) {
                 return;
             } // can happen at initialisation, width not yet set
@@ -226,9 +204,8 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
     public getHeaderResizeDiff(diff: number, column: AgColumn | AgColumnGroup): number {
         const pinned = column.getPinned();
         if (pinned) {
-            const leftWidth = this.getPinnedLeftWidth();
-            const rightWidth = this.getPinnedRightWidth();
-            const bodyWidth = _getInnerWidth(this.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
+            const { leftWidth, rightWidth } = this;
+            const bodyWidth = _getInnerWidth(this.beans.ctrlsSvc.getGridBodyCtrl().eBodyViewport) - 50;
 
             if (leftWidth + rightWidth + diff > bodyWidth) {
                 if (bodyWidth > leftWidth + rightWidth) {
@@ -244,16 +221,17 @@ export class PinnedColumnService extends BeanStub implements NamedBean {
     }
 
     private getPinnedColumnsOverflowingViewport(viewportWidth: number): AgColumn[] {
-        const pinnedRightWidth = this.getPinnedRightWidth() ?? 0;
-        const pinnedLeftWidth = this.getPinnedLeftWidth() ?? 0;
+        const pinnedRightWidth = this.rightWidth ?? 0;
+        const pinnedLeftWidth = this.leftWidth ?? 0;
         const totalPinnedWidth = pinnedRightWidth + pinnedLeftWidth;
 
         if (totalPinnedWidth < viewportWidth) {
             return [];
         }
 
-        const pinnedLeftColumns = [...this.visibleCols.leftCols];
-        const pinnedRightColumns = [...this.visibleCols.rightCols];
+        const { visibleCols } = this.beans;
+        const pinnedLeftColumns = [...visibleCols.leftCols];
+        const pinnedRightColumns = [...visibleCols.rightCols];
 
         let indexRight = 0;
         let indexLeft = 0;

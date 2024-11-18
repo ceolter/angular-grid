@@ -1,27 +1,16 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { RowContainerCtrl } from '../gridBodyComp/rowContainer/rowContainerCtrl';
-import type { RowRenderer } from './rowRenderer';
 
 export class AutoWidthCalculator extends BeanStub implements NamedBean {
     beanName = 'autoWidthCalc' as const;
 
-    private rowRenderer: RowRenderer;
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowRenderer = beans.rowRenderer;
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
-
     private centerRowContainerCtrl: RowContainerCtrl;
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => {
+        this.beans.ctrlsSvc.whenReady(this, (p) => {
             this.centerRowContainerCtrl = p.center;
         });
     }
@@ -37,7 +26,7 @@ export class AutoWidthCalculator extends BeanStub implements NamedBean {
             return -1;
         }
 
-        const elements = this.rowRenderer.getAllCellsForColumn(column);
+        const elements = this.beans.rowRenderer.getAllCellsForColumn(column);
 
         if (!skipHeader) {
             // we only consider the lowest level cell, not the group cell. in 99% of the time, this
@@ -85,19 +74,15 @@ export class AutoWidthCalculator extends BeanStub implements NamedBean {
 
         // we add padding as I found sometimes the gui still put '...' after some of the texts. so the
         // user can configure the grid to add a few more pixels after the calculated width
-        const autoSizePadding = this.getAutoSizePadding();
+        const autoSizePadding = this.gos.get('autoSizePadding');
 
         return dummyContainerWidth + autoSizePadding;
-    }
-
-    private getAutoSizePadding(): number {
-        return this.gos.get('autoSizePadding');
     }
 
     private getHeaderCellForColumn(column: AgColumnGroup | AgColumn): HTMLElement | null {
         let element: HTMLElement | null = null;
 
-        this.ctrlsSvc.getHeaderRowContainerCtrls().forEach((container) => {
+        this.beans.ctrlsSvc.getHeaderRowContainerCtrls().forEach((container) => {
             const res = container.getHtmlElementForColumnHeader(column);
             if (res != null) {
                 element = res;

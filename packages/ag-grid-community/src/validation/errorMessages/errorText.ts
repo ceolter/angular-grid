@@ -572,17 +572,7 @@ export function getError<TId extends ErrorId, TParams extends GetErrorParams<TId
 
 export const MISSING_MODULE_REASONS = {
     1: 'Charting Aggregation',
-    2: 'the Context Menu key "pivotChart"',
-    3: 'the Context Menu key "chartRange"',
-    4: 'Aggregation from Menu',
-    5: 'Copy from Menu',
-    6: 'Copy with Headers from Menu',
-    7: 'Copy with Group Headers from Menu',
-    8: 'Cut from Menu',
-    9: 'Paste from Clipboard',
-    10: 'pivotResultFields',
-    11: 'Column Tool Panel',
-    12: 'Filters Tool Panel',
+    2: 'pivotResultFields',
 } as const;
 
 export type MissingModuleErrors = typeof MISSING_MODULE_REASONS;

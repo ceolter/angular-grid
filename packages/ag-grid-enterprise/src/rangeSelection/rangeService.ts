@@ -712,7 +712,7 @@ export class RangeService extends BeanStub implements NamedBean, IRangeService {
 
         // The browser changes the Event target of cached events when working with the ShadowDOM
         // so we need to retrieve the initial DragStartTarget.
-        const startTarget = this.dragSvc.getStartTarget();
+        const startTarget = this.dragSvc.startTarget;
 
         if (startTarget) {
             this.updateValuesOnMove(startTarget);

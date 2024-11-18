@@ -305,7 +305,7 @@ export class GridBodyCtrl extends BeanStub {
         // the context menu if no rows or columns are displayed, or user simply clicks outside of a cell
         const listener = this.onBodyViewportContextMenu.bind(this);
         this.addManagedElementListeners(this.eBodyViewport, { contextmenu: listener });
-        touchSvc?.mockBodyContextMenuForIPad(this, listener);
+        touchSvc?.mockBodyContextMenu(this, listener);
 
         this.addManagedElementListeners(this.eBodyViewport, {
             wheel: this.onBodyViewportWheel.bind(this, popupSvc),

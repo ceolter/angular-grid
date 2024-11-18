@@ -1,6 +1,5 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import { _getDocument } from '../gridOptionsUtils';
 import { _setAriaAtomic, _setAriaLive, _setAriaRelevant } from '../utils/aria';
 import { _clearElement } from '../utils/dom';
@@ -8,12 +7,6 @@ import { _debounce } from '../utils/function';
 
 export class AriaAnnouncementService extends BeanStub implements NamedBean {
     beanName = 'ariaAnnounce' as const;
-
-    private eGridDiv: HTMLElement;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.eGridDiv = beans.eGridDiv;
-    }
 
     private descriptionContainer: HTMLElement | null = null;
 
@@ -26,7 +19,8 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
     }
 
     public postConstruct(): void {
-        const eDocument = _getDocument(this.beans);
+        const beans = this.beans;
+        const eDocument = _getDocument(beans);
         const div = (this.descriptionContainer = eDocument.createElement('div'));
         div.classList.add('ag-aria-description-container');
 
@@ -34,7 +28,7 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
         _setAriaRelevant(div, 'additions text');
         _setAriaAtomic(div, true);
 
-        this.eGridDiv.appendChild(div);
+        beans.eGridDiv.appendChild(div);
     }
 
     /**
@@ -69,12 +63,9 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
 
         if (descriptionContainer) {
             _clearElement(descriptionContainer);
-            if (descriptionContainer.parentElement) {
-                descriptionContainer.parentElement.removeChild(descriptionContainer);
-            }
+            descriptionContainer.parentElement?.removeChild(descriptionContainer);
         }
         this.descriptionContainer = null;
-        (this.eGridDiv as any) = null;
         this.pendingAnnouncements.clear();
     }
 }

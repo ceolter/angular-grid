@@ -15,19 +15,20 @@ export class DragService extends BeanStub implements NamedBean {
     beanName = 'dragSvc' as const;
 
     private currentDragParams: DragListenerParams | null;
-    private dragging: boolean;
-    private startTarget: EventTarget | null;
+    public dragging: boolean;
+    public startTarget: EventTarget | null;
     private mouseStartEvent: MouseEvent | null;
     private touchLastTime: Touch | null;
     private touchStart: Touch | null;
 
     private dragEndFunctions: ((...args: any[]) => any)[] = [];
 
-    private dragSources: DragSourceAndListener[] = [];
+    private readonly dragSources: DragSourceAndListener[] = [];
 
     public override destroy(): void {
-        this.dragSources.forEach(this.removeListener.bind(this));
-        this.dragSources.length = 0;
+        const { dragSources } = this;
+        dragSources.forEach(this.removeListener.bind(this));
+        dragSources.length = 0;
         super.destroy();
     }
 
@@ -44,18 +45,15 @@ export class DragService extends BeanStub implements NamedBean {
     }
 
     public removeDragSource(params: DragListenerParams): void {
-        const dragSourceAndListener = this.dragSources.find((item) => item.dragSource === params);
+        const { dragSources } = this;
+        const dragSourceAndListener = dragSources.find((item) => item.dragSource === params);
 
         if (!dragSourceAndListener) {
             return;
         }
 
         this.removeListener(dragSourceAndListener);
-        _removeFromArray(this.dragSources, dragSourceAndListener);
-    }
-
-    public isDragging(): boolean {
-        return this.dragging;
+        _removeFromArray(dragSources, dragSourceAndListener);
     }
 
     public addDragSource(params: DragListenerParams): void {
@@ -88,10 +86,6 @@ export class DragService extends BeanStub implements NamedBean {
             touchStartListener: touchListener,
             touchEnabled: !!includeTouch,
         });
-    }
-
-    public getStartTarget(): EventTarget | null {
-        return this.startTarget;
     }
 
     // gets called whenever mouse down on any drag source
@@ -292,8 +286,15 @@ export class DragService extends BeanStub implements NamedBean {
     }
 
     private shouldPreventMouseEvent(mouseEvent: MouseEvent): boolean {
-        const isEnableCellTextSelect = this.gos.get('enableCellTextSelection');
+        const { gos } = this;
+        const isEnableCellTextSelect = gos.get('enableCellTextSelection');
         const isMouseMove = mouseEvent.type === 'mousemove';
+        const isOverFormFieldElement = (mouseEvent: MouseEvent) => {
+            const el = mouseEvent.target as HTMLElement | null;
+            const tagName = el?.tagName.toLocaleLowerCase();
+
+            return !!tagName?.match('^a$|textarea|input|select|button');
+        };
 
         return (
             // when `isEnableCellTextSelect` is `true`, we need to preventDefault on mouseMove
@@ -301,16 +302,9 @@ export class DragService extends BeanStub implements NamedBean {
             isEnableCellTextSelect &&
             isMouseMove &&
             mouseEvent.cancelable &&
-            _isEventFromThisGrid(this.gos, mouseEvent) &&
-            !this.isOverFormFieldElement(mouseEvent)
+            _isEventFromThisGrid(gos, mouseEvent) &&
+            !isOverFormFieldElement(mouseEvent)
         );
-    }
-
-    private isOverFormFieldElement(mouseEvent: MouseEvent): boolean {
-        const el = mouseEvent.target as HTMLElement | null;
-        const tagName = el?.tagName.toLocaleLowerCase();
-
-        return !!tagName?.match('^a$|textarea|input|select|button');
     }
 
     public onTouchUp(touchEvent: TouchEvent, el: Element): void {
@@ -372,8 +366,9 @@ export class DragService extends BeanStub implements NamedBean {
         this.touchLastTime = null;
         this.currentDragParams = null;
 
-        this.dragEndFunctions.forEach((func) => func());
-        this.dragEndFunctions.length = 0;
+        const { dragEndFunctions } = this;
+        dragEndFunctions.forEach((func) => func());
+        dragEndFunctions.length = 0;
     }
 }
 

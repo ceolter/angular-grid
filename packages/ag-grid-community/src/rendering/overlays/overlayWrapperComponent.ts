@@ -1,8 +1,5 @@
-import type { VisibleColsService } from '../../columns/visibleColsService';
 import { KeyCode } from '../../constants/keyCode';
-import type { BeanCollection } from '../../context/context';
 import type { GridOptions } from '../../entities/gridOptions';
-import type { FocusService } from '../../focusService';
 import { _getActiveDomElement, _isNothingFocused } from '../../gridOptionsUtils';
 import type { LayoutView, UpdateLayoutClassesParams } from '../../styling/layoutFeature';
 import { LayoutCssClasses, LayoutFeature } from '../../styling/layoutFeature';
@@ -14,27 +11,16 @@ import type { AgPromise } from '../../utils/promise';
 import type { ComponentSelector } from '../../widgets/component';
 import { Component, RefPlaceholder } from '../../widgets/component';
 import type { IOverlayComp } from './overlayComponent';
-import type { OverlayService } from './overlayService';
 import { overlayWrapperComponentCSS } from './overlayWrapperComponent.css-GENERATED';
 
 export class OverlayWrapperComponent extends Component implements LayoutView {
-    private overlays: OverlayService;
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.overlays = beans.overlays!;
-        this.focusSvc = beans.focusSvc;
-        this.visibleCols = beans.visibleCols;
-    }
-
     private readonly eOverlayWrapper: HTMLElement = RefPlaceholder;
 
     private activePromise: AgPromise<IOverlayComp> | null = null;
     private activeOverlay: IOverlayComp | null = null;
     private updateListenerDestroyFunc: (() => null) | null = null;
-    private activeOverlayWrapperCssClass: string | null = null;
+    private activeCssClass: string | null = null;
     private elToFocusAfter: HTMLElement | null = null;
-    private visibleCols: VisibleColsService;
 
     constructor() {
         // wrapping in outer div, and wrapper, is needed to center the loading icon
@@ -52,16 +38,18 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
             return;
         }
 
-        const nextEl = _findNextFocusableElement(this.beans, this.eOverlayWrapper, false, e.shiftKey);
+        const beans = this.beans;
+
+        const nextEl = _findNextFocusableElement(beans, this.eOverlayWrapper, false, e.shiftKey);
         if (nextEl) {
             return;
         }
 
         let isFocused = false;
         if (e.shiftKey) {
-            isFocused = this.focusSvc.focusGridView(_last(this.visibleCols.allCols), true, false);
+            isFocused = beans.focusSvc.focusGridView(_last(beans.visibleCols.allCols), true, false);
         } else {
-            isFocused = _focusNextGridCoreContainer(this.beans, false);
+            isFocused = _focusNextGridCoreContainer(beans, false);
         }
 
         if (isFocused) {
@@ -71,25 +59,26 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
 
     public updateLayoutClasses(cssClass: string, params: UpdateLayoutClassesParams): void {
         const overlayWrapperClassList = this.eOverlayWrapper.classList;
-        overlayWrapperClassList.toggle(LayoutCssClasses.AUTO_HEIGHT, params.autoHeight);
-        overlayWrapperClassList.toggle(LayoutCssClasses.NORMAL, params.normal);
-        overlayWrapperClassList.toggle(LayoutCssClasses.PRINT, params.print);
+        const { AUTO_HEIGHT, NORMAL, PRINT } = LayoutCssClasses;
+        overlayWrapperClassList.toggle(AUTO_HEIGHT, params.autoHeight);
+        overlayWrapperClassList.toggle(NORMAL, params.normal);
+        overlayWrapperClassList.toggle(PRINT, params.print);
     }
 
     public postConstruct(): void {
         this.createManagedBean(new LayoutFeature(this));
         this.setDisplayed(false, { skipAriaHidden: true });
 
-        this.overlays.setOverlayWrapperComp(this);
+        this.beans.overlays!.setOverlayWrapperComp(this);
         this.addManagedElementListeners(this.getFocusableElement(), { keydown: this.handleKeyDown.bind(this) });
     }
 
     private setWrapperTypeClass(overlayWrapperCssClass: string): void {
         const overlayWrapperClassList = this.eOverlayWrapper.classList;
-        if (this.activeOverlayWrapperCssClass) {
-            overlayWrapperClassList.toggle(this.activeOverlayWrapperCssClass, false);
+        if (this.activeCssClass) {
+            overlayWrapperClassList.toggle(this.activeCssClass, false);
         }
-        this.activeOverlayWrapperCssClass = overlayWrapperCssClass;
+        this.activeCssClass = overlayWrapperCssClass;
         overlayWrapperClassList.toggle(overlayWrapperCssClass, true);
     }
 
@@ -200,7 +189,7 @@ export class OverlayWrapperComponent extends Component implements LayoutView {
     public override destroy(): void {
         this.elToFocusAfter = null;
         this.destroyActiveOverlay();
-        this.overlays.setOverlayWrapperComp(undefined);
+        this.beans.overlays!.setOverlayWrapperComp(undefined);
         super.destroy();
     }
 }

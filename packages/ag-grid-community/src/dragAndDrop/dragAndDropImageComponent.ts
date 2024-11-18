@@ -72,22 +72,24 @@ export class DragAndDropImageComponent extends Component implements IDragAndDrop
     }
 
     public setIcon(iconName: DragAndDropIcon | null, shake: boolean): void {
-        _clearElement(this.eIcon);
+        const { eIcon, dragSource, dropIconMap, gos } = this;
 
-        let eIcon: Element | null = null;
+        _clearElement(eIcon);
+
+        let eIconChild: Element | null = null;
 
         if (!iconName) {
-            iconName = this.dragSource?.getDefaultIconName ? this.dragSource?.getDefaultIconName() : 'notAllowed';
+            iconName = dragSource?.getDefaultIconName ? dragSource.getDefaultIconName() : 'notAllowed';
         }
-        eIcon = this.dropIconMap[iconName];
+        eIconChild = dropIconMap[iconName];
 
-        this.eIcon.classList.toggle('ag-shake-left-to-right', shake);
+        eIcon.classList.toggle('ag-shake-left-to-right', shake);
 
-        if (eIcon === this.dropIconMap['hide'] && this.gos.get('suppressDragLeaveHidesColumns')) {
+        if (eIconChild === dropIconMap['hide'] && gos.get('suppressDragLeaveHidesColumns')) {
             return;
         }
-        if (eIcon) {
-            this.eIcon.appendChild(eIcon);
+        if (eIconChild) {
+            eIcon.appendChild(eIconChild);
         }
     }
 
