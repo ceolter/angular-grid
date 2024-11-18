@@ -1,15 +1,17 @@
 import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    colorSchemeVariable,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -19,9 +21,7 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
@@ -33,17 +33,31 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
 ]);
 
-const baseThemes = [themeQuartz, themeBalham, themeAlpine];
-const colorSchemes = [
-    null,
-    colorSchemeLight,
-    colorSchemeLightCold,
-    colorSchemeLightWarm,
-    colorSchemeDark,
-    colorSchemeDarkWarm,
-    colorSchemeDarkBlue,
+const baseThemes = [
+    { id: 'themeQuartz', value: themeQuartz },
+    { id: 'themeBalham', value: themeBalham },
+    { id: 'themeAlpine', value: themeAlpine },
 ];
-const iconSets = [null, iconSetQuartzLight, iconSetQuartzRegular, iconSetQuartzBold, iconSetAlpine, iconSetMaterial];
+
+const colorSchemes = [
+    { id: '(unchanged)', value: null },
+    { id: 'colorSchemeLight', value: colorSchemeLight },
+    { id: 'colorSchemeLightCold', value: colorSchemeLightCold },
+    { id: 'colorSchemeLightWarm', value: colorSchemeLightWarm },
+    { id: 'colorSchemeDark', value: colorSchemeDark },
+    { id: 'colorSchemeDarkWarm', value: colorSchemeDarkWarm },
+    { id: 'colorSchemeDarkBlue', value: colorSchemeDarkBlue },
+    { id: 'colorSchemeVariable', value: colorSchemeVariable },
+];
+
+const iconSets = [
+    { id: '(unchanged)', value: null },
+    { id: 'iconSetQuartzLight', value: iconSetQuartzLight },
+    { id: 'iconSetQuartzRegular', value: iconSetQuartzRegular },
+    { id: 'iconSetQuartzBold', value: iconSetQuartzBold },
+    { id: 'iconSetAlpine', value: iconSetAlpine },
+    { id: 'iconSetMaterial', value: iconSetMaterial },
+];
 
 const GridExample = () => {
     const [baseTheme, setBaseTheme] = useState(baseThemes[0]);
@@ -51,12 +65,12 @@ const GridExample = () => {
     const [iconSet, setIconSet] = useState(iconSets[0]);
 
     const theme = useMemo(() => {
-        let theme = baseTheme;
-        if (colorScheme) {
-            theme = theme.withPart(colorScheme);
+        let theme = baseTheme.value;
+        if (colorScheme.value) {
+            theme = theme.withPart(colorScheme.value);
         }
-        if (iconSet) {
-            theme = theme.withPart(iconSet);
+        if (iconSet.value) {
+            theme = theme.withPart(iconSet.value);
         }
         return theme;
     }, [baseTheme, colorScheme, iconSet]);
@@ -88,9 +102,7 @@ const PartSelector = ({ options, value, setValue }) => (
         value={value?.id}
     >
         {options.map((option, i) => (
-            <option key={i} value={option?.id}>
-                {option?.variant || option?.id || '(unchanged)'}
-            </option>
+            <option key={i}>{option.id}</option>
         ))}
     </select>
 );

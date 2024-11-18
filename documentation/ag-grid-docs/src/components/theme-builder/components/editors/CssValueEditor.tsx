@@ -3,8 +3,9 @@ import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme
 import { type ThemeImpl, cssValueIsValid, reinterpretCSSValue } from '@components/theme-builder/model/utils';
 import { useEffect, useRef, useState } from 'react';
 
-import { paramValueToCss } from 'ag-grid-community';
+import { _theming } from 'ag-grid-community';
 
+import { getThemeDefaultParams } from '../component-utils';
 import { Input } from './Input';
 import { RGBAColor } from './RGBAColor';
 import { type ValueEditorProps } from './ValueEditorProps';
@@ -50,8 +51,8 @@ export const CssValueEditor = ({ param, value, onChange }: ValueEditorProps<unkn
 };
 
 const getEditorValue = (theme: ThemeImpl, param: ParamModel<unknown>): string => {
-    const paramValue = theme.getParams().getValues()[param.property];
-    let cssValue = paramValueToCss(param.property, paramValue) || '';
+    const paramValue = getThemeDefaultParams(theme)[param.property];
+    let cssValue = _theming.paramValueToCss(param.property, paramValue) || '';
     const reinterpreted = reinterpretCSSValue(cssValue, param.type);
     if (reinterpreted) {
         cssValue = reinterpreted;

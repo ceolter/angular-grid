@@ -169,6 +169,7 @@ import type { SideBarDef } from '../interfaces/iSideBar';
 import type { StatusPanelDef } from '../interfaces/iStatusPanel';
 import type { IViewportDatasource } from '../interfaces/iViewportDatasource';
 import type { DefaultMenuItem, MenuItemDef } from '../interfaces/menuItem';
+import type { Theme } from '../theming/Theme';
 import type { CheckboxSelectionCallback, ColDef, ColGroupDef, ColTypeDef, IAggFunc, SortDirection } from './colDef';
 import type { DataTypeDefinition } from './dataType';
 
@@ -1653,7 +1654,7 @@ export interface GridOptions<TData = any> {
      * on the parent element of the grid. To opt back in to this behaviour, pass
      * the string "legacy"
      */
-    theme?: GridTheme | 'legacy';
+    theme?: Theme | 'legacy';
 
     /**
      * Whether to load supported theme fonts from the Google Fonts server.
@@ -2404,28 +2405,6 @@ export interface RowClassParams<TData = any, TContext = any> extends AgGridCommo
     /**
      * The index of the row */
     rowIndex: number;
-}
-
-export type GridThemeUseArgs = {
-    loadThemeGoogleFonts: boolean | undefined;
-    container: HTMLElement;
-};
-
-export interface GridTheme {
-    /**
-     * Called by a grid instance when it starts using the theme.
-     */
-    startUse(args: GridThemeUseArgs): void;
-
-    /**
-     * Called by a grid instance when it stops using the theme.
-     */
-    stopUse(): void;
-
-    /**
-     * CSS class to be applied to the grid wrapper element in order to apply the theme.
-     */
-    getCssClass(): string;
 }
 
 type MenuCallbackReturn<TMenuItem extends string, TData = any, TContext = any> = (

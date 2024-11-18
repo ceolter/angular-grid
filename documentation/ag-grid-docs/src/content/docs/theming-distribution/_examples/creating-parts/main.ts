@@ -3,6 +3,7 @@ import {
     AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    colorSchemeVariable,
     createGrid,
     createPart,
     createTheme,
@@ -10,22 +11,30 @@ import {
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
-const myCheckboxStyle = createPart('checkboxStyle')
-    // Add some CSS to this part. If your application is bundled with Vite you
-    // can put this in a separate file and import it with
-    // `import checkboxCSS "./checkbox.css?inline"`
-    .withCSS(
-        `
+const myCheckboxStyle = createPart({
+    // By setting the feature, adding this part to a theme will remove the
+    // theme's existing checkboxStyle, if any
+    feature: 'checkboxStyle',
+    params: {
+        // Declare parameters added by the custom CSS and provide default values
+        checkboxCheckedGlowColor: { ref: 'accentColor' },
+        checkboxGlowColor: { ref: 'foregroundColor', mix: 0.5 },
+        // If you want to provide new default values for parameters already defined
+        // by the grid, you can do so too
+        accentColor: 'red',
+    },
+    // Add some CSS to this part.
+    // If your application is bundled with Vite you can put this in a separate
+    // file and import it with `import checkboxCSS "./checkbox.css?inline"`
+    css: `
         .ag-checkbox-input-wrapper {
             border-radius: 4px;
-            /* Parts' CSS can use new parameters - define support
-               for them using withAdditionalParams below */
-            box-shadow: 0 0 5px 4px var(--ag-checkbox-glow-color);
+            box-shadow: 0 0 5px 4px red;
             width: 16px;
             height: 16px;
-
+        
             &.ag-checked {
-                box-shadow: 0 0 5px 4px var(--ag-checkbox-checked-glow-color);
+                box-shadow: 0 0 5px 4px red;
                 &::before {
                     content: '✔';
                     position: absolute;
@@ -41,21 +50,20 @@ const myCheckboxStyle = createPart('checkboxStyle')
         .ag-checkbox-input {
             width: 16px;
             height: 16px;
+            margin: 0;
             appearance: none;
             -webkit-appearance: none;
+            border-radius: 4px;
+        
+            &:focus {
+                box-shadow: 0 0 3px 3px yellow;
+            }
         }
-    `
-    )
-    // Declare parameters added by the custom CSS and provide default values
-    .withAdditionalParams({
-        checkboxCheckedGlowColor: { ref: 'accentColor' },
-        checkboxGlowColor: { ref: 'foregroundColor', mix: 0.5 },
-    })
-    // If you want to provide new default values for parameters already defined
-    // by the grid, use withParams which provides TypeScript checking
-    .withParams({ accentColor: 'red' });
+        
+        `,
+});
 
-const myCustomTheme = createTheme().withPart(myCheckboxStyle);
+const myCustomTheme = createTheme().withPart(myCheckboxStyle).withPart(colorSchemeVariable);
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 

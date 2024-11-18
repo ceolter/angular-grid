@@ -798,8 +798,6 @@ export {
     CellSelectionOptions,
     RowSelectionOptions,
     RowSelectionMode,
-    GridTheme,
-    GridThemeUseArgs,
     IsApplyServerSideTransaction,
     GetContextMenuItems,
     GetDataPath,
@@ -1081,11 +1079,11 @@ export * from './events';
 
 // theming
 export { type Part, createPart } from './theming/Part';
-export { type Theme, createTheme, asThemeImpl as _asThemeImpl } from './theming/Theme';
+export { type Theme, createTheme } from './theming/Theme';
 export * from './theming/parts/checkbox-style/checkbox-styles';
 export * from './theming/parts/color-scheme/color-schemes';
 export * from './theming/parts/icon-set/icon-sets';
 export * from './theming/parts/input-style/input-styles';
 export * from './theming/parts/tab-style/tab-styles';
 export * from './theming/parts/theme/themes';
-export * from './theming/theme-types';
+export * as _theming from './theming/private-theming-api';

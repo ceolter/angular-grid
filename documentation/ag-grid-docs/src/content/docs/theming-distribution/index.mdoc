@@ -4,6 +4,31 @@ title: "Theming: Distributing Shared Themes & Parts"
 
 For organisations with multiple applications, you can create your own themes and parts to share styles between applications.
 
+### Creating Themes From Scratch
+
+Most applications create themes by starting with a built-in theme like `themeQuartz` and using the `withParams` and `withPart` method to generate a customised version.
+
+The `createTheme` function creates a new theme containing core styles but no parts. If you're going to change most of the parts anyway, starting from a new theme will reduce the bundle size compared to starting with a built-in theme.
+
+```js
+import { createTheme, iconSetMaterial } from 'ag-grid-community';
+
+const myCustomTheme = createTheme()
+    // add just the parts you want
+    .withPart(iconSetMaterial)
+    .withPart(colorSchemeVariable)
+    // set default param values
+    .withParams({
+        accentColor: 'red',
+        foregroundColor: '#660000',
+        iconSize: 18,
+    });
+```
+
+Note that the checkboxes in the example below are using the default styles from your web browser, because the parts containing their styles have not been added. This is useful if your application does not contain these features, or if you want a clean base upon which to apply your own checkbox styles.
+
+{% gridExampleRunner title="Creating a Theme From Scratch" name="creating-themes" /%}
+
 ### Creating Your Own Parts
 
 For organisations that create a library of reusable styles and share them among many applications, creating parts can be a convenient way to package up a collection of styles and parameters, allowing applications to choose which .
@@ -12,72 +37,46 @@ For organisations that create a library of reusable styles and share them among 
 Single applications that want to change the appearance of the grid do not need to create their own parts, they can simply [add CSS rules](./theming-css/) into the application's stylesheets.
 {% /note %}
 
-The `createPart` function creates an empty part.
-
-Parts have the following methods:
+The `createPart` function creates an empty part and takes the following arguments:
 
 ```js
 import { createPart } from 'ag-grid-community';
 
-// This part is for the checkboxStyle feature - adding it to a theme will
-// remove the theme's existing checkboxStyle, if any 
-const myCheckboxStyle = createPart('checkboxStyle')
-    // Add some CSS to this part. If your application is bundled with Vite you
-    // can put this in a separate file and import it with
-    // `import checkboxCSS "./checkbox.css?inline"`
-    .withCSS(
-        `
-        .ag-checkbox-input {
-            /* Parts' CSS can include new variables - define support
-               for them using withAdditionalParams below */
-            box-shadow: 0 0 5px 4px var(--ag-checkbox-glow-color);
-            ...
-        }
-        /* styles are scoped to grids using the theme, so won't pollute
-           the page's global CSS. This next line will have no effect: */
-        body {
-            border: solid 50px blue !important;
-        }
-    `
-    )
-    // Declare parameters added by the custom CSS and provide default values
-    .withAdditionalParams({
+const myCheckboxStyle = createPart({
+    // By setting the feature, adding this part to a theme will remove the
+    // theme's existing checkboxStyle, if any 
+    feature: 'checkboxStyle',
+    params: {
+        // Declare parameters added by the custom CSS and provide default values
+        checkboxCheckedGlowColor: { ref: 'accentColor' },
         checkboxGlowColor: { ref: 'foregroundColor', mix: 0.5 },
-        ...
-    })
-    // If you want to provide new default values for parameters already defined
-    // by the grid, use withParams which provides TypeScript checking
-    .withParams({ accentColor: 'red' });
+        // If you want to provide new default values for parameters already defined
+        // by the grid, you can do so too
+        accentColor: 'red',
+    },
+    // Add some CSS to this part.
+    // If your application is bundled with Vite you can put this in a separate
+    // file and import it with `import checkboxCSS "./checkbox.css?inline"`
+    css: `
+        .ag-checkbox-input-wrapper {
+            border-radius: 4px;
+            box-shadow: 0 0 5px 4px red;
 
-// Use your part in built-in theme
-const quartzWithMyCheckboxes = themeQuartz.withPart(myCheckboxStyle);
-// Or in a theme you build from scratch
-const myCustomTheme = createTheme().withPart(myCheckboxStyle);
+        ... css implementing the new checkbox style ...
+        
+        `,
+});
 ```
 
 {% gridExampleRunner title="Creating Parts" name="creating-parts" /%}
 
-### Creating Themes From Scratch
+#### Naming of parameters in custom parts
 
-Most applications create themes by starting with a built-in theme like `themeQuartz` and using the `withParams` and `withPart` method to generate a new theme.
+Parameters must use a naming convention based on their type, so for example all color parameters must end with `Color`. The full list of types and suffixes is on the [Parameters](./theming-parameters/) page. Any variable without a recognised suffix is considered to be a length.
 
-The `createTheme` function creates a new theme containing core styles but no parts. If you're going to change most of the parts anyway, starting from a new theme will reduce the bundle size compared to starting with a built-in theme.
+Using the correct type suffix ensures that values will be interpreted correctly, allowing you to use the extended syntax, e.g. `{ref: "accentColor", mix: 0.5}` to create a semi-transparent color.
 
-```js
-import { createTheme, iconSetMaterial } from 'ag-grid-community';
-
-const myCustomTheme = createTheme()
-    .withPart(iconSetMaterial)
-    .withParams({
-        accentColor: 'red',
-        foregroundColor: '#660000',
-        iconSize: 18,
-    });
-```
-
-Note that the checkboxes and text editors in the example below (double click on a cell to edit it) are using the default styles from your web browser, because the parts containing their styles have not been added. This is useful if your application does not contain these features, or if you want a clean base upon which to apply your own checkbox styles. 
-
-{% gridExampleRunner title="Creating a Theme From Scratch" name="creating-themes" /%}
+Additionally, the suffix is used by Typescript to infer the correct type for the parameter, ensuring that applications using the part and overriding the default value in their theme will get appropriate type checking.
 
 ### Multiple Grids
 

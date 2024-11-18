@@ -1,612 +1,604 @@
-import type {
-    BorderStyleValue,
-    BorderValue,
-    ColorSchemeValue,
-    ColorValue,
-    DurationValue,
-    FontFamilyValue,
-    FontWeightValue,
-    LengthValue,
-    ScaleValue,
-    ShadowValue,
-} from '../theme-types';
+import type { ExpandTypeKeys } from '../Part';
+import type { WithParamTypes } from '../theme-types';
 
 export { coreCSS } from './core.css-GENERATED';
 
 /**
  * All possible theme param types - the actual params available will be a subset of this type depending on the parts in use by the theme.
  */
-export type CoreParams = {
+type CoreParamsDefinitions = {
     /**
      * The 'brand color' for the grid, used wherever a non-neutral color is required. Selections, focus outlines and checkboxes use the accent color by default.
      */
-    accentColor: ColorValue;
+    accentColor: 'infer';
 
     /**
      * Color of the dividing line above the buttons in the advanced filter builder
      */
-    advancedFilterBuilderButtonBarBorder: BorderValue;
+    advancedFilterBuilderButtonBarBorder: 'infer';
 
     /**
      * Color of the column pills in the Advanced Filter Builder
      */
-    advancedFilterBuilderColumnPillColor: ColorValue;
+    advancedFilterBuilderColumnPillColor: 'infer';
 
     /**
      * Amount that each level of the nesting in the advanced filter builder is indented by
      */
-    advancedFilterBuilderIndentSize: LengthValue;
+    advancedFilterBuilderIndentSize: 'infer';
 
     /**
      * Color of the join operator pills in the Advanced Filter Builder
      */
-    advancedFilterBuilderJoinPillColor: ColorValue;
+    advancedFilterBuilderJoinPillColor: 'infer';
 
     /**
      * Color of the filter option pills in the Advanced Filter Builder
      */
-    advancedFilterBuilderOptionPillColor: ColorValue;
+    advancedFilterBuilderOptionPillColor: 'infer';
 
     /**
      * Color of the value pills in the Advanced Filter Builder
      */
-    advancedFilterBuilderValuePillColor: ColorValue;
+    advancedFilterBuilderValuePillColor: 'infer';
 
     /**
      * Background color of the grid. Many UI elements are semi-transparent, so their color blends with the background color.
      */
-    backgroundColor: ColorValue;
+    backgroundColor: 'infer';
 
     /**
      * Default color for borders.
      */
-    borderColor: ColorValue;
+    borderColor: 'infer';
 
     /**
      * Default corner radius for many UI elements such as menus, dialogs and form widgets.
      */
-    borderRadius: LengthValue;
+    borderRadius: 'infer';
 
     /**
      * The CSS color-scheme to apply to the grid, which affects the default appearance of browser scrollbars form inputs unless these have been styled with CSS.
      */
-    browserColorScheme: ColorSchemeValue;
+    browserColorScheme: 'infer';
 
     /**
      * Padding at the start and end of grid cells and header cells.
      */
-    cellHorizontalPadding: LengthValue;
+    cellHorizontalPadding: 'infer';
 
     /**
      * Multiply the cell horizontal padding by a number, e.g. 1.5 to increase by 50%
      */
-    cellHorizontalPaddingScale: ScaleValue;
+    cellHorizontalPaddingScale: 'infer';
 
     /**
      * Color of text in grid cells.
      */
-    cellTextColor: ColorValue;
+    cellTextColor: 'infer';
 
     /**
      * Horizontal spacing between widgets inside cells (e.g. row group expand buttons and row selection checkboxes).
      */
-    cellWidgetSpacing: LengthValue;
+    cellWidgetSpacing: 'infer';
 
     /**
      * Color of form field labels within the chart editing panel for integrated charts
      */
-    chartMenuLabelColor: ColorValue;
+    chartMenuLabelColor: 'infer';
 
     /**
      * Width of the chart editing panel for integrated charts
      */
-    chartMenuPanelWidth: LengthValue;
+    chartMenuPanelWidth: 'infer';
 
     /**
      * Background color for non-data areas of the grid. Headers, tool panels and menus use this color by default.
      */
-    chromeBackgroundColor: ColorValue;
+    chromeBackgroundColor: 'infer';
 
     /**
      * Vertical borders between columns within the grid only, excluding headers.
      */
-    columnBorder: BorderValue;
+    columnBorder: 'infer';
 
     /**
      * Background color for the representation of columns within the column drop component
      */
-    columnDropCellBackgroundColor: ColorValue;
+    columnDropCellBackgroundColor: 'infer';
 
     /**
      * Border for the representation of columns within the column drop component
      */
-    columnDropCellBorder: BorderValue;
+    columnDropCellBorder: 'infer';
 
     /**
      * Background color when hovering over columns in the grid. This is not visible unless enabled in the grid options.
      */
-    columnHoverColor: ColorValue;
+    columnHoverColor: 'infer';
 
     /**
      * Amount of indentation for each level of children when selecting grouped columns in the column select widget.
      */
-    columnSelectIndentSize: LengthValue;
+    columnSelectIndentSize: 'infer';
 
     /**
      * Border color popup dialogs such as the integrated charts and the advanced filter builder.
      */
-    dialogBorder: BorderValue;
+    dialogBorder: 'infer';
 
     /**
      * Shadow for popup dialogs such as the integrated charts and the advanced filter builder.
      */
-    dialogShadow: ShadowValue;
+    dialogShadow: 'infer';
 
     /**
      * Border around cells being edited
      */
-    cellEditingBorder: BorderValue;
+    cellEditingBorder: 'infer';
 
     /**
      * Shadow for cells being edited
      */
-    cellEditingShadow: ShadowValue;
+    cellEditingShadow: 'infer';
 
     /**
      * Background color of the drag and drop image component element when dragging columns
      */
-    dragAndDropImageBackgroundColor: ColorValue;
+    dragAndDropImageBackgroundColor: 'infer';
 
     /**
      * Border color of the drag and drop image component element when dragging columns
      */
-    dragAndDropImageBorder: BorderValue;
+    dragAndDropImageBorder: 'infer';
 
     /**
      * Shadow for the drag and drop image component element when dragging columns
      */
-    dragAndDropImageShadow: ShadowValue;
+    dragAndDropImageShadow: 'infer';
 
     /**
      * Color of the drag handle on draggable rows and column markers
      */
-    dragHandleColor: ColorValue;
+    dragHandleColor: 'infer';
 
     /**
      * Default shadow for dropdown menus
      */
-    dropdownShadow: ShadowValue;
+    dropdownShadow: 'infer';
 
     /**
      * How much to indent child columns in the filters tool panel relative to their parent
      */
-    filterToolPanelGroupIndent: LengthValue;
+    filterToolPanelGroupIndent: 'infer';
 
     /**
      * Shadow around UI controls that have focus e.g. text inputs and buttons. The value must a valid CSS box-shadow.
      */
-    focusShadow: ShadowValue;
+    focusShadow: 'infer';
 
     /**
      * Default font family for all text. Can be overridden by more specific parameters like `headerFontFamily`
      */
-    fontFamily: FontFamilyValue;
+    fontFamily: 'infer';
 
     /**
      * Default font size for text throughout the grid UI
      */
-    fontSize: LengthValue;
+    fontSize: 'infer';
 
     /**
      * Font size for data in grid rows
      */
-    dataFontSize: LengthValue;
+    dataFontSize: 'infer';
 
     /**
      * Horizontal borders above footer components like the pagination and status bars
      */
-    footerRowBorder: BorderValue;
+    footerRowBorder: 'infer';
 
     /**
      * Default color for neutral UI elements. Most text, borders and backgrounds are defined as semi-transparent versions of this color, resulting in a blend between the background and foreground colours.
      */
-    foregroundColor: ColorValue;
+    foregroundColor: 'infer';
 
     /**
      * Amount of spacing around and inside UI elements. All padding and margins in the grid are defined as a multiple of this value.
      */
-    spacing: LengthValue;
+    spacing: 'infer';
 
     /**
      * Background color for header and header-like.
      */
-    headerBackgroundColor: ColorValue;
+    headerBackgroundColor: 'infer';
 
     /**
      * Duration in seconds of the background color transition if headerCellHoverBackgroundColor or headerCellMovingBackgroundColor is set.
      */
-    headerCellBackgroundTransitionDuration: DurationValue;
+    headerCellBackgroundTransitionDuration: 'infer';
 
     /**
      * Background color of a header cell when hovering over it, or `transparent` for no change.
      */
-    headerCellHoverBackgroundColor: ColorValue;
+    headerCellHoverBackgroundColor: 'infer';
 
     /**
      * Background color of a header cell when dragging to reposition it, or `transparent` for no change.
      */
-    headerCellMovingBackgroundColor: ColorValue;
+    headerCellMovingBackgroundColor: 'infer';
 
     /**
      * Vertical borders between columns within headers.
      */
-    headerColumnBorder: BorderValue;
+    headerColumnBorder: 'infer';
 
     /**
      * Height of the vertical border between column headers. Percentage values are relative to the header height.
      */
-    headerColumnBorderHeight: LengthValue;
+    headerColumnBorderHeight: 'infer';
 
     /**
      * Color of the drag handle on resizable header columns. Set this to transparent to hide the resize handle.
      */
-    headerColumnResizeHandleColor: ColorValue;
+    headerColumnResizeHandleColor: 'infer';
 
     /**
      * Height of the drag handle on resizable header columns. Percentage values are relative to the header height.
      */
-    headerColumnResizeHandleHeight: LengthValue;
+    headerColumnResizeHandleHeight: 'infer';
 
     /**
      * Width of the drag handle on resizable header columns.
      */
-    headerColumnResizeHandleWidth: LengthValue;
+    headerColumnResizeHandleWidth: 'infer';
 
     /**
      * Font family of text in the header
      */
-    headerFontFamily: FontFamilyValue;
+    headerFontFamily: 'infer';
 
     /**
      * Font family of text in grid cells
      */
-    cellFontFamily: FontFamilyValue;
+    cellFontFamily: 'infer';
 
     /**
      * Size of text in the header
      */
-    headerFontSize: LengthValue;
+    headerFontSize: 'infer';
 
     /**
      * Font weight of text in the header
      */
-    headerFontWeight: FontWeightValue;
+    headerFontWeight: 'infer';
 
     /**
      * Height of header rows. NOTE: by default this value is calculated to leave enough room for text, icons and padding. Most applications should leave it as is and use rowVerticalPaddingScale to change padding.
      */
-    headerHeight: LengthValue;
+    headerHeight: 'infer';
 
     /**
      * Borders between and below header rows.
      */
-    headerRowBorder: BorderValue;
+    headerRowBorder: 'infer';
 
     /**
      * Color of text in the header
      */
-    headerTextColor: ColorValue;
+    headerTextColor: 'infer';
 
     /**
      * Multiply the header vertical padding by a number, e.g. 1.5 to increase by 50%
      */
-    headerVerticalPaddingScale: ScaleValue;
+    headerVerticalPaddingScale: 'infer';
 
     /**
      * Background color of clickable icons when hovered
      */
-    iconButtonHoverBackgroundColor: ColorValue;
+    iconButtonHoverBackgroundColor: 'infer';
 
     /**
      * Hover color for clickable icons
      */
-    iconButtonHoverColor: ColorValue;
+    iconButtonHoverColor: 'infer';
 
     /**
      * The size of square icons and icon-buttons
      */
-    iconSize: LengthValue;
+    iconSize: 'infer';
 
     /**
      * The color for inputs and UI controls in an invalid state.
      */
-    invalidColor: ColorValue;
+    invalidColor: 'infer';
 
     /**
      * Height of items in scrolling lists e.g. dropdown select inputs and column menu set filters.
      */
-    listItemHeight: LengthValue;
+    listItemHeight: 'infer';
 
     /**
      * Background color for menus e.g. column menu and right-click context menu
      */
-    menuBackgroundColor: ColorValue;
+    menuBackgroundColor: 'infer';
 
     /**
      * Border around menus e.g. column menu and right-click context menu
      */
-    menuBorder: BorderValue;
+    menuBorder: 'infer';
 
     /**
      * Color of the dividing line between sections of menus e.g. column menu and right-click context menu
      */
-    menuSeparatorColor: ColorValue;
+    menuSeparatorColor: 'infer';
 
     /**
      * Shadow for menus e.g. column menu and right-click context menu
      */
-    menuShadow: ShadowValue;
+    menuShadow: 'infer';
 
     /**
      * Text color for menus e.g. column menu and right-click context menu
      */
-    menuTextColor: ColorValue;
+    menuTextColor: 'infer';
 
     /**
      * Background color of the overlay shown over the grid e.g. a data loading indicator.
      */
-    modalOverlayBackgroundColor: ColorValue;
+    modalOverlayBackgroundColor: 'infer';
 
     /**
      * Background color applied to every other row
      */
-    oddRowBackgroundColor: ColorValue;
+    oddRowBackgroundColor: 'infer';
 
     /**
      * Background color for panels and dialogs such as the integrated charts and the advanced filter builder.
      */
-    panelBackgroundColor: ColorValue;
+    panelBackgroundColor: 'infer';
 
     /**
      * Background color for the title bar of panels and dialogs such as the integrated charts and the advanced filter builder.
      */
-    panelTitleBarBackgroundColor: ColorValue;
+    panelTitleBarBackgroundColor: 'infer';
 
     /**
      * Border below the title bar of panels and dialogs such as the integrated charts and the advanced filter builder.
      */
-    panelTitleBarBorder: BorderValue;
+    panelTitleBarBorder: 'infer';
 
     /**
      * Vertical borders between columns that are pinned to the left or right and the rest of the grid
      */
-    pinnedColumnBorder: BorderValue;
+    pinnedColumnBorder: 'infer';
 
     /**
      * Horizontal borders between the grid and rows that are pinned to the top or bottom and the rest of the grid
      */
-    pinnedRowBorder: BorderValue;
+    pinnedRowBorder: 'infer';
 
     /**
      * Default shadow for elements that float above the grid e.g. dialogs and menus
      */
-    popupShadow: ShadowValue;
+    popupShadow: 'infer';
 
     /**
      * Background color of selected cell ranges. Choosing a semi-transparent color ensure that multiple overlapping ranges look correct.
      */
-    rangeSelectionBackgroundColor: ColorValue;
+    rangeSelectionBackgroundColor: 'infer';
 
     /**
      * The color used for borders around range selections. The selection background defaults to a semi-transparent version of this color.
      */
-    rangeSelectionBorderColor: ColorValue;
+    rangeSelectionBorderColor: 'infer';
 
     /**
      * Border style around range selections.
      */
-    rangeSelectionBorderStyle: BorderStyleValue;
+    rangeSelectionBorderStyle: 'infer';
 
     /**
      * Background color for cells that provide data to the current range chart
      */
-    rangeSelectionChartBackgroundColor: ColorValue;
+    rangeSelectionChartBackgroundColor: 'infer';
 
     /**
      * Background color for cells that provide categories to the current range chart
      */
-    rangeSelectionChartCategoryBackgroundColor: ColorValue;
+    rangeSelectionChartCategoryBackgroundColor: 'infer';
 
     /**
      * Background color to briefly apply to a cell range when the user copies from or pastes into it.
      */
-    rangeSelectionHighlightColor: ColorValue;
+    rangeSelectionHighlightColor: 'infer';
 
     /**
      * Horizontal borders between rows.
      */
-    rowBorder: BorderValue;
+    rowBorder: 'infer';
 
     /**
      * The size of indentation applied to each level of row grouping - deep rows are indented by a multiple of this value.
      */
-    rowGroupIndentSize: LengthValue;
+    rowGroupIndentSize: 'infer';
 
     /**
      * Height of grid rows. NOTE: by default this value is calculated to leave enough room for text, icons and padding. Most applications should leave it as is and use rowVerticalPaddingScale to change padding.
      */
-    rowHeight: LengthValue;
+    rowHeight: 'infer';
 
     /**
      * Background color when hovering over rows in the grid and in dropdown menus. Set to `transparent` to disable the hover effect. Note: if you want a hover effect on one but not the other, use CSS selectors instead of this property.
      */
-    rowHoverColor: ColorValue;
+    rowHoverColor: 'infer';
 
     /**
      * Color of the skeleton loading effect used when loading row data with the Server-side Row Model
      */
-    rowLoadingSkeletonEffectColor: ColorValue;
+    rowLoadingSkeletonEffectColor: 'infer';
 
     /**
      * Multiply the row vertical padding by a number, e.g. 1.5 to increase by 50%. Has no effect if rowHeight is set.
      */
-    rowVerticalPaddingScale: ScaleValue;
+    rowVerticalPaddingScale: 'infer';
 
     /**
      * Background color for selected items within the multiple select widget
      */
-    selectCellBackgroundColor: ColorValue;
+    selectCellBackgroundColor: 'infer';
 
     /**
      * Border for selected items within the multiple select widget
      */
-    selectCellBorder: BorderValue;
+    selectCellBorder: 'infer';
 
     /**
      * Background color of selected rows in the grid and in dropdown menus.
      */
-    selectedRowBackgroundColor: ColorValue;
+    selectedRowBackgroundColor: 'infer';
 
     /**
      * Amount of indentation for each level of child items in the Set Filter list when filtering tree data.
      */
-    setFilterIndentSize: LengthValue;
+    setFilterIndentSize: 'infer';
 
     /**
      * Background color for non-data areas of the grid. Headers, tool panels and menus use this color by default.
      */
-    sideBarBackgroundColor: ColorValue;
+    sideBarBackgroundColor: 'infer';
 
     /**
      * Default width of the sidebar that contains the columns and filters tool panels
      */
-    sideBarPanelWidth: LengthValue;
+    sideBarPanelWidth: 'infer';
 
     /**
      * Borders between the grid and side panels including the column and filter tool bars, and chart settings
      */
-    sidePanelBorder: BorderValue;
+    sidePanelBorder: 'infer';
 
     /**
      * Color of text and UI elements that should stand out less than the default.
      */
-    subtleTextColor: ColorValue;
+    subtleTextColor: 'infer';
 
     /**
      * Default color for all text
      */
-    textColor: ColorValue;
+    textColor: 'infer';
 
     /**
      * Width of the toggle button outer border
      */
-    toggleButtonBorderWidth: LengthValue;
+    toggleButtonBorderWidth: 'infer';
 
     /**
      * Height of the whole toggle button component
      */
-    toggleButtonHeight: LengthValue;
+    toggleButtonHeight: 'infer';
 
     /**
      * Color of the toggle button background in its 'off' state
      */
-    toggleButtonOffBackgroundColor: ColorValue;
+    toggleButtonOffBackgroundColor: 'infer';
 
     /**
      * Color of the toggle button's outer border in its 'off' state
      */
-    toggleButtonOffBorderColor: ColorValue;
+    toggleButtonOffBorderColor: 'infer';
 
     /**
      * Color of the toggle button background in its 'on' state
      */
-    toggleButtonOnBackgroundColor: ColorValue;
+    toggleButtonOnBackgroundColor: 'infer';
 
     /**
      * Color of the toggle button outer border in its 'on' state
      */
-    toggleButtonOnBorderColor: ColorValue;
+    toggleButtonOnBorderColor: 'infer';
 
     /**
      * Background color of the toggle button switch (the bit that slides from left to right)
      */
-    toggleButtonSwitchBackgroundColor: ColorValue;
+    toggleButtonSwitchBackgroundColor: 'infer';
 
     /**
      * Border color of the toggle button switch (the bit that slides from left to right)
      */
-    toggleButtonSwitchBorderColor: ColorValue;
+    toggleButtonSwitchBorderColor: 'infer';
 
     /**
      * Width of the whole toggle button component
      */
-    toggleButtonWidth: LengthValue;
+    toggleButtonWidth: 'infer';
 
     /**
      * The dividing line between sections of menus e.g. column menu and right-click context menu
      */
-    toolPanelSeparatorBorder: BorderValue;
+    toolPanelSeparatorBorder: 'infer';
 
     /**
      * Background color for tooltips
      */
-    tooltipBackgroundColor: ColorValue;
+    tooltipBackgroundColor: 'infer';
 
     /**
      * Border for tooltips
      */
-    tooltipBorder: BorderValue;
+    tooltipBorder: 'infer';
 
     /**
      * Text color for tooltips
      */
-    tooltipTextColor: ColorValue;
+    tooltipTextColor: 'infer';
 
     /**
      * Color to temporarily apply to cell data when its value decreases in an agAnimateShowChangeCellRenderer cell
      */
-    valueChangeDeltaDownColor: ColorValue;
+    valueChangeDeltaDownColor: 'infer';
 
     /**
      * Color to temporarily apply to cell data when its value increases in an agAnimateShowChangeCellRenderer cell
      */
-    valueChangeDeltaUpColor: ColorValue;
+    valueChangeDeltaUpColor: 'infer';
 
     /**
      * Background color to apply when a cell value changes and enableCellChangeFlash is enabled
      */
-    valueChangeValueHighlightBackgroundColor: ColorValue;
+    valueChangeValueHighlightBackgroundColor: 'infer';
 
     /**
      * The horizontal padding of containers that contain stacked widgets, such as menus and tool panels
      */
-    widgetContainerHorizontalPadding: LengthValue;
+    widgetContainerHorizontalPadding: 'infer';
 
     /**
      * The vertical padding of containers that contain stacked widgets, such as menus and tool panels
      */
-    widgetContainerVerticalPadding: LengthValue;
+    widgetContainerVerticalPadding: 'infer';
 
     /**
      * The spacing between widgets in containers arrange widgets horizontally
      */
-    widgetHorizontalSpacing: LengthValue;
+    widgetHorizontalSpacing: 'infer';
 
     /**
      * The spacing between widgets in containers arrange widgets vertically
      */
-    widgetVerticalSpacing: LengthValue;
+    widgetVerticalSpacing: 'infer';
 
     /**
      * Borders around the outside of the grid
      */
-    wrapperBorder: BorderValue;
+    wrapperBorder: 'infer';
 
     /**
      * Corner radius of the outermost container around the grid.
      */
-    wrapperBorderRadius: LengthValue;
+    wrapperBorderRadius: 'infer';
 };
+
+export type CoreParams = ExpandTypeKeys<WithParamTypes<CoreParamsDefinitions>>;
 
 export const defaultLightColorSchemeParams = {
     backgroundColor: '#fff',
@@ -623,7 +615,7 @@ export const defaultLightColorSchemeParams = {
     browserColorScheme: 'light',
 } as const;
 
-export const coreDefaults = (): CoreParams => ({
+export const coreDefaults: Readonly<CoreParams> = {
     ...defaultLightColorSchemeParams,
     textColor: {
         ref: 'foregroundColor',
@@ -928,4 +920,4 @@ export const coreDefaults = (): CoreParams => ({
         mix: 0.1,
     },
     rowLoadingSkeletonEffectColor: 'rgba(66, 66, 66, 0.2)',
-});
+};

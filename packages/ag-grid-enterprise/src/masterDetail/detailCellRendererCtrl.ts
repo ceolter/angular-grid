@@ -37,7 +37,6 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
 
         this.setAutoHeightClasses();
         this.setupRefreshStrategy();
-        this.addThemeToDetailGrid();
         this.createDetailGrid();
         this.loadRowData();
 
@@ -82,15 +81,6 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
         }
 
         this.refreshStrategy = 'rows';
-    }
-
-    private addThemeToDetailGrid(): void {
-        // this is needed by environment service of the child grid, the class needs to be on
-        // the grid div itself - the browser's CSS on the other hand just inherits from the parent grid theme.
-        const { themeClass } = this.environment;
-        if (themeClass) {
-            this.comp.addOrRemoveDetailGridCssClass(themeClass, true);
-        }
     }
 
     private createDetailGrid(): void {

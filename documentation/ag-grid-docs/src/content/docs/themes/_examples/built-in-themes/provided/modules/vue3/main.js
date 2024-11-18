@@ -27,7 +27,7 @@ const VueExample = {
             <p style="flex: 0 1 0%">
                 Theme:
                 <select style="margin-right: 16px" v-model="theme">
-                    <option v-for="t in themes" :value="t">{{ t.id }}</option>
+                    <option v-for="(theme, id) in themes" :value="theme">{{ id }}</option>
                 </select>
             </p>
             <div style="flex: 1 1 0%">
@@ -49,7 +49,11 @@ const VueExample = {
         const theme = ref(themeQuartz);
         return {
             theme,
-            themes: [themeQuartz, themeBalham, themeAlpine],
+            themes: {
+                themeQuartz,
+                themeBalham,
+                themeAlpine,
+            },
 
             columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
             defaultColDef: {

@@ -73,13 +73,13 @@ const iconNameToFullSvg: Record<string, string | undefined> = {
 export const getQuartzIconsCss = (args: { strokeWidth?: number } = {}) => {
     let result = iconSetQuartzCSS;
     for (const iconName of [...Object.keys(iconNameToSvgFragment), ...Object.keys(iconNameToFullSvg)]) {
-        const iconSvg = quartzIconSvg(iconName, args.strokeWidth || 1.5);
+        const iconSvg = quartzIconSvg(iconName, args.strokeWidth);
         result += `.ag-icon-${iconName}::before { mask-image: url('data:image/svg+xml,${encodeURIComponent(iconSvg)}'); }\n`;
     }
     return result;
 };
 
-const quartzIconSvg = (name: string, strokeWidth: number): string => {
+const quartzIconSvg = (name: string, strokeWidth = 1.5): string => {
     const fullSVG = iconNameToFullSvg[name];
     if (fullSVG) return fullSVG;
     const svgFragment = iconNameToSvgFragment[name];

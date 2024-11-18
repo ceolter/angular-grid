@@ -1,4 +1,4 @@
-import type { ColDef, GridOptions } from 'ag-grid-community';
+import type { ColDef, GridOptions, GridTheme } from 'ag-grid-community';
 import {
     AllCommunityModule,
     ClientSideRowModelModule,
@@ -18,8 +18,12 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
 ]);
 
-const baseThemes = [themeQuartz, themeBalham, themeAlpine];
-const theme = baseThemes[0];
+const themes: Record<string, GridTheme> = {
+    quartz: themeQuartz,
+    balham: themeBalham,
+    alpine: themeAlpine,
+};
+const theme = themeQuartz;
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 
@@ -51,6 +55,5 @@ const gridOptions: GridOptions<IOlympicData> = {
 const gridApi = createGrid(document.querySelector<HTMLElement>('#myGrid')!, gridOptions);
 
 function setBaseTheme(id: string) {
-    const theme = baseThemes.find((theme) => theme.id === id)!;
-    gridApi.setGridOption('theme', theme);
+    gridApi.setGridOption('theme', themes[id]);
 }

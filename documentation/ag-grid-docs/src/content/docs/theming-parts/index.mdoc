@@ -8,7 +8,7 @@ Using parts you can, for example, select a text input style that matches you app
 
 ## Configuring Theme Parts
 
-To add a part to a theme, call the `theme.withPart(...)` method which returns a new theme using that part. A theme can only have one part for a given feature, so for example adding a `colorScheme` part will remove any existing `colorScheme` part.
+To add a part to a theme, call the `theme.withPart(...)` method which returns a new theme using that part. A theme can only have one part for a given feature, so for example because all color scheme parts have `feature: "colorScheme"`, adding a new color scheme to a theme will remove any existing part.
 
 The `theme.withPart(...)` method generates a new theme with the specified part:
 
@@ -57,10 +57,10 @@ The following parts are available:
 
 ## Removing a Part from a Built-in Theme
 
-Adding a part to a theme will remove any part of the same feature. So to remove a part, just add an empty part with the same feature name:
+Adding a part to a theme will remove any part of the same feature. So to remove a part, create an empty part with the same feature name:
 
 ```js
-const noCheckboxStyle = createPart('checkboxStyle');
+const noCheckboxStyle = createPart({ feature: 'checkboxStyle' });
 const myCustomTheme = themeQuartz.withPart(noCheckboxStyle);
 ```
 
