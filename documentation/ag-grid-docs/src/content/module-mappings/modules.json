@@ -6,7 +6,8 @@
         },
         {
             "moduleName": "AllEnterpriseModule",
-            "name": "All Enterprise Features"
+            "name": "All Enterprise Features",
+            "isEnterprise": true
         },
         {
             "moduleName": "ValidationModule",
