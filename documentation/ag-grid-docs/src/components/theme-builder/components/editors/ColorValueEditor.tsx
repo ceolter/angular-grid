@@ -3,7 +3,7 @@ import { FloatingPortal, autoPlacement, autoUpdate, offset, useFloating } from '
 import { useEffect, useRef, useState } from 'react';
 import { HexAlphaColorPicker, HexColorPicker } from 'react-colorful';
 
-import { type ColorValue, paramValueToCss } from 'ag-grid-community';
+import { _theming } from 'ag-grid-community';
 
 import { useClickAwayListener } from '../component-utils';
 import { Card } from '../general/Card';
@@ -11,10 +11,10 @@ import { Input } from './Input';
 import { RGBAColor } from './RGBAColor';
 import { type ValueEditorProps } from './ValueEditorProps';
 
-export const ColorValueEditor = ({ param, value, onChange }: ValueEditorProps<ColorValue>) => (
+export const ColorValueEditor = ({ param, value, onChange }: ValueEditorProps<_theming.ColorValue>) => (
     <ColorEditor
         preventTransparency={param.property === 'backgroundColor'}
-        value={paramValueToCss(param.property, value) || ''}
+        value={_theming.paramValueToCss(param.property, value) || ''}
         onChange={onChange}
     />
 );

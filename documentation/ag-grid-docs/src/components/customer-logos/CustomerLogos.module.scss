@@ -1,0 +1,57 @@
+@use 'design-system' as *;
+
+.customerLogosOuter {
+    text-align: center;
+}
+
+.customerLogos {
+    --overflow-width: 10vw;
+
+    position: relative;
+    width: calc(100% + var(--overflow-width) * 2);
+    height: 107px;
+    margin-left: calc(var(--overflow-width) * -1);
+    background-image: url(urlWithBaseUrl('/images/ag-grid-customer-logos.webp'));
+    background-size: auto 107px;
+    animation-name: customerMarquee;
+    animation-duration: 1600s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    @media screen and (min-width: $breakpoint-grid-homepage-medium) {
+        animation-duration: 400s;
+    }
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: var(--overflow-width);
+    }
+
+    &::before {
+        left: 0;
+        background-image: linear-gradient(90deg, var(--color-bg-primary), transparent);
+    }
+
+    &::after {
+        right: 0;
+        background-image: linear-gradient(90deg, transparent, var(--color-bg-primary));
+    }
+
+    @media screen and (max-width: $breakpoint-hero-small) {
+        margin: 0 auto;
+        width: 100%;
+        animation-duration: 1100s;
+    }
+}
+
+@keyframes customerMarquee {
+    from {
+        background-position-x: 0%;
+    }
+
+    to {
+        background-position-x: 5000%;
+    }
+}

@@ -1,9 +1,9 @@
-import { type BorderValue } from 'ag-grid-community';
+import type { _theming } from 'ag-grid-community';
 
 import { Checkbox } from '../general/Checkbox';
 import type { ValueEditorProps } from './ValueEditorProps';
 
-export const BorderValueEditor = ({ value, onChange }: ValueEditorProps<BorderValue>) => {
+export const BorderValueEditor = ({ value, onChange }: ValueEditorProps<_theming.BorderValue>) => {
     const checked = !!value;
     return (
         <Checkbox

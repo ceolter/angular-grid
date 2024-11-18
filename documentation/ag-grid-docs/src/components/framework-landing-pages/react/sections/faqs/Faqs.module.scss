@@ -5,11 +5,9 @@
     width: 100%;
     max-width: 1500px;
     justify-content: space-between;
-    padding: $spacing-size-5;
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {
         flex-direction: column;
-        padding: 0;
     }
 }
 
@@ -38,7 +36,7 @@
     justify-content: space-between;
     align-items: center;
     word-wrap: break-word;
-    padding: 10px;
+    padding: 10px 0;
     transition: border-color 0.3s ease;
 }
 

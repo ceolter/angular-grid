@@ -1,17 +1,16 @@
 import { createTheme } from '../../Theme';
 import { checkboxStyleDefault } from '../checkbox-style/checkbox-styles';
 import { colorSchemeVariable } from '../color-scheme/color-schemes';
-import { iconSetAlpine, iconSetQuartz } from '../icon-set/icon-sets';
+import { iconSetAlpine, iconSetQuartzRegular } from '../icon-set/icon-sets';
 import { inputStyleBordered } from '../input-style/input-styles';
 import { tabStyleAlpine, tabStyleQuartz, tabStyleRolodex } from '../tab-style/tab-styles';
 
-const createThemeWithDefaultWidgets = (name: string) => createTheme(name).withPart(checkboxStyleDefault);
-
 export const themeQuartz =
     /*#__PURE__*/
-    createThemeWithDefaultWidgets('quartz')
+    createTheme()
+        .withPart(checkboxStyleDefault)
         .withPart(colorSchemeVariable)
-        .withPart(iconSetQuartz)
+        .withPart(iconSetQuartzRegular)
         .withPart(tabStyleQuartz)
         .withPart(() => inputStyleBordered)
         .withParams({
@@ -28,7 +27,8 @@ export const themeQuartz =
 
 export const themeAlpine =
     /*#__PURE__*/
-    createThemeWithDefaultWidgets('alpine')
+    createTheme()
+        .withPart(checkboxStyleDefault)
         .withPart(colorSchemeVariable)
         .withPart(iconSetAlpine)
         .withPart(tabStyleAlpine)
@@ -54,7 +54,8 @@ export const themeAlpine =
 
 export const themeBalham =
     /*#__PURE__*/
-    createThemeWithDefaultWidgets('balham')
+    createTheme()
+        .withPart(checkboxStyleDefault)
         .withPart(colorSchemeVariable)
         .withPart(iconSetAlpine)
         .withPart(tabStyleRolodex)

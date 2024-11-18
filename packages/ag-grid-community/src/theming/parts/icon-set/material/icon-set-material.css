@@ -1,3 +1,7 @@
+/* disable autoprefix to prevent mask-image SVGs from being duplicated as -webkit-mask-image and doubling bundle size */
+
+/* autoprefixer: off */
+
 .ag-icon::before {
     content: '';
     display: block;

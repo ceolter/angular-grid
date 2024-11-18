@@ -69,7 +69,8 @@ export class Component<TLocalEvent extends string = ComponentEvent>
 
     public preConstruct(): void {
         this.wireTemplate(this.getGui());
-        this.css?.forEach((css) => this.beans.environment.addGlobalCSS(css));
+        const debugId = 'component-' + Object.getPrototypeOf(this)?.constructor?.name;
+        this.css?.forEach((css) => this.beans.environment.addGlobalCSS(css, debugId));
     }
 
     private wireTemplate(element: HTMLElement | undefined, paramsMap?: { [key: string]: any }): void {

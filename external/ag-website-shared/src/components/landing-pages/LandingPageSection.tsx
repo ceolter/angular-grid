@@ -1,3 +1,4 @@
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import classnames from 'classnames';
 import type { FunctionComponent, ReactNode } from 'react';
 
@@ -8,7 +9,9 @@ interface Props {
     heading?: string;
     headingHtml?: string;
     subHeading: string;
-    learnMoreUrl?: string;
+    learnMoreTitle?: string;
+    ctaTitle?: string;
+    ctaUrl?: string;
     sectionClass?: string;
     children: ReactNode;
 }
@@ -18,7 +21,8 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     heading,
     headingHtml,
     subHeading,
-    learnMoreUrl,
+    ctaTitle,
+    ctaUrl,
     sectionClass,
     children,
 }) => {
@@ -26,6 +30,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
         <div className={classnames(styles.sectionContent, sectionClass)}>
             <header className={styles.headingContainer}>
                 <h2 className={styles.tag}>{tag}</h2>
+
                 {headingHtml ? (
                     <h3
                         className={styles.heading}
@@ -34,10 +39,12 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                 ) : (
                     <h3 className={styles.heading}>{heading}</h3>
                 )}
+
                 <h4 className={styles.subHeading}>{subHeading}</h4>
-                {learnMoreUrl && (
-                    <a href={learnMoreUrl} className={classnames([styles.learnMoreButton, 'button-tertiary'])}>
-                        Learn more
+
+                {ctaUrl && (
+                    <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                        {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
                     </a>
                 )}
             </header>

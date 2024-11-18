@@ -12,7 +12,7 @@ import './style.css';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
-const noCheckboxStyle = createPart('checkboxStyle');
+const noCheckboxStyle = createPart({ feature: 'checkboxStyle' });
 
 const myCustomTheme = themeQuartz.withPart(noCheckboxStyle);
 

@@ -102,11 +102,6 @@ validatePackages()
       validateCommonDist "$current_root_dir"
 
       expected_umd=4
-      if [[ $directory = "ag-grid-enterprise" ]]
-      then
-        expected_umd=8
-      fi
-
       current_dist=$current_root_dir/dist
       count=`find $current_dist -maxdepth 1 -name *.js | wc -l | tr -d ' '`
       if [[ $count -ne $expected_umd ]]

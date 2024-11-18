@@ -2,13 +2,14 @@ import { atom, useAtom } from 'jotai';
 
 import type { Part } from 'ag-grid-community';
 import {
-    _asThemeImpl,
+    _theming,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    colorSchemeVariable,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -27,30 +28,12 @@ import type { PersistentAtom } from './JSONStorage';
 import { atomWithJSONStorage } from './JSONStorage';
 import { memoize, titleCase } from './utils';
 
-const partsByFeatureName: Record<string, Part<any>[] | undefined> = {
-    colorScheme: [
-        colorSchemeLightCold,
-        colorSchemeLight,
-        colorSchemeLightWarm,
-        colorSchemeDarkBlue,
-        colorSchemeDark,
-        colorSchemeDarkWarm,
-    ],
-    iconSet: [iconSetAlpine, iconSetMaterial, iconSetQuartzLight, iconSetQuartzRegular, iconSetQuartzBold],
-    tabStyle: [tabStyleQuartz, tabStyleAlpine, tabStyleMaterial, tabStyleRolodex],
-    inputStyle: [inputStyleBordered, inputStyleUnderlined],
-};
-
-export const getPartsByFeature = (featureName: string) => partsByFeatureName[featureName];
-
-const featureModels: Record<string, FeatureModel> = {};
-
 const partDocs: Record<string, string | undefined> = {
     tabStyle: 'The appearance of tabs in chart settings and legacy column menu',
     inputStyle: 'The appearance of text input fields',
 };
 
-const defaultPartIds = new Set(_asThemeImpl(themeQuartz).parts.map((dep) => dep.id));
+const quartzParts = new Set(_theming.asThemeImpl(themeQuartz).parts);
 
 export class FeatureModel {
     readonly label: string;
@@ -59,18 +42,24 @@ export class FeatureModel {
     readonly defaultPart: PartModel;
     readonly selectedPartAtom: PersistentAtom<PartModel>;
 
-    private constructor(readonly featureName: string) {
+    constructor(
+        readonly featureName: string,
+        parts: Record<string, Part>
+    ) {
         this.label = titleCase(featureName);
         this.docs = partDocs[featureName] || null;
-        const parts = partsByFeatureName[featureName];
-        if (!parts) throw new Error(`Invalid feature "${featureName}"`);
-        this.parts = parts.map((part) => new PartModel(this, part));
-        this.defaultPart = this.parts.find((v) => defaultPartIds.has(v.id)) || this.parts[0];
+        this.parts = Object.entries(parts).map(([variant, part]) => new PartModel(this, variant, part));
+        this.defaultPart = this.parts.find((pm) => quartzParts.has(pm.part))!;
+        if (!this.defaultPart) {
+            throw new Error(`Default part for quartz theme is not one of the options for ${featureName}`);
+        }
         this.selectedPartAtom = createSelectedPartAtom(this);
     }
 
-    static for(partID: string) {
-        return featureModels[partID] || (featureModels[partID] = new FeatureModel(partID));
+    static for(featureId: string) {
+        const featureModel = featureModels[featureId];
+        if (!featureModel) throw new Error(`Invalid feature ${featureId}`);
+        return featureModel;
     }
 }
 
@@ -91,18 +80,46 @@ const createSelectedPartAtom = (feature: FeatureModel) => {
 export class PartModel {
     readonly label: string;
     readonly id: string;
-    readonly variantName: string;
 
     constructor(
         readonly feature: FeatureModel,
+        readonly variantName: string,
         readonly part: Part<any>
     ) {
-        this.label = titleCase(part.variant);
-        this.variantName = part.variant;
-        this.id = part.id;
+        this.label = titleCase(variantName);
+        this.id = feature.featureName + '/' + variantName;
     }
 }
 
 const allFeatureNames = ['colorScheme', 'iconSet', 'tabStyle', 'inputStyle'];
 
 export const allFeatureModels = memoize(() => allFeatureNames.map(FeatureModel.for));
+
+const featureModels: Record<string, FeatureModel | undefined> = {
+    colorScheme: new FeatureModel('colorScheme', {
+        lightCold: colorSchemeLightCold,
+        light: colorSchemeLight,
+        lightWarm: colorSchemeLightWarm,
+        darkBlue: colorSchemeDarkBlue,
+        dark: colorSchemeDark,
+        darkWarm: colorSchemeDarkWarm,
+        variable: colorSchemeVariable,
+    }),
+    iconSet: new FeatureModel('iconSet', {
+        alpine: iconSetAlpine,
+        material: iconSetMaterial,
+        quartzLight: iconSetQuartzLight,
+        quartzRegular: iconSetQuartzRegular,
+        quartzBold: iconSetQuartzBold,
+    }),
+    tabStyle: new FeatureModel('tabStyle', {
+        quartz: tabStyleQuartz,
+        alpine: tabStyleAlpine,
+        material: tabStyleMaterial,
+        rolodex: tabStyleRolodex,
+    }),
+    inputStyle: new FeatureModel('inputStyle', {
+        bordered: inputStyleBordered,
+        underlined: inputStyleUnderlined,
+    }),
+};

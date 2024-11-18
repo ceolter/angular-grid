@@ -1371,9 +1371,9 @@
     "typesToInclude": []
   },
   "theme": {
-    "typeName": "GridTheme | 'legacy'",
+    "typeName": "Theme | 'legacy'",
     "typesToInclude": [
-      "GridTheme"
+      "Theme"
     ]
   },
   "loadThemeGoogleFonts": {

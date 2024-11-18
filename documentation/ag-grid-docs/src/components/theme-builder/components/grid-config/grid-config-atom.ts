@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react';
 import { atomWithJSONStorage } from '../../model/JSONStorage';
 import { type GridConfig, buildGridOptions, defaultConfigFields } from './grid-options';
 
-export const gridConfigAtom = atomWithJSONStorage<GridConfig>(
+const gridConfigAtom = atomWithJSONStorage<GridConfig>(
     'grid-config',
     Object.fromEntries(defaultConfigFields.map((field) => [field, true]))
 );

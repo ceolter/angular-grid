@@ -1,14 +1,15 @@
-import { computed, createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { computed, createApp, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDark,
-    colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    colorSchemeVariable,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -18,11 +19,13 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import {
+    ColumnsToolPanelModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    MenuModule,
+    SideBarModule,
+} from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
@@ -36,6 +39,32 @@ ModuleRegistry.registerModules([
     MenuModule,
 ]);
 
+const baseThemes = [
+    { id: 'themeQuartz', theme: themeQuartz },
+    { id: 'themeBalham', theme: themeBalham },
+    { id: 'themeAlpine', theme: themeAlpine },
+];
+
+const colorSchemes = [
+    { id: '(unchanged)', part: null },
+    { id: 'colorSchemeLight', part: colorSchemeLight },
+    { id: 'colorSchemeLightCold', part: colorSchemeLightCold },
+    { id: 'colorSchemeLightWarm', part: colorSchemeLightWarm },
+    { id: 'colorSchemeDark', part: colorSchemeDark },
+    { id: 'colorSchemeDarkWarm', part: colorSchemeDarkWarm },
+    { id: 'colorSchemeDarkBlue', part: colorSchemeDark },
+    { id: 'colorSchemeVariable', part: colorSchemeVariable },
+];
+
+const iconSets = [
+    { id: '(unchanged)', part: null },
+    { id: 'iconSetQuartzLight', part: iconSetQuartzLight },
+    { id: 'iconSetQuartzRegular', part: iconSetQuartzRegular },
+    { id: 'iconSetQuartzBold', part: iconSetQuartzBold },
+    { id: 'iconSetAlpine', part: iconSetAlpine },
+    { id: 'iconSetMaterial', part: iconSetMaterial },
+];
+
 const VueExample = {
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
@@ -46,11 +75,11 @@ const VueExample = {
                 </select>
                 Icons:
                 <select style="margin-right: 16px" v-model="iconSet">
-                    <option v-for="iconSet in iconSets" :value="iconSet">{{ iconSet ? iconSet.variant : '(unchanged)' }}</option>
+                    <option v-for="iconSet in iconSets" :value="iconSet">{{ iconSet.id }}</option>
                 </select>
                 Color scheme:
                 <select style="margin-right: 16px" v-model="colorScheme">
-                    <option v-for="colorScheme in colorSchemes" :value="colorScheme">{{ colorScheme ? colorScheme.variant : '(unchanged)' }}</option>
+                    <option v-for="colorScheme in colorSchemes" :value="colorScheme">{{ colorScheme.id }}</option>
                 </select>
             </p>
             <div style="flex: 1 1 0%">
@@ -69,41 +98,26 @@ const VueExample = {
         'ag-grid-vue': AgGridVue,
     },
     setup(props) {
-        const baseTheme = ref(themeQuartz);
-        const iconSet = ref(null);
-        const colorScheme = ref(null);
+        const baseTheme = ref(baseThemes[0]);
+        const iconSet = ref(iconSets[0]);
+        const colorScheme = ref(colorSchemes[0]);
         return {
             baseTheme,
-            baseThemes: [themeQuartz, themeBalham, themeAlpine],
+            baseThemes,
 
             iconSet,
-            iconSets: [
-                null,
-                iconSetQuartzLight,
-                iconSetQuartzRegular,
-                iconSetQuartzBold,
-                iconSetAlpine,
-                iconSetMaterial,
-            ],
+            iconSets,
 
-            colorSchemes: [
-                null,
-                colorSchemeLight,
-                colorSchemeLightCold,
-                colorSchemeLightWarm,
-                colorSchemeDark,
-                colorSchemeDarkWarm,
-                colorSchemeDarkBlue,
-            ],
+            colorSchemes,
             colorScheme,
 
             theme: computed(() => {
-                let theme = baseTheme.value;
-                if (colorScheme.value) {
-                    theme = theme.withPart(colorScheme.value);
+                let theme = baseTheme.value.theme;
+                if (colorScheme.value.part) {
+                    theme = theme.withPart(colorScheme.value.part);
                 }
-                if (iconSet.value) {
-                    theme = theme.withPart(iconSet.value);
+                if (iconSet.value.part) {
+                    theme = theme.withPart(iconSet.value.part);
                 }
                 return theme;
             }),
