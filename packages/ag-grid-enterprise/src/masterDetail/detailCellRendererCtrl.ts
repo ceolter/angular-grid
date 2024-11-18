@@ -130,10 +130,14 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
                 return;
             }
 
+            const { rowSelection } = this.params.detailGridOptions;
+            const selectAllMode =
+                (typeof rowSelection !== 'string' && rowSelection?.mode === 'multiRow' && rowSelection.selectAll) ||
+                undefined;
             if (e.node.isSelected()) {
-                api.selectAll();
+                api.selectAll(selectAllMode);
             } else {
-                api.deselectAll();
+                api.deselectAll(selectAllMode);
             }
         });
 
