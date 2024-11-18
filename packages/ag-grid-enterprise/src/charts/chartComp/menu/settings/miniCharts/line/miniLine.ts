@@ -1,7 +1,6 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { createLinePaths } from '../miniChartHelpers';
@@ -10,7 +9,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniLine extends MiniChartWithAxes {
     static chartType: ChartType = 'line';
 
-    protected lines: _Scene.Path[];
+    protected lines: any[];
 
     static readonly data = [
         [1, 3, 5],
@@ -20,6 +19,7 @@ export class MiniLine extends MiniChartWithAxes {
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -27,15 +27,16 @@ export class MiniLine extends MiniChartWithAxes {
         data: number[][] = MiniLine.data,
         tooltipName: ChartTranslationKey = 'lineTooltip'
     ) {
-        super(container, tooltipName);
+        super(container, agChartsExports, tooltipName);
 
-        this.lines = createLinePaths(this.root, data, this.size, this.padding);
+        const { size, padding, root } = this;
+        this.lines = createLinePaths(agChartsExports, root, data, size, padding);
 
         this.updateColors(fills, strokes);
     }
 
     updateColors(fills: string[], _strokes: string[]) {
-        this.lines.forEach((line: _Scene.Path, i: number) => {
+        this.lines.forEach((line: any, i: number) => {
             line.stroke = fills[i];
         });
     }

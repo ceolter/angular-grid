@@ -2,7 +2,7 @@ import type { MockInstance } from 'vitest';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
+import { CellSelectionModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager } from '../test-utils';
 import { assertSelectedCellRanges } from './utils';
@@ -12,7 +12,7 @@ describe('Cell Selection Grid API', () => {
     let consoleWarnSpy: MockInstance;
 
     const gridMgr = new TestGridsManager({
-        modules: [ClientSideRowModelModule, RangeSelectionModule],
+        modules: [ClientSideRowModelModule, CellSelectionModule],
     });
 
     function createGrid(go: GridOptions): GridApi {

@@ -45,15 +45,14 @@ export class DateCompWrapper {
 
             eParent.appendChild(dateComp.getGui());
 
-            if (dateComp.afterGuiAttached) {
-                dateComp.afterGuiAttached();
-            }
+            dateComp?.afterGuiAttached?.();
 
-            if (this.tempValue) {
-                dateComp.setDate(this.tempValue);
+            const { tempValue, disabled } = this;
+            if (tempValue) {
+                dateComp.setDate(tempValue);
             }
-            if (this.disabled != null) {
-                this.setDateCompDisabled(this.disabled);
+            if (disabled != null) {
+                dateComp.setDisabled?.(disabled);
             }
 
             onReady?.(this);
@@ -70,16 +69,18 @@ export class DateCompWrapper {
     }
 
     public setDate(value: Date | null): void {
-        if (this.dateComp) {
-            this.dateComp.setDate(value);
+        const dateComp = this.dateComp;
+        if (dateComp) {
+            dateComp.setDate(value);
         } else {
             this.tempValue = value;
         }
     }
 
     public setDisabled(disabled: boolean): void {
-        if (this.dateComp) {
-            this.setDateCompDisabled(disabled);
+        const dateComp = this.dateComp;
+        if (dateComp) {
+            dateComp.setDisabled?.(disabled);
         } else {
             this.disabled = disabled;
         }
@@ -90,37 +91,18 @@ export class DateCompWrapper {
     }
 
     public setInputPlaceholder(placeholder: string): void {
-        if (this.dateComp && this.dateComp.setInputPlaceholder) {
-            this.dateComp.setInputPlaceholder(placeholder);
-        }
+        this.dateComp?.setInputPlaceholder?.(placeholder);
     }
 
     public setInputAriaLabel(label: string): void {
-        if (this.dateComp && this.dateComp.setInputAriaLabel) {
-            this.dateComp.setInputAriaLabel(label);
-        }
+        this.dateComp?.setInputAriaLabel?.(label);
     }
 
     public afterGuiAttached(params?: IAfterGuiAttachedParams): void {
-        if (this.dateComp && typeof this.dateComp.afterGuiAttached === 'function') {
-            this.dateComp.afterGuiAttached(params);
-        }
+        this.dateComp?.afterGuiAttached?.(params);
     }
 
     public updateParams(params: IDateParams): void {
-        if (this.dateComp?.refresh && typeof this.dateComp.refresh === 'function') {
-            this.dateComp.refresh(params);
-        }
-    }
-
-    private setDateCompDisabled(disabled: boolean): void {
-        if (this.dateComp == null) {
-            return;
-        }
-        if (this.dateComp.setDisabled == null) {
-            return;
-        }
-
-        this.dateComp.setDisabled(disabled);
+        this.dateComp?.refresh?.(params);
     }
 }

@@ -1,10 +1,15 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { GridApi, GridOptions, createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ColumnsToolPanelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ColumnsToolPanelModule,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

@@ -1,5 +1,5 @@
 import type { _AdvancedFilterGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { DragAndDropModule, FilterCoreModule, FilterValueModule, PopupModule } from 'ag-grid-community';
+import { _FilterCoreModule, _FilterValueModule, _PopupModule, _SharedDragAndDropModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -46,6 +46,6 @@ export const AdvancedFilterModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
         showAdvancedFilterBuilder,
         hideAdvancedFilterBuilder,
     },
-    dependsOn: [EnterpriseCoreModule, FilterCoreModule, DragAndDropModule, PopupModule, FilterValueModule],
+    dependsOn: [EnterpriseCoreModule, _FilterCoreModule, _SharedDragAndDropModule, _PopupModule, _FilterValueModule],
     css: [advancedFilterCSS],
 };

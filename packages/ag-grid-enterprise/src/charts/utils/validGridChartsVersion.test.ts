@@ -122,6 +122,7 @@ describe.each([
         message: validGridChartsVersionErrorMessage({
             type: 'invalidCharts', // NOTE: Can still have a grid error message since there is a grid version
             gridVersion: '29.0.0',
+            chartsVersion: 'something.weird',
         }),
     },
     { gridVersion: '31.3.0', chartsVersion: '9.3.0-beta.20240423', isValid: true },

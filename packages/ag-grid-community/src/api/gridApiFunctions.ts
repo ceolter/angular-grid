@@ -1,4 +1,4 @@
-import type { ModuleName } from '../interfaces/iModule';
+import type { ValidationModuleName } from '../interfaces/iModule';
 import type {
     GridApi,
     _AdvancedFilterGridApi,
@@ -24,7 +24,6 @@ import type {
     _EventGridApi,
     _ExcelExportGridApi,
     _FilterGridApi,
-    _GetColumnDefsApi,
     _GridChartsGridApi,
     _InfiniteRowModelGridApi,
     _KeyboardNavigationGridApi,
@@ -51,16 +50,16 @@ import type {
 } from './gridApi';
 
 const mod = <TGridApi extends Partial<GridApi>>(
-    moduleName: ModuleName,
+    moduleName: ValidationModuleName,
     input: Record<keyof TGridApi, 0>
-): Record<keyof TGridApi, ModuleName> => {
+): Record<keyof TGridApi, ValidationModuleName> => {
     for (const key of Object.keys(input)) {
         (input as any)[key] = moduleName;
     }
     return input as any;
 };
 
-export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
+export const gridApiFunctionsMap: Record<keyof GridApi, ValidationModuleName> = {
     dispatchEvent: 'CommunityCoreModule', // this is always registered
     ...mod<_CoreGridApi<any>>('CommunityCoreModule', {
         destroy: 0,
@@ -70,10 +69,10 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         setGridOption: 0,
         updateGridOptions: 0,
     }),
-    ...mod<_StateGridApi>('StateModule', {
+    ...mod<_StateGridApi>('GridStateModule', {
         getState: 0,
     }),
-    ...mod<_RowSelectionGridApi<any>>('RowSelectionApiModule', {
+    ...mod<_RowSelectionGridApi<any>>('SharedRowSelectionModule', {
         setNodesSelected: 0,
         selectAll: 0,
         deselectAll: 0,
@@ -127,7 +126,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         showColumnMenu: 0,
         hidePopupMenu: 0,
     }),
-    ...mod<_SortGridApi>('SortCoreModule', {
+    ...mod<_SortGridApi>('SortModule', {
         onSortChanged: 0,
     }),
     ...mod<_PinnedRowGridApi>('PinnedRowModule', {
@@ -136,7 +135,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getPinnedTopRow: 0,
         getPinnedBottomRow: 0,
     }),
-    ...mod<_OverlayGridApi>('OverlayCoreModule', {
+    ...mod<_OverlayGridApi>('OverlayModule', {
         showLoadingOverlay: 0,
         showNoRowsOverlay: 0,
         hideOverlay: 0,
@@ -156,10 +155,8 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         removeRowDropZone: 0,
         getRowDropZoneParams: 0,
     }),
-    ...mod<_GetColumnDefsApi<any>>('GetColumnDefsApiModule', {
-        getColumnDefs: 0,
-    }),
     ...mod<_ColumnGridApi<any>>('ColumnApiModule', {
+        getColumnDefs: 0,
         getColumnDef: 0,
         getDisplayNameForColumn: 0,
         getColumn: 0,
@@ -181,7 +178,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getAllDisplayedColumns: 0,
         getAllDisplayedVirtualColumns: 0,
     }),
-    ...mod<_ColumnAutosizeApi>('ColumnAutosizeModule', {
+    ...mod<_ColumnAutosizeApi>('ColumnAutoSizeModule', {
         sizeColumnsToFit: 0,
         autoSizeColumns: 0,
         autoSizeAllColumns: 0,
@@ -282,7 +279,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         exportDataAsCsv: 0,
     }),
 
-    ...mod<_InfiniteRowModelGridApi>('InfiniteRowModelApiModule', {
+    ...mod<_InfiniteRowModelGridApi>('InfiniteRowModelModule', {
         refreshInfiniteCache: 0,
         purgeInfiniteCache: 0,
         getInfiniteRowCount: 0,
@@ -295,7 +292,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         hideAdvancedFilterBuilder: 0,
     }),
 
-    ...mod<_GridChartsGridApi>('GridChartsModule', {
+    ...mod<_GridChartsGridApi>('IntegratedChartsModule', {
         getChartModels: 0,
         getChartRef: 0,
         getChartImageDataURL: 0,
@@ -326,7 +323,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         exportMultipleSheetsAsExcel: 0,
     }),
 
-    ...mod<_MasterDetailGridApi>('MasterDetailCoreModule', {
+    ...mod<_MasterDetailGridApi>('SharedMasterDetailModule', {
         addDetailGridInfo: 0,
         removeDetailGridInfo: 0,
         getDetailGridInfo: 0,
@@ -337,19 +334,19 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         showContextMenu: 0,
     }),
 
-    ...mod<_ColumnChooserGridApi>('ColumnChooserModule', {
+    ...mod<_ColumnChooserGridApi>('ColumnMenuModule', {
         showColumnChooser: 0,
         hideColumnChooser: 0,
     }),
 
-    ...mod<_CellSelectionGridApi>('CellSelectionCoreModule', {
+    ...mod<_CellSelectionGridApi>('CellSelectionModule', {
         getCellRanges: 0,
         addCellRange: 0,
         clearRangeSelection: 0,
         clearCellSelection: 0,
     }),
 
-    ...mod<_RowGroupingGridApi>('RowGroupingCoreModule', {
+    ...mod<_RowGroupingGridApi>('SharedRowGroupingModule', {
         setRowGroupColumns: 0,
         removeRowGroupColumns: 0,
         addRowGroupColumns: 0,
@@ -357,13 +354,13 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         moveRowGroupColumn: 0,
     }),
 
-    ...mod<_AggregationGridApi<any>>('AggregationModule', {
+    ...mod<_AggregationGridApi<any>>('SharedAggregationModule', {
         addAggFuncs: 0,
         clearAggFuncs: 0,
         setColumnAggFunc: 0,
     }),
 
-    ...mod<_PivotGridApi<any>>('PivotCoreModule', {
+    ...mod<_PivotGridApi<any>>('SharedPivotModule', {
         isPivotMode: 0,
         getPivotResultColumn: 0,
         setValueColumns: 0,
@@ -403,7 +400,7 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ModuleName> = {
         getSideBar: 0,
     }),
 
-    ...mod<_StatusBarGridApi>('StatusBarCoreModule', {
+    ...mod<_StatusBarGridApi>('StatusBarModule', {
         getStatusPanel: 0,
     }),
 };

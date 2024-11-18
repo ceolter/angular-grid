@@ -10,7 +10,8 @@
  * Usage: node ./watch [charts|grid]
  */
 const { spawn } = require('child_process');
-const fs = require('node:fs/promises');
+const fsp = require('node:fs/promises');
+const fs = require('node:fs');
 const path = require('path');
 const { QUIET_PERIOD_MS, BATCH_LIMIT, PROJECT_ECHO_LIMIT, NX_ARGS, BUILD_QUEUE_EMPTY_FILE } = require('./constants');
 const chartsConfig = require('./chartsWatch.config');
@@ -244,15 +245,15 @@ async function build() {
 async function touchBuildQueueEmptyFile() {
     try {
         const time = new Date();
-        await fs.utimes(BUILD_QUEUE_EMPTY_FILE, time, time);
+        await fsp.utimes(BUILD_QUEUE_EMPTY_FILE, time, time);
     } catch (err) {
         if ('ENOENT' !== err.code) {
             throw err;
         }
 
         const dirPath = path.dirname(BUILD_QUEUE_EMPTY_FILE);
-        await fs.mkdir(dirPath, { recursive: true });
-        const fh = await fs.open(BUILD_QUEUE_EMPTY_FILE, 'a');
+        await fsp.mkdir(dirPath, { recursive: true });
+        const fh = await fsp.open(BUILD_QUEUE_EMPTY_FILE, 'a');
         await fh.close();
     }
 }
@@ -260,6 +261,17 @@ async function touchBuildQueueEmptyFile() {
 const CONSECUTIVE_RESPAWN_THRESHOLD_MS = 500;
 async function run(config) {
     const { ignoredProjects, getProjectBuildTargets } = config;
+
+    for (const { file, projects } of config.externalBuildTriggers ?? []) {
+        if (!fs.existsSync(file)) continue;
+
+        info(`Watching [${file}] for changes, affecting [${projects.join(' ')}]`);
+        fs.watch(file, () => {
+            for (const project of projects) {
+                processWatchOutput({ project, getProjectBuildTargets });
+            }
+        });
+    }
 
     let lastRespawn;
     let consecutiveRespawns = 0;

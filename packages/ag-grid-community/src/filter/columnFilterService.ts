@@ -1,15 +1,12 @@
-import type { ColumnModel } from '../columns/columnModel';
-import type { DataTypeService } from '../columns/dataTypeService';
 import { _unwrapUserComp } from '../components/framework/unwrapUserComp';
 import {
     _getFilterDetails,
     _getFloatingFilterCompDetails,
     _mergeFilterParamsWithApplicationProvidedParams,
 } from '../components/framework/userCompUtils';
-import type { UserComponentFactory } from '../components/framework/userComponentFactory';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection, BeanName } from '../context/context';
+import type { BeanName } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { ColDef, ValueFormatterParams, ValueGetterParams } from '../entities/colDef';
 import type {
@@ -20,18 +17,12 @@ import type {
 import type { RowNode } from '../entities/rowNode';
 import type { ColumnEventType, FilterChangedEventSourceType } from '../events';
 import { _getGroupAggFiltering, _isSetFilterByDefault } from '../gridOptionsUtils';
-import type { IAutoColService } from '../interfaces/iAutoColService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { FilterModel, IFilter, IFilterComp, IFilterParams } from '../interfaces/iFilter';
-import type { IRowModel } from '../interfaces/iRowModel';
 import type { UserCompDetails } from '../interfaces/iUserCompDetails';
-import type { RowRenderer } from '../rendering/rowRenderer';
 import { _exists, _jsonEquals } from '../utils/generic';
 import { AgPromise } from '../utils/promise';
 import { _error, _warn } from '../validation/logging';
-import type { ValueService } from '../valueService/valueService';
-import type { FilterManager } from './filterManager';
-import type { FilterValueService } from './filterValueService';
 import type { IFloatingFilterParams, IFloatingFilterParentCallback } from './floating/floatingFilter';
 import { _getDefaultFloatingFilterType } from './floating/floatingFilterMapper';
 
@@ -77,28 +68,6 @@ function setFilterNumberComparator(a: string, b: string): number {
 export class ColumnFilterService extends BeanStub implements NamedBean {
     beanName: BeanName = 'colFilter';
 
-    private valueSvc: ValueService;
-    private colModel: ColumnModel;
-    private rowModel: IRowModel;
-    private userCompFactory: UserComponentFactory;
-    private rowRenderer: RowRenderer;
-    private dataTypeSvc?: DataTypeService;
-    private filterManager?: FilterManager;
-    private filterValueSvc: FilterValueService;
-    private autoColSvc?: IAutoColService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.valueSvc = beans.valueSvc;
-        this.colModel = beans.colModel;
-        this.rowModel = beans.rowModel;
-        this.userCompFactory = beans.userCompFactory;
-        this.rowRenderer = beans.rowRenderer;
-        this.dataTypeSvc = beans.dataTypeSvc;
-        this.filterManager = beans.filterManager;
-        this.filterValueSvc = beans.filterValueSvc!;
-        this.autoColSvc = beans.autoColSvc;
-    }
-
     private allColumnFilters = new Map<string, FilterWrapper>();
     private allColumnListeners = new Map<string, (() => null) | undefined>();
     private activeAggregateFilters: IFilterComp[] = [];
@@ -135,7 +104,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public setFilterModel(model: FilterModel | null, source: FilterChangedEventSourceType = 'api'): void {
-        if (this.dataTypeSvc?.isPendingInference()) {
+        const { colModel, dataTypeSvc, filterManager } = this.beans;
+        if (dataTypeSvc?.isPendingInference()) {
             this.filterModelUpdateQueue.push({ model, source });
             return;
         }
@@ -150,13 +120,13 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             this.allColumnFilters.forEach((filterWrapper, colId) => {
                 const newModel = model[colId];
 
-                allPromises.push(this.setModelOnFilterWrapper(filterWrapper.filterPromise!, newModel));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, newModel));
                 modelKeys.delete(colId);
             });
 
             // at this point, processedFields contains data for which we don't have a filter working yet
             modelKeys.forEach((colId) => {
-                const column = this.colModel.getColDefCol(colId) || this.colModel.getCol(colId);
+                const column = colModel.getColDefCol(colId) || colModel.getCol(colId);
 
                 if (!column) {
                     _warn(62, { colId });
@@ -173,11 +143,11 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                     _warn(64, { colId });
                     return;
                 }
-                allPromises.push(this.setModelOnFilterWrapper(filterWrapper.filterPromise!, model[colId]));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, model[colId]));
             });
         } else {
             this.allColumnFilters.forEach((filterWrapper) => {
-                allPromises.push(this.setModelOnFilterWrapper(filterWrapper.filterPromise!, null));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, null));
             });
         }
 
@@ -195,28 +165,19 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             });
 
             if (columns.length > 0) {
-                this.filterManager?.onFilterChanged({ columns, source });
+                filterManager?.onFilterChanged({ columns, source });
             }
-        });
-    }
-
-    private setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp>, newModel: any): AgPromise<void> {
-        return new AgPromise<void>((resolve) => {
-            filterPromise.then((filter) => {
-                if (typeof filter!.setModel !== 'function') {
-                    _warn(65);
-                    resolve();
-                }
-
-                (filter!.setModel(newModel) || AgPromise.resolve()).then(() => resolve());
-            });
         });
     }
 
     public getFilterModel(excludeInitialState?: boolean): FilterModel {
         const result: FilterModel = {};
 
-        const { allColumnFilters, initialFilterModel } = this;
+        const {
+            allColumnFilters,
+            initialFilterModel,
+            beans: { colModel },
+        } = this;
 
         allColumnFilters.forEach((filterWrapper, key) => {
             const model = this.getModelFromFilterWrapper(filterWrapper);
@@ -228,7 +189,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
         if (!excludeInitialState) {
             Object.entries(initialFilterModel).forEach(([colId, model]) => {
-                if (_exists(model) && !allColumnFilters.has(colId) && this.colModel.getCol(colId)?.isFilterAllowed()) {
+                if (_exists(model) && !allColumnFilters.has(colId) && colModel.getCol(colId)?.isFilterAllowed()) {
                     result[colId] = model;
                 }
             });
@@ -265,8 +226,9 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public disableColumnFilters(): boolean {
-        if (this.allColumnFilters.size) {
-            this.allColumnFilters.forEach((filterWrapper) =>
+        const { allColumnFilters } = this;
+        if (allColumnFilters.size) {
+            allColumnFilters.forEach((filterWrapper) =>
                 this.disposeFilterWrapper(filterWrapper, 'advancedFilterEnabled')
             );
             return true;
@@ -290,7 +252,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             return filter.isFilterActive();
         };
 
-        const groupFilterEnabled = !!_getGroupAggFiltering(this.gos);
+        const { colModel, gos } = this.beans;
+        const groupFilterEnabled = !!_getGroupAggFiltering(gos);
 
         const isAggFilter = (column: AgColumn) => {
             const isSecondary = !column.isPrimary();
@@ -299,7 +262,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 return true;
             }
 
-            const isShowingPrimaryColumns = !this.colModel.isPivotActive();
+            const isShowingPrimaryColumns = !colModel.isPivotActive();
             const isValueActive = column.isValueActive();
 
             // primary columns are only ever groupAgg filters if a) value is active and b) showing primary columns
@@ -308,7 +271,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             }
 
             // from here on we know: isPrimary=true, isValueActive=true, isShowingPrimaryColumns=true
-            if (this.colModel.isPivotMode()) {
+            if (colModel.isPivotMode()) {
                 // primary column is pretending to be a pivot column, ie pivotMode=true, but we are
                 // still showing primary columns
                 return true;
@@ -392,12 +355,13 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         additionalEventAttributes?: any;
         columns?: AgColumn[];
     }): void {
+        const { rowRenderer, filterManager } = this.beans;
         const action = () => {
             if (this.isAlive()) {
-                this.filterManager?.onFilterChanged(params);
+                filterManager?.onFilterChanged(params);
             }
         };
-        if (this.rowRenderer.isRefreshInProgress()) {
+        if (rowRenderer.isRefreshInProgress()) {
             setTimeout(action, 0);
         } else {
             action();
@@ -453,9 +417,10 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     private createGetValue(filterColumn: AgColumn): IFilterParams['getValue'] {
+        const { filterValueSvc, colModel } = this.beans;
         return (rowNode, column) => {
-            const columnToUse = column ? this.colModel.getCol(column) : filterColumn;
-            return columnToUse ? this.filterValueSvc.getValue(columnToUse, rowNode) : undefined;
+            const columnToUse = column ? colModel.getCol(column) : filterColumn;
+            return columnToUse ? filterValueSvc!.getValue(columnToUse, rowNode) : undefined;
         };
     }
 
@@ -489,10 +454,11 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private getDefaultFilter(column: AgColumn): string {
         let defaultFilter;
-        if (_isSetFilterByDefault(this.gos)) {
+        const { gos, dataTypeSvc } = this.beans;
+        if (_isSetFilterByDefault(gos)) {
             defaultFilter = 'agSetColumnFilter';
         } else {
-            const cellDataType = this.dataTypeSvc?.getBaseDataType(column);
+            const cellDataType = dataTypeSvc?.getBaseDataType(column);
             if (cellDataType === 'number') {
                 defaultFilter = 'agNumberColumnFilter';
             } else if (cellDataType === 'date' || cellDataType === 'dateString') {
@@ -506,10 +472,11 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     public getDefaultFloatingFilter(column: AgColumn): string {
         let defaultFloatingFilterType: string;
-        if (_isSetFilterByDefault(this.gos)) {
+        const { gos, dataTypeSvc } = this.beans;
+        if (_isSetFilterByDefault(gos)) {
             defaultFloatingFilterType = 'agSetColumnFloatingFilter';
         } else {
-            const cellDataType = this.dataTypeSvc?.getBaseDataType(column);
+            const cellDataType = dataTypeSvc?.getBaseDataType(column);
             if (cellDataType === 'number') {
                 defaultFloatingFilterType = 'agNumberColumnFloatingFilter';
             } else if (cellDataType === 'date' || cellDataType === 'dateString') {
@@ -533,17 +500,16 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         const colDef = column.getColDef();
 
         let filterInstance: IFilterComp;
-
         const params: IFilterParams = {
             ...this.createFilterParams(column, colDef),
             filterModifiedCallback: () => this.filterModifiedCallbackFactory(filterInstance, column)(),
             filterChangedCallback: (additionalEventAttributes?: any) =>
                 this.filterChangedCallbackFactory(filterInstance, column)(additionalEventAttributes),
             doesRowPassOtherFilter: (node) =>
-                this.filterManager ? this.filterManager.doesRowPassOtherFilters(filterInstance, node) : true,
+                this.beans.filterManager?.doesRowPassOtherFilters(filterInstance, node) ?? true,
         };
 
-        const compDetails = _getFilterDetails(this.userCompFactory, colDef, params, defaultFilter);
+        const compDetails = _getFilterDetails(this.beans.userCompFactory, colDef, params, defaultFilter);
         if (!compDetails) {
             return { filterPromise: null, compDetails: null };
         }
@@ -566,7 +532,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         const params: IFilterParams = this.gos.addGridCommonParams({
             column,
             colDef,
-            rowModel: this.rowModel,
+            rowModel: this.beans.rowModel,
             filterChangedCallback: () => {},
             filterModifiedCallback: () => {},
             getValue: this.createGetValue(column),
@@ -593,13 +559,14 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private onColumnsChanged(): void {
         const columns: AgColumn[] = [];
+        const { colModel, filterManager } = this.beans;
 
         this.allColumnFilters.forEach((wrapper, colId) => {
             let currentColumn: AgColumn | null;
             if (wrapper.column.isPrimary()) {
-                currentColumn = this.colModel.getColDefCol(colId);
+                currentColumn = colModel.getColDefCol(colId);
             } else {
-                currentColumn = this.colModel.getCol(colId);
+                currentColumn = colModel.getCol(colId);
             }
             // group columns can be recreated with the same colId
             if (currentColumn && currentColumn === wrapper.column) {
@@ -618,7 +585,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         if (columns.length > 0 && !allFiltersAreGroupFilters) {
             // When a filter changes as a side effect of a column changes,
             // we report 'api' as the source, so that the client can distinguish
-            this.filterManager?.onFilterChanged({ columns, source: 'api' });
+            filterManager?.onFilterChanged({ columns, source: 'api' });
         } else {
             // onFilterChanged does this already
             this.updateDependentFilters();
@@ -628,7 +595,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     private updateDependentFilters(): void {
         // Group column filters can be dependant on underlying column filters, but don't normally get created until they're used for the first time.
         // Instead, create them by default when any filter changes.
-        this.autoColSvc?.getAutoCols()?.forEach((groupColumn) => {
+        this.beans.autoColSvc?.getAutoCols()?.forEach((groupColumn) => {
             if (groupColumn.getColDef().filter === 'agGroupColumnFilter') {
                 this.getOrCreateFilterWrapper(groupColumn);
             }
@@ -670,13 +637,14 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                     this.filterChangedCallbackFactory(filterInstance as IFilterComp, column)()
                 ),
         };
+        const { userCompFactory, frameworkOverrides } = this.beans;
         const finalFilterParams = _mergeFilterParamsWithApplicationProvidedParams(
-            this.userCompFactory,
+            userCompFactory,
             colDef,
             filterParams
         );
 
-        let defaultFloatingFilterType = _getDefaultFloatingFilterType(this.beans.frameworkOverrides, colDef, () =>
+        let defaultFloatingFilterType = _getDefaultFloatingFilterType(frameworkOverrides, colDef, () =>
             this.getDefaultFloatingFilter(column)
         );
 
@@ -692,7 +660,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             showParentFilter,
         };
 
-        return _getFloatingFilterCompDetails(this.userCompFactory, colDef, params, defaultFloatingFilterType);
+        return _getFloatingFilterCompDetails(userCompFactory, colDef, params, defaultFloatingFilterType);
     }
 
     public getCurrentFloatingFilterParentModel(column: AgColumn): any {
@@ -710,7 +678,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
         if (filterWrapper) {
             this.disposeFilterWrapper(filterWrapper, source);
-            this.filterManager?.onFilterChanged({
+            this.beans.filterManager?.onFilterChanged({
                 columns: [column],
                 source: 'api',
             });
@@ -794,6 +762,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         // Otherwise - Check for refresh method before destruction
         // If refresh() method is implemented - call it and destroy filter if it returns false
         // Otherwise - do nothing ( filter will not be destroyed - we assume new params are compatible with old ones )
+
         filterWrapper.filterPromise.then((filter) => {
             const shouldRefreshFilter = filter?.refresh
                 ? filter.refresh({
@@ -801,7 +770,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                       filterModifiedCallback: this.filterModifiedCallbackFactory(filter, column),
                       filterChangedCallback: this.filterChangedCallbackFactory(filter, column),
                       doesRowPassOtherFilter: (node) =>
-                          this.filterManager ? this.filterManager.doesRowPassOtherFilters(filter, node) : true,
+                          this.beans.filterManager?.doesRowPassOtherFilters(filter, node) ?? true,
                       ...newFilterParams,
                   })
                 : true;
@@ -840,7 +809,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public hasFloatingFilters(): boolean {
-        const gridColumns = this.colModel.getCols();
+        const gridColumns = this.beans.colModel.getCols();
         return gridColumns.some((col) => col.getColDef().floatingFilter);
     }
 
@@ -855,7 +824,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     private getFilterInstanceImpl(key: string | AgColumn): AgPromise<IFilter | null | undefined> {
-        const column = this.colModel.getColDefCol(key);
+        const column = this.beans.colModel.getColDefCol(key);
 
         if (!column) {
             return AgPromise.resolve(undefined);
@@ -880,7 +849,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 
     public setColumnFilterModel(key: string | AgColumn, model: any): Promise<void> {
-        if (this.dataTypeSvc?.isPendingInference()) {
+        const { colModel, dataTypeSvc } = this.beans;
+        if (dataTypeSvc?.isPendingInference()) {
             let resolve: () => void = () => {};
             const promise = new Promise<void>((res) => {
                 resolve = res;
@@ -889,7 +859,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             return promise;
         }
 
-        const column = this.colModel.getColDefCol(key);
+        const column = colModel.getColDefCol(key);
         const filterWrapper = column ? this.getOrCreateFilterWrapper(column) : null;
         const convertPromise = <T>(promise: AgPromise<T>): Promise<T> => {
             return new Promise((resolve) => {
@@ -897,12 +867,12 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             });
         };
         return filterWrapper
-            ? convertPromise(this.setModelOnFilterWrapper(filterWrapper.filterPromise!, model))
+            ? convertPromise(setModelOnFilterWrapper(filterWrapper.filterPromise!, model))
             : Promise.resolve();
     }
 
     private getFilterWrapper(key: string | AgColumn): FilterWrapper | null {
-        const column = this.colModel.getColDefCol(key);
+        const column = this.beans.colModel.getColDefCol(key);
         return column ? this.cachedFilter(column) ?? null : null;
     }
 
@@ -1036,7 +1006,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                         formatValue({
                             column: params.column,
                             node: params.node,
-                            value: this.valueSvc.getValue(params.column as AgColumn, params.node),
+                            value: this.beans.valueSvc.getValue(params.column as AgColumn, params.node),
                         });
                 }
                 break;
@@ -1064,6 +1034,19 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         // don't need to destroy the listeners as they are managed listeners
         this.allColumnListeners.clear();
     }
+}
+
+function setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp>, newModel: any): AgPromise<void> {
+    return new AgPromise<void>((resolve) => {
+        filterPromise.then((filter) => {
+            if (typeof filter!.setModel !== 'function') {
+                _warn(65);
+                resolve();
+            }
+
+            (filter!.setModel(newModel) || AgPromise.resolve()).then(() => resolve());
+        });
+    });
 }
 
 export interface FilterWrapper {

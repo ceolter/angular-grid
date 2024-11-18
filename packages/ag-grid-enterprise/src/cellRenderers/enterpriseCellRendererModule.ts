@@ -6,7 +6,7 @@ import { LoadingCellRenderer } from './loadingCellRenderer';
 import { SkeletonCellRenderer } from './skeletonCellRenderer';
 
 /**
- * @feature Server-Side Row Model -> Loading Cell Renderer
+ * @internal
  */
 export const LoadingCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('LoadingCellRendererModule'),
@@ -21,7 +21,7 @@ export const LoadingCellRendererModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Server-Side Row Model -> Loading Cell Renderer
+ * @internal
  */
 export const SkeletonCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('SkeletonCellRendererModule'),

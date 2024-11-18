@@ -1,21 +1,21 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniBar extends MiniChartWithAxes {
     static chartType: ChartType = 'groupedBar';
-    private readonly bars: _Scene.Rect[];
+    private readonly bars: any[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'groupedBarTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'groupedBarTooltip');
+        const { _Scene } = agChartsExports;
 
         const padding = this.padding;
         const size = this.size;
         const data = [2, 3, 4];
 
-        const yScale = new _Scene.BandScale<number>();
+        const yScale = new _Scene.BandScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;

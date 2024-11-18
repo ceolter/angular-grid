@@ -1,5 +1,5 @@
 import type { _ClipboardGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { CellFlashModule, CsvExportModule, KeyboardNavigationModule } from 'ag-grid-community';
+import { CsvExportModule, HighlightChangesModule, _KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -27,5 +27,5 @@ export const ClipboardModule: _ModuleWithApi<_ClipboardGridApi> = {
         copySelectedRangeDown,
         pasteFromClipboard,
     },
-    dependsOn: [EnterpriseCoreModule, CsvExportModule, KeyboardNavigationModule, CellFlashModule],
+    dependsOn: [EnterpriseCoreModule, CsvExportModule, _KeyboardNavigationModule, HighlightChangesModule],
 };

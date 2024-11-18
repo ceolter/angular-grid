@@ -10,12 +10,12 @@ import type {
     RowDataTransaction,
     RowDropZoneParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, RowNodeTransaction } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const columns: ColDef[] = [
     { field: 'id', rowDrag: true },

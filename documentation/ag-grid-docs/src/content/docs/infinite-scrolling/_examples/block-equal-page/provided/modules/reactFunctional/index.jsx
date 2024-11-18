@@ -1,7 +1,7 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { InfiniteRowModelModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
@@ -11,7 +11,13 @@ import { AgGridReact } from 'ag-grid-react';
 import { countries } from './countries.jsx';
 import './styles.css';
 
-ModuleRegistry.registerModules([InfiniteRowModelModule, SetFilterModule, MenuModule, ColumnsToolPanelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    InfiniteRowModelModule,
+    SetFilterModule,
+    MenuModule,
+    ColumnsToolPanelModule,
+]);
 
 const filterParams = { values: countries() };
 

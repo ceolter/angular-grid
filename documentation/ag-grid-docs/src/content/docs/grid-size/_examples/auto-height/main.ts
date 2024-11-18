@@ -1,12 +1,18 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnsToolPanelModule, MenuModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ColumnsToolPanelModule,
+    MenuModule,
+    RowGroupingModule,
+]);
 
 const columnDefs: ColGroupDef[] = [
     {
@@ -40,7 +46,6 @@ const gridOptions: GridOptions = {
     columnDefs: columnDefs,
     defaultColDef: {
         enableRowGroup: true,
-        enablePivot: true,
         enableValue: true,
         filter: true,
     },

@@ -10,13 +10,19 @@ import type {
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ColumnsToolPanelModule, MenuModule, TreeDataModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ColumnsToolPanelModule,
+    MenuModule,
+    TreeDataModule,
+    ServerSideRowModelModule,
+]);
 
 let fakeServer: {
     getData: (request: IServerSideGetRowsRequest) => void;

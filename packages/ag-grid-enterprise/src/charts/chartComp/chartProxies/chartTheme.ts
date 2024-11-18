@@ -1,10 +1,10 @@
-import { _Theme } from 'ag-charts-community';
 import type {
     AgChartLegendClickEvent,
     AgChartTheme,
     AgChartThemeName,
     AgChartThemeOverrides,
     AgChartThemePalette,
+    _ITheme,
 } from 'ag-charts-types';
 
 import { _warn } from 'ag-grid-community';
@@ -22,9 +22,9 @@ export function createAgChartTheme(
     chartThemeDefaults?: AgChartThemeOverrides,
     updatedOverrides?: AgChartThemeOverrides
 ): AgChartTheme {
-    const { chartOptionsToRestore, chartPaletteToRestore, chartThemeToRestore } = chartProxyParams;
+    const { chartOptionsToRestore, chartPaletteToRestore, chartThemeToRestore, agChartsExports } = chartProxyParams;
     const themeName = getSelectedTheme(chartProxyParams);
-    const stockTheme = isStockTheme(themeName);
+    const stockTheme = isStockTheme(themeName, agChartsExports._Theme);
 
     const rootTheme = stockTheme
         ? { baseTheme: themeName as AgChartThemeName }
@@ -77,7 +77,7 @@ export function createAgChartTheme(
     // Avoid explicitly setting the `theme.palette` property unless we're using the restored theme
     // AND the palette is actually different.
     if (chartPaletteToRestore && themeName === chartThemeToRestore) {
-        const rootThemePalette = _Theme.getChartTheme(rootTheme).palette;
+        const rootThemePalette = chartProxyParams.agChartsExports._Theme.getChartTheme(rootTheme).palette;
         if (!isIdenticalPalette(chartPaletteToRestore, rootThemePalette)) {
             theme.palette = chartPaletteToRestore;
         }
@@ -97,8 +97,8 @@ function isIdenticalPalette(paletteA: AgChartThemePalette, paletteB: AgChartThem
     return arrayCompare(paletteA.fills, paletteB.fills) && arrayCompare(paletteA.strokes, paletteB.strokes);
 }
 
-export function isStockTheme(themeName: string): boolean {
-    return Object.keys(_Theme.themes).includes(themeName);
+export function isStockTheme(themeName: string, theme: _ITheme): boolean {
+    return Object.keys(theme.themes).includes(themeName);
 }
 
 function createCrossFilterThemeOverrides(

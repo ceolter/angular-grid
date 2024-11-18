@@ -4,12 +4,15 @@ import { _makeNull } from '../../../utils/generic';
 import { AgInputTextField } from '../../../widgets/agInputTextField';
 import type { ISimpleFilterModel, ISimpleFilterModelType, Tuple } from '../iSimpleFilter';
 import { SimpleFilter } from '../simpleFilter';
+import { isBlank } from '../simpleFilterUtils';
 import type { TextFilterModel, TextFilterParams, TextFormatter, TextMatcher } from './iTextFilter';
 import { DEFAULT_TEXT_FILTER_OPTIONS } from './textFilterConstants';
 import { TextFilterModelFormatter } from './textFilterModelFormatter';
 import { trimInputForFilter } from './textFilterUtils';
 
 export class TextFilter extends SimpleFilter<TextFilterModel, string> {
+    protected filterType = 'text' as const;
+
     private readonly defaultFormatter: TextFormatter = (from: string) => from;
 
     private readonly defaultLowercaseFormatter: TextFormatter = (from: string) =>
@@ -53,19 +56,16 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         super('textFilter');
     }
 
-    protected override getDefaultDebounceMs(): number {
-        return 500;
-    }
+    protected override defaultDebounceMs: number = 500;
 
     protected override setParams(params: TextFilterParams): void {
         this.textFilterParams = params;
 
         super.setParams(params);
 
-        this.matcher = this.textFilterParams.textMatcher || this.defaultMatcher;
+        this.matcher = params.textMatcher || this.defaultMatcher;
         this.formatter =
-            this.textFilterParams.textFormatter ||
-            (this.textFilterParams.caseSensitive ? this.defaultFormatter : this.defaultLowercaseFormatter);
+            params.textFormatter || (params.caseSensitive ? this.defaultFormatter : this.defaultLowercaseFormatter);
         this.filterModelFormatter = new TextFilterModelFormatter(
             this.getLocaleTextFunc.bind(this),
             this.optionsFactory
@@ -76,7 +76,7 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         const type = this.getConditionType(position);
 
         const model: TextFilterModel = {
-            filterType: this.getFilterType(),
+            filterType: this.filterType,
             type,
         };
 
@@ -91,10 +91,6 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         return model;
     }
 
-    protected getFilterType(): 'text' {
-        return 'text';
-    }
-
     protected areSimpleModelsEqual(aSimple: TextFilterModel, bSimple: TextFilterModel): boolean {
         return (
             aSimple.filter === bSimple.filter && aSimple.filterTo === bSimple.filterTo && aSimple.type === bSimple.type
@@ -102,10 +98,11 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
     }
 
     protected getInputs(position: number): Tuple<AgInputTextField> {
-        if (position >= this.eValuesFrom.length) {
+        const { eValuesFrom, eValuesTo } = this;
+        if (position >= eValuesFrom.length) {
             return [null, null];
         }
-        return [this.eValuesFrom[position], this.eValuesTo[position]];
+        return [eValuesFrom[position], eValuesTo[position]];
     }
 
     protected getValues(position: number): Tuple<string> {
@@ -152,8 +149,9 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
     }
 
     protected removeValueElements(startPosition: number, deleteCount?: number): void {
-        this.removeComponents(this.eValuesFrom, startPosition, deleteCount);
-        this.removeComponents(this.eValuesTo, startPosition, deleteCount);
+        const removeComps = (eGui: AgInputTextField[]) => this.removeComponents(eGui, startPosition, deleteCount);
+        removeComps(this.eValuesFrom);
+        removeComps(this.eValuesTo);
     }
 
     protected mapValuesFromModel(filterModel: TextFilterModel | null): Tuple<string> {
@@ -178,9 +176,9 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         const { api, colDef, column, context, textFormatter } = this.textFilterParams;
 
         if (filterModel.type === 'blank') {
-            return this.isBlank(cellValue);
+            return isBlank(cellValue);
         } else if (filterModel.type === 'notBlank') {
-            return !this.isBlank(cellValue);
+            return !isBlank(cellValue);
         }
 
         const matcherParams = {

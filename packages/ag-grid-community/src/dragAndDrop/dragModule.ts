@@ -21,8 +21,8 @@ export const DragModule: _ModuleWithoutApi = {
  * @feature Import & Export -> Drag & Drop
  * @colDef dndSource, dndSourceOnRowDrag
  */
-export const NativeDragModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('NativeDragModule'),
+export const DragAndDropModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('DragAndDropModule'),
     dynamicBeans: {
         dndSourceComp: DndSourceComp as any,
     },
@@ -35,8 +35,8 @@ export const NativeDragModule: _ModuleWithoutApi = {
 /**
  * @internal
  */
-export const DragAndDropModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DragAndDropModule'),
+export const SharedDragAndDropModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('SharedDragAndDropModule'),
     beans: [DragAndDropService],
     dependsOn: [DragModule],
     userComponents: {
@@ -79,7 +79,7 @@ export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
         removeRowDropZone,
         getRowDropZoneParams,
     },
-    dependsOn: [DragAndDropModule],
+    dependsOn: [SharedDragAndDropModule],
 };
 
 /**

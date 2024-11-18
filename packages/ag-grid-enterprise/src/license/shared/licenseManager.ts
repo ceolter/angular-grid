@@ -281,9 +281,7 @@ export class LicenseManager {
     static setLicenseKey(licenseKey: string): void {
         this.licenseKey = licenseKey;
 
-        if (this.chartsLicenseManager) {
-            this.chartsLicenseManager.setLicenseKey(licenseKey, true);
-        }
+        this.chartsLicenseManager?.setLicenseKey(licenseKey, true);
     }
 
     private static extractBracketedInformation(licenseKey: string): [string | null, boolean | null, string?] {

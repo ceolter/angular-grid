@@ -1,6 +1,6 @@
 import type { BeanCollection } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
-import type { ModuleName } from '../interfaces/iModule';
+import type { ValidationModuleName } from '../interfaces/iModule';
 import type { RowModelType } from '../interfaces/iRowModel';
 
 export interface OptionsValidator<T extends object> {
@@ -10,8 +10,6 @@ export interface OptionsValidator<T extends object> {
     docsUrl?: `${string}/`;
     deprecations: Deprecations<T>;
     validations: Validations<T>;
-    /** these will always be validated, even if not in options */
-    mandatoryKeys?: Set<keyof T>;
 }
 
 // Deprecations, if renamed then old value is copied.
@@ -34,7 +32,7 @@ export type ValidationsRequired<T extends object> = Required<Validations<T>>;
 
 // Rules object, if present, module is required.
 export interface OptionsValidation<T extends object> {
-    module?: ModuleName | ModuleName[];
+    module?: ValidationModuleName | ValidationModuleName[];
     supportedRowModels?: RowModelType[];
     dependencies?: RequiredOptions<T>;
     validate?: (options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;

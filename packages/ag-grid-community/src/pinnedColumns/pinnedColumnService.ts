@@ -1,3 +1,4 @@
+import type { ColumnAnimationService } from '../columnMove/columnAnimationService';
 import { dispatchColumnPinnedEvent } from '../columns/columnEventUtils';
 import type { ColKey, ColumnModel } from '../columns/columnModel';
 import type { VisibleColsService } from '../columns/visibleColsService';
@@ -15,7 +16,6 @@ import type { HeaderRowContainerCtrl } from '../headerRendering/rowContainer/hea
 import type { ProcessUnpinnedColumnsParams } from '../interfaces/iCallbackParams';
 import type { ColumnPinnedType } from '../interfaces/iColumn';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { ColumnAnimationService } from '../rendering/columnAnimationService';
 import { _getInnerWidth } from '../utils/dom';
 import { _warn } from '../validation/logging';
 

@@ -1,13 +1,8 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _PivotGridApi } from 'ag-grid-community';
-import { ColumnGroupModule, StickyRowModule } from 'ag-grid-community';
+import { _ColumnGroupModule } from 'ag-grid-community';
 
 import { baseEnterpriseModule } from '../moduleUtils';
-import {
-    GroupFilterModule,
-    GroupFloatingFilterModule,
-    RowGroupingCoreModule,
-    RowGroupingPanelModule,
-} from '../rowGrouping/rowGroupingModule';
+import { RowGroupingModule, SharedRowGroupingModule } from '../rowGrouping/rowGroupingModule';
 import { ClientSideRowModelHierarchyModule } from '../rowHierarchy/rowHierarchyModule';
 import {
     addPivotColumns,
@@ -28,9 +23,12 @@ import { PivotColsSvc } from './pivotColsSvc';
 import { PivotResultColsService } from './pivotResultColsService';
 import { PivotStage } from './pivotStage';
 
-export const PivotCoreModule: _ModuleWithApi<_PivotGridApi<any>> = {
-    ...baseEnterpriseModule('PivotCoreModule'),
-    beans: [PivotResultColsService, PivotColDefService, PivotStage, PivotColDefService, PivotColsSvc],
+/**
+ * @internal
+ */
+export const SharedPivotModule: _ModuleWithApi<_PivotGridApi<any>> = {
+    ...baseEnterpriseModule('SharedPivotModule'),
+    beans: [PivotResultColsService, PivotColDefService, PivotColDefService, PivotColsSvc],
     apiFunctions: {
         isPivotMode,
         getPivotResultColumn,
@@ -45,17 +43,17 @@ export const PivotCoreModule: _ModuleWithApi<_PivotGridApi<any>> = {
         setPivotResultColumns,
         getPivotResultColumns,
     },
-    dependsOn: [RowGroupingCoreModule, ColumnGroupModule],
+    dependsOn: [SharedRowGroupingModule, _ColumnGroupModule],
 };
 
+/**
+ * @feature Pivoting
+ * @colDef pivot, enablePivot
+ * @gridOption pivotMode
+ */
 export const PivotModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('PivotModule'),
-    dependsOn: [
-        PivotCoreModule,
-        StickyRowModule,
-        RowGroupingPanelModule,
-        ClientSideRowModelHierarchyModule,
-        GroupFilterModule,
-        GroupFloatingFilterModule,
-    ],
+    rowModels: ['clientSide'],
+    beans: [PivotStage],
+    dependsOn: [SharedPivotModule, RowGroupingModule, ClientSideRowModelHierarchyModule],
 };

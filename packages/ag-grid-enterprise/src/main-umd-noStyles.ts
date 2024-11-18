@@ -1,59 +1,13 @@
 /*
  * Used for umd bundles without styles
  */
-import {
-    ClientSideRowModelModule,
-    CommunityFeaturesModule,
-    CsvExportModule,
-    InfiniteRowModelModule,
-    ModuleRegistry,
-} from 'ag-grid-community';
+import { ModuleRegistry } from 'ag-grid-community';
 
-import { GridChartsModule } from './charts/main';
-import {
-    AdvancedFilterModule,
-    ClipboardModule,
-    ColumnsToolPanelModule,
-    ExcelExportModule,
-    FiltersToolPanelModule,
-    MasterDetailModule,
-    MenuModule,
-    MultiFilterModule,
-    RangeSelectionModule,
-    RichSelectModule,
-    RowGroupingModule,
-    ServerSideRowModelModule,
-    SetFilterModule,
-    SideBarModule,
-    SparklinesModule,
-    StatusBarModule,
-    ViewportRowModelModule,
-} from './main';
+import { AllEnterpriseModule } from './main';
 
-ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
-    ClientSideRowModelModule,
-    InfiniteRowModelModule,
-    CsvExportModule,
-    AdvancedFilterModule,
-    GridChartsModule,
-    ClipboardModule,
-    ColumnsToolPanelModule,
-    ExcelExportModule,
-    FiltersToolPanelModule,
-    MasterDetailModule,
-    MenuModule,
-    MultiFilterModule,
-    RangeSelectionModule,
-    RichSelectModule,
-    RowGroupingModule,
-    ServerSideRowModelModule,
-    SetFilterModule,
-    SideBarModule,
-    SparklinesModule,
-    StatusBarModule,
-    ViewportRowModelModule,
-]);
+ModuleRegistry.registerModules([AllEnterpriseModule]);
 
 export * from 'ag-grid-community';
 export * from './main';
+// Export the overridden createGrid function which automatically registers AG Charts modules if present
+export { createGrid } from './main-umd-shared';

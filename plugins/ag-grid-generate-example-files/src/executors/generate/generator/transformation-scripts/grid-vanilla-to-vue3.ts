@@ -269,7 +269,7 @@ function getModuleImports(
         imports: [],
     });
     if (bImports.length > 0) {
-        addBindingImports(bImports, imports, true, true);
+        addBindingImports(bImports, imports, true);
     }
 
     if (componentFileNames) {

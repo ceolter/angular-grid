@@ -1,12 +1,11 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniSunburst extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'sunburst';
-    private readonly series: _Scene.Group[];
+    private readonly series: any[];
 
     // Hierarchical data using multidimensional array
     private data = [
@@ -20,13 +19,20 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
     private innerRadiusRatio = 0;
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'sunburstTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'sunburstTooltip');
 
         this.showRadiusAxisLine = false;
         this.showAngleAxisLines = false;
 
-        const { data, size, padding, angleOffset, innerRadiusRatio } = this;
+        const {
+            data,
+            size,
+            padding,
+            angleOffset,
+            innerRadiusRatio,
+            agChartsExports: { _Scene },
+        } = this;
 
         const radius = (size - padding * 2) / 2;
 
@@ -53,13 +59,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
         this.series = [];
 
-        const createSectors = (
-            data: any[],
-            depth: number,
-            startAngle: number,
-            availableAngle: number,
-            group?: _Scene.Group
-        ) => {
+        const createSectors = (data: any[], depth: number, startAngle: number, availableAngle: number, group?: any) => {
             const isArray = Array.isArray(data);
 
             if (!isArray) {
@@ -112,7 +112,7 @@ export class MiniSunburst extends MiniChartWithPolarAxes {
 
     updateColors(fills: string[], strokes: string[]) {
         this.series.forEach((group, i) => {
-            for (const sector of group.children() as Iterable<_Scene.Sector>) {
+            for (const sector of group.children() as Iterable<any>) {
                 sector.fill = fills[i % fills.length];
                 sector.stroke = strokes[i % strokes.length];
             }

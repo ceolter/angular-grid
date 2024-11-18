@@ -5,7 +5,8 @@ import type { FilterModel, IFilter } from '../interfaces/iFilter';
 import { _error } from '../validation/logging';
 
 export function isColumnFilterPresent(beans: BeanCollection): boolean {
-    return !!beans.filterManager?.isColumnFilterPresent() || !!beans.filterManager?.isAggregateFilterPresent();
+    const filterManager = beans.filterManager;
+    return !!filterManager?.isColumnFilterPresent() || !!filterManager?.isAggregateFilterPresent();
 }
 
 export function getColumnFilterInstance<TFilter extends IFilter>(

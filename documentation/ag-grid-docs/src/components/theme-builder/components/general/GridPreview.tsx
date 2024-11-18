@@ -1,22 +1,24 @@
 import { useApplicationConfigAtom } from '@components/theme-builder/model/application-config';
 import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme';
 import styled from '@emotion/styled';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { memo, useRef, useState } from 'react';
 import root from 'react-shadow';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { type GridState, ModuleRegistry } from 'ag-grid-community';
-import { AdvancedFilterModule } from 'ag-grid-enterprise';
-import { GridChartsModule } from 'ag-grid-enterprise';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
-import { RichSelectModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
-import { StatusBarModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, type GridState, ModuleRegistry } from 'ag-grid-community';
+import {
+    AdvancedFilterModule,
+    CellSelectionModule,
+    ClipboardModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    IntegratedChartsModule,
+    MenuModule,
+    RichSelectModule,
+    RowGroupingModule,
+    SetFilterModule,
+    StatusBarModule,
+} from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import { ColorEditor } from '../editors/ColorValueEditor';
@@ -28,15 +30,16 @@ import { withErrorBoundary } from './ErrorBoundary';
 import { InfoTooltip } from './Tooltip';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     MenuModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     RowGroupingModule,
-    GridChartsModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,

@@ -1,12 +1,17 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GetRowIdParams, GridApi, GridOptions, ValueFormatterParams } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 
 import { getData, globalRowData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    RowGroupingPanelModule,
+]);
 
 const UPDATE_COUNT = 500;
 
@@ -16,7 +21,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Product',
         field: 'product',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 0,
         hide: true,
     },
@@ -24,7 +28,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Portfolio',
         field: 'portfolio',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 1,
         hide: true,
     },
@@ -32,7 +35,6 @@ const columnDefs: ColDef[] = [
         headerName: 'Book',
         field: 'book',
         enableRowGroup: true,
-        enablePivot: true,
         rowGroupIndex: 2,
         hide: true,
     },
@@ -60,13 +62,11 @@ const columnDefs: ColDef[] = [
     {
         field: 'dealType',
         enableRowGroup: true,
-        enablePivot: true,
     },
     {
         headerName: 'Bid',
         field: 'bidFlag',
         enableRowGroup: true,
-        enablePivot: true,
         width: 100,
     },
     {
@@ -150,7 +150,6 @@ const gridOptions: GridOptions = {
     columnDefs: columnDefs,
     suppressAggFuncInHeader: true,
     rowGroupPanelShow: 'always',
-    pivotPanelShow: 'always',
     getRowId: (params: GetRowIdParams) => String(params.data.trade),
     defaultColDef: {
         width: 120,

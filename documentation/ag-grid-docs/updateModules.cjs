@@ -97,14 +97,14 @@ const moduleMapping = [
         shortname: 'charts',
         module: '@ag-grid-enterprise/charts',
         enterprise: true,
-        exported: 'GridChartsModule',
+        exported: 'IntegratedChartsModule',
     },
     {
         title: 'Integrated Enterprise Charts<enterprise-icon></enterprise-icon>',
         shortname: 'charts-enterprise',
         module: '@ag-grid-enterprise/charts-enterprise',
         enterprise: true,
-        exported: 'GridChartsModule',
+        exported: 'IntegratedChartsModule',
     },
     {
         title: 'Sparklines<enterprise-icon></enterprise-icon>',

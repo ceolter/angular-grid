@@ -1,7 +1,6 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
@@ -14,10 +13,11 @@ export class MiniStackedBar extends MiniChartWithAxes {
         [2, 3, 4],
     ];
 
-    private readonly bars: _Scene.Rect[][];
+    private readonly bars: any[][];
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -26,12 +26,13 @@ export class MiniStackedBar extends MiniChartWithAxes {
         xScaleDomain = [0, 16],
         tooltipName: ChartTranslationKey = 'stackedBarTooltip'
     ) {
-        super(container, tooltipName);
+        super(container, agChartsExports, tooltipName);
 
+        const { _Scene } = agChartsExports;
         const size = this.size;
         const padding = this.padding;
 
-        const yScale = new _Scene.BandScale<number>();
+        const yScale = new _Scene.BandScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
@@ -59,7 +60,7 @@ export class MiniStackedBar extends MiniChartWithAxes {
         );
 
         this.updateColors(fills, strokes);
-        this.root.append(([] as _Scene.Rect[]).concat.apply([], this.bars));
+        this.root.append(([] as any[]).concat.apply([], this.bars));
     }
 
     updateColors(fills: string[], strokes: string[]) {

@@ -1,4 +1,5 @@
 import type { _RowSelectionGridApi } from '../api/gridApi';
+import { SelectionColService } from '../columns/selectionColService';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import {
@@ -15,20 +16,11 @@ import {
 import { SelectionService } from './selectionService';
 
 /**
- * @feature Selection -> Row Selection
- * @gridOption rowSelection
+ * @internal
  */
-export const RowSelectionCoreModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowSelectionCoreModule'),
-    rowModels: ['clientSide', 'infinite', 'viewport'],
-    beans: [SelectionService],
-};
-
-/**
- * @feature Selection -> Row Selection
- */
-export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
-    ...baseCommunityModule('RowSelectionApiModule'),
+export const SharedRowSelectionModule: _ModuleWithApi<_RowSelectionGridApi> = {
+    ...baseCommunityModule('SharedRowSelectionModule'),
+    beans: [SelectionColService],
     apiFunctions: {
         setNodesSelected,
         selectAll,
@@ -47,5 +39,7 @@ export const RowSelectionApiModule: _ModuleWithApi<_RowSelectionGridApi> = {
  */
 export const RowSelectionModule: _ModuleWithoutApi = {
     ...baseCommunityModule('RowSelectionModule'),
-    dependsOn: [RowSelectionCoreModule, RowSelectionApiModule],
+    rowModels: ['clientSide', 'infinite', 'viewport'],
+    beans: [SelectionService],
+    dependsOn: [SharedRowSelectionModule],
 };

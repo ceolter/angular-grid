@@ -1,5 +1,3 @@
-import type { ColumnModel } from '../columns/columnModel';
-import type { DataTypeService } from '../columns/dataTypeService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -24,15 +22,11 @@ import type { QuickFilterService } from './quickFilterService';
 export class FilterManager extends BeanStub implements NamedBean {
     beanName = 'filterManager' as const;
 
-    private colModel: ColumnModel;
-    private dataTypeSvc?: DataTypeService;
     private quickFilter?: QuickFilterService;
     private advancedFilter: IAdvancedFilterService;
     private colFilter?: ColumnFilterService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.dataTypeSvc = beans.dataTypeSvc;
         this.quickFilter = beans.quickFilter;
         this.advancedFilter = beans.advancedFilter;
         this.colFilter = beans.colFilter;
@@ -44,20 +38,20 @@ export class FilterManager extends BeanStub implements NamedBean {
     private aggFiltering: boolean;
 
     // when we're waiting for cell data types to be inferred, we need to defer filter model updates
-    private advancedFilterModelUpdateQueue: (AdvancedFilterModel | null | undefined)[] = [];
+    private advFilterModelUpdateQueue: (AdvancedFilterModel | null | undefined)[] = [];
 
     private alwaysPassFilter?: (rowNode: IRowNode) => boolean;
 
     public postConstruct(): void {
         const refreshFiltersForAggregations = this.refreshFiltersForAggregations.bind(this);
-        const updateAdvancedFilterColumns = this.updateAdvancedFilterColumns.bind(this);
+        const updateAdvFilterColumns = this.updateAdvFilterColumns.bind(this);
         this.addManagedEventListeners({
             columnValueChanged: refreshFiltersForAggregations,
             columnPivotChanged: refreshFiltersForAggregations,
             columnPivotModeChanged: refreshFiltersForAggregations,
-            newColumnsLoaded: updateAdvancedFilterColumns,
-            columnVisible: updateAdvancedFilterColumns,
-            advancedFilterEnabledChanged: ({ enabled }) => this.onAdvancedFilterEnabledChanged(enabled),
+            newColumnsLoaded: updateAdvFilterColumns,
+            columnVisible: updateAdvFilterColumns,
+            advancedFilterEnabledChanged: ({ enabled }) => this.onAdvFilterEnabledChanged(enabled),
             dataTypesInferred: this.processFilterModelUpdateQueue.bind(this),
         });
 
@@ -88,23 +82,17 @@ export class FilterManager extends BeanStub implements NamedBean {
 
     private isExternalFilterPresentCallback() {
         const isFilterPresent = this.gos.getCallback('isExternalFilterPresent');
-        if (typeof isFilterPresent === 'function') {
-            return isFilterPresent({});
-        }
-        return false;
+        return typeof isFilterPresent === 'function' && isFilterPresent({});
     }
 
     private doesExternalFilterPass(node: RowNode) {
         const doesFilterPass = this.gos.get('doesExternalFilterPass');
-        if (typeof doesFilterPass === 'function') {
-            return doesFilterPass(node);
-        }
-        return false;
+        return typeof doesFilterPass === 'function' && doesFilterPass(node);
     }
 
     public setFilterModel(model: FilterModel | null, source: FilterChangedEventSourceType = 'api'): void {
-        if (this.isAdvancedFilterEnabled()) {
-            this.warnAdvancedFilters();
+        if (this.isAdvFilterEnabled()) {
+            this.warnAdvFilters();
             return;
         }
 
@@ -123,24 +111,23 @@ export class FilterManager extends BeanStub implements NamedBean {
         return !!this.colFilter?.isAggregateFilterPresent();
     }
 
-    public isExternalFilterPresent(): boolean {
-        return this.externalFilterPresent;
-    }
-
     public isChildFilterPresent(): boolean {
         return (
             this.isColumnFilterPresent() ||
             this.isQuickFilterPresent() ||
-            this.isExternalFilterPresent() ||
-            this.isAdvancedFilterPresent()
+            this.externalFilterPresent ||
+            this.isAdvFilterPresent()
         );
     }
-
-    private isAdvancedFilterPresent(): boolean {
-        return this.isAdvancedFilterEnabled() && this.advancedFilter.isFilterPresent();
+    public isAnyFilterPresent(): boolean {
+        return this.isChildFilterPresent() || this.isAggregateFilterPresent();
     }
 
-    private onAdvancedFilterEnabledChanged(enabled: boolean): void {
+    private isAdvFilterPresent(): boolean {
+        return this.isAdvFilterEnabled() && this.advancedFilter.isFilterPresent();
+    }
+
+    private onAdvFilterEnabledChanged(enabled: boolean): void {
         if (enabled) {
             if (this.colFilter?.disableColumnFilters()) {
                 this.onFilterChanged({ source: 'advancedFilter' });
@@ -153,26 +140,16 @@ export class FilterManager extends BeanStub implements NamedBean {
         }
     }
 
-    public isAdvancedFilterEnabled(): boolean {
+    public isAdvFilterEnabled(): boolean {
         return !!this.advancedFilter?.isEnabled();
     }
 
-    public isAdvancedFilterHeaderActive(): boolean {
-        return this.isAdvancedFilterEnabled() && this.advancedFilter.isHeaderActive();
-    }
-
-    public isAnyFilterPresent(): boolean {
-        return (
-            this.isQuickFilterPresent() ||
-            this.isColumnFilterPresent() ||
-            this.isAggregateFilterPresent() ||
-            this.isExternalFilterPresent() ||
-            this.isAdvancedFilterPresent()
-        );
+    public isAdvFilterHeaderActive(): boolean {
+        return this.isAdvFilterEnabled() && this.advancedFilter.isHeaderActive();
     }
 
     public resetQuickFilterCache(): void {
-        this.quickFilter?.resetQuickFilterCache();
+        this.quickFilter?.resetCache();
     }
 
     private refreshFiltersForAggregations() {
@@ -214,7 +191,7 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     public isQuickFilterPresent(): boolean {
-        return !!this.quickFilter?.isQuickFilterPresent();
+        return !!this.quickFilter?.isFilterPresent();
     }
 
     private updateAggFiltering(): void {
@@ -230,7 +207,10 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     private shouldApplyQuickFilterAfterAgg(): boolean {
-        return (this.aggFiltering || this.colModel.isPivotMode()) && !this.gos.get('applyQuickFilterBeforePivotOrAgg');
+        return (
+            (this.aggFiltering || this.beans.colModel.isPivotMode()) &&
+            !this.gos.get('applyQuickFilterBeforePivotOrAgg')
+        );
     }
 
     public doesRowPassOtherFilters(filterToSkip: IFilterComp, node: any): boolean {
@@ -245,7 +225,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         }
 
         // check quick filter
-        if (this.isAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(rowNode)) {
+        if (this.isAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPass(rowNode)) {
             return false;
         }
 
@@ -271,12 +251,12 @@ export class FilterManager extends BeanStub implements NamedBean {
         // we return true. that means if a row passes the quick filter,
         // but fails the column filter, it fails overall
         // first up, check quick filter
-        if (this.isNonAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPassQuickFilter(rowNode)) {
+        if (this.isNonAggregateQuickFilterPresent() && !this.quickFilter!.doesRowPass(rowNode)) {
             return false;
         }
 
         // secondly, give the client a chance to reject this row
-        if (this.isExternalFilterPresent() && !this.doesExternalFilterPass(rowNode)) {
+        if (this.externalFilterPresent && !this.doesExternalFilterPass(rowNode)) {
             return false;
         }
 
@@ -288,7 +268,7 @@ export class FilterManager extends BeanStub implements NamedBean {
             return false;
         }
 
-        if (this.isAdvancedFilterPresent() && !this.advancedFilter.doesFilterPass(rowNode)) {
+        if (this.isAdvFilterPresent() && !this.advancedFilter.doesFilterPass(rowNode)) {
             return false;
         }
 
@@ -314,7 +294,7 @@ export class FilterManager extends BeanStub implements NamedBean {
 
     // for group filters, can change dynamically whether they are allowed or not
     public isFilterAllowed(column: AgColumn): boolean {
-        if (this.isAdvancedFilterEnabled()) {
+        if (this.isAdvFilterEnabled()) {
             return false;
         }
         return !!this.colFilter?.isFilterAllowed(column);
@@ -340,31 +320,31 @@ export class FilterManager extends BeanStub implements NamedBean {
         return !!this.colFilter?.areFilterCompsDifferent(oldCompDetails, newCompDetails);
     }
 
-    public getAdvancedFilterModel(): AdvancedFilterModel | null {
-        return this.isAdvancedFilterEnabled() ? this.advancedFilter.getModel() : null;
+    public getAdvFilterModel(): AdvancedFilterModel | null {
+        return this.isAdvFilterEnabled() ? this.advancedFilter.getModel() : null;
     }
 
-    public setAdvancedFilterModel(expression: AdvancedFilterModel | null | undefined): void {
-        if (!this.isAdvancedFilterEnabled()) {
+    public setAdvFilterModel(expression: AdvancedFilterModel | null | undefined): void {
+        if (!this.isAdvFilterEnabled()) {
             return;
         }
-        if (this.dataTypeSvc?.isPendingInference()) {
-            this.advancedFilterModelUpdateQueue.push(expression);
+        if (this.beans.dataTypeSvc?.isPendingInference()) {
+            this.advFilterModelUpdateQueue.push(expression);
             return;
         }
         this.advancedFilter.setModel(expression ?? null);
         this.onFilterChanged({ source: 'advancedFilter' });
     }
 
-    public toggleAdvancedFilterBuilder(show: boolean, source: 'api' | 'ui'): void {
-        if (!this.isAdvancedFilterEnabled()) {
+    public toggleAdvFilterBuilder(show: boolean, source: 'api' | 'ui'): void {
+        if (!this.isAdvFilterEnabled()) {
             return;
         }
         this.advancedFilter.getCtrl().toggleFilterBuilder({ source, force: show });
     }
 
-    private updateAdvancedFilterColumns(): void {
-        if (!this.isAdvancedFilterEnabled()) {
+    private updateAdvFilterColumns(): void {
+        if (!this.isAdvFilterEnabled()) {
             return;
         }
         if (this.advancedFilter.updateValidity()) {
@@ -373,7 +353,7 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     public hasFloatingFilters(): boolean {
-        if (this.isAdvancedFilterEnabled()) {
+        if (this.isAdvFilterEnabled()) {
             return false;
         }
         return !!this.colFilter?.hasFloatingFilters();
@@ -382,33 +362,33 @@ export class FilterManager extends BeanStub implements NamedBean {
     public getColumnFilterInstance<TFilter extends IFilter>(
         key: string | AgColumn
     ): Promise<TFilter | null | undefined> {
-        if (this.isAdvancedFilterEnabled()) {
-            this.warnAdvancedFilters();
+        if (this.isAdvFilterEnabled()) {
+            this.warnAdvFilters();
             return Promise.resolve(undefined);
         }
         return this.colFilter?.getColumnFilterInstance(key) ?? Promise.resolve(undefined);
     }
 
-    private warnAdvancedFilters(): void {
+    private warnAdvFilters(): void {
         // Column Filter API methods have been disabled as Advanced Filters are enabled
         _warn(68);
     }
 
-    public setupAdvancedFilterHeaderComp(eCompToInsertBefore: HTMLElement): void {
+    public setupAdvFilterHeaderComp(eCompToInsertBefore: HTMLElement): void {
         this.advancedFilter?.getCtrl().setupHeaderComp(eCompToInsertBefore);
     }
 
     public getHeaderRowCount(): number {
-        return this.isAdvancedFilterHeaderActive() ? 1 : 0;
+        return this.isAdvFilterHeaderActive() ? 1 : 0;
     }
 
     public getHeaderHeight(): number {
-        return this.isAdvancedFilterHeaderActive() ? this.advancedFilter.getCtrl().getHeaderHeight() : 0;
+        return this.isAdvFilterHeaderActive() ? this.advancedFilter.getCtrl().getHeaderHeight() : 0;
     }
 
     private processFilterModelUpdateQueue(): void {
-        this.advancedFilterModelUpdateQueue.forEach((model) => this.setAdvancedFilterModel(model));
-        this.advancedFilterModelUpdateQueue = [];
+        this.advFilterModelUpdateQueue.forEach((model) => this.setAdvFilterModel(model));
+        this.advFilterModelUpdateQueue = [];
     }
 
     public getColumnFilterModel(key: string | AgColumn): any {
@@ -416,8 +396,8 @@ export class FilterManager extends BeanStub implements NamedBean {
     }
 
     public setColumnFilterModel(key: string | AgColumn, model: any): Promise<void> {
-        if (this.isAdvancedFilterEnabled()) {
-            this.warnAdvancedFilters();
+        if (this.isAdvFilterEnabled()) {
+            this.warnAdvFilters();
             return Promise.resolve();
         }
         return this.colFilter?.setColumnFilterModel(key, model) ?? Promise.resolve();

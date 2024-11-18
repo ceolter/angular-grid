@@ -1,4 +1,3 @@
-import { AgCharts } from 'ag-charts-community';
 import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
@@ -34,7 +33,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             } as AgSparklineOptions;
 
             // create new sparkline
-            this.sparklineInstance = AgCharts.__createSparkline(this.sparklineOptions);
+            this.sparklineInstance = params.createSparkline!(this.sparklineOptions);
             return true;
         } else if (this.sparklineInstance) {
             const data = params?.value;

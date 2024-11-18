@@ -1,19 +1,19 @@
-import type { ModuleName } from '../../interfaces/iModule';
+import type { ValidationModuleName } from '../../interfaces/iModule';
 import type { DefaultMenuItem } from '../../interfaces/menuItem';
 
-export const MENU_ITEM_MODULES: Record<DefaultMenuItem, ModuleName | ModuleName[]> = {
+export const MENU_ITEM_MODULES: Record<DefaultMenuItem, ValidationModuleName | ValidationModuleName[]> = {
     pinSubMenu: 'PinnedColumnModule',
     pinLeft: 'PinnedColumnModule',
     pinRight: 'PinnedColumnModule',
     clearPinned: 'PinnedColumnModule',
-    valueAggSubMenu: 'AggregationModule',
-    autoSizeThis: 'ColumnAutosizeModule',
-    autoSizeAll: 'ColumnAutosizeModule',
-    rowGroup: 'RowGroupingCoreModule',
-    rowUnGroup: 'RowGroupingCoreModule',
+    valueAggSubMenu: 'SharedAggregationModule',
+    autoSizeThis: 'ColumnAutoSizeModule',
+    autoSizeAll: 'ColumnAutoSizeModule',
+    rowGroup: 'SharedRowGroupingModule',
+    rowUnGroup: 'SharedRowGroupingModule',
     resetColumns: 'CommunityCoreModule',
-    expandAll: ['ClientSideRowModelHierarchyModule', 'ServerSideRowModelHierarchyModule'],
-    contractAll: ['ClientSideRowModelHierarchyModule', 'ServerSideRowModelHierarchyModule'],
+    expandAll: ['ClientSideRowModelHierarchyModule', 'ServerSideRowModelModule'],
+    contractAll: ['ClientSideRowModelHierarchyModule', 'ServerSideRowModelModule'],
     copy: 'ClipboardModule',
     copyWithHeaders: 'ClipboardModule',
     copyWithGroupHeaders: 'ClipboardModule',
@@ -23,11 +23,11 @@ export const MENU_ITEM_MODULES: Record<DefaultMenuItem, ModuleName | ModuleName[
     csvExport: 'CsvExportModule',
     excelExport: 'ExcelExportModule',
     separator: 'CommunityCoreModule',
-    pivotChart: 'GridChartsModule',
-    chartRange: 'GridChartsModule',
-    columnFilter: 'ColumnFilterMenuModule',
-    columnChooser: 'ColumnChooserModule',
-    sortAscending: 'SortCoreModule',
-    sortDescending: 'SortCoreModule',
-    sortUnSort: 'SortCoreModule',
+    pivotChart: 'IntegratedChartsModule',
+    chartRange: 'IntegratedChartsModule',
+    columnFilter: 'ColumnFilterModule',
+    columnChooser: 'ColumnMenuModule',
+    sortAscending: 'SortModule',
+    sortDescending: 'SortModule',
+    sortUnSort: 'SortModule',
 };

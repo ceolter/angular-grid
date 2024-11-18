@@ -7,7 +7,7 @@ import type {
     SetFilterValuesFuncParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -15,7 +15,13 @@ import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([ColumnsToolPanelModule, MenuModule, RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ColumnsToolPanelModule,
+    MenuModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+]);
 
 const colDefCountry: ColDef = { field: 'country', rowGroup: true };
 const colDefYear: ColDef = { field: 'year', rowGroup: true };

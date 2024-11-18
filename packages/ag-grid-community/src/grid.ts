@@ -8,7 +8,13 @@ import type { GridOptions } from './entities/gridOptions';
 import { GridComp } from './gridComp/gridComp';
 import { CommunityCoreModule } from './gridCoreModule';
 import type { IFrameworkOverrides } from './interfaces/iFrameworkOverrides';
-import type { Module, ModuleName, _ModuleWithApi, _ModuleWithoutApi } from './interfaces/iModule';
+import type {
+    CommunityModuleName,
+    EnterpriseModuleName,
+    Module,
+    _ModuleWithApi,
+    _ModuleWithoutApi,
+} from './interfaces/iModule';
 import type { RowModelType } from './interfaces/iRowModel';
 import {
     _areModulesGridScoped,
@@ -112,6 +118,7 @@ export function _getGlobalGridOption<K extends keyof GridOptions>(gridOption: K)
     return GlobalGridOptions.gridOptions?.[gridOption];
 }
 
+// **NOTE** If updating this JsDoc please also update the re-exported createGrid in main-umd-shared.ts
 /**
  * Creates a grid inside the provided HTML element.
  * @param eGridDiv Parent element to contain the grid.
@@ -261,11 +268,11 @@ export class GridCoreCreator {
         gridId: string
     ): SingletonBean[] | undefined {
         // assert that the relevant module has been loaded
-        const rowModelModuleNames: Record<RowModelType, ModuleName> = {
-            clientSide: 'ClientSideRowModelCoreModule',
-            infinite: 'InfiniteRowModelCoreModule',
-            serverSide: 'ServerSideRowModelCoreModule',
-            viewport: 'ViewportRowModelCoreModule',
+        const rowModelModuleNames: Record<RowModelType, CommunityModuleName | EnterpriseModuleName> = {
+            clientSide: 'ClientSideRowModelModule',
+            infinite: 'InfiniteRowModelModule',
+            serverSide: 'ServerSideRowModelModule',
+            viewport: 'ViewportRowModelModule',
         };
 
         const rowModuleModelName = rowModelModuleNames[rowModelType];
@@ -284,6 +291,7 @@ export class GridCoreCreator {
                     moduleName: rowModuleModelName,
                     gridScoped: _areModulesGridScoped(),
                     gridId,
+                    rowModelType,
                 },
                 `Missing module ${rowModuleModelName} for rowModelType ${rowModelType}.`
             );

@@ -3,14 +3,14 @@ import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, ColGroupDef, IFilter } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact, getInstance } from 'ag-grid-react';
 
 import { getData } from './data.tsx';
 import PartialMatchFilter from './partialMatchFilter';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const GridExample = () => {
     const gridRef = useRef<AgGridReact>(null);

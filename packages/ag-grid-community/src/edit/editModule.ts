@@ -26,12 +26,11 @@ import { EditService } from './editService';
 import { RowEditService } from './rowEditService';
 
 /**
- * @feature Editing
- * @colDef editable
+ * @internal
  */
 export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
     ...baseCommunityModule('EditCoreModule'),
-    beans: [EditService],
+    beans: [EditService, RowEditService],
     apiFunctions: {
         getCellEditorInstances,
         getEditingCells,
@@ -58,42 +57,51 @@ export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
 };
 
 /**
- * @feature Editing -> Full Row
+ * @feature Editing -> Text Editor
  */
-export const FullRowEditModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('FullRowEditModule'),
-    beans: [RowEditService],
+export const TextEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('TextEditorModule'),
+    userComponents: { agCellEditor: TextCellEditor, agTextCellEditor: TextCellEditor },
     dependsOn: [EditCoreModule],
 };
 
 /**
- * @feature Editing
+ * @feature Editing -> Number Editor
  */
-export const DefaultEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DefaultEditorModule'),
-    userComponents: { agCellEditor: TextCellEditor },
-    dependsOn: [EditCoreModule],
-};
-
-/**
- * @feature Editing
- */
-export const DataTypeEditorsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DataTypeEditorsModule'),
+export const NumberEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('NumberEditorModule'),
     userComponents: {
-        agTextCellEditor: TextCellEditor,
-
         agNumberCellEditor: {
             classImp: NumberCellEditor,
             params: {
                 suppressPreventDefault: true,
             } as DefaultProvidedCellEditorParams,
         },
+    },
+    dependsOn: [EditCoreModule],
+};
+
+/**
+ * @feature Editing -> Date Editor
+ */
+export const DateEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('DateEditorModule'),
+    userComponents: {
         agDateCellEditor: DateCellEditor,
         agDateStringCellEditor: DateStringCellEditor,
+    },
+    dependsOn: [EditCoreModule],
+};
+
+/**
+ * @feature Editing -> Checkbox Editor
+ */
+export const CheckboxEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('CheckboxEditorModule'),
+    userComponents: {
         agCheckboxCellEditor: CheckboxCellEditor,
     },
-    dependsOn: [DefaultEditorModule],
+    dependsOn: [EditCoreModule],
 };
 
 /**
@@ -117,15 +125,7 @@ export const LargeTextEditorModule: _ModuleWithoutApi = {
 /**
  * @feature Editing
  */
-export const AllCommunityEditorsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AllCommunityEditorsModule'),
-    dependsOn: [DefaultEditorModule, DataTypeEditorsModule, SelectEditorModule, LargeTextEditorModule],
-};
-
-/**
- * @feature Editing
- */
-export const EditModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('EditModule'),
-    dependsOn: [EditCoreModule, UndoRedoEditModule, FullRowEditModule, AllCommunityEditorsModule],
+export const CustomEditorModule: _ModuleWithoutApi = {
+    ...baseCommunityModule('CustomEditorModule'),
+    dependsOn: [EditCoreModule],
 };

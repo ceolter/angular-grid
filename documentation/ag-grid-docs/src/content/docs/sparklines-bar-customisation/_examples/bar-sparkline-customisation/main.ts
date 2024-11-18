@@ -1,12 +1,16 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import { AgChartsCommunityModule } from 'ag-charts-community';
+
 import type { BarSparklineOptions, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, SparklinesModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    SparklinesModule.with(AgChartsCommunityModule),
+]);
 
 let gridApi: GridApi;
 

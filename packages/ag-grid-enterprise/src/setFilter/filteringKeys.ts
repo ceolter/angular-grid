@@ -8,7 +8,7 @@ export class SetValueModelFilteringKeys {
     // - When filtering is case-sensitive, this is the same as filteringKeys.
     private filteringKeysCaseFormatted: Set<string | null> | null = null;
 
-    private hasNoAppliedFilteringKeys: boolean = false;
+    public hasNoAppliedFilteringKeys: boolean = false;
 
     // Function responsible for formatting the filtering keys.
     private readonly caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat;
@@ -23,10 +23,6 @@ export class SetValueModelFilteringKeys {
 
     public allFilteringKeysCaseFormatted(): Set<string | null> | null {
         return this.filteringKeysCaseFormatted;
-    }
-
-    public noAppliedFilteringKeys(): boolean {
-        return this.hasNoAppliedFilteringKeys;
     }
 
     public setFilteringKeys(filteringKeys: Set<string | null> | null): void {

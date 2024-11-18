@@ -1,5 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { stackData } from '../miniChartHelpers';
@@ -11,6 +12,7 @@ export class MiniStackedArea extends MiniArea {
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -18,7 +20,17 @@ export class MiniStackedArea extends MiniArea {
         data: number[][] = MiniStackedArea.data,
         tooltipName: ChartTranslationKey = 'stackedAreaTooltip'
     ) {
-        super(container, fills, strokes, _themeTemplateParameters, _isCustomTheme, data, tooltipName, true);
+        super(
+            container,
+            agChartsExports,
+            fills,
+            strokes,
+            _themeTemplateParameters,
+            _isCustomTheme,
+            data,
+            tooltipName,
+            true
+        );
     }
 
     override updateColors(fills: string[], strokes: string[]) {

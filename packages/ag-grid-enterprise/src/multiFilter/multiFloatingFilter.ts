@@ -1,8 +1,6 @@
 import type {
     AgColumn,
-    BeanCollection,
     FilterChangedEvent,
-    FilterManager,
     IFilter,
     IFilterDef,
     IFloatingFilterComp,
@@ -10,7 +8,6 @@ import type {
     IMultiFilterModel,
     MultiFilterParams,
     UserCompDetails,
-    UserComponentFactory,
 } from 'ag-grid-community';
 import {
     AgPromise,
@@ -26,14 +23,6 @@ import {
 import { MultiFilter, getMultiFilterDefs } from './multiFilter';
 
 export class MultiFloatingFilterComp extends Component implements IFloatingFilterComp<MultiFilter> {
-    private userCompFactory: UserComponentFactory;
-    private filterManager?: FilterManager;
-
-    public wireBeans(beans: BeanCollection) {
-        this.userCompFactory = beans.userCompFactory;
-        this.filterManager = beans.filterManager;
-    }
-
     private floatingFilters: IFloatingFilterComp[] = [];
     private compDetailsList: UserCompDetails[] = [];
     private params: IFloatingFilterParams<MultiFilter>;
@@ -83,7 +72,7 @@ export class MultiFloatingFilterComp extends Component implements IFloatingFilte
             newCompDetailsList.length === this.compDetailsList.length &&
             newCompDetailsList.every(
                 (newCompDetails, index) =>
-                    !this.filterManager?.areFilterCompsDifferent(this.compDetailsList[index], newCompDetails)
+                    !this.beans.filterManager?.areFilterCompsDifferent(this.compDetailsList[index], newCompDetails)
             );
 
         if (allFloatingFilterCompsUnchanged) {
@@ -176,12 +165,13 @@ export class MultiFloatingFilterComp extends Component implements IFloatingFilte
     }
 
     private getCompDetails(filterDef: IFilterDef, params: IFloatingFilterParams<IFilter>): UserCompDetails | undefined {
+        const { filterManager, frameworkOverrides, userCompFactory } = this.beans;
         const defaultComponentName =
-            _getDefaultFloatingFilterType(this.beans.frameworkOverrides, filterDef, () =>
-                this.filterManager!.getDefaultFloatingFilter(this.params.column as AgColumn)
+            _getDefaultFloatingFilterType(frameworkOverrides, filterDef, () =>
+                filterManager!.getDefaultFloatingFilter(this.params.column as AgColumn)
             ) ?? 'agReadOnlyFloatingFilter';
 
-        return _getFloatingFilterCompDetails(this.userCompFactory, filterDef, params, defaultComponentName);
+        return _getFloatingFilterCompDetails(userCompFactory, filterDef, params, defaultComponentName);
     }
 
     private parentMultiFilterInstance(cb: (instance: MultiFilter) => void): void {

@@ -1,18 +1,20 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniScatter extends MiniChartWithAxes {
     static chartType: ChartType = 'scatter';
-    private readonly points: _Scene.Shape[];
+    private readonly points: any[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'scatterTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'scatterTooltip');
 
-        const size = this.size;
-        const padding = this.padding;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         // [x, y] pairs
         const data = [
@@ -38,7 +40,7 @@ export class MiniScatter extends MiniChartWithAxes {
         yScale.domain = [-0.5, 3.5];
         yScale.range = [size - padding, padding];
 
-        const points: _Scene.Shape[] = [];
+        const points: any[] = [];
 
         data.forEach((series) => {
             series.forEach(([x, y]) => {

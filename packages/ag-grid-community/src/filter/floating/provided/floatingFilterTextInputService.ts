@@ -5,21 +5,21 @@ import { RefPlaceholder } from '../../../widgets/component';
 import type { FloatingFilterInputService } from './iFloatingFilterInputService';
 
 export class FloatingFilterTextInputService extends BeanStub implements FloatingFilterInputService {
-    private eFloatingFilterTextInput: AgInputTextField = RefPlaceholder;
-    private valueChangedListener: (e: KeyboardEvent) => void = () => {};
+    private eInput: AgInputTextField = RefPlaceholder;
+    private onValueChanged: (e: KeyboardEvent) => void = () => {};
 
     constructor(private params?: { config?: AgInputTextFieldParams }) {
         super();
     }
 
     public setupGui(parentElement: HTMLElement): void {
-        this.eFloatingFilterTextInput = this.createManagedBean(new AgInputTextField(this.params?.config));
+        this.eInput = this.createManagedBean(new AgInputTextField(this.params?.config));
 
-        const eInput = this.eFloatingFilterTextInput.getGui();
+        const eInput = this.eInput.getGui();
 
         parentElement.appendChild(eInput);
 
-        const listener = (e: KeyboardEvent) => this.valueChangedListener(e);
+        const listener = (e: KeyboardEvent) => this.onValueChanged(e);
         this.addManagedListeners(eInput, {
             input: listener,
             keydown: listener,
@@ -27,34 +27,27 @@ export class FloatingFilterTextInputService extends BeanStub implements Floating
     }
 
     public setEditable(editable: boolean): void {
-        this.eFloatingFilterTextInput.setDisabled(!editable);
-    }
-
-    public setAutoComplete(autoComplete: boolean | string): void {
-        this.eFloatingFilterTextInput.setAutoComplete(autoComplete);
+        this.eInput.setDisabled(!editable);
     }
 
     public getValue(): string | null | undefined {
-        return this.eFloatingFilterTextInput.getValue();
+        return this.eInput.getValue();
     }
 
     public setValue(value: string | null | undefined, silent?: boolean): void {
-        this.eFloatingFilterTextInput.setValue(value, silent);
+        this.eInput.setValue(value, silent);
     }
 
     public setValueChangedListener(listener: (e: KeyboardEvent) => void): void {
-        this.valueChangedListener = listener;
+        this.onValueChanged = listener;
     }
 
-    public setParams(params: { ariaLabel: string; autoComplete?: boolean | string }): void {
-        this.setAriaLabel(params.ariaLabel);
+    public setParams({ ariaLabel, autoComplete }: { ariaLabel: string; autoComplete?: boolean | string }): void {
+        const { eInput } = this;
+        eInput.setInputAriaLabel(ariaLabel);
 
-        if (params.autoComplete !== undefined) {
-            this.setAutoComplete(params.autoComplete);
+        if (autoComplete !== undefined) {
+            eInput.setAutoComplete(autoComplete);
         }
-    }
-
-    private setAriaLabel(ariaLabel: string): void {
-        this.eFloatingFilterTextInput.setInputAriaLabel(ariaLabel);
     }
 }

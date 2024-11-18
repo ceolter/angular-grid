@@ -286,7 +286,7 @@ export class AgSideBar extends Component implements ISideBar {
         }
 
         if (def.toolPanel === 'agFiltersToolPanel') {
-            if (this.filterManager?.isAdvancedFilterEnabled()) {
+            if (this.filterManager?.isAdvFilterEnabled()) {
                 _warn(213);
                 return false;
             }
