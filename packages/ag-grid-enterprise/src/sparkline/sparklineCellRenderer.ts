@@ -9,7 +9,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     private readonly eSparkline: HTMLElement = RefPlaceholder;
     private sparklineInstance?: AgChartInstance<any>;
     private sparklineOptions: AgSparklineOptions;
-    params: ISparklineCellRendererParams<any, any> | undefined;
+    private params: ISparklineCellRendererParams<any, any> | undefined;
 
     constructor() {
         super(/* html */ `<div class="ag-sparkline-wrapper">
