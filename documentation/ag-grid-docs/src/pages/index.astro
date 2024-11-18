@@ -16,6 +16,7 @@ import { parseVersion } from '@ag-website-shared/utils/parseVersion';
 import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
 import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
+import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { blogPrefix } = whatsNewData['grid'];
@@ -95,12 +96,7 @@ const frameworksData = [
     </div>
 
     <div class={styles.homepageCustomers}>
-        <div class:list={[styles.customersInner, 'layout-max-width-small']}>
-            <div class={styles.customerLogos}></div>
-            <p class="text-tertiary">
-                Trusted by the finest teams globally, an unmatched experience for developers and users alike.
-            </p>
-        </div>
+        <CustomerLogos client:load />
     </div>
 
     <AutomatedExamples client:visible />
