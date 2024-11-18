@@ -3,16 +3,18 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    colorSchemeVariable,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -22,9 +24,7 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -44,18 +44,20 @@ ModuleRegistry.registerModules([
             <p style="flex: 0 1 0%">
                 Theme:
                 <select style="margin-right: 16px" [(ngModel)]="baseTheme">
-                    <option *ngFor="let baseTheme of baseThemes" [ngValue]="baseTheme">{{ baseTheme.id }}</option>
+                    <option *ngFor="let baseTheme of baseThemes" [ngValue]="baseTheme.value">
+                        {{ baseTheme.id }}
+                    </option>
                 </select>
                 Icons:
                 <select style="margin-right: 16px" [(ngModel)]="iconSet">
-                    <option *ngFor="let iconSet of iconSets" [ngValue]="iconSet">
-                        {{ iconSet ? iconSet.variant : '(unchanged)' }}
+                    <option *ngFor="let iconSet of iconSets" [ngValue]="iconSet.value">
+                        {{ iconSet.id }}
                     </option>
                 </select>
                 Color scheme:
                 <select style="margin-right: 16px" [(ngModel)]="colorScheme">
-                    <option *ngFor="let colorScheme of colorSchemes" [ngValue]="colorScheme">
-                        {{ colorScheme ? colorScheme.variant : '(unchanged)' }}
+                    <option *ngFor="let colorScheme of colorSchemes" [ngValue]="colorScheme.value">
+                        {{ colorScheme.id }}
                     </option>
                 </select>
             </p>
@@ -73,21 +75,33 @@ ModuleRegistry.registerModules([
     `,
 })
 export class AppComponent {
-    baseThemes = [themeQuartz, themeBalham, themeAlpine];
+    baseThemes = [
+        { id: 'themeQuartz', value: themeQuartz },
+        { id: 'themeBalham', value: themeBalham },
+        { id: 'themeAlpine', value: themeAlpine },
+    ];
     baseTheme = themeQuartz;
 
     colorSchemes = [
-        null,
-        colorSchemeLight,
-        colorSchemeLightCold,
-        colorSchemeLightWarm,
-        colorSchemeDark,
-        colorSchemeDarkWarm,
-        colorSchemeDarkBlue,
+        { id: '(unchanged)', value: null },
+        { id: 'colorSchemeLight', value: colorSchemeLight },
+        { id: 'colorSchemeLightCold', value: colorSchemeLightCold },
+        { id: 'colorSchemeLightWarm', value: colorSchemeLightWarm },
+        { id: 'colorSchemeDark', value: colorSchemeDark },
+        { id: 'colorSchemeDarkWarm', value: colorSchemeDarkWarm },
+        { id: 'colorSchemeDarkBlue', value: colorSchemeDarkBlue },
+        { id: 'colorSchemeVariable', value: colorSchemeVariable },
     ];
     colorScheme = null;
 
-    iconSets = [null, iconSetQuartzLight, iconSetQuartzRegular, iconSetQuartzBold, iconSetAlpine, iconSetMaterial];
+    iconSets = [
+        { id: '(unchanged)', value: null },
+        { id: 'iconSetQuartzLight', value: iconSetQuartzLight },
+        { id: 'iconSetQuartzRegular', value: iconSetQuartzRegular },
+        { id: 'iconSetQuartzBold', value: iconSetQuartzBold },
+        { id: 'iconSetAlpine', value: iconSetAlpine },
+        { id: 'iconSetMaterial', value: iconSetMaterial },
+    ];
     iconSet = null;
 
     get theme() {

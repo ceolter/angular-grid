@@ -2,10 +2,11 @@ import { useSetAdvancedParamEnabled } from '@components/theme-builder/model/adva
 import type { ThemeParam } from '@components/theme-builder/model/utils';
 import type { FC, ReactNode } from 'react';
 
-import type { ParamType } from 'ag-grid-community';
+import type { _theming } from 'ag-grid-community';
 
 import { ParamModel, useParamAtom } from '../../model/ParamModel';
 import { useRenderedTheme } from '../../model/rendered-theme';
+import { getThemeDefaultParams } from '../component-utils';
 import { withErrorBoundary } from '../general/ErrorBoundary';
 import { BorderStyleValueEditor } from './BorderStyleValueEditor';
 import { BorderValueEditor } from './BorderValueEditor';
@@ -40,7 +41,7 @@ export const ParamEditor = withErrorBoundary((props: ParamEditorProps) => {
     const theme = useRenderedTheme();
     let editorValue = value;
     if (editorValue == null) {
-        const params = theme.getParams().getValues();
+        const params = getThemeDefaultParams(theme);
         if (param.property in params) {
             editorValue = params[param.property];
         } else {
@@ -76,7 +77,7 @@ export const ParamEditor = withErrorBoundary((props: ParamEditorProps) => {
     );
 });
 
-const valueEditors: Record<ParamType, FC<ValueEditorProps<any>>> = {
+const valueEditors: Record<_theming.ParamType, FC<ValueEditorProps<any>>> = {
     color: ColorValueEditor,
     colorScheme: ColorSchemeValueEditor,
     length: LengthValueEditor,

@@ -303,7 +303,8 @@ export const AG_GRID_ERRORS = {
     105: ({ e }: { e: any }) => [`chart rendering failed`, e] as const,
     106: () =>
         'Invalid mixing of Theming API and CSS File Themes in the same page. A Theming API theme has been provided to the `theme` grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page.' as const,
-    107: ({ key, value }: { key: string; value: string }) => `Invalid value for param ${key} - ${value}` as const,
+    107: ({ key, value }: { key: string; value: unknown }) =>
+        `Invalid value for theme param ${key} - ${value}` as const,
     108: ({ e }: { e: any }) => ['chart update failed', e] as const,
     109: ({ aggFuncOrString }: { aggFuncOrString: any }) =>
         `unrecognised aggregation function ${aggFuncOrString}` as const,

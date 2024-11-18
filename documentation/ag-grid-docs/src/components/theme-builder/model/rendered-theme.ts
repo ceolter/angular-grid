@@ -1,16 +1,16 @@
 import { atom, useAtomValue } from 'jotai';
 
-import { type Part, type Theme, _asThemeImpl, themeQuartz } from 'ag-grid-community';
+import { type Theme, _theming, themeQuartz } from 'ag-grid-community';
 
 import { allParamModels } from './ParamModel';
+import type { PartModel } from './PartModel';
 import { FeatureModel } from './PartModel';
 import { enabledAdvancedParamsAtom } from './advanced-params';
-import { setCurrentThemeCssClass } from './utils';
 
 export type RenderedThemeInfo = {
     theme: Theme;
     overriddenParams: Record<string, unknown>;
-    usedParts: Part[];
+    usedParts: PartModel[];
 };
 
 const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
@@ -18,18 +18,21 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
 
     let theme = themeQuartz;
 
-    const usedParts: Part[] = [];
-    for (const featureName of ['iconSet'] as const) {
+    const usedParts: PartModel[] = [];
+    for (const featureName of ['iconSet']) {
         const feature = FeatureModel.for(featureName);
-        const part = get(feature.selectedPartAtom).part;
-        if (part !== feature.defaultPart.part) {
-            usedParts.push(part);
-            theme = theme.withPart(part);
+        const partModel = get(feature.selectedPartAtom);
+        if (partModel.part !== feature.defaultPart.part) {
+            usedParts.push(partModel);
+            theme = theme.withPart(partModel.part);
         }
     }
 
     const overriddenParams = Object.fromEntries(
         allParamModels()
+            // filter out params where we still have a value saved in
+            // localStorage, but the param is turned off so the value is not
+            // added to the current theme
             .filter((param) => enabledAdvancedParams.has(param.property) || !param.onlyEditableAsAdvancedParam)
             .map((param) => [param.property, get(param.valueAtom)])
     );
@@ -37,9 +40,8 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
 
     // globally install the theme CSS, because form widgets use reinterpretCSSValue
     // which requires that the CSS variable values are available
-    setCurrentThemeCssClass(theme.getCssClass());
     const stylesheet = new CSSStyleSheet();
-    stylesheet.replaceSync(_asThemeImpl(theme).getParamsCSS());
+    stylesheet.replaceSync(_theming.asThemeImpl(theme)._getPerGridCss('apply-current-theme-params'));
     document.adoptedStyleSheets = [stylesheet];
 
     return {
@@ -49,6 +51,6 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
     };
 });
 
-export const useRenderedTheme = () => _asThemeImpl(useAtomValue(renderedThemeInfoAtom).theme);
+export const useRenderedTheme = () => _theming.asThemeImpl(useAtomValue(renderedThemeInfoAtom).theme);
 
 export const useRenderedThemeInfo = () => useAtomValue(renderedThemeInfoAtom);

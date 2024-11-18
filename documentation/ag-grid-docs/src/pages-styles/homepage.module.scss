@@ -327,16 +327,6 @@ body {
     }
 }
 
-.homepageExample {
-    padding-top: $spacing-size-12;
-    padding-bottom: $spacing-size-16;
-
-    @media screen and (min-width: $breakpoint-automated-row-grouping-medium) {
-        padding-top: $spacing-size-24;
-        padding-bottom: $spacing-size-32;
-    }
-}
-
 .sponsorshipInner {
     margin-bottom: $spacing-size-20;
 
@@ -556,6 +546,7 @@ body {
     align-items: center;
     gap: 8px;
 }
+
 .heroSectioncta1 svg {
     height: 24px;
     width: 24px;
@@ -581,6 +572,7 @@ body {
     gap: $spacing-size-2;
     padding: $spacing-size-1 $spacing-size-3;
     margin-bottom: $spacing-size-6;
+
     #{$selector-darkmode} & {
         background-color: var(--color-bg-secondary);
     }
@@ -590,7 +582,6 @@ body {
     display: flex;
     flex-direction: row;
     gap: 16px;
-
     padding: $spacing-size-2 $spacing-size-2;
     font-weight: 500;
 
@@ -599,28 +590,35 @@ body {
         gap: 8px;
         padding-bottom: 8px;
     }
+
     .active {
         border-bottom: 1.5px solid var(--color-white);
     }
+
     :not(.active) {
         transition: color opacity 0.5s;
         color: var(--color-brand-300);
+
         img {
             opacity: 0.5;
         }
+
         &:hover {
             cursor: pointer;
             color: var(--color-white);
+            transition: color opacity 0.5s;
+
             img {
                 opacity: 1;
             }
-            transition: color opacity 0.5s;
         }
     }
+
     img {
         height: 20px;
     }
 }
+
 .frameworkSelector {
     background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-brand-500) 90%);
     width: 400px;
@@ -646,6 +644,7 @@ body {
     cursor: pointer;
     opacity: 0.7;
 }
+
 .heroSectionfeatureHighlight {
     font-weight: 500;
 }
@@ -685,6 +684,7 @@ body {
         padding: 0;
     }
 }
+
 .subHeading {
     color: var(--color-fg-tertiary);
     font-weight: var(--text-fs-regular);
@@ -715,24 +715,17 @@ body {
         transform: translate(-50%, 250px);
     }
 }
+
 .customerSubheading {
     opacity: 0.7;
     margin: 0 auto;
     display: flex;
     justify-content: center;
 }
+
 .sectionContent a {
     width: fit-content;
     margin-top: $spacing-size-3;
-}
-
-.quotesSection {
-    padding-bottom: $spacing-size-16;
-}
-
-.faqSection {
-    padding-top: $spacing-size-20;
-    padding-bottom: $spacing-size-16;
 }
 
 .themeBuilder {

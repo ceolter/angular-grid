@@ -1,16 +1,15 @@
 import type { CollectionEntry } from 'astro:content';
-import { type FunctionComponent, useCallback, useEffect, useState } from 'react';
+import { type FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
 import type {
     GetRowIdParams,
     IRowNode,
-    Module,
     RowSelectedEvent,
     RowSelectionOptions,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllEnterpriseModule, ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
+import { ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 interface Props {
@@ -27,7 +26,8 @@ ModuleRegistry.registerModules([
 ]);
 
 export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
-    const [dependencies] = useState(new Map<string, Set<string>>());
+    const allCommunityRef = useRef(false);
+    const allEnterpriseRef = useRef(false);
     const [defaultColDef] = useState({
         flex: 1,
     });
@@ -37,59 +37,100 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
         valueFormatter: (params: ValueFormatterParams) => `${params.value}${params.data.isEnterprise ? ' (e)' : ''}`,
     });
     const getRowId = useCallback((params: GetRowIdParams) => params.data.name, []);
-    const onRowSelected = useCallback(
-        (event: RowSelectedEvent) => {
-            const {
-                node,
-                data: { moduleName },
-                api,
-            } = event;
-            if (node.isSelected()) {
-                const moduleDependencies = dependencies.get(moduleName);
-                if (moduleDependencies) {
-                    const selectedNodes: IRowNode[] = [];
-                    api.forEachLeafNode((node) => {
-                        if (moduleDependencies.has(node.data.moduleName)) {
-                            selectedNodes.push(node);
-                        }
-                    });
-                    if (selectedNodes.length) {
-                        api.setNodesSelected({
-                            nodes: selectedNodes,
-                            newValue: true,
-                        });
-                    }
+    const [update, setUpdate] = useState(0);
+    const [selectedModules, setSelectedModules] = useState<{ community: string[]; enterprise: string[] }>({
+        community: [],
+        enterprise: [],
+    });
+    const onRowSelected = useCallback((event: RowSelectedEvent) => {
+        const {
+            node,
+            data: { moduleName },
+            api,
+        } = event;
+        const isSelected = !!node.isSelected();
+        if (moduleName === 'AllEnterpriseModule') {
+            allEnterpriseRef.current = isSelected;
+            if (isSelected) {
+                api.selectAll('all');
+            } else {
+                api.deselectAll('all');
+            }
+        } else if (moduleName === 'AllCommunityModule') {
+            allCommunityRef.current = isSelected;
+            const nodesToToggle: IRowNode[] = [];
+            // toggle all community modules
+            api.forEachLeafNode((child) => {
+                if (!child.data.isEnterprise && child.data.moduleName) {
+                    nodesToToggle.push(child);
+                }
+            });
+            api.setNodesSelected({
+                nodes: nodesToToggle,
+                newValue: isSelected,
+            });
+        } else if (!moduleName && !isSelected && allCommunityRef.current) {
+            // when deselecting a group with all community selected, we need to prevent deselecting disabled children
+            const nodesToReselect: IRowNode[] = [];
+            node.allLeafChildren?.forEach((child) => {
+                if (!child.isSelected() && !child.data.isEnterprise) {
+                    nodesToReselect.push(child);
+                }
+                api.setNodesSelected({
+                    nodes: nodesToReselect,
+                    newValue: true,
+                });
+            });
+        }
+        setUpdate((old) => old + 1);
+        const selectedCommunity: string[] = [];
+        const selectedEnterprise: string[] = [];
+        api.forEachLeafNode((leaf) => {
+            const { moduleName: leafModuleName, isEnterprise: leafIsEnterprise } = leaf.data;
+            if (leafModuleName && leaf.isSelected()) {
+                if (leafIsEnterprise) {
+                    selectedEnterprise.push(leafModuleName);
+                } else {
+                    selectedCommunity.push(leafModuleName);
                 }
             }
-        },
-        [dependencies]
-    );
-    const [treeData] = useState(true);
-    const [treeDataChildrenField] = useState('children');
-    const [rowSelection] = useState<RowSelectionOptions>({
-        mode: 'multiRow',
-        groupSelects: 'descendants',
-    });
-    const [groupDefaultExpanded] = useState(-1);
-    const [loadThemeGoogleFonts] = useState(true);
-
+        });
+        setSelectedModules({
+            community: allEnterpriseRef.current
+                ? []
+                : allCommunityRef.current
+                  ? ['AllCommunityModule']
+                  : selectedCommunity,
+            enterprise: allEnterpriseRef.current ? ['AllEnterpriseModule'] : selectedEnterprise,
+        });
+    }, []);
     useEffect(() => {
-        const calcDependencies = ({ moduleName, dependsOn }: Module) => {
-            let moduleDependencies = dependencies.get(moduleName);
-            if (!moduleDependencies) {
-                moduleDependencies = new Set();
-                dependencies.set(moduleName, moduleDependencies);
-                dependsOn?.forEach((child) => {
-                    moduleDependencies!.add(child.moduleName);
-                    const childDependencies = calcDependencies(child);
-                    childDependencies.forEach((childDependency) => moduleDependencies!.add(childDependency));
-                });
-            }
-            return moduleDependencies;
+        // eslint-disable-next-line no-console
+        console.log('selected modules', selectedModules);
+    }, [selectedModules]);
+    const rowSelection = useMemo<RowSelectionOptions>(() => {
+        return {
+            mode: 'multiRow',
+            checkboxes: (params) => {
+                if (allEnterpriseRef.current) {
+                    return params.data.moduleName === 'AllEnterpriseModule';
+                }
+                if (!allCommunityRef.current) {
+                    // neither is checked, so everything available
+                    return true;
+                }
+                if (params.data.moduleName) {
+                    // when all community is checked, only enterprise or all community (leaf modules) are available
+                    return params.data.isEnterprise || params.data.moduleName === 'AllCommunityModule';
+                }
+                // when all community is checked, groups are available only if some of their children are enterprise
+                return params.node.allLeafChildren?.some((child) => child.data.isEnterprise);
+            },
+            groupSelects: 'descendants',
+            headerCheckbox: false,
         };
-
-        AllEnterpriseModule.dependsOn?.forEach(calcDependencies);
-    }, [dependencies]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [update]);
 
     return (
         <div style={{ height: '600px' }}>
@@ -98,13 +139,13 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
                 columnDefs={columnDefs}
                 autoGroupColumnDef={autoGroupColumnDef}
                 rowData={modules.groups}
-                treeData={treeData}
-                treeDataChildrenField={treeDataChildrenField}
+                treeData
+                treeDataChildrenField={'children'}
                 getRowId={getRowId}
                 rowSelection={rowSelection}
                 onRowSelected={onRowSelected}
-                groupDefaultExpanded={groupDefaultExpanded}
-                loadThemeGoogleFonts={loadThemeGoogleFonts}
+                groupDefaultExpanded={-1}
+                loadThemeGoogleFonts
             />
         </div>
     );

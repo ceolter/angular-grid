@@ -1,7 +1,8 @@
 import { useAtom, useAtomValue } from 'jotai';
 
-import { type ParamType, _asThemeImpl, getParamType, themeQuartz } from 'ag-grid-community';
+import { _theming, themeQuartz } from 'ag-grid-community';
 
+import { getThemeDefaultParams } from '../components/component-utils';
 import type { PersistentAtom } from './JSONStorage';
 import { atomWithJSONStorage } from './JSONStorage';
 import { getParamDocs } from './param-docs';
@@ -41,14 +42,14 @@ const nonAdvancedParams = new Set([
 export class ParamModel<T> {
     readonly label: string;
     readonly docs: string;
-    readonly type: ParamType;
+    readonly type: _theming.ParamType;
     readonly valueAtom: PersistentAtom<T | undefined>;
 
     private constructor(readonly property: ThemeParam) {
         this.label = titleCase(property);
         this.valueAtom = atomWithJSONStorage<T | undefined>(`param.${property}`, undefined);
         this.docs = getParamDocs(property) || '';
-        this.type = getParamType(property);
+        this.type = _theming.getParamType(property);
     }
 
     hasValue = (store: Store) => store.get(this.valueAtom) != null;
@@ -73,7 +74,8 @@ export const useParamAtom = <T>(model: ParamModel<T>) => useAtom(model.valueAtom
 export const useParam = <T>(model: ParamModel<T>) => useAtomValue(model.valueAtom);
 
 export const allParamModels = memoize(() => {
-    const allParams = Array.from(Object.keys(_asThemeImpl(themeQuartz).getParams().getValues())) as ThemeParam[];
+    const defaultModeParams = getThemeDefaultParams(themeQuartz);
+    const allParams = Array.from(Object.keys(defaultModeParams)) as ThemeParam[];
     return (
         allParams
             .sort()

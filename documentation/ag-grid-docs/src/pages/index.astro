@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content';
 import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
-import FrameworkSelector from '@components/FrameworkSelector';
+import { LandingPageFWSelector } from '@ag-website-shared/components/landing-pages/LandingPageFWSelector';
 import InstallText from '@components/framework-landing-pages/InstallText';
 import HeroGrid from '@components/hero-grid/HeroGrid.astro';
 import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
@@ -16,6 +16,7 @@ import { parseVersion } from '@ag-website-shared/utils/parseVersion';
 import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
 import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
+import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { blogPrefix } = whatsNewData['grid'];
@@ -90,17 +91,12 @@ const frameworksData = [
 
     <div class={styles.homepageFrameworks}>
         <div class:list={[styles.frameworksInner, 'layout-max-width-small']}>
-            <FrameworkSelector client:load data={frameworksData} isFullWidth />
+            <LandingPageFWSelector client:load data={frameworksData} isFullWidth />
         </div>
     </div>
 
     <div class={styles.homepageCustomers}>
-        <div class:list={[styles.customersInner, 'layout-max-width-small']}>
-            <div class={styles.customerLogos}></div>
-            <p class="text-tertiary">
-                Trusted by the finest teams globally, an unmatched experience for developers and users alike.
-            </p>
-        </div>
+        <CustomerLogos client:load />
     </div>
 
     <AutomatedExamples client:visible />
@@ -109,6 +105,8 @@ const frameworksData = [
         tag="Where Can I See AG Grid React Tables Being Used?"
         heading="Used in Every Industry, for All Types of Data"
         subHeading="Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
+        ctaTitle="See More Projects Powered by AG Grid"
+        ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >
         <Showcase client:load />
     </LandingPageSection>
@@ -117,7 +115,6 @@ const frameworksData = [
         tag="Who Builds Data Grids with AG Grid?"
         heading="Loved By Developers, Trusted By The Worlds Largest Enterprises"
         subHeading="Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000 Stars on GitHub."
-        sectionClass={styles.quotesSection}
     >
         <Quotes client:load data={quotesData} />
     </LandingPageSection>
@@ -126,7 +123,10 @@ const frameworksData = [
         tag="Latest JavaScript Charting Releases from AG Grid"
         headingHtml="Regular Releases, <br /> Updates, and Enhancements"
         subHeading="With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of the newest features and improvements to AG Grid Data Grids."
-        sectionClass={styles.faqSection}
+        ctaTitle="See Whats New"
+        ctaUrl={urlWithBaseUrl(
+            '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
+        )}
     >
         <div class={styles.latestNewsVersions}>
             {
@@ -151,14 +151,6 @@ const frameworksData = [
                         }
                     })
             }
-        </div>
-        <div class={styles.ctaButton}>
-            <a
-                href={urlWithBaseUrl(
-                    '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
-                )}
-                class="button">See Whats New</a
-            >
         </div>
     </LandingPageSection>
 

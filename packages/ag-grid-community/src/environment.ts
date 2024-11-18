@@ -3,7 +3,7 @@ import { themeQuartz } from 'ag-grid-community';
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
-import type { GridTheme } from './entities/gridOptions';
+import { ThemeImpl } from './theming/Theme';
 import { _injectCoreAndModuleCSS, _injectGlobalCSS } from './theming/inject';
 import { _observeResize } from './utils/dom';
 import { _error, _warn } from './validation/logging';
@@ -24,6 +24,8 @@ const LIST_ITEM_HEIGHT: Variable = {
     defaultValue: 24,
 };
 
+let paramsId = 0;
+
 export class Environment extends BeanStub implements NamedBean {
     beanName = 'environment' as const;
 
@@ -38,14 +40,14 @@ export class Environment extends BeanStub implements NamedBean {
     private eMeasurementContainer: HTMLElement | undefined;
     public sizesMeasured = false;
 
-    private gridTheme: GridTheme | undefined;
-    public themeClass: string | undefined;
-    private globalCSS: string[] = [];
+    private paramsClass = `ag-theme-params-${++paramsId}`;
+    private gridTheme: ThemeImpl | undefined;
+    private eParamsStyle: HTMLStyleElement | undefined;
+    private globalCSS: [string, string][] = [];
 
     public postConstruct(): void {
         this.addManagedPropertyListener('theme', () => this.handleThemeGridOptionChange());
         this.handleThemeGridOptionChange();
-        this.addDestroyFunc(() => this.stopUsingTheme());
 
         this.addManagedPropertyListener('rowHeight', () => this.refreshRowHeightVariable());
         this.getSizeEl(ROW_HEIGHT);
@@ -74,13 +76,14 @@ export class Environment extends BeanStub implements NamedBean {
         return this.getCSSVariablePixelValue(LIST_ITEM_HEIGHT);
     }
 
-    public getGridThemeClass(): string | null {
-        return this.gridTheme?.getCssClass() || null;
-    }
-
     public applyThemeClasses(el: HTMLElement) {
-        let themeClass: string | undefined;
-        if (this.gos.get('theme') === 'legacy') {
+        const { gridTheme } = this;
+        let themeClass = '';
+        if (gridTheme) {
+            // theming API mode
+            themeClass = `${this.paramsClass} ${gridTheme._getCssClass()}`;
+        } else {
+            // legacy mode
             let node: HTMLElement | null = this.eGridDiv;
             while (node) {
                 for (const className of Array.from(node.classList)) {
@@ -90,16 +93,16 @@ export class Environment extends BeanStub implements NamedBean {
                 }
                 node = node.parentElement;
             }
-        } else {
-            themeClass = this.themeClass;
         }
+
         for (const className of Array.from(el.classList)) {
             if (className.startsWith('ag-theme-')) {
                 el.classList.remove(className);
             }
         }
         if (themeClass) {
-            el.classList.add(themeClass);
+            const oldClass = el.className;
+            el.className = oldClass + (oldClass ? ' ' : '') + themeClass;
         }
     }
 
@@ -125,11 +128,11 @@ export class Environment extends BeanStub implements NamedBean {
         return oldRowHeight != '' ? parseFloat(oldRowHeight) : -1;
     }
 
-    public addGlobalCSS(css: string): void {
+    public addGlobalCSS(css: string, debugId: string): void {
         if (this.gridTheme) {
-            _injectGlobalCSS(css, this.eGridDiv);
+            _injectGlobalCSS(css, this.eGridDiv, debugId);
         } else {
-            this.globalCSS.push(css);
+            this.globalCSS.push([css, debugId]);
         }
     }
 
@@ -205,41 +208,43 @@ export class Environment extends BeanStub implements NamedBean {
     }
 
     private handleThemeGridOptionChange(): void {
-        const { gos, eGridDiv, globalCSS, gridTheme: oldGridTheme, themeClass: oldThemeClass } = this;
+        const { gos, eGridDiv, globalCSS, gridTheme: oldGridTheme } = this;
         const themeGridOption = gos.get('theme');
-        let newGridTheme: GridTheme | undefined;
-        let newThemeClass: string | undefined;
+        let newGridTheme: ThemeImpl | undefined;
         if (themeGridOption === 'legacy') {
             newGridTheme = undefined;
         } else {
-            newGridTheme = themeGridOption || themeQuartz;
-            if (!isValidTheme(newGridTheme)) {
+            const themeOrDefault = themeGridOption ?? themeQuartz;
+            if (themeOrDefault instanceof ThemeImpl) {
+                newGridTheme = themeOrDefault;
+            } else {
                 _error(240, { theme: newGridTheme });
-                newGridTheme = themeQuartz;
             }
-            newThemeClass = newGridTheme.getCssClass();
         }
         if (newGridTheme !== oldGridTheme) {
             if (newGridTheme) {
                 _injectCoreAndModuleCSS(eGridDiv);
-                for (const css of globalCSS) {
-                    _injectGlobalCSS(css, eGridDiv);
+                for (const [css, debugId] of globalCSS) {
+                    _injectGlobalCSS(css, eGridDiv, debugId);
                 }
                 globalCSS.length = 0;
             }
-            oldGridTheme?.stopUse();
             this.gridTheme = newGridTheme;
-            newGridTheme?.startUse({
+            newGridTheme?._startUse({
                 loadThemeGoogleFonts: gos.get('loadThemeGoogleFonts'),
                 container: eGridDiv,
             });
-        }
-        if (newThemeClass !== oldThemeClass) {
-            this.themeClass = newThemeClass;
+            let eParamsStyle = this.eParamsStyle;
+            if (!eParamsStyle) {
+                eParamsStyle = this.eParamsStyle = document.createElement('style');
+                eGridDiv.appendChild(eParamsStyle);
+            }
+            eParamsStyle.textContent = newGridTheme?._getPerGridCss(this.paramsClass) || '';
+
             this.applyThemeClasses(eGridDiv);
             this.fireGridStylesChangedEvent('themeChanged');
         }
-        // --ag-legacy-styles-loaded is defined by the Sass themes which
+        // --ag-legacy-styles-loaded is defined by the legacy themes which
         // shouldn't be used at the same time as Theming API
         if (newGridTheme && getComputedStyle(document.body).getPropertyValue('--ag-legacy-styles-loaded')) {
             if (themeGridOption) {
@@ -249,17 +254,7 @@ export class Environment extends BeanStub implements NamedBean {
             }
         }
     }
-
-    private stopUsingTheme(): void {
-        this.gridTheme?.stopUse();
-        this.gridTheme = undefined;
-    }
 }
-
-const isValidTheme = (theme: GridTheme): boolean => {
-    const isFunction = (f: unknown) => typeof f === 'function';
-    return isFunction(theme.getCssClass) && isFunction(theme.startUse) && isFunction(theme.stopUse);
-};
 
 type Variable = {
     cssName: string;

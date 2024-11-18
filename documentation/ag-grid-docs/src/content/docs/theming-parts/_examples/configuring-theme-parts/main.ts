@@ -1,14 +1,15 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import type { ColDef, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
+import type { ColDef, GridOptions, Part, Theme } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLight,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    createGrid,
     iconSetAlpine,
     iconSetMaterial,
     iconSetQuartzBold,
@@ -18,9 +19,7 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -30,22 +29,31 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
 ]);
 
-const baseThemes = [themeQuartz, themeBalham, themeAlpine];
-let baseTheme = baseThemes[0];
+const baseThemes: Record<string, Theme> = {
+    quartz: themeQuartz,
+    balham: themeBalham,
+    alpine: themeAlpine,
+};
+let baseTheme = themeQuartz;
 
-const colorSchemes = [
-    null,
-    colorSchemeLight,
-    colorSchemeLightCold,
-    colorSchemeLightWarm,
-    colorSchemeDark,
-    colorSchemeDarkWarm,
-    colorSchemeDarkBlue,
-];
-let colorScheme = colorSchemes[0];
+const colorSchemes: Record<string, Part> = {
+    light: colorSchemeLight,
+    lightCold: colorSchemeLightCold,
+    lightWarm: colorSchemeLightWarm,
+    dark: colorSchemeDark,
+    darkWarm: colorSchemeDarkWarm,
+    darkBlue: colorSchemeDarkBlue,
+};
+let colorScheme: Part | null = null;
 
-const iconSets = [null, iconSetQuartzLight, iconSetQuartzRegular, iconSetQuartzBold, iconSetAlpine, iconSetMaterial];
-let iconSet = iconSets[0];
+const iconSets: Record<string, Part> = {
+    quartzLight: iconSetQuartzLight,
+    quartzRegular: iconSetQuartzRegular,
+    quartzBold: iconSetQuartzBold,
+    alpine: iconSetAlpine,
+    material: iconSetMaterial,
+};
+let iconSet: Part | null = null;
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 
@@ -77,17 +85,17 @@ const gridOptions: GridOptions<IOlympicData> = {
 const gridApi = createGrid(document.querySelector<HTMLElement>('#myGrid')!, gridOptions);
 
 function setBaseTheme(id: string) {
-    baseTheme = baseThemes.find((theme) => theme.id === id)!;
+    baseTheme = baseThemes[id];
     gridApi.setGridOption('theme', buildTheme());
 }
 
 function setIconSet(id: string) {
-    iconSet = iconSets.find((theme) => theme?.id === id) || null;
+    iconSet = iconSets[id] || null;
     gridApi.setGridOption('theme', buildTheme());
 }
 
 function setColorScheme(id: string) {
-    colorScheme = colorSchemes.find((theme) => theme?.id === id) || null;
+    colorScheme = colorSchemes[id] || null;
     gridApi.setGridOption('theme', buildTheme());
 }
 

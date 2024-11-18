@@ -12,7 +12,7 @@ export const RootContainer = () => {
 
     return (
         <Container>
-            <Menu>
+            <Menu className="apply-current-theme-params">
                 <EditorScroller>
                     <EditorPanel />
                 </EditorScroller>

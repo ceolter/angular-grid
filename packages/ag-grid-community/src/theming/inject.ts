@@ -10,8 +10,13 @@ type Injection = {
 
 const injections = new WeakMap<HTMLElement, Injection>();
 
-export const _injectGlobalCSS = (css: string, container: HTMLElement, id = '') => {
+export const _injectGlobalCSS = (css: string, container: HTMLElement, debugId: string) => {
     if (IS_SSR) return;
+
+    // if the container is attached to the main document, inject into the head
+    // (only one instance of each stylesheet created per document). Otherwise
+    // (and this happens for grids in the shadow root and grids detached form
+    // the DOM) inject into the container itself.
     const root = container.getRootNode() === document ? document.head : container;
 
     let injection = injections.get(root);
@@ -22,7 +27,7 @@ export const _injectGlobalCSS = (css: string, container: HTMLElement, id = '') =
     if (injection.css.has(css)) return;
 
     const style = document.createElement('style');
-    style.dataset.agGlobalCss = id;
+    style.dataset.agGlobalCss = debugId;
     style.textContent = css;
 
     if (injection.last) {
@@ -38,11 +43,10 @@ export const _injectGlobalCSS = (css: string, container: HTMLElement, id = '') =
 };
 
 export const _injectCoreAndModuleCSS = (container: HTMLElement) => {
-    const moduleCSS = Array.from(_getAllRegisteredModules())
+    _injectGlobalCSS(coreCSS, container, 'core');
+    Array.from(_getAllRegisteredModules())
         .sort((a, b) => a.moduleName.localeCompare(b.moduleName))
-        .flatMap((module) => module.css || []);
-
-    for (const css of [coreCSS, ...moduleCSS]) {
-        _injectGlobalCSS(css, container);
-    }
+        .forEach((module) =>
+            module.css?.forEach((css) => _injectGlobalCSS(css, container, `module-${module.moduleName}`))
+        );
 };

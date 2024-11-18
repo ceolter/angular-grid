@@ -29,7 +29,9 @@ ModuleRegistry.registerModules([
             <p style="flex: 0 1 0%">
                 Theme:
                 <select style="margin-right: 16px" [(ngModel)]="theme">
-                    <option *ngFor="let theme of themes" [ngValue]="theme">{{ theme.id }}</option>
+                    <option *ngFor="let theme of themes" [ngValue]="theme.theme">
+                        {{ theme.label }}
+                    </option>
                 </select>
             </p>
             <div style="flex: 1 1 0%">
@@ -46,7 +48,11 @@ ModuleRegistry.registerModules([
     `,
 })
 export class AppComponent {
-    themes = [themeQuartz, themeBalham, themeAlpine];
+    themes = [
+        { label: 'themeQuartz', theme: themeQuartz },
+        { label: 'themeBalham', theme: themeBalham },
+        { label: 'themeAlpine', theme: themeAlpine },
+    ];
     theme = themeQuartz;
 
     columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];

@@ -1,13 +1,11 @@
 @use 'design-system' as *;
 
 .sectionContent {
-    padding-top: $spacing-size-12;
     width: 100%;
-    max-width: var(--layout-max-width-small);
-
-    padding-right: var(--layout-horizontal-margins);
+    max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
     margin-right: auto;
     margin-left: auto;
+    padding: $spacing-size-12 var(--layout-horizontal-margins) $spacing-size-24;
 }
 
 .tag,
@@ -47,7 +45,18 @@
     gap: $spacing-size-2;
 }
 
-.learnMoreButton {
+.ctaButton {
+    --icon-size: #{$spacing-size-5};
+
     width: fit-content;
     margin-top: $spacing-size-3;
+
+    :global(.icon) {
+        transform: translateX($spacing-size-2);
+        transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translateX($spacing-size-3);
+    }
 }

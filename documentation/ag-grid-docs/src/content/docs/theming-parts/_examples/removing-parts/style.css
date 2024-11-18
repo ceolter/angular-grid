@@ -1,7 +1,5 @@
 .ag-checkbox-input-wrapper {
     border-radius: 4px;
-    /* Parts' CSS can use new parameters - define support
-       for them using withAdditionalParams below */
     box-shadow: 0 0 5px 4px red;
     width: 16px;
     height: 16px;
@@ -23,6 +21,12 @@
 .ag-checkbox-input {
     width: 16px;
     height: 16px;
+    margin: 0;
     appearance: none;
     -webkit-appearance: none;
+    border-radius: 4px;
+
+    &:focus {
+        box-shadow: 0 0 3px 3px yellow;
+    }
 }
