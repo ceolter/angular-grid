@@ -1,10 +1,15 @@
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import Aerie from 'public/community/showcase/aerie.svg?react';
 import AIIcon from 'public/community/showcase/ai.svg?react';
 import DashboardIcon from 'public/community/showcase/dashboard.svg?react';
 import FinanceIcon from 'public/community/showcase/finance.svg?react';
+import MLFlowLogo from 'public/community/showcase/mlflow.svg?react';
 import ModelIcon from 'public/community/showcase/model.svg?react';
+import OpenBB from 'public/community/showcase/openbb.svg?react';
+import RA from 'public/community/showcase/ra.svg?react';
 import TerminalIcon from 'public/community/showcase/terminal.svg?react';
+import Windmill from 'public/community/showcase/windmill.svg?react';
 import React from 'react';
 
 import styles from './Showcase.module.scss';
@@ -15,6 +20,7 @@ const Showcase: React.FC = () => {
             <div className={styles.gridItem}>
                 <div className={styles.iconWrapper}>
                     <FinanceIcon className={styles.icon} />
+                    <OpenBB className={styles.logo} />
                 </div>
                 <h3 className={styles.title}>Finance</h3>
                 <p className={styles.description}>
@@ -26,6 +32,7 @@ const Showcase: React.FC = () => {
             <div className={styles.gridItem}>
                 <div className={styles.iconWrapper}>
                     <AIIcon className={styles.icon} />
+                    <MLFlowLogo className={styles.logo} />
                 </div>
                 <h3 className={styles.title}>ML/AI</h3>
                 <p className={styles.description}>
@@ -37,6 +44,7 @@ const Showcase: React.FC = () => {
             <div className={styles.gridItem}>
                 <div className={styles.iconWrapper}>
                     <ModelIcon className={styles.icon} />
+                    <Windmill className={styles.logo} />
                 </div>
                 <h3 className={styles.title}>Data Modelling</h3>
                 <p className={styles.description}>
@@ -48,6 +56,7 @@ const Showcase: React.FC = () => {
             <div className={styles.gridItem}>
                 <div className={styles.iconWrapper}>
                     <DashboardIcon className={styles.icon} />
+                    <RA className={styles.logo} />
                 </div>
                 <h3 className={styles.title}>Dashboards</h3>
                 <p className={styles.description}>
@@ -59,6 +68,7 @@ const Showcase: React.FC = () => {
             <div className={styles.gridItem}>
                 <div className={styles.iconWrapper}>
                     <TerminalIcon className={styles.icon} />
+                    <Aerie className={styles.logo} />
                 </div>
                 <h3 className={styles.title}>Developer Platforms</h3>
                 <p className={styles.description}>

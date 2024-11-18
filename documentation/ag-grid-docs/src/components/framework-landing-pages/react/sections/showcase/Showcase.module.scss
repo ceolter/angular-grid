@@ -6,19 +6,48 @@
     border-collapse: collapse;
     padding-top: $spacing-size-8;
     padding-bottom: $spacing-size-8;
+
+    @media screen and (max-width: 768px) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.gridItem:first-child {
+    border-top-left-radius: $spacing-size-2;
+}
+
+.gridItem:last-child {
+    border-bottom-right-radius: $spacing-size-2;
 }
 
 .gridItem {
     background-color: var(--color-bg-primary);
     padding: $spacing-size-8;
     margin: -1px;
-
     border: 1px solid var(--color-border-secondary);
+    transition: all 0.6s;
+
+    &:hover {
+        border: 1px solid var(--color-util-brand-500);
+        background-color: var(--color-brand-50);
+        #{$selector-darkmode} & {
+            border: 1px solid var(--color-white);
+        }
+        z-index: 2;
+        cursor: pointer;
+        transition: all 0.6s;
+    }
 
     .iconWrapper {
         display: flex;
-        justify-content: left;
+        justify-content: space-between;
         margin-bottom: 16px;
+
+        .logo {
+            path {
+                fill: var(--color-fg-secondary);
+            }
+        }
 
         .icon {
             width: 32px;
