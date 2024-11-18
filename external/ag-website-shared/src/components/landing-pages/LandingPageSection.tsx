@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import type { FunctionComponent, ReactNode } from 'react';
 
-import styles from './Section.module.scss';
+import styles from './LandingPageSection.module.scss';
 
 interface Props {
     tag: string;
@@ -13,7 +13,7 @@ interface Props {
     children: ReactNode;
 }
 
-export const Section: FunctionComponent<Props> = ({
+export const LandingPageSection: FunctionComponent<Props> = ({
     tag,
     heading,
     headingHtml,

@@ -1,5 +1,5 @@
 import { createAutomatedExampleManager } from '@ag-website-shared/components/automated-examples/lib/createAutomatedExampleManager';
-import { Section } from '@ag-website-shared/components/homepage/Section';
+import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import styles from '@pages-styles/homepage.module.scss';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import classNames from 'classnames';
@@ -36,7 +36,7 @@ export const AutomatedExamples: FunctionComponent = () => {
 
     return (
         <>
-            <Section
+            <LandingPageSection
                 tag="Performance And Speed First"
                 heading="The Fastest Data Grid In The World"
                 subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
@@ -55,9 +55,9 @@ export const AutomatedExamples: FunctionComponent = () => {
                         </div>
                     </div>
                 </section>
-            </Section>
+            </LandingPageSection>
 
-            <Section
+            <LandingPageSection
                 tag="Fully Integrated Charting"
                 heading="Integrated Charts, Powered by AG Charts"
                 subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
@@ -75,7 +75,7 @@ export const AutomatedExamples: FunctionComponent = () => {
                         </div>
                     </div>
                 </section>
-            </Section>
+            </LandingPageSection>
         </>
     );
 };
