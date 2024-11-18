@@ -445,7 +445,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
             // find rowNode using object references
             rowNode = this.rootNode?.allLeafChildren?.find((node) => node.data === data);
             if (!rowNode) {
-                _error(5, { data });
+                _error(5, { data }); // Could not find data item
                 return null;
             }
         }
