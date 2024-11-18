@@ -2,7 +2,6 @@ import { createAutomatedExampleManager } from '@ag-website-shared/components/aut
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import styles from '@pages-styles/homepage.module.scss';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
-import classNames from 'classnames';
 import { useEffect, useMemo, useState } from 'react';
 import type { FunctionComponent } from 'react';
 

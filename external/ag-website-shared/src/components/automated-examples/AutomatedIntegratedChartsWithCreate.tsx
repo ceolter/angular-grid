@@ -8,7 +8,6 @@ import { useIntersectionObserver } from '@utils/hooks/useIntersectionObserver';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import classNames from 'classnames';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ReactNode } from 'react';
 
 import automatedExamplesVars from './AutomatedExamplesVars.module.scss';
 import styles from './AutomatedIntegratedCharts.module.scss';
@@ -25,7 +24,6 @@ export interface AutomatedIntegratedChartsProps {
     useStaticData?: boolean;
     runOnce?: boolean;
     visibilityThreshold: number;
-    children?: ReactNode;
 }
 
 type AutomatedIntegratedChartsWithCreateProps = {
@@ -48,7 +46,6 @@ export function AutomatedIntegratedChartsWithCreate({
     useStaticData,
     runOnce,
     visibilityThreshold,
-    children,
 }: AutomatedIntegratedChartsWithCreateProps) {
     const exampleId = INTEGRATED_CHARTS_ID;
     const gridClassname = 'automated-integrated-charts-grid';
