@@ -4,7 +4,7 @@ import { getEntry } from 'astro:content';
 import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
-import FrameworkSelector from '@components/FrameworkSelector';
+import { LandingPageFWSelector } from '@ag-website-shared/components/landing-pages/LandingPageFWSelector';
 import InstallText from '@components/framework-landing-pages/InstallText';
 import HeroGrid from '@components/hero-grid/HeroGrid.astro';
 import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
@@ -91,7 +91,7 @@ const frameworksData = [
 
     <div class={styles.homepageFrameworks}>
         <div class:list={[styles.frameworksInner, 'layout-max-width-small']}>
-            <FrameworkSelector client:load data={frameworksData} isFullWidth />
+            <LandingPageFWSelector client:load data={frameworksData} isFullWidth />
         </div>
     </div>
 

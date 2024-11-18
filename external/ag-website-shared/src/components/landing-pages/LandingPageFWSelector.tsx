@@ -5,11 +5,11 @@ import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classnames from 'classnames';
 import React from 'react';
 
-import styles from './FrameworkSelector.module.scss';
+import styles from './LandingPageFWSelector.module.scss';
 
 const fwLogos = 'images/fw-logos/';
 
-export default function FrameworkSelector({ data, currentFramework, isFullWidth, showSelectedFramework }) {
+export function LandingPageFWSelector({ data, currentFramework, isFullWidth, showSelectedFramework }) {
     return (
         <div
             className={classnames(styles.frameworkSelector, {
