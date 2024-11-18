@@ -1,8 +1,15 @@
 import type { CollectionEntry } from 'astro:content';
-import { type FunctionComponent, useEffect, useState } from 'react';
+import { type FunctionComponent, useCallback, useEffect, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
-import type { GetRowIdParams, IRowNode, Module, RowSelectedEvent, ValueFormatterParams } from 'ag-grid-community';
+import type {
+    GetRowIdParams,
+    IRowNode,
+    Module,
+    RowSelectedEvent,
+    RowSelectionOptions,
+    ValueFormatterParams,
+} from 'ag-grid-community';
 import { AllEnterpriseModule, ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -21,6 +28,50 @@ ModuleRegistry.registerModules([
 
 export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
     const [dependencies] = useState(new Map<string, Set<string>>());
+    const [defaultColDef] = useState({
+        flex: 1,
+    });
+    const [columnDefs] = useState([{ field: 'moduleName' }]);
+    const [autoGroupColumnDef] = useState({
+        headerName: 'Feature',
+        valueFormatter: (params: ValueFormatterParams) => `${params.value}${params.data.isEnterprise ? ' (e)' : ''}`,
+    });
+    const getRowId = useCallback((params: GetRowIdParams) => params.data.name, []);
+    const onRowSelected = useCallback(
+        (event: RowSelectedEvent) => {
+            const {
+                node,
+                data: { moduleName },
+                api,
+            } = event;
+            if (node.isSelected()) {
+                const moduleDependencies = dependencies.get(moduleName);
+                if (moduleDependencies) {
+                    const selectedNodes: IRowNode[] = [];
+                    api.forEachLeafNode((node) => {
+                        if (moduleDependencies.has(node.data.moduleName)) {
+                            selectedNodes.push(node);
+                        }
+                    });
+                    if (selectedNodes.length) {
+                        api.setNodesSelected({
+                            nodes: selectedNodes,
+                            newValue: true,
+                        });
+                    }
+                }
+            }
+        },
+        [dependencies]
+    );
+    const [treeData] = useState(true);
+    const [treeDataChildrenField] = useState('children');
+    const [rowSelection] = useState<RowSelectionOptions>({
+        mode: 'multiRow',
+        groupSelects: 'descendants',
+    });
+    const [groupDefaultExpanded] = useState(-1);
+    const [loadThemeGoogleFonts] = useState(true);
 
     useEffect(() => {
         const calcDependencies = ({ moduleName, dependsOn }: Module) => {
@@ -43,49 +94,17 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
     return (
         <div style={{ height: '600px' }}>
             <AgGridReact
-                defaultColDef={{
-                    flex: 1,
-                }}
-                columnDefs={[{ field: 'moduleName' }]}
-                autoGroupColumnDef={{
-                    headerName: 'Feature',
-                    valueFormatter: (params: ValueFormatterParams) =>
-                        `${params.value}${params.data.isEnterprise ? ' (e)' : ''}`,
-                }}
+                defaultColDef={defaultColDef}
+                columnDefs={columnDefs}
+                autoGroupColumnDef={autoGroupColumnDef}
                 rowData={modules.groups}
-                treeData={true}
-                treeDataChildrenField="children"
-                getRowId={(params: GetRowIdParams) => params.data.name}
-                rowSelection={{
-                    mode: 'multiRow',
-                    groupSelects: 'descendants',
-                }}
-                onRowSelected={(event: RowSelectedEvent) => {
-                    const {
-                        node,
-                        data: { moduleName },
-                        api,
-                    } = event;
-                    if (node.isSelected()) {
-                        const moduleDependencies = dependencies.get(moduleName);
-                        if (moduleDependencies) {
-                            const selectedNodes: IRowNode[] = [];
-                            api.forEachLeafNode((node) => {
-                                if (moduleDependencies.has(node.data.moduleName)) {
-                                    selectedNodes.push(node);
-                                }
-                            });
-                            if (selectedNodes.length) {
-                                api.setNodesSelected({
-                                    nodes: selectedNodes,
-                                    newValue: true,
-                                });
-                            }
-                        }
-                    }
-                }}
-                groupDefaultExpanded={-1}
-                loadThemeGoogleFonts={true}
+                treeData={treeData}
+                treeDataChildrenField={treeDataChildrenField}
+                getRowId={getRowId}
+                rowSelection={rowSelection}
+                onRowSelected={onRowSelected}
+                groupDefaultExpanded={groupDefaultExpanded}
+                loadThemeGoogleFonts={loadThemeGoogleFonts}
             />
         </div>
     );
