@@ -28,7 +28,7 @@ export class ChartColumnService extends BeanStub implements NamedBean {
     public postConstruct(): void {
         const clearValueCols = () => this.valueColsWithoutSeriesType.clear();
         this.addManagedEventListeners({
-            newColumnsLoaded: clearValueCols,
+            newColumnsLoaded: () => this.valueColsWithoutSeriesType.clear(),
             rowDataUpdated: clearValueCols,
         });
     }

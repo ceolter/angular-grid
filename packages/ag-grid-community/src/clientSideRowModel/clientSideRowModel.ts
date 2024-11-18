@@ -86,18 +86,25 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private rowDataTransactionBatch: BatchTransactionItem[] | null;
     private lastHighlightedRow: RowNode | null;
     private applyAsyncTransactionsTimeout: number | undefined;
-    /** Has the start method been called */
+
+    /** Has the start method been called? */
     private started: boolean = false;
-    /** E.g. data has been set into the node manager already */
-    private currentRefreshModelState: RefreshModelState | null = null;
+
     /**
-     * This is to prevent refresh model being called when it's already being called.
+     * This manages the nested refresh model calls and the "start" state, including transactions or multiple set row data.
+     * During initialization, we cannot emit any refresh event until start() is called.
+     * But we want to process all requests to change rowNodes while we are in the "not started" state.
+     *
+     * This is also to handle nested refresh calls, and to prevent refresh model steps being executed while already executing.
      * E.g. the group stage can trigger initial state filter model to be applied. This fires onFilterChanged,
      * which then triggers the listener here that calls refresh model again but at the filter stage
      * (which is about to be run by the original call).
      */
+    private currentRefreshModelState: RefreshModelState | null = null;
+
     private rowNodesCountReady: boolean = false;
     private rowCountReady: boolean = false;
+
     private orderedStages: IRowNodeStage[];
 
     public postConstruct(): void {
@@ -197,7 +204,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
-                this.refreshModel({ step: 'nothing', changedPropsArray: properties });
+                this.refreshModel({ step: 'nothing', changedProps: properties });
             }
         });
 
@@ -587,38 +594,44 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         let newRowData: any[] | null | undefined;
         let rowDataChanged: boolean;
         let ownsState = false;
+
+        const changedProps = params.changedProps;
         const rowData = this.gos.get('rowData');
+        const started = this.started;
         if (!state) {
             ownsState = true;
             state = new RefreshModelState(gos, rootNode, params);
             this.currentRefreshModelState = state;
-            rowDataChanged = !!state.changedProps?.has('rowData') || (!this.started && !!rowData);
-            state.rowData = rowData;
+            state.started = started;
+            rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
         } else {
             rowDataChanged = rowData !== state.rowData;
-            state.rowData = rowData;
             state.updateParams(params);
         }
+        state.rowData = rowData;
 
-        if (!state.started && this.started) {
+        if (!state.started && started) {
             state.started = true;
             ownsState = true; // This was caused by the start() method
         }
 
+        if (changedProps) {
+            state.setStepFromStages(this.orderedStages, changedProps);
+        }
+
         const oldNodeManager = this.nodeManager;
         const nodeManager = this.getNodeManagerToUse();
-
-        const changedProps = state.changedProps;
+        this.nodeManager = nodeManager;
 
         // TODO: don't use changedProps and remove it
 
-        const treeDataChanged = changedProps?.has('treeData');
-        const treeDataChildrenFieldChanged = changedProps?.has('treeDataChildrenField');
+        const treeDataChanged = changedProps?.includes('treeData');
+        const treeDataChildrenFieldChanged = changedProps?.includes('treeDataChildrenField');
 
         const reset = oldNodeManager !== nodeManager || treeDataChildrenFieldChanged;
 
         if (treeDataChanged) {
-            state.updateStep('group');
+            state.setStep('group');
         }
 
         if (reset || rowDataChanged) {
@@ -646,7 +659,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (newRowData) {
-            const immutable =
+            const deltaUpdate =
                 !reset &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
@@ -655,7 +668,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 // the old behaviour of Row IDs but NOT Immutable Data.
                 !gos.get('resetRowDataOnUpdate');
 
-            if (immutable && state.setDeltaUpdate()) {
+            if (deltaUpdate && state.setDeltaUpdate()) {
                 this.nodeManager.setImmutableRowData(state, newRowData);
             } else {
                 state.setNewData();
@@ -668,12 +681,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         params?.updateRowNodes?.(state);
 
         if (state.hasChanges()) {
-            state.updateStep('group');
+            state.setStep('group');
         }
 
         this.nodeManager.refreshModel(state);
-
-        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
 
         let stepsExecuted = false;
         if (ownsState && this.started) {
@@ -694,20 +705,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private executeRefreshSteps(state: RefreshModelState): boolean {
-        if (state.rowDataUpdated) {
-            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
-        }
+        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
 
-        const changedProps = state.changedProps;
-        if (changedProps && state.step !== 'group') {
-            for (const { refreshProps, step } of this.orderedStages) {
-                for (const prop of changedProps) {
-                    if (refreshProps.has(prop)) {
-                        state.updateStep(step);
-                        break;
-                    }
-                }
-            }
+        if (state.rowDataUpdated) {
+            console.log('ROW DATA UPDATED RAISE', state.rowDataUpdated);
+            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
         }
 
         if (state.step === 'nothing') {

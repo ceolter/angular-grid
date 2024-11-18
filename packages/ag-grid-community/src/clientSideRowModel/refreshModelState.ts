@@ -3,6 +3,7 @@ import type { RowNode } from '../entities/rowNode';
 import type { GridOptionsService } from '../gridOptionsService';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
+import type { IRowNodeStageDefinition } from '../interfaces/iRowNodeStage';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { ChangedPath } from '../utils/changedPath';
 import type { AbstractClientSideNodeManager } from './abstractClientSideNodeManager';
@@ -42,7 +43,7 @@ export interface RefreshModelParams<TData = any> {
     keepUndoRedoStack?: boolean;
 
     /** The set of changed grid options, if any */
-    changedPropsArray?: (keyof GridOptions<TData>)[];
+    changedProps?: (keyof GridOptions<TData>)[];
 
     /** True if the row order changed */
     rowsOrderChanged?: boolean;
@@ -62,9 +63,6 @@ export class RefreshModelState<TData = any> {
 
     /** how much of the pipeline to execute */
     public step: ClientSideRowModelStage;
-
-    /** The set of changed grid options, if any */
-    public changedProps: Set<keyof GridOptions<TData>> | null = null;
 
     /** true if this update is due to columns changing, ie no rows were changed */
     public afterColumnsChanged: boolean;
@@ -134,7 +132,6 @@ export class RefreshModelState<TData = any> {
             keepRenderedRows = false,
             keepUndoRedoStack = false,
             rowsOrderChanged = false,
-            changedPropsArray,
         }: RefreshModelParams<TData>
     ) {
         const changedPath = new ChangedPath(false, rootNode);
@@ -147,9 +144,6 @@ export class RefreshModelState<TData = any> {
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
-        if (changedPropsArray) {
-            this.addChangedProps(changedPropsArray);
-        }
     }
 
     public updateParams({
@@ -159,7 +153,6 @@ export class RefreshModelState<TData = any> {
         keepRenderedRows = false,
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
-        changedPropsArray,
     }: RefreshModelParams<any>) {
         this.nested = true;
         this.afterColumnsChanged ||= afterColumnsChanged;
@@ -169,10 +162,7 @@ export class RefreshModelState<TData = any> {
         if (rowsOrderChanged && !this.newData) {
             this.rowsOrderChanged = true;
         }
-        if (changedPropsArray) {
-            this.addChangedProps(changedPropsArray);
-        }
-        this.updateStep(step);
+        this.setStep(step);
     }
 
     /**
@@ -180,9 +170,27 @@ export class RefreshModelState<TData = any> {
      * Precedence must be respected, for example, group comes before 'filter', so if the new step is 'filter',
      * we don't update the step if the current step is 'group'.
      */
-    public updateStep(step: ClientSideRowModelStage): void {
+    public setStep(step: ClientSideRowModelStage): void {
         if (orderedSteps[step] < orderedSteps[this.step]) {
             this.step = step;
+        }
+    }
+
+    public setStepFromStages(
+        orderedStages: IRowNodeStageDefinition[],
+        changedProps: (keyof GridOptions<TData>)[]
+    ): void {
+        if (this.step === 'group') {
+            return; // Is already the minimum
+        }
+        const changedPropsLen = changedProps.length;
+        for (const { refreshProps, step } of orderedStages) {
+            for (let i = 0; i < changedPropsLen; i++) {
+                if (refreshProps.has(changedProps[i])) {
+                    this.setStep(step);
+                    return; // We found the minimum step
+                }
+            }
         }
     }
 
@@ -199,7 +207,7 @@ export class RefreshModelState<TData = any> {
         this.removals.clear();
         this.updates.clear();
         this.changedPath.active = false;
-        this.updateStep('group');
+        this.setStep('group');
     }
 
     public setDeltaUpdate(): boolean {
@@ -216,7 +224,7 @@ export class RefreshModelState<TData = any> {
             this.keepRenderedRows = true;
             this.animate = !this.gos.get('suppressAnimationFrame');
         }
-        this.updateStep('group');
+        this.setStep('group');
         return true;
     }
 
@@ -240,15 +248,5 @@ export class RefreshModelState<TData = any> {
 
     public hasChanges(): boolean {
         return this.newData || this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
-    }
-
-    private addChangedProps(changedPropsArray: (keyof GridOptions<TData>)[]): void {
-        const changedPropsArrayLen = changedPropsArray.length;
-        if (changedPropsArrayLen > 0) {
-            const changedProps = (this.changedProps ??= new Set());
-            for (let i = 0; i < changedPropsArrayLen; i++) {
-                changedProps.add(changedPropsArray[i]);
-            }
-        }
     }
 }
