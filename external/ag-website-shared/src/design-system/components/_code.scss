@@ -34,8 +34,6 @@ pre.code code,
 
 pre.code,
 #{$blog-code-selector} {
-    --color-code-background: color-mix(in srgb, var(--color-bg-secondary), var(--color-bg-primary) 70%);
-
     --comment-color: #5d6376;
     --tag-color: #984f4e;
     --string-color: #c33c3a;

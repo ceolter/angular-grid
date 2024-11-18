@@ -4,7 +4,7 @@ import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
 import { ThemeImpl } from './theming/Theme';
-import { _injectCoreAndModuleCSS, _injectGlobalCSS } from './theming/inject';
+import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './theming/inject';
 import { _observeResize } from './utils/dom';
 import { _error, _warn } from './validation/logging';
 
@@ -239,7 +239,9 @@ export class Environment extends BeanStub implements NamedBean {
                 eParamsStyle = this.eParamsStyle = document.createElement('style');
                 eGridDiv.appendChild(eParamsStyle);
             }
-            eParamsStyle.textContent = newGridTheme?._getPerGridCss(this.paramsClass) || '';
+            if (!IS_SSR) {
+                eParamsStyle.textContent = newGridTheme?._getPerGridCss(this.paramsClass) || '';
+            }
 
             this.applyThemeClasses(eGridDiv);
             this.fireGridStylesChangedEvent('themeChanged');
