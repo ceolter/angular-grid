@@ -1,5 +1,6 @@
 import type { ColDef, GridOptions } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     createGrid,
@@ -10,6 +11,7 @@ import {
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,

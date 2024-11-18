@@ -10,7 +10,7 @@ import type {
     RowDragEndEvent,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { CsvExportModule } from 'ag-grid-community';
 import { ExcelExportModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
 import type { CustomCellRendererProps } from 'ag-grid-react';
@@ -18,7 +18,7 @@ import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, CsvExportModule, ExcelExportModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, CsvExportModule, ExcelExportModule]);
 
 const SportRenderer = (props: CustomCellRendererProps) => {
     return (

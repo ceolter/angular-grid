@@ -14,6 +14,7 @@ export interface GeneratedContents {
     styleFiles: string[];
     isEnterprise: boolean;
     isLocale: boolean;
+    isIntegratedCharts: boolean;
     boilerPlateFiles: FileContents;
     packageJson: Record<string, string>;
     extras?: string[];

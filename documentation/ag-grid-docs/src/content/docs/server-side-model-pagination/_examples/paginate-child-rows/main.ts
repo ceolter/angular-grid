@@ -1,6 +1,6 @@
 import type { ColDef, GridApi, GridOptions, IServerSideDatasource } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -8,7 +8,13 @@ import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([ColumnsToolPanelModule, MenuModule, RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ColumnsToolPanelModule,
+    MenuModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'country', rowGroup: true, hide: true },

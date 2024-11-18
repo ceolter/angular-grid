@@ -1,4 +1,3 @@
-import { _ModuleSupport } from 'ag-charts-community';
 import type { AgChartThemeOverrides } from 'ag-charts-types';
 
 import type {
@@ -32,7 +31,7 @@ const createWarnMessage =
 
 const createEnterpriseMessage = (feature: string) => {
     const url = 'https://www.ag-grid.com/javascript-data-grid/integrated-charts-installation/';
-    return `${feature} is not supported in AG Charts Community (either 'ag-grid-charts-enterprise' or '@ag-grid-enterprise/charts-enterprise' hasn't been loaded). See ${url} for more details.`;
+    return `${feature} is not supported in AG Charts Community ('ag-charts-enterprise' hasn't been loaded). See ${url} for more details.`;
 };
 
 interface ValidationFunction<T, K extends keyof T = keyof T, V = T[K]> {
@@ -53,10 +52,6 @@ export class ChartParamsValidator {
         'chartThemeOverrides',
         'unlinkChart',
     ] as const;
-
-    private static isEnterprise(): boolean {
-        return _ModuleSupport.enterpriseModule.isEnterprise;
-    }
 
     private static isValidChartType(value: string): value is ChartType {
         return !!getSeriesTypeIfExists(value as ChartType) || isComboChart(value as ChartType);
@@ -94,25 +89,29 @@ export class ChartParamsValidator {
         return typeof aggFunc === 'string' || typeof aggFunc === 'function';
     });
 
-    private static enterpriseChartTypeValidation: ValidationFunction<any> = {
+    private static enterpriseChartTypeValidation: (isEnterprise: boolean) => ValidationFunction<any> = (
+        isEnterprise
+    ) => ({
         property: 'chartType',
         validationFn: validateIfDefined<ChartType>(
-            (chartType) => ChartParamsValidator.isEnterprise() || !chartType || !isEnterpriseChartType(chartType)
+            (chartType) => isEnterprise || !chartType || !isEnterpriseChartType(chartType)
         ),
         warnMessage: (chartType) => createEnterpriseMessage(`The '${chartType}' chart type`),
-    };
+    });
 
-    private static switchCategorySeriesValidation: ValidationFunction<any> = {
+    private static switchCategorySeriesValidation: (isEnterprise: boolean) => ValidationFunction<any> = (
+        isEnterprise
+    ) => ({
         property: 'switchCategorySeries',
         validationFn: validateIfDefined<boolean, undefined>((switchCategorySeries) => {
-            if (!switchCategorySeries || ChartParamsValidator.isEnterprise()) {
+            if (!switchCategorySeries || isEnterprise) {
                 return true;
             }
             return undefined;
         }),
         warnMessage: () => createEnterpriseMessage(`'switchCategorySeries' has been ignored as it`),
         warnIfFixed: true,
-    };
+    });
 
     private static commonUpdateValidations: ValidationFunction<any>[] = [
         { property: 'chartId', validationFn: isString, warnMessage: createWarnMessage('chartId', 'string') },
@@ -134,7 +133,7 @@ export class ChartParamsValidator {
         { property: 'unlinkChart', validationFn: isBoolean, warnMessage: createWarnMessage('unlinkChart', 'boolean') },
     ];
 
-    private static cellRangeValidations: ValidationFunction<any>[] = [
+    private static cellRangeValidations: (isEnterprise: boolean) => ValidationFunction<any>[] = (isEnterprise) => [
         {
             property: 'cellRange',
             validationFn: ChartParamsValidator.validateChartParamsCellRange,
@@ -150,19 +149,23 @@ export class ChartParamsValidator {
             validationFn: ChartParamsValidator.validateAggFunc,
             warnMessage: createWarnMessage('aggFunc', 'string or IAggFunc'),
         },
-        ChartParamsValidator.switchCategorySeriesValidation,
+        ChartParamsValidator.switchCategorySeriesValidation(isEnterprise),
     ];
 
-    public static validateUpdateParams(params: UpdateChartParams): boolean | UpdateChartParams {
+    public static validateUpdateParams(params: UpdateChartParams, isEnterprise: boolean): boolean | UpdateChartParams {
         const paramsToValidate = params as UpdateChartParams;
         switch (paramsToValidate.type) {
             case 'rangeChartUpdate':
-                return ChartParamsValidator.validateUpdateRangeChartParams(params as UpdateRangeChartParams);
+                return ChartParamsValidator.validateUpdateRangeChartParams(
+                    params as UpdateRangeChartParams,
+                    isEnterprise
+                );
             case 'pivotChartUpdate':
                 return ChartParamsValidator.validateUpdatePivotChartParams(params as UpdatePivotChartParams);
             case 'crossFilterChartUpdate':
                 return ChartParamsValidator.validateUpdateCrossFilterChartParams(
-                    params as UpdateCrossFilterChartParams
+                    params as UpdateCrossFilterChartParams,
+                    isEnterprise
                 );
             default:
                 _warnOnce(
@@ -172,18 +175,24 @@ export class ChartParamsValidator {
         }
     }
 
-    public static validateCreateParams(params: CommonCreateChartParams): boolean | CommonCreateChartParams {
+    public static validateCreateParams(
+        params: CommonCreateChartParams,
+        isEnterprise: boolean
+    ): boolean | CommonCreateChartParams {
         return validateProperties(params, [
-            ChartParamsValidator.enterpriseChartTypeValidation,
-            ChartParamsValidator.switchCategorySeriesValidation,
+            ChartParamsValidator.enterpriseChartTypeValidation(isEnterprise),
+            ChartParamsValidator.switchCategorySeriesValidation(isEnterprise),
         ]);
     }
 
-    private static validateUpdateRangeChartParams(params: UpdateRangeChartParams): boolean | UpdateRangeChartParams {
+    private static validateUpdateRangeChartParams(
+        params: UpdateRangeChartParams,
+        isEnterprise: boolean
+    ): boolean | UpdateRangeChartParams {
         const validations: ValidationFunction<any>[] = [
             ...ChartParamsValidator.commonUpdateValidations,
-            ChartParamsValidator.enterpriseChartTypeValidation,
-            ...ChartParamsValidator.cellRangeValidations,
+            ChartParamsValidator.enterpriseChartTypeValidation(isEnterprise),
+            ...ChartParamsValidator.cellRangeValidations(isEnterprise),
             {
                 property: 'seriesChartTypes',
                 validationFn: (value: any) =>
@@ -220,11 +229,12 @@ export class ChartParamsValidator {
     }
 
     private static validateUpdateCrossFilterChartParams(
-        params: UpdateCrossFilterChartParams
+        params: UpdateCrossFilterChartParams,
+        isEnterprise: boolean
     ): boolean | UpdateCrossFilterChartParams {
         const validations: ValidationFunction<any>[] = [
             ...ChartParamsValidator.commonUpdateValidations,
-            ...ChartParamsValidator.cellRangeValidations,
+            ...ChartParamsValidator.cellRangeValidations(isEnterprise),
         ];
 
         return validateProperties(

@@ -669,7 +669,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             // this is how we achieve pining by dragging the column to the edge of the grid.
             this.failedMoveAttempts++;
 
-            if (this.failedMoveAttempts <= MOVE_FAIL_THRESHOLD + 1) {
+            if (this.failedMoveAttempts <= MOVE_FAIL_THRESHOLD + 1 || !this.pinnedCols) {
                 return;
             }
 

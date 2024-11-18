@@ -1,7 +1,6 @@
-import type { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniLine } from '../line/miniLine';
@@ -10,12 +9,13 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniArea extends MiniChartWithAxes {
     static chartType: ChartType = 'area';
-    protected readonly areas: _Scene.Path[];
+    protected readonly areas: any[];
 
     static readonly data = MiniLine.data;
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -24,9 +24,9 @@ export class MiniArea extends MiniChartWithAxes {
         tooltipName: ChartTranslationKey = 'groupedAreaTooltip',
         stacked: boolean = false
     ) {
-        super(container, tooltipName);
+        super(container, agChartsExports, tooltipName);
 
-        this.areas = createAreaPaths(this.root, data, this.size, this.padding, stacked);
+        this.areas = createAreaPaths(agChartsExports._Scene, this.root, data, this.size, this.padding, stacked);
 
         this.updateColors(fills, strokes);
     }

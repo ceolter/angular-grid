@@ -2,17 +2,18 @@ import { _warn } from '../../../validation/logging';
 import type { ProvidedFilterParams } from '../../provided/iProvidedFilter';
 
 export function getDebounceMs(params: ProvidedFilterParams, debounceDefault: number): number {
+    const { debounceMs } = params;
     if (isUseApplyButton(params)) {
-        if (params.debounceMs != null) {
+        if (debounceMs != null) {
             _warn(71);
         }
 
         return 0;
     }
 
-    return params.debounceMs != null ? params.debounceMs : debounceDefault;
+    return debounceMs ?? debounceDefault;
 }
 
 export function isUseApplyButton(params: ProvidedFilterParams): boolean {
-    return !!params.buttons && params.buttons.indexOf('apply') >= 0;
+    return (params.buttons?.indexOf('apply') ?? -1) >= 0;
 }

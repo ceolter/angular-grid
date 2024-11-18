@@ -270,6 +270,7 @@ export class MiniChartsContainer extends Component {
                 this.createBean(
                     new MiniClass(
                         miniWrapper,
+                        this.beans.agChartsExports,
                         this.fills,
                         this.strokes,
                         this.themeTemplateParameters,

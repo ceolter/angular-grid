@@ -545,8 +545,8 @@ function internalParser(
     const inlineWidth = gridElement.css('width');
 
     const inlineGridStyles: InlineGridStyles = {
-        width: parseInt(inlineHeight) ? inlineHeight : '100%',
-        height: parseInt(inlineWidth) ? inlineWidth : '100%',
+        width: parseInt(inlineWidth) ? inlineWidth : '100%',
+        height: parseInt(inlineHeight) ? inlineHeight : '100%',
         className: inlineClass || undefined,
     };
 

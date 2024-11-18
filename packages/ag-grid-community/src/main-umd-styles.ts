@@ -16,19 +16,8 @@ import '@ag-grid-community/styles/agGridClassicFont.css';
 import '@ag-grid-community/styles/agGridMaterialFont.css';
 import '@ag-grid-community/styles/agGridQuartzFont.css';
 
-import {
-    ClientSideRowModelModule,
-    CommunityFeaturesModule,
-    CsvExportModule,
-    InfiniteRowModelModule,
-    ModuleRegistry,
-} from './main';
+import { AllCommunityModule, ModuleRegistry } from './main';
 
-ModuleRegistry.registerModules([
-    CommunityFeaturesModule,
-    ClientSideRowModelModule,
-    InfiniteRowModelModule,
-    CsvExportModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export * from './main';

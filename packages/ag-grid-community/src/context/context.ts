@@ -3,6 +3,7 @@ import type { ApiFunctionService } from '../api/apiFunctionService';
 import type { GridApi } from '../api/gridApi';
 import type { AbstractClientSideNodeManager } from '../clientSideRowModel/abstractClientSideNodeManager';
 import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeService';
+import type { ColumnAnimationService } from '../columnMove/columnAnimationService';
 import type { ColumnMoveService } from '../columnMove/columnMoveService';
 import type { ColumnResizeService } from '../columnResize/columnResizeService';
 import type { ColumnDefFactory } from '../columns/columnDefFactory';
@@ -64,6 +65,7 @@ import type { ISelectionService } from '../interfaces/iSelectionService';
 import type { IServerSideTransactionManager } from '../interfaces/iServerSideRowModel';
 import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
 import type { ISideBarService } from '../interfaces/iSideBar';
+import type { IStickyRowService } from '../interfaces/iStickyRows';
 import type { IMasterDetailService } from '../interfaces/masterDetail';
 import type { IRenderStatusService } from '../interfaces/renderStatusService';
 import type { AnimationFrameService } from '../misc/animationFrameService';
@@ -85,8 +87,6 @@ import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
 import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { AutoWidthCalculator } from '../rendering/autoWidthCalculator';
 import type { CellFlashService } from '../rendering/cell/cellFlashService';
-import type { ColumnAnimationService } from '../rendering/columnAnimationService';
-import type { StickyRowService } from '../rendering/features/stickyRowService';
 import type { OverlayService } from '../rendering/overlays/overlayService';
 import type { RowAutoHeightService } from '../rendering/row/rowAutoHeightService';
 import type { RowContainerHeightService } from '../rendering/rowContainerHeightService';
@@ -286,7 +286,7 @@ export interface CoreBeanCollection {
     aggColNameSvc?: IAggColumnNameService;
     renderStatus?: IRenderStatusService;
     rowDragSvc?: RowDragService;
-    stickyRowSvc?: StickyRowService;
+    stickyRowSvc?: IStickyRowService;
     groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
     filterValueSvc?: FilterValueService;
     csrmNodeSvc?: AbstractClientSideNodeManager;
@@ -355,6 +355,7 @@ export type BeanName =
     | 'chartMenuSvc'
     | 'chartTranslation'
     | 'chartSvc'
+    | 'agChartsExports'
     | 'clipboardSvc'
     | 'colAnimation'
     | 'colAutosize'

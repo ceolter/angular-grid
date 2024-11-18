@@ -9,12 +9,12 @@ import type {
     GridReadyEvent,
     SizeColumnsToFitGridStrategy,
 } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const GridExample = () => {
     const topGridRef = useRef<AgGridReact>(null);

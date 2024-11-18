@@ -838,7 +838,7 @@ describe('ag-grid rows-ordering', () => {
         });
 
         // Await the async events are executed
-        await asyncSetTimeout(1);
+        await asyncSetTimeout(0);
         await asyncSetTimeout(1);
 
         await new GridRows(api, 'data', defaultGridRowsOptions).check(`

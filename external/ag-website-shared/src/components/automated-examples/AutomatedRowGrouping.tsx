@@ -138,15 +138,6 @@ export function AutomatedRowGrouping({
 
     return (
         <>
-            <header className={styles.sectionHeader}>
-                <h2 className="text-3xl">Feature Packed, Incredible Performance</h2>
-                <p className="text-xl">
-                    Millions of rows, thousands of updates per second? No problem!
-                    <br />
-                    Out of the box performance that can handle any data you can throw at it.
-                </p>
-            </header>
-
             <div
                 ref={gridRef}
                 className={classNames('automated-row-grouping-grid', {

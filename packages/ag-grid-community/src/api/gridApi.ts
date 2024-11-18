@@ -517,14 +517,12 @@ export interface _ColumnHoverApi {
     isColumnHovered(column: Column): boolean;
 }
 
-export interface _GetColumnDefsApi<TData> {
+export interface _ColumnGridApi<TData> {
     /**
      * Returns the current column definitions.
      */
     getColumnDefs(): (ColDef<TData> | ColGroupDef<TData>)[] | undefined;
-}
 
-export interface _ColumnGridApi<TData> {
     getColumnDef<TValue = any>(key: string | Column<TValue>): ColDef<TData, TValue> | null;
 
     /** Returns the display name for a column. Useful if you are doing your own header rendering and want the grid to work out if `headerValueGetter` is used, or if you are doing your own column management GUI, to know what to show as the column name. */
@@ -1181,7 +1179,6 @@ export interface GridApi<TData = any>
         _ColumnResizeApi,
         _ColumnMoveApi,
         _ColumnHoverApi,
-        _GetColumnDefsApi<TData>,
         _ColumnGridApi<TData>,
         _ColumnGroupGridApi,
         _DragGridApi,

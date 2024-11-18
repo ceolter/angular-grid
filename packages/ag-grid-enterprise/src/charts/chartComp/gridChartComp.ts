@@ -1,4 +1,9 @@
-import type { AgChartInstance, AgChartThemeOverrides, AgChartThemePalette } from 'ag-charts-types';
+import type {
+    AgChartInstance,
+    AgChartInstanceOptions,
+    AgChartThemeOverrides,
+    AgChartThemePalette,
+} from 'ag-charts-types';
 
 import type {
     BeanCollection,
@@ -29,6 +34,7 @@ import {
 } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
+import type { AgChartsExports } from '../agChartsExports';
 import type { CrossFilteringContext } from '../chartService';
 import { ChartController, DEFAULT_THEMES } from './chartController';
 import { AreaChartProxy } from './chartProxies/cartesian/areaChartProxy';
@@ -181,7 +187,7 @@ export class GridChartComp extends Component {
 
     private createChart(): void {
         // if chart already exists, destroy it and remove it from DOM
-        let chartInstance: AgChartInstance | undefined = undefined;
+        let chartInstance: AgChartInstance<AgChartInstanceOptions> | undefined = undefined;
         if (this.chartProxy) {
             chartInstance = this.chartProxy.destroy({ keepChartInstance: true });
         }
@@ -197,6 +203,7 @@ export class GridChartComp extends Component {
 
         const chartType = this.chartController.getChartType();
         const chartProxyParams: ChartProxyParams = {
+            agChartsExports: this.beans.agChartsExports as AgChartsExports,
             chartType,
             chartInstance,
             getChartThemeName: this.getChartThemeName.bind(this),

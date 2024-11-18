@@ -1,5 +1,6 @@
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniDonut } from './miniDonut';
 
@@ -8,11 +9,12 @@ export class MiniPie extends MiniDonut {
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, fills, strokes, themeTemplateParameters, isCustomTheme, 0, 'pieTooltip');
+        super(container, agChartsExports, fills, strokes, themeTemplateParameters, isCustomTheme, 0, 'pieTooltip');
     }
 }

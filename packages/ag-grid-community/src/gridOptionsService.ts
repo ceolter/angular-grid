@@ -10,7 +10,7 @@ import type { GridOptionOrDefault } from './gridOptionsDefault';
 import { GRID_OPTION_DEFAULTS } from './gridOptionsDefault';
 import { _getCallbackForEvent } from './gridOptionsUtils';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
-import type { ModuleName } from './interfaces/iModule';
+import type { ModuleName, ValidationModuleName } from './interfaces/iModule';
 import { LocalEventService } from './localEventService';
 import { _areModulesGridScoped, _isModuleRegistered } from './modules/moduleRegistry';
 import type { AnyGridOptions } from './propertyKeys';
@@ -264,12 +264,18 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         TId extends keyof MissingModuleErrors,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         TShowMessageAtCallLocation = MissingModuleErrors[TId],
-    >(moduleName: ModuleName | ModuleName[], reasonOrId: string | TId): boolean {
+    >(moduleName: ValidationModuleName | ValidationModuleName[], reasonOrId: string | TId): boolean {
         const registered = Array.isArray(moduleName)
             ? moduleName.some((modName) => this.isModuleRegistered(modName))
             : this.isModuleRegistered(moduleName);
         if (!registered) {
-            _error(200, { gridId: this.gridId, gridScoped: _areModulesGridScoped(), moduleName, reasonOrId });
+            _error(200, {
+                gridId: this.gridId,
+                gridScoped: _areModulesGridScoped(),
+                moduleName,
+                reasonOrId,
+                rowModelType: this.get('rowModelType'),
+            });
         }
         return registered;
     }

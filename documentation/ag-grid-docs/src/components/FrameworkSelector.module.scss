@@ -5,12 +5,18 @@
     --icon-size: #{$spacing-size-6};
     --x-padding: 10px;
 
+    svg {
+        height: 24px;
+        width: 24px;
+        fill: var(--color-fg-secondary);
+        opacity: 0.8;
+    }
+
     display: flex;
     width: 100%;
     border-radius: var(--radius-sm);
     background-color: var(--color-bg-primary);
-
-    border: 1px solid transparent;
+    gap: $spacing-size-3;
 
     #{$selector-darkmode} & {
         --color-bg-primary: var(--color-bg-primary);
@@ -30,18 +36,9 @@
     padding: calc((var(--height) - var(--icon-size)) / 2) var(--x-padding);
     text-decoration: none;
     outline: none;
-
-    &::after {
-        content: '';
-        position: absolute;
-        height: 2px;
-        bottom: -2px;
-        left: 5px;
-        right: 5px;
-        background-color: var(--color-input-bg-checked);
-        opacity: 0;
-        transition: opacity $transition-default-timing;
-    }
+    background: var(--color-button-tertiary-bg-hover);
+    border-radius: var(--radius-md);
+    transition: background-color 0.5s;
 
     img {
         width: var(--icon-size);
@@ -58,6 +55,8 @@
     &:hover,
     &:focus-visible {
         text-decoration: none;
+        background-color: var(--color-brand-100);
+        transition: background-color 0.5s;
     }
 }
 
@@ -134,7 +133,6 @@
     min-width: 220px;
     max-width: 420px;
     border-radius: var(--radius-md);
-    border: 1px solid transparent;
 
     @media screen and (min-width: 740px) {
         width: unset;

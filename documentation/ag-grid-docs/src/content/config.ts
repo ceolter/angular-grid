@@ -94,6 +94,29 @@ const matrixTable = defineCollection({
     schema: z.array(z.record(z.string(), z.any())),
 });
 
+const moduleItemBase = {
+    moduleName: z.string(),
+    name: z.string(),
+    isEnterprise: z.boolean().optional(),
+};
+
+const moduleGroupLevel2 = z.object({
+    name: z.string(),
+    children: z.array(z.object(moduleItemBase)).optional(),
+});
+
+const moduleGroupLevel1 = z.object({
+    name: z.string(),
+    children: z.array(z.object(moduleItemBase).or(moduleGroupLevel2)).optional(),
+});
+
+const moduleMappings = defineCollection({
+    type: 'data',
+    schema: z.object({
+        groups: z.array(z.object(moduleItemBase).or(moduleGroupLevel1)),
+    }),
+});
+
 const errors = defineCollection({
     schema: z.object({
         description: z.string().optional(),
@@ -104,5 +127,6 @@ export const collections = {
     docs,
     menu,
     'matrix-table': matrixTable,
+    'module-mappings': moduleMappings,
     errors,
 };

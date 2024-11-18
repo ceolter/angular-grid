@@ -1,3 +1,4 @@
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { FRAMEWORK_DISPLAY_TEXT } from '@constants';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
@@ -30,7 +31,10 @@ export default function FrameworkSelector({ data, currentFramework, isFullWidth,
                         })}
                     >
                         <img src={urlWithBaseUrl(`/${fwLogos}${framework.name}.svg`)} alt={alt} />
-                        <span>{frameworkDisplay}</span>
+
+                        <span>
+                            {frameworkDisplay} <Icon name="chevronRight" />
+                        </span>
                     </a>
                 );
             })}

@@ -11,15 +11,25 @@ import { FooterService } from './footerService';
 import { ValueColsSvc } from './valueColsSvc';
 
 /**
- * @feature Aggregation
+ * @internal
  */
-export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
-    ...baseEnterpriseModule('AggregationModule'),
-    beans: [AggFuncService, AggregationStage, FilterAggregatesStage, AggColumnNameService, FooterService, ValueColsSvc],
+export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
+    ...baseEnterpriseModule('SharedAggregationModule'),
+    beans: [AggFuncService, AggColumnNameService, FooterService, ValueColsSvc],
     apiFunctions: {
         addAggFuncs,
         clearAggFuncs,
         setColumnAggFunc,
     },
     dependsOn: [EnterpriseCoreModule],
+};
+
+/**
+ * @internal
+ */
+export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
+    ...baseEnterpriseModule('AggregationModule'),
+    beans: [AggregationStage, FilterAggregatesStage],
+    rowModels: ['clientSide'],
+    dependsOn: [SharedAggregationModule],
 };

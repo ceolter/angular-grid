@@ -1,16 +1,15 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniRangeBar extends MiniChartWithAxes {
     static chartType: ChartType = 'rangeBar';
 
-    private readonly bars: _Scene.Rect[];
+    private readonly bars: any[];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'rangeBarTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'rangeBarTooltip');
         const data = [3, 3.5, 3];
 
         this.bars = this.createRangeBar(this.root, data, this.size, this.padding, 'vertical');
@@ -25,16 +24,18 @@ export class MiniRangeBar extends MiniChartWithAxes {
     }
 
     createRangeBar(
-        root: _Scene.Group,
+        root: any,
         data: number[],
         size: number,
         padding: number,
         direction: 'horizontal' | 'vertical'
-    ): _Scene.Rect[] {
+    ): any[] {
         const barAlongX = direction === 'horizontal';
         const scalePadding = 2 * padding;
 
-        const xScale = new _Scene.BandScale<number>();
+        const { _Scene } = this.agChartsExports;
+
+        const xScale = new _Scene.BandScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.3;

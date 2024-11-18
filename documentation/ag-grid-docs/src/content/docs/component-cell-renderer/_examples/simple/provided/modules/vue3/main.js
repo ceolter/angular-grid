@@ -1,13 +1,13 @@
 import { createApp, ref } from 'vue';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import MedalCellRenderer from './medalCellRendererVue.js';
 import TotalValueRenderer from './totalValueRendererVue.js';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const VueExample = {
     template: `

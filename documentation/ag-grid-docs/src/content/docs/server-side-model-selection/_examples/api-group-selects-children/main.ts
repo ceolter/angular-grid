@@ -1,12 +1,17 @@
 import type { GridApi, GridOptions, IServerSideDatasource, IServerSideGroupSelectionState } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+    RowGroupingPanelModule,
+]);
 
 let gridApi: GridApi<IOlympicDataWithId>;
 const gridOptions: GridOptions<IOlympicDataWithId> = {

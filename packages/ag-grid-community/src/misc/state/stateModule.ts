@@ -8,8 +8,8 @@ import { StateService } from './stateService';
  * @feature API -> Grid State
  * @gridOption initialState
  */
-export const StateModule: _ModuleWithApi<_StateGridApi> = {
-    ...baseCommunityModule('StateModule'),
+export const GridStateModule: _ModuleWithApi<_StateGridApi> = {
+    ...baseCommunityModule('GridStateModule'),
     beans: [StateService],
     apiFunctions: {
         getState,

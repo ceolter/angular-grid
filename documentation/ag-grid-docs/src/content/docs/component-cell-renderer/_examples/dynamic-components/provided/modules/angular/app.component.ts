@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridReadyEvent, IRowNode } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import { ChildMessageRenderer } from './child-message-renderer.component';
 import { CubeRenderer } from './cube-renderer.component';
@@ -12,7 +12,7 @@ import { ParamsRenderer } from './params-renderer.component';
 import { SquareRenderer } from './square-renderer.component';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 @Component({
     selector: 'my-app',

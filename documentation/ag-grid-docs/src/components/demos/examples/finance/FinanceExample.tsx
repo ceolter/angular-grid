@@ -1,6 +1,8 @@
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
     type ColDef,
     type GetRowIdFunc,
@@ -13,12 +15,12 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     AdvancedFilterModule,
+    CellSelectionModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
+    IntegratedChartsModule,
     MenuModule,
-    RangeSelectionModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -38,19 +40,20 @@ interface Props {
 }
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
     AdvancedFilterModule,
     ColumnsToolPanelModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    GridChartsModule,
     MenuModule,
-    RangeSelectionModule,
+    CellSelectionModule,
     RowGroupingModule,
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,
-    SparklinesModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
+    SparklinesModule.with(AgChartsEnterpriseModule),
 ]);
 
 const numberFormatter: ValueFormatterFunc = ({ value }) => {

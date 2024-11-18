@@ -1,6 +1,12 @@
-import type { AgCartesianAxisType, AgChartInstance, AgPolarAxisOptions, _Scene } from 'ag-charts-community';
+import type {
+    AgCartesianAxisType,
+    AgChartCaptionOptions,
+    AgChartInstance,
+    AgChartInstanceOptions,
+    AgPolarAxisOptions,
+} from 'ag-charts-types';
 
-export function deproxy(chartOrProxy: AgChartInstance): AgChartActual {
+export function deproxy(chartOrProxy: AgChartInstance<AgChartInstanceOptions>): AgChartActual {
     if ((chartOrProxy as any).chart != null) {
         return (chartOrProxy as any).chart;
     }
@@ -13,7 +19,7 @@ export function deproxy(chartOrProxy: AgChartInstance): AgChartActual {
 // AVOID ADDING MORE DEPENDENCIES ON THESE PRIVATE APIS.
 
 export interface AgChartActual extends AgChartInstance {
-    title?: _Scene.Caption;
+    title?: AgChartCaptionOptions;
     width: number;
     height: number;
     series: {

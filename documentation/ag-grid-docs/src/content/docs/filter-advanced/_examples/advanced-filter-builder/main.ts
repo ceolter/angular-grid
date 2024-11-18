@@ -1,11 +1,11 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { AdvancedFilterModel, FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AdvancedFilterModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AdvancedFilterModule, ClientSideRowModelModule, MenuModule]);
+ModuleRegistry.registerModules([AllCommunityModule, AdvancedFilterModule, ClientSideRowModelModule, MenuModule]);
 
 const initialAdvancedFilterModel: AdvancedFilterModel = {
     filterType: 'join',

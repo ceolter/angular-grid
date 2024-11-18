@@ -8,13 +8,13 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ViewportRowModelModule } from 'ag-grid-enterprise';
 
 import { createMockServer } from './mock-server';
 import { createViewportDatasource } from './viewport-datasource';
 
-ModuleRegistry.registerModules([ViewportRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ViewportRowModelModule]);
 
 class RowIndexRenderer implements ICellRendererComp {
     eGui!: HTMLDivElement;

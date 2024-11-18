@@ -1,4 +1,5 @@
 import corePackageJson from '../../../packages/ag-grid-community/package.json';
+import gridEnterprisePackageJson from '../../../packages/ag-grid-enterprise/package.json';
 import type { Framework, InternalFramework } from './types/ag-grid';
 
 const isTruthy = (val: string | boolean) => ['1', 'true', true].includes(val);
@@ -26,6 +27,7 @@ export const FRAMEWORK_DISPLAY_TEXT: Record<Framework, string> = {
 
 export const DISABLE_EXAMPLE_RUNNER = isTruthy(import.meta.env?.DISABLE_EXAMPLE_RUNNER);
 
+export const agChartsVersion = gridEnterprisePackageJson.optionalDependencies['ag-charts-enterprise'];
 export const agGridVersion = import.meta.env?.PUBLIC_PACKAGE_VERSION ?? corePackageJson.version;
 export const agGridEnterpriseVersion = agGridVersion;
 export const agGridReactVersion = agGridVersion;
@@ -38,12 +40,8 @@ export const agLibraryVersion = agGridVersion;
 export const NPM_CDN = 'https://cdn.jsdelivr.net/npm';
 export const PUBLISHED_URLS = {
     '@ag-grid-community/styles': `${NPM_CDN}/@ag-grid-community/styles@${agGridVersion}`,
-    '@ag-grid-community/react': `${NPM_CDN}/@ag-grid-community/react@${agGridReactVersion}/`,
-    '@ag-grid-community/angular': `${NPM_CDN}/@ag-grid-community/angular@${agGridAngularVersion}/`,
-    '@ag-grid-community/vue3': `${NPM_CDN}/@ag-grid-community/vue3@${agGridVue3Version}/`,
     'ag-grid-community': `${NPM_CDN}/ag-grid-community@${agGridVersion}`,
     'ag-grid-enterprise': `${NPM_CDN}/ag-grid-enterprise@${agGridEnterpriseVersion}/`,
-    'ag-grid-charts-enterprise': `${NPM_CDN}/ag-grid-charts-enterprise@${agGridEnterpriseVersion}/`,
     'ag-grid-angular': `${NPM_CDN}/ag-grid-angular@${agGridAngularVersion}/`,
     'ag-grid-react': `${NPM_CDN}/ag-grid-react@${agGridReactVersion}/`,
     'ag-grid-vue3': `${NPM_CDN}/ag-grid-vue3@${agGridVue3Version}/`,
@@ -53,13 +51,12 @@ export const PUBLISHED_URLS = {
 // also need to update plugins/ag-grid-generate-example-files/src/executors/generate/generator/constants.ts if this value is changed
 export const integratedChartsUsesChartsEnterprise = false;
 export const PUBLISHED_UMD_URLS = {
-    'ag-grid-community': `${NPM_CDN}/ag-grid-community@${agGridVersion}/dist/ag-grid-community.js`,
-    'ag-grid-enterprise': `${NPM_CDN}/ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise@${agGridVersion}/dist/ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise.js`,
+    'ag-grid-community': `${NPM_CDN}/ag-grid-community@${agGridVersion}/dist/ag-grid-community.min.js`,
+    'ag-grid-enterprise': `${NPM_CDN}/ag-grid-enterprise@${agGridVersion}/dist/ag-grid-enterprise.min.js`,
+    'ag-charts-community': `${NPM_CDN}/ag-charts-community@${agChartsVersion}/dist/umd/ag-charts-community.min.js`,
+    'ag-charts-enterprise': `${NPM_CDN}/ag-charts-enterprise@${agChartsVersion}/dist/umd/ag-charts-enterprise.min.js`,
     '@ag-grid-community/locale': `${NPM_CDN}/@ag-grid-community/locale@${agGridVersion}/dist/umd/@ag-grid-community/locale.min.js`,
 };
-
-export const getEnterprisePackageName = () =>
-    `ag-grid-${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}enterprise`;
 
 /**
  * Site base URL

@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions, ICellRendererParams, ValueGetterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const gbpFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',

@@ -10,10 +10,6 @@ then
   npx webpack --env production --env minify --env styles=false --env entry=./src/main-umd-noStyles.ts &
   npx webpack --env production              --env styles=false --env entry=./src/main-umd-noStyles.ts &
 
-  npx webpack --env production --env minify --env styles       --env ce --env entry=./src/main-umd-ce-styles.ts &
-  npx webpack --env production              --env styles       --env ce --env entry=./src/main-umd-ce-styles.ts &
-  npx webpack --env production --env minify --env styles=false --env ce --env entry=./src/main-umd-ce-noStyles.ts &
-  npx webpack --env production              --env styles=false --env ce --env entry=./src/main-umd-ce-noStyles.ts &
   wait
 else
   echo "Building DEVELOPMENT UMDs for $NX_TASK_TARGET_PROJECT"

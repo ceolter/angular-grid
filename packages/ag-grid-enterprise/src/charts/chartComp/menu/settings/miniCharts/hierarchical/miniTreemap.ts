@@ -1,24 +1,28 @@
-import { _Scene, _Theme } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
 export class MiniTreemap extends MiniChart {
     static chartType: ChartType = 'treemap';
-    private readonly rects: _Scene.Rect[];
+    private readonly rects: any[];
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplate: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, 'treemapTooltip');
+        super(container, agChartsExports, 'treemapTooltip');
 
-        const { size, padding } = this;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         const data: number[][] = [
             [1, 1],
@@ -70,7 +74,7 @@ export class MiniTreemap extends MiniChart {
             rects.push(...xRects);
 
             return rects;
-        }, [] as _Scene.Rect[]);
+        }, []);
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
@@ -81,7 +85,9 @@ export class MiniTreemap extends MiniChart {
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
-        const defaultBackgroundColor = themeTemplate?.get(_Theme.DEFAULT_BACKGROUND_COLOUR);
+        const defaultBackgroundColor = themeTemplate?.get(
+            this.agChartsExports._Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR
+        );
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
 

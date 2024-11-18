@@ -8,12 +8,18 @@ import type {
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule, TreeDataModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ColumnsToolPanelModule, TreeDataModule, MenuModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ColumnsToolPanelModule,
+    TreeDataModule,
+    MenuModule,
+    ServerSideRowModelModule,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'employeeId', hide: true },

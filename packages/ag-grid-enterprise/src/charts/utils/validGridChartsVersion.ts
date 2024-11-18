@@ -80,7 +80,7 @@ export function validGridChartsVersionErrorMessage({
     if (type === 'incompatible') {
         return `AG Grid version ${gridVersion} and AG Charts version ${chartsVersion} is not supported. AG Grid version ${gridMajorMinor} should be used with AG Chart ${chartsMajorMinor}. Please see https://www.ag-grid.com/javascript-data-grid/modules/ for more information.`;
     } else if (type === 'invalidCharts') {
-        return `AG Grid version ${gridMajorMinor} should be used with AG Chart ${chartsMajorMinor}. Please see https://www.ag-grid.com/javascript-data-grid/modules/ for more information.`;
+        return `AG Grid version ${gridMajorMinor} should be used with AG Chart ${chartsMajorMinor} not ${chartsVersion}. Please see https://www.ag-grid.com/javascript-data-grid/modules/ for more information.`;
     }
 
     return invalidMessage;

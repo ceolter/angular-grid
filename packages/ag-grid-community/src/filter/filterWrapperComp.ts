@@ -1,5 +1,3 @@
-import type { ColumnModel } from '../columns/columnModel';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { FilterDestroyedEvent } from '../events';
 import type { IAfterGuiAttachedParams } from '../interfaces/iAfterGuiAttachedParams';
@@ -10,18 +8,9 @@ import { AgPromise } from '../utils/promise';
 import { _warn } from '../validation/logging';
 import { Component } from '../widgets/component';
 import type { FilterWrapper } from './columnFilterService';
-import type { FilterManager } from './filterManager';
 import type { FilterRequestSource } from './iColumnFilter';
 
 export class FilterWrapperComp extends Component {
-    private filterManager?: FilterManager;
-    private colModel: ColumnModel;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.filterManager = beans.filterManager;
-        this.colModel = beans.colModel;
-    }
-
     private filterWrapper: FilterWrapper | null = null;
 
     constructor(
@@ -63,7 +52,7 @@ export class FilterWrapperComp extends Component {
 
     private createFilter(init?: boolean): void {
         const { column, source } = this;
-        this.filterWrapper = this.filterManager?.getOrCreateFilterWrapper(column) ?? null;
+        this.filterWrapper = this.beans.filterManager?.getOrCreateFilterWrapper(column) ?? null;
         if (!this.filterWrapper?.filterPromise) {
             return;
         }
@@ -90,7 +79,7 @@ export class FilterWrapperComp extends Component {
         if (
             (event.source === 'api' || event.source === 'paramsUpdated') &&
             event.column.getId() === this.column.getId() &&
-            this.colModel.getColDefCol(this.column)
+            this.beans.colModel.getColDefCol(this.column)
         ) {
             // filter has been destroyed by the API or params changing. If the column still exists, need to recreate UI component
             _clearElement(this.getGui());

@@ -1,9 +1,8 @@
 import { BASE_URL } from './baseUrl';
 import type { FrameworkOverridesIncomingSource, IFrameworkOverrides } from './interfaces/iFrameworkOverrides';
+import { getPassiveStateForEvent } from './utils/event';
 import { AgPromise } from './utils/promise';
 import { setValidationDocLink } from './validation/logging';
-
-const PASSIVE_EVENTS = ['touchstart', 'touchend', 'touchmove', 'touchcancel'];
 
 /** The base frameworks, eg React & Angular, override this bean with implementations specific to their requirement. */
 export class VanillaFrameworkOverrides implements IFrameworkOverrides {
@@ -36,8 +35,12 @@ export class VanillaFrameworkOverrides implements IFrameworkOverrides {
             eventListenerOptions = { capture: options };
         }
 
-        if (!eventListenerOptions.passive && PASSIVE_EVENTS.includes(type)) {
-            eventListenerOptions.passive = true;
+        if (eventListenerOptions.passive == null) {
+            const passive = getPassiveStateForEvent(type);
+
+            if (passive != null) {
+                eventListenerOptions.passive = passive;
+            }
         }
 
         element.addEventListener(type, listener, eventListenerOptions);

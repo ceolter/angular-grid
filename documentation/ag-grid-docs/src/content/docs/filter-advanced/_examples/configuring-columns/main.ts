@@ -1,12 +1,18 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, HeaderValueGetterParams, ValueGetterParams } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AdvancedFilterModule } from 'ag-grid-enterprise';
 import { MenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AdvancedFilterModule, ClientSideRowModelModule, MenuModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    AdvancedFilterModule,
+    ClientSideRowModelModule,
+    MenuModule,
+    RowGroupingModule,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

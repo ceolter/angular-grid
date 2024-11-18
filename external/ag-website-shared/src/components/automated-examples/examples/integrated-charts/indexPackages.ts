@@ -8,7 +8,6 @@ import type { CreateAutomatedIntegratedChartsParams } from './createAutomatedInt
 /**
  * Create automated integrated charts example using packages
  *
- * NOTE: Assumes `ag-grid-charts-enterprise` is loaded on the page before this component is loaded
  */
 export function createAutomatedIntegratedCharts(params: CreateAutomatedIntegratedChartsParams): AutomatedExample {
     return createAutomatedIntegratedChartsWithCreateGrid({

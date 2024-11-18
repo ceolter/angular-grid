@@ -1,10 +1,14 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _RowGroupingGridApi } from 'ag-grid-community';
-import { ColumnFilterModule, FloatingFilterModule, PopupModule, StickyRowModule } from 'ag-grid-community';
+import { _ColumnFilterModule, _PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { AggregationModule } from '../aggregation/aggregationModule';
+import { AggregationModule, SharedAggregationModule } from '../aggregation/aggregationModule';
 import { baseEnterpriseModule } from '../moduleUtils';
-import { ClientSideRowModelHierarchyModule, GroupColumnModule } from '../rowHierarchy/rowHierarchyModule';
+import {
+    ClientSideRowModelHierarchyModule,
+    GroupColumnModule,
+    StickyRowModule,
+} from '../rowHierarchy/rowHierarchyModule';
 import { AgGridHeaderDropZonesSelector } from './columnDropZones/agGridHeaderDropZones';
 import { GroupFilter } from './groupFilter/groupFilter';
 import { GroupFloatingFilterComp } from './groupFilter/groupFloatingFilter';
@@ -19,12 +23,11 @@ import {
 } from './rowGroupingApi';
 
 /**
- * @feature Row Grouping
- * @colDef enableRowGroup, rowGroup, rowGroupIndex
+ * @internal
  */
-export const RowGroupingCoreModule: _ModuleWithApi<_RowGroupingGridApi> = {
-    ...baseEnterpriseModule('RowGroupingCoreModule'),
-    beans: [GroupStage, GroupHideOpenParentsService],
+export const SharedRowGroupingModule: _ModuleWithApi<_RowGroupingGridApi> = {
+    ...baseEnterpriseModule('SharedRowGroupingModule'),
+    beans: [GroupHideOpenParentsService],
     apiFunctions: {
         setRowGroupColumns,
         removeRowGroupColumns,
@@ -32,7 +35,18 @@ export const RowGroupingCoreModule: _ModuleWithApi<_RowGroupingGridApi> = {
         getRowGroupColumns,
         moveRowGroupColumn,
     },
-    dependsOn: [EnterpriseCoreModule, AggregationModule, GroupColumnModule],
+    dependsOn: [EnterpriseCoreModule, SharedAggregationModule, GroupColumnModule, StickyRowModule],
+};
+
+/**
+ * @feature Row Grouping
+ * @colDef enableRowGroup, rowGroup, rowGroupIndex
+ */
+export const RowGroupingModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('RowGroupingModule'),
+    beans: [GroupStage],
+    rowModels: ['clientSide'],
+    dependsOn: [SharedRowGroupingModule, AggregationModule, ClientSideRowModelHierarchyModule],
 };
 
 /**
@@ -51,7 +65,7 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
         // version of panelDelimiter used in RTL mode
         panelDelimiterRtl: 'small-left',
     },
-    dependsOn: [RowGroupingCoreModule, PopupModule],
+    dependsOn: [SharedRowGroupingModule, _PopupModule],
 };
 
 /**
@@ -59,30 +73,6 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
  */
 export const GroupFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupFilterModule'),
-    userComponents: { agGroupColumnFilter: GroupFilter },
-    dependsOn: [RowGroupingCoreModule, ColumnFilterModule],
-};
-
-/**
- * @feature Row Grouping -> Filtering
- */
-export const GroupFloatingFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupFloatingFilterModule'),
-    userComponents: { agGroupColumnFloatingFilter: GroupFloatingFilterComp },
-    dependsOn: [GroupFilterModule, FloatingFilterModule],
-};
-
-/**
- * @feature Row Grouping
- */
-export const RowGroupingOnlyModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGroupingOnlyModule'),
-    dependsOn: [
-        RowGroupingCoreModule,
-        StickyRowModule,
-        RowGroupingPanelModule,
-        ClientSideRowModelHierarchyModule,
-        GroupFilterModule,
-        GroupFloatingFilterModule,
-    ],
+    userComponents: { agGroupColumnFilter: GroupFilter, agGroupColumnFloatingFilter: GroupFloatingFilterComp },
+    dependsOn: [SharedRowGroupingModule, _ColumnFilterModule],
 };

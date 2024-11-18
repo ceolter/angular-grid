@@ -1,26 +1,29 @@
-import { _Scene, _Theme, _Util } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniBoxPlot extends MiniChartWithAxes {
     static chartType: ChartType = 'boxPlot';
 
-    private readonly boxPlotGroups: _Scene.Group[];
+    private readonly boxPlotGroups: any[];
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplateParameters: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, 'boxPlotTooltip');
+        super(container, agChartsExports, 'boxPlotTooltip');
 
-        const padding = this.padding;
-        const size = this.size;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         const data = [11, 11.5, 10.5];
 
@@ -99,12 +102,15 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         themeTemplateParameters?: ThemeTemplateParameters,
         isCustomTheme?: boolean
     ) {
-        const themeBackgroundColor = themeTemplateParameters?.get(_Theme.DEFAULT_BACKGROUND_COLOUR);
+        const {
+            agChartsExports: { _Util, _Theme },
+        } = this;
+        const themeBackgroundColor = themeTemplateParameters?.get(_Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR);
         const backgroundFill =
             (Array.isArray(themeBackgroundColor) ? themeBackgroundColor[0] : themeBackgroundColor) ?? 'white';
 
         this.boxPlotGroups.forEach((group, i) => {
-            for (const node of group.children() as Iterable<_Scene.Rect | _Scene.Line>) {
+            for (const node of group.children() as Iterable<any>) {
                 const fill = fills[i % fills.length];
                 node.fill = isCustomTheme ? fill : _Util.interpolateColor(fill, backgroundFill)(0.7);
                 node.stroke = strokes[i % strokes.length];
@@ -112,7 +118,7 @@ export class MiniBoxPlot extends MiniChartWithAxes {
         });
     }
 
-    setLineProperties(line: _Scene.Line, x1: number, x2: number, y1: number, y2: number) {
+    setLineProperties(line: any, x1: number, x2: number, y1: number, y2: number) {
         line.x1 = x1;
         line.x2 = x2;
         line.y1 = y1;

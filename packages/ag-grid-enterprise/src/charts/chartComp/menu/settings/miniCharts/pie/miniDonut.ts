@@ -1,18 +1,17 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ChartTranslationKey } from '../../../../services/chartTranslationService';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
-const toRadians = _Scene.toRadians;
 export class MiniDonut extends MiniChart {
     static chartType: ChartType = 'donut';
-    private readonly sectors: _Scene.Sector[];
+    private readonly sectors: any[];
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         _themeTemplateParameters: ThemeTemplateParameters,
@@ -20,10 +19,16 @@ export class MiniDonut extends MiniChart {
         centerRadiusScaler = 0.6,
         tooltipName: ChartTranslationKey = 'donutTooltip'
     ) {
-        super(container, tooltipName);
+        super(container, agChartsExports, tooltipName);
 
-        const radius = (this.size - this.padding * 2) / 2;
-        const center = radius + this.padding;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
+        const radius = (size - padding * 2) / 2;
+        const center = radius + padding;
+        const toRadians = _Scene.toRadians;
         const angles = [
             [toRadians(-90), toRadians(30)],
             [toRadians(30), toRadians(120)],

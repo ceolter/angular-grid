@@ -2,17 +2,13 @@ import type {
     AgCheckbox,
     AgColumn,
     AgEvent,
-    BeanCollection,
     ColDef,
     ICellRendererComp,
     ISetFilterCellRendererParams,
     ITooltipCtrl,
-    Registry,
     SetFilterParams,
     TooltipFeature,
-    UserComponentFactory,
     ValueFormatterParams,
-    ValueService,
 } from 'ag-grid-community';
 import {
     AgCheckboxSelector,
@@ -69,16 +65,6 @@ export interface SetFilterListItemParams<V> {
 export type SetFilterListItemEvent = 'selectionChanged' | 'expandedChanged';
 /** @param V type of value in the Set Filter */
 export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
-    private valueSvc: ValueService;
-    private userCompFactory: UserComponentFactory;
-    private registry: Registry;
-
-    public wireBeans(beans: BeanCollection) {
-        this.valueSvc = beans.valueSvc;
-        this.userCompFactory = beans.userCompFactory;
-        this.registry = beans.registry;
-    }
-
     private readonly eCheckbox: AgCheckbox = RefPlaceholder;
 
     private readonly eGroupOpenedIcon: HTMLElement = RefPlaceholder;
@@ -144,7 +130,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
 
     public postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            this.beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getColDef: () => this.params.colDef,
                 getColumn: () => this.params.column as AgColumn,
@@ -199,15 +185,18 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private setupExpansion(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('setFilterGroupClosed', this.beans, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('setFilterGroupOpen', this.beans, null));
-        const listener = this.onExpandOrContractClicked.bind(this);
-        this.addManagedElementListeners(this.eGroupClosedIcon, { click: listener });
-        this.addManagedElementListeners(this.eGroupOpenedIcon, { click: listener });
+        const { eGroupClosedIcon, eGroupOpenedIcon, eGroupIndeterminateIcon, hasIndeterminateExpandState, beans } =
+            this;
 
-        if (this.hasIndeterminateExpandState) {
-            this.eGroupIndeterminateIcon.appendChild(_createIcon('setFilterGroupIndeterminate', this.beans, null));
-            this.addManagedElementListeners(this.eGroupIndeterminateIcon, {
+        eGroupClosedIcon.appendChild(_createIcon('setFilterGroupClosed', beans, null));
+        eGroupOpenedIcon.appendChild(_createIcon('setFilterGroupOpen', beans, null));
+        const listener = this.onExpandOrContractClicked.bind(this);
+        this.addManagedElementListeners(eGroupClosedIcon, { click: listener });
+        this.addManagedElementListeners(eGroupOpenedIcon, { click: listener });
+
+        if (hasIndeterminateExpandState) {
+            eGroupIndeterminateIcon.appendChild(_createIcon('setFilterGroupIndeterminate', beans, null));
+            this.addManagedElementListeners(eGroupIndeterminateIcon, {
                 click: listener,
             });
         }
@@ -240,13 +229,12 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private setExpandedIcons(): void {
-        _setDisplayed(
-            this.eGroupClosedIcon,
-            this.hasIndeterminateExpandState ? this.isExpanded === false : !this.isExpanded
-        );
-        _setDisplayed(this.eGroupOpenedIcon, this.isExpanded === true);
-        if (this.hasIndeterminateExpandState) {
-            _setDisplayed(this.eGroupIndeterminateIcon, this.isExpanded === undefined);
+        const { isExpanded, hasIndeterminateExpandState, eGroupClosedIcon, eGroupOpenedIcon, eGroupIndeterminateIcon } =
+            this;
+        _setDisplayed(eGroupClosedIcon, hasIndeterminateExpandState ? isExpanded === false : !isExpanded);
+        _setDisplayed(eGroupOpenedIcon, isExpanded === true);
+        if (hasIndeterminateExpandState) {
+            _setDisplayed(eGroupIndeterminateIcon, isExpanded === undefined);
         }
     }
 
@@ -327,18 +315,19 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
             this.setSelected(isSelected, true);
         }
         this.setExpanded(isExpanded, true);
+        const { cellRendererComponent, cellRendererParams } = this;
         if (this.valueFunction) {
             // underlying value might have changed, so call again and re-render
             const value = this.valueFunction();
             this.setTooltipAndCellRendererParams(value as any, value);
-            if (!this.cellRendererComponent) {
+            if (!cellRendererComponent) {
                 this.renderCellWithoutCellRenderer();
             }
         }
-        if (this.cellRendererComponent) {
-            const success = this.cellRendererComponent.refresh?.(this.cellRendererParams as any);
+        if (cellRendererComponent) {
+            const success = cellRendererComponent.refresh?.(cellRendererParams as any);
             if (!success) {
-                const oldComponent = this.cellRendererComponent;
+                const oldComponent = cellRendererComponent;
                 this.renderCell();
                 this.destroyBean(oldComponent);
             }
@@ -394,12 +383,12 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private getFormattedValue(column: AgColumn, value: any) {
-        return this.valueSvc.formatValue(column, null, value, this.valueFormatter, false);
+        return this.beans.valueSvc.formatValue(column, null, value, this.valueFormatter, false);
     }
 
     private renderCell(): void {
         const compDetails = _getCellRendererDetails<SetFilterParams<any, V>, ISetFilterCellRendererParams>(
-            this.userCompFactory,
+            this.beans.userCompFactory,
             this.params,
             this.cellRendererParams
         );
@@ -420,10 +409,8 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private renderCellWithoutCellRenderer(): void {
-        let valueToRender =
-            (this.cellRendererParams.valueFormatted == null
-                ? this.cellRendererParams.value
-                : this.cellRendererParams.valueFormatted) ?? this.translate('blanks');
+        const { valueFormatted, value } = this.cellRendererParams;
+        let valueToRender = (valueFormatted == null ? value : valueFormatted) ?? this.translate('blanks');
         if (typeof valueToRender !== 'string') {
             _warn(208);
             valueToRender = '';

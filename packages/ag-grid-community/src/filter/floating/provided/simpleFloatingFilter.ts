@@ -1,5 +1,3 @@
-import type { ColumnNameService } from '../../../columns/columnNameService';
-import type { BeanCollection } from '../../../context/context';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { FilterChangedEvent } from '../../../events';
 import type { ProvidedFilterModel } from '../../../interfaces/iFilter';
@@ -17,57 +15,24 @@ import type { SimpleFilterModelFormatter } from '../../provided/simpleFilterMode
 import type { IFloatingFilterComp, IFloatingFilterParams } from '../floatingFilter';
 
 export abstract class SimpleFloatingFilter extends Component implements IFloatingFilterComp<ISimpleFilter> {
-    private colNames: ColumnNameService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colNames = beans.colNames;
-    }
-
     // this method is on IFloatingFilterComp. because it's not implemented at this level, we have to
     // define it as an abstract method. it gets implemented in sub classes.
     public abstract onParentModelChanged(model: ProvidedFilterModel, event: FilterChangedEvent): void;
 
-    protected abstract getDefaultFilterOptions(): string[];
+    protected abstract getDefaultOptions(): string[];
     protected abstract setEditable(editable: boolean): void;
 
-    protected abstract getFilterModelFormatter(): SimpleFilterModelFormatter;
+    protected abstract filterModelFormatter: SimpleFilterModelFormatter;
 
-    private lastType: string | null | undefined;
-
+    protected lastType: string | null | undefined;
     protected optionsFactory: OptionsFactory;
-
-    private readOnly: boolean;
-
-    protected getDefaultDebounceMs(): number {
-        return 0;
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
-    protected isEventFromFloatingFilter(event: FilterChangedEvent): boolean | undefined {
-        return event && event.afterFloatingFilter;
-    }
-
-    protected isEventFromDataChange(event: FilterChangedEvent): boolean | undefined {
-        return event?.afterDataChange;
-    }
-
-    protected getLastType(): string | null | undefined {
-        return this.lastType;
-    }
-
-    protected isReadOnly(): boolean {
-        return this.readOnly;
-    }
+    protected readOnly: boolean;
+    protected defaultDebounceMs: number = 0;
 
     protected setLastTypeFromModel(model: ProvidedFilterModel): void {
         // if no model provided by the parent filter use default
         if (!model) {
-            this.lastType = this.optionsFactory.getDefaultOption();
+            this.lastType = this.optionsFactory.defaultOption;
             return;
         }
 
@@ -109,12 +74,14 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     }
 
     private setSimpleParams(params: IFloatingFilterParams, update: boolean = true): void {
-        this.optionsFactory = new OptionsFactory();
-        this.optionsFactory.init(params.filterParams as ScalarFilterParams, this.getDefaultFilterOptions());
+        const optionsFactory = new OptionsFactory();
+        this.optionsFactory = optionsFactory;
+        optionsFactory.init(params.filterParams as ScalarFilterParams, this.getDefaultOptions());
 
+        const defaultOption = optionsFactory.defaultOption;
         // Initial call
         if (!update) {
-            this.lastType = this.optionsFactory.getDefaultOption();
+            this.lastType = defaultOption;
         }
 
         // readOnly is a property of ProvidedFilterParams - we need to find a better (type-safe)
@@ -125,7 +92,7 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
         // 1) there is a type (user has configured filter wrong if not type)
         //  AND
         // 2) the default type is not 'inRange'
-        const editable = this.isTypeEditable(this.optionsFactory.getDefaultOption());
+        const editable = this.isTypeEditable(defaultOption);
         this.setEditable(editable);
     }
 
@@ -133,9 +100,8 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
         this.setSimpleParams(params);
     }
 
-    private doesFilterHaveSingleInput(filterType: string) {
-        const customFilterOption = this.optionsFactory.getCustomOption(filterType);
-        const { numberOfInputs } = customFilterOption || {};
+    private hasSingleInput(filterType: string) {
+        const numberOfInputs = this.optionsFactory.getCustomOption(filterType)?.numberOfInputs;
         return numberOfInputs == null || numberOfInputs == 1;
     }
 
@@ -143,15 +109,14 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
         const uneditableTypes: ISimpleFilterModelType[] = ['inRange', 'empty', 'blank', 'notBlank'];
         return (
             !!type &&
-            !this.isReadOnly() &&
-            this.doesFilterHaveSingleInput(type) &&
+            !this.readOnly &&
+            this.hasSingleInput(type) &&
             uneditableTypes.indexOf(type as ISimpleFilterModelType) < 0
         );
     }
 
     protected getAriaLabel(params: IFloatingFilterParams): string {
-        const displayName = this.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
-        const translate = this.getLocaleTextFunc();
-        return `${displayName} ${translate('ariaFilterInput', 'Filter Input')}`;
+        const displayName = this.beans.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);
+        return `${displayName} ${this.getLocaleTextFunc()('ariaFilterInput', 'Filter Input')}`;
     }
 }

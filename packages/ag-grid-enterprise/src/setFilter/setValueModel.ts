@@ -760,6 +760,6 @@ export class SetValueModel<V> implements IEventEmitter<SetValueModelEvent> {
     }
 
     public hasAnyAppliedModelKey(): boolean {
-        return !this.filteringKeys.noAppliedFilteringKeys();
+        return !this.filteringKeys.hasNoAppliedFilteringKeys;
     }
 }

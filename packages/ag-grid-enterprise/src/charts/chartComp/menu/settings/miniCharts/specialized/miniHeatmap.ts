@@ -1,24 +1,28 @@
-import { _Scene, _Theme, _Util } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import type { ThemeTemplateParameters } from '../../miniChartsContainer';
 import { MiniChart } from '../miniChart';
 
 export class MiniHeatmap extends MiniChart {
     static chartType: ChartType = 'heatmap';
-    private readonly rects: _Scene.Rect[];
+    private readonly rects: any[];
 
     constructor(
         container: HTMLElement,
+        agChartsExports: AgChartsExports,
         fills: string[],
         strokes: string[],
         themeTemplate: ThemeTemplateParameters,
         isCustomTheme: boolean
     ) {
-        super(container, 'heatmapTooltip');
+        super(container, agChartsExports, 'heatmapTooltip');
 
-        const { size, padding } = this;
+        const {
+            size,
+            padding,
+            agChartsExports: { _Scene },
+        } = this;
 
         const heatmapSize = 3;
 
@@ -59,7 +63,7 @@ export class MiniHeatmap extends MiniChart {
             rects.push(...xRects);
 
             return rects;
-        }, [] as _Scene.Rect[]);
+        }, []);
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 
@@ -70,8 +74,9 @@ export class MiniHeatmap extends MiniChart {
     }
 
     updateColors(fills: string[], strokes: string[], themeTemplate?: ThemeTemplateParameters, isCustomTheme?: boolean) {
-        const defaultColorRange = themeTemplate?.get(_Theme.DEFAULT_DIVERGING_SERIES_COLOR_RANGE);
-        const defaultBackgroundColor = themeTemplate?.get(_Theme.DEFAULT_BACKGROUND_COLOUR);
+        const { _Theme, _Util } = this.agChartsExports;
+        const defaultColorRange = themeTemplate?.get(_Theme.themeSymbols.DEFAULT_DIVERGING_SERIES_COLOR_RANGE);
+        const defaultBackgroundColor = themeTemplate?.get(_Theme.themeSymbols.DEFAULT_BACKGROUND_COLOUR);
         const backgroundFill =
             (Array.isArray(defaultBackgroundColor) ? defaultBackgroundColor[0] : defaultBackgroundColor) ?? 'white';
 

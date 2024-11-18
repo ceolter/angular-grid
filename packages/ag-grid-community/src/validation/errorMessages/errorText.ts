@@ -1,19 +1,19 @@
 import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
-import type { EnterpriseModuleName, ModuleName } from '../../interfaces/iModule';
+import type { EnterpriseModuleName, ModuleName, ValidationModuleName } from '../../interfaces/iModule';
 import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
+import { resolveModuleNames } from '../resolvableModuleNames';
 
-export const moduleImportMsg = (moduleName: ModuleName | ModuleName[]) => {
-    const moduleNames = Array.isArray(moduleName) ? moduleName : [moduleName];
+export const moduleImportMsg = (moduleNames: ModuleName[]) => {
     const imports = moduleNames
         .map(
-            (modName) =>
-                `import { ${modName} } from '${ENTERPRISE_MODULE_NAMES[modName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
+            (moduleName) =>
+                `import { ${moduleName} } from '${ENTERPRISE_MODULE_NAMES[moduleName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
         )
         .join(' \n');
     return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
@@ -24,19 +24,33 @@ const missingModule = ({
     moduleName,
     gridScoped,
     gridId,
+    rowModelType,
     additionalText,
 }: {
     reasonOrId: string | keyof MissingModuleErrors;
-    moduleName: ModuleName | ModuleName[];
+    moduleName: ValidationModuleName | ValidationModuleName[];
     gridScoped: boolean;
     gridId: string;
+    rowModelType: RowModelType;
     additionalText?: string;
 }) => {
+    const resolvedModuleNames = resolveModuleNames(moduleName, rowModelType);
     const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
     return (
-        `Unable to use ${reason} as ${Array.isArray(moduleName) ? 'one of ' + moduleName.join(', ') : moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
-${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '')
+        `Unable to use ${reason} as ${resolvedModuleNames.length > 1 ? 'one of ' + resolvedModuleNames.join(', ') : resolvedModuleNames[0]} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+${moduleImportMsg(resolvedModuleNames)}` + (additionalText ? ` \n\n${additionalText}` : '')
     );
+};
+
+const missingChartsWithModule = (gridModule: 'IntegratedChartsModule' | 'SparklinesModule') => {
+    return `${gridModule} must be initialised with an AG Charts module. One of 'AgChartsCommunityModule' / 'AgChartsEnterpriseModule'.
+
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ${gridModule} } from 'ag-grid-enterprise';
+    
+ModuleRegistry.registerModules([${gridModule}.with(AgChartsEnterpriseModule)]);
+    ` as const;
 };
 
 const clipboardApiError = (method: string) =>
@@ -532,7 +546,9 @@ export const AG_GRID_ERRORS = {
     255: ({ point }: { point: number }) =>
         `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
     256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
-} as const;
+    257: () => missingChartsWithModule('IntegratedChartsModule'),
+    258: () => missingChartsWithModule('SparklinesModule'),
+};
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
 export type ErrorId = keyof ErrorMap;

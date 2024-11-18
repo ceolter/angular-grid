@@ -52,7 +52,6 @@ const postBuildMinificationPlugin = {
 const exportedNames = {
     'ag-grid-community': 'agGrid',
     'ag-grid-enterprise': 'agGrid',
-    'ag-grid-charts-enterprise': 'agGrid',
     'ag-grid-react': 'AgGridReact',
 };
 const exportedName = exportedNames[process.env.NX_TASK_TARGET_PROJECT];

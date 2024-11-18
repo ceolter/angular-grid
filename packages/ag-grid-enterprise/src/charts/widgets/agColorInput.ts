@@ -1,16 +1,19 @@
-import { _Util } from 'ag-charts-community';
+import type { IColor, _IUtil } from 'ag-charts-types';
 
 import type { AgInputTextFieldParams, BeanCollection, ComponentSelector } from 'ag-grid-community';
 import { AgInputTextField, RefPlaceholder } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../agChartsExports';
 import type { ChartTranslationService } from '../chartComp/services/chartTranslationService';
 
 export type AgColorInputEvent = 'colorChanged';
 export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgColorInputEvent> {
     private chartTranslation: ChartTranslationService;
+    private color: _IUtil['Color'];
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
+        this.color = (beans.agChartsExports as AgChartsExports)._Util.Color;
     }
     private readonly eColor: HTMLElement = RefPlaceholder;
 
@@ -27,14 +30,14 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
         });
     }
 
-    public setColor(color: _Util.Color): void {
+    public setColor(color: IColor): void {
         const rgbaColor = color.toRgbaString();
-        this.setValue(_Util.Color.fromString(rgbaColor).toHexString().toUpperCase(), true);
+        this.setValue(this.color.fromString(rgbaColor).toHexString().toUpperCase(), true);
         this.eColor.style.backgroundColor = rgbaColor;
     }
 
     public override setValue(value?: string | null | undefined, silent?: boolean | undefined): this {
-        const isValid = _Util.Color.validColorString(value ?? '');
+        const isValid = this.color.validColorString(value ?? '');
         this.eInput.setCustomValidity(isValid ? '' : this.chartTranslation.translate('invalidColor'));
         super.setValue(value, silent);
         if (isValid && !silent) {
@@ -43,8 +46,8 @@ export class AgColorInput extends AgInputTextField<AgInputTextFieldParams, AgCol
         return this;
     }
 
-    public onColorChanged(callback: (color: _Util.Color) => void): void {
-        this.addManagedListeners(this, { colorChanged: () => callback(_Util.Color.fromString(this.value!)) });
+    public onColorChanged(callback: (color: IColor) => void): void {
+        this.addManagedListeners(this, { colorChanged: () => callback(this.color.fromString(this.value!)) });
     }
 }
 
