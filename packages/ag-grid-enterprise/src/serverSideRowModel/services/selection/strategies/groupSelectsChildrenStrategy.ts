@@ -162,7 +162,7 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
-                _error(241);
+                _error(130);
                 return 0;
             }
             this.deselectAllRowNodes();
