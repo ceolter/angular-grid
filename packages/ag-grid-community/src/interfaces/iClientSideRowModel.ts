@@ -47,7 +47,7 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     resetRowHeights(): void;
     onRowHeightChanged(): void;
     onRowHeightChangedDebounced(): void;
-    doAggregate(changedPath?: ChangedPath): void;
+    doAggregate(changedPath: ChangedPath): void;
     getTopLevelNodes(): RowNode[] | null;
     ensureRowsAtPixel(rowNode: RowNode[], pixel: number, increment: number): boolean;
     highlightRowAtPixel(rowNode: RowNode | null, pixel?: number): void;

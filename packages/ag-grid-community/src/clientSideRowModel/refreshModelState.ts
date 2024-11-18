@@ -52,6 +52,12 @@ export interface RefreshModelParams<TData = any> {
     updateRowNodes?: (state: RefreshModelState<TData>) => void;
 }
 
+const createInactiveChangedPath = (rootNode: RowNode) => {
+    const changedPath = new ChangedPath(false, rootNode);
+    changedPath.active = false;
+    return changedPath;
+};
+
 export class RefreshModelState<TData = any> {
     public rowData: TData[] | null | undefined;
 
@@ -92,9 +98,6 @@ export class RefreshModelState<TData = any> {
 
     /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
     public keepUndoRedoStack: boolean;
-
-    /** The ChangedPath containing the changed parent nodes in DFS order. */
-    public readonly changedPath: ChangedPath;
 
     /**
      * The set of removed nodes.
@@ -137,6 +140,7 @@ export class RefreshModelState<TData = any> {
     public constructor(
         /** The Grid Option Service instance to query grid options */
         public readonly gos: GridOptionsService,
+
         /** The CSRM rootNode */
         public readonly rootNode: AbstractClientSideNodeManager.RootNode<TData>,
         {
@@ -146,12 +150,14 @@ export class RefreshModelState<TData = any> {
             keepRenderedRows = false,
             keepUndoRedoStack = false,
             rowsOrderChanged = false,
-        }: RefreshModelParams<TData>
-    ) {
-        const changedPath = new ChangedPath(false, rootNode);
-        changedPath.active = false;
-        this.changedPath = changedPath;
+        }: RefreshModelParams<TData>,
 
+        /**
+         * The ChangedPath containing the changed parent nodes in DFS order.
+         * By default is disabled, and it gets enabled only if running an immutable set data.
+         */
+        public readonly changedPath: ChangedPath = createInactiveChangedPath(rootNode)
+    ) {
         this.step = step;
         this.afterColumnsChanged = afterColumnsChanged;
         this.animate = animate;

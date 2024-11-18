@@ -15,7 +15,7 @@ import {
 } from '../gridOptionsUtils';
 import type { ClientSideRowModelStage, IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { RowBounds, RowModelType } from '../interfaces/iRowModel';
-import type { IRowNodeStage } from '../interfaces/iRowNodeStage';
+import type { IRowNodeAggregationStage, IRowNodeMapStage, IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
 import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _EmptyArray, _last, _removeFromArray } from '../utils/array';
@@ -54,11 +54,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     // standard stages
     private filterStage?: IRowNodeStage;
     private sortStage?: IRowNodeStage;
-    private flattenStage?: IRowNodeStage<RowNode[]>;
+    private flattenStage?: IRowNodeMapStage;
 
     // enterprise stages
     private groupStage?: IRowNodeStage;
-    private aggStage?: IRowNodeStage;
+    private aggStage?: IRowNodeAggregationStage;
     private pivotStage?: IRowNodeStage;
     private filterAggStage?: IRowNodeStage;
 
@@ -748,7 +748,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             case 'sort':
                 this.doSort(state);
             case 'map':
-                this.doRowsToDisplay();
+                this.doRowsToDisplay(state);
             /* eslint-enable no-fallthrough */
         }
 
@@ -1000,36 +1000,25 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     // it's possible to recompute the aggregate without doing the other parts
     // + api.refreshClientSideRowModel('aggregate')
-    public doAggregate(changedPath?: ChangedPath): void {
-        const rootNode = this.rootNode;
-        if (rootNode) {
-            this.aggStage?.execute({ rowNode: rootNode, changedPath });
-        }
+    public doAggregate(changedPath: ChangedPath): void {
+        this.aggStage?.aggregate(changedPath);
     }
 
     private doFilterAggregates(changedRowNodes: RefreshModelState): void {
         const rootNode = this.rootNode!;
         if (this.filterAggStage) {
-            this.filterAggStage.execute({
-                rowNode: rootNode,
-                refreshModelState: changedRowNodes,
-                changedPath: changedRowNodes.changedPath,
-            });
+            this.filterAggStage.execute(changedRowNodes);
         } else {
             // If filterAggStage is undefined, then so is the grouping stage, so all children should be on the rootNode.
             rootNode.childrenAfterAggFilter = rootNode.childrenAfterFilter;
         }
     }
 
-    private doSort(changedRowNodes: RefreshModelState) {
-        const { rootNode, changedPath } = changedRowNodes;
+    private doSort(state: RefreshModelState) {
+        const { changedPath } = state;
         const { groupHideOpenParentsSvc } = this.beans;
         if (this.sortStage) {
-            this.sortStage.execute({
-                rowNode: rootNode,
-                refreshModelState: changedRowNodes,
-                changedPath,
-            });
+            this.sortStage.execute(state);
         } else {
             changedPath.forEachChangedNodeDepthFirst((rowNode) => {
                 // this needs to run before sorting
@@ -1050,14 +1039,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (!this.nodeManager.treeData) {
             const groupStage = this.groupStage;
             if (groupStage) {
-                const rowNodesOrderChanged = state.rowsInserted || state.rowsOrderChanged;
-                groupStage.execute({
-                    rowNode: rootNode,
-                    refreshModelState: state,
-                    changedPath: state.changedPath,
-                    rowNodesOrderChanged,
-                    afterColumnsChanged: state.afterColumnsChanged,
-                });
+                groupStage.execute(state);
             } else {
                 const sibling = rootNode.sibling;
                 rootNode.childrenAfterGroup = rootNode.allLeafChildren;
@@ -1075,14 +1057,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private doFilter(changedRowNodes: RefreshModelState) {
-        const changedPath = changedRowNodes.changedPath;
+    private doFilter(state: RefreshModelState) {
+        const changedPath = state.changedPath;
         if (this.filterStage) {
-            this.filterStage.execute({
-                rowNode: this.rootNode!,
-                refreshModelState: changedRowNodes,
-                changedPath,
-            });
+            this.filterStage.execute(state);
         } else {
             changedPath.forEachChangedNodeDepthFirst((rowNode) => {
                 rowNode.childrenAfterFilter = rowNode.childrenAfterGroup;
@@ -1091,12 +1069,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private doPivot(changedRowNodes: RefreshModelState) {
-        this.pivotStage?.execute({
-            rowNode: this.rootNode!,
-            refreshModelState: changedRowNodes,
-            changedPath: changedRowNodes.changedPath,
-        });
+    private doPivot(state: RefreshModelState) {
+        this.pivotStage?.execute(state);
     }
 
     public getRowNode(id: string): RowNode | undefined {
@@ -1217,13 +1191,13 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return rowNodeTransaction;
     }
 
-    private doRowsToDisplay() {
-        const { flattenStage, rootNode } = this;
+    private doRowsToDisplay(state: RefreshModelState) {
+        const { flattenStage } = this;
         let rowsToDisplay: RowNode[];
         if (flattenStage) {
-            rowsToDisplay = flattenStage.execute({ rowNode: rootNode! });
+            rowsToDisplay = flattenStage.execute(state);
         } else {
-            rowsToDisplay = rootNode!.childrenAfterSort ?? [];
+            rowsToDisplay = state.rootNode.childrenAfterSort ?? [];
             for (let i = 0, len = rowsToDisplay.length; i < len; i++) {
                 rowsToDisplay[i].setUiLevel(0);
             }
