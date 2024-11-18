@@ -10,27 +10,21 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {
-        const rootNode = refreshModelState.rootNode;
-        const treeRoot = this.treeRoot!;
+    protected override isTreeData(): boolean {
+        const gos = this.gos;
+        return gos.get('treeData') && !!gos.get('getDataPath');
+    }
 
-        this.treeClear();
-        treeRoot.setRow(rootNode);
+    protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {
+        this.treeReset();
 
         super.loadNewRowData(refreshModelState, rowData);
 
-        const allLeafChildren = rootNode.allLeafChildren!;
         const getDataPath = this.gos.get('getDataPath');
+        const allLeafChildren = refreshModelState.rootNode.allLeafChildren!;
         for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
-
-        this.treeCommit(refreshModelState);
-    }
-
-    public override get treeData(): boolean {
-        const gos = this.gos;
-        return gos.get('treeData') && !!gos.get('getDataPath');
     }
 
     public override refreshModel(state: RefreshModelState<TData>): void {
@@ -72,8 +66,6 @@ export class ClientSidePathTreeNodeManager<TData>
                 }
             }
         }
-
-        this.treeCommit(state); // One single commit for all the transactions
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {

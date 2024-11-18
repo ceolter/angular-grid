@@ -27,6 +27,8 @@ const enum Flags {
     PathChanged = 0x10,
 }
 
+export const isTreeRowCommitted = (row: RowNode): boolean => (row.treeNodeFlags & Flags.Committed) !== 0;
+
 /** Check if the expanded state needs to be initialized, first time for a node, or again if the node was removed */
 export const isTreeRowExpandedInitialized = (row: RowNode): boolean =>
     (row.treeNodeFlags & Flags.ExpandedInitialized) !== 0;
@@ -96,6 +98,12 @@ export const markTreeRowCommitted = (row: TreeRow): void => {
             sibling.childrenAfterGroup = row.childrenAfterGroup;
             sibling.childrenMapped = row.childrenMapped;
         }
+    }
+};
+
+export const clearTreeRootCommitted = (row: TreeRow | null | undefined): void => {
+    if (row) {
+        row.treeNodeFlags &= ~Flags.Committed;
     }
 };
 

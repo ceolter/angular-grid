@@ -34,12 +34,9 @@ export namespace AbstractClientSideNodeManager {
 export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStub {
     private nextId = 0;
     protected allNodesMap: { [id: string]: RowNode<TData> } = {};
+    public treeData: boolean = false;
 
     public rootNode: AbstractClientSideNodeManager.RootNode<TData> | null = null;
-
-    public get treeData(): boolean {
-        return false; // not supported by this node manager
-    }
 
     public getRowNode(id: string): RowNode | undefined {
         return this.allNodesMap[id];
@@ -49,17 +46,22 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         return this.rootNode?.allLeafChildren?.map((node) => node.data!);
     }
 
-    public activate(rootNode: ClientSideNodeManagerRootNode<TData>): void {
-        this.rootNode = rootNode;
+    public activate(state: RefreshModelState<TData>): void {
+        if (state.fullReload) {
+            state.clearDeltaUpdate();
 
-        rootNode.group = true;
-        rootNode.level = -1;
-        rootNode.id = 'ROOT_NODE_ID';
-        rootNode.allLeafChildren = [];
-        rootNode.childrenAfterGroup = [];
-        rootNode.childrenAfterSort = [];
-        rootNode.childrenAfterAggFilter = [];
-        rootNode.childrenAfterFilter = [];
+            const rootNode = state.rootNode;
+            this.rootNode = rootNode;
+
+            rootNode.group = true;
+            rootNode.level = -1;
+            rootNode.id = 'ROOT_NODE_ID';
+            rootNode.allLeafChildren = [];
+            rootNode.childrenAfterGroup = [];
+            rootNode.childrenAfterSort = [];
+            rootNode.childrenAfterAggFilter = [];
+            rootNode.childrenAfterFilter = [];
+        }
     }
 
     public deactivate(): void {
@@ -87,12 +89,11 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
         const sibling = rootNode.sibling;
 
-        rootNode.childrenAfterFilter = null;
         rootNode.childrenAfterGroup = null;
+        rootNode.childrenAfterFilter = null;
         rootNode.childrenAfterAggFilter = null;
         rootNode.childrenAfterSort = null;
         rootNode.childrenMapped = null;
-        rootNode.updateHasChildren();
 
         // Clear internal maps
 
@@ -101,14 +102,9 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
         this.loadNewRowData(state, rowData);
 
-        const allLeafChildren = rootNode.allLeafChildren!;
-        for (let i = 0, len = allLeafChildren.length; i < len; i++) {
-            state.add(allLeafChildren[i]);
-        }
-
         if (sibling) {
-            sibling.childrenAfterFilter = rootNode.childrenAfterFilter;
             sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
+            sibling.childrenAfterFilter = rootNode.childrenAfterFilter;
             sibling.childrenAfterAggFilter = rootNode.childrenAfterAggFilter;
             sibling.childrenAfterSort = rootNode.childrenAfterSort;
             sibling.childrenMapped = rootNode.childrenMapped;
@@ -117,7 +113,13 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
     }
 
     protected loadNewRowData(state: RefreshModelState, rowData: TData[]): void {
-        state.rootNode.allLeafChildren = rowData?.map((dataItem, index) => this.createRowNode(dataItem, index)) ?? [];
+        const allLeafChildren = new Array<RowNode<TData>>(rowData.length);
+        for (let i = 0, len = rowData.length; i < len; ++i) {
+            const node = this.createRowNode(rowData[i], i);
+            allLeafChildren[i] = node;
+            state.add(node);
+        }
+        state.rootNode.allLeafChildren = allLeafChildren;
     }
 
     public setImmutableRowData(state: RefreshModelState<TData>, rowData: TData[]): boolean {
@@ -152,6 +154,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         const rowNodeTran: RowNodeTransaction<TData> = { remove, update, add };
 
         // Add the transaction to the ChangedRowNodes list of transactions
+        // but only if delta update is allowed. Else just executed them.
         if (state.setDeltaUpdate()) {
             (state.deltaUpdateTransactions ??= []).push(rowNodeTran);
         }
@@ -406,49 +409,6 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         });
     }
 
-    protected deselectNodes(nodesToUnselect: RowNode<TData>[]): void {
-        const source = 'rowDataChanged';
-        const selectionSvc = this.beans.selectionSvc;
-        const selectionChanged = nodesToUnselect.length > 0;
-        if (selectionChanged) {
-            selectionSvc?.setNodesSelected({
-                newValue: false,
-                nodes: nodesToUnselect,
-                suppressFinishActions: true,
-                source,
-            });
-        }
-
-        // we do this regardless of nodes to unselect or not, as it's possible
-        // a new node was inserted, so a parent that was previously selected (as all
-        // children were selected) should not be tri-state (as new one unselected against
-        // all other selected children).
-        selectionSvc?.updateGroupsFromChildrenSelections?.(source);
-
-        if (selectionChanged) {
-            this.eventSvc.dispatchEvent({ type: 'selectionChanged', source: source });
-        }
-    }
-
-    private deselectNodesAfterUpdate(state: RefreshModelState<TData>) {
-        const nodesToUnselect: RowNode[] = [];
-        for (const removedNode of state.removals) {
-            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
-            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
-            if (removedNode.isSelected()) {
-                nodesToUnselect.push(removedNode);
-            }
-        }
-
-        for (const updatedNode of state.updates.keys()) {
-            if (!updatedNode.selectable && updatedNode.isSelected()) {
-                nodesToUnselect.push(updatedNode);
-            }
-        }
-
-        this.deselectNodes(nodesToUnselect);
-    }
-
     protected createRowNode(data: TData, sourceRowIndex: number): RowNode<TData> {
         const node: ClientSideNodeManagerRowNode<TData> = new RowNode<TData>(this.beans);
         node.parent = this.rootNode;
@@ -493,8 +453,55 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         return rowNode || null;
     }
 
+    protected deselectNodes(state: RefreshModelState<TData> | null, nodesToUnselect: RowNode<TData>[]): void {
+        const source = 'rowDataChanged';
+        const selectionSvc = this.beans.selectionSvc;
+        const selectionChanged = nodesToUnselect.length > 0;
+        if (selectionChanged) {
+            selectionSvc?.setNodesSelected({
+                newValue: false,
+                nodes: nodesToUnselect,
+                suppressFinishActions: true,
+                source,
+            });
+        }
+
+        // we do this regardless of nodes to unselect or not, as it's possible
+        // a new node was inserted, so a parent that was previously selected (as all
+        // children were selected) should not be tri-state (as new one unselected against
+        // all other selected children).
+        if (selectionChanged || (state && !state.newData && state.hasChanges())) {
+            selectionSvc?.updateGroupsFromChildrenSelections?.(source);
+        }
+
+        if (selectionChanged) {
+            this.eventSvc.dispatchEvent({ type: 'selectionChanged', source: source });
+        }
+    }
+
+    private deselectNodesAfterUpdate(state: RefreshModelState<TData>) {
+        const nodesToUnselect: RowNode[] = [];
+        for (const removedNode of state.removals) {
+            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
+            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
+            if (removedNode.isSelected()) {
+                nodesToUnselect.push(removedNode);
+            }
+        }
+
+        for (const updatedNode of state.updates.keys()) {
+            if (!updatedNode.selectable && updatedNode.isSelected()) {
+                nodesToUnselect.push(updatedNode);
+            }
+        }
+
+        this.deselectNodes(state, nodesToUnselect);
+    }
+
     public refreshModel(state: RefreshModelState<TData>): void {
-        if (state.deltaUpdate || state.hasChanges()) {
+        state.rootNode.updateHasChildren();
+
+        if (state.rowDataUpdated || state.hasChanges()) {
             this.deselectNodesAfterUpdate(state);
         }
     }

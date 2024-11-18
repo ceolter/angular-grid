@@ -145,7 +145,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const rootNode = new RowNode(this.beans);
         this.rootNode = rootNode;
         this.nodeManager = this.getNodeManagerToUse();
-        this.nodeManager.activate(rootNode);
+
+        const state = new RefreshModelState(this.gos, rootNode, { step: 'nothing' });
+        state.fullReload = true;
+
+        this.nodeManager.activate(state);
     }
 
     private getNodeManagerToUse(): AbstractClientSideNodeManager<any> {
@@ -202,9 +206,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         ];
 
         this.addManagedPropertyListeners(allProps, (params) => {
-            const properties = params.changeSet?.properties;
-            if (properties) {
-                this.refreshModel({ step: 'nothing', changedProps: properties });
+            const changedProps = params.changeSet?.properties;
+            if (changedProps) {
+                this.refreshModel({ step: 'nothing', changedProps });
             }
         });
 
@@ -587,8 +591,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return; // Destroyed
         }
 
-        const gos = this.gos;
-
         let state = this.currentRefreshModelState;
 
         let newRowData: any[] | null | undefined;
@@ -600,7 +602,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const started = this.started;
         if (!state) {
             ownsState = true;
-            state = new RefreshModelState(gos, rootNode, params);
+            state = new RefreshModelState(this.gos, rootNode, params);
             this.currentRefreshModelState = state;
             state.started = started;
             rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
@@ -625,16 +627,13 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         // TODO: don't use changedProps and remove it
 
-        const treeDataChanged = changedProps?.includes('treeData');
-        const treeDataChildrenFieldChanged = changedProps?.includes('treeDataChildrenField');
-
-        const reset = oldNodeManager !== nodeManager || treeDataChildrenFieldChanged;
-
-        if (treeDataChanged) {
+        if (changedProps?.includes('treeData')) {
             state.setStep('group');
         }
 
-        if (reset || rowDataChanged) {
+        const nodeManagerChanged = oldNodeManager !== nodeManager;
+
+        if (nodeManagerChanged || rowDataChanged) {
             newRowData = state.rowData;
 
             if (newRowData != null && !Array.isArray(newRowData)) {
@@ -643,24 +642,27 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (reset) {
-            if (!rowDataChanged) {
-                // No new rowData was passed, so to include user executed transaction we need to extract
-                // the row data from the node manager as it might be different from the original rowData
-                newRowData = oldNodeManager?.extractRowData() ?? newRowData;
-            }
+        if (nodeManagerChanged) {
+            state.fullReload = true;
 
-            if (oldNodeManager !== nodeManager) {
-                oldNodeManager?.deactivate();
-                this.nodeManager = nodeManager;
-            }
+            oldNodeManager?.deactivate();
+            this.nodeManager = nodeManager;
+        }
 
-            nodeManager.activate(rootNode);
+        nodeManager.activate(state);
+
+        if (state.fullReload && !rowDataChanged) {
+            // No new rowData was passed, so to include user executed transaction we need to extract
+            // the row data from the node manager as it might be different from the original rowData
+            newRowData = oldNodeManager?.extractRowData() ?? newRowData;
         }
 
         if (newRowData) {
+            state.rowData = newRowData;
+
+            const gos = this.gos;
             const deltaUpdate =
-                !reset &&
+                !nodeManagerChanged &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
                 gos.exists('getRowId') &&
@@ -678,7 +680,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        params?.updateRowNodes?.(state);
+        params.updateRowNodes?.(state);
 
         if (state.hasChanges()) {
             state.setStep('group');
@@ -708,7 +710,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
 
         if (state.rowDataUpdated) {
-            console.log('ROW DATA UPDATED RAISE', state.rowDataUpdated);
             this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
         }
 
@@ -1045,9 +1046,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private doRowGrouping(state: RefreshModelState) {
-        const treeData = this.nodeManager.treeData;
         const rootNode = state.rootNode;
-        if (!treeData) {
+        if (!this.nodeManager.treeData) {
             const groupStage = this.groupStage;
             if (groupStage) {
                 const rowNodesOrderChanged = state.rowsInserted || state.rowsOrderChanged;

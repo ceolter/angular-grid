@@ -1,4 +1,4 @@
-import type { NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
+import type { NamedBean, RefreshModelState } from 'ag-grid-community';
 import { _error, _getRowIdCallback } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -15,10 +15,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
     private childrenGetter: DataFieldGetter<TData, TData[] | null | undefined> | null = null;
 
-    public override get treeData(): boolean {
-        return this.gos.get('treeData');
-    }
-
     public override extractRowData(): TData[] | null | undefined {
         const treeRoot = this.treeRoot;
         return treeRoot && Array.from(treeRoot.enumChildren(), (node) => node.row!.data);
@@ -31,19 +27,24 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.childrenGetter = null;
     }
 
-    public override activate(rootNode: RowNode<TData>): void {
+    protected override isTreeData(): boolean {
+        return this.gos.get('treeData') && !!this.childrenGetter?.path;
+    }
+
+    public override activate(state: RefreshModelState<TData>): void {
         const oldChildrenGetter = this.childrenGetter;
         const childrenField = this.gos.get('treeDataChildrenField');
         if (!oldChildrenGetter || oldChildrenGetter.path !== childrenField) {
             this.childrenGetter = makeFieldPathGetter(childrenField);
+            state.fullReload = true;
         }
 
-        super.activate(rootNode);
+        super.activate(state);
     }
 
-    protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {
+    protected override loadNewRowData(state: RefreshModelState<TData>, rowData: TData[]): void {
         const treeRoot = this.treeRoot!;
-        const rootNode = refreshModelState.rootNode;
+        const rootNode = state.rootNode;
         const childrenGetter = this.childrenGetter;
 
         const processedDataSet = new Set<TData>();
@@ -51,8 +52,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         rootNode.allLeafChildren = allLeafChildren;
 
-        this.treeClear();
-        treeRoot.setRow(rootNode);
+        this.treeReset();
 
         const processChild = (node: TreeNode, data: TData) => {
             if (processedDataSet.has(data)) {
@@ -64,6 +64,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
             const row = this.createRowNode(data, allLeafChildren.length);
             allLeafChildren.push(row);
+            state.add(row);
 
             node = node.upsertKey(row.id!);
             this.treeSetRow(node, row, true);
@@ -79,8 +80,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
         for (let i = 0, len = rowData.length; i < len; ++i) {
             processChild(treeRoot, rowData[i]);
         }
-
-        this.treeCommit(refreshModelState);
     }
 
     public override setImmutableRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): boolean {
@@ -210,16 +209,12 @@ export class ClientSideChildrenTreeNodeManager<TData>
             refreshModelState.rowsOrderChanged = true;
         }
 
-        this.treeCommit(refreshModelState);
-
         return treeChanged || refreshModelState.hasChanges();
     }
 
     public override refreshModel(state: RefreshModelState<TData>): void {
         const { rootNode, treeRoot } = this;
-
-        if (treeRoot && !state.newData && state.changedProps?.has('treeData')) {
-            treeRoot.setRow(rootNode);
+        if (treeRoot && state.treeDataChanged && !state.newData) {
             const allLeafChildren = rootNode?.allLeafChildren;
             if (allLeafChildren) {
                 for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
@@ -228,7 +223,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
                     row.treeNode?.invalidate();
                 }
             }
-            this.treeCommit(state);
         }
 
         super.refreshModel(state);

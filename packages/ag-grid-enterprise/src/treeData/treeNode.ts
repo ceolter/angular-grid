@@ -1,6 +1,7 @@
 import { _EmptyArray } from 'ag-grid-community';
 import type { ITreeNode, RowNode } from 'ag-grid-community';
 
+import { clearTreeRootCommitted } from './treeRow';
 import type { TreeRow } from './treeRow';
 
 const treeNodePositionComparer = (a: RowNode, b: RowNode): number => a.treeNode!.sourceIdx - b.treeNode!.sourceIdx;
@@ -313,7 +314,7 @@ export class TreeNode implements ITreeNode {
             }
             this.invalidatedHead = node.invalidatedNext ?? null;
             node.invalidatedNext = undefined; // Mark as not invalidated
-            if (node.parent) {
+            if (node.parent === this) {
                 return node; // Not deleted
             }
         }
@@ -327,12 +328,20 @@ export class TreeNode implements ITreeNode {
      */
     public invalidate(): void {
         let node: TreeNode | null = this;
-        let parent = this.parent;
-        while (parent !== null && node.invalidatedNext === undefined) {
+        while (true) {
+            const parent: TreeNode | null = node.parent;
+            if (!parent) {
+                if (node.level < 0) {
+                    clearTreeRootCommitted(node.row);
+                }
+                break; // This is the parent or a deleted node
+            }
+            if (node.invalidatedNext !== undefined) {
+                break; // Already invalidated
+            }
             node.invalidatedNext = parent.invalidatedHead;
             parent.invalidatedHead = node;
             node = parent;
-            parent = node.parent;
         }
     }
 

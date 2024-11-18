@@ -55,6 +55,20 @@ export interface RefreshModelParams<TData = any> {
 export class RefreshModelState<TData = any> {
     public rowData: TData[] | null | undefined;
 
+    /**
+     * This flag indicates that a full refresh of the row data is required.
+     * - true if the node manager changed
+     * - true if a client side node manager needs a full reload of the data due to a property change,
+     *   with extract row data from row nodes if needed
+     */
+    public fullReload: boolean = false;
+
+    /**
+     * If true, treeData effectively changed since last refresh.
+     * This might be false if fullReload is true, as the node manager might have changed.
+     */
+    public treeDataChanged: boolean = false;
+
     /** If this is true, refreshModel was called inside refreshModel */
     public nested: boolean = false;
 
@@ -195,37 +209,41 @@ export class RefreshModelState<TData = any> {
     }
 
     public setNewData(): void {
+        this.setStep('group');
         this.rowDataUpdated = true;
         this.newData = true;
-        this.deltaUpdate = false;
         this.afterColumnsChanged = false;
         this.animate = false;
         this.keepRenderedRows = false;
         this.keepUndoRedoStack = false;
         this.rowsOrderChanged = false;
-        this.deltaUpdateTransactions = null;
         this.removals.clear();
         this.updates.clear();
-        this.changedPath.active = false;
-        this.setStep('group');
+        this.clearDeltaUpdate();
     }
 
     public setDeltaUpdate(): boolean {
+        this.setStep('group');
+        this.rowDataUpdated = true;
         if (this.deltaUpdate) {
             return true;
         }
-        if (this.newData || !this.started) {
+        if (this.newData || this.fullReload || !this.started) {
             return false;
         }
-        this.rowDataUpdated = true;
         this.deltaUpdate = true;
         this.changedPath.active = true;
         if (!this.nested) {
             this.keepRenderedRows = true;
             this.animate = !this.gos.get('suppressAnimationFrame');
         }
-        this.setStep('group');
         return true;
+    }
+
+    public clearDeltaUpdate(): void {
+        this.deltaUpdate = false;
+        this.changedPath.active = false;
+        this.deltaUpdateTransactions = null;
     }
 
     public remove(node: IRowNode<TData>): void {
