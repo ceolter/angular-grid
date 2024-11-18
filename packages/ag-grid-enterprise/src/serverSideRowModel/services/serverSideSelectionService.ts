@@ -330,6 +330,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         if (current !== isSelectAll) {
             if (isSelectAll === null) {
                 const selectionChanged = this.selectRowNode(node, undefined, event, source);
+                this.selectionStrategy.setNodesSelected({ nodes: [node], newValue: false, source, event });
 
                 if (selectionChanged) {
                     this.dispatchSelectionChanged(source);

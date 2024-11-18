@@ -5,12 +5,11 @@ function escapeQuotes(value: string): string {
     return value.replaceAll(/(['"])/g, '\\$1');
 }
 
-export function getRowByIndex(index: number, gridId?: string): HTMLElement | null {
-    let root = document.getElementById('myGrid')!;
-    if (gridId) {
-        root = root!.querySelector(`[grid-id="${gridId}"]`)!;
-    }
-    return root!.querySelector(`[row-index="${index}"]`);
+export function getRowByIndex(
+    index: number,
+    root: HTMLElement = document.getElementById('myGrid')!
+): HTMLElement | null {
+    return root.querySelector(`[row-index="${index}"]`);
 }
 
 export function getRowById(id: string): HTMLElement | null {
@@ -21,9 +20,9 @@ export function getCellByPosition(rowIndex: number, colId: string): HTMLElement 
     return getRowByIndex(rowIndex)?.querySelector(`[col-id="${colId}"]`) ?? null;
 }
 
-export function getCheckboxByIndex(index: number, gridId?: string): HTMLElement | null {
+export function getCheckboxByIndex(index: number, root?: HTMLElement): HTMLElement | null {
     return (
-        getRowByIndex(index, gridId)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null
+        getRowByIndex(index, root)?.querySelector<HTMLElement>('.ag-selection-checkbox input[type=checkbox]') ?? null
     );
 }
 
@@ -71,9 +70,7 @@ export function clickExpandGroupRowByIndex(index: number, opts?: MouseEventInit)
 }
 
 export async function expandGroupRowByIndex(api: GridApi, index: number, opts?: MouseEventInit): Promise<void> {
-    const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
-    clickExpandGroupRowByIndex(index, opts);
-    await updated;
+    await waitForEventWhile('modelUpdated', api, () => clickExpandGroupRowByIndex(index, opts), 2);
 }
 
 export function assertSelectedRowsByIndex(indices: number[], api: GridApi): void {
