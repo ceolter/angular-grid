@@ -45,7 +45,18 @@
     gap: $spacing-size-2;
 }
 
-.learnMoreButton {
+.ctaButton {
+    --icon-size: #{$spacing-size-5};
+
     width: fit-content;
     margin-top: $spacing-size-3;
+
+    :global(.icon) {
+        transform: translateX($spacing-size-2);
+        transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translateX($spacing-size-3);
+    }
 }

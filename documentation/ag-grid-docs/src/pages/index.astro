@@ -109,6 +109,8 @@ const frameworksData = [
         tag="Where Can I See AG Grid React Tables Being Used?"
         heading="Used in Every Industry, for All Types of Data"
         subHeading="Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
+        ctaTitle="See More Projects Powered by AG Grid"
+        ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >
         <Showcase client:load />
     </LandingPageSection>
@@ -125,6 +127,10 @@ const frameworksData = [
         tag="Latest JavaScript Charting Releases from AG Grid"
         headingHtml="Regular Releases, <br /> Updates, and Enhancements"
         subHeading="With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of the newest features and improvements to AG Grid Data Grids."
+        ctaTitle="See Whats New"
+        ctaUrl={urlWithBaseUrl(
+            '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
+        )}
     >
         <div class={styles.latestNewsVersions}>
             {
@@ -149,14 +155,6 @@ const frameworksData = [
                         }
                     })
             }
-        </div>
-        <div class={styles.ctaButton}>
-            <a
-                href={urlWithBaseUrl(
-                    '/whats-new/?utm_source=charts-homepage&utm_medium=whats-new-section&utm_campaign=homepage-cta'
-                )}
-                class="button">See Whats New</a
-            >
         </div>
     </LandingPageSection>
 

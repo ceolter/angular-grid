@@ -40,7 +40,8 @@ export const AutomatedExamples: FunctionComponent = () => {
                 tag="Performance And Speed First"
                 heading="The Fastest Data Grid In The World"
                 subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
-                learnMoreUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
+                ctaTitle="Build your first Grid"
+                ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
             >
                 <section className={styles.automatedRowGroupingOuter}>
                     <div className={styles.automatedRowGrouping}>
@@ -59,7 +60,8 @@ export const AutomatedExamples: FunctionComponent = () => {
                 tag="Fully Integrated Charting"
                 heading="Integrated Charts, Powered by AG Charts"
                 subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
-                learnMoreUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
+                ctaTitle="Get started with Integrated Charts"
+                ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
             >
                 <section className={styles.automatedIntegratedChartsOuter}>
                     <div className={styles.automatedIntegratedCharts}>
