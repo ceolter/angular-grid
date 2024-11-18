@@ -1,13 +1,11 @@
 @use 'design-system' as *;
 
 .sectionContent {
-    padding-top: $spacing-size-12;
     width: 100%;
     max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
-    padding-left: var(--layout-horizontal-margins);
-    padding-right: var(--layout-horizontal-margins);
     margin-right: auto;
     margin-left: auto;
+    padding: $spacing-size-12 var(--layout-horizontal-margins) $spacing-size-24;
 }
 
 .tag,

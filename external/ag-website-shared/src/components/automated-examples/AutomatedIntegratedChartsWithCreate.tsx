@@ -152,8 +152,6 @@ export function AutomatedIntegratedChartsWithCreate({
 
     return (
         <>
-            <header className={classNames(styles.sectionHeader)}>{children}</header>
-
             <div className={styles.automatedExampleWrapper}>
                 {clientIsReady && (
                     <div

@@ -43,16 +43,14 @@ export const AutomatedExamples: FunctionComponent = () => {
                 learnMoreUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
             >
                 <section className={styles.automatedRowGroupingOuter}>
-                    <div className={classNames(styles.homepageExample)}>
-                        <div className={styles.automatedRowGrouping}>
-                            <AutomatedRowGrouping
-                                automatedExampleManager={automatedExampleManager}
-                                useStaticData={isCI}
-                                runOnce={runOnce}
-                                visibilityThreshold={0.2}
-                                darkMode={true}
-                            />
-                        </div>
+                    <div className={styles.automatedRowGrouping}>
+                        <AutomatedRowGrouping
+                            automatedExampleManager={automatedExampleManager}
+                            useStaticData={isCI}
+                            runOnce={runOnce}
+                            visibilityThreshold={0.2}
+                            darkMode={true}
+                        />
                     </div>
                 </section>
             </LandingPageSection>
@@ -64,15 +62,13 @@ export const AutomatedExamples: FunctionComponent = () => {
                 learnMoreUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
             >
                 <section className={styles.automatedIntegratedChartsOuter}>
-                    <div className={classNames(styles.homepageExample)}>
-                        <div className={styles.automatedIntegratedCharts}>
-                            <AutomatedIntegratedCharts
-                                automatedExampleManager={automatedExampleManager}
-                                useStaticData={isCI}
-                                runOnce={runOnce}
-                                visibilityThreshold={0.8}
-                            />
-                        </div>
+                    <div className={styles.automatedIntegratedCharts}>
+                        <AutomatedIntegratedCharts
+                            automatedExampleManager={automatedExampleManager}
+                            useStaticData={isCI}
+                            runOnce={runOnce}
+                            visibilityThreshold={0.8}
+                        />
                     </div>
                 </section>
             </LandingPageSection>
