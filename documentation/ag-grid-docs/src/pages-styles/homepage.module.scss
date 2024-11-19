@@ -87,10 +87,10 @@ body {
 .heroSectiondemoContainer {
     height: 320px;
     margin: 0 auto;
-    width: 1200px;
+    max-width: 1200px;
 
     @media screen and (max-width: 500px) {
-        top: 450px;
+        padding: $spacing-size-4;
     }
 
     .loadingLogoContainer {
@@ -126,6 +126,10 @@ body {
     justify-content: center;
     gap: $spacing-size-2;
     margin-top: 260px;
+
+    @media screen and (max-width: 500px) {
+        margin-top: 360px;
+    }
 
     @media screen and (min-width: 640px) {
         flex-direction: row;

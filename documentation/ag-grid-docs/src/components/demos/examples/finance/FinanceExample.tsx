@@ -139,7 +139,7 @@ export const FinanceExample: React.FC<Props> = ({
                 cellDataType: 'number',
                 type: 'rightAligned',
                 valueFormatter: numberFormatter,
-                maxWidth: 150,
+                maxWidth: 75,
             },
             {
                 headerName: 'Price',
@@ -147,7 +147,7 @@ export const FinanceExample: React.FC<Props> = ({
                 cellDataType: 'number',
                 type: 'rightAligned',
                 valueFormatter: numberFormatter,
-                maxWidth: 150,
+                maxWidth: 75,
             },
             {
                 field: 'purchaseDate',
