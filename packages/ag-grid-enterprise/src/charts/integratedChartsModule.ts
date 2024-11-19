@@ -39,7 +39,7 @@ type IntegratedChartsModuleType = {
 } & _ModuleWithApi<_GridChartsGridApi>;
 
 const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
-    ...baseEnterpriseModule('IntegratedChartsModule'),
+    ...baseEnterpriseModule('IntegratedCharts'),
     validate: () => {
         return {
             isValid: false,
@@ -90,7 +90,7 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
  */
 export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     ...baseIntegratedChartsModule,
-    ...baseEnterpriseModule('GridChartsModule'),
+    ...baseEnterpriseModule('GridCharts'),
     validate: () => {
         return {
             isValid: false,

@@ -11,7 +11,7 @@ import { OverlayService } from './overlayService';
  * @gridOption loading, overlayLoadingTemplate, loadingOverlayComponent, overlayNoRowsTemplate, noRowsOverlayComponent
  */
 export const OverlayModule: _ModuleWithApi<_OverlayGridApi> = {
-    ...baseCommunityModule('OverlayModule'),
+    ...baseCommunityModule('Overlay'),
     userComponents: {
         agLoadingOverlay: LoadingOverlayComponent,
         agNoRowsOverlay: NoRowsOverlayComponent,

@@ -9,7 +9,7 @@ import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
 import { resolveModuleNames } from '../resolvableModuleNames';
 
-export const moduleImportMsg = (moduleNames: ModuleName[]) => {
+export const moduleImportMsg = (moduleNames: `${ModuleName}Module`[]) => {
     const imports = moduleNames
         .map(
             (moduleName) =>

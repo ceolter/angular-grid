@@ -38,7 +38,7 @@ export class SyncService extends BeanStub implements NamedBean {
         eventSvc.dispatchEvent({
             type: 'gridReady',
         });
-        _logIfDebug(gos, `initialised successfully, enterprise = ${gos.isModuleRegistered('EnterpriseCoreModule')}`);
+        _logIfDebug(gos, `initialised successfully, enterprise = ${gos.isModuleRegistered('EnterpriseCore')}`);
     }
 
     private setColumnDefs(event: PropertyValueChangedEvent<'columnDefs'>): void {

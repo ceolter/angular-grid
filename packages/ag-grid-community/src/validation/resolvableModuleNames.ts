@@ -7,13 +7,13 @@ import type {
 import type { RowModelType } from '../interfaces/iRowModel';
 
 const ALL_COLUMN_FILTERS = [
-    'TextFilterModule',
-    'NumberFilterModule',
-    'DateFilterModule',
-    'SetFilterModule',
-    'MultiFilterModule',
-    'GroupFilterModule',
-    'CustomFilterModule',
+    'TextFilter',
+    'NumberFilter',
+    'DateFilter',
+    'SetFilter',
+    'MultiFilter',
+    'GroupFilter',
+    'CustomFilter',
 ] as const;
 
 /**
@@ -23,73 +23,61 @@ export const RESOLVABLE_MODULE_NAMES: Record<
     ResolvableModuleName,
     readonly (CommunityModuleName | EnterpriseModuleName)[]
 > = {
-    EditCoreModule: [
-        'TextEditorModule',
-        'NumberEditorModule',
-        'DateEditorModule',
-        'CheckboxEditorModule',
-        'LargeTextEditorModule',
-        'SelectEditorModule',
-        'RichSelectModule',
-        'CustomEditorModule',
+    EditCore: [
+        'TextEditor',
+        'NumberEditor',
+        'DateEditor',
+        'CheckboxEditor',
+        'LargeTextEditor',
+        'SelectEditor',
+        'RichSelect',
+        'CustomEditor',
     ],
-    CheckboxCellRendererModule: ['AllCommunityModule'],
-    ClientSideRowModelHierarchyModule: ['RowGroupingModule', 'PivotModule', 'TreeDataModule'],
-    ColumnFilterModule: ALL_COLUMN_FILTERS,
-    ColumnGroupHeaderCompModule: ['AllCommunityModule'],
-    ColumnGroupModule: ['AllCommunityModule'],
-    ColumnHeaderCompModule: ['AllCommunityModule'],
-    ColumnMoveModule: ['AllCommunityModule'],
-    ColumnResizeModule: ['AllCommunityModule'],
-    CommunityCoreModule: ['AllCommunityModule'],
-    CsrmSsrmSharedApiModule: ['ClientSideRowModelApiModule', 'ServerSideRowModelApiModule'],
-    EnterpriseCoreModule: ['AllEnterpriseModule'],
-    FilterCoreModule: [...ALL_COLUMN_FILTERS, 'QuickFilterModule', 'ExternalFilterModule', 'AdvancedFilterModule'],
-    GroupCellRendererModule: [
-        'RowGroupingModule',
-        'PivotModule',
-        'TreeDataModule',
-        'MasterDetailModule',
-        'ServerSideRowModelModule',
-    ],
-    KeyboardNavigationModule: ['AllCommunityModule'],
-    LoadingCellRendererModule: ['ServerSideRowModelModule'],
-    MenuCoreModule: ['ColumnMenuModule', 'ContextMenuModule'],
-    MenuItemModule: [
-        'ColumnMenuModule',
-        'ContextMenuModule',
-        'MultiFilterModule',
-        'IntegratedChartsModule',
-        'ColumnsToolPanelModule',
-    ],
-    OverlayModule: ['AllCommunityModule'],
-    PinnedColumnModule: ['AllCommunityModule'],
-    SharedAggregationModule: ['RowGroupingModule', 'PivotModule', 'TreeDataModule', 'ServerSideRowModelModule'],
-    SharedDragAndDropModule: ['AllCommunityModule'],
-    SharedMasterDetailModule: ['MasterDetailModule', 'ServerSideRowModelModule'],
-    SharedMenuModule: [...ALL_COLUMN_FILTERS, 'ColumnMenuModule', 'ContextMenuModule'],
-    SharedPivotModule: ['PivotModule', 'ServerSideRowModelModule'],
-    SharedRowGroupingModule: ['RowGroupingModule', 'ServerSideRowModelModule'],
-    SharedRowSelectionModule: ['RowSelectionModule', 'ServerSideRowModelModule'],
-    SkeletonCellRendererModule: ['ServerSideRowModelModule'],
-    SortModule: ['AllCommunityModule'],
-    SsrmInfiniteSharedApiModule: ['InfiniteRowModelModule', 'ServerSideRowModelApiModule'],
-    SharedTreeDataModule: ['TreeDataModule', 'ServerSideRowModelModule'],
+    CheckboxCellRenderer: ['AllCommunity'],
+    ClientSideRowModelHierarchy: ['RowGrouping', 'Pivot', 'TreeData'],
+    ColumnFilter: ALL_COLUMN_FILTERS,
+    ColumnGroupHeaderComp: ['AllCommunity'],
+    ColumnGroup: ['AllCommunity'],
+    ColumnHeaderComp: ['AllCommunity'],
+    ColumnMove: ['AllCommunity'],
+    ColumnResize: ['AllCommunity'],
+    CommunityCore: ['AllCommunity'],
+    CsrmSsrmSharedApi: ['ClientSideRowModelApi', 'ServerSideRowModelApi'],
+    EnterpriseCore: ['AllEnterprise'],
+    FilterCore: [...ALL_COLUMN_FILTERS, 'QuickFilter', 'ExternalFilter', 'AdvancedFilter'],
+    GroupCellRenderer: ['RowGrouping', 'Pivot', 'TreeData', 'MasterDetail', 'ServerSideRowModel'],
+    KeyboardNavigation: ['AllCommunity'],
+    LoadingCellRenderer: ['ServerSideRowModel'],
+    MenuCore: ['ColumnMenu', 'ContextMenu'],
+    MenuItem: ['ColumnMenu', 'ContextMenu', 'MultiFilter', 'IntegratedCharts', 'ColumnsToolPanel'],
+    Overlay: ['AllCommunity'],
+    PinnedColumn: ['AllCommunity'],
+    SharedAggregation: ['RowGrouping', 'Pivot', 'TreeData', 'ServerSideRowModel'],
+    SharedDragAndDrop: ['AllCommunity'],
+    SharedMasterDetail: ['MasterDetail', 'ServerSideRowModel'],
+    SharedMenu: [...ALL_COLUMN_FILTERS, 'ColumnMenu', 'ContextMenu'],
+    SharedPivot: ['Pivot', 'ServerSideRowModel'],
+    SharedRowGrouping: ['RowGrouping', 'ServerSideRowModel'],
+    SharedRowSelection: ['RowSelection', 'ServerSideRowModel'],
+    SkeletonCellRenderer: ['ServerSideRowModel'],
+    Sort: ['AllCommunity'],
+    SsrmInfiniteSharedApi: ['InfiniteRowModel', 'ServerSideRowModelApi'],
+    SharedTreeData: ['TreeData', 'ServerSideRowModel'],
 };
 
 export const MODULES_FOR_ROW_MODELS: Partial<Record<CommunityModuleName | EnterpriseModuleName, RowModelType>> = {
-    InfiniteRowModelModule: 'infinite',
-    ClientSideRowModelApiModule: 'clientSide',
-    ClientSideRowModelModule: 'clientSide',
-    ServerSideRowModelApiModule: 'serverSide',
-    ServerSideRowModelModule: 'serverSide',
-    ViewportRowModelModule: 'viewport',
+    InfiniteRowModel: 'infinite',
+    ClientSideRowModelApi: 'clientSide',
+    ClientSideRowModel: 'clientSide',
+    ServerSideRowModelApi: 'serverSide',
+    ServerSideRowModel: 'serverSide',
+    ViewportRowModel: 'viewport',
 };
 
 export function resolveModuleNames(
     moduleName: ValidationModuleName | ValidationModuleName[],
     rowModelType: RowModelType
-): (CommunityModuleName | EnterpriseModuleName)[] {
+): `${CommunityModuleName | EnterpriseModuleName}Module`[] {
     const resolvedModuleNames: (CommunityModuleName | EnterpriseModuleName)[] = [];
     (Array.isArray(moduleName) ? moduleName : [moduleName]).forEach((modName) => {
         const resolved = RESOLVABLE_MODULE_NAMES[modName as ResolvableModuleName];
@@ -105,5 +93,5 @@ export function resolveModuleNames(
             resolvedModuleNames.push(modName as CommunityModuleName | EnterpriseModuleName);
         }
     });
-    return resolvedModuleNames;
+    return resolvedModuleNames.map((modName) => `${modName}Module` as const);
 }

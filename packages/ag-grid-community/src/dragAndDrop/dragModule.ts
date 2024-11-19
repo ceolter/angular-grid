@@ -13,7 +13,7 @@ import { RowDragService } from './rowDragService';
  * @internal
  */
 export const DragModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DragModule'),
+    ...baseCommunityModule('Drag'),
     beans: [DragService],
 };
 
@@ -22,7 +22,7 @@ export const DragModule: _ModuleWithoutApi = {
  * @colDef dndSource, dndSourceOnRowDrag
  */
 export const DragAndDropModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DragAndDropModule'),
+    ...baseCommunityModule('DragAndDrop'),
     dynamicBeans: {
         dndSourceComp: DndSourceComp as any,
     },
@@ -36,7 +36,7 @@ export const DragAndDropModule: _ModuleWithoutApi = {
  * @internal
  */
 export const SharedDragAndDropModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SharedDragAndDropModule'),
+    ...baseCommunityModule('SharedDragAndDrop'),
     beans: [DragAndDropService],
     dependsOn: [DragModule],
     userComponents: {
@@ -72,7 +72,7 @@ export const SharedDragAndDropModule: _ModuleWithoutApi = {
  * @colDef rowDrag
  */
 export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
-    ...baseCommunityModule('RowDragModule'),
+    ...baseCommunityModule('RowDrag'),
     beans: [RowDragService],
     apiFunctions: {
         addRowDropZone,
@@ -86,7 +86,7 @@ export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
  * @internal
  */
 export const HorizontalResizeModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('HorizontalResizeModule'),
+    ...baseCommunityModule('HorizontalResize'),
     beans: [HorizontalResizeService],
     dependsOn: [DragModule],
 };

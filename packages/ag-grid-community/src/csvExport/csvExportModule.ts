@@ -9,7 +9,7 @@ import { exportDataAsCsv, getDataAsCsv } from './csvExportApi';
  * @feature Import & Export -> CSV Export
  */
 export const CsvExportModule: _ModuleWithApi<_CsvExportGridApi> = {
-    ...baseCommunityModule('CsvExportModule'),
+    ...baseCommunityModule('CsvExport'),
     beans: [CsvCreator],
     apiFunctions: {
         getDataAsCsv,

@@ -6,6 +6,6 @@ import { AriaAnnouncementService } from './ariaAnnouncementService';
  * @feature Interactivity -> Accessibility (ARIA)
  */
 export const AriaModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AriaModule'),
+    ...baseCommunityModule('Aria'),
     beans: [AriaAnnouncementService],
 };

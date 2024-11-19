@@ -559,7 +559,7 @@ export function _getGroupSelectsDescendants(gos: GridOptionsService): boolean {
 }
 
 export function _isSetFilterByDefault(gos: GridOptionsService): boolean {
-    return gos.isModuleRegistered('SetFilterModule') && !gos.get('suppressSetFilterByDefault');
+    return gos.isModuleRegistered('SetFilter') && !gos.get('suppressSetFilterByDefault');
 }
 
 export function _isLegacyMenuEnabled(gos: GridOptionsService): boolean {

@@ -17,7 +17,7 @@ import { StatusBarService } from './statusBarService';
  * @gridOption statusBar
  */
 export const StatusBarModule: _ModuleWithApi<_StatusBarGridApi> = {
-    ...baseEnterpriseModule('StatusBarModule'),
+    ...baseEnterpriseModule('StatusBar'),
     beans: [StatusBarService],
     userComponents: {
         agAggregationComponent: AggregationComp,

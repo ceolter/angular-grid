@@ -17,7 +17,7 @@ import { MasterDetailService } from './masterDetailService';
  * @internal
  */
 export const SharedMasterDetailModule: _ModuleWithApi<_MasterDetailGridApi> = {
-    ...baseEnterpriseModule('SharedMasterDetailModule'),
+    ...baseEnterpriseModule('SharedMasterDetail'),
     beans: [MasterDetailService],
     userComponents: { agDetailCellRenderer: DetailCellRenderer },
     dynamicBeans: { detailCellRendererCtrl: DetailCellRendererCtrl },
@@ -36,6 +36,6 @@ export const SharedMasterDetailModule: _ModuleWithApi<_MasterDetailGridApi> = {
  * @gridOption masterDetail
  */
 export const MasterDetailModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MasterDetailModule'),
+    ...baseEnterpriseModule('MasterDetail'),
     dependsOn: [SharedMasterDetailModule, ClientSideRowModelHierarchyModule],
 };

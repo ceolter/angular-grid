@@ -41,7 +41,7 @@ import { ValueService } from './valueService/valueService';
  * @internal
  */
 export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
-    ...baseCommunityModule('CommunityCoreModule'),
+    ...baseCommunityModule('CommunityCore'),
     beans: [
         GridDestroyService,
         ApiFunctionService,

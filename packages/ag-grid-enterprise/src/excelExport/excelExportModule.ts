@@ -16,7 +16,7 @@ import {
  * @feature Import & Export -> Excel
  */
 export const ExcelExportModule: _ModuleWithApi<_ExcelExportGridApi> = {
-    ...baseEnterpriseModule('ExcelExportModule'),
+    ...baseEnterpriseModule('ExcelExport'),
     beans: [ExcelCreator],
     apiFunctions: {
         getDataAsExcel,

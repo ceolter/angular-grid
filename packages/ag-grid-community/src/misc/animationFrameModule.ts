@@ -7,6 +7,6 @@ import { AnimationFrameService } from './animationFrameService';
  * @gridOption suppressAnimationFrame
  */
 export const AnimationFrameModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AnimationFrameModule'),
+    ...baseCommunityModule('AnimationFrame'),
     beans: [AnimationFrameService],
 };

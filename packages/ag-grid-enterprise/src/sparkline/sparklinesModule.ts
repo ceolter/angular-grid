@@ -11,7 +11,7 @@ import { SparklineCellRenderer } from './sparklineCellRenderer';
 type SparklineChartsModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
 const baseSparklinesModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SparklinesModule'),
+    ...baseEnterpriseModule('Sparklines'),
     dependsOn: [EnterpriseCoreModule],
     css: [sparklineCSS],
     validate: () => {

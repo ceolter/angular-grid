@@ -6,6 +6,6 @@ import { AgComponentUtils } from './agComponentUtils';
  * @internal
  */
 export const CellRendererFunctionModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CellRendererFunctionModule'),
+    ...baseCommunityModule('CellRendererFunction'),
     beans: [AgComponentUtils],
 };

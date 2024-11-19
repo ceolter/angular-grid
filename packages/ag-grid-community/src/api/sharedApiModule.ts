@@ -10,7 +10,7 @@ import { getCacheBlockState, isLastRowIndexKnown, setRowCount } from './ssrmInfi
  * @internal
  */
 export const CsrmSsrmSharedApiModule: _ModuleWithApi<_CsrmSsrmSharedGridApi> = {
-    ...baseCommunityModule('CsrmSsrmSharedApiModule'),
+    ...baseCommunityModule('CsrmSsrmSharedApi'),
     apiFunctions: {
         expandAll,
         collapseAll,
@@ -22,7 +22,7 @@ export const CsrmSsrmSharedApiModule: _ModuleWithApi<_CsrmSsrmSharedGridApi> = {
  * @internal
  */
 export const SsrmInfiniteSharedApiModule: _ModuleWithApi<_SsrmInfiniteSharedGridApi> = {
-    ...baseCommunityModule('SsrmInfiniteSharedApiModule'),
+    ...baseCommunityModule('SsrmInfiniteSharedApi'),
     apiFunctions: {
         setRowCount,
         getCacheBlockState,

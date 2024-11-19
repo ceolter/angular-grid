@@ -26,7 +26,7 @@ import {
  * @internal
  */
 export const SharedRowGroupingModule: _ModuleWithApi<_RowGroupingGridApi> = {
-    ...baseEnterpriseModule('SharedRowGroupingModule'),
+    ...baseEnterpriseModule('SharedRowGrouping'),
     beans: [GroupHideOpenParentsService],
     apiFunctions: {
         setRowGroupColumns,
@@ -43,7 +43,7 @@ export const SharedRowGroupingModule: _ModuleWithApi<_RowGroupingGridApi> = {
  * @colDef enableRowGroup, rowGroup, rowGroupIndex
  */
 export const RowGroupingModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGroupingModule'),
+    ...baseEnterpriseModule('RowGrouping'),
     beans: [GroupStage],
     rowModels: ['clientSide'],
     dependsOn: [SharedRowGroupingModule, AggregationModule, ClientSideRowModelHierarchyModule],
@@ -53,7 +53,7 @@ export const RowGroupingModule: _ModuleWithoutApi = {
  * @feature Row Grouping -> Row Group Panel
  */
 export const RowGroupingPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGroupingPanelModule'),
+    ...baseEnterpriseModule('RowGroupingPanel'),
     selectors: [AgGridHeaderDropZonesSelector],
     icons: {
         // identifies the pivot drop zone
@@ -65,14 +65,14 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
         // version of panelDelimiter used in RTL mode
         panelDelimiterRtl: 'small-left',
     },
-    dependsOn: [_PopupModule],
+    dependsOn: [EnterpriseCoreModule, _PopupModule],
 };
 
 /**
  * @feature Row Grouping -> Filtering
  */
 export const GroupFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupFilterModule'),
+    ...baseEnterpriseModule('GroupFilter'),
     userComponents: { agGroupColumnFilter: GroupFilter, agGroupColumnFloatingFilter: GroupFloatingFilterComp },
-    dependsOn: [_ColumnFilterModule],
+    dependsOn: [EnterpriseCoreModule, _ColumnFilterModule],
 };

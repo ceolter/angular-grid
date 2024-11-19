@@ -10,7 +10,7 @@ import { RowNodeBlockLoader } from './rowNodeBlockLoader';
  * @feature Infinite Row Model
  */
 export const InfiniteRowModelModule: _ModuleWithApi<_InfiniteRowModelGridApi> = {
-    ...baseCommunityModule('InfiniteRowModelModule'),
+    ...baseCommunityModule('InfiniteRowModel'),
     rowModels: ['infinite'],
     apiFunctions: {
         refreshInfiniteCache,

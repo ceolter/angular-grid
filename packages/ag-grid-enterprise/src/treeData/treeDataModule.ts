@@ -15,7 +15,7 @@ import { ClientSidePathTreeNodeManager } from './clientSidePathTreeNodeManager';
  * @internal
  */
 export const SharedTreeDataModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SharedTreeDataModule'),
+    ...baseEnterpriseModule('SharedTreeData'),
     dependsOn: [EnterpriseCoreModule, SharedAggregationModule, GroupColumnModule, StickyRowModule],
 };
 
@@ -24,7 +24,7 @@ export const SharedTreeDataModule: _ModuleWithoutApi = {
  * @gridOption treeData
  */
 export const TreeDataModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('TreeDataModule'),
+    ...baseEnterpriseModule('TreeData'),
     beans: [ClientSidePathTreeNodeManager, ClientSideChildrenTreeNodeManager],
     rowModels: ['clientSide'],
     dependsOn: [SharedTreeDataModule, AggregationModule, ClientSideRowModelHierarchyModule],

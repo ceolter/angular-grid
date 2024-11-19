@@ -8,7 +8,7 @@ import { ViewportRowModel } from './viewportRowModel';
  * @feature Viewport Row Model
  */
 export const ViewportRowModelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ViewportRowModelModule'),
+    ...baseEnterpriseModule('ViewportRowModel'),
     rowModels: ['viewport'],
     beans: [ViewportRowModel],
     dependsOn: [EnterpriseCoreModule],

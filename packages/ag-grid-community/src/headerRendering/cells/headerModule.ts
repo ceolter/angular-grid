@@ -8,7 +8,7 @@ import { HeaderGroupComp } from './columnGroup/headerGroupComp';
  * @colDef headerComponent
  */
 export const ColumnHeaderCompModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnHeaderCompModule'),
+    ...baseCommunityModule('ColumnHeaderComp'),
     userComponents: {
         agColumnHeader: HeaderComp,
     },
@@ -25,7 +25,7 @@ export const ColumnHeaderCompModule: _ModuleWithoutApi = {
  * @colGroupDef headerGroupComponent
  */
 export const ColumnGroupHeaderCompModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnGroupHeaderCompModule'),
+    ...baseCommunityModule('ColumnGroupHeaderComp'),
     userComponents: {
         agColumnGroupHeader: HeaderGroupComp,
     },

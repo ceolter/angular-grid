@@ -14,7 +14,7 @@ import { ValueColsSvc } from './valueColsSvc';
  * @internal
  */
 export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
-    ...baseEnterpriseModule('SharedAggregationModule'),
+    ...baseEnterpriseModule('SharedAggregation'),
     beans: [AggFuncService, AggColumnNameService, FooterService, ValueColsSvc],
     apiFunctions: {
         addAggFuncs,
@@ -28,7 +28,7 @@ export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> =
  * @internal
  */
 export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
-    ...baseEnterpriseModule('AggregationModule'),
+    ...baseEnterpriseModule('Aggregation'),
     beans: [AggregationStage, FilterAggregatesStage],
     rowModels: ['clientSide'],
     dependsOn: [SharedAggregationModule],

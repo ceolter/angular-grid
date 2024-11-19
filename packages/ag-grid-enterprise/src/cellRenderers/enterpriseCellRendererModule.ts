@@ -9,7 +9,7 @@ import { SkeletonCellRenderer } from './skeletonCellRenderer';
  * @internal
  */
 export const LoadingCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('LoadingCellRendererModule'),
+    ...baseEnterpriseModule('LoadingCellRenderer'),
     userComponents: {
         agLoadingCellRenderer: LoadingCellRenderer,
     },
@@ -24,7 +24,7 @@ export const LoadingCellRendererModule: _ModuleWithoutApi = {
  * @internal
  */
 export const SkeletonCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SkeletonCellRendererModule'),
+    ...baseEnterpriseModule('SkeletonCellRenderer'),
     userComponents: {
         agSkeletonCellRenderer: SkeletonCellRenderer,
     },

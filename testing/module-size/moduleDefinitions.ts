@@ -4,7 +4,7 @@ import {
     ModuleName,
 } from '../../packages/ag-grid-community/src/interfaces/iModule';
 
-export const AllCommunityModules: Record<CommunityModuleName, number> = {
+export const AllCommunityModules: Record<`${CommunityModuleName}Module`, number> = {
     AlignedGridsModule: 3.06,
     AllCommunityModule: 399.71,
     CellApiModule: 0.28,
@@ -48,7 +48,7 @@ export const AllCommunityModules: Record<CommunityModuleName, number> = {
     ValidationModule: 69.56,
     ValueCacheModule: 0.65,
 };
-export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
+export const AllEnterpriseModules: Record<`${EnterpriseModuleName}Module`, number> = {
     AdvancedFilterModule: 231.28,
     AllEnterpriseModule: 1096.36,
     CellSelectionModule: 79.37,
@@ -80,16 +80,16 @@ export const AllEnterpriseModules: Record<EnterpriseModuleName, number> = {
 };
 
 export interface ModuleTest {
-    modules: ModuleName[];
+    modules: `${ModuleName}Module`[];
     expectedSize: number;
 }
 
 const allCommunityModules: ModuleTest[] = Object.entries(AllCommunityModules).map(([m, s]) => ({
-    modules: [m as ModuleName],
+    modules: [m as `${ModuleName}Module`],
     expectedSize: s,
 }));
 const allEnterpriseModules: ModuleTest[] = Object.entries(AllEnterpriseModules).map(([m, s]) => ({
-    modules: [m as ModuleName],
+    modules: [m as `${ModuleName}Module`],
     expectedSize: s,
 }));
 

@@ -11,7 +11,7 @@ import { ColumnMoveService } from './columnMoveService';
  * @feature Columns -> Column Moving
  */
 export const ColumnMoveModule: _ModuleWithApi<_ColumnMoveApi> = {
-    ...baseCommunityModule('ColumnMoveModule'),
+    ...baseCommunityModule('ColumnMove'),
     beans: [ColumnMoveService, ColumnAnimationService],
     apiFunctions: {
         moveColumnByIndex,

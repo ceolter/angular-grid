@@ -9,7 +9,7 @@ import { CellFlashService } from './cellFlashService';
  * @colDef enableCellChangeFlash
  */
 export const HighlightChangesModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('HighlightChangesModule'),
+    ...baseCommunityModule('HighlightChanges'),
     beans: [CellFlashService],
     userComponents: {
         agAnimateShowChangeCellRenderer: AnimateShowChangeCellRenderer,

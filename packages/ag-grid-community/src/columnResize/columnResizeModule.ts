@@ -10,7 +10,7 @@ import { ColumnResizeService } from './columnResizeService';
  * @feature Columns -> Column Sizing
  */
 export const ColumnResizeModule: _ModuleWithApi<_ColumnResizeApi> = {
-    ...baseCommunityModule('ColumnResizeModule'),
+    ...baseCommunityModule('ColumnResize'),
     beans: [ColumnResizeService],
     apiFunctions: {
         setColumnWidths,

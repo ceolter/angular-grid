@@ -110,15 +110,15 @@ function toConstrainedNum(
  */
 const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
-        alignedGrids: { module: 'AlignedGridsModule' },
-        allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
+        alignedGrids: { module: 'AlignedGrids' },
+        allowContextMenuWithControlKey: { module: 'ContextMenu' },
         autoGroupColumnDef: () => COL_DEF_VALIDATORS,
         autoSizePadding: {
             validate({ autoSizePadding }) {
                 return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
             },
         },
-        autoSizeStrategy: { module: 'ColumnAutoSizeModule' },
+        autoSizeStrategy: { module: 'ColumnAutoSize' },
         cacheBlockSize: {
             supportedRowModels: ['serverSide', 'infinite'],
             validate({ cacheBlockSize }) {
@@ -131,20 +131,20 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         cellSelection: {
-            module: 'CellSelectionModule',
+            module: 'CellSelection',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
         columnDefs: () => COL_DEF_VALIDATORS,
-        columnHoverHighlight: { module: 'ColumnHoverModule' },
+        columnHoverHighlight: { module: 'ColumnHover' },
         datasource: {
             supportedRowModels: ['infinite'],
-            module: 'InfiniteRowModelModule',
+            module: 'InfiniteRowModel',
         },
         defaultColDef: () => COL_DEF_VALIDATORS,
         defaultColGroupDef: () => COL_DEF_VALIDATORS,
-        doesExternalFilterPass: { module: 'ExternalFilterModule' },
+        doesExternalFilterPass: { module: 'ExternalFilter' },
         domLayout: {
             validate: (options) => {
                 const domLayout = options.domLayout;
@@ -156,10 +156,10 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         editType: {
-            module: 'EditCoreModule',
+            module: 'EditCore',
         },
-        enableAdvancedFilter: { module: 'AdvancedFilterModule' },
-        enableCharts: { module: 'IntegratedChartsModule' },
+        enableAdvancedFilter: { module: 'AdvancedFilter' },
+        enableCharts: { module: 'IntegratedCharts' },
         enableFillHandle: {
             dependencies: {
                 enableRangeSelection: { required: [true] },
@@ -171,15 +171,15 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         enableRangeSelection: {
-            module: 'CellSelectionModule',
+            module: 'CellSelection',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
-        getMainMenuItems: { module: 'ColumnMenuModule' },
-        getContextMenuItems: { module: 'ContextMenuModule' },
-        getLocaleText: { module: 'LocaleModule' },
-        getRowStyle: { module: 'RowStyleModule' },
+        getMainMenuItems: { module: 'ColumnMenu' },
+        getContextMenuItems: { module: 'ContextMenu' },
+        getLocaleText: { module: 'Locale' },
+        getRowStyle: { module: 'RowStyle' },
         groupDefaultExpanded: {
             supportedRowModels: ['clientSide'],
         },
@@ -223,18 +223,18 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         initialGroupOrderComparator: {
             supportedRowModels: ['clientSide'],
         },
-        initialState: { module: 'GridStateModule' },
-        isExternalFilterPresent: { module: 'ExternalFilterModule' },
+        initialState: { module: 'GridState' },
+        isExternalFilterPresent: { module: 'ExternalFilter' },
         keepDetailRowsCount: {
             validate({ keepDetailRowsCount }) {
                 return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
             },
         },
         localeText: {
-            module: 'LocaleModule',
+            module: 'Locale',
         },
-        masterDetail: { module: 'SharedMasterDetailModule' },
-        pagination: { module: 'PaginationModule' },
+        masterDetail: { module: 'SharedMasterDetail' },
+        pagination: { module: 'Pagination' },
         paginationPageSize: {
             validate({ paginationPageSize }) {
                 return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
@@ -254,10 +254,10 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         pinnedTopRowData: {
-            module: 'PinnedRowModule',
+            module: 'PinnedRow',
         },
         pinnedBottomRowData: {
-            module: 'PinnedRowModule',
+            module: 'PinnedRow',
         },
         pivotMode: {
             dependencies: {
@@ -266,12 +266,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                     reason: 'Pivot Mode is not supported with Tree Data.',
                 },
             },
-            module: 'PivotModule',
+            module: 'Pivot',
         },
-        pivotPanelShow: { module: 'RowGroupingPanelModule' },
+        pivotPanelShow: { module: 'RowGroupingPanel' },
         quickFilterText: {
             supportedRowModels: ['clientSide'],
-            module: 'QuickFilterModule',
+            module: 'QuickFilter',
         },
         rowBuffer: {
             validate({ rowBuffer }) {
@@ -286,12 +286,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
-            module: 'RowStyleModule',
+            module: 'RowStyle',
         },
-        rowClassRules: { module: 'RowStyleModule' },
+        rowClassRules: { module: 'RowStyle' },
         rowData: {
             supportedRowModels: ['clientSide'],
-            module: 'ClientSideRowModelModule',
+            module: 'ClientSideRowModel',
         },
         rowDragManaged: {
             supportedRowModels: ['clientSide'],
@@ -303,9 +303,9 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                     required: [false, undefined],
                 },
             },
-            module: 'RowDragModule',
+            module: 'RowDrag',
         },
-        rowGroupPanelShow: { module: 'RowGroupingPanelModule' },
+        rowGroupPanelShow: { module: 'RowGroupingPanel' },
         rowSelection: {
             validate({ rowSelection }) {
                 if (rowSelection && typeof rowSelection === 'string') {
@@ -316,7 +316,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
-            module: 'SharedRowSelectionModule',
+            module: 'SharedRowSelection',
         },
         rowStyle: {
             validate: (options) => {
@@ -326,12 +326,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
-            module: 'RowStyleModule',
+            module: 'RowStyle',
         },
         selectionColumnDef: () => COL_DEF_VALIDATORS,
         serverSideDatasource: {
             supportedRowModels: ['serverSide'],
-            module: 'ServerSideRowModelModule',
+            module: 'ServerSideRowModel',
         },
         serverSideInitialRowCount: {
             supportedRowModels: ['serverSide'],
@@ -345,7 +345,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         serverSideSortAllLevels: {
             supportedRowModels: ['serverSide'],
         },
-        sideBar: { module: 'SideBarModule' },
+        sideBar: { module: 'SideBar' },
         sortingOrder: {
             validate: (_options) => {
                 const sortingOrder = _options.sortingOrder;
@@ -361,7 +361,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-        statusBar: { module: 'StatusBarModule' },
+        statusBar: { module: 'StatusBar' },
         tooltipHideDelay: {
             validate: (options) => {
                 if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
@@ -380,7 +380,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
-            module: 'SharedTreeDataModule',
+            module: 'SharedTreeData',
             validate: (options) => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
@@ -397,13 +397,13 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         treeDataChildrenField: {
-            module: 'SharedTreeDataModule',
+            module: 'SharedTreeData',
         },
-        undoRedoCellEditing: { module: 'UndoRedoEditModule' },
-        valueCache: { module: 'ValueCacheModule' },
+        undoRedoCellEditing: { module: 'UndoRedoEdit' },
+        valueCache: { module: 'ValueCache' },
         viewportDatasource: {
             supportedRowModels: ['viewport'],
-            module: 'ViewportRowModelModule',
+            module: 'ViewportRowModel',
         },
         viewportRowModelBufferSize: {
             validate({ viewportRowModelBufferSize }) {

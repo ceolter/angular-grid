@@ -6,6 +6,6 @@ import { ValidationService } from './validationService';
  * @feature Validation
  */
 export const ValidationModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ValidationModule'),
+    ...baseCommunityModule('Validation'),
     beans: [ValidationService],
 };
