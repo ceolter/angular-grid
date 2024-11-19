@@ -94,3 +94,22 @@ export function _getValueUsingField(data: any, field: string, fieldContainsDots:
 function _isNonNullObject(value: any): boolean {
     return typeof value === 'object' && value !== null;
 }
+
+export function _getObjectPaths(obj: Record<string, unknown>): string[][] {
+    const stack: { path: string[]; cursor: Record<string, unknown> }[] = [{ path: [], cursor: obj }];
+    const paths: string[][] = [];
+
+    while (stack.length > 0) {
+        const { path, cursor } = stack.pop()!;
+
+        if (cursor && typeof cursor === 'object' && !Array.isArray(cursor)) {
+            for (const [key, value] of Object.entries(cursor)) {
+                stack.push({ path: path.concat(key), cursor: value as Record<string, unknown> });
+            }
+        } else {
+            paths.push(path);
+        }
+    }
+
+    return paths;
+}

@@ -16,6 +16,7 @@ import { _areModulesGridScoped, _isModuleRegistered } from './modules/moduleRegi
 import type { AnyGridOptions } from './propertyKeys';
 import { _logIfDebug } from './utils/function';
 import { _exists } from './utils/generic';
+import { _getObjectPaths, _getValueUsingField } from './utils/object';
 import type { MissingModuleErrors } from './validation/errorMessages/errorText';
 import { _error } from './validation/logging';
 import type { ValidationService } from './validation/validationService';
@@ -59,6 +60,9 @@ export interface PropertyChangedEvent extends AgEvent {
     source: PropertyChangedSource;
 }
 
+type Objectify<T> = Extract<NonNullable<T>, object>;
+type ObjectKeys<T> = Objectify<T> extends never ? never : keyof Objectify<T>;
+
 /**
  * For boolean properties the changed value will have been coerced to a boolean, so we do not want the type to include the undefined value.
  */
@@ -74,6 +78,14 @@ export interface PropertyValueChangedEvent<K extends keyof GridOptions> extends 
 
 export type PropertyChangedListener = (event: PropertyChangedEvent) => void;
 export type PropertyValueChangedListener<K extends keyof GridOptions> = (event: PropertyValueChangedEvent<K>) => void;
+interface DeepPropertyValueChangedEvent<V> {
+    type: string;
+    changeSet: PropertyChangeSet | undefined;
+    currentValue: V;
+    previousValue: V;
+    source: PropertyChangedSource;
+}
+type DeepPropertyValueChangedListener<V> = (event: DeepPropertyValueChangedEvent<V>) => void;
 
 let changeSetId = 0;
 
@@ -104,7 +116,8 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         return this.gridOptions['context'];
     }
 
-    private propEventSvc: LocalEventService<keyof GridOptions> = new LocalEventService();
+    private propEventSvc = new LocalEventService<keyof GridOptions>();
+    private deepPropEventScv = new LocalEventService<string>();
 
     public postConstruct(): void {
         this.eventSvc.addGlobalListener(this.globalEventHandlerFactory().bind(this), true);
@@ -177,6 +190,21 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         // all events are fired after grid options has finished updating.
         const events: PropertyValueChangedEvent<keyof GridOptions>[] = [];
         const { gridOptions, validation } = this;
+
+        const changedPaths = _getObjectPaths(options);
+        for (const path of changedPaths) {
+            const eventType = path.join('.');
+            const value = _getValueUsingField(options, eventType, true);
+            const oldValue = _getValueUsingField(gridOptions, eventType, true);
+            this.deepPropEventScv.dispatchEvent({
+                type: eventType,
+                currentValue: value,
+                previousValue: oldValue,
+                changeSet,
+                source,
+            } as DeepPropertyValueChangedEvent<typeof value>);
+        }
+
         Object.entries(options).forEach(([key, value]) => {
             validation?.warnOnInitialPropertyUpdate(source, key);
 
@@ -193,13 +221,11 @@ export class GridOptionsService extends BeanStub implements NamedBean {
                     source,
                 };
                 events.push(event);
+                changeSet.properties.push(key as keyof GridOptions);
             }
         });
 
         validation?.processGridOptions(this.gridOptions);
-
-        // changeSet should just include the properties that have changed.
-        changeSet.properties = events.map((event) => event.type);
 
         events.forEach((event) => {
             _logIfDebug(this, `Updated property ${event.type} from`, event.previousValue, ` to `, event.currentValue);
@@ -212,6 +238,31 @@ export class GridOptionsService extends BeanStub implements NamedBean {
     }
     removePropertyEventListener<K extends keyof GridOptions>(key: K, listener: PropertyValueChangedListener<K>): void {
         this.propEventSvc.removeEventListener(key, listener as any);
+    }
+
+    addDeepPropertyEventListener<P1 extends ObjectKeys<GridOptions>>(
+        prop1: P1,
+        listener: DeepPropertyValueChangedListener<Objectify<GridOptions>[P1]>
+    ): void;
+    addDeepPropertyEventListener<P1 extends ObjectKeys<GridOptions>, P2 extends ObjectKeys<Objectify<GridOptions>[P1]>>(
+        prop1: P1,
+        prop2: P2,
+        listener: DeepPropertyValueChangedListener<Objectify<Objectify<GridOptions>[P1]>[P2]>
+    ): void;
+    addDeepPropertyEventListener<
+        P1 extends ObjectKeys<GridOptions>,
+        P2 extends ObjectKeys<Objectify<GridOptions>[P1]>,
+        P3 extends ObjectKeys<Objectify<Objectify<GridOptions>[P1]>[P2]>,
+    >(
+        prop1: P1,
+        prop2: P2,
+        prop3: P3,
+        listener: DeepPropertyValueChangedListener<Objectify<Objectify<Objectify<GridOptions>[P1]>[P2]>[P3]>
+    ): void;
+    addDeepPropertyEventListener(...args: any[]): any {
+        const props = args.slice(0, -1) as string[];
+        const listener = args[args.length - 1];
+        this.deepPropEventScv.addEventListener(props.join('.'), listener);
     }
 
     // responsible for calling the onXXX functions on gridOptions
