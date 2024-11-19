@@ -14,11 +14,12 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
 import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
 import { parseVersion } from '@ag-website-shared/utils/parseVersion';
 import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
-import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
+import { LandingPageFAQ } from '@ag-website-shared/components/landing-pages/LandingPageFAQ';
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
+const { data: FAQData } = await getEntry('homepage', 'homepageFAQs');
 const { blogPrefix } = whatsNewData['grid'];
 
 const frameworksData = [
@@ -160,6 +161,6 @@ const frameworksData = [
         subHeading="How many rows can AG Grid handle? How fast is AG Grid? Is AG Grid free? Answers to these common questions and more."
         sectionClass={styles.faqSection}
     >
-        <Faqs client:load />
+        <LandingPageFAQ client:load FAQData={FAQData} />
     </LandingPageSection>
 </Layout>
