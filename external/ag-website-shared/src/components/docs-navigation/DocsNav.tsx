@@ -1,6 +1,6 @@
 import type { Framework } from '@ag-grid-types';
+import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { Collapsible } from '@components/Collapsible';
 import { getExamplePageUrl } from '@components/docs/utils/urlPaths';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import classnames from 'classnames';
