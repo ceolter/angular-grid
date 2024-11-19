@@ -28,7 +28,7 @@ const Showcase: React.FC = () => {
                     standalone charts from AG Charts.
                 </p>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://openbb.co/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -38,7 +38,7 @@ const Showcase: React.FC = () => {
                     </span>
                 </a>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://github.com/OpenBB-finance/OpenBBTerminal"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -60,7 +60,7 @@ const Showcase: React.FC = () => {
                     powers the tables in its dashboard
                 </p>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://mlflow.org"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -70,7 +70,7 @@ const Showcase: React.FC = () => {
                     </span>
                 </a>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://github.com/mlflow/mlflow/tree/master"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -92,7 +92,7 @@ const Showcase: React.FC = () => {
                     help visualise mission data.
                 </p>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://www.windmill.dev/docs/apps/app_configuration_settings/aggrid_table#aggird-table-input"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -102,7 +102,7 @@ const Showcase: React.FC = () => {
                     </span>
                 </a>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://github.com/windmill-labs/windmill"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -124,7 +124,7 @@ const Showcase: React.FC = () => {
                     React tables with advanced features.
                 </p>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://marmelab.com/react-admin/DatagridAG.html"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -134,7 +134,7 @@ const Showcase: React.FC = () => {
                     </span>
                 </a>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://github.com/marmelab/react-admin"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -156,7 +156,7 @@ const Showcase: React.FC = () => {
                     builder.
                 </p>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://nasa-ammos.github.io/aerie-docs/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
@@ -166,7 +166,7 @@ const Showcase: React.FC = () => {
                     </span>
                 </a>
                 <a
-                    href="https://ag-grid.com"
+                    href="https://github.com/NASA-AMMOS/aerie-ui"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
