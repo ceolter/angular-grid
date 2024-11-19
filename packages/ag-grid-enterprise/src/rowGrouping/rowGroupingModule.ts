@@ -65,7 +65,7 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
         // version of panelDelimiter used in RTL mode
         panelDelimiterRtl: 'small-left',
     },
-    dependsOn: [SharedRowGroupingModule, _PopupModule],
+    dependsOn: [_PopupModule],
 };
 
 /**
@@ -74,5 +74,5 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
 export const GroupFilterModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupFilterModule'),
     userComponents: { agGroupColumnFilter: GroupFilter, agGroupColumnFloatingFilter: GroupFloatingFilterComp },
-    dependsOn: [SharedRowGroupingModule, _ColumnFilterModule],
+    dependsOn: [_ColumnFilterModule],
 };

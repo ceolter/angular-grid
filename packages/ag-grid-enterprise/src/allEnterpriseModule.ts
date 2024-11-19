@@ -1,13 +1,16 @@
+import type { IntegratedModule } from 'ag-charts-types';
+
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 import { AllCommunityModule } from 'ag-grid-community';
 
 import { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
+import { IntegratedChartsModule } from './charts/integratedChartsModule';
 import { ClipboardModule } from './clipboard/clipboardModule';
 import { ColumnsToolPanelModule } from './columnToolPanel/columnsToolPanelModule';
 import { ExcelExportModule } from './excelExport/excelExportModule';
 import { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
 import { MasterDetailModule } from './masterDetail/masterDetailModule';
-import { MenuModule } from './menu/menuModule';
+import { ColumnMenuModule, ContextMenuModule } from './menu/menuModule';
 import { baseEnterpriseModule } from './moduleUtils';
 import { MultiFilterModule } from './multiFilter/multiFilterModule';
 import { PivotModule } from './pivot/pivotModule';
@@ -17,11 +20,14 @@ import { GroupFilterModule, RowGroupingModule, RowGroupingPanelModule } from './
 import { ServerSideRowModelApiModule, ServerSideRowModelModule } from './serverSideRowModel/serverSideRowModelModule';
 import { SetFilterModule } from './setFilter/setFilterModule';
 import { SideBarModule } from './sideBar/sideBarModule';
+import { SparklinesModule } from './sparkline/sparklinesModule';
 import { StatusBarModule } from './statusBar/statusBarModule';
 import { TreeDataModule } from './treeData/treeDataModule';
 import { ViewportRowModelModule } from './viewportRowModel/viewportRowModelModule';
 
-export const AllEnterpriseModule: _ModuleWithoutApi = {
+type AllEnterpriseModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
+
+const baseAllEnterpriseModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('AllEnterpriseModule'),
     dependsOn: [
         AllCommunityModule,
@@ -30,7 +36,8 @@ export const AllEnterpriseModule: _ModuleWithoutApi = {
         ExcelExportModule,
         FiltersToolPanelModule,
         MasterDetailModule,
-        MenuModule,
+        ColumnMenuModule,
+        ContextMenuModule,
         CellSelectionModule,
         RichSelectModule,
         RowGroupingModule,
@@ -47,4 +54,19 @@ export const AllEnterpriseModule: _ModuleWithoutApi = {
         PivotModule,
         TreeDataModule,
     ],
+};
+
+/**
+ * @feature All Enterprise and Community features
+ */
+export const AllEnterpriseModule: AllEnterpriseModuleType = {
+    with: (params) => ({
+        ...baseAllEnterpriseModule,
+        dependsOn: [
+            ...baseAllEnterpriseModule.dependsOn!,
+            IntegratedChartsModule.with(params),
+            SparklinesModule.with(params),
+        ],
+    }),
+    ...baseAllEnterpriseModule,
 };

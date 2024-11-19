@@ -239,7 +239,7 @@ export class HeaderRowContainerCtrl extends BeanStub implements ScrollPartner {
     }
 
     private onDisplayedColumnsChanged(filterManager: FilterManager): void {
-        const includeFloatingFilter = filterManager?.hasFloatingFilters() && !this.hidden;
+        const includeFloatingFilter = !!filterManager?.hasFloatingFilters() && !this.hidden;
         if (this.includeFloatingFilter !== includeFloatingFilter) {
             this.refresh(true);
         }
