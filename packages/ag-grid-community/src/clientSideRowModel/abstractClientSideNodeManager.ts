@@ -13,6 +13,8 @@ import type { RefreshModelState } from './refreshModelState';
  */
 interface ClientSideNodeManagerRowNode<TData> extends RowNode<TData> {
     sourceRowIndex: number;
+    allLeafChildren: ClientSideNodeManagerRowNode<TData>[] | null;
+    childrenAfterGroup: ClientSideNodeManagerRowNode<TData>[] | null;
 }
 
 /**

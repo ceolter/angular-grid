@@ -69,12 +69,6 @@ export class RefreshModelState<TData = any> {
      */
     public fullReload: boolean = false;
 
-    /**
-     * If true, treeData effectively changed since last refresh.
-     * This might be false if fullReload is true, as the node manager might have changed.
-     */
-    public treeDataChanged: boolean = false;
-
     /** If this is true, refreshModel was called inside refreshModel */
     public nested: boolean = false;
 
@@ -231,6 +225,7 @@ export class RefreshModelState<TData = any> {
     public setDeltaUpdate(): boolean {
         this.setStep('group');
         this.rowDataUpdated = true;
+        this.keepUndoRedoStack = false;
         if (this.deltaUpdate) {
             return true;
         }

@@ -215,20 +215,4 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         return treeChanged || refreshModelState.hasChanges();
     }
-
-    public override refreshModel(state: RefreshModelState<TData>): void {
-        const { rootNode, treeRoot } = this;
-        if (treeRoot && state.treeDataChanged && !state.newData) {
-            const allLeafChildren = rootNode?.allLeafChildren;
-            if (allLeafChildren) {
-                for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
-                    const row = allLeafChildren[i];
-                    row.groupData = null;
-                    row.treeNode?.invalidate();
-                }
-            }
-        }
-
-        super.refreshModel(state);
-    }
 }

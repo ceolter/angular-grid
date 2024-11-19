@@ -76,15 +76,30 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
     public override activate(state: RefreshModelState<TData>): void {
         const treeData = this.isTreeData();
-        state.treeDataChanged = this.treeData !== treeData;
+        const treeDataChanged = this.treeData !== treeData;
         this.treeData = treeData;
 
         super.activate(state);
 
-        if (state.fullReload || state.treeDataChanged || !state.rootNode.treeNode) {
+        const rootNode = state.rootNode;
+
+        if (treeDataChanged || state.fullReload || !rootNode.treeNode) {
             const treeRoot = (this.treeRoot ??= new TreeNode(null, '', -1));
-            treeRoot.setRow(state.rootNode);
+            treeRoot.setRow(rootNode);
             treeRoot.invalidate();
+
+            if (treeDataChanged) {
+                treeRoot.childrenChanged = true;
+                const allLeafChildren = rootNode.allLeafChildren;
+                if (allLeafChildren && !state.newData) {
+                    for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
+                        const row = allLeafChildren[i];
+                        const treeNode = row.treeNode as TreeNode | null;
+                        treeNode?.invalidate();
+                        row.groupData = null;
+                    }
+                }
+            }
         }
     }
 
