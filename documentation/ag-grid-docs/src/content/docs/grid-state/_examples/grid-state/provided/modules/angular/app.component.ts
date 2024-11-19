@@ -14,11 +14,11 @@ import type {
     RowSelectionOptions,
     StateUpdatedEvent,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
 import {
+    CellSelectionModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    RangeSelectionModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
 
@@ -26,12 +26,13 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
 
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
-    RangeSelectionModule,
+    CellSelectionModule,
 ]);
 
 @Component({

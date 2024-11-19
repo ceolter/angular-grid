@@ -1,0 +1,66 @@
+@use 'design-system' as *;
+
+.sectionContent {
+    width: 100%;
+    max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
+    margin-right: auto;
+    margin-left: auto;
+    padding: $spacing-size-12 var(--layout-horizontal-margins) $spacing-size-24;
+}
+
+.tag,
+.heading,
+.subHeading {
+    margin: 0;
+}
+
+.tag {
+    font-size: var(--text-fs-lg);
+    font-weight: var(--text-semibold);
+    color: var(--color-util-brand-600);
+
+    #{$selector-darkmode} & {
+        color: var(--color-util-brand-900);
+    }
+}
+
+.heading {
+    font-size: 40px;
+    font-weight: var(--text-bold);
+    letter-spacing: -1px;
+
+    @media screen and (max-width: $breakpoint-landing-page-medium) {
+        padding: 0;
+    }
+}
+
+.subHeading {
+    color: var(--color-fg-tertiary);
+    font-weight: var(--text-fs-regular);
+}
+
+.headingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;
+    text-align: left;
+    margin-bottom: $spacing-size-12;
+    gap: $spacing-size-2;
+}
+
+.ctaButton {
+    --icon-size: #{$spacing-size-5};
+
+    width: fit-content;
+    margin-top: $spacing-size-3;
+
+    :global(.icon) {
+        transform: translateX($spacing-size-2);
+        transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translateX($spacing-size-3);
+    }
+}

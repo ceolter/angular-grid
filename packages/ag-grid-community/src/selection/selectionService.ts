@@ -91,8 +91,18 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
     }
 
-    public setNodesSelected(params: ISetNodesSelectedParams): number {
-        const { newValue, clearSelection, suppressFinishActions, nodes, event, source } = params;
+    public setNodesSelected({
+        newValue,
+        clearSelection,
+        suppressFinishActions,
+        nodes,
+        event,
+        source,
+    }: ISetNodesSelectedParams): number {
+        if (!_isRowSelection(this.gos) && newValue) {
+            _warn(132);
+            return 0;
+        }
 
         if (nodes.length === 0) return 0;
 

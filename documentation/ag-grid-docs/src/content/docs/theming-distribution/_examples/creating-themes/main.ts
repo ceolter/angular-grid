@@ -1,13 +1,26 @@
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid, createTheme, iconSetMaterial } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    colorSchemeVariable,
+    createGrid,
+    createTheme,
+    iconSetMaterial,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
-const myCustomTheme = createTheme().withPart(iconSetMaterial).withParams({
-    accentColor: 'red',
-    foregroundColor: '#660000',
-    iconSize: 18,
-});
+const myCustomTheme = createTheme()
+    // add just the parts you want
+    .withPart(iconSetMaterial)
+    .withPart(colorSchemeVariable)
+    // set default param values
+    .withParams({
+        accentColor: 'red',
+        foregroundColor: '#660000',
+        iconSize: 18,
+    });
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 

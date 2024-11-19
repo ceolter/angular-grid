@@ -1,12 +1,18 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { MenuModule } from 'ag-grid-enterprise';
-import { RangeSelectionModule } from 'ag-grid-enterprise';
+import { CellSelectionModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, MenuModule, RangeSelectionModule, SetFilterModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    MenuModule,
+    CellSelectionModule,
+    SetFilterModule,
+]);
 
 interface IOlympicDataTypes extends IOlympicData {
     countryObject: {

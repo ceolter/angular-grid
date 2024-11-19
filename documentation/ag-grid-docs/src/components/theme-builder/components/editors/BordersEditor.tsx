@@ -5,7 +5,7 @@ import type { ThemeParam } from '@components/theme-builder/model/utils';
 import styled from '@emotion/styled';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
 
-import { paramValueToCss } from 'ag-grid-community';
+import { _theming } from 'ag-grid-community';
 
 import { withErrorBoundary } from '../general/ErrorBoundary';
 import { FormField } from './FormField';
@@ -19,7 +19,7 @@ const borders: [ThemeParam, string][] = [
 ];
 
 export const BordersEditor = withErrorBoundary(() => {
-    const params = useRenderedTheme().getParams().getValues();
+    const params = useRenderedTheme()._getModeParams();
     const selectedBorders = borders.filter(([param]) => !!params[param]).map(([, label]) => label);
 
     return (
@@ -60,7 +60,7 @@ const BorderItem = (props: BorderProps) => {
     const theme = useRenderedTheme();
     let editorValue = value;
     if (editorValue == null) {
-        const params = theme.getParams().getValues();
+        const params = theme._getModeParams();
         if (param.property in params) {
             editorValue = params[param.property];
         } else {
@@ -68,7 +68,7 @@ const BorderItem = (props: BorderProps) => {
         }
     }
 
-    const rendered = paramValueToCss(props.param, editorValue);
+    const rendered = _theming.paramValueToCss(props.param, editorValue);
     const checked = !!rendered && rendered !== 'none' && !rendered.includes('transparent');
 
     return (

@@ -9,13 +9,18 @@ import type {
     ServerSideTransaction,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { getFakeServer, registerObserver } from './fakeServer';
 
-ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+    RowGroupingPanelModule,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

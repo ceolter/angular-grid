@@ -44,12 +44,13 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         eHeaderCompWrapper: HTMLElement,
         compBean: BeanStub<any> | undefined
     ): void {
-        const { context, colNames, colHover, colResize } = this.beans;
+        const { column, beans } = this;
+        const { context, colNames, colHover, colResize } = beans;
         this.comp = comp;
         compBean = setupCompBean(this, context, compBean);
         this.setGui(eGui, compBean);
 
-        this.displayName = colNames.getDisplayNameForColumnGroup(this.column, 'header');
+        this.displayName = colNames.getDisplayNameForColumnGroup(column, 'header');
 
         this.addClasses();
         this.setupMovingCss(compBean);
@@ -68,14 +69,14 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
         this.refreshMaxHeaderHeight();
 
         const pinned = this.rowCtrl.pinned;
-        const leafCols = this.column.getProvidedColumnGroup().getLeafColumns();
+        const leafCols = column.getProvidedColumnGroup().getLeafColumns();
 
         colHover?.createHoverFeature(compBean, leafCols, eGui);
-        compBean.createManagedBean(new SetLeftFeature(this.column, eGui, this.beans));
-        compBean.createManagedBean(new GroupWidthFeature(comp, this.column));
+        compBean.createManagedBean(new SetLeftFeature(column, eGui, beans));
+        compBean.createManagedBean(new GroupWidthFeature(comp, column));
         if (colResize) {
             this.resizeFeature = compBean.createManagedBean(
-                colResize.createGroupResizeFeature(comp, eResize, pinned, this.column)
+                colResize.createGroupResizeFeature(comp, eResize, pinned, column)
             );
         } else {
             comp.setResizableDisplayed(false);
@@ -262,14 +263,15 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     }
 
     private addClasses(): void {
-        const colGroupDef = this.column.getColGroupDef();
-        const classes = _getHeaderClassesFromColDef(colGroupDef, this.gos, null, this.column);
+        const { column } = this;
+        const colGroupDef = column.getColGroupDef();
+        const classes = _getHeaderClassesFromColDef(colGroupDef, this.gos, null, column);
 
         // having different classes below allows the style to not have a bottom border
         // on the group header, if no group is specified
-        if (this.column.isPadding()) {
+        if (column.isPadding()) {
             classes.push('ag-header-group-cell-no-group');
-            const leafCols = this.column.getLeafColumns();
+            const leafCols = column.getLeafColumns();
             if (leafCols.every((col) => col.isSpanHeaderHeight())) {
                 classes.push('ag-header-span-height');
             }
@@ -284,13 +286,14 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
     }
 
     private setupMovingCss(compBean: BeanStub): void {
-        const providedColumnGroup = this.column.getProvidedColumnGroup();
+        const { column } = this;
+        const providedColumnGroup = column.getProvidedColumnGroup();
         const leafColumns = providedColumnGroup.getLeafColumns();
 
         // function adds or removes the moving css, based on if the col is moving.
         // this is what makes the header go dark when it is been moved (gives impression to
         // user that the column was picked up).
-        const listener = () => this.comp.addOrRemoveCssClass('ag-header-cell-moving', this.column.isMoving());
+        const listener = () => this.comp.addOrRemoveCssClass('ag-header-cell-moving', column.isMoving());
 
         leafColumns.forEach((col) => {
             compBean.addManagedListeners(col, { movingChanged: listener });

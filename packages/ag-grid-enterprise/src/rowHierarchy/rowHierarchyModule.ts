@@ -11,9 +11,10 @@ import { FlattenStage } from './flattenStage';
 import { GroupCellRenderer } from './rendering/groupCellRenderer';
 import { GroupCellRendererCtrl } from './rendering/groupCellRendererCtrl';
 import { ShowRowGroupColsService } from './showRowGroupColsService';
+import { StickyRowService } from './stickyRowService';
 
 /**
- * @feature Row Grouping -> Provided Component
+ * @internal
  */
 export const GroupCellRendererModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('GroupCellRendererModule'),
@@ -42,11 +43,19 @@ export const GroupColumnModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Row Grouping -> Opening Groups, Tree Data -> Expanding Groups, Master Detail
+ * @internal
  */
 export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
     ...baseEnterpriseModule('ClientSideRowModelHierarchyModule'),
     rowModels: ['clientSide'],
     beans: [FlattenStage, ClientSideExpansionService],
     dependsOn: [EnterpriseCoreModule],
+};
+
+/**
+ * @internal
+ */
+export const StickyRowModule: _ModuleWithoutApi = {
+    ...baseEnterpriseModule('StickyRowModule'),
+    beans: [StickyRowService],
 };

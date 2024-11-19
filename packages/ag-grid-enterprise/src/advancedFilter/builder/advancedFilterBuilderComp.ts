@@ -79,16 +79,17 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     }
 
     public refresh(): void {
-        let indexToFocus = this.virtualList.getLastFocusedRow();
+        const virtualList = this.virtualList;
+        let indexToFocus = virtualList.getLastFocusedRow();
         this.setupFilterModel();
         this.validateItems();
         this.refreshList(false);
         if (indexToFocus != null) {
             // last focused row is cleared on focus out, so if defined, we need to put the focus back
-            if (!this.virtualList.getComponentAt(indexToFocus)) {
+            if (!virtualList.getComponentAt(indexToFocus)) {
                 indexToFocus = 0;
             }
-            this.virtualList.focusRow(indexToFocus);
+            virtualList.focusRow(indexToFocus);
         }
     }
 
@@ -111,25 +112,26 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     }
 
     private setupVirtualList(): void {
-        this.virtualList = this.createManagedBean(
+        const virtualList = (this.virtualList = this.createManagedBean(
             new VirtualList({
                 cssIdentifier: 'advanced-filter-builder',
                 ariaRole: 'tree',
                 listName: this.advFilterExpSvc.translate('ariaAdvancedFilterBuilderList'),
             })
-        );
-        this.virtualList.setComponentCreator(this.createItemComponent.bind(this));
-        this.virtualList.setComponentUpdater(this.updateItemComponent.bind(this));
-        this.virtualList.setRowHeight(40);
-        this.eList.appendChild(this.virtualList.getGui());
+        ));
 
-        this.virtualList.setModel({
+        virtualList.setComponentCreator(this.createItemComponent.bind(this));
+        virtualList.setComponentUpdater(this.updateItemComponent.bind(this));
+        virtualList.setRowHeight(40);
+        this.eList.appendChild(virtualList.getGui());
+
+        virtualList.setModel({
             getRowCount: () => this.items.length,
             getRow: (index: number) => this.items[index],
             areRowsEqual: (oldRow: AdvancedFilterBuilderItem, newRow: AdvancedFilterBuilderItem) => oldRow === newRow,
         });
         this.buildList();
-        this.virtualList.refresh();
+        virtualList.refresh();
     }
 
     private setupButtons(): void {

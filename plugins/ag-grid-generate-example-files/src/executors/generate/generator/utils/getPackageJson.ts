@@ -1,6 +1,5 @@
 import { readFileSync } from 'fs';
 
-import { getEnterprisePackageName } from '../constants';
 import type { InternalFramework } from '../types';
 
 interface Params {
@@ -73,7 +72,7 @@ function addPackageJson(isLocale, framework) {
         addDependency('ag-grid-react', agGridReactVersion);
     }
     addDependency('ag-grid-community', agGridVersion);
-    addDependency(getEnterprisePackageName(), agGridEnterpriseVersion);
+    addDependency('ag-grid-enterprise', agGridEnterpriseVersion);
 
     return packageJson;
 }

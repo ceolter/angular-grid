@@ -10,7 +10,7 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { MenuModule } from 'ag-grid-enterprise';
 import { MultiFilterModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
@@ -18,7 +18,13 @@ import { SetFilterModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([MenuModule, ServerSideRowModelModule, SetFilterModule, MultiFilterModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    MenuModule,
+    ServerSideRowModelModule,
+    SetFilterModule,
+    MultiFilterModule,
+]);
 
 const columnDefs: ColDef[] = [
     {

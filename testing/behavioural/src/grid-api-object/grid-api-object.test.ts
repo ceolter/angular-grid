@@ -1,7 +1,13 @@
 import type { MockInstance } from 'vitest';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 describe('ag-grid overlays state', () => {
     let consoleWarnSpy: MockInstance | undefined;
@@ -16,7 +22,7 @@ describe('ag-grid overlays state', () => {
     }
 
     beforeAll(() => {
-        ModuleRegistry.registerModules([ClientSideRowModelModule]);
+        ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule, RowApiModule]);
     });
 
     beforeEach(() => {

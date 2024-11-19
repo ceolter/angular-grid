@@ -1,14 +1,10 @@
-import type { ColumnModel } from '../columns/columnModel';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup, _isGroupUseEntireRow } from '../gridOptionsUtils';
-import type { IShowRowGroupColsService } from '../interfaces/iShowRowGroupColsService';
 import type { SortOption } from '../interfaces/iSortOption';
 import { _defaultComparator } from '../utils/generic';
-import type { ValueService } from '../valueService/valueService';
 
 export interface SortedRowNode {
     currentPos: number;
@@ -20,22 +16,13 @@ export interface SortedRowNode {
 export class RowNodeSorter extends BeanStub implements NamedBean {
     beanName = 'rowNodeSorter' as const;
 
-    private valueSvc: ValueService;
-    private colModel: ColumnModel;
-    private showRowGroupCols?: IShowRowGroupColsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.valueSvc = beans.valueSvc;
-        this.colModel = beans.colModel;
-        this.showRowGroupCols = beans.showRowGroupCols;
-    }
-
     private isAccentedSort: boolean;
     private primaryColumnsSortGroups: boolean;
 
     public postConstruct(): void {
-        this.isAccentedSort = this.gos.get('accentedSort');
-        this.primaryColumnsSortGroups = _isColumnsSortingCoupledToGroup(this.gos);
+        const { gos } = this;
+        this.isAccentedSort = gos.get('accentedSort');
+        this.primaryColumnsSortGroups = _isColumnsSortingCoupledToGroup(gos);
 
         this.addManagedPropertyListener(
             'accentedSort',
@@ -43,7 +30,7 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
         );
         this.addManagedPropertyListener(
             'autoGroupColumnDef',
-            () => (this.primaryColumnsSortGroups = _isColumnsSortingCoupledToGroup(this.gos))
+            () => (this.primaryColumnsSortGroups = _isColumnsSortingCoupledToGroup(gos))
         );
     }
 
@@ -112,7 +99,7 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
             return;
         }
 
-        const primaryColumn = this.colModel.getColDefCol(groupLeafField);
+        const primaryColumn = this.beans.colModel.getColDefCol(groupLeafField);
         if (!primaryColumn) {
             return;
         }
@@ -121,24 +108,25 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
     }
 
     private getValue(node: RowNode, column: AgColumn): any {
+        const { valueSvc, colModel, showRowGroupCols, gos } = this.beans;
         if (!this.primaryColumnsSortGroups) {
-            return this.valueSvc.getValue(column, node, false);
+            return valueSvc.getValue(column, node, false);
         }
 
         const isNodeGroupedAtLevel = node.rowGroupColumn === column;
         if (isNodeGroupedAtLevel) {
-            const isGroupRows = _isGroupUseEntireRow(this.gos, this.colModel.isPivotActive());
+            const isGroupRows = _isGroupUseEntireRow(gos, colModel.isPivotActive());
             // because they're group rows, no display cols exist, so groupData never populated.
             // instead delegate to getting value from leaf child.
             if (isGroupRows) {
                 const leafChild = node.allLeafChildren?.[0];
                 if (leafChild) {
-                    return this.valueSvc.getValue(column, leafChild, false);
+                    return valueSvc.getValue(column, leafChild, false);
                 }
                 return undefined;
             }
 
-            const displayCol = this.showRowGroupCols?.getShowRowGroupCol(column.getId());
+            const displayCol = showRowGroupCols?.getShowRowGroupCol(column.getId());
             if (!displayCol) {
                 return undefined;
             }
@@ -149,6 +137,6 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
             return undefined;
         }
 
-        return this.valueSvc.getValue(column, node, false);
+        return valueSvc.getValue(column, node, false);
     }
 }

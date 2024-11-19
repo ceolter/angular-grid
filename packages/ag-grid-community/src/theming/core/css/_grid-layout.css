@@ -77,8 +77,16 @@
     --ag-internal-content-line-height: min(calc(var(--ag-row-height) - 1px), var(--ag-line-height, 1000px));
 }
 
-/* Only display the bottom border of the last row when there is a gap between the row and grid edge */
-:where(.ag-body-vertical-content-no-gap) .ag-row-last {
+/* Hide the border of the last last row when there is no gap between the row and
+   grid edge to prevent a double border. The use of the child  combinator `>`
+   is to ensure that the ag-body-vertical-content-no-gap class only hides the
+   border of rows in the same grid, not in nested detail grids  */
+:where(
+    /* there are either 3 or 4 elements between the body and the row as the
+       center cols container has an extra layer of nesting than other containers */
+    .ag-body-vertical-content-no-gap > div > div > div,
+    .ag-body-vertical-content-no-gap > div > div > div > div
+) > .ag-row-last {
     border-bottom-color: transparent;
 }
 

@@ -75,7 +75,23 @@
         "externalDependencies": ["npm:typescript", "npm:esbuild"]
       }
     ],
-    "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"]
+    "sharedGlobals": ["{workspaceRoot}/esbuild.config*.cjs", "{workspaceRoot}/tsconfig.*.json"],
+    "charts": ["chartsPackages", "chartsTypes"],
+    "chartsPackages": [
+      { "externalDependencies": ["ag-charts-locale", "ag-charts-community", "ag-charts-enterprise"] },
+      { "runtime": "date -r ./node_modules/ag-charts-locale/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-community/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-enterprise/dist \"+%Y-%m-%d %H:%M:%S\"" }
+    ],
+    "chartsTypes": [
+      {
+        "externalDependencies": ["ag-charts-types", "ag-charts-locale", "ag-charts-community", "ag-charts-enterprise"]
+      },
+      { "runtime": "date -r ./node_modules/ag-charts-locale/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-types/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-community/dist \"+%Y-%m-%d %H:%M:%S\"" },
+      { "runtime": "date -r ./node_modules/ag-charts-enterprise/dist \"+%Y-%m-%d %H:%M:%S\"" }
+    ]
   },
   "targetDefaults": {
     "build": {

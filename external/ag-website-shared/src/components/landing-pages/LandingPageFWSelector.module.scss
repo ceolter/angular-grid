@@ -1,0 +1,121 @@
+@use 'design-system' as *;
+
+.frameworkSelector {
+    --height: #{$spacing-size-12};
+    --icon-size: #{$spacing-size-6};
+    --x-padding: 10px;
+
+    display: flex;
+    width: 100%;
+    min-width: 220px;
+    max-width: 420px;
+    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-primary);
+    gap: $spacing-size-3;
+
+    svg {
+        height: 24px;
+        width: 24px;
+        fill: var(--color-fg-secondary);
+        opacity: 0.8;
+    }
+
+    @media screen and (min-width: 740px) {
+        width: unset;
+        max-width: unset;
+    }
+
+    @media screen and (min-width: $breakpoint-fw-selector-full-width-large) {
+        --height: #{$spacing-size-16};
+        --icon-size: #{$spacing-size-10};
+
+        font-size: var(--text-fs-xl);
+    }
+
+    #{$selector-darkmode} & {
+        --color-bg-primary: var(--color-bg-primary);
+
+        border-color: var(--color-border-primary);
+    }
+}
+
+.option {
+    --color-link: var(--color-fg-primary);
+    --color-link-hover: var(--color-fg-primary);
+
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    min-width: $spacing-size-12;
+    padding: calc((var(--height) - var(--icon-size)) / 2) var(--x-padding);
+    text-decoration: none;
+    outline: none;
+    background: var(--color-button-tertiary-bg-hover);
+    border-radius: var(--radius-md);
+    transition: background-color 0.5s;
+
+    img {
+        width: var(--icon-size);
+        height: var(--icon-size);
+        border-radius: 14%;
+    }
+
+    span {
+        display: none;
+        margin-left: 4px;
+        font-size: var(--text-fs-base);
+        transition: opacity $transition-default-timing;
+    }
+
+    &:hover,
+    &:focus-visible {
+        text-decoration: none;
+        background-color: var(--color-brand-100);
+        transition: background-color 0.5s;
+    }
+
+    &:hover::after,
+    &:focus-visible::after {
+        opacity: 1;
+    }
+
+    @media screen and (min-width: $breakpoint-fw-selector-full-width-medium) {
+        width: unset;
+        padding: calc((var(--height) - var(--icon-size)) / 2) var(--x-padding);
+
+        &:first-child {
+            padding-left: calc(var(--x-padding) * 2);
+
+            &::after {
+                left: calc(var(--x-padding) * 1.5);
+            }
+        }
+
+        &:last-child {
+            padding-right: calc(var(--x-padding) * 2);
+
+            &::after {
+                right: var(--x-padding);
+            }
+        }
+
+        span {
+            display: inline;
+        }
+    }
+
+    @media screen and (min-width: $breakpoint-fw-selector-full-width-large) {
+        &::after {
+            height: 3px;
+            border-radius: 1.5px;
+        }
+
+        span {
+            margin-left: $spacing-size-2;
+            font-size: var(--text-fs-xl);
+        }
+    }
+}

@@ -1,4 +1,3 @@
-import { _ModuleSupport } from 'ag-charts-community';
 import type { AgChartThemeOverrides, AgChartThemePalette } from 'ag-charts-types';
 
 import type {
@@ -13,7 +12,6 @@ import type {
     CreateCrossFilterChartParams,
     CreatePivotChartParams,
     CreateRangeChartParams,
-    Environment,
     GetChartImageDataUrlParams,
     IAggFunc,
     IChartService,
@@ -29,6 +27,7 @@ import type {
 import { BeanStub, _focusInto, _warn } from 'ag-grid-community';
 
 import { VERSION as GRID_VERSION } from '../version';
+import type { AgChartsExports } from './agChartsExports';
 import type { GridChartParams } from './chartComp/gridChartComp';
 import { GridChartComp } from './chartComp/gridChartComp';
 import { ChartParamsValidator } from './chartComp/utils/chartParamsValidator';
@@ -57,13 +56,13 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     beanName = 'chartSvc' as const;
 
     private visibleCols: VisibleColsService;
+    private agChartsExports: AgChartsExports;
     private rangeSvc?: IRangeService;
-    private environment: Environment;
 
     public wireBeans(beans: BeanCollection): void {
         this.visibleCols = beans.visibleCols;
         this.rangeSvc = beans.rangeSvc;
-        this.environment = beans.environment;
+        this.agChartsExports = beans.agChartsExports as AgChartsExports;
     }
 
     // we destroy all charts bound to this grid when grid is destroyed. activeCharts contains all charts, including
@@ -76,7 +75,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
         lastSelectedChartId: '',
     };
 
-    public isEnterprise = () => _ModuleSupport.enterpriseModule.isEnterprise;
+    public isEnterprise = () => this.agChartsExports.isEnterprise;
 
     public updateChart(params: UpdateChartParams): void {
         if (this.activeChartComps.size === 0) {
@@ -254,7 +253,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     }
 
     private createChart(params: CommonCreateChartParams): ChartRef | undefined {
-        const validationResult = ChartParamsValidator.validateCreateParams(params);
+        const validationResult = ChartParamsValidator.validateCreateParams(params, this.agChartsExports.isEnterprise);
         if (!validationResult) {
             return undefined;
         }

@@ -8,13 +8,13 @@ import type {
     ITextFilterParams,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import { CustomNumberFilter } from './custom-number-filter_typescript';
 import type { CustomFloatingParams } from './number-floating-filter_typescript';
 import { NumberFloatingFilter } from './number-floating-filter_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     {

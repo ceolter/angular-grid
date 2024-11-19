@@ -1,6 +1,13 @@
 @use 'design-system' as *;
 
-:global(#heroGrid.ag-theme-quartz-dark) {
+:global(#heroGrid) {
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-md);
+    max-width: 1000px;
+    background-color: var(--color-bg-primary);
+}
+
+:global(#heroGrid.ag-theme-quartz) {
     position: relative;
     overflow: hidden;
 
@@ -19,7 +26,7 @@
     }
 }
 
-:global(#heroGrid.ag-theme-quartz-dark .ag-root-wrapper) {
+:global(#heroGrid.ag-theme-quartz .ag-root-wrapper) {
     --ag-row-height: 48px;
     --ag-header-height: 30px;
 

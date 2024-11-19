@@ -1,9 +1,7 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import { _getWindow } from '../gridOptionsUtils';
-import type { PaginationService } from '../pagination/paginationService';
 import { _warn } from '../validation/logging';
 
 interface TaskItem {
@@ -32,14 +30,6 @@ export function _requestAnimationFrame(beans: BeanCollection, callback: any) {
 export class AnimationFrameService extends BeanStub implements NamedBean {
     beanName = 'animationFrameSvc' as const;
 
-    private ctrlsSvc: CtrlsService;
-    private pagination?: PaginationService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.pagination = beans.pagination;
-    }
-
     // p1 and p2 are create tasks are to do with row and cell creation.
     // for them we want to execute according to row order, so we use
     // TaskItem so we know what index the item is for.
@@ -51,7 +41,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
     // important.
     private destroyTasks: (() => void)[] = [];
     private ticking = false;
-    private useAnimationFrame: boolean;
+    public active: boolean;
 
     // we need to know direction of scroll, to build up rows in the direction of
     // the scroll. eg if user scrolls down, we extend the rows by building down.
@@ -63,11 +53,12 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
     private cancelledTasks = new Set();
 
     public setScrollTop(scrollTop: number): void {
-        const isPaginationActive = this.gos.get('pagination');
+        const { gos, pagination } = this.beans;
+        const isPaginationActive = gos.get('pagination');
         this.scrollGoingDown = scrollTop >= this.lastScrollTop;
 
         if (isPaginationActive && scrollTop === 0) {
-            const currentPage = this.pagination?.getCurrentPage() ?? 0;
+            const currentPage = pagination?.getCurrentPage() ?? 0;
             if (currentPage !== this.lastPage) {
                 this.lastPage = currentPage;
                 this.scrollGoingDown = true;
@@ -78,11 +69,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
     }
 
     public postConstruct(): void {
-        this.useAnimationFrame = !this.gos.get('suppressAnimationFrame');
-    }
-
-    public isOn(): boolean {
-        return this.useAnimationFrame;
+        this.active = !this.gos.get('suppressAnimationFrame');
     }
 
     // this method is for our AG Grid sanity only - if animation frames are turned off,
@@ -90,7 +77,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
     // frames. this stops bugs - where some code is asking for a frame to be executed
     // when it should not.
     private verifyAnimationFrameOn(methodName: string): void {
-        if (this.useAnimationFrame === false) {
+        if (this.active === false) {
             _warn(92, { methodName });
         }
     }
@@ -149,7 +136,7 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         // 16ms is 60 fps
         const noMaxMillis = millis <= 0;
 
-        const scrollFeature = this.ctrlsSvc.getScrollFeature();
+        const scrollFeature = this.beans.ctrlsSvc.getScrollFeature();
 
         while (noMaxMillis || duration < millis) {
             const gridBodyDidSomething = scrollFeature.scrollGridIfNeeded();
@@ -180,23 +167,19 @@ export class AnimationFrameService extends BeanStub implements NamedBean {
         if (p1Tasks.length || p2Tasks.length || destroyTasks.length) {
             this.requestFrame();
         } else {
-            this.stopTicking();
+            this.ticking = false;
         }
     }
 
-    private stopTicking(): void {
-        this.ticking = false;
-    }
-
     public flushAllFrames(): void {
-        if (!this.useAnimationFrame) {
+        if (!this.active) {
             return;
         }
         this.executeFrame(-1);
     }
 
     public schedule(): void {
-        if (!this.useAnimationFrame) {
+        if (!this.active) {
             return;
         }
         if (!this.ticking) {

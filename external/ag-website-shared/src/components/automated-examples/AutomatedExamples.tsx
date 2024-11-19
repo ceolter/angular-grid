@@ -1,6 +1,7 @@
 import { createAutomatedExampleManager } from '@ag-website-shared/components/automated-examples/lib/createAutomatedExampleManager';
+import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import styles from '@pages-styles/homepage.module.scss';
-import classNames from 'classnames';
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { useEffect, useMemo, useState } from 'react';
 import type { FunctionComponent } from 'react';
 
@@ -34,8 +35,14 @@ export const AutomatedExamples: FunctionComponent = () => {
 
     return (
         <>
-            <section className={styles.automatedRowGroupingOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+            <LandingPageSection
+                tag="Performance And Speed First"
+                heading="The Fastest Data Grid In The World"
+                subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
+                ctaTitle="Build your first Grid"
+                ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
+            >
+                <section className={styles.automatedRowGroupingOuter}>
                     <div className={styles.automatedRowGrouping}>
                         <AutomatedRowGrouping
                             automatedExampleManager={automatedExampleManager}
@@ -45,27 +52,27 @@ export const AutomatedExamples: FunctionComponent = () => {
                             darkMode={true}
                         />
                     </div>
-                </div>
-            </section>
+                </section>
+            </LandingPageSection>
 
-            <section className={styles.automatedIntegratedChartsOuter}>
-                <div className={classNames('layout-max-width-small', styles.homepageExample)}>
+            <LandingPageSection
+                tag="Fully Integrated Charting"
+                heading="Integrated Charts, Powered by AG Charts"
+                subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
+                ctaTitle="Get started with Integrated Charts"
+                ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
+            >
+                <section className={styles.automatedIntegratedChartsOuter}>
                     <div className={styles.automatedIntegratedCharts}>
                         <AutomatedIntegratedCharts
                             automatedExampleManager={automatedExampleManager}
                             useStaticData={isCI}
                             runOnce={runOnce}
                             visibilityThreshold={0.8}
-                        >
-                            <h2 className="text-3xl">Fully Integrated Charting</h2>
-                            <p className="text-xl">
-                                With a complete suite of integrated charting tools, your users can visualise their data
-                                any way they choose.
-                            </p>
-                        </AutomatedIntegratedCharts>
+                        />
                     </div>
-                </div>
-            </section>
+                </section>
+            </LandingPageSection>
         </>
     );
 };

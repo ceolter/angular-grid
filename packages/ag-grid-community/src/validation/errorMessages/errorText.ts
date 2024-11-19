@@ -1,19 +1,19 @@
 import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
-import type { EnterpriseModuleName, ModuleName } from '../../interfaces/iModule';
+import type { EnterpriseModuleName, ModuleName, ValidationModuleName } from '../../interfaces/iModule';
 import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
+import { resolveModuleNames } from '../resolvableModuleNames';
 
-export const moduleImportMsg = (moduleName: ModuleName | ModuleName[]) => {
-    const moduleNames = Array.isArray(moduleName) ? moduleName : [moduleName];
+export const moduleImportMsg = (moduleNames: ModuleName[]) => {
     const imports = moduleNames
         .map(
-            (modName) =>
-                `import { ${modName} } from '${ENTERPRISE_MODULE_NAMES[modName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
+            (moduleName) =>
+                `import { ${moduleName} } from '${ENTERPRISE_MODULE_NAMES[moduleName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
         )
         .join(' \n');
     return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
@@ -24,19 +24,33 @@ const missingModule = ({
     moduleName,
     gridScoped,
     gridId,
+    rowModelType,
     additionalText,
 }: {
     reasonOrId: string | keyof MissingModuleErrors;
-    moduleName: ModuleName | ModuleName[];
+    moduleName: ValidationModuleName | ValidationModuleName[];
     gridScoped: boolean;
     gridId: string;
+    rowModelType: RowModelType;
     additionalText?: string;
 }) => {
+    const resolvedModuleNames = resolveModuleNames(moduleName, rowModelType);
     const reason = typeof reasonOrId === 'string' ? reasonOrId : MISSING_MODULE_REASONS[reasonOrId];
     return (
-        `Unable to use ${reason} as ${Array.isArray(moduleName) ? 'one of ' + moduleName.join(', ') : moduleName} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
-${moduleImportMsg(moduleName)}` + (additionalText ? ` \n\n${additionalText}` : '')
+        `Unable to use ${reason} as ${resolvedModuleNames.length > 1 ? 'one of ' + resolvedModuleNames.join(', ') : resolvedModuleNames[0]} is not registered${gridScoped ? ' for gridId: ' + gridId : ''}. Check if you have registered the module:
+${moduleImportMsg(resolvedModuleNames)}` + (additionalText ? ` \n\n${additionalText}` : '')
     );
+};
+
+const missingChartsWithModule = (gridModule: 'IntegratedChartsModule' | 'SparklinesModule') => {
+    return `${gridModule} must be initialised with an AG Charts module. One of 'AgChartsCommunityModule' / 'AgChartsEnterpriseModule'.
+
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import { ModuleRegistry } from 'ag-grid-community';
+import { ${gridModule} } from 'ag-grid-enterprise';
+    
+ModuleRegistry.registerModules([${gridModule}.with(AgChartsEnterpriseModule)]);
+    ` as const;
 };
 
 const clipboardApiError = (method: string) =>
@@ -289,7 +303,8 @@ export const AG_GRID_ERRORS = {
     105: ({ e }: { e: any }) => [`chart rendering failed`, e] as const,
     106: () =>
         'Invalid mixing of Theming API and CSS File Themes in the same page. A Theming API theme has been provided to the `theme` grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page.' as const,
-    107: ({ key, value }: { key: string; value: string }) => `Invalid value for param ${key} - ${value}` as const,
+    107: ({ key, value }: { key: string; value: unknown }) =>
+        `Invalid value for theme param ${key} - ${value}` as const,
     108: ({ e }: { e: any }) => ['chart update failed', e] as const,
     109: ({ aggFuncOrString }: { aggFuncOrString: any }) =>
         `unrecognised aggregation function ${aggFuncOrString}` as const,
@@ -532,7 +547,9 @@ export const AG_GRID_ERRORS = {
     255: ({ point }: { point: number }) =>
         `Lone surrogate U+${point.toString(16).toUpperCase()} is not a scalar value` as const,
     256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
-} as const;
+    257: () => missingChartsWithModule('IntegratedChartsModule'),
+    258: () => missingChartsWithModule('SparklinesModule'),
+};
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
 export type ErrorId = keyof ErrorMap;
@@ -556,17 +573,7 @@ export function getError<TId extends ErrorId, TParams extends GetErrorParams<TId
 
 export const MISSING_MODULE_REASONS = {
     1: 'Charting Aggregation',
-    2: 'the Context Menu key "pivotChart"',
-    3: 'the Context Menu key "chartRange"',
-    4: 'Aggregation from Menu',
-    5: 'Copy from Menu',
-    6: 'Copy with Headers from Menu',
-    7: 'Copy with Group Headers from Menu',
-    8: 'Cut from Menu',
-    9: 'Paste from Clipboard',
-    10: 'pivotResultFields',
-    11: 'Column Tool Panel',
-    12: 'Filters Tool Panel',
+    2: 'pivotResultFields',
 } as const;
 
 export type MissingModuleErrors = typeof MISSING_MODULE_REASONS;

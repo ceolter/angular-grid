@@ -11,6 +11,7 @@ import {
     _setDisplayed,
 } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../agChartsExports';
 import type { ChartController } from '../../chartController';
 import { isStockTheme } from '../../chartProxies/chartTheme';
 import { MiniChartsContainer } from './miniChartsContainer';
@@ -110,7 +111,7 @@ export class ChartSettingsPanel extends Component {
             const isActivePalette = this.activePaletteIndex === index;
             const { fills = [], strokes = [] } = palette;
             const themeName = themes[index];
-            const isCustomTheme = !isStockTheme(themeName);
+            const isCustomTheme = !isStockTheme(themeName, (this.beans.agChartsExports as AgChartsExports)._Theme);
             const miniChartsContainer = this.createBean(
                 new MiniChartsContainer(
                     this.chartController,

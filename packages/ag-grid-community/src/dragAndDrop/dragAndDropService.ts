@@ -199,20 +199,20 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     public removeDragSource(dragSource: DragSource): void {
-        const sourceAndParams = this.dragSourceAndParamsList.find((item) => item.dragSource === dragSource);
+        const { dragSourceAndParamsList, dragSvc } = this;
+        const sourceAndParams = dragSourceAndParamsList.find((item) => item.dragSource === dragSource);
 
         if (sourceAndParams) {
-            this.dragSvc.removeDragSource(sourceAndParams.params);
-            _removeFromArray(this.dragSourceAndParamsList, sourceAndParams);
+            dragSvc.removeDragSource(sourceAndParams.params);
+            _removeFromArray(dragSourceAndParamsList, sourceAndParams);
         }
     }
 
     public override destroy(): void {
-        this.dragSourceAndParamsList.forEach((sourceAndParams) =>
-            this.dragSvc.removeDragSource(sourceAndParams.params)
-        );
-        this.dragSourceAndParamsList.length = 0;
-        this.dropTargets.length = 0;
+        const { dragSourceAndParamsList, dragSvc, dropTargets } = this;
+        dragSourceAndParamsList.forEach((sourceAndParams) => dragSvc.removeDragSource(sourceAndParams.params));
+        dragSourceAndParamsList.length = 0;
+        dropTargets.length = 0;
         this.clearDragAndDropProperties();
         super.destroy();
     }
@@ -227,29 +227,31 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         this.dragging = true;
         this.dragSource = dragSource;
         this.eventLastTime = mouseEvent;
-        this.dragItem = this.dragSource.getDragItem();
+        this.dragItem = dragSource.getDragItem();
 
-        this.dragSource.onDragStarted?.();
+        dragSource.onDragStarted?.();
         this.createDragAndDropImageComponent();
     }
 
     private onDragStop(mouseEvent: MouseEvent): void {
         this.dragSource?.onDragStopped?.();
 
-        if (this.lastDropTarget?.onDragStop) {
-            const draggingEvent = this.createDropTargetEvent(this.lastDropTarget, mouseEvent, null, null, false);
-            this.lastDropTarget.onDragStop(draggingEvent);
+        const { lastDropTarget } = this;
+        if (lastDropTarget?.onDragStop) {
+            const draggingEvent = this.createDropTargetEvent(lastDropTarget, mouseEvent, null, null, false);
+            lastDropTarget.onDragStop(draggingEvent);
         }
 
         this.clearDragAndDropProperties();
     }
 
     private onDragCancel(): void {
-        this.dragSource?.onDragCancelled?.();
+        const { dragSource, lastDropTarget } = this;
+        dragSource?.onDragCancelled?.();
 
-        if (this.lastDropTarget?.onDragCancel) {
-            this.lastDropTarget.onDragCancel(
-                this.createDropTargetEvent(this.lastDropTarget, this.eventLastTime!, null, null, false)
+        if (lastDropTarget?.onDragCancel) {
+            lastDropTarget.onDragCancel(
+                this.createDropTargetEvent(lastDropTarget, this.eventLastTime!, null, null, false)
             );
         }
         this.clearDragAndDropProperties();
@@ -275,19 +277,21 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         const validDropTargets = this.dropTargets.filter((target) => this.isMouseOnDropTarget(mouseEvent, target));
         const dropTarget: DropTarget | null = this.findCurrentDropTarget(mouseEvent, validDropTargets);
 
-        if (dropTarget !== this.lastDropTarget) {
+        const { lastDropTarget, dragSource, dragAndDropImageComp, dragItem } = this;
+
+        if (dropTarget !== lastDropTarget) {
             this.leaveLastTargetIfExists(mouseEvent, hDirection, vDirection, fromNudge);
 
-            if (this.lastDropTarget !== null && dropTarget === null) {
-                this.dragSource?.onGridExit?.(this.dragItem);
+            if (lastDropTarget !== null && dropTarget === null) {
+                dragSource?.onGridExit?.(dragItem);
             }
-            if (this.lastDropTarget === null && dropTarget !== null) {
-                this.dragSource?.onGridEnter?.(this.dragItem);
+            if (lastDropTarget === null && dropTarget !== null) {
+                dragSource?.onGridEnter?.(dragItem);
             }
             this.enterDragTargetIfExists(dropTarget, mouseEvent, hDirection, vDirection, fromNudge);
 
-            if (dropTarget && this.dragAndDropImageComp) {
-                const { comp, promise } = this.dragAndDropImageComp;
+            if (dropTarget && dragAndDropImageComp) {
+                const { comp, promise } = dragAndDropImageComp;
                 if (comp) {
                     comp.setIcon(dropTarget.getIconName ? dropTarget.getIconName() : null, false);
                 } else {
@@ -313,32 +317,32 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         return secondaryContainers ? containers.concat(secondaryContainers) : containers;
     }
 
-    private allContainersIntersect(mouseEvent: MouseEvent, containers: HTMLElement[]) {
-        for (const container of containers) {
-            const { width, height, left, right, top, bottom } = container.getBoundingClientRect();
-
-            // if element is not visible, then width and height are zero
-            if (width === 0 || height === 0) {
-                return false;
-            }
-
-            const horizontalFit = mouseEvent.clientX >= left && mouseEvent.clientX < right;
-            const verticalFit = mouseEvent.clientY >= top && mouseEvent.clientY < bottom;
-
-            if (!horizontalFit || !verticalFit) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // checks if the mouse is on the drop target. it checks eContainer and eSecondaryContainers
     private isMouseOnDropTarget(mouseEvent: MouseEvent, dropTarget: DropTarget): boolean {
         const allContainersFromDropTarget = this.getAllContainersFromDropTarget(dropTarget);
         let mouseOverTarget = false;
 
+        const allContainersIntersect = (mouseEvent: MouseEvent, containers: HTMLElement[]) => {
+            for (const container of containers) {
+                const { width, height, left, right, top, bottom } = container.getBoundingClientRect();
+
+                // if element is not visible, then width and height are zero
+                if (width === 0 || height === 0) {
+                    return false;
+                }
+
+                const horizontalFit = mouseEvent.clientX >= left && mouseEvent.clientX < right;
+                const verticalFit = mouseEvent.clientY >= top && mouseEvent.clientY < bottom;
+
+                if (!horizontalFit || !verticalFit) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
         for (const currentContainers of allContainersFromDropTarget) {
-            if (this.allContainersIntersect(mouseEvent, currentContainers)) {
+            if (allContainersIntersect(mouseEvent, currentContainers)) {
                 mouseOverTarget = true;
                 break;
             }
@@ -412,20 +416,21 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         vDirection: VerticalDirection | null,
         fromNudge: boolean
     ): void {
-        if (!this.lastDropTarget) {
+        const { lastDropTarget } = this;
+        if (!lastDropTarget) {
             return;
         }
 
-        if (this.lastDropTarget.onDragLeave) {
+        if (lastDropTarget.onDragLeave) {
             const dragLeaveEvent = this.createDropTargetEvent(
-                this.lastDropTarget,
+                lastDropTarget,
                 mouseEvent,
                 hDirection,
                 vDirection,
                 fromNudge
             );
 
-            this.lastDropTarget.onDragLeave(dragLeaveEvent);
+            lastDropTarget.onDragLeave(dragLeaveEvent);
         }
 
         const dragAndDropImageComponent = this.getDragAndDropImageComponent();
@@ -462,7 +467,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     public getHorizontalDirection(event: MouseEvent): HorizontalDirection | null {
-        const clientX = this.eventLastTime && this.eventLastTime.clientX;
+        const clientX = this.eventLastTime?.clientX;
         const eClientX = event.clientX;
 
         if (clientX === eClientX) {
@@ -473,7 +478,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     public getVerticalDirection(event: MouseEvent): VerticalDirection | null {
-        const clientY = this.eventLastTime && this.eventLastTime.clientY;
+        const clientY = this.eventLastTime?.clientY;
         const eClientY = event.clientY;
 
         if (clientY === eClientY) {
@@ -493,11 +498,11 @@ export class DragAndDropService extends BeanStub implements NamedBean {
         // localise x and y to the target
         const dropZoneTarget = dropTarget.getContainer();
         const rect = dropZoneTarget.getBoundingClientRect();
-        const { dragItem, dragSource } = this;
+        const { dragItem, dragSource, gos } = this;
         const x = event.clientX - rect.left;
         const y = event.clientY - rect.top;
 
-        return this.gos.addGridCommonParams({
+        return gos.addGridCommonParams({
             event,
             x,
             y,
@@ -564,13 +569,12 @@ export class DragAndDropService extends BeanStub implements NamedBean {
     }
 
     private removeDragAndDropImageComponent(): void {
-        if (this.dragAndDropImageComp) {
-            const { comp } = this.dragAndDropImageComp;
+        const { dragAndDropImageComp } = this;
+        if (dragAndDropImageComp) {
+            const { comp } = dragAndDropImageComp;
             if (comp) {
                 const eGui = comp.getGui();
-                if (this.dragAndDropImageParent) {
-                    this.dragAndDropImageParent.removeChild(eGui);
-                }
+                this.dragAndDropImageParent?.removeChild(eGui);
                 this.destroyBean(comp);
             }
         }

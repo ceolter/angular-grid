@@ -1,1 +1,3 @@
-export * from './AgGridVue';
+import AgGridVue from './components/AgGridVue.vue';
+
+export { AgGridVue };

@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
-import { EditCoreModule } from 'ag-grid-community';
+import { _EditCoreModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -18,5 +18,5 @@ export const RichSelectModule: _ModuleWithoutApi = {
         // remove for rich select editor pills
         richSelectRemove: 'cancel',
     },
-    dependsOn: [EnterpriseCoreModule, EditCoreModule],
+    dependsOn: [EnterpriseCoreModule, _EditCoreModule],
 };

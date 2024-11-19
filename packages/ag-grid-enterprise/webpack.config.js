@@ -1,15 +1,9 @@
 const { join } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = ({
-    production = false,
-    minify = false,
-    styles = true,
-    ce = false,
-    entry = './src/main-umd-styles.ts',
-}) => {
+module.exports = ({ production = false, minify = false, styles = true, entry = './src/main-umd-styles.ts' }) => {
     styles = styles === 'false' ? false : styles;
-    const filename = `ag-grid-${ce ? 'charts-' : ''}enterprise${minify ? '.min' : ''}${styles ? '' : '.noStyle'}.js`;
+    const filename = `ag-grid-enterprise${minify ? '.min' : ''}${styles ? '' : '.noStyle'}.js`;
 
     console.log(`filename: ${filename}, minify: ${minify}, styles: ${styles}, entry: ${entry}`);
 

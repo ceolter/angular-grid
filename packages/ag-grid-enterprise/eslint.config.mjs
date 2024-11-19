@@ -31,6 +31,17 @@ export default [
             '@typescript-eslint/no-this-alias': 'off',
             '@typescript-eslint/no-for-in-array': 'error',
             'no-restricted-syntax': ['error', 'ForInStatement'],
+            'no-restricted-imports': [
+                'error',
+                {
+                    name: 'ag-charts-community',
+                    message: 'There should be no direct imports of ag-charts-community',
+                },
+                {
+                    name: 'ag-charts-enterprise',
+                    message: 'There should be no direct imports of ag-charts-enterprise',
+                },
+            ],
         },
     },
     {

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useStore } from 'jotai';
 import { type RefObject, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 
-import { colorSchemeLight, themeQuartz } from 'ag-grid-community';
+import { _theming, colorSchemeLight, themeQuartz } from 'ag-grid-community';
 
 import { ResetChangesModal } from '../general/ResetChangesModal';
 import { PresetRender } from './PresetRender';
@@ -16,7 +16,7 @@ export const PresetSelector = memo(() => {
         <Scroller ref={scrollerRef}>
             <Horizontal>
                 {allPresets.map((preset, i) => (
-                    <SelectButton key={i} preset={preset} scrollerRef={scrollerRef} />
+                    <SelectButton key={i} presetClass={`preset-${i}`} preset={preset} scrollerRef={scrollerRef} />
                 ))}
             </Horizontal>
         </Scroller>
@@ -24,19 +24,22 @@ export const PresetSelector = memo(() => {
 });
 
 type SelectButtonProps = {
+    presetClass: string;
     preset: Preset;
     scrollerRef: RefObject<HTMLDivElement>;
 };
 
-const SelectButton = ({ preset, scrollerRef }: SelectButtonProps) => {
+const SelectButton = ({ preset, scrollerRef, presetClass }: SelectButtonProps) => {
     const [showDialog, setShowDialog] = useState(false);
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const styleRef = useRef<HTMLStyleElement>(null);
     const [themeClass, setThemeClass] = useState<string | undefined>();
 
     useLayoutEffect(() => {
         const wrapper = wrapperRef.current;
-        if (wrapper) {
-            let theme = themeQuartz.withPart(colorSchemeLight);
+        const style = styleRef.current;
+        if (wrapper && style) {
+            let theme = _theming.asThemeImpl(themeQuartz.withPart(colorSchemeLight));
             if (preset.params) {
                 theme = theme.withParams(preset.params);
             }
@@ -44,12 +47,12 @@ const SelectButton = ({ preset, scrollerRef }: SelectButtonProps) => {
                 theme = theme.withPart(part);
             }
             wrapper.style.setProperty('--page-background-color', preset.pageBackgroundColor);
-            theme.startUse({ container: wrapper, loadThemeGoogleFonts: true });
-            setThemeClass(theme.getCssClass());
+            theme._startUse({ container: wrapper, loadThemeGoogleFonts: true });
+            setThemeClass(theme._getCssClass());
 
-            return () => theme.stopUse();
+            style.textContent = theme._getPerGridCss(presetClass) || '';
         }
-    }, [preset]);
+    }, [preset, presetClass]);
 
     const store = useStore();
     const selectNewPreset = useCallback(() => {
@@ -77,12 +80,15 @@ const SelectButton = ({ preset, scrollerRef }: SelectButtonProps) => {
                     }
                     selectNewPreset();
                 }}
-                className={themeClass}
+                className={`${themeClass} ${presetClass}`}
             >
                 <PresetRender />
             </SelectButtonWrapper>
+            <style ref={styleRef}></style>
 
-            <ResetChangesModal showDialog={showDialog} setShowDialog={setShowDialog} onSuccess={selectNewPreset} />
+            {showDialog && (
+                <ResetChangesModal showDialog={showDialog} setShowDialog={setShowDialog} onSuccess={selectNewPreset} />
+            )}
         </>
     );
 };

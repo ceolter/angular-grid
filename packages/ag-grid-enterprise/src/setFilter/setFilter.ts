@@ -56,8 +56,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     private valueSvc: ValueService;
     private dataTypeSvc?: DataTypeService;
 
-    public override wireBeans(beans: BeanCollection) {
-        super.wireBeans(beans);
+    protected filterType = 'set' as const;
+
+    public wireBeans(beans: BeanCollection) {
         this.rowGroupColsSvc = beans.rowGroupColsSvc;
         this.valueSvc = beans.valueSvc;
         this.dataTypeSvc = beans.dataTypeSvc;
@@ -285,11 +286,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             return null;
         }
 
-        return { values, filterType: this.getFilterType() };
-    }
-
-    public getFilterType(): 'set' {
-        return 'set';
+        return { values, filterType: this.filterType };
     }
 
     public getValueModel(): SetValueModel<V> {

@@ -65,10 +65,11 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     // }
 
     public destroy(): void {
-        for (let i = 0; i < this.destroyFunctions.length; i++) {
-            this.destroyFunctions[i]();
+        const { destroyFunctions } = this;
+        for (let i = 0; i < destroyFunctions.length; i++) {
+            destroyFunctions[i]();
         }
-        this.destroyFunctions.length = 0;
+        destroyFunctions.length = 0;
         this.destroyed = true;
 
         // cast destroy type as we do not want to expose destroy event type to the dispatchLocalEvent method
@@ -96,15 +97,11 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
         listener: AgEventListener<any, any, any>,
         async?: boolean
     ): void {
-        if (this.localEventService) {
-            this.localEventService.removeEventListener(eventType, listener, async);
-        }
+        this.localEventService?.removeEventListener(eventType, listener, async);
     }
 
     public dispatchLocalEvent<TEvent extends AgEvent<TEventType>>(event: TEvent): void {
-        if (this.localEventService) {
-            this.localEventService.dispatchEvent(event);
-        }
+        this.localEventService?.dispatchEvent(event);
     }
 
     public addManagedElementListeners<TEvent extends keyof HTMLElementEventMap>(
@@ -174,9 +171,10 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
         event: K,
         listener: PropertyValueChangedListener<K>
     ): () => null {
-        this.gos.addPropertyEventListener(event, listener);
+        const { gos } = this;
+        gos.addPropertyEventListener(event, listener);
         const destroyFunc: () => null = () => {
-            this.gos.removePropertyEventListener(event, listener);
+            gos.removePropertyEventListener(event, listener);
             return null;
         };
         this.destroyFunctions.push(destroyFunc);

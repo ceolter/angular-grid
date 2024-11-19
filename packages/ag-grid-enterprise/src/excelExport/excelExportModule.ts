@@ -1,5 +1,5 @@
 import type { _ExcelExportGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { SharedExportModule } from 'ag-grid-community';
+import { _SharedExportModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { baseEnterpriseModule } from '../moduleUtils';
@@ -25,5 +25,5 @@ export const ExcelExportModule: _ModuleWithApi<_ExcelExportGridApi> = {
         getMultipleSheetsAsExcel,
         exportMultipleSheetsAsExcel,
     },
-    dependsOn: [SharedExportModule, EnterpriseCoreModule],
+    dependsOn: [_SharedExportModule, EnterpriseCoreModule],
 };

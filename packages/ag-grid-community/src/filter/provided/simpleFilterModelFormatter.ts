@@ -53,6 +53,7 @@ export abstract class SimpleFilterModelFormatter<TValue = any> {
     }
 
     protected formatValue(value?: TValue | null): string {
-        return this.valueFormatter ? this.valueFormatter(value ?? null) ?? '' : String(value);
+        const valueFormatter = this.valueFormatter;
+        return valueFormatter ? valueFormatter(value ?? null) ?? '' : String(value);
     }
 }

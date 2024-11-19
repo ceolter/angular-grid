@@ -4,15 +4,9 @@
   "version": "32.2.0",
   "author": "Sean Landsman <sean@thelandsmans.com>",
   "license": "MIT",
-  "main": "./dist/package/main.cjs.js",
-  "types": "./dist/types/src/main.d.ts",
-  "module": "./dist/package/main.esm.mjs",
-  "exports": {
-    "import": "./dist/package/main.esm.mjs",
-    "require": "./dist/package/main.cjs.js",
-    "types": "./dist/types/src/main.d.ts",
-    "default": "./dist/package/main.cjs.js"
-  },
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ag-grid/ag-grid.git"
@@ -28,27 +22,42 @@
     "vue",
     "vuejs"
   ],
+  "main": "./dist/main.umd.js",
+  "module": "./dist/main.mjs",
+  "typings": "./dist/typings/main.d.ts",
   "scripts": {
     "clean": "rimraf dist lib",
-    "build": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build --target lib src/AgGridVue.ts && npx tsc && rm ./dist/demo.html",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2ex": "vue-cli-service test:e2e"
+    "dev": "vite",
+    "build": "run-p type-check  \"build-only {@}\" --",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build --force --declaration --emitDeclarationOnly",
+    "bootstrap": "YARN_REGISTRY=\"http://52.50.158.57:4873\" yarn"
   },
   "dependencies": {
-    "ag-grid-community": "32.2.0",
-    "vue": "^3.0.0"
+    "ag-grid-community": "32.2.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.19",
-    "@vue/cli-plugin-e2e-cypress": "~5.0.8",
-    "@vue/cli-plugin-typescript": "~5.0.8",
-    "@vue/cli-plugin-unit-jest": "~5.0.8",
-    "@vue/cli-service": "~5.0.8",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/test-utils": "^2.0.0-0",
-    "typescript": "~5.2.2",
-    "vue-jest": "^3.0.7",
-    "rimraf": "3.0.2"
+    "vue": "^3.5.0",
+    "replace-in-file": "4.1.0",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.14.5",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vitejs/plugin-vue-jsx": "^4.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.5.1",
+    "jsdom": "^24.1.0",
+    "npm-run-all2": "^6.2.0",
+    "typescript": "~5.4.0",
+    "vite": "^5.3.1",
+    "vite-plugin-vue-devtools": "^7.3.1",
+    "vitest": "^1.6.0",
+    "vue-tsc": "^2.0.21"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
   },
   "publishConfig": {
     "access": "public"

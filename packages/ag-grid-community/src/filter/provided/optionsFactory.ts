@@ -6,8 +6,8 @@ import type { SimpleFilterParams } from './iSimpleFilter';
 /* Common logic for options, used by both filters and floating filters. */
 export class OptionsFactory {
     protected customFilterOptions: { [name: string]: IFilterOptionDef } = {};
-    protected filterOptions: (IFilterOptionDef | string)[];
-    protected defaultOption: string;
+    public filterOptions: (IFilterOptionDef | string)[];
+    public defaultOption: string;
 
     public init(params: ScalarFilterParams, defaultOptions: string[]): void {
         this.filterOptions = params.filterOptions || defaultOptions;
@@ -15,16 +15,13 @@ export class OptionsFactory {
         this.selectDefaultItem(params);
     }
 
-    public getFilterOptions(): (IFilterOptionDef | string)[] {
-        return this.filterOptions;
-    }
-
     private mapCustomOptions(): void {
-        if (!this.filterOptions) {
+        const { filterOptions } = this;
+        if (!filterOptions) {
             return;
         }
 
-        this.filterOptions.forEach((filterOption) => {
+        filterOptions.forEach((filterOption) => {
             if (typeof filterOption === 'string') {
                 return;
             }
@@ -40,7 +37,7 @@ export class OptionsFactory {
             };
 
             if (!requiredProperties.every(propertyCheck)) {
-                this.filterOptions = this.filterOptions.filter((v) => v === filterOption) || [];
+                this.filterOptions = filterOptions.filter((v) => v === filterOption) || [];
                 return;
             }
 
@@ -49,10 +46,11 @@ export class OptionsFactory {
     }
 
     private selectDefaultItem(params: SimpleFilterParams): void {
+        const { filterOptions } = this;
         if (params.defaultOption) {
             this.defaultOption = params.defaultOption;
-        } else if (this.filterOptions.length >= 1) {
-            const firstFilterOption = this.filterOptions[0];
+        } else if (filterOptions.length >= 1) {
+            const firstFilterOption = filterOptions[0];
 
             if (typeof firstFilterOption === 'string') {
                 this.defaultOption = firstFilterOption;
@@ -66,10 +64,6 @@ export class OptionsFactory {
             //no filter options for filter
             _warn(74);
         }
-    }
-
-    public getDefaultOption(): string {
-        return this.defaultOption;
     }
 
     public getCustomOption(name?: string | null): IFilterOptionDef | undefined {

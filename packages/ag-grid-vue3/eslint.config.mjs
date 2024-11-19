@@ -11,4 +11,7 @@ export default [
             '@typescript-eslint/no-this-alias': 'off',
         },
     },
+    {
+        ignores: ['updateGridAndColumnProperties.cjs', 'eslint.config.mjs', 'vite.config.d.ts'],
+    },
 ];

@@ -7,10 +7,10 @@ import type {
     GridReadyEvent,
     RowDropZoneParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 // Register the required feature modules with the Grid
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 let rowIdSequence = 100;
 

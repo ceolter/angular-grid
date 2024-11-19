@@ -23,7 +23,6 @@
     font-size: inherit;
     font-family: inherit;
     line-height: inherit;
-    cursor: pointer;
     background-color: var(--ag-input-background-color);
     border-radius: var(--ag-input-border-radius);
     color: var(--ag-input-text-color);

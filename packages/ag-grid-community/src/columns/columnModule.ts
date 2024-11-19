@@ -1,4 +1,4 @@
-import type { _ColumnGridApi, _GetColumnDefsApi } from '../api/gridApi';
+import type { _ColumnGridApi } from '../api/gridApi';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { CheckboxCellRendererModule } from '../rendering/cellRenderers/cellRendererModule';
@@ -28,11 +28,9 @@ import {
 import { ColumnDefFactory } from './columnDefFactory';
 import { ColumnFlexService } from './columnFlexService';
 import { DataTypeService } from './dataTypeService';
-import { SelectionColService } from './selectionColService';
 
 /**
- * @feature Cells -> Cell Data Type
- * @colDef cellDataType
+ * @internal
  */
 export const DataTypeModule: _ModuleWithoutApi = {
     ...baseCommunityModule('DataTypeModule'),
@@ -41,28 +39,7 @@ export const DataTypeModule: _ModuleWithoutApi = {
 };
 
 /**
- * @feature Selection -> Row Selection
- * @gridOption rowSelection
- */
-export const SelectionColumnModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SelectionColumnModule'),
-    beans: [SelectionColService],
-};
-
-/**
- * @feature Columns -> Column Definitions
- */
-export const GetColumnDefsApiModule: _ModuleWithApi<_GetColumnDefsApi<any>> = {
-    ...baseCommunityModule('GetColumnDefsApiModule'),
-    beans: [ColumnDefFactory],
-    apiFunctions: {
-        getColumnDefs,
-    },
-};
-
-/**
- * @feature Columns -> Column Sizing
- * @colDef flex
+ * @internal
  */
 export const ColumnFlexModule: _ModuleWithoutApi = {
     ...baseCommunityModule('ColumnFlexModule'),
@@ -74,6 +51,7 @@ export const ColumnFlexModule: _ModuleWithoutApi = {
  */
 export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
     ...baseCommunityModule('ColumnApiModule'),
+    beans: [ColumnDefFactory],
     apiFunctions: {
         getColumnDef,
         getDisplayNameForColumn,
@@ -95,5 +73,6 @@ export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
         getDisplayedRightColumns,
         getAllDisplayedColumns,
         getAllDisplayedVirtualColumns,
+        getColumnDefs,
     },
 };

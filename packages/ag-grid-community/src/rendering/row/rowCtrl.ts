@@ -1322,7 +1322,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
                 // if hover turned off, we don't add the class. we do this here so that if the application
                 // toggles this property mid way, we remove the hover form the last row, but we stop
                 // adding hovers from that point onwards. Also, do not highlight while dragging elements around.
-                if (!beans.dragSvc?.isDragging() && !gos.get('suppressRowHoverHighlight')) {
+                if (!beans.dragSvc?.dragging && !gos.get('suppressRowHoverHighlight')) {
                     element.classList.add('ag-row-hover');
                     rowNode.setHovered(true);
                 }

@@ -13,7 +13,6 @@ import type {
 } from 'ag-grid-community';
 import {
     AgColumn,
-    AgProvidedColumnGroup,
     BeanStub,
     GROUP_AUTO_COLUMN_ID,
     _addColumnDefaultAndTypes,
@@ -112,7 +111,7 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
 
         destroyPrevious();
         const treeDepth = this.colGroupSvc?.findDepth(cols.tree) ?? 0;
-        const tree = this.balanceTreeForAutoCols(list, treeDepth);
+        const tree = this.colGroupSvc?.balanceTreeForAutoCols(list, treeDepth) ?? [];
         this.autoCols = {
             list,
             tree,
@@ -130,37 +129,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         };
 
         updateOrders(putAutoColsFirstInList);
-    }
-
-    /**
-     * Inserts dummy group columns in the hierarchy above auto-generated columns
-     * in order to ensure auto-generated columns are leaf nodes (and therefore are
-     * displayed correctly)
-     */
-    public balanceTreeForAutoCols(autoCols: AgColumn[], depth: number): (AgColumn | AgProvidedColumnGroup)[] {
-        const tree: (AgColumn | AgProvidedColumnGroup)[] = [];
-
-        autoCols.forEach((col) => {
-            // at the end, this will be the top of the tree item.
-            let nextChild: AgColumn | AgProvidedColumnGroup = col;
-
-            for (let i = depth - 1; i >= 0; i--) {
-                const autoGroup = new AgProvidedColumnGroup(null, `FAKE_PATH_${col.getId()}}_${i}`, true, i);
-                this.createBean(autoGroup);
-                autoGroup.setChildren([nextChild]);
-                nextChild.originalParent = autoGroup;
-                nextChild = autoGroup;
-            }
-
-            if (depth === 0) {
-                col.originalParent = null;
-            }
-
-            // at this point, the nextChild is the top most item in the tree
-            tree.push(nextChild);
-        });
-
-        return tree;
     }
 
     public getAutoCol(key: ColKey): AgColumn | null {

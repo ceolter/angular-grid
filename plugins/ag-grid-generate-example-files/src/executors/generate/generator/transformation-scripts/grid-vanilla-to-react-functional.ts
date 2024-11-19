@@ -47,11 +47,11 @@ function getModuleImports(
 
     const moduleImports = bindings.imports.filter((i) => i.imports.find((m) => m.includes('Module')));
     if (moduleImports.length > 0) {
-        addBindingImports(moduleImports, imports, false, true);
+        addBindingImports(moduleImports, imports, true);
     }
     const cssImports = bindings.imports.filter((i) => i.module.includes('.css'));
     if (cssImports.length > 0) {
-        addBindingImports(cssImports, imports, false, true);
+        addBindingImports(cssImports, imports, true);
     }
 
     if (bindings.moduleRegistration) {

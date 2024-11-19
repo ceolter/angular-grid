@@ -8,14 +8,10 @@ import type { ThemeParams } from '@components/theme-builder/model/utils';
 import { type Part, iconSetAlpine, iconSetQuartzLight } from 'ag-grid-community';
 
 import type { Store } from '../../model/store';
-import { gridConfigAtom } from '../grid-config/grid-config-atom';
-import { type ProductionGridConfigField, defaultConfigFields } from '../grid-config/grid-options';
 
 export type Preset = {
     pageBackgroundColor: string;
     params?: Partial<ThemeParams>;
-    additionalGridFeatures?: ProductionGridConfigField[];
-    // e.g. {iconSet: "alpine"} or {iconSet: "quartzBold"}
     parts?: Part<any>[];
 };
 
@@ -76,7 +72,6 @@ export const allPresets: Preset[] = [
             rangeSelectionBorderStyle: 'dashed',
             rangeSelectionBackgroundColor: '#FFFF0020',
         },
-        additionalGridFeatures: ['columnsToolPanel'],
     },
     {
         pageBackgroundColor: '#F6F8F9',
@@ -144,7 +139,7 @@ export const allPresets: Preset[] = [
             headerBackgroundColor: '#F9FAFB',
             headerTextColor: '#919191',
             foregroundColor: 'rgb(46, 55, 66)',
-            fontFamily: { googleFont: 'Arial' },
+            fontFamily: 'Arial',
             spacing: 8,
             wrapperBorderRadius: 0,
             headerFontWeight: 600,
@@ -226,9 +221,6 @@ export const applyPreset = (store: Store, preset: Preset) => {
         }
     }
     store.set(enabledAdvancedParamsAtom, advancedParams);
-
-    const activeConfigFields = Array.from(new Set(defaultConfigFields.concat(preset.additionalGridFeatures || [])));
-    store.set(gridConfigAtom, Object.fromEntries(activeConfigFields.map((field) => [field, true])));
 
     for (const feature of allFeatureModels()) {
         const part = feature.parts.find((partModel) => preset.parts?.includes(partModel.part)) || feature.defaultPart;

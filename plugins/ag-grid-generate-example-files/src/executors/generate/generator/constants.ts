@@ -11,5 +11,3 @@ export const ANGULAR_GENERATED_MAIN_FILE_NAME = 'app.component.ts';
 // whether integrated charts includes ag-charts-enterprise or just ag-charts-community
 // also need to update documentation/ag-grid-docs/src/constants.ts if this value is changed
 export const integratedChartsUsesChartsEnterprise = false;
-export const getEnterprisePackageName = () => `ag-grid-enterprise`;
-/// ${integratedChartsUsesChartsEnterprise ? 'charts-' : ''}

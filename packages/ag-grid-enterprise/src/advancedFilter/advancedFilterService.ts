@@ -226,7 +226,7 @@ export class AdvancedFilterService extends BeanStub implements NamedBean, IAdvan
     }
 
     private onNewColumnsLoaded(event: NewColumnsLoadedEvent): void {
-        if (event.source !== 'gridInitializing' || !this.dataTypeSvc?.isPendingInference()) {
+        if (event.source !== 'gridInitializing' || !this.dataTypeSvc?.isPendingInference) {
             return;
         }
 

@@ -5,13 +5,14 @@ import { FormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
 
     SideBarModule,
@@ -28,7 +29,9 @@ ModuleRegistry.registerModules([
             <p style="flex: 0 1 0%">
                 Theme:
                 <select style="margin-right: 16px" [(ngModel)]="theme">
-                    <option *ngFor="let theme of themes" [ngValue]="theme">{{ theme.id }}</option>
+                    <option *ngFor="let theme of themes" [ngValue]="theme.theme">
+                        {{ theme.label }}
+                    </option>
                 </select>
             </p>
             <div style="flex: 1 1 0%">
@@ -45,7 +48,11 @@ ModuleRegistry.registerModules([
     `,
 })
 export class AppComponent {
-    themes = [themeQuartz, themeBalham, themeAlpine];
+    themes = [
+        { label: 'themeQuartz', theme: themeQuartz },
+        { label: 'themeBalham', theme: themeBalham },
+        { label: 'themeAlpine', theme: themeAlpine },
+    ];
     theme = themeQuartz;
 
     columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];

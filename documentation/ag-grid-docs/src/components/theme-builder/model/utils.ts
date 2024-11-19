@@ -1,11 +1,11 @@
-import type { ParamType, Theme, _asThemeImpl, themeQuartz } from 'ag-grid-community';
+import type { Theme, _theming, themeQuartz } from 'ag-grid-community';
 
 type InferThemeParams<T> = T extends Theme<infer P> ? P : never;
 
 export type ThemeParams = InferThemeParams<typeof themeQuartz>;
 export type ThemeParam = keyof ThemeParams;
 
-export type ThemeImpl = ReturnType<typeof _asThemeImpl>;
+export type ThemeImpl = ReturnType<typeof _theming.asThemeImpl>;
 
 export const mapObjectValues = <T, U>(input: Record<string, T>, mapper: (value: T) => U): Record<string, U> =>
     Object.fromEntries(Object.entries(input).map(([key, value]) => [key, mapper(value)]));
@@ -58,13 +58,10 @@ export const stripFloatingPointErrors = (value: number) => value.toFixed(10).rep
 export const paramToVariableName = (param: string) => `--ag-${kebabCase(param)}`;
 const kebabCase = (str: string) => str.replace(/[A-Z]/g, (m) => `-${m}`).toLowerCase();
 
-export const cssValueIsValid = (value: string, type: ParamType): boolean => reinterpretCSSValue(value, type) != null;
+export const cssValueIsValid = (value: string, type: _theming.ParamType): boolean =>
+    reinterpretCSSValue(value, type) != null;
 
-export const setCurrentThemeCssClass = (themeClass: string) => {
-    getReinterpretationElement().className = themeClass;
-};
-
-export const reinterpretCSSValue = (value: string, type: ParamType): string | null => {
+export const reinterpretCSSValue = (value: string, type: _theming.ParamType): string | null => {
     value = value.trim();
     if (value === '') return '';
     const reinterpretationElement = getReinterpretationElement();
@@ -86,6 +83,7 @@ let _reinterpretationElement: HTMLElement | null = null;
 const getReinterpretationElement = () => {
     if (!_reinterpretationElement) {
         _reinterpretationElement = document.createElement('span');
+        _reinterpretationElement.className = 'apply-current-theme-params';
         document.body.appendChild(_reinterpretationElement);
     }
     return _reinterpretationElement;
@@ -103,4 +101,4 @@ const cssPropertyForParamType = {
     fontFamily: 'fontFamily',
     fontWeight: 'fontWeight',
     duration: 'transitionDuration',
-} satisfies Record<ParamType, keyof CSSStyleDeclaration>;
+} satisfies Record<_theming.ParamType, keyof CSSStyleDeclaration>;

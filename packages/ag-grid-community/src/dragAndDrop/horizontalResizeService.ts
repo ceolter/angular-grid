@@ -1,8 +1,6 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
-import type { DragListenerParams, DragService } from './dragService';
+import type { DragListenerParams } from './dragService';
 
 export interface HorizontalResizeParams {
     eResizeBar: HTMLElement;
@@ -14,14 +12,6 @@ export interface HorizontalResizeParams {
 
 export class HorizontalResizeService extends BeanStub implements NamedBean {
     beanName = 'horizontalResizeSvc' as const;
-
-    private dragSvc: DragService;
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.dragSvc = beans.dragSvc!;
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
 
     private dragStartX: number;
     private resizeAmount: number;
@@ -38,11 +28,13 @@ export class HorizontalResizeService extends BeanStub implements NamedBean {
             stopPropagationForTouch: true,
         };
 
-        this.dragSvc.addDragSource(dragSource);
+        const { dragSvc } = this.beans;
+
+        dragSvc!.addDragSource(dragSource);
 
         // we pass remove func back to the caller, so call can tell us when they
         // are finished, and then we remove the listener from the drag source
-        const finishedWithResizeFunc = () => this.dragSvc.removeDragSource(dragSource);
+        const finishedWithResizeFunc = () => dragSvc!.removeDragSource(dragSource);
 
         return finishedWithResizeFunc;
     }
@@ -57,7 +49,7 @@ export class HorizontalResizeService extends BeanStub implements NamedBean {
     }
 
     private setResizeIcons(): void {
-        const ctrl = this.ctrlsSvc.get('gridCtrl');
+        const ctrl = this.beans.ctrlsSvc.get('gridCtrl');
         // change the body cursor, so when drag moves out of the drag bar, the cursor is still 'resize' (or 'move'
         ctrl.setResizeCursor(true);
         // we don't want text selection outside the grid (otherwise it looks weird as text highlights when we move)
@@ -70,7 +62,7 @@ export class HorizontalResizeService extends BeanStub implements NamedBean {
     }
 
     private resetIcons(): void {
-        const ctrl = this.ctrlsSvc.get('gridCtrl');
+        const ctrl = this.beans.ctrlsSvc.get('gridCtrl');
         ctrl.setResizeCursor(false);
         ctrl.disableUserSelect(false);
     }

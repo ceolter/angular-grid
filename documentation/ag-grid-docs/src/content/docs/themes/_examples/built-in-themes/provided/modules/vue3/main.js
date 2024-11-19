@@ -1,7 +1,7 @@
 import { computed, createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
@@ -11,6 +11,7 @@ import { SideBarModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
 
     SideBarModule,
@@ -26,7 +27,7 @@ const VueExample = {
             <p style="flex: 0 1 0%">
                 Theme:
                 <select style="margin-right: 16px" v-model="theme">
-                    <option v-for="t in themes" :value="t">{{ t.id }}</option>
+                    <option v-for="(theme, id) in themes" :value="theme">{{ id }}</option>
                 </select>
             </p>
             <div style="flex: 1 1 0%">
@@ -48,7 +49,11 @@ const VueExample = {
         const theme = ref(themeQuartz);
         return {
             theme,
-            themes: [themeQuartz, themeBalham, themeAlpine],
+            themes: {
+                themeQuartz,
+                themeBalham,
+                themeAlpine,
+            },
 
             columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
             defaultColDef: {

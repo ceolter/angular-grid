@@ -8,11 +8,11 @@ import type {
     ISetFilter,
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { MenuModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, MenuModule, SetFilterModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, MenuModule, SetFilterModule]);
 
 const dateFilterParams: IDateFilterParams = {
     comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {

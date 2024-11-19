@@ -2,7 +2,7 @@ import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
@@ -10,6 +10,7 @@ import { SideBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
 
     SideBarModule,
@@ -17,7 +18,11 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
 ]);
 
-const themes = [themeQuartz, themeBalham, themeAlpine];
+const themes = [
+    { id: 'themeQuartz', theme: themeQuartz },
+    { id: 'themeBalham', theme: themeBalham },
+    { id: 'themeAlpine', theme: themeAlpine },
+];
 
 const GridExample = () => {
     const [theme, setBaseTheme] = useState(themes[0]);
@@ -29,7 +34,7 @@ const GridExample = () => {
             </p>
             <div style={{ flex: 1 }}>
                 <AgGridReact
-                    theme={theme}
+                    theme={theme.theme}
                     columnDefs={columnDefs}
                     rowData={rowData}
                     defaultColDef={defaultColDef}

@@ -14,24 +14,27 @@ The Integrated Enterprise Charts module, which includes AG Charts Enterprise, ca
 
 ```ts
 // Import minimal modules required for charts
-import { ModuleRegistry } from "@ag-grid-community/core";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { GridChartsModule } from "@ag-grid-enterprise/charts-enterprise";
+import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
+import { IntegratedChartsModule } from "ag-grid-enterprise";
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, GridChartsModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule)
+]);
 ```
 
 {% note %}
-When importing from `@ag-grid-enterprise/charts`, only AG Chart Community features are available.
+AG Charts Community (`AgChartsCommunityModule`) is available from the `ag-charts-community` package.
 {% /note %}
 
 ## Integrated Charts Package
 
-Applications that are not using ES6 Modules and are instead using the bundled version of AG Grid Enterprise
-can install Integrated Enterprise Charts as follows:
+Applications that are not using ES6 Modules and are instead using the UMD bundled version of AG Grid Enterprise and AG Charts Enterprise
+can be setup as follows:
 
 ```bash
-npm install --save ag-grid-charts-enterprise
+npm install --save ag-grid-enterprise ag-charts-enterprise
 ```
 
 Then in your code you can import the charts module as shown below:
@@ -39,16 +42,11 @@ Then in your code you can import the charts module as shown below:
 ```ts
 // import the AG Grid Enteprise package - this includes all enterprise features and performs all 
 // required registration
-import  "ag-grid-charts-enterprise";
+import  "ag-grid-enterprise";
+import  "ag-charts-enterprise";
 
 // rest of your code 
 ```
-
-The `ag-grid-charts-enterprise` package includes AG Grid Enterprise and AG Charts Enterprise.
-
-{% note %}
-The `ag-grid-enterprise` package is limited to AG Chart Community features.
-{% /note %}
 
 ## Next Up
 

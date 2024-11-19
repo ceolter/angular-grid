@@ -7,8 +7,7 @@ import { DEFAULT_TEXT_FILTER_OPTIONS } from './textFilterConstants';
 import { TextFilterModelFormatter } from './textFilterModelFormatter';
 
 export class TextFloatingFilter extends TextInputFloatingFilter<TextFilterModel> {
-    private filterModelFormatter: SimpleFilterModelFormatter;
-
+    protected filterModelFormatter: SimpleFilterModelFormatter;
     public override init(params: ITextFloatingFilterParams): void {
         super.init(params);
         this.filterModelFormatter = new TextFilterModelFormatter(
@@ -22,12 +21,8 @@ export class TextFloatingFilter extends TextInputFloatingFilter<TextFilterModel>
         this.filterModelFormatter.updateParams({ optionsFactory: this.optionsFactory });
     }
 
-    protected getDefaultFilterOptions(): string[] {
+    protected getDefaultOptions(): string[] {
         return DEFAULT_TEXT_FILTER_OPTIONS;
-    }
-
-    protected getFilterModelFormatter(): SimpleFilterModelFormatter {
-        return this.filterModelFormatter;
     }
 
     protected createFloatingFilterInputService(): FloatingFilterInputService {

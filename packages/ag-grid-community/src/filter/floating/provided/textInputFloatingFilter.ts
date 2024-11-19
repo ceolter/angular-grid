@@ -17,7 +17,7 @@ import { SimpleFloatingFilter } from './simpleFloatingFilter';
 type ModelUnion = TextFilterModel | NumberFilterModel;
 export abstract class TextInputFloatingFilter<M extends ModelUnion> extends SimpleFloatingFilter {
     private readonly eFloatingFilterInputContainer: HTMLElement = RefPlaceholder;
-    private floatingFilterInputService: FloatingFilterInputService;
+    private inputSvc: FloatingFilterInputService;
 
     protected params: ITextInputFloatingFilterParams;
 
@@ -32,13 +32,10 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
             <div class="ag-floating-filter-input" role="presentation" data-ref="eFloatingFilterInputContainer"></div>
         `);
     }
-
-    protected override getDefaultDebounceMs(): number {
-        return 500;
-    }
+    protected override defaultDebounceMs: number = 500;
 
     public onParentModelChanged(model: M, event: FilterChangedEvent): void {
-        if (this.isEventFromFloatingFilter(event) || this.isEventFromDataChange(event)) {
+        if (event?.afterFloatingFilter || event?.afterDataChange) {
             // if the floating filter triggered the change, it is already in sync.
             // Data changes also do not affect provided text floating filters
             return;
@@ -46,7 +43,7 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
 
         this.setLastTypeFromModel(model);
         this.setEditable(this.canWeEditAfterModelFromParentFilter(model));
-        this.floatingFilterInputService.setValue(this.getFilterModelFormatter().getModelAsString(model));
+        this.inputSvc.setValue(this.filterModelFormatter.getModelAsString(model));
     }
 
     public override init(params: ITextInputFloatingFilterParams): void {
@@ -56,30 +53,32 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
     }
 
     private setupFloatingFilterInputService(params: ITextInputFloatingFilterParams): void {
-        this.floatingFilterInputService = this.createFloatingFilterInputService(params);
-        this.floatingFilterInputService.setupGui(this.eFloatingFilterInputContainer);
+        this.inputSvc = this.createFloatingFilterInputService(params);
+        this.inputSvc.setupGui(this.eFloatingFilterInputContainer);
     }
 
     private setTextInputParams(params: ITextInputFloatingFilterParams): void {
         this.params = params;
 
         const autoComplete = params.browserAutoComplete ?? false;
-        this.floatingFilterInputService.setParams({
+        const { inputSvc, defaultDebounceMs, readOnly } = this;
+
+        inputSvc.setParams({
             ariaLabel: this.getAriaLabel(params),
             autoComplete,
         });
 
-        this.applyActive = isUseApplyButton(this.params.filterParams);
+        this.applyActive = isUseApplyButton(params.filterParams);
 
-        if (!this.isReadOnly()) {
-            const debounceMs = getDebounceMs(this.params.filterParams, this.getDefaultDebounceMs());
+        if (!readOnly) {
+            const debounceMs = getDebounceMs(params.filterParams, defaultDebounceMs);
             const toDebounce: (e: KeyboardEvent) => void = _debounce(
                 this,
                 this.syncUpWithParentFilter.bind(this),
                 debounceMs
             );
 
-            this.floatingFilterInputService.setValueChangedListener(toDebounce);
+            inputSvc.setValueChangedListener(toDebounce);
         }
     }
 
@@ -89,11 +88,12 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
     }
 
     protected recreateFloatingFilterInputService(params: ITextInputFloatingFilterParams): void {
-        const value = this.floatingFilterInputService.getValue();
+        const { inputSvc } = this;
+        const value = inputSvc.getValue();
         _clearElement(this.eFloatingFilterInputContainer);
-        this.destroyBean(this.floatingFilterInputService);
+        this.destroyBean(inputSvc);
         this.setupFloatingFilterInputService(params);
-        this.floatingFilterInputService.setValue(value, true);
+        inputSvc.setValue(value, true);
     }
 
     private syncUpWithParentFilter(e: KeyboardEvent): void {
@@ -103,22 +103,21 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
             return;
         }
 
-        let value = this.floatingFilterInputService.getValue();
+        const { inputSvc, params } = this;
+        let value = inputSvc.getValue();
 
-        if ((this.params.filterParams as TextFilterParams).trimInput) {
+        if ((params.filterParams as TextFilterParams).trimInput) {
             value = trimInputForFilter(value);
-            this.floatingFilterInputService.setValue(value, true); // ensure visible value is trimmed
+            inputSvc.setValue(value, true); // ensure visible value is trimmed
         }
 
-        this.params.parentFilterInstance((filterInstance) => {
-            if (filterInstance) {
-                // NumberFilter is typed as number, but actually receives string values
-                filterInstance.onFloatingFilterChanged(this.getLastType() || null, (value as never) || null);
-            }
+        params.parentFilterInstance((filterInstance) => {
+            // NumberFilter is typed as number, but actually receives string values
+            filterInstance?.onFloatingFilterChanged(this.lastType || null, (value as never) || null);
         });
     }
 
     protected setEditable(editable: boolean): void {
-        this.floatingFilterInputService.setEditable(editable);
+        this.inputSvc.setEditable(editable);
     }
 }

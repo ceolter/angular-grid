@@ -1,4 +1,5 @@
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
     GridApi,
     GridOptions,
@@ -9,6 +10,7 @@ import {
 import { ColumnsToolPanelModule, MenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     MenuModule,

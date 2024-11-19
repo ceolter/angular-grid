@@ -12,7 +12,7 @@
         "production",
         "!{projectRoot}/vitest.config.mjs",
         "{workspaceRoot}/external/ag-website-shared/**",
-        { "externalDependencies": ["ag-charts-community", "ag-charts-enterprise"] },
+        "charts",
         { "env": "PUBLIC_PACKAGE_VERSION" }
       ],
       "cache": true,

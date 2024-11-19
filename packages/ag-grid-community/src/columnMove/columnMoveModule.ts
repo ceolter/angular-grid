@@ -1,8 +1,9 @@
 import type { _ColumnMoveApi } from '../api/gridApi';
-import { DragAndDropModule } from '../dragAndDrop/dragModule';
+import { SharedDragAndDropModule } from '../dragAndDrop/dragModule';
 import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { columnMovingCSS } from './column-moving.css-GENERATED';
+import { ColumnAnimationService } from './columnAnimationService';
 import { moveColumnByIndex, moveColumns } from './columnMoveApi';
 import { ColumnMoveService } from './columnMoveService';
 
@@ -11,11 +12,11 @@ import { ColumnMoveService } from './columnMoveService';
  */
 export const ColumnMoveModule: _ModuleWithApi<_ColumnMoveApi> = {
     ...baseCommunityModule('ColumnMoveModule'),
-    beans: [ColumnMoveService],
+    beans: [ColumnMoveService, ColumnAnimationService],
     apiFunctions: {
         moveColumnByIndex,
         moveColumns,
     },
-    dependsOn: [DragAndDropModule],
+    dependsOn: [SharedDragAndDropModule],
     css: [columnMovingCSS],
 };

@@ -5,7 +5,7 @@ import { _error } from '../validation/logging';
 export class ExpressionService extends BeanStub implements NamedBean {
     beanName = 'expressionSvc' as const;
 
-    private expressionToFunctionCache = {} as any;
+    private cache = {} as any;
 
     public evaluate(expression: string | undefined, params: any): any {
         if (typeof expression === 'string') {
@@ -46,9 +46,10 @@ export class ExpressionService extends BeanStub implements NamedBean {
     }
 
     private createExpressionFunction(expression: any) {
+        const expressionToFunctionCache = this.cache;
         // check cache first
-        if (this.expressionToFunctionCache[expression]) {
-            return this.expressionToFunctionCache[expression];
+        if (expressionToFunctionCache[expression]) {
+            return expressionToFunctionCache[expression];
         }
         // if not found in cache, return the function
         const functionBody = this.createFunctionBody(expression);
@@ -58,7 +59,7 @@ export class ExpressionService extends BeanStub implements NamedBean {
         );
 
         // store in cache
-        this.expressionToFunctionCache[expression] = theFunction;
+        expressionToFunctionCache[expression] = theFunction;
 
         return theFunction;
     }

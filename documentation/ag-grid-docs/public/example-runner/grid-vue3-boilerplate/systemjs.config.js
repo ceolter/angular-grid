@@ -24,7 +24,7 @@
             tslib: 'npm:tslib@2.3.1/tslib.js',
             typescript: 'npm:typescript@5.4.5/lib/typescript.min.js',
 
-            vue: 'npm:vue@3.2.29/dist/vue.esm-browser.js',
+            vue: 'npm:vue@3.5.0/dist/vue.esm-browser.js',
             '@vue/reactivity': 'npm:@vue/reactivity@3.0.0/dist/reactivity.esm-browser.prod.js',
 
             // vue class component
@@ -58,7 +58,7 @@
                 format: 'cjs',
             },
             'ag-grid-vue3': {
-                main: './dist/package/main.cjs.js',
+                main: './dist/main.umd.js',
                 defaultExtension: 'js',
                 format: 'cjs',
             },
@@ -66,15 +66,11 @@
                 defaultExtension: 'js',
                 format: 'cjs',
             },
-            'ag-charts-community/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
-            'ag-charts-enterprise/modules': {
-                defaultExtension: 'js',
-                format: 'cjs',
-            },
             'ag-charts-community': {
+                defaultExtension: 'js',
+                format: 'cjs',
+            },
+            'ag-charts-enterprise': {
                 defaultExtension: 'js',
                 format: 'cjs',
             },

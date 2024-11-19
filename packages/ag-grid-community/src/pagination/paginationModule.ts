@@ -1,6 +1,7 @@
 import type { _PaginationGridApi } from '../api/gridApi';
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { baseCommunityModule } from '../interfaces/iModule';
+import { PopupModule } from '../widgets/popupModule';
 import {
     paginationGetCurrentPage,
     paginationGetPageSize,
@@ -45,4 +46,5 @@ export const PaginationModule: _ModuleWithApi<_PaginationGridApi> = {
         paginationGoToLastPage,
         paginationGoToPage,
     },
+    dependsOn: [PopupModule],
 };

@@ -1,7 +1,7 @@
 @use 'design-system' as *;
 
 .clipboardButtonOuter {
-    --clipboard-button-bg: transparent;
+    --clipboard-button-bg: var(--color-code-background);
     --clipboard-button-fg: var(--color-fg-tertiary);
 
     display: flex;

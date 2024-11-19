@@ -1,12 +1,19 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
-import { ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ColumnsToolPanelModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
+import { PivotModule } from 'ag-grid-enterprise';
 import { SideBarModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, SideBarModule, ColumnsToolPanelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    PivotModule,
+    SideBarModule,
+    ColumnsToolPanelModule,
+    RowGroupingPanelModule,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

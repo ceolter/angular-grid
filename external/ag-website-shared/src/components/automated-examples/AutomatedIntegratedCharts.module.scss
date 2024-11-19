@@ -92,18 +92,10 @@ $z-index-splash-contents: 10;
     filter: invert(1);
 }
 
-.sectionHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: $spacing-size-12;
-}
-
 .sectionFooter {
     display: none;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     gap: $spacing-size-12;
     margin-top: $spacing-size-12;
 
@@ -113,14 +105,6 @@ $z-index-splash-contents: 10;
 
     button:not([class^='ag-']) {
         margin-left: $spacing-size-2;
-    }
-}
-
-.exploreButtonOuter {
-    margin-left: -80px;
-
-    @media screen and (min-width: $breakpoint-site-header-large) {
-        margin-left: -100px;
     }
 }
 

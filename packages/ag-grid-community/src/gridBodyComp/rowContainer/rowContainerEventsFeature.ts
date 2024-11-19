@@ -59,7 +59,7 @@ export class RowContainerEventsFeature extends BeanStub {
     public postConstruct(): void {
         this.addKeyboardListeners();
         this.addMouseListeners();
-        this.beans.touchSvc?.mockRowContextMenuForIPad(this);
+        this.beans.touchSvc?.mockRowContextMenu(this);
     }
 
     private addKeyboardListeners(): void {

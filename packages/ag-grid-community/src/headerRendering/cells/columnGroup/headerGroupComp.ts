@@ -1,4 +1,3 @@
-import type { ColumnGroupService } from '../../../columns/columnGroups/columnGroupService';
 import type { BeanCollection } from '../../../context/context';
 import type { AgColumnGroup } from '../../../entities/agColumnGroup';
 import type { ColumnGroup } from '../../../interfaces/iColumn';
@@ -36,12 +35,6 @@ export interface IHeaderGroup {}
 export interface IHeaderGroupComp extends IHeaderGroup, IComponent<IHeaderGroupParams> {}
 
 export class HeaderGroupComp extends Component implements IHeaderGroupComp {
-    private colGroupSvc: ColumnGroupService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colGroupSvc = beans.colGroupSvc!;
-    }
-
     private params: IHeaderGroupParams;
 
     private readonly agOpened: HTMLElement = RefPlaceholder;
@@ -67,8 +60,8 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
 
         this.checkWarnings();
 
-        this.setupLabel();
-        this.addGroupExpandIcon();
+        this.setupLabel(params);
+        this.addGroupExpandIcon(params);
         this.setupExpandIcons();
     }
 
@@ -81,24 +74,30 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     }
 
     private setupExpandIcons(): void {
-        this.addInIcon('columnGroupOpened', this.agOpened);
-        this.addInIcon('columnGroupClosed', this.agClosed);
+        const {
+            agOpened,
+            agClosed,
+            params: { columnGroup },
+            beans,
+        } = this;
+        this.addInIcon('columnGroupOpened', agOpened);
+        this.addInIcon('columnGroupClosed', agClosed);
 
         const expandAction = (event: MouseEvent) => {
             if (_isStopPropagationForAgGrid(event)) {
                 return;
             }
 
-            const newExpandedValue = !this.params.columnGroup.isExpanded();
-            this.colGroupSvc.setColumnGroupOpened(
-                (this.params.columnGroup as AgColumnGroup).getProvidedColumnGroup(),
+            const newExpandedValue = !columnGroup.isExpanded();
+            beans.colGroupSvc!.setColumnGroupOpened(
+                (columnGroup as AgColumnGroup).getProvidedColumnGroup(),
                 newExpandedValue,
                 'uiColumnExpanded'
             );
         };
 
-        this.addTouchAndClickListeners(this.agClosed, expandAction);
-        this.addTouchAndClickListeners(this.agOpened, expandAction);
+        this.addTouchAndClickListeners(beans, agClosed, expandAction);
+        this.addTouchAndClickListeners(beans, agOpened, expandAction);
 
         const stopPropagationAction = (event: MouseEvent) => {
             _stopPropagationForAgGrid(event);
@@ -109,14 +108,14 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         // then close again straight away. if we also listened to double click, then the group would open,
         // close, then open, which is not what we want. double click should only action if the user double
         // clicks outside of the icons.
-        this.addManagedElementListeners(this.agClosed, { dblclick: stopPropagationAction });
-        this.addManagedElementListeners(this.agOpened, { dblclick: stopPropagationAction });
+        this.addManagedElementListeners(agClosed, { dblclick: stopPropagationAction });
+        this.addManagedElementListeners(agOpened, { dblclick: stopPropagationAction });
 
         this.addManagedElementListeners(this.getGui(), { dblclick: expandAction });
 
         this.updateIconVisibility();
 
-        const providedColumnGroup = this.params.columnGroup.getProvidedColumnGroup();
+        const providedColumnGroup = columnGroup.getProvidedColumnGroup();
         const updateIcon = this.updateIconVisibility.bind(this);
         this.addManagedListeners(providedColumnGroup, {
             expandedChanged: updateIcon,
@@ -124,20 +123,28 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         });
     }
 
-    private addTouchAndClickListeners(eElement: HTMLElement, action: (event: MouseEvent) => void): void {
-        this.beans.touchSvc?.setupForHeaderGroup(this, eElement, action);
+    private addTouchAndClickListeners(
+        beans: BeanCollection,
+        eElement: HTMLElement,
+        action: (event: MouseEvent) => void
+    ): void {
+        beans.touchSvc?.setupForHeaderGroup(this, eElement, action);
         this.addManagedElementListeners(eElement, { click: action });
     }
 
     private updateIconVisibility(): void {
-        const columnGroup = this.params.columnGroup;
+        const {
+            agOpened,
+            agClosed,
+            params: { columnGroup },
+        } = this;
         if (columnGroup.isExpandable()) {
-            const expanded = this.params.columnGroup.isExpanded();
-            _setDisplayed(this.agOpened, expanded);
-            _setDisplayed(this.agClosed, !expanded);
+            const expanded = columnGroup.isExpanded();
+            _setDisplayed(agOpened, expanded);
+            _setDisplayed(agClosed, !expanded);
         } else {
-            _setDisplayed(this.agOpened, false);
-            _setDisplayed(this.agClosed, false);
+            _setDisplayed(agOpened, false);
+            _setDisplayed(agClosed, false);
         }
     }
 
@@ -148,17 +155,18 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         }
     }
 
-    private addGroupExpandIcon() {
-        if (!this.params.columnGroup.isExpandable()) {
-            _setDisplayed(this.agOpened, false);
-            _setDisplayed(this.agClosed, false);
+    private addGroupExpandIcon(params: IHeaderGroupParams) {
+        if (!params.columnGroup.isExpandable()) {
+            const { agOpened, agClosed } = this;
+            _setDisplayed(agOpened, false);
+            _setDisplayed(agClosed, false);
             return;
         }
     }
 
-    private setupLabel(): void {
+    private setupLabel(params: IHeaderGroupParams): void {
         // no renderer, default text render
-        const { displayName, columnGroup } = this.params;
+        const { displayName, columnGroup } = params;
 
         if (_exists(displayName)) {
             const displayNameSanitised = _escapeString(displayName, true);

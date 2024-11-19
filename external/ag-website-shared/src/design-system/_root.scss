@@ -154,6 +154,7 @@
     --color-bg-code: var(--color-gray-100);
     --color-bg-site-header: var(--color-brand-500);
     --color-bg-mobile-nav: var(--color-bg-site-header); //TODO, review & replace color
+    --color-code-background: color-mix(in srgb, var(--color-bg-secondary), var(--color-bg-primary) 70%);
 
     // Foreground colors
     --color-fg-primary: var(--color-gray-900);

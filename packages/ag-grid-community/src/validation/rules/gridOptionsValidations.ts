@@ -110,6 +110,7 @@ function toConstrainedNum(
  */
 const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
+        alignedGrids: { module: 'AlignedGridsModule' },
         allowContextMenuWithControlKey: { module: 'ContextMenuModule' },
         autoGroupColumnDef: () => COL_DEF_VALIDATORS,
         autoSizePadding: {
@@ -117,6 +118,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
             },
         },
+        autoSizeStrategy: { module: 'ColumnAutoSizeModule' },
         cacheBlockSize: {
             supportedRowModels: ['serverSide', 'infinite'],
             validate({ cacheBlockSize }) {
@@ -129,18 +131,20 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         cellSelection: {
-            module: 'CellSelectionCoreModule',
+            module: 'CellSelectionModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
         columnDefs: () => COL_DEF_VALIDATORS,
+        columnHoverHighlight: { module: 'ColumnHoverModule' },
         datasource: {
             supportedRowModels: ['infinite'],
-            module: 'InfiniteRowModelCoreModule',
+            module: 'InfiniteRowModelModule',
         },
         defaultColDef: () => COL_DEF_VALIDATORS,
         defaultColGroupDef: () => COL_DEF_VALIDATORS,
+        doesExternalFilterPass: { module: 'ExternalFilterModule' },
         domLayout: {
             validate: (options) => {
                 const domLayout = options.domLayout;
@@ -151,8 +155,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
+        editType: {
+            module: 'EditCoreModule',
+        },
         enableAdvancedFilter: { module: 'AdvancedFilterModule' },
-        enableCharts: { module: 'GridChartsModule' },
+        enableCharts: { module: 'IntegratedChartsModule' },
         enableFillHandle: {
             dependencies: {
                 enableRangeSelection: { required: [true] },
@@ -164,13 +171,15 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         enableRangeSelection: {
-            module: 'CellSelectionCoreModule',
+            module: 'CellSelectionModule',
             dependencies: {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
         getMainMenuItems: { module: 'ColumnMenuModule' },
         getContextMenuItems: { module: 'ContextMenuModule' },
+        getLocaleText: { module: 'LocaleModule' },
+        getRowStyle: { module: 'RowStyleModule' },
         groupDefaultExpanded: {
             supportedRowModels: ['clientSide'],
         },
@@ -214,12 +223,18 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         initialGroupOrderComparator: {
             supportedRowModels: ['clientSide'],
         },
+        initialState: { module: 'GridStateModule' },
+        isExternalFilterPresent: { module: 'ExternalFilterModule' },
         keepDetailRowsCount: {
             validate({ keepDetailRowsCount }) {
                 return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
             },
         },
-        masterDetail: { module: 'MasterDetailCoreModule' },
+        localeText: {
+            module: 'LocaleModule',
+        },
+        masterDetail: { module: 'SharedMasterDetailModule' },
+        pagination: { module: 'PaginationModule' },
         paginationPageSize: {
             validate({ paginationPageSize }) {
                 return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
@@ -238,6 +253,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
+        pinnedTopRowData: {
+            module: 'PinnedRowModule',
+        },
+        pinnedBottomRowData: {
+            module: 'PinnedRowModule',
+        },
         pivotMode: {
             dependencies: {
                 treeData: {
@@ -245,9 +266,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                     reason: 'Pivot Mode is not supported with Tree Data.',
                 },
             },
+            module: 'PivotModule',
         },
+        pivotPanelShow: { module: 'RowGroupingPanelModule' },
         quickFilterText: {
             supportedRowModels: ['clientSide'],
+            module: 'QuickFilterModule',
         },
         rowBuffer: {
             validate({ rowBuffer }) {
@@ -262,10 +286,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
+            module: 'RowStyleModule',
         },
+        rowClassRules: { module: 'RowStyleModule' },
         rowData: {
             supportedRowModels: ['clientSide'],
-            module: 'ClientSideRowModelCoreModule',
+            module: 'ClientSideRowModelModule',
         },
         rowDragManaged: {
             supportedRowModels: ['clientSide'],
@@ -277,7 +303,9 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                     required: [false, undefined],
                 },
             },
+            module: 'RowDragModule',
         },
+        rowGroupPanelShow: { module: 'RowGroupingPanelModule' },
         rowSelection: {
             validate({ rowSelection }) {
                 if (rowSelection && typeof rowSelection === 'string') {
@@ -288,6 +316,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
+            module: 'SharedRowSelectionModule',
         },
         rowStyle: {
             validate: (options) => {
@@ -297,11 +326,12 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 }
                 return null;
             },
+            module: 'RowStyleModule',
         },
         selectionColumnDef: () => COL_DEF_VALIDATORS,
         serverSideDatasource: {
             supportedRowModels: ['serverSide'],
-            module: 'ServerSideRowModelCoreModule',
+            module: 'ServerSideRowModelModule',
         },
         serverSideInitialRowCount: {
             supportedRowModels: ['serverSide'],
@@ -331,7 +361,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-        statusBar: { module: 'StatusBarCoreModule' },
+        statusBar: { module: 'StatusBarModule' },
         tooltipHideDelay: {
             validate: (options) => {
                 if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
@@ -350,7 +380,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
-            module: 'TreeDataCoreModule',
+            module: 'SharedTreeDataModule',
             validate: (options) => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
@@ -367,11 +397,13 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         treeDataChildrenField: {
-            module: 'TreeDataCoreModule',
+            module: 'SharedTreeDataModule',
         },
+        undoRedoCellEditing: { module: 'UndoRedoEditModule' },
+        valueCache: { module: 'ValueCacheModule' },
         viewportDatasource: {
             supportedRowModels: ['viewport'],
-            module: 'ViewportRowModelCoreModule',
+            module: 'ViewportRowModelModule',
         },
         viewportRowModelBufferSize: {
             validate({ viewportRowModelBufferSize }) {
@@ -403,5 +435,4 @@ export const GRID_OPTIONS_VALIDATORS: () => OptionsValidator<GridOptions> = () =
     docsUrl: 'grid-options/',
     deprecations: GRID_OPTION_DEPRECATIONS(),
     validations: GRID_OPTION_VALIDATIONS(),
-    mandatoryKeys: new Set(['suppressContextMenu']),
 });

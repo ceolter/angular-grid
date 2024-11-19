@@ -6,6 +6,9 @@
 /.idea/atlassian-ide-plugin.xml
 .vscode
 
+vite.config.ts.timestamp-*.mjs
+vite.config.mts.timestamp-*.mjs
+
 *.tar.gz
 
 .DS_Store
@@ -37,7 +40,6 @@ dist
 
 packages/ag-grid-community/styles/**
 packages/ag-grid-enterprise/styles/**
-packages/ag-grid-charts-enterprise/styles/**
 
 # compiled CSS files
 community-modules/styles/*.css
@@ -51,3 +53,7 @@ community-modules/styles/_css-content.scss
 
 # Astro generated file
 src/env.d.ts
+
+# test results file
+testing/module-size/module-size-results.json
+testing/module-size/src/App_AUTO.tsx

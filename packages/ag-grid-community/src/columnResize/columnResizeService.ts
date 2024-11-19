@@ -1,11 +1,7 @@
 import { dispatchColumnResizedEvent } from '../columns/columnEventUtils';
-import type { ColumnFlexService } from '../columns/columnFlexService';
-import type { ColKey, ColumnModel } from '../columns/columnModel';
-import type { ColumnViewportService } from '../columns/columnViewportService';
-import type { VisibleColsService } from '../columns/visibleColsService';
+import type { ColKey } from '../columns/columnModel';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColumnEventType } from '../events';
@@ -25,18 +21,6 @@ export interface ColumnResizeSet {
 export class ColumnResizeService extends BeanStub implements NamedBean {
     beanName = 'colResize' as const;
 
-    private colModel: ColumnModel;
-    private colViewport: ColumnViewportService;
-    private visibleCols: VisibleColsService;
-    private colFlex?: ColumnFlexService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.colViewport = beans.colViewport;
-        this.visibleCols = beans.visibleCols;
-        this.colFlex = beans.colFlex;
-    }
-
     public setColumnWidths(
         columnWidths: {
             key: ColKey; // @key - the column who's size we want to change
@@ -48,8 +32,10 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
     ): void {
         const sets: ColumnResizeSet[] = [];
 
+        const { colModel, gos, visibleCols } = this.beans;
+
         columnWidths.forEach((columnWidth) => {
-            const col = this.colModel.getColDefCol(columnWidth.key) || this.colModel.getCol(columnWidth.key);
+            const col = colModel.getColDefCol(columnWidth.key) || colModel.getCol(columnWidth.key);
 
             if (!col) {
                 return;
@@ -62,14 +48,14 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
             });
 
             // if user wants to do shift resize by default, then we invert the shift operation
-            const defaultIsShift = this.gos.get('colResizeDefault') === 'shift';
+            const defaultIsShift = gos.get('colResizeDefault') === 'shift';
 
             if (defaultIsShift) {
                 shiftKey = !shiftKey;
             }
 
             if (shiftKey) {
-                const otherCol = this.visibleCols.getColAfter(col);
+                const otherCol = visibleCols.getColAfter(col);
                 if (!otherCol) {
                     return;
                 }
@@ -107,7 +93,7 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
     }): void {
         const { resizeSets, finished, source } = params;
         const passMinMaxCheck =
-            !resizeSets || resizeSets.every((columnResizeSet) => this.checkMinAndMaxWidthsForSet(columnResizeSet));
+            !resizeSets || resizeSets.every((columnResizeSet) => checkMinAndMaxWidthsForSet(columnResizeSet));
 
         if (!passMinMaxCheck) {
             // even though we are not going to resize beyond min/max size, we still need to dispatch event when finished
@@ -221,14 +207,15 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
         let flexedCols: AgColumn[] = [];
 
         if (atLeastOneColChanged) {
+            const { colFlex, visibleCols, colViewport } = this.beans;
             flexedCols =
-                this.colFlex?.refreshFlexedColumns({
+                colFlex?.refreshFlexedColumns({
                     resizingCols: allResizedCols,
                     skipSetLeft: true,
                 }) ?? [];
-            this.visibleCols.setLeftValues(source);
-            this.visibleCols.updateBodyWidths();
-            this.colViewport.checkViewportColumns();
+            visibleCols.setLeftValues(source);
+            visibleCols.updateBodyWidths();
+            colViewport.checkViewportColumns();
         }
 
         // check for change first, to avoid unnecessary firing of events
@@ -275,33 +262,33 @@ export class ColumnResizeService extends BeanStub implements NamedBean {
     ): GroupResizeFeature {
         return new GroupResizeFeature(comp, eResize, pinned, columnGroup);
     }
+}
 
-    private checkMinAndMaxWidthsForSet(columnResizeSet: ColumnResizeSet): boolean {
-        const { columns, width } = columnResizeSet;
+function checkMinAndMaxWidthsForSet(columnResizeSet: ColumnResizeSet): boolean {
+    const { columns, width } = columnResizeSet;
 
-        // every col has a min width, so sum them all up and see if we have enough room
-        // for all the min widths
-        let minWidthAccumulated = 0;
-        let maxWidthAccumulated = 0;
-        let maxWidthActive = true;
+    // every col has a min width, so sum them all up and see if we have enough room
+    // for all the min widths
+    let minWidthAccumulated = 0;
+    let maxWidthAccumulated = 0;
+    let maxWidthActive = true;
 
-        columns.forEach((col) => {
-            const minWidth = col.getMinWidth();
-            minWidthAccumulated += minWidth || 0;
+    columns.forEach((col) => {
+        const minWidth = col.getMinWidth();
+        minWidthAccumulated += minWidth || 0;
 
-            const maxWidth = col.getMaxWidth();
-            if (maxWidth > 0) {
-                maxWidthAccumulated += maxWidth;
-            } else {
-                // if at least one columns has no max width, it means the group of columns
-                // then has no max width, as at least one column can take as much width as possible
-                maxWidthActive = false;
-            }
-        });
+        const maxWidth = col.getMaxWidth();
+        if (maxWidth > 0) {
+            maxWidthAccumulated += maxWidth;
+        } else {
+            // if at least one columns has no max width, it means the group of columns
+            // then has no max width, as at least one column can take as much width as possible
+            maxWidthActive = false;
+        }
+    });
 
-        const minWidthPasses = width >= minWidthAccumulated;
-        const maxWidthPasses = !maxWidthActive || width <= maxWidthAccumulated;
+    const minWidthPasses = width >= minWidthAccumulated;
+    const maxWidthPasses = !maxWidthActive || width <= maxWidthAccumulated;
 
-        return minWidthPasses && maxWidthPasses;
-    }
+    return minWidthPasses && maxWidthPasses;
 }

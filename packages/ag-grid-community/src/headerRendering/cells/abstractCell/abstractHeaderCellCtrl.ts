@@ -70,7 +70,7 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     protected shouldStopEventPropagation(event: KeyboardEvent): boolean {
-        const { headerRowIndex, column } = this.beans.focusSvc.getFocusedHeader()!;
+        const { headerRowIndex, column } = this.beans.focusSvc.focusedHeader!;
 
         const colDef = column.getDefinition();
         const colDefFunc = colDef && colDef.suppressHeaderKeyboardEvent;
@@ -283,10 +283,11 @@ export abstract class AbstractHeaderCellCtrl<
     }
 
     private getResizeDiff(e: KeyboardEvent): number {
-        let isLeft = (e.key === KeyCode.LEFT) !== this.gos.get('enableRtl');
+        const { gos, column } = this;
+        let isLeft = (e.key === KeyCode.LEFT) !== gos.get('enableRtl');
 
-        const pinned = this.column.getPinned();
-        const isRtl = this.gos.get('enableRtl');
+        const pinned = column.getPinned();
+        const isRtl = gos.get('enableRtl');
         if (pinned) {
             if (isRtl !== (pinned === 'right')) {
                 isLeft = !isLeft;
@@ -329,22 +330,24 @@ export abstract class AbstractHeaderCellCtrl<
 
     private addDomData(compBean: BeanStub): void {
         const key = DOM_DATA_KEY_HEADER_CTRL;
-        _setDomData(this.gos, this.eGui, key, this);
-        compBean.addDestroyFunc(() => _setDomData(this.gos, this.eGui, key, null));
+        const { eGui, gos } = this;
+        _setDomData(gos, eGui, key, this);
+        compBean.addDestroyFunc(() => _setDomData(gos, eGui, key, null));
     }
 
     public focus(event?: KeyboardEvent): boolean {
-        if (!this.eGui) {
+        const { eGui } = this;
+        if (!eGui) {
             return false;
         }
 
         this.lastFocusEvent = event || null;
-        this.eGui.focus();
+        eGui.focus();
         return true;
     }
 
     protected focusThis(): void {
-        this.beans.focusSvc.setFocusedHeader(this.rowCtrl.rowIndex, this.column);
+        this.beans.focusSvc.focusedHeader = { headerRowIndex: this.rowCtrl.rowIndex, column: this.column };
     }
 
     protected removeDragSource(): void {
@@ -360,10 +363,10 @@ export abstract class AbstractHeaderCellCtrl<
         column: AgColumn | AgProvidedColumnGroup
     ): void {
         const event = mouseEvent ?? touchEvent!;
-        if (this.gos.get('preventDefaultOnContextMenu')) {
+        const { menuSvc, gos } = this.beans;
+        if (gos.get('preventDefaultOnContextMenu')) {
             event.preventDefault();
         }
-        const { menuSvc } = this.beans;
         if (menuSvc?.isHeaderContextMenuEnabled(column)) {
             menuSvc.showHeaderContextMenu(column, mouseEvent, touchEvent);
         }
@@ -385,15 +388,16 @@ export abstract class AbstractHeaderCellCtrl<
         if (!col.setAutoHeaderHeight(height)) {
             return;
         }
+        const { eventSvc } = this;
         if (col.isColumn) {
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'columnHeaderHeightChanged',
                 column: col,
                 columns: [col],
                 source: 'autosizeColumnHeaderHeight',
             });
         } else {
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'columnGroupHeaderHeightChanged',
                 columnGroup: col,
                 source: 'autosizeColumnGroupHeaderHeight',

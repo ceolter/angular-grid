@@ -133,7 +133,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
         }
         let pending = false;
         return () => {
-            if (!this.animationFrameSvc!.isOn()) {
+            if (!this.animationFrameSvc!.active) {
                 window.setTimeout(func, 0);
                 return;
             }

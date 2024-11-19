@@ -1,4 +1,3 @@
-import type { ColumnAutosizeService } from '../columnAutosize/columnAutosizeService';
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
@@ -15,18 +14,15 @@ import type {
     ValueParserLiteParams,
 } from '../entities/dataType';
 import type { AgGridEvent, ColumnEventType } from '../events';
-import type { FilterManager } from '../filter/filterManager';
+import type { GridOptionsService } from '../gridOptionsService';
 import { _isClientSideRowModel } from '../gridOptionsUtils';
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
-import type { IColsService } from '../interfaces/iColsService';
 import type { ColumnEventName } from '../interfaces/iColumn';
 import type { IEventListener } from '../interfaces/iEventEmitter';
-import type { IRowModel } from '../interfaces/iRowModel';
 import { _parseDateTimeFromString, _serialiseDate } from '../utils/date';
 import { _toStringOrNull } from '../utils/generic';
 import { _getValueUsingField } from '../utils/object';
 import { _warn } from '../validation/logging';
-import type { ValueService } from '../valueService/valueService';
 import { _addColumnDefaultAndTypes } from './columnFactoryUtils';
 import type { ColumnModel } from './columnModel';
 import { _applyColumnState, getColumnStateFromColDef } from './columnStateUtils';
@@ -37,36 +33,25 @@ interface GroupSafeValueFormatter {
     groupSafeValueFormatter?: ValueFormatterFunc;
 }
 
+type DataTypeDefinitions = {
+    [cellDataType: string]: (DataTypeDefinition | CoreDataTypeDefinition) & GroupSafeValueFormatter;
+};
+
 export class DataTypeService extends BeanStub implements NamedBean {
     beanName = 'dataTypeSvc' as const;
 
-    private rowModel: IRowModel;
     private colModel: ColumnModel;
-    private rowGroupColsSvc?: IColsService;
-    private pivotColsSvc?: IColsService;
-    private valueSvc: ValueService;
-    private filterManager?: FilterManager;
-    private colAutosize?: ColumnAutosizeService;
 
     public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
         this.colModel = beans.colModel;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.pivotColsSvc = beans.pivotColsSvc;
-        this.valueSvc = beans.valueSvc;
-        this.filterManager = beans.filterManager;
-        this.colAutosize = beans.colAutosize;
     }
 
-    private dataTypeDefinitions: {
-        [cellDataType: string]: (DataTypeDefinition | CoreDataTypeDefinition) & GroupSafeValueFormatter;
-    } = {};
+    private dataTypeDefinitions: DataTypeDefinitions = {};
     private dataTypeMatchers: { [cellDataType: string]: ((value: any) => boolean) | undefined };
     private formatValueFuncs: { [cellDataType: string]: DataTypeFormatValueFunc };
-    private isWaitingForRowData: boolean = false;
+    public isPendingInference: boolean = false;
     private hasObjectValueParser: boolean;
     private hasObjectValueFormatter: boolean;
-    private groupHideOpenParents: boolean;
     private initialData: any | null | undefined;
     private isColumnTypeOverrideInDataTypeDefinitions: boolean = false;
     // keep track of any column state updates whilst waiting for data types to be inferred
@@ -74,10 +59,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
     private columnStateUpdateListenerDestroyFuncs: (() => void)[] = [];
 
     public postConstruct(): void {
-        this.groupHideOpenParents = this.gos.get('groupHideOpenParents');
-        this.addManagedPropertyListener('groupHideOpenParents', () => {
-            this.groupHideOpenParents = this.gos.get('groupHideOpenParents');
-        });
         this.processDataTypeDefinitions();
 
         this.addManagedPropertyListener('dataTypeDefinitions', (event) => {
@@ -88,8 +69,10 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
     private processDataTypeDefinitions(): void {
         const defaultDataTypes = this.getDefaultDataTypes();
-        this.dataTypeDefinitions = {};
-        this.formatValueFuncs = {};
+        const newDataTypeDefinitions: DataTypeDefinitions = {};
+        this.dataTypeDefinitions = newDataTypeDefinitions;
+        const newFormatValueFuncs: { [cellDataType: string]: DataTypeFormatValueFunc } = {};
+        this.formatValueFuncs = newFormatValueFuncs;
         const generateFormatValueFunc = (
             dataTypeDefinition: (DataTypeDefinition | CoreDataTypeDefinition) & GroupSafeValueFormatter
         ): DataTypeFormatValueFunc => {
@@ -99,19 +82,20 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 if (valueFormatter === dataTypeDefinition.groupSafeValueFormatter) {
                     valueFormatter = dataTypeDefinition.valueFormatter;
                 }
-                return this.valueSvc.formatValue(column as AgColumn, node, value, valueFormatter as any)!;
+                return this.beans.valueSvc.formatValue(column as AgColumn, node, value, valueFormatter as any)!;
             };
         };
         Object.entries(defaultDataTypes).forEach(([cellDataType, dataTypeDefinition]) => {
             const mergedDataTypeDefinition = {
                 ...dataTypeDefinition,
-                groupSafeValueFormatter: this.createGroupSafeValueFormatter(dataTypeDefinition),
+                groupSafeValueFormatter: createGroupSafeValueFormatter(dataTypeDefinition, this.gos),
             };
-            this.dataTypeDefinitions[cellDataType] = mergedDataTypeDefinition;
-            this.formatValueFuncs[cellDataType] = generateFormatValueFunc(mergedDataTypeDefinition);
+            newDataTypeDefinitions[cellDataType] = mergedDataTypeDefinition;
+            newFormatValueFuncs[cellDataType] = generateFormatValueFunc(mergedDataTypeDefinition);
         });
         const dataTypeDefinitions = this.gos.get('dataTypeDefinitions') ?? {};
-        this.dataTypeMatchers = {};
+        const newDataTypeMatchers: { [cellDataType: string]: ((value: any) => boolean) | undefined } = {};
+        this.dataTypeMatchers = newDataTypeMatchers;
 
         Object.entries(dataTypeDefinitions).forEach(([cellDataType, dataTypeDefinition]) => {
             const mergedDataTypeDefinition = this.processDataTypeDefinition(
@@ -121,45 +105,24 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 defaultDataTypes
             );
             if (mergedDataTypeDefinition) {
-                this.dataTypeDefinitions[cellDataType] = mergedDataTypeDefinition;
+                newDataTypeDefinitions[cellDataType] = mergedDataTypeDefinition;
                 if (dataTypeDefinition.dataTypeMatcher) {
-                    this.dataTypeMatchers[cellDataType] = dataTypeDefinition.dataTypeMatcher;
+                    newDataTypeMatchers[cellDataType] = dataTypeDefinition.dataTypeMatcher;
                 }
-                this.formatValueFuncs[cellDataType] = generateFormatValueFunc(mergedDataTypeDefinition);
+                newFormatValueFuncs[cellDataType] = generateFormatValueFunc(mergedDataTypeDefinition);
             }
         });
         this.checkObjectValueHandlers(defaultDataTypes);
 
         ['dateString', 'text', 'number', 'boolean', 'date'].forEach((cellDataType) => {
-            const overriddenDataTypeMatcher = this.dataTypeMatchers[cellDataType];
+            const overriddenDataTypeMatcher = newDataTypeMatchers[cellDataType];
             if (overriddenDataTypeMatcher) {
                 // remove to maintain correct ordering
-                delete this.dataTypeMatchers[cellDataType];
+                delete newDataTypeMatchers[cellDataType];
             }
-            this.dataTypeMatchers[cellDataType] =
+            newDataTypeMatchers[cellDataType] =
                 overriddenDataTypeMatcher ?? defaultDataTypes[cellDataType].dataTypeMatcher;
         });
-    }
-
-    private mergeDataTypeDefinitions(
-        parentDataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition,
-        childDataTypeDefinition: DataTypeDefinition
-    ): DataTypeDefinition {
-        const mergedDataTypeDefinition = {
-            ...parentDataTypeDefinition,
-            ...childDataTypeDefinition,
-        } as DataTypeDefinition;
-        if (
-            parentDataTypeDefinition.columnTypes &&
-            childDataTypeDefinition.columnTypes &&
-            (childDataTypeDefinition as any).appendColumnTypes
-        ) {
-            mergedDataTypeDefinition.columnTypes = [
-                ...convertColumnTypes(parentDataTypeDefinition.columnTypes),
-                ...convertColumnTypes(childDataTypeDefinition.columnTypes),
-            ];
-        }
-        return mergedDataTypeDefinition;
     }
 
     private processDataTypeDefinition(
@@ -182,17 +145,17 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 // only if it's valid do we override with a provided one
                 baseDataTypeDefinition = overriddenBaseDataTypeDefinition;
             }
-            if (!this.validateDataTypeDefinition(dataTypeDefinition, baseDataTypeDefinition, extendsCellDataType)) {
+            if (!validateDataTypeDefinition(dataTypeDefinition, baseDataTypeDefinition, extendsCellDataType)) {
                 return undefined;
             }
-            mergedDataTypeDefinition = this.mergeDataTypeDefinitions(baseDataTypeDefinition, dataTypeDefinition);
+            mergedDataTypeDefinition = mergeDataTypeDefinitions(baseDataTypeDefinition, dataTypeDefinition);
         } else {
             if (alreadyProcessedDataTypes.includes(extendsCellDataType)) {
                 _warn(44);
                 return undefined;
             }
             const extendedDataTypeDefinition = dataTypeDefinitions[extendsCellDataType];
-            if (!this.validateDataTypeDefinition(dataTypeDefinition, extendedDataTypeDefinition, extendsCellDataType)) {
+            if (!validateDataTypeDefinition(dataTypeDefinition, extendedDataTypeDefinition, extendsCellDataType)) {
                 return undefined;
             }
             const mergedExtendedDataTypeDefinition = this.processDataTypeDefinition(
@@ -204,93 +167,12 @@ export class DataTypeService extends BeanStub implements NamedBean {
             if (!mergedExtendedDataTypeDefinition) {
                 return undefined;
             }
-            mergedDataTypeDefinition = this.mergeDataTypeDefinitions(
-                mergedExtendedDataTypeDefinition,
-                dataTypeDefinition
-            );
+            mergedDataTypeDefinition = mergeDataTypeDefinitions(mergedExtendedDataTypeDefinition, dataTypeDefinition);
         }
 
         return {
             ...mergedDataTypeDefinition,
-            groupSafeValueFormatter: this.createGroupSafeValueFormatter(mergedDataTypeDefinition),
-        };
-    }
-
-    private validateDataTypeDefinition(
-        dataTypeDefinition: DataTypeDefinition,
-        parentDataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition,
-        parentCellDataType: string
-    ): boolean {
-        if (!parentDataTypeDefinition) {
-            _warn(45, { parentCellDataType });
-            return false;
-        }
-        if (parentDataTypeDefinition.baseDataType !== dataTypeDefinition.baseDataType) {
-            _warn(46);
-            return false;
-        }
-        return true;
-    }
-
-    private createGroupSafeValueFormatter(
-        dataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition
-    ): ValueFormatterFunc | undefined {
-        if (!dataTypeDefinition.valueFormatter) {
-            return undefined;
-        }
-        return (params: ValueFormatterParams) => {
-            if (params.node?.group) {
-                const aggFunc = (params.colDef.pivotValueColumn ?? params.column).getAggFunc();
-                if (aggFunc) {
-                    // the resulting type of these will be the same, so we call valueFormatter anyway
-                    if (aggFunc === 'first' || aggFunc === 'last') {
-                        return dataTypeDefinition.valueFormatter!(params);
-                    }
-
-                    if (dataTypeDefinition.baseDataType === 'number' && aggFunc !== 'count') {
-                        if (typeof params.value === 'number') {
-                            return dataTypeDefinition.valueFormatter!(params);
-                        }
-
-                        if (typeof params.value === 'object') {
-                            if (!params.value) {
-                                return undefined;
-                            }
-
-                            if ('toNumber' in params.value) {
-                                return dataTypeDefinition.valueFormatter!({
-                                    ...params,
-                                    value: params.value.toNumber(),
-                                });
-                            }
-
-                            if ('value' in params.value) {
-                                return dataTypeDefinition.valueFormatter!({
-                                    ...params,
-                                    value: params.value.value,
-                                });
-                            }
-                        }
-                    }
-
-                    // by default don't use value formatter for agg func as type may have changed
-                    return undefined as any;
-                }
-
-                // `groupRows` use the key as the value
-                if (this.gos.get('groupDisplayType') === 'groupRows' && !this.gos.get('treeData')) {
-                    // we don't want to double format the value
-                    // as this is already formatted by using the valueFormatter as the keyCreator
-                    return undefined as any;
-                }
-            } else if (this.groupHideOpenParents && params.column.isRowGroupActive()) {
-                // `groupHideOpenParents` passes leaf values in the group column, so need to format still.
-                // If it's not a string, we know it hasn't been formatted. Otherwise check the data type matcher.
-                if (typeof params.value === 'string' && !dataTypeDefinition.dataTypeMatcher?.(params.value)) {
-                    return undefined as any;
-                }
-            }
-            return dataTypeDefinition.valueFormatter!(params);
+            groupSafeValueFormatter: createGroupSafeValueFormatter(mergedDataTypeDefinition, this.gos),
         };
     }
 
@@ -330,7 +212,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
     }
 
     public addColumnListeners(column: AgColumn): void {
-        if (!this.isWaitingForRowData) {
+        if (!this.isPendingInference) {
             return;
         }
         const columnStateUpdates = this.columnStateUpdatesPendingInference[column.getColId()];
@@ -349,57 +231,26 @@ export class DataTypeService extends BeanStub implements NamedBean {
     }
 
     private canInferCellDataType(colDef: ColDef, userColDef: ColDef): boolean {
-        if (!_isClientSideRowModel(this.gos)) {
+        const { gos } = this;
+        if (!_isClientSideRowModel(gos)) {
             return false;
         }
         const propsToCheckForInference = { cellRenderer: true, valueGetter: true, valueParser: true, refData: true };
-        if (this.doColDefPropsPreventInference(userColDef, propsToCheckForInference)) {
+        if (doColDefPropsPreventInference(userColDef, propsToCheckForInference)) {
             return false;
         }
         const columnTypes = userColDef.type === null ? colDef.type : userColDef.type;
         if (columnTypes) {
-            const columnTypeDefs = this.gos.get('columnTypes') ?? {};
+            const columnTypeDefs = gos.get('columnTypes') ?? {};
             const hasPropsPreventingInference = convertColumnTypes(columnTypes).some((columnType) => {
                 const columnTypeDef = columnTypeDefs[columnType.trim()];
-                return columnTypeDef && this.doColDefPropsPreventInference(columnTypeDef, propsToCheckForInference);
+                return columnTypeDef && doColDefPropsPreventInference(columnTypeDef, propsToCheckForInference);
             });
             if (hasPropsPreventingInference) {
                 return false;
             }
         }
-        return !this.doColDefPropsPreventInference(colDef, propsToCheckForInference);
-    }
-
-    private doColDefPropsPreventInference(
-        colDef: ColDef,
-        propsToCheckForInference: { [key in keyof ColDef]: boolean }
-    ): boolean {
-        return [
-            ['cellRenderer', 'agSparklineCellRenderer'],
-            ['valueGetter', undefined],
-            ['valueParser', undefined],
-            ['refData', undefined],
-        ].some(([prop, comparisonValue]: [keyof ColDef, any]) =>
-            this.doesColDefPropPreventInference(colDef, propsToCheckForInference, prop, comparisonValue)
-        );
-    }
-
-    private doesColDefPropPreventInference(
-        colDef: ColDef,
-        checkProps: { [key in keyof ColDef]: boolean },
-        prop: keyof ColDef,
-        comparisonValue?: any
-    ): boolean {
-        if (!checkProps[prop]) {
-            return false;
-        }
-        const value = colDef[prop];
-        if (value === null) {
-            checkProps[prop] = false;
-            return false;
-        } else {
-            return comparisonValue === undefined ? !!value : value === comparisonValue;
-        }
+        return !doColDefPropsPreventInference(colDef, propsToCheckForInference);
     }
 
     private inferCellDataType(field: string | undefined, colId: string): string | undefined {
@@ -430,7 +281,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
         } else if (this.initialData) {
             return this.initialData;
         } else {
-            const rowNodes = (this.rowModel as IClientSideRowModel).rootNode?.allLeafChildren;
+            const rowNodes = (this.beans.rowModel as IClientSideRowModel).rootNode?.allLeafChildren;
             if (rowNodes?.length) {
                 return rowNodes[0].data;
             }
@@ -440,13 +291,14 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
     private initWaitForRowData(colId: string): void {
         this.columnStateUpdatesPendingInference[colId] = new Set();
-        if (this.isWaitingForRowData) {
+        if (this.isPendingInference) {
             return;
         }
-        this.isWaitingForRowData = true;
+        this.isPendingInference = true;
         const columnTypeOverridesExist = this.isColumnTypeOverrideInDataTypeDefinitions;
-        if (columnTypeOverridesExist && this.colAutosize) {
-            this.colAutosize.shouldQueueResizeOperations = true;
+        const { colAutosize, eventSvc } = this.beans;
+        if (columnTypeOverridesExist && colAutosize) {
+            colAutosize.shouldQueueResizeOperations = true;
         }
         const [destroyFunc] = this.addManagedEventListeners({
             rowDataUpdateStarted: (event) => {
@@ -455,21 +307,17 @@ export class DataTypeService extends BeanStub implements NamedBean {
                     return;
                 }
                 destroyFunc?.();
-                this.isWaitingForRowData = false;
+                this.isPendingInference = false;
                 this.processColumnsPendingInference(firstRowData, columnTypeOverridesExist);
                 this.columnStateUpdatesPendingInference = {};
                 if (columnTypeOverridesExist) {
-                    this.colAutosize?.processResizeOperations();
+                    colAutosize?.processResizeOperations();
                 }
-                this.eventSvc.dispatchEvent({
+                eventSvc.dispatchEvent({
                     type: 'dataTypesInferred',
                 });
             },
         });
-    }
-
-    public isPendingInference(): boolean {
-        return this.isWaitingForRowData;
     }
 
     private processColumnsPendingInference(firstRowData: any, columnTypeOverridesExist: boolean): void {
@@ -489,7 +337,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
             }
             const newColDef = column.getColDef();
             if (columnTypeOverridesExist && newColDef.type && newColDef.type !== oldColDef.type) {
-                const updatedColumnState = this.getUpdatedColumnState(column, columnStateUpdates);
+                const updatedColumnState = getUpdatedColumnState(column, columnStateUpdates);
                 if (updatedColumnState.rowGroup && updatedColumnState.rowGroupIndex == null) {
                     newRowGroupColumnStateWithoutIndex[colId] = updatedColumnState;
                 }
@@ -523,8 +371,10 @@ export class DataTypeService extends BeanStub implements NamedBean {
 
         const existingColumnStateUpdates: { [colId: string]: ColumnState } = {};
 
-        this.rowGroupColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedRowGroupColumnState);
-        this.pivotColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedPivotColumnState);
+        const { rowGroupColsSvc, pivotColsSvc } = this.beans;
+
+        rowGroupColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedRowGroupColumnState);
+        pivotColsSvc?.restoreColumnOrder(existingColumnStateUpdates, updatedPivotColumnState);
 
         return Object.values(existingColumnStateUpdates);
     }
@@ -539,20 +389,6 @@ export class DataTypeService extends BeanStub implements NamedBean {
         return true;
     }
 
-    private getUpdatedColumnState(column: AgColumn, columnStateUpdates: Set<keyof ColumnStateParams>): ColumnState {
-        const columnState = getColumnStateFromColDef(column);
-        columnStateUpdates.forEach((key) => {
-            // if the column state has been updated, don't update again
-            delete columnState[key];
-            if (key === 'rowGroup') {
-                delete columnState.rowGroupIndex;
-            } else if (key === 'pivot') {
-                delete columnState.pivotIndex;
-            }
-        });
-        return columnState;
-    }
-
     private checkObjectValueHandlers(defaultDataTypes: { [key: string]: CoreDataTypeDefinition }): void {
         const resolvedObjectDataTypeDefinition = this.dataTypeDefinitions.object;
         const defaultObjectDataTypeDefinition = defaultDataTypes.object;
@@ -563,11 +399,11 @@ export class DataTypeService extends BeanStub implements NamedBean {
     }
 
     private getDateStringTypeDefinition(column?: AgColumn | null): DateStringDataTypeDefinition {
+        const { dateString } = this.dataTypeDefinitions;
         if (!column) {
-            return this.dataTypeDefinitions.dateString as DateStringDataTypeDefinition;
+            return dateString as DateStringDataTypeDefinition;
         }
-        return (this.getDataTypeDefinition(column) ??
-            this.dataTypeDefinitions.dateString) as DateStringDataTypeDefinition;
+        return (this.getDataTypeDefinition(column) ?? dateString) as DateStringDataTypeDefinition;
     }
 
     public getDateParserFunction(column?: AgColumn | null): (value: string | undefined) => Date | undefined {
@@ -604,17 +440,11 @@ export class DataTypeService extends BeanStub implements NamedBean {
     public validateColDef(colDef: ColDef): void {
         const warning = (property: 'Formatter' | 'Parser') => _warn(48, { property });
         if (colDef.cellDataType === 'object') {
-            if (
-                colDef.valueFormatter === this.dataTypeDefinitions.object.groupSafeValueFormatter &&
-                !this.hasObjectValueFormatter
-            ) {
+            const { object } = this.dataTypeDefinitions;
+            if (colDef.valueFormatter === object.groupSafeValueFormatter && !this.hasObjectValueFormatter) {
                 warning('Formatter');
             }
-            if (
-                colDef.editable &&
-                colDef.valueParser === this.dataTypeDefinitions.object.valueParser &&
-                !this.hasObjectValueParser
-            ) {
+            if (colDef.editable && colDef.valueParser === object.valueParser && !this.hasObjectValueParser) {
                 warning('Parser');
             }
         }
@@ -672,7 +502,7 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 break;
             }
         }
-        this.filterManager?.setColDefPropertiesForDataType(colDef, dataTypeDefinition, formatValue);
+        this.beans.filterManager?.setColDefPropertiesForDataType(colDef, dataTypeDefinition, formatValue);
     }
 
     private getDefaultDataTypes(): { [key: string]: CoreDataTypeDefinition } {
@@ -760,4 +590,150 @@ export class DataTypeService extends BeanStub implements NamedBean {
         this.destroyColumnStateUpdateListeners();
         super.destroy();
     }
+}
+
+function mergeDataTypeDefinitions(
+    parentDataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition,
+    childDataTypeDefinition: DataTypeDefinition
+): DataTypeDefinition {
+    const mergedDataTypeDefinition = {
+        ...parentDataTypeDefinition,
+        ...childDataTypeDefinition,
+    } as DataTypeDefinition;
+    if (
+        parentDataTypeDefinition.columnTypes &&
+        childDataTypeDefinition.columnTypes &&
+        (childDataTypeDefinition as any).appendColumnTypes
+    ) {
+        mergedDataTypeDefinition.columnTypes = [
+            ...convertColumnTypes(parentDataTypeDefinition.columnTypes),
+            ...convertColumnTypes(childDataTypeDefinition.columnTypes),
+        ];
+    }
+    return mergedDataTypeDefinition;
+}
+
+function validateDataTypeDefinition(
+    dataTypeDefinition: DataTypeDefinition,
+    parentDataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition,
+    parentCellDataType: string
+): boolean {
+    if (!parentDataTypeDefinition) {
+        _warn(45, { parentCellDataType });
+        return false;
+    }
+    if (parentDataTypeDefinition.baseDataType !== dataTypeDefinition.baseDataType) {
+        _warn(46);
+        return false;
+    }
+    return true;
+}
+
+function createGroupSafeValueFormatter(
+    dataTypeDefinition: DataTypeDefinition | CoreDataTypeDefinition,
+    gos: GridOptionsService
+): ValueFormatterFunc | undefined {
+    if (!dataTypeDefinition.valueFormatter) {
+        return undefined;
+    }
+    return (params: ValueFormatterParams) => {
+        if (params.node?.group) {
+            const aggFunc = (params.colDef.pivotValueColumn ?? params.column).getAggFunc();
+            if (aggFunc) {
+                // the resulting type of these will be the same, so we call valueFormatter anyway
+                if (aggFunc === 'first' || aggFunc === 'last') {
+                    return dataTypeDefinition.valueFormatter!(params);
+                }
+
+                if (dataTypeDefinition.baseDataType === 'number' && aggFunc !== 'count') {
+                    if (typeof params.value === 'number') {
+                        return dataTypeDefinition.valueFormatter!(params);
+                    }
+
+                    if (typeof params.value === 'object') {
+                        if (!params.value) {
+                            return undefined;
+                        }
+
+                        if ('toNumber' in params.value) {
+                            return dataTypeDefinition.valueFormatter!({
+                                ...params,
+                                value: params.value.toNumber(),
+                            });
+                        }
+
+                        if ('value' in params.value) {
+                            return dataTypeDefinition.valueFormatter!({
+                                ...params,
+                                value: params.value.value,
+                            });
+                        }
+                    }
+                }
+
+                // by default don't use value formatter for agg func as type may have changed
+                return undefined as any;
+            }
+
+            // `groupRows` use the key as the value
+            if (gos.get('groupDisplayType') === 'groupRows' && !gos.get('treeData')) {
+                // we don't want to double format the value
+                // as this is already formatted by using the valueFormatter as the keyCreator
+                return undefined as any;
+            }
+        } else if (gos.get('groupHideOpenParents') && params.column.isRowGroupActive()) {
+            // `groupHideOpenParents` passes leaf values in the group column, so need to format still.
+            // If it's not a string, we know it hasn't been formatted. Otherwise check the data type matcher.
+            if (typeof params.value === 'string' && !dataTypeDefinition.dataTypeMatcher?.(params.value)) {
+                return undefined as any;
+            }
+        }
+        return dataTypeDefinition.valueFormatter!(params);
+    };
+}
+
+function doesColDefPropPreventInference(
+    colDef: ColDef,
+    checkProps: { [key in keyof ColDef]: boolean },
+    prop: keyof ColDef,
+    comparisonValue?: any
+): boolean {
+    if (!checkProps[prop]) {
+        return false;
+    }
+    const value = colDef[prop];
+    if (value === null) {
+        checkProps[prop] = false;
+        return false;
+    } else {
+        return comparisonValue === undefined ? !!value : value === comparisonValue;
+    }
+}
+
+function doColDefPropsPreventInference(
+    colDef: ColDef,
+    propsToCheckForInference: { [key in keyof ColDef]: boolean }
+): boolean {
+    return [
+        ['cellRenderer', 'agSparklineCellRenderer'],
+        ['valueGetter', undefined],
+        ['valueParser', undefined],
+        ['refData', undefined],
+    ].some(([prop, comparisonValue]: [keyof ColDef, any]) =>
+        doesColDefPropPreventInference(colDef, propsToCheckForInference, prop, comparisonValue)
+    );
+}
+
+function getUpdatedColumnState(column: AgColumn, columnStateUpdates: Set<keyof ColumnStateParams>): ColumnState {
+    const columnState = getColumnStateFromColDef(column);
+    columnStateUpdates.forEach((key) => {
+        // if the column state has been updated, don't update again
+        delete columnState[key];
+        if (key === 'rowGroup') {
+            delete columnState.rowGroupIndex;
+        } else if (key === 'pivot') {
+            delete columnState.pivotIndex;
+        }
+    });
+    return columnState;
 }

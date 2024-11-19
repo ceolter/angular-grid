@@ -32,7 +32,8 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
 
     public init(params: ICheckboxCellRendererParams): void {
         this.refresh(params);
-        const inputEl = this.eCheckbox.getInputElement();
+        const { eCheckbox, beans } = this;
+        const inputEl = eCheckbox.getInputElement();
         inputEl.setAttribute('tabindex', '-1');
         _setAriaLive(inputEl, 'polite');
 
@@ -40,11 +41,11 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
             click: (event: Event) => {
                 _stopPropagationForAgGrid(event);
 
-                if (this.eCheckbox.isDisabled()) {
+                if (eCheckbox.isDisabled()) {
                     return;
                 }
 
-                const isSelected = this.eCheckbox.getValue();
+                const isSelected = eCheckbox.getValue();
 
                 this.onCheckboxChanged(isSelected);
             },
@@ -53,13 +54,13 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
             },
         });
 
-        this.addManagedElementListeners(this.params.eGridCell, {
+        this.addManagedElementListeners(params.eGridCell, {
             keydown: (event: KeyboardEvent) => {
-                if (event.key === KeyCode.SPACE && !this.eCheckbox.isDisabled()) {
-                    if (this.params.eGridCell === _getActiveDomElement(this.beans)) {
-                        this.eCheckbox.toggle();
+                if (event.key === KeyCode.SPACE && !eCheckbox.isDisabled()) {
+                    if (params.eGridCell === _getActiveDomElement(beans)) {
+                        eCheckbox.toggle();
                     }
-                    const isSelected = this.eCheckbox.getValue();
+                    const isSelected = eCheckbox.getValue();
                     this.onCheckboxChanged(isSelected);
                     event.preventDefault();
                 }
@@ -76,46 +77,45 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
     private updateCheckbox(params: ICheckboxCellRendererParams): void {
         let isSelected: boolean | undefined;
         let displayed = true;
-        if (params.node.group && params.column) {
-            if (typeof params.value === 'boolean') {
-                isSelected = params.value;
+        const { value, column, node } = params;
+        if (node.group && column) {
+            if (typeof value === 'boolean') {
+                isSelected = value;
             } else {
-                const colId = params.column.getColId();
+                const colId = column.getColId();
                 if (colId.startsWith(GROUP_AUTO_COLUMN_ID)) {
                     // if we're grouping by this column then the value is a string and we need to parse it
-                    isSelected =
-                        params.value == null || (params.value as any) === ''
-                            ? undefined
-                            : (params.value as any) === 'true';
-                } else if (params.node.aggData && params.node.aggData[colId] !== undefined) {
-                    isSelected = params.value ?? undefined;
+                    isSelected = value == null || (value as any) === '' ? undefined : (value as any) === 'true';
+                } else if (node.aggData && node.aggData[colId] !== undefined) {
+                    isSelected = value ?? undefined;
                 } else {
                     displayed = false;
                 }
             }
         } else {
-            isSelected = params.value ?? undefined;
+            isSelected = value ?? undefined;
         }
+        const { eCheckbox } = this;
         if (!displayed) {
-            this.eCheckbox.setDisplayed(false);
+            eCheckbox.setDisplayed(false);
             return;
         }
-        this.eCheckbox.setValue(isSelected);
-        const disabled = params.disabled != null ? params.disabled : !params.column?.isCellEditable(params.node);
-        this.eCheckbox.setDisabled(disabled);
+        eCheckbox.setValue(isSelected);
+        const disabled = params.disabled ?? !column?.isCellEditable(node);
+        eCheckbox.setDisabled(disabled);
 
         const translate = this.getLocaleTextFunc();
         const stateName = _getAriaCheckboxStateName(translate, isSelected);
         const ariaLabel = disabled
             ? stateName
             : `${translate('ariaToggleCellValue', 'Press SPACE to toggle cell value')} (${stateName})`;
-        this.eCheckbox.setInputAriaLabel(ariaLabel);
+        eCheckbox.setInputAriaLabel(ariaLabel);
     }
 
     private onCheckboxChanged(isSelected?: boolean): void {
-        const { column, node, value } = this.params;
-        this.eventSvc.dispatchEvent({
-            type: 'cellEditingStarted',
+        const { eventSvc, params } = this;
+        const { column, node, value } = params;
+        const sharedEventParams = {
             column: column!,
             colDef: column!.getColDef(),
             data: node.data,
@@ -123,19 +123,17 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
             rowIndex: node.rowIndex,
             rowPinned: node.rowPinned,
             value,
+        };
+        eventSvc.dispatchEvent({
+            type: 'cellEditingStarted',
+            ...sharedEventParams,
         });
 
-        const valueChanged = this.params.node.setDataValue(this.params.column!, isSelected, 'edit');
+        const valueChanged = node.setDataValue(column!, isSelected, 'edit');
 
-        this.eventSvc.dispatchEvent({
+        eventSvc.dispatchEvent({
             type: 'cellEditingStopped',
-            column: column!,
-            colDef: column!.getColDef(),
-            data: node.data,
-            node,
-            rowIndex: node.rowIndex,
-            rowPinned: node.rowPinned,
-            value,
+            ...sharedEventParams,
             oldValue: value,
             newValue: isSelected,
             valueChanged,
@@ -143,7 +141,7 @@ export class CheckboxCellRenderer extends Component implements ICellRenderer {
 
         if (!valueChanged) {
             // need to reset to original
-            this.updateCheckbox(this.params);
+            this.updateCheckbox(params);
         }
     }
 }

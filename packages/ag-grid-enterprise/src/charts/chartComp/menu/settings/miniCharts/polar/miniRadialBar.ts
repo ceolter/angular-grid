@@ -1,13 +1,12 @@
-import { _Scene } from 'ag-charts-community';
-
 import type { ChartType } from 'ag-grid-community';
 
+import type { AgChartsExports } from '../../../../../agChartsExports';
 import { accumulateData } from '../miniChartHelpers';
 import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniRadialBar extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radialBar';
-    private readonly series: _Scene.Group[];
+    private readonly series: any[];
 
     private data = [
         [6, 8, 10],
@@ -15,23 +14,30 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         [5, 4, 2],
     ];
 
-    constructor(container: HTMLElement, fills: string[], strokes: string[]) {
-        super(container, 'radialBarTooltip');
+    constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
+        super(container, agChartsExports, 'radialBarTooltip');
 
         this.showRadiusAxisLine = false;
 
-        const radius = (this.size - this.padding) / 2;
+        const {
+            size,
+            padding,
+            data,
+            agChartsExports: { _Scene },
+        } = this;
+
+        const radius = (size - padding) / 2;
         const innerRadiusRatio = 0.4;
         const innerRadius = radius * innerRadiusRatio;
 
         const radiusScale = new _Scene.BandScale();
-        radiusScale.domain = this.data[0].map((_, index) => index);
+        radiusScale.domain = data[0].map((_, index) => index);
         radiusScale.range = [innerRadius, radius];
         radiusScale.paddingInner = 0.5;
         radiusScale.paddingOuter = 0;
         const bandwidth = radiusScale.bandwidth;
 
-        const { processedData, max } = accumulateData(this.data);
+        const { processedData, max } = accumulateData(data);
 
         const angleScale = new _Scene.LinearScale();
         angleScale.domain = [0, Math.ceil(max * 1.5)];
@@ -39,7 +45,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         const end = start + 2 * Math.PI;
         angleScale.range = [start, end];
 
-        const center = this.size / 2;
+        const center = size / 2;
         this.series = processedData.map((series, index) => {
             const previousSeries = index < 0 ? undefined : processedData[index - 1];
 
@@ -76,7 +82,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
 
     updateColors(fills: string[], strokes: string[]) {
         this.series.forEach((group, i) => {
-            for (const sector of group.children() as Iterable<_Scene.Sector>) {
+            for (const sector of group.children() as Iterable<any>) {
                 sector.fill = fills[i % fills.length];
                 sector.stroke = strokes[i % strokes.length];
             }

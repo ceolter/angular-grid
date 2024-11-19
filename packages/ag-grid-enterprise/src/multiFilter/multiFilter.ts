@@ -1,8 +1,6 @@
 import type {
     AgColumn,
-    BeanCollection,
     ContainerType,
-    FilterManager,
     IAfterGuiAttachedParams,
     IDoesFilterPassParams,
     IFilterComp,
@@ -14,7 +12,6 @@ import type {
     MultiFilterParams,
     ProvidedFilterModel,
     RowNode,
-    UserComponentFactory,
 } from 'ag-grid-community';
 import {
     AgPromise,
@@ -52,14 +49,16 @@ function _forEachReverse<T>(list: T[] | null | undefined, action: (value: T, ind
     }
 }
 
-export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilter {
-    private filterManager?: FilterManager;
-    private userCompFactory: UserComponentFactory;
-
-    public wireBeans(beans: BeanCollection) {
-        this.filterManager = beans.filterManager;
-        this.userCompFactory = beans.userCompFactory;
+function getFilterTitle(filter: IFilterComp, filterDef: IMultiFilterDef): string {
+    if (filterDef.title != null) {
+        return filterDef.title;
     }
+
+    return filter instanceof ProvidedFilter ? filter.getFilterTitle() : 'Filter';
+}
+
+export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilter {
+    private filterType = 'multi' as const;
 
     private params: MultiFilterParams;
     private filterDefs: IMultiFilterDef[] = [];
@@ -130,7 +129,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         return AgPromise.all(
             this.filters!.map((filter, index) => {
                 const filterDef = this.filterDefs[index];
-                const filterTitle = this.getFilterTitle(filter, filterDef);
+                const filterTitle = getFilterTitle(filter, filterDef);
                 let filterGuiPromise: AgPromise<HTMLElement>;
 
                 if (filterDef.display === 'subMenu' && container !== 'toolPanel') {
@@ -160,14 +159,6 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
             this.filterGuis = filterGuis as HTMLElement[];
             this.lastOpenedInContainer = container;
         });
-    }
-
-    private getFilterTitle(filter: IFilterComp, filterDef: IMultiFilterDef): string {
-        if (filterDef.title != null) {
-            return filterDef.title;
-        }
-
-        return filter instanceof ProvidedFilter ? filter.getFilterTitle() : 'Filter';
     }
 
     private destroyChildren() {
@@ -275,9 +266,8 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
     }
 
     public getLastActiveFilterIndex(): number | null {
-        return this.activeFilterIndices.length > 0
-            ? this.activeFilterIndices[this.activeFilterIndices.length - 1]
-            : null;
+        const activeFilterIndices = this.activeFilterIndices;
+        return activeFilterIndices.length > 0 ? activeFilterIndices[activeFilterIndices.length - 1] : null;
     }
 
     public doesFilterPass(params: IDoesFilterPassParams, filterToSkip?: IFilterComp): boolean {
@@ -294,13 +284,9 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         return rowPasses;
     }
 
-    private getFilterType(): 'multi' {
-        return 'multi';
-    }
-
     public getModelFromUi(): IMultiFilterModel | null {
         const model: IMultiFilterModel = {
-            filterType: this.getFilterType(),
+            filterType: this.filterType,
             filterModels: this.filters!.map((filter) => {
                 const providedFilter = filter as ProvidedFilter<IMultiFilterModel, unknown>;
 
@@ -321,7 +307,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         }
 
         const model: IMultiFilterModel = {
-            filterType: this.getFilterType(),
+            filterType: this.filterType,
             filterModels: this.filters!.map((filter) => {
                 if (filter.isFilterActive()) {
                     return filter.getModel();
@@ -393,7 +379,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         const suppressFocus = params?.suppressFocus;
 
         refreshPromise.then(() => {
-            const { filterDefs } = this;
+            const { filterDefs, filters, filterGuis, beans } = this;
             // don't want to focus later if focus suppressed
             let hasFocused = !!suppressFocus;
             if (filterDefs) {
@@ -402,7 +388,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                     const notInlineDisplayType = filterDef.display && filterDef.display !== 'inline';
                     const suppressFocusForFilter = suppressFocus || !isFirst || notInlineDisplayType;
                     const afterGuiAttachedParams = { ...(params ?? {}), suppressFocus: suppressFocusForFilter };
-                    const filter = this.filters?.[index];
+                    const filter = filters?.[index];
                     if (filter) {
                         this.executeFunctionIfExistsOnFilter(filter, 'afterGuiAttached', afterGuiAttachedParams);
                         if (isFirst && !suppressFocusForFilter) {
@@ -411,7 +397,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                     }
                     if (!suppressFocus && isFirst && notInlineDisplayType) {
                         // focus the first filter container instead (accordion/sub menu)
-                        const filterGui = this.filterGuis[index];
+                        const filterGui = filterGuis[index];
                         if (filterGui) {
                             if (!_focusInto(filterGui)) {
                                 // menu item contains no focusable elements but is focusable itself
@@ -423,14 +409,14 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                 });
             }
 
-            const activeEl = _getActiveDomElement(this.beans);
+            const activeEl = _getActiveDomElement(beans);
 
             // if we haven't focused the first item in the filter, we might run into two scenarios:
             // 1 - we are loading the filter for the first time and the component isn't ready,
             //     which means the document will have focus.
             // 2 - The focus will be somewhere inside the component due to auto focus
             // In both cases we need to force the focus somewhere valid but outside the filter.
-            if (!hasFocused && (_isNothingFocused(this.beans) || this.getGui().contains(activeEl))) {
+            if (!hasFocused && (_isNothingFocused(beans) || this.getGui().contains(activeEl))) {
                 // reset focus to the top of the container, and blur
                 this.forceFocusOutOfContainer(true);
             }
@@ -477,11 +463,12 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
 
     private createFilter(filterDef: IFilterDef, index: number): AgPromise<IFilterComp> | null {
         const { filterModifiedCallback, doesRowPassOtherFilter } = this.params;
+        const { filterManager, userCompFactory } = this.beans;
 
         let filterInstance: IFilterComp;
 
         const filterParams: IFilterParams = {
-            ...this.filterManager!.createFilterParams(this.column, this.column.getColDef()),
+            ...filterManager!.createFilterParams(this.column, this.column.getColDef()),
             filterModifiedCallback,
             filterChangedCallback: (additionalEventAttributes) => {
                 this.executeWhenAllFiltersReady(() => this.filterChanged(index, additionalEventAttributes));
@@ -490,7 +477,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
                 doesRowPassOtherFilter(node) && this.doesFilterPass({ node, data: node.data }, filterInstance),
         };
 
-        const compDetails = _getFilterDetails(this.userCompFactory, filterDef, filterParams, 'agTextColumnFilter');
+        const compDetails = _getFilterDetails(userCompFactory, filterDef, filterParams, 'agTextColumnFilter');
         if (!compDetails) {
             return null;
         }
@@ -502,7 +489,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
     }
 
     private executeWhenAllFiltersReady(action: () => void): void {
-        if (this.filters && this.filters.length > 0) {
+        if ((this.filters?.length ?? 0) > 0) {
             action();
         } else {
             this.afterFiltersReadyFuncs.push(action);
@@ -510,12 +497,13 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
     }
 
     private updateActiveList(index: number): void {
-        const changedFilter = this.filters![index];
+        const { filters, activeFilterIndices } = this;
+        const changedFilter = filters![index];
 
-        _removeFromArray(this.activeFilterIndices, index);
+        _removeFromArray(activeFilterIndices, index);
 
         if (changedFilter.isFilterActive()) {
-            this.activeFilterIndices.push(index);
+            activeFilterIndices.push(index);
         }
     }
 
@@ -537,11 +525,9 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
     }
 
     protected onFocusIn(e: FocusEvent): void {
-        if (
-            this.lastActivatedMenuItem != null &&
-            !this.lastActivatedMenuItem.getGui().contains(e.target as HTMLElement)
-        ) {
-            this.lastActivatedMenuItem.deactivate();
+        const lastActivatedMenuItem = this.lastActivatedMenuItem;
+        if (lastActivatedMenuItem != null && !lastActivatedMenuItem.getGui().contains(e.target as HTMLElement)) {
+            lastActivatedMenuItem.deactivate();
             this.lastActivatedMenuItem = null;
         }
     }

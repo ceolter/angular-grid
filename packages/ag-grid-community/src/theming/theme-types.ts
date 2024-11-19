@@ -1,83 +1,55 @@
 import { _error } from '../validation/logging';
-import type { CoreParams } from './core/core-css';
 import { clamp, memoize, paramToVariableExpression } from './theme-utils';
-
-export type CssFragment = string | (() => string);
 
 export type Feature = 'colorScheme' | 'iconSet' | 'checkboxStyle' | 'inputStyle' | 'tabStyle';
 
-export type ParamType =
-    | 'color'
-    | 'colorScheme'
-    | 'length'
-    | 'scale'
-    | 'border'
-    | 'borderStyle'
-    | 'shadow'
-    | 'image'
-    | 'fontFamily'
-    | 'fontWeight'
-    | 'duration';
+const paramTypes = [
+    'colorScheme',
+    'color',
+    'length',
+    'scale',
+    'borderStyle',
+    'border',
+    'shadow',
+    'image',
+    'fontFamily',
+    'fontWeight',
+    'duration',
+] as const;
 
+export type ParamType = (typeof paramTypes)[number];
 /**
  * Return the ParamType for a given param name,
  */
 export const getParamType = memoize((param: string): ParamType => {
-    //
-    // IMPORTANT! If adding new supported suffixes, add them to the union types (e.g. ColorParam) below
-    //
-    if (/Color$/.test(param)) return 'color';
-    if (/Scale?$/.test(param)) return 'scale';
-    if (
-        param === 'spacing' ||
-        /(Padding|Spacing|Size|Width|Height|Radius|Indent|Start|End|Top|Bottom|Horizontal|Vertical)$/.test(param)
-    ) {
-        return 'length';
-    }
-    if (/Border$/.test(param)) return 'border';
-    if (/BorderStyle$/.test(param)) return 'borderStyle';
-    if (/Shadow$/.test(param)) return 'shadow';
-    if (/Image$/.test(param)) return 'image';
-    if (/Family$/.test(param)) return 'fontFamily';
-    if (/Weight$/.test(param)) return 'fontWeight';
-    if (/Duration$/.test(param)) return 'duration';
-    if (/ColorScheme$/.test(param)) return 'colorScheme';
-    throw new Error(`"${param}" is not a valid theme parameter.`);
+    param = param.toLowerCase();
+    return paramTypes.find((type) => param.endsWith(type.toLowerCase())) ?? 'length';
 });
 
-type ColorParam = CoreParamWithSuffix<'Color'>;
-type LengthParam =
-    | 'spacing'
-    | CoreParamWithSuffix<
-          | 'Padding'
-          | 'Spacing'
-          | 'Size'
-          | 'Width'
-          | 'Height'
-          | 'Radius'
-          | 'Indent'
-          | 'Start'
-          | 'End'
-          | 'Top'
-          | 'Bottom'
-          | 'Horizontal'
-          | 'Vertical'
-      >;
-type BorderParam = CoreParamWithSuffix<'Border'>;
-type ShadowParam = CoreParamWithSuffix<'Shadow'>;
-type ImageParam = CoreParamWithSuffix<'Image'>;
-type FontFamilyParam = CoreParamWithSuffix<'Family'>;
-type DurationParam = CoreParamWithSuffix<'Duration'>;
+export type WithParamTypes<T> = {
+    [K in keyof T]: K extends string ? ParamTypeForLowercaseKey<Lowercase<K>> : LengthValue;
+};
+
+// prettier-ignore
+type ParamTypeForLowercaseKey<K extends string> = K extends `${string}color`
+    ? ColorValue
+    : K extends `${string}colorscheme` ? ColorSchemeValue
+    : K extends `${string}color` ? ColorValue
+    : K extends `${string}scale` ? ScaleValue
+    : K extends `${string}borderstyle` ? BorderStyleValue
+    : K extends `${string}border` ? BorderValue
+    : K extends `${string}shadow` ? ShadowValue
+    : K extends `${string}image` ? ImageValue
+    : K extends `${string}fontfamily` ? FontFamilyValue
+    : K extends `${string}fontweight` ? FontWeightValue
+    : K extends `${string}duration` ? DurationValue
+    : LengthValue;
 
 const literalToCSS = (value: string | number): string | false => {
     if (typeof value === 'string') return value;
     if (typeof value === 'number') return String(value);
     return false;
 };
-
-type CoreParamWithSuffix<Suffix extends string> = {
-    [K in keyof CoreParams]: K extends `${infer _}${Suffix}` ? K : never;
-}[keyof CoreParams];
 
 // string & {} used to preserve auto-complete from string union but allow any string
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -94,7 +66,7 @@ export type ColorValue =
           /**
            * The name of the color parameter to reference
            */
-          ref: ColorParam | AnyString;
+          ref: string;
           /**
            * Enable color mixing. Provide a value between 0 and 1 determining the amount of the referenced color used in the mix.
            *
@@ -102,9 +74,9 @@ export type ColorValue =
            */
           mix?: number;
           /**
-           * Provide a second color reference to mix with instead of `transparent` This has no effect if `mix` is unspecified.
+           * Provide a second color reference to mix with instead of `transparent`. This has no effect if `mix` is unspecified.
            */
-          onto?: ColorParam | AnyString;
+          onto?: string;
       };
 
 const colorValueToCss = (value: ColorValue): string | false => {
@@ -149,7 +121,7 @@ export type LengthValue =
           calc: string;
       }
     | {
-          ref: LengthParam | AnyString;
+          ref: string;
       };
 
 const lengthValueToCss = (value: LengthValue): string | false => {
@@ -197,7 +169,7 @@ export type BorderValue =
           width?: LengthValue;
           color?: ColorValue;
       }
-    | { ref: BorderParam | AnyString };
+    | { ref: string };
 
 const borderValueToCss = (value: BorderValue, param: string) => {
     if (typeof value === 'string') return value;
@@ -266,7 +238,7 @@ export type ShadowValue =
            */
           color?: ColorValue;
       }
-    | { ref: ShadowParam | AnyString };
+    | { ref: string };
 
 const shadowValueToCss = (value: ShadowValue): string | false => {
     if (typeof value === 'string') return value;
@@ -303,7 +275,7 @@ export type FontFamilyValue =
     | string
     | { googleFont: string }
     | Array<string | { googleFont: string }>
-    | { ref: FontFamilyParam | AnyString };
+    | { ref: string };
 
 const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
     if (typeof value === 'string') return value;
@@ -329,7 +301,7 @@ const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight
  */
-export type FontWeightValue = 'normal' | 'bold' | number;
+export type FontWeightValue = 'normal' | 'bold' | AnyString | number;
 
 const fontWeightValueToCss = literalToCSS;
 
@@ -356,7 +328,7 @@ export type ImageValue =
            */
           svg: string;
       }
-    | { ref: ImageParam | AnyString };
+    | { ref: string };
 
 const imageValueToCss = (value: ImageValue): string | false => {
     if (typeof value === 'string') return value;
@@ -374,12 +346,12 @@ const imageValueToCss = (value: ImageValue): string | false => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/animation-duration
  */
-export type DurationValue = number | string | { ref: DurationParam | AnyString };
+export type DurationValue = number | string | { ref: string };
 
 const durationValueToCss = (value: DurationValue, param: string): string | false => {
     if (typeof value === 'string') return value;
     if (typeof value === 'number') {
-        if (value > 50) {
+        if (value >= 10) {
             _error(104, { value, param });
         }
         return `${value}s`;

@@ -102,7 +102,6 @@ import type {
     GridReadyEvent,
     GridSizeChangedEvent,
     GridState,
-    GridTheme,
     HeaderFocusedEvent,
     HeaderPosition,
     IAdvancedFilterBuilderParams,
@@ -182,6 +181,7 @@ import type {
     StoreRefreshedEvent,
     TabToNextCellParams,
     TabToNextHeaderParams,
+    Theme,
     ToolPanelSizeChangedEvent,
     ToolPanelVisibleChangedEvent,
     TooltipHideEvent,
@@ -1480,7 +1480,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      * on the parent element of the grid. To opt back in to this behaviour, pass
      * the string "legacy"
      */
-    @Input() public theme: GridTheme | 'legacy' | undefined = undefined;
+    @Input() public theme: Theme | 'legacy' | undefined = undefined;
     /** Whether to load supported theme fonts from the Google Fonts server.
      *
      * - `true` -> load fonts automatically if your theme uses them

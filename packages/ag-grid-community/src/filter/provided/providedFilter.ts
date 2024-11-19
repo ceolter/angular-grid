@@ -1,9 +1,7 @@
-import type { BeanCollection } from '../../context/context';
 import type { FilterChangedEventSourceType } from '../../events';
 import type { ContainerType, IAfterGuiAttachedParams } from '../../interfaces/iAfterGuiAttachedParams';
 import type { IDoesFilterPassParams, IFilterComp } from '../../interfaces/iFilter';
 import type { PopupEventParams } from '../../interfaces/iPopup';
-import type { IRowModel } from '../../interfaces/iRowModel';
 import type { IRowNode } from '../../interfaces/iRowNode';
 import { PositionableFeature } from '../../rendering/features/positionableFeature';
 import { _clearElement, _loadTemplate, _removeFromParent, _setDisabled } from '../../utils/dom';
@@ -28,7 +26,7 @@ import type { IProvidedFilter, ProvidedFilterParams } from './iProvidedFilter';
  */
 export abstract class ProvidedFilter<M, V> extends Component implements IProvidedFilter, IFilterComp {
     // each level in the hierarchy will save params with the appropriate type for that level.
-    private providedFilterParams: ProvidedFilterParams;
+    private params: ProvidedFilterParams;
 
     protected applyActive = false;
     private hidePopup: ((params: PopupEventParams) => void) | null | undefined = null;
@@ -45,11 +43,6 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     private appliedModel: M | null = null;
 
     private positionableFeature: PositionableFeature | undefined;
-
-    protected rowModel: IRowModel;
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-    }
 
     protected readonly eFilterBody: HTMLElement = RefPlaceholder;
 
@@ -73,7 +66,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     protected abstract areModelsEqual(a: M, b: M): boolean;
 
     /** Used to get the filter type for filter models. */
-    protected abstract getFilterType(): string;
+    protected abstract filterType: string;
 
     public postConstruct(): void {
         this.resetTemplate(); // do this first to create the DOM
@@ -121,13 +114,11 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         this.setTemplate(templateString, this.getAgComponents(), paramsMap);
 
         eGui = this.getGui();
-        if (eGui) {
-            eGui.addEventListener('submit', this.onFormSubmit);
-        }
+        eGui?.addEventListener('submit', this.onFormSubmit);
     }
 
     protected isReadOnly(): boolean {
-        return !!this.providedFilterParams.readOnly;
+        return !!this.params.readOnly;
     }
 
     public init(params: ProvidedFilterParams): void {
@@ -140,14 +131,14 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     protected setParams(params: ProvidedFilterParams): void {
-        this.providedFilterParams = params;
+        this.params = params;
         this.applyActive = isUseApplyButton(params);
 
         this.resetButtonsPanel(params);
     }
 
     protected updateParams(params: ProvidedFilterParams): void {
-        this.providedFilterParams = params;
+        this.params = params;
         this.applyActive = isUseApplyButton(params);
 
         this.resetUiToActiveModel(this.getModel(), () => {
@@ -194,24 +185,19 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         const fragment = document.createDocumentFragment();
 
         const addButton = (type: 'apply' | 'clear' | 'reset' | 'cancel'): void => {
-            let text;
             let clickListener: (e?: Event) => void;
-
+            const text = type ? this.translate(`${type}Filter`) : undefined;
             switch (type) {
                 case 'apply':
-                    text = this.translate('applyFilter');
                     clickListener = (e) => this.onBtApply(false, false, e);
                     break;
                 case 'clear':
-                    text = this.translate('clearFilter');
                     clickListener = () => this.onBtClear();
                     break;
                 case 'reset':
-                    text = this.translate('resetFilter');
                     clickListener = () => this.onBtReset();
                     break;
                 case 'cancel':
-                    text = this.translate('cancelFilter');
                     clickListener = (e) => {
                         this.onBtCancel(e!);
                     };
@@ -243,12 +229,10 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     // subclasses can override this to provide alternative debounce defaults
-    protected getDefaultDebounceMs(): number {
-        return 0;
-    }
+    protected defaultDebounceMs: number = 0;
 
     private setupOnBtApplyDebounce(): void {
-        const debounceMs = getDebounceMs(this.providedFilterParams, this.getDefaultDebounceMs());
+        const debounceMs = getDebounceMs(this.params, this.defaultDebounceMs);
         const debounceFunc = _debounce(this, this.checkApplyDebounce.bind(this), debounceMs);
         this.onBtApplyDebounce = () => {
             this.debouncePending = true;
@@ -265,7 +249,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     public getModel(): M | null {
-        return this.appliedModel ? this.appliedModel : null;
+        return this.appliedModel ?? null;
     }
 
     public setModel(model: M | null): AgPromise<void> {
@@ -288,7 +272,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     protected handleCancelEnd(e: Event): void {
-        if (this.providedFilterParams.closeOnApply) {
+        if (this.params.closeOnApply) {
             this.close(e);
         }
     }
@@ -354,10 +338,10 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
             // the floating filter uses 'afterFloatingFilter' info, so it doesn't refresh after filter changed if change
             // came from floating filter
             const source: FilterChangedEventSourceType = 'columnFilter';
-            this.providedFilterParams.filterChangedCallback({ afterFloatingFilter, afterDataChange, source });
+            this.params.filterChangedCallback({ afterFloatingFilter, afterDataChange, source });
         }
 
-        const { closeOnApply } = this.providedFilterParams;
+        const { closeOnApply } = this.params;
 
         // only close if an apply button is visible, otherwise we'd be closing every time a change was made!
         if (closeOnApply && this.applyActive && !afterFloatingFilter && !afterDataChange) {
@@ -391,7 +375,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
      */
     protected onUiChanged(fromFloatingFilter = false, apply?: 'immediately' | 'debounce' | 'prevent'): void {
         this.updateUiVisibility();
-        this.providedFilterParams.filterModifiedCallback();
+        this.params.filterModifiedCallback();
 
         if (this.applyActive && !this.isReadOnly()) {
             const isValid = this.isModelValid(this.getModelFromUi()!);
@@ -418,13 +402,12 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
 
     private refreshFilterResizer(containerType?: ContainerType): void {
         // tool panel is scrollable, so don't need to size
-        if (!this.positionableFeature || containerType === 'toolPanel') {
+        const { positionableFeature, gos } = this;
+        if (!positionableFeature || containerType === 'toolPanel') {
             return;
         }
 
         const isResizable = containerType === 'floatingFilter' || containerType === 'columnFilter';
-
-        const { positionableFeature, gos } = this;
 
         if (isResizable) {
             positionableFeature.restoreLastSize();
@@ -434,23 +417,21 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
                     : { bottom: true, bottomRight: true, right: true }
             );
         } else {
-            this.positionableFeature.removeSizeFromEl();
-            this.positionableFeature.setResizable(false);
+            positionableFeature.removeSizeFromEl();
+            positionableFeature.setResizable(false);
         }
-        this.positionableFeature.constrainSizeToAvailableHeight(true);
+        positionableFeature.constrainSizeToAvailableHeight(true);
     }
 
     public afterGuiDetached(): void {
         this.checkApplyDebounce();
 
-        if (this.positionableFeature) {
-            this.positionableFeature.constrainSizeToAvailableHeight(false);
-        }
+        this.positionableFeature?.constrainSizeToAvailableHeight(false);
     }
 
     public refresh(newParams: ProvidedFilterParams): boolean {
-        const oldParams = this.providedFilterParams;
-        this.providedFilterParams = newParams;
+        const oldParams = this.params;
+        this.params = newParams;
 
         this.resetButtonsPanel(newParams, oldParams);
 
@@ -475,13 +456,11 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     protected translate(key: keyof typeof FILTER_LOCALE_TEXT): string {
-        const translate = this.getLocaleTextFunc();
-
-        return translate(key, FILTER_LOCALE_TEXT[key]);
+        return this.getLocaleTextFunc()(key, FILTER_LOCALE_TEXT[key]);
     }
 
     protected getCellValue(rowNode: IRowNode): V | null | undefined {
-        return this.providedFilterParams.getValue(rowNode);
+        return this.params.getValue(rowNode);
     }
 
     // override to control positionable feature
