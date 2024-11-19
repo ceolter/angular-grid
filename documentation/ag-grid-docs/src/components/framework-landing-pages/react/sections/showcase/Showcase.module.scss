@@ -11,9 +11,13 @@
         grid-template-columns: repeat(1, 1fr);
     }
 }
-
+/* adds rounded border to grid items */
 .gridItem:first-child {
     border-top-left-radius: $spacing-size-2;
+}
+
+.gridItem:nth-child(4) {
+    border-bottom-left-radius: $spacing-size-2;
 }
 
 .gridItem:last-child {
@@ -27,8 +31,8 @@
 
     .logo {
         opacity: 0.5;
-        transition: opacity 0.5s all;
         height: 40px;
+        transition: opacity 1.5s ease;
 
         path {
             fill: var(--color-fg-secondary);
@@ -38,12 +42,11 @@
     .icon {
         width: 32px;
         height: 32px;
-
         path {
             fill: var(--color-util-brand-500);
 
             #{$selector-darkmode} & {
-                fill: var(--color-bg-primary);
+                fill: var(--color-white);
             }
         }
     }
@@ -54,7 +57,7 @@
     padding: $spacing-size-8;
     margin: -1px;
     border: 1px solid var(--color-border-secondary);
-    transition: all 0.6s;
+    transition: all 0.5s;
 
     a {
         padding-right: $spacing-size-4;
@@ -65,11 +68,22 @@
         background-color: var(--color-brand-50);
         z-index: 2;
         cursor: pointer;
-        transition: opacity 0.5s all;
 
         .logo {
             opacity: 1;
-            transition: opacity 0.5s all;
+            path {
+                #{$selector-darkmode} & {
+                    fill: var(--color-bg-primary);
+                }
+            }
+        }
+
+        .icon {
+            path {
+                #{$selector-darkmode} & {
+                    fill: var(--color-bg-primary);
+                }
+            }
         }
 
         #{$selector-darkmode} & {
