@@ -27,6 +27,26 @@ const Showcase: React.FC = () => {
                     Analyse complex financial data, perform calculations and visualise the data in AG Grid, with
                     standalone charts from AG Charts.
                 </p>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Visit Site
+                    </span>
+                </a>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Source code
+                    </span>
+                </a>
             </div>
 
             <div className={styles.gridItem}>
@@ -39,6 +59,26 @@ const Showcase: React.FC = () => {
                     Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to
                     powers the tables in its dashboard
                 </p>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Visit Site
+                    </span>
+                </a>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Source code
+                    </span>
+                </a>
             </div>
 
             <div className={styles.gridItem}>
@@ -51,6 +91,26 @@ const Showcase: React.FC = () => {
                     Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to
                     help visualise mission data.
                 </p>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Visit Site
+                    </span>
+                </a>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Source code
+                    </span>
+                </a>
             </div>
 
             <div className={styles.gridItem}>
@@ -63,6 +123,26 @@ const Showcase: React.FC = () => {
                     An open source React library for building dashboards, with AG Grid enterprise support for building
                     React tables with advanced features.
                 </p>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Visit Site
+                    </span>
+                </a>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Source code
+                    </span>
+                </a>
             </div>
 
             <div className={styles.gridItem}>
@@ -75,6 +155,26 @@ const Showcase: React.FC = () => {
                     Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI
                     builder.
                 </p>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Visit Site
+                    </span>
+                </a>
+                <a
+                    href="https://ag-grid.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
+                >
+                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
+                        Source code
+                    </span>
+                </a>
             </div>
         </div>
     );

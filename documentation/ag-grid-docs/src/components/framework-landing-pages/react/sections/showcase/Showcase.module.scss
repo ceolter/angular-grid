@@ -20,6 +20,35 @@
     border-bottom-right-radius: $spacing-size-2;
 }
 
+.iconWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    .logo {
+        opacity: 0.5;
+        transition: opacity 0.5s all;
+        height: 40px;
+
+        path {
+            fill: var(--color-fg-secondary);
+        }
+    }
+
+    .icon {
+        width: 32px;
+        height: 32px;
+
+        path {
+            fill: var(--color-util-brand-500);
+
+            #{$selector-darkmode} & {
+                fill: var(--color-bg-primary);
+            }
+        }
+    }
+}
+
 .gridItem {
     background-color: var(--color-bg-primary);
     padding: $spacing-size-8;
@@ -27,38 +56,31 @@
     border: 1px solid var(--color-border-secondary);
     transition: all 0.6s;
 
+    a {
+        padding-right: $spacing-size-4;
+    }
+
     &:hover {
         border: 1px solid var(--color-util-brand-500);
         background-color: var(--color-brand-50);
-        #{$selector-darkmode} & {
-            border: 1px solid var(--color-white);
-        }
         z-index: 2;
         cursor: pointer;
-        transition: all 0.6s;
-    }
-
-    .iconWrapper {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 16px;
+        transition: opacity 0.5s all;
 
         .logo {
-            path {
-                fill: var(--color-fg-secondary);
-            }
+            opacity: 1;
+            transition: opacity 0.5s all;
         }
 
-        .icon {
-            width: 32px;
-            height: 32px;
-
-            path {
-                fill: var(--color-util-brand-500);
-                #{$selector-darkmode} & {
-                    fill: var(--color-fg-primary);
-                }
+        #{$selector-darkmode} & {
+            h3,
+            p,
+            a {
+                color: var(--color-bg-primary);
             }
+
+            background-color: var(--color-brand-200);
+            border: 1px solid var(--color-white);
         }
     }
 
