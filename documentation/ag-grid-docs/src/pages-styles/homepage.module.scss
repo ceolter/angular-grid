@@ -545,6 +545,14 @@ body {
     justify-content: center;
     align-items: center;
     gap: 8px;
+
+    #{$selector-darkmode} & {
+        background-color: var(--color-white);
+        color: var(--color-bg-primary);
+        svg path {
+            fill: var(--color-bg-primary);
+        }
+    }
 }
 
 .heroSectioncta1 svg {

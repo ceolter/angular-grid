@@ -11,18 +11,6 @@
         grid-template-columns: repeat(1, 1fr);
     }
 }
-/* adds rounded border to grid items */
-.gridItem:first-child {
-    border-top-left-radius: $spacing-size-2;
-}
-
-.gridItem:nth-child(4) {
-    border-bottom-left-radius: $spacing-size-2;
-}
-
-.gridItem:last-child {
-    border-bottom-right-radius: $spacing-size-2;
-}
 
 .iconWrapper {
     display: flex;
@@ -58,6 +46,44 @@
     margin: -1px;
     border: 1px solid var(--color-border-secondary);
     transition: all 0.5s;
+    position: relative;
+    z-index: 1;
+
+    &:nth-child(1) {
+        @media screen and (max-width: $breakpoint-hero-small) {
+            border-top-right-radius: $spacing-size-2;
+        }
+        border-top-left-radius: $spacing-size-2;
+        &:hover {
+            z-index: 6;
+        }
+    }
+    &:nth-child(2) {
+        &:hover {
+            z-index: 5;
+        }
+    }
+    &:nth-child(3) {
+        border-top-right-radius: $spacing-size-2;
+        &:hover {
+            z-index: 4;
+        }
+    }
+    &:nth-child(4) {
+        border-bottom-left-radius: $spacing-size-2;
+        &:hover {
+            z-index: 3;
+        }
+    }
+    &:nth-child(5) {
+        @media screen and (max-width: $breakpoint-hero-small) {
+            border-bottom-left-radius: $spacing-size-2;
+        }
+        border-bottom-right-radius: $spacing-size-2;
+        &:hover {
+            z-index: 2;
+        }
+    }
 
     a {
         padding-right: $spacing-size-4;
@@ -66,7 +92,6 @@
     &:hover {
         border: 1px solid var(--color-util-brand-500);
         background-color: var(--color-brand-50);
-        z-index: 2;
         cursor: pointer;
 
         .logo {
@@ -108,5 +133,9 @@
         font-size: var(--text-fs-sm);
         color: var(--color-text-secondary);
         opacity: 0.8;
+    }
+
+    #{$selector-darkmode} & {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); // sharper transition for dark mode
     }
 }
