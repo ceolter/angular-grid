@@ -1,13 +1,20 @@
 import type { CellKeyDownEvent, ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, MenuModule, SetFilterModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    FiltersToolPanelModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     SetFilterModule,
 ]);
 

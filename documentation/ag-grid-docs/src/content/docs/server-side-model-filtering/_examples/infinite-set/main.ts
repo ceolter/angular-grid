@@ -11,7 +11,7 @@ import type {
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { MultiFilterModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
@@ -20,7 +20,8 @@ import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ServerSideRowModelModule,
     SetFilterModule,
     MultiFilterModule,

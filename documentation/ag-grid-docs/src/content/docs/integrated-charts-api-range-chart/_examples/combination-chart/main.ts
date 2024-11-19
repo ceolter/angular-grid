@@ -3,7 +3,7 @@ import type { AgAxisCaptionFormatterParams } from 'ag-charts-types';
 
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import { IntegratedChartsModule, MenuModule, RowGroupingModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
@@ -11,7 +11,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
 ]);
 

@@ -3,7 +3,7 @@ import type { CellValueChangedEvent, GridApi, GridOptions, ICellEditorParams } f
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
 import type { IRow } from './data';
@@ -14,7 +14,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RichSelectModule,
 ]);
 

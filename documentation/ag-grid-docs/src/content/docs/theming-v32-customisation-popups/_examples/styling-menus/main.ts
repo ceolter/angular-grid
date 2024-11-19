@@ -4,8 +4,9 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     ClipboardModule,
+    ColumnMenuModule,
     ColumnsToolPanelModule,
-    MenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
@@ -15,7 +16,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
 ]);

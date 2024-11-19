@@ -3,9 +3,15 @@ import type { ColDef, GetMainMenuItemsParams, GridApi, GridOptions, MenuItemDef 
 import { PostProcessPopupParams, createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ColumnsToolPanelModule, MenuModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ColumnsToolPanelModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 200 },

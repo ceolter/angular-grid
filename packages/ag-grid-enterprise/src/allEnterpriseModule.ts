@@ -7,7 +7,7 @@ import { ColumnsToolPanelModule } from './columnToolPanel/columnsToolPanelModule
 import { ExcelExportModule } from './excelExport/excelExportModule';
 import { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
 import { MasterDetailModule } from './masterDetail/masterDetailModule';
-import { MenuModule } from './menu/menuModule';
+import { ColumnMenuModule, ContextMenuModule } from './menu/menuModule';
 import { baseEnterpriseModule } from './moduleUtils';
 import { MultiFilterModule } from './multiFilter/multiFilterModule';
 import { PivotModule } from './pivot/pivotModule';
@@ -30,7 +30,8 @@ export const AllEnterpriseModule: _ModuleWithoutApi = {
         ExcelExportModule,
         FiltersToolPanelModule,
         MasterDetailModule,
-        MenuModule,
+        ColumnMenuModule,
+        ContextMenuModule,
         CellSelectionModule,
         RichSelectModule,
         RowGroupingModule,

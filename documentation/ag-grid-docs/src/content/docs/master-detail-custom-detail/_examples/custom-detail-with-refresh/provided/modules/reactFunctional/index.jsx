@@ -5,7 +5,7 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import DetailCellRenderer from './detailCellRenderer.jsx';
@@ -15,7 +15,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     MasterDetailModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ColumnsToolPanelModule,
 ]);
 

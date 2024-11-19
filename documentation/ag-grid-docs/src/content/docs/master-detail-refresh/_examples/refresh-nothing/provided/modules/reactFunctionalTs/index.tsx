@@ -6,7 +6,7 @@ import type { ColDef, FirstDataRenderedEvent, GetRowIdParams, GridReadyEvent } f
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import type { CustomDetailCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -16,7 +16,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     MasterDetailModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ColumnsToolPanelModule,
 ]);
 

@@ -7,13 +7,20 @@ import {
     ModuleRegistry,
     createGrid,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule, MenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    RowGroupingModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
 ]);
