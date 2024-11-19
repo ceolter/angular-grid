@@ -10,6 +10,15 @@
     gap: 0 var(--column-gap);
 }
 
+.column {
+    width: 100%;
+    margin-bottom: -1px;
+
+    @media screen and (min-width: $breakpoint-landing-page-medium) {
+        width: calc(50% - var(--column-gap) / 2);
+    }
+}
+
 .questionContainer {
     --question-border: 1px solid var(--color-util-gray-200);
 
@@ -25,14 +34,6 @@
 
     #{$selector-darkmode} & {
         --question-border: 1px solid var(--color-util-gray-400);
-    }
-
-    @media screen and (min-width: $breakpoint-landing-page-medium) {
-        width: calc(50% - var(--column-gap) / 2);
-
-        &:nth-last-child(2) {
-            border-bottom: var(--question-border);
-        }
     }
 }
 

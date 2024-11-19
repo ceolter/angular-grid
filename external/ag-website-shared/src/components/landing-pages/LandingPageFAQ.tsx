@@ -1,3 +1,4 @@
+import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import classnames from 'classnames';
 import { useState } from 'react';
@@ -25,7 +26,9 @@ const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, isOpen, onClick }) 
                 <Icon svgClasses={styles.expandIcon} name={'chevronRight'} />
             </div>
 
-            {isOpen && <div className={styles.answerContainer}>{itemData.answer}</div>}
+            <Collapsible isOpen={isOpen}>
+                <div className={styles.answerContainer}>{itemData.answer}</div>
+            </Collapsible>
         </div>
     );
 };
@@ -33,20 +36,35 @@ const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, isOpen, onClick }) 
 export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData }) => {
     const [activeItemIndex, setActiveItemIndex] = useState(-1);
 
+    const clickHandler = (activeIndex) => {
+        if (activeIndex === activeItemIndex) {
+            setActiveItemIndex(-1);
+        } else {
+            setActiveItemIndex(activeIndex);
+        }
+    };
+
+    const getColumnItems = (columnIndex) => {
+        return FAQData.map((item, i) => {
+            if (i % 2 === columnIndex) return;
+
+            return (
+                <FAQItem
+                    itemData={item}
+                    key={i}
+                    isOpen={activeItemIndex === i}
+                    onClick={() => {
+                        clickHandler(i);
+                    }}
+                />
+            );
+        });
+    };
+
     return (
         <div className={styles.container}>
-            {FAQData.map((item, i) => {
-                return (
-                    <FAQItem
-                        itemData={item}
-                        key={i}
-                        isOpen={activeItemIndex === i}
-                        onClick={() => {
-                            setActiveItemIndex(i);
-                        }}
-                    />
-                );
-            })}
+            <div className={styles.column}> {getColumnItems(0)}</div>
+            <div className={styles.column}> {getColumnItems(1)}</div>
         </div>
     );
 };
