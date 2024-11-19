@@ -576,7 +576,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows(state);
 
-        if (state.afterColumnsChanged) {
+        if (state.columnsChanged) {
             this.afterColumnsChanged();
         }
 

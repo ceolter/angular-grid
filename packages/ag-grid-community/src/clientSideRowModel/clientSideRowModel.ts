@@ -120,7 +120,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const refreshEverythingFunc = this.refreshModel.bind(this, { step: 'group' });
         const refreshEverythingAfterColsChangedFunc = this.refreshModel.bind(this, {
             step: 'group', // after cols change, row grouping (the first stage) could of changed
-            afterColumnsChanged: true,
+            columnsChanged: true,
             keepRenderedRows: true,
             // we want animations cos sorting or filtering could be applied
             animate: !this.gos.get('suppressAnimationFrame'),

@@ -28,7 +28,7 @@ export interface RefreshModelParams<TData = any> {
     step: ClientSideRowModelStage;
 
     /** true if this update is due to columns changing, ie no rows were changed */
-    afterColumnsChanged?: boolean;
+    columnsChanged?: boolean;
 
     /** if true, rows that are kept are animated to the new position */
     animate?: boolean;
@@ -84,8 +84,8 @@ export class RefreshModelState<TData = any> {
     /** how much of the pipeline to execute */
     public step: ClientSideRowModelStage;
 
-    /** true if this update is due to columns changing, ie no rows were changed */
-    public afterColumnsChanged: boolean;
+    /** true if columns were changed, this is used by tree data and grouping to check if group data need to be changed */
+    public columnsChanged: boolean;
 
     /** if true, rows that are kept are animated to the new position */
     public animate: boolean;
@@ -145,7 +145,7 @@ export class RefreshModelState<TData = any> {
         public readonly rootNode: AbstractClientSideNodeManager.RootNode<TData>,
         {
             step,
-            afterColumnsChanged = false,
+            columnsChanged = false,
             animate = false,
             keepRenderedRows = false,
             keepUndoRedoStack = false,
@@ -159,7 +159,7 @@ export class RefreshModelState<TData = any> {
         public readonly changedPath: ChangedPath = createInactiveChangedPath(rootNode)
     ) {
         this.step = step;
-        this.afterColumnsChanged = afterColumnsChanged;
+        this.columnsChanged = columnsChanged;
         this.animate = animate;
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
@@ -168,14 +168,14 @@ export class RefreshModelState<TData = any> {
 
     public updateParams({
         step,
-        afterColumnsChanged = false,
+        columnsChanged = false,
         animate = false,
         keepRenderedRows = false,
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
     }: RefreshModelParams<any>) {
         this.nested = true;
-        this.afterColumnsChanged ||= afterColumnsChanged;
+        this.columnsChanged ||= columnsChanged;
         this.animate &&= animate;
         this.keepRenderedRows &&= keepRenderedRows;
         this.keepUndoRedoStack &&= keepUndoRedoStack;
@@ -218,7 +218,7 @@ export class RefreshModelState<TData = any> {
         this.setStep('group');
         this.rowDataUpdated = true;
         this.newData = true;
-        this.afterColumnsChanged = false;
+        this.columnsChanged = false;
         this.animate = false;
         this.keepRenderedRows = false;
         this.keepUndoRedoStack = false;
@@ -252,11 +252,13 @@ export class RefreshModelState<TData = any> {
         this.deltaUpdateTransactions = null;
     }
 
+    /** Registers a node as removed. It has precedence over add and update. */
     public remove(node: IRowNode<TData>): void {
         this.removals.add(node as RowNode<TData>);
         this.updates.delete(node as RowNode<TData>);
     }
 
+    /** Registers a node as updated. Note that add has the precedence. */
     public update(node: IRowNode<TData>): boolean {
         const updates = this.updates;
         if (updates.has(node as RowNode<TData>)) {
@@ -266,6 +268,7 @@ export class RefreshModelState<TData = any> {
         return true;
     }
 
+    /** Registers a node as added. Add has the precedence over update. */
     public add(node: IRowNode<TData>): void {
         this.updates.set(node as RowNode<TData>, true);
     }

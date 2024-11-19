@@ -98,7 +98,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         if (details.transactions) {
             this.handleTransaction(details);
         } else {
-            this.shotgunResetEverything(details, state.afterColumnsChanged);
+            this.shotgunResetEverything(details, state.columnsChanged);
         }
 
         const changedPath = state.changedPath!;
