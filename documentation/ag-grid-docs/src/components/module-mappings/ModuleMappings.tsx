@@ -1,5 +1,7 @@
-import type { CollectionEntry } from 'astro:content';
-import { type FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Framework } from '@ag-grid-types';
+import type { ModuleMappings as ModuleMappingsType } from '@ag-grid-types';
+import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
+import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
 import type {
@@ -12,8 +14,11 @@ import type {
 import { ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
+import { type SelectedModules, getModuleMappingsSnippet } from './getModuleMappingsSnippet';
+
 interface Props {
-    modules: CollectionEntry<'module-mappings'>['data'];
+    framework: Framework;
+    modules: ModuleMappingsType;
 }
 
 ModuleRegistry.registerModules([
@@ -25,9 +30,10 @@ ModuleRegistry.registerModules([
     ClipboardModule,
 ]);
 
-export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
+export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules }) => {
     const allCommunityRef = useRef(false);
     const allEnterpriseRef = useRef(false);
+
     const [defaultColDef] = useState({
         flex: 1,
     });
@@ -38,10 +44,12 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
     });
     const getRowId = useCallback((params: GetRowIdParams) => params.data.name, []);
     const [update, setUpdate] = useState(0);
-    const [selectedModules, setSelectedModules] = useState<{ community: string[]; enterprise: string[] }>({
+    const [selectedModules, setSelectedModules] = useState<SelectedModules>({
         community: [],
         enterprise: [],
     });
+    const selectedDependenciesSnippet = useMemo(() => getModuleMappingsSnippet(selectedModules), [selectedModules]);
+
     const onRowSelected = useCallback((event: RowSelectedEvent) => {
         const {
             node,
@@ -104,10 +112,7 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
             enterprise: allEnterpriseRef.current ? ['AllEnterpriseModule'] : selectedEnterprise,
         });
     }, []);
-    useEffect(() => {
-        // eslint-disable-next-line no-console
-        console.log('selected modules', selectedModules);
-    }, [selectedModules]);
+
     const rowSelection = useMemo<RowSelectionOptions>(() => {
         return {
             mode: 'multiRow',
@@ -133,20 +138,25 @@ export const ModuleMappings: FunctionComponent<Props> = ({ modules }) => {
     }, [update]);
 
     return (
-        <div style={{ height: '600px' }}>
-            <AgGridReact
-                defaultColDef={defaultColDef}
-                columnDefs={columnDefs}
-                autoGroupColumnDef={autoGroupColumnDef}
-                rowData={modules.groups}
-                treeData
-                treeDataChildrenField={'children'}
-                getRowId={getRowId}
-                rowSelection={rowSelection}
-                onRowSelected={onRowSelected}
-                groupDefaultExpanded={-1}
-                loadThemeGoogleFonts
-            />
-        </div>
+        <>
+            <div style={{ height: '600px' }}>
+                <AgGridReact
+                    defaultColDef={defaultColDef}
+                    columnDefs={columnDefs}
+                    autoGroupColumnDef={autoGroupColumnDef}
+                    rowData={modules.groups}
+                    treeData
+                    treeDataChildrenField={'children'}
+                    getRowId={getRowId}
+                    rowSelection={rowSelection}
+                    onRowSelected={onRowSelected}
+                    groupDefaultExpanded={-1}
+                    loadThemeGoogleFonts
+                />
+            </div>
+            {selectedDependenciesSnippet && (
+                <Snippet framework={framework} content={selectedDependenciesSnippet} copyToClipboard />
+            )}
+        </>
     );
 };

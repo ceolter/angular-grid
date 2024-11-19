@@ -1,3 +1,6 @@
+import type { IconName } from '@ag-website-shared/icon/Icon';
+import type { CollectionEntry } from 'astro:content';
+
 export type Framework = 'javascript' | 'react' | 'angular' | 'vue';
 
 export type InternalFramework = 'vanilla' | 'typescript' | 'reactFunctional' | 'reactFunctionalTs' | 'angular' | 'vue3';
@@ -38,3 +41,5 @@ export interface FooterItem {
         iconName: string;
     }[];
 }
+
+export type ModuleMappings = CollectionEntry<'module-mappings'>['data'];
