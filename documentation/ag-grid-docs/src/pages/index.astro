@@ -18,6 +18,7 @@ import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 import { Finance } from 'src/components/demos/examples/finance';
+import { StockPerformanceGrid } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { blogPrefix } = whatsNewData['grid'];
@@ -101,6 +102,16 @@ const frameworksData = [
     </div>
 
     <AutomatedExamples client:visible />
+
+    <LandingPageSection
+        tag="Theming and customisation"
+        heading="Personalise the grids appearance"
+        subHeading="Customise your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our advanced features."
+        ctaTitle="Use the Theme Builder"
+        ctaUrl={urlWithBaseUrl('/community/showcase/')}
+    >
+        <StockPerformanceGrid client:load />
+    </LandingPageSection>
 
     <LandingPageSection
         tag="See the use cases"
