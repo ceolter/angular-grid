@@ -69,12 +69,16 @@
            heights are enabled.
     
           - use line height rather than flex align to centre single line text within a
-            default height row, because if the row is larger than the default height
-            then we want content to be top aligned.
+            default height row, because if the row is made larger than the default height
+            then we want all additional space to go at the bottom.
           - don't allow line height to be larger than the actual row height as then
             content won't fit
+          - subtract the row border width to ensure that text is still centrally aligned
+            when there is a thick row border
             */
-    --ag-internal-content-line-height: min(calc(var(--ag-row-height) - 1px), var(--ag-line-height, 1000px));
+    --ag-internal-content-line-height: calc(
+        min(var(--ag-row-height), var(--ag-line-height, 1000px)) - var(--ag-internal-row-border-width, 1px)
+    );
 }
 
 /* Hide the border of the last last row when there is no gap between the row and
