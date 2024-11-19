@@ -17,6 +17,7 @@ import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
 import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
+import { Finance } from 'src/components/demos/examples/finance';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { blogPrefix } = whatsNewData['grid'];
@@ -84,8 +85,8 @@ const frameworksData = [
                 </div>
             </section>
         </section>
-        <section class={styles.heroGrid}>
-            <HeroGrid />
+        <section class={styles.heroSectiondemoContainer}>
+            <Finance client:load gridHeight={450} />
         </section>
     </div>
 
