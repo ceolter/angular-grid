@@ -18,6 +18,10 @@
     font-size: var(--text-fs-lg);
     font-weight: var(--text-semibold);
     color: var(--color-util-brand-600);
+
+    #{$selector-darkmode} & {
+        color: var(--color-util-brand-900);
+    }
 }
 
 .heading {

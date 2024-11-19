@@ -44,9 +44,11 @@ export abstract class MiniChart extends Component {
         this.scene.canvas.element.title = this.chartTranslation.translate(this.tooltipName);
 
         // Necessary to force scene graph render as we are not using the standalone factory.
-        this.scene.render().catch((e: Error) => {
+        try {
+            this.scene.render();
+        } catch (e) {
             _error(108, { e });
-        });
+        }
     }
 
     abstract updateColors(fills: string[], strokes: string[]): void;

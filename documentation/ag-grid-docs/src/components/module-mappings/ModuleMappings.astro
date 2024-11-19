@@ -1,8 +1,12 @@
 ---
 import { getEntry } from 'astro:content';
 import { ModuleMappings } from './ModuleMappings';
+import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
+
+const { pathname } = Astro.url;
+const framework = getFrameworkFromPath(pathname);
 
 const { data: modules } = await getEntry('module-mappings', 'modules');
 ---
 
-<ModuleMappings client:load modules={modules} />
+<ModuleMappings client:load framework={framework} modules={modules} />

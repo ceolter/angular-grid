@@ -70,38 +70,39 @@ export class TouchService extends BeanStub implements NamedBean {
         if (gos.get('suppressTouch')) {
             return;
         }
+        const { params, eMenu, eFilterButton } = comp;
 
         const touchListener = new TouchListener(comp.getGui(), true);
         const suppressMenuHide = comp.shouldSuppressMenuHide();
-        const tapMenuButton = suppressMenuHide && _exists(comp.eMenu);
-        const menuTouchListener = tapMenuButton ? new TouchListener(comp.eMenu!, true) : touchListener;
+        const tapMenuButton = suppressMenuHide && _exists(eMenu);
+        const menuTouchListener = tapMenuButton ? new TouchListener(eMenu, true) : touchListener;
 
-        if (comp.params.enableMenu) {
+        if (params.enableMenu) {
             const eventType: TouchListenerEvent = tapMenuButton ? 'tap' : 'longTap';
             const showMenuFn = (event: TapEvent | LongTapEvent) =>
-                comp.params.showColumnMenuAfterMouseClick(event.touchStart);
+                params.showColumnMenuAfterMouseClick(event.touchStart);
             comp.addManagedListeners(menuTouchListener, { [eventType]: showMenuFn });
         }
 
-        if (comp.params.enableSorting) {
+        if (params.enableSorting) {
             const tapListener = (event: TapEvent) => {
                 const target = event.touchStart.target as HTMLElement;
                 // When suppressMenuHide is true, a tap on the menu icon or filter button will bubble up
                 // to the header container, in that case we should not sort
-                if (suppressMenuHide && (comp.eMenu?.contains(target) || comp.eFilterButton?.contains(target))) {
+                if (suppressMenuHide && (eMenu?.contains(target) || eFilterButton?.contains(target))) {
                     return;
                 }
 
-                sortSvc?.progressSort(comp.params.column as AgColumn, false, 'uiColumnSorted');
+                sortSvc?.progressSort(params.column as AgColumn, false, 'uiColumnSorted');
             };
 
             comp.addManagedListeners(touchListener, { tap: tapListener });
         }
 
-        if (comp.params.enableFilterButton) {
-            const filterButtonTouchListener = new TouchListener(comp.eFilterButton!, true);
+        if (params.enableFilterButton && eFilterButton) {
+            const filterButtonTouchListener = new TouchListener(eFilterButton, true);
             comp.addManagedListeners(filterButtonTouchListener, {
-                tap: () => comp.params.showFilter(comp.eFilterButton!),
+                tap: () => params.showFilter(eFilterButton),
             });
             comp.addDestroyFunc(() => filterButtonTouchListener.destroy());
         }
