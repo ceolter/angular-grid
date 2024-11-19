@@ -90,7 +90,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     public setNodesSelected(params: ISetNodesSelectedParams): number {
-        if (!_isRowSelection(this.gos)) {
+        if (!_isRowSelection(this.gos) && params.newValue) {
             _warn(132);
             return 0;
         }
