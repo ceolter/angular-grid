@@ -1,4 +1,4 @@
-import type { AgChartInstance, AgSparklineOptions } from 'ag-charts-types';
+import type { AgChartInstance, AgChartTheme, AgSparklineOptions } from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
@@ -29,7 +29,6 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
 
         if (!this.sparklineInstance && params && width > 0 && height) {
             this.sparklineOptions = {
-                background: { visible: false },
                 container: this.eSparkline,
                 width,
                 height,
@@ -39,6 +38,16 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
 
             if (this.sparklineOptions.tooltip?.renderer) {
                 this.wrapTooltipRenderer();
+            } else {
+                this.sparklineOptions.tooltip = {
+                    ...this.sparklineOptions.tooltip,
+                    renderer: (params: any) => this.createDefaultContent(params),
+                };
+            }
+
+            const theme = this.sparklineOptions?.theme as AgChartTheme;
+            if (theme?.overrides?.bar?.series?.itemStyler) {
+                this.wrapBarItemStyler();
             }
 
             // create new sparkline
@@ -57,24 +66,50 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         return false;
     }
 
+    private createParams(params: any) {
+        return {
+            context: {
+                data: this.params?.data,
+                cellData: this.params?.value,
+            },
+            yValue: params.datum.yValue ?? params.datum[params.yKey],
+            xValue: params.datum.xValue ?? params.datum[params.xKey],
+        };
+    }
+
+    private createDefaultContent(params: any) {
+        const yValue = params.datum.yValue ?? params.datum[params.yKey];
+        return {
+            content: `${yValue}`,
+        };
+    }
+
+    private wrapBarItemStyler() {
+        // Only bar sparklines have itemStyler
+        const theme = this.sparklineOptions.theme as AgChartTheme;
+        const existing = theme.overrides!.bar!.series!.itemStyler!;
+
+        theme.overrides!.bar!.series!.itemStyler = wrapFn(existing, (fn, stylerParams: any): any => {
+            return fn({
+                ...this.createParams(stylerParams),
+                ...stylerParams,
+            });
+        });
+    }
+
     private wrapTooltipRenderer() {
         const existing = this.sparklineOptions.tooltip!.renderer!;
-        type existingType = typeof existing;
 
         this.sparklineOptions.tooltip = {
             ...this.sparklineOptions.tooltip,
-            renderer: wrapFn(existing, (fn, tooltipParams: Parameters<existingType>[0]): ReturnType<existingType> => {
-                return fn({
-                    ...tooltipParams,
-                    ...({
-                        context: {
-                            data: this.params?.data,
-                            cellData: this.params?.value,
-                        },
-                        yValue: tooltipParams.datum[tooltipParams.yKey],
-                        xValue: tooltipParams.datum[tooltipParams.xKey],
-                    } as any),
-                });
+            renderer: wrapFn(existing, (fn, tooltipParams: any): any => {
+                return {
+                    ...this.createDefaultContent(tooltipParams),
+                    ...fn({
+                        ...this.createParams(tooltipParams),
+                        ...tooltipParams,
+                    }),
+                };
             }),
         };
     }
