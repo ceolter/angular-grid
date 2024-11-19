@@ -20,9 +20,24 @@ export const Collapsible: FunctionComponent<Props> = ({
         return children;
     }
 
+    const onStart = () => {
+        document.body.classList.add('no-overflow-anchor');
+    };
+
+    const onEnd = () => {
+        document.body.classList.remove('no-overflow-anchor');
+    };
+
     const height = isOpen ? 'auto' : 0;
+
     return (
-        <AnimateHeight id={id} duration={animationDuration} height={height}>
+        <AnimateHeight
+            id={id}
+            duration={animationDuration}
+            height={height}
+            onHeightAnimationStart={onStart}
+            onHeightAnimationEnd={onEnd}
+        >
             {children}
         </AnimateHeight>
     );
