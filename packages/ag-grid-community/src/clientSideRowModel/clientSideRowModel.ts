@@ -13,7 +13,7 @@ import {
     _isAnimateRows,
     _isDomLayout,
 } from '../gridOptionsUtils';
-import type { ClientSideRowModelStage, IClientSideRowModel } from '../interfaces/iClientSideRowModel';
+import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { RowBounds, RowModelType } from '../interfaces/iRowModel';
 import type { IRowNodeAggregationStage, IRowNodeMapStage, IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
@@ -117,25 +117,63 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             this.filterAggStage,
             this.flattenStage,
         ].filter((stage) => !!stage) as IRowNodeStage[];
-        const refreshEverythingFunc = this.refreshModel.bind(this, { step: 'group' });
-        const refreshEverythingAfterColsChangedFunc = this.refreshModel.bind(this, {
-            step: 'group', // after cols change, row grouping (the first stage) could of changed
-            columnsChanged: true,
-            keepRenderedRows: true,
-            // we want animations cos sorting or filtering could be applied
-            animate: !this.gos.get('suppressAnimationFrame'),
-        });
+
+        const regroup = this.refreshModel.bind(this, { step: 'group' });
+
+        const newColumnsLoaded = () => {
+            this.refreshModel({
+                step: 'group', // after cols change, row grouping (the first stage) could of changed
+                columnsChanged: true,
+                keepRenderedRows: true,
+                // we want animations cos sorting or filtering could be applied
+                animate: !this.gos.get('suppressAnimationFrame'),
+            });
+        };
+
+        const columnValueChanged = () => {
+            this.refreshModel({ step: this.colModel.isPivotActive() ? 'pivot' : 'aggregate' });
+        };
+
+        const columnPivotChanged = () => {
+            this.refreshModel({ step: 'pivot' });
+        };
+
+        const sortChanged = () => {
+            this.refreshModel({
+                step: 'sort',
+                keepRenderedRows: true,
+                animate: _isAnimateRows(this.gos),
+            });
+        };
+
+        const filterChanged = (event: FilterChangedEvent) => {
+            if (!event.afterDataChange) {
+                const primaryOrQuickFilterChanged =
+                    event.columns.length === 0 || event.columns.some((col) => col.isPrimary());
+                this.refreshModel({
+                    step: primaryOrQuickFilterChanged ? 'filter' : 'filter_aggregates',
+                    keepRenderedRows: true,
+                    animate: _isAnimateRows(this.gos),
+                });
+            }
+        };
+
+        const gridReady = () => {
+            // App can start using API to add transactions, so need to add data into the node manager if not started
+            this.refreshModel({ step: 'nothing' });
+        };
 
         this.addManagedEventListeners({
-            newColumnsLoaded: refreshEverythingAfterColsChangedFunc,
-            columnRowGroupChanged: refreshEverythingFunc,
-            columnValueChanged: this.onValueChanged.bind(this),
-            columnPivotChanged: this.refreshModel.bind(this, { step: 'pivot' }),
-            filterChanged: this.onFilterChanged.bind(this),
-            sortChanged: this.onSortChanged.bind(this),
-            columnPivotModeChanged: refreshEverythingFunc,
+            newColumnsLoaded,
+            columnRowGroupChanged: regroup,
+            columnValueChanged,
+            columnPivotChanged,
+            columnPivotModeChanged: regroup,
+            filterChanged,
+            sortChanged,
+            gridReady,
+
             gridStylesChanged: this.onGridStylesChanges.bind(this),
-            gridReady: this.onGridReady.bind(this),
         });
 
         // doesn't need done if doing full reset
@@ -536,7 +574,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public refreshAfterRowGroupOpened(keepRenderedRows: boolean): void {
-        // TODO: investigate why we need to do a full refresh here
+        // TODO: investigate why we need keepRenderedRows=false
         // This method is called by expansion service alone
         this.refreshModel({
             step: 'map',
@@ -545,44 +583,30 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         });
     }
 
-    private onFilterChanged(event: FilterChangedEvent): void {
-        if (event.afterDataChange) {
-            return;
-        }
-        const animate = _isAnimateRows(this.gos);
-        const primaryOrQuickFilterChanged = event.columns.length === 0 || event.columns.some((col) => col.isPrimary());
-        const step: ClientSideRowModelStage = primaryOrQuickFilterChanged ? 'filter' : 'filter_aggregates';
-        this.refreshModel({ step: step, keepRenderedRows: true, animate: animate });
-    }
-
-    private onSortChanged(): void {
-        this.refreshModel({
-            step: 'sort',
-            keepRenderedRows: true,
-            animate: _isAnimateRows(this.gos),
-        });
-    }
-
     public getType(): RowModelType {
         return 'clientSide';
     }
 
-    private onValueChanged(): void {
-        this.refreshModel({ step: this.colModel.isPivotActive() ? 'pivot' : 'aggregate' });
-    }
-
-    private isSuppressModelUpdateAfterUpdateTransaction(state: RefreshModelState): boolean {
-        if (!this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
+    private isSuppressModelUpdateAfterUpdateTransaction({
+        rowDataUpdated,
+        removals,
+        updates,
+    }: RefreshModelState): boolean {
+        if (!rowDataUpdated || !this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
             return false;
         }
 
-        const transWithAddsOrDeletes = state.deltaUpdateTransactions?.some(
-            (tx) => (tx.add != null && tx.add.length > 0) || (tx.remove != null && tx.remove.length > 0)
-        );
+        if (removals.size) {
+            return false; // Remove found
+        }
 
-        // return true if we are only doing update transactions
-        const transactionsContainUpdatesOnly = !transWithAddsOrDeletes;
-        return transactionsContainUpdatesOnly;
+        for (const update of updates.keys()) {
+            if (update.data && updates.get(update)) {
+                return false; // Add found
+            }
+        }
+
+        return true; // No add or remove found, only updates
     }
 
     public refreshModel(params: RefreshModelParams): void {
@@ -602,10 +626,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const started = this.started;
         if (!state) {
             ownsState = true;
+            rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
             state = new RefreshModelState(this.gos, rootNode, params);
             this.currentRefreshModelState = state;
-            state.started = started;
-            rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
         } else {
             rowDataChanged = rowData !== state.rowData;
             state.updateParams(params);
@@ -632,10 +655,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         const nodeManagerChanged = oldNodeManager !== nodeManager;
-
         if (nodeManagerChanged || rowDataChanged) {
             newRowData = state.rowData;
-
             if (newRowData != null && !Array.isArray(newRowData)) {
                 newRowData = null;
                 _warn(1);
@@ -644,7 +665,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         if (nodeManagerChanged) {
             state.fullReload = true;
-
             oldNodeManager?.deactivate();
             this.nodeManager = nodeManager;
         }
@@ -1271,13 +1291,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
 
             this.resetRowHeights();
-        }
-    }
-
-    private onGridReady(): void {
-        if (!this.started) {
-            // App can start using API to add transactions, so need to add data into the node manager if not started
-            this.refreshModel({ step: 'nothing' });
         }
     }
 

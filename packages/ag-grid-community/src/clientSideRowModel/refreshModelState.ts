@@ -69,9 +69,6 @@ export class RefreshModelState<TData = any> {
      */
     public fullReload: boolean = false;
 
-    /** If this is true, refreshModel was called inside refreshModel */
-    public nested: boolean = false;
-
     /** The CSRM might still not be in a started state during initialization */
     public started: boolean = false;
 
@@ -168,7 +165,6 @@ export class RefreshModelState<TData = any> {
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
     }: RefreshModelParams<any>) {
-        this.nested = true;
         this.columnsChanged ||= columnsChanged;
         this.animate &&= animate;
         this.keepRenderedRows &&= keepRenderedRows;
@@ -234,10 +230,8 @@ export class RefreshModelState<TData = any> {
         }
         this.deltaUpdate = true;
         this.changedPath.active = true;
-        if (!this.nested) {
-            this.keepRenderedRows = true;
-            this.animate = !this.gos.get('suppressAnimationFrame');
-        }
+        this.keepRenderedRows = true;
+        this.animate = !this.gos.get('suppressAnimationFrame');
         return true;
     }
 
