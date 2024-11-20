@@ -9,7 +9,7 @@
     },
     {
         "question": "Will my React Tables be compatible with AG Charts?",
-        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between React Tables and [React Charts](/charts/react/quick-start/)."
+        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between React Tables and [React Charts](https://www.ag-grid.com/charts/react/quick-start/)."
     },
     {
         "question": "Can I customise the React Table?",
