@@ -22,6 +22,7 @@
     display: flex;
     gap: 16px;
     flex-direction: column;
+    margin-top: $spacing-size-12;
 }
 .themeOptions {
     padding-bottom: $spacing-size-5;
@@ -79,8 +80,12 @@
     line-height: 1.5;
     overflow-x: auto;
     left: -100px;
-    bottom: 40px;
+    bottom: 50px;
     box-shadow: var(--shadow-md);
+
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+    }
 }
 
 .windowControls {
@@ -95,15 +100,7 @@
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: #ff5f56;
-
-    &:nth-child(2) {
-        background-color: #ffbd2e;
-    }
-
-    &:nth-child(3) {
-        background-color: #27c93f;
-    }
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .codeBlock {
@@ -112,4 +109,16 @@
     color: var(--color-white);
     margin: 0;
     white-space: pre;
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+    }
+}
+
+.lineNumbers {
+    color: rgba(255, 255, 255, 0.6);
+    margin-right: 16px;
+    text-align: right;
+    user-select: none;
+    margin-top: 30px;
+    font-size: 14px;
 }

@@ -27,7 +27,7 @@ interface Props {
 
 export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => {
     const [theme, setTheme] = useState(themeQuartz);
-    const [spacing, setSpacing] = useState(12);
+    const [spacing, setSpacing] = useState(8);
 
     const columnDefs = useMemo<ColDef[]>(
         () => [
@@ -56,6 +56,16 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
         { ticker: 'JP10Y', performance: [94074, 19321], current: 94074, feb: 19321 },
     ];
 
+    const handleThemeChange = (newTheme: typeof themeQuartz | typeof themeBalham | typeof themeAlpine) => {
+        setTheme(newTheme.withParams({ spacing }));
+        setTheme(newTheme);
+    };
+
+    const handleSpacingChange = (newSpacing: number) => {
+        setSpacing(newSpacing);
+        setTheme(theme.withParams({ spacing: newSpacing }));
+    };
+
     const themeName = theme === themeAlpine ? 'themeAlpine' : theme === themeBalham ? 'themeBalham' : 'themeQuartz';
     const codeBlock = `
     import { ${themeName} } from 'ag-grid-community';
@@ -65,6 +75,7 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
       spacing={${spacing}}
     />
       `;
+    const lines = codeBlock.split('\n');
 
     return (
         <div className={styles.gridColumns}>
@@ -72,39 +83,38 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                 <div className={styles.themeOptions}>
                     <div className={styles.label}>Theme</div>
                     <div className={styles.buttonGroup}>
-                        <button
-                            className={theme === themeQuartz ? styles.active : ''}
-                            onClick={() => setTheme(themeQuartz)}
-                        >
-                            Quartz
-                        </button>
-                        <button
-                            className={theme === themeBalham ? styles.active : ''}
-                            onClick={() => setTheme(themeBalham)}
-                        >
-                            Balham
-                        </button>
-                        <button
-                            className={theme === themeAlpine ? styles.active : ''}
-                            onClick={() => setTheme(themeAlpine)}
-                        >
-                            Alpine
-                        </button>
+                        {[
+                            { value: themeQuartz, label: 'Quartz' },
+                            { value: themeBalham, label: 'Balham' },
+                            { value: themeAlpine, label: 'Alpine' },
+                        ].map((themeOption) => (
+                            <button
+                                key={themeOption.label}
+                                className={theme === themeOption.value ? styles.active : ''}
+                                onClick={() => handleThemeChange(themeOption.value)}
+                            >
+                                {themeOption.label}
+                            </button>
+                        ))}
                     </div>
                 </div>
 
                 <div className="spacing-options">
                     <div className={styles.label}>Spacing</div>
                     <div className={styles.buttonGroup}>
-                        <button className={spacing === 12 ? 'active' : ''} onClick={() => setSpacing(12)}>
-                            Compact
-                        </button>
-                        <button className={spacing === 16 ? 'active' : ''} onClick={() => setSpacing(16)}>
-                            Normal
-                        </button>
-                        <button className={spacing === 24 ? 'active' : ''} onClick={() => setSpacing(24)}>
-                            Large
-                        </button>
+                        {[
+                            { value: 8, label: 'Compact' },
+                            { value: 12, label: 'Normal' },
+                            { value: 16, label: 'Large' },
+                        ].map((spacingOption) => (
+                            <button
+                                key={spacingOption.label}
+                                className={spacing === spacingOption.value ? styles.active : ''}
+                                onClick={() => handleSpacingChange(spacingOption.value)}
+                            >
+                                {spacingOption.label}
+                            </button>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -128,7 +138,14 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                         <div className={styles.dot}></div>
                         <div className={styles.dot}></div>
                     </div>
-                    <pre className={styles.codeBlock}>{codeBlock}</pre>
+                    <div style={{ display: 'flex' }}>
+                        <div className={styles.lineNumbers}>
+                            {lines.map((_, index) => (
+                                <div key={index}>{index + 1}</div>
+                            ))}
+                        </div>
+                        <pre className={styles.codeBlock}>{codeBlock}</pre>
+                    </div>
                 </div>
             </div>
         </div>
