@@ -191,18 +191,20 @@ export class GridOptionsService extends BeanStub implements NamedBean {
         const events: PropertyValueChangedEvent<keyof GridOptions>[] = [];
         const { gridOptions, validation } = this;
 
-        const changedPaths = _getObjectPaths(options);
-        for (const path of changedPaths) {
+        const deepEvents: DeepPropertyValueChangedEvent<any>[] = [];
+        for (const path of _getObjectPaths(options)) {
             const eventType = path.join('.');
             const value = _getValueUsingField(options, eventType, true);
             const oldValue = _getValueUsingField(gridOptions, eventType, true);
-            this.deepPropEventScv.dispatchEvent({
-                type: eventType,
-                currentValue: value,
-                previousValue: oldValue,
-                changeSet,
-                source,
-            } as DeepPropertyValueChangedEvent<typeof value>);
+            if (value !== oldValue) {
+                deepEvents.push({
+                    type: eventType,
+                    currentValue: value,
+                    previousValue: oldValue,
+                    changeSet,
+                    source,
+                });
+            }
         }
 
         Object.entries(options).forEach(([key, value]) => {
@@ -231,6 +233,8 @@ export class GridOptionsService extends BeanStub implements NamedBean {
             _logIfDebug(this, `Updated property ${event.type} from`, event.previousValue, ` to `, event.currentValue);
             this.propEventSvc.dispatchEvent(event);
         });
+
+        deepEvents.forEach((event) => this.deepPropEventScv.dispatchEvent(event));
     }
 
     addPropertyEventListener<K extends keyof GridOptions>(key: K, listener: PropertyValueChangedListener<K>): void {
