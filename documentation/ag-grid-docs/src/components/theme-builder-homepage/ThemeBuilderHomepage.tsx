@@ -122,8 +122,13 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                         />
                     </ShadowDom>
                 </div>
-                <div className={styles.codeBlock}>
-                    <pre>{codeBlock}</pre>
+                <div className={styles.codeBlockWrapper}>
+                    <div className={styles.windowControls}>
+                        <div className={styles.dot}></div>
+                        <div className={styles.dot}></div>
+                        <div className={styles.dot}></div>
+                    </div>
+                    <pre className={styles.codeBlock}>{codeBlock}</pre>
                 </div>
             </div>
         </div>

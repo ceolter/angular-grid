@@ -69,9 +69,47 @@
     }
 }
 
-.codeBlock pre {
+.codeBlockWrapper {
+    position: relative;
+    background-color: #111a4a;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+    left: -100px;
+    bottom: 40px;
+    box-shadow: var(--shadow-md);
+}
+
+.windowControls {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ff5f56;
+
+    &:nth-child(2) {
+        background-color: #ffbd2e;
+    }
+
+    &:nth-child(3) {
+        background-color: #27c93f;
+    }
+}
+
+.codeBlock {
     background: #111a4a;
+    border: none;
     color: var(--color-white);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    margin: 0;
+    white-space: pre;
 }
