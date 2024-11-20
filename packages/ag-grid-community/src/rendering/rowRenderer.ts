@@ -146,6 +146,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
         );
 
         this.addManagedPropertyListener('cellSelection', ({ currentValue, previousValue }) => {
+            // Only redraw rows if cell selection is enabled or disabled
             if ((!previousValue && currentValue) || (previousValue && !currentValue)) {
                 this.redrawRows();
             }
