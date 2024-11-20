@@ -168,14 +168,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         };
 
         this.addManagedEventListeners({
-            newColumnsLoaded,
+            gridReady,
             columnRowGroupChanged: regroup,
             columnValueChanged,
             columnPivotChanged,
             columnPivotModeChanged: regroup,
+            newColumnsLoaded,
             filterChanged,
             sortChanged,
-            gridReady,
 
             gridStylesChanged: this.onGridStylesChanges.bind(this),
         });
@@ -233,14 +233,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.nodeManager.activate(state);
     }
 
-    private getNodeManagerToUse(): AbstractClientSideNodeManager<any> {
+    private getNodeManagerToUse(): AbstractClientSideNodeManager {
         const { gos, beans } = this;
 
         const treeData = gos.get('treeData');
         const childrenField = gos.get('treeDataChildrenField');
         const isTree = childrenField || treeData;
 
-        let nodeManager: AbstractClientSideNodeManager<any> | undefined;
+        let nodeManager: AbstractClientSideNodeManager | undefined;
         if (isTree) {
             nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
         }
@@ -1088,7 +1088,26 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.pivotStage?.execute(state);
     }
 
+    private doRowsToDisplay(state: RefreshModelState) {
+        const { flattenStage } = this;
+        let rowsToDisplay: RowNode[];
+        if (flattenStage) {
+            rowsToDisplay = flattenStage.execute(state);
+        } else {
+            rowsToDisplay = state.rootNode.childrenAfterSort ?? [];
+            for (let i = 0, len = rowsToDisplay.length; i < len; i++) {
+                rowsToDisplay[i].setUiLevel(0);
+            }
+        }
+        this.rowsToDisplay = rowsToDisplay;
+    }
+
     public getRowNode(id: string): RowNode | undefined {
+        const found = this.nodeManager.getRowNode(id);
+        if (found !== undefined) {
+            return found;
+        }
+
         // although id is typed a string, this could be called by the user, and they could have passed a number
         const idIsGroup = typeof id == 'string' && id.indexOf(ROW_ID_PREFIX_ROW_GROUP) == 0;
 
@@ -1106,7 +1125,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return res;
         }
 
-        return this.nodeManager.getRowNode(id);
+        return undefined;
     }
 
     public applyTransactionAsync(
@@ -1150,23 +1169,23 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 this.rowNodesCountReady = true;
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
-                for (let i = 0; i < batch.length; i++) {
-                    const tranItem = batch[i];
-                    if (tranItem.callback) {
+                for (let i = 0; i < batch.length; ++i) {
+                    const { rowDataTransaction, callback } = batch[i];
+                    results.push(this.nodeManager.applyTransaction(state, rowDataTransaction, getRowIdFunc));
+                    if (callback) {
                         hasCallbacks = true;
                     }
-                    results.push(this.nodeManager.applyTransaction(state, tranItem.rowDataTransaction, getRowIdFunc));
                 }
+
+                this.rowDataTransactionBatch = null;
+                this.applyAsyncTransactionsTimeout = undefined;
             },
         });
-
-        this.rowDataTransactionBatch = null;
-        this.applyAsyncTransactionsTimeout = undefined;
 
         if (hasCallbacks) {
             // do callbacks in next VM turn so it's async
             window.setTimeout(() => {
-                for (let i = 0, len = batch.length; i < len; i++) {
+                for (let i = 0; i < batch.length; ++i) {
                     const tranItem = batch[i];
                     if (tranItem.callback) {
                         tranItem.callback(results[i]);
@@ -1204,20 +1223,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         });
 
         return rowNodeTransaction;
-    }
-
-    private doRowsToDisplay(state: RefreshModelState) {
-        const { flattenStage } = this;
-        let rowsToDisplay: RowNode[];
-        if (flattenStage) {
-            rowsToDisplay = flattenStage.execute(state);
-        } else {
-            rowsToDisplay = state.rootNode.childrenAfterSort ?? [];
-            for (let i = 0, len = rowsToDisplay.length; i < len; i++) {
-                rowsToDisplay[i].setUiLevel(0);
-            }
-        }
-        this.rowsToDisplay = rowsToDisplay;
     }
 
     public onRowHeightChanged(): void {
