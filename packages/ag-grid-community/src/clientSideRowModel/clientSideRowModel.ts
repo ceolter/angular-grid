@@ -253,6 +253,451 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.refreshModel({ step: 'nothing' });
     }
 
+    /** returns false if row was moved, otherwise true */
+    public dragDropRowsAtPixel(rowNodes: RowNode[], pixel: number, increment: number = 0): boolean {
+        const allLeafChildren = this.rootNode?.allLeafChildren;
+        if (!allLeafChildren) {
+            return false;
+        }
+
+        const indexAtPixelNow = this.getRowIndexAtPixel(pixel);
+        if (indexAtPixelNow < 0) {
+            return false;
+        }
+
+        const rowNodeAtPixelNow = this.getRow(indexAtPixelNow);
+        if (rowNodeAtPixelNow === rowNodes[0]) {
+            return false;
+        }
+
+        // TODO: this implementation is currently quite inefficient and it could be optimized to run in O(n) in a single pass
+
+        rowNodes.forEach((rowNode) => {
+            _removeFromArray(allLeafChildren, rowNode);
+        });
+
+        rowNodes.forEach((rowNode, idx) => {
+            allLeafChildren.splice(Math.max(indexAtPixelNow + increment, 0) + idx, 0, rowNode);
+        });
+
+        rowNodes.forEach((rowNode: ClientSideRowModelRowNode, index) => {
+            rowNode.sourceRowIndex = index;
+        });
+
+        this.refreshModel({
+            step: 'group',
+            keepRenderedRows: true,
+            animate: !this.gos.get('suppressAnimationFrame'),
+            rowsOrderChanged: true,
+        });
+
+        return true;
+    }
+
+    public refreshAfterRowGroupOpened(keepRenderedRows: boolean): void {
+        // TODO: investigate why we need keepRenderedRows=false
+        // This method is called by expansion service alone
+        this.refreshModel({
+            step: 'map',
+            keepRenderedRows,
+            animate: keepRenderedRows && _isAnimateRows(this.gos),
+        });
+    }
+
+    /** Used to apply transaction changes.  Called by gridApi & rowDragFeature */
+    public applyTransaction(rowDataTran: RowDataTransaction): RowNodeTransaction | null {
+        const rootNode = this.rootNode;
+        if (!rootNode) {
+            return null; // Destroyed
+        }
+
+        let rowNodeTransaction: RowNodeTransaction | null = null;
+        this.refreshModel({
+            step: 'nothing',
+            keepRenderedRows: true,
+            animate: !this.gos.get('suppressAnimationFrame'),
+            updateRowNodes: (state) => {
+                this.rowNodesCountReady = true;
+                this.valueCache?.onDataChanged();
+                const getRowIdFunc = _getRowIdCallback(this.gos);
+                rowNodeTransaction = this.nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
+            },
+        });
+
+        return rowNodeTransaction;
+    }
+
+    public applyTransactionAsync(
+        rowDataTransaction: RowDataTransaction,
+        callback?: (res: RowNodeTransaction) => void
+    ): void {
+        if (this.applyAsyncTransactionsTimeout == null) {
+            this.rowDataTransactionBatch = [];
+            const waitMillis = this.gos.get('asyncTransactionWaitMillis');
+            this.applyAsyncTransactionsTimeout = window.setTimeout(() => {
+                if (this.isAlive()) {
+                    // Handle case where grid is destroyed before timeout is triggered
+                    this.executeBatchUpdateRowData();
+                }
+            }, waitMillis);
+        }
+        this.rowDataTransactionBatch!.push({ rowDataTransaction: rowDataTransaction, callback });
+    }
+
+    public flushAsyncTransactions(): void {
+        if (this.applyAsyncTransactionsTimeout != null) {
+            clearTimeout(this.applyAsyncTransactionsTimeout);
+            this.executeBatchUpdateRowData();
+        }
+    }
+
+    private executeBatchUpdateRowData(): void {
+        const batch = this.rowDataTransactionBatch;
+        if (!batch) {
+            return; // Destroyed
+        }
+
+        let hasCallbacks = false;
+        const results: RowNodeTransaction[] = [];
+
+        this.refreshModel({
+            step: 'nothing',
+            keepRenderedRows: true,
+            animate: !this.gos.get('suppressAnimationFrame'),
+            updateRowNodes: (state) => {
+                this.rowNodesCountReady = true;
+                this.valueCache?.onDataChanged();
+                const getRowIdFunc = _getRowIdCallback(this.gos);
+                for (let i = 0; i < batch.length; ++i) {
+                    const { rowDataTransaction, callback } = batch[i];
+                    results.push(this.nodeManager.applyTransaction(state, rowDataTransaction, getRowIdFunc));
+                    if (callback) {
+                        hasCallbacks = true;
+                    }
+                }
+
+                this.rowDataTransactionBatch = null;
+                this.applyAsyncTransactionsTimeout = undefined;
+            },
+        });
+
+        if (hasCallbacks) {
+            // do callbacks in next VM turn so it's async
+            window.setTimeout(() => {
+                for (let i = 0; i < batch.length; ++i) {
+                    const tranItem = batch[i];
+                    if (tranItem.callback) {
+                        tranItem.callback(results[i]);
+                    }
+                }
+            }, 0);
+        }
+
+        if (results.length) {
+            this.eventSvc.dispatchEvent({ type: 'asyncTransactionsFlushed', results });
+        }
+    }
+
+    public onRowHeightChanged(): void {
+        this.refreshModel({
+            step: 'map',
+            keepRenderedRows: true,
+            keepUndoRedoStack: true,
+        });
+    }
+
+    public refreshModel(params: RefreshModelParams): void {
+        const rootNode = this.rootNode;
+        if (!rootNode) {
+            return; // Destroyed
+        }
+
+        let state = this.currentRefreshModelState;
+
+        let newRowData: any[] | null | undefined;
+        let rowDataChanged: boolean;
+        let ownsState = false;
+
+        const changedProps = params.changedProps;
+        const rowData = this.gos.get('rowData');
+        const started = this.started;
+        if (!state) {
+            ownsState = true;
+            rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
+            state = new RefreshModelState(this.gos, rootNode, params);
+            this.currentRefreshModelState = state;
+        } else {
+            rowDataChanged = rowData !== state.rowData;
+            state.updateParams(params);
+        }
+        state.rowData = rowData;
+
+        if (!state.started && started) {
+            state.started = true;
+            ownsState = true; // This was caused by the start() method
+        }
+
+        if (changedProps) {
+            state.setStepFromStages(this.orderedStages, changedProps);
+        }
+
+        const oldNodeManager = this.nodeManager;
+        const nodeManager = this.getNodeManagerToUse();
+        this.nodeManager = nodeManager;
+
+        // TODO: don't use changedProps and remove it
+
+        if (changedProps?.includes('treeData')) {
+            state.setStep('group');
+        }
+
+        const nodeManagerChanged = oldNodeManager !== nodeManager;
+        if (nodeManagerChanged || rowDataChanged) {
+            newRowData = state.rowData;
+            if (newRowData != null && !Array.isArray(newRowData)) {
+                newRowData = null;
+                _warn(1);
+            }
+        }
+
+        if (nodeManagerChanged) {
+            state.fullReload = true;
+            oldNodeManager?.deactivate();
+            this.nodeManager = nodeManager;
+        }
+
+        nodeManager.activate(state);
+
+        if (state.fullReload && !rowDataChanged) {
+            // No new rowData was passed, so to include user executed transaction we need to extract
+            // the row data from the node manager as it might be different from the original rowData
+            newRowData = oldNodeManager?.extractRowData() ?? newRowData;
+        }
+
+        if (newRowData) {
+            state.rowData = newRowData;
+
+            const gos = this.gos;
+            const deltaUpdate =
+                !nodeManagerChanged &&
+                !this.isEmpty() &&
+                newRowData.length > 0 &&
+                gos.exists('getRowId') &&
+                // this property is a backwards compatibility property, for those who want
+                // the old behaviour of Row IDs but NOT Immutable Data.
+                !gos.get('resetRowDataOnUpdate');
+
+            if (deltaUpdate && state.setDeltaUpdate()) {
+                this.nodeManager.setImmutableRowData(state, newRowData);
+            } else {
+                state.setNewData();
+
+                this.rowNodesCountReady = true;
+                this.nodeManager.setNewRowData(state, newRowData);
+            }
+        }
+
+        params.updateRowNodes?.(state);
+
+        if (state.hasChanges()) {
+            state.setStep('group');
+        }
+
+        this.nodeManager.refreshModel(state);
+
+        let stepsExecuted = false;
+        if (ownsState && this.started) {
+            stepsExecuted = this.executeRefreshSteps(state);
+            this.currentRefreshModelState = null;
+        }
+
+        if (stepsExecuted) {
+            this.eventSvc.dispatchEvent({
+                type: 'modelUpdated',
+                animate: state.animate,
+                keepRenderedRows: state.keepRenderedRows,
+                newData: state.newData,
+                newPage: false,
+                keepUndoRedoStack: state.keepUndoRedoStack,
+            });
+        }
+    }
+
+    private isSuppressModelUpdateAfterUpdateTransaction({
+        rowDataUpdated,
+        removals,
+        updates,
+    }: RefreshModelState): boolean {
+        if (!rowDataUpdated || !this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
+            return false;
+        }
+
+        if (removals.size) {
+            return false; // Remove found
+        }
+
+        for (const update of updates.keys()) {
+            if (update.data && updates.get(update)) {
+                return false; // Add found
+            }
+        }
+
+        return true; // No add or remove found, only updates
+    }
+
+    private executeRefreshSteps(state: RefreshModelState): boolean {
+        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
+
+        if (state.rowDataUpdated) {
+            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
+        }
+
+        if (state.step === 'nothing') {
+            return false;
+        }
+
+        if (this.colModel.changeEventsDispatching || this.isSuppressModelUpdateAfterUpdateTransaction(state)) {
+            return false;
+        }
+
+        // this goes through the pipeline of stages. what's in my head is similar
+        // to the diagram on this page:
+        // http://commons.apache.org/sandbox/commons-pipeline/pipeline_basics.html
+        // however we want to keep the results of each stage, hence we manually call
+        // each step rather than have them chain each other.
+
+        // fallthrough in below switch is on purpose,
+        // eg if STEP_FILTER, then all steps below this
+        // step get done
+        // let start: number;
+        // console.log('======= start =======');
+
+        switch (state.step) {
+            case 'group':
+                this.doRowGrouping(state);
+            /* eslint-disable no-fallthrough */
+            case 'filter':
+                this.doFilter(state);
+            case 'pivot':
+                this.doPivot(state);
+            case 'aggregate': // depends on agg fields
+                this.doAggregate(state.changedPath);
+            case 'filter_aggregates':
+                this.doFilterAggregates(state);
+            case 'sort':
+                this.doSort(state);
+            case 'map':
+                this.doRowsToDisplay(state);
+            /* eslint-enable no-fallthrough */
+        }
+
+        // set all row tops to null, then set row tops on all visible rows. if we don't
+        // do this, then the algorithm below only sets row tops, old row tops from old rows
+        // will still lie around
+        const displayedNodesMapped = this.setRowTopAndRowIndex();
+        this.clearRowTopAndRowIndex(state.changedPath, displayedNodesMapped);
+
+        return true;
+    }
+
+    /** refreshModel row grouping stage (1) */
+    private doRowGrouping(state: RefreshModelState) {
+        const rootNode = state.rootNode;
+        if (!this.nodeManager.treeData) {
+            const groupStage = this.groupStage;
+            if (groupStage) {
+                groupStage.execute(state);
+            } else {
+                const sibling = rootNode.sibling;
+                rootNode.childrenAfterGroup = rootNode.allLeafChildren;
+                if (sibling) {
+                    sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
+                }
+                rootNode.updateHasChildren();
+            }
+        }
+
+        if (this.rowNodesCountReady) {
+            // only if row data has been set
+            this.rowCountReady = true;
+            this.eventSvc.dispatchEventOnce({ type: 'rowCountReady' });
+        }
+    }
+
+    /** refreshModel filter stage (2) */
+    private doFilter(state: RefreshModelState) {
+        const changedPath = state.changedPath;
+        if (this.filterStage) {
+            this.filterStage.execute(state);
+        } else {
+            changedPath.forEachChangedNodeDepthFirst((rowNode) => {
+                rowNode.childrenAfterFilter = rowNode.childrenAfterGroup;
+                updateRowNodeAfterFilter(rowNode);
+            }, true);
+        }
+    }
+
+    /** refreshModel pivot stage (3) */
+    private doPivot(state: RefreshModelState) {
+        this.pivotStage?.execute(state);
+    }
+
+    /**
+     * refreshModel aggregate stage (4)
+     * it's possible to recompute the aggregate without doing the other parts
+     * + api.refreshClientSideRowModel('aggregate')
+     */
+    public doAggregate(changedPath: ChangedPath): void {
+        this.aggStage?.aggregate(changedPath);
+    }
+
+    /** refreshModel filter aggregate stage (5) */
+    private doFilterAggregates(changedRowNodes: RefreshModelState): void {
+        const rootNode = this.rootNode!;
+        if (this.filterAggStage) {
+            this.filterAggStage.execute(changedRowNodes);
+        } else {
+            // If filterAggStage is undefined, then so is the grouping stage, so all children should be on the rootNode.
+            rootNode.childrenAfterAggFilter = rootNode.childrenAfterFilter;
+        }
+    }
+
+    /** refreshModel sort stage (6) */
+    private doSort(state: RefreshModelState) {
+        const { changedPath } = state;
+        const { groupHideOpenParentsSvc } = this.beans;
+        if (this.sortStage) {
+            this.sortStage.execute(state);
+        } else {
+            changedPath.forEachChangedNodeDepthFirst((rowNode) => {
+                // this needs to run before sorting
+                groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
+
+                rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
+
+                updateRowNodeAfterSort(rowNode);
+            });
+        }
+
+        // this needs to run after sorting
+        groupHideOpenParentsSvc?.updateGroupDataForHideOpenParents(changedPath);
+    }
+
+    /** refreshModel map stage (7) */
+    private doRowsToDisplay(state: RefreshModelState) {
+        const { flattenStage } = this;
+        let rowsToDisplay: RowNode[];
+        if (flattenStage) {
+            rowsToDisplay = flattenStage.execute(state);
+        } else {
+            rowsToDisplay = state.rootNode.childrenAfterSort ?? [];
+            for (let i = 0, len = rowsToDisplay.length; i < len; i++) {
+                rowsToDisplay[i].setUiLevel(0);
+            }
+        }
+        this.rowsToDisplay = rowsToDisplay;
+    }
+
     public ensureRowHeightsValid(
         startPixel: number,
         endPixel: number,
@@ -365,47 +810,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         };
 
         recurse(this.rootNode);
-    }
-
-    // returns false if row was moved, otherwise true
-    public ensureRowsAtPixel(rowNodes: RowNode[], pixel: number, increment: number = 0): boolean {
-        const allLeafChildren = this.rootNode?.allLeafChildren;
-        if (!allLeafChildren) {
-            return false;
-        }
-
-        const indexAtPixelNow = this.getRowIndexAtPixel(pixel);
-        if (indexAtPixelNow < 0) {
-            return false;
-        }
-
-        const rowNodeAtPixelNow = this.getRow(indexAtPixelNow);
-        if (rowNodeAtPixelNow === rowNodes[0]) {
-            return false;
-        }
-
-        // TODO: this implementation is currently quite inefficient and it could be optimized to run in O(n) in a single pass
-
-        rowNodes.forEach((rowNode) => {
-            _removeFromArray(allLeafChildren, rowNode);
-        });
-
-        rowNodes.forEach((rowNode, idx) => {
-            allLeafChildren.splice(Math.max(indexAtPixelNow + increment, 0) + idx, 0, rowNode);
-        });
-
-        rowNodes.forEach((rowNode: ClientSideRowModelRowNode, index) => {
-            rowNode.sourceRowIndex = index;
-        });
-
-        this.refreshModel({
-            step: 'group',
-            keepRenderedRows: true,
-            animate: !this.gos.get('suppressAnimationFrame'),
-            rowsOrderChanged: true,
-        });
-
-        return true;
     }
 
     public highlightRowAtPixel(rowNode: RowNode | null, pixel?: number): void {
@@ -568,212 +972,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return null;
     }
 
-    public refreshAfterRowGroupOpened(keepRenderedRows: boolean): void {
-        // TODO: investigate why we need keepRenderedRows=false
-        // This method is called by expansion service alone
-        this.refreshModel({
-            step: 'map',
-            keepRenderedRows,
-            animate: keepRenderedRows && _isAnimateRows(this.gos),
-        });
-    }
-
     public getType(): RowModelType {
         return 'clientSide';
-    }
-
-    private isSuppressModelUpdateAfterUpdateTransaction({
-        rowDataUpdated,
-        removals,
-        updates,
-    }: RefreshModelState): boolean {
-        if (!rowDataUpdated || !this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
-            return false;
-        }
-
-        if (removals.size) {
-            return false; // Remove found
-        }
-
-        for (const update of updates.keys()) {
-            if (update.data && updates.get(update)) {
-                return false; // Add found
-            }
-        }
-
-        return true; // No add or remove found, only updates
-    }
-
-    public refreshModel(params: RefreshModelParams): void {
-        const rootNode = this.rootNode;
-        if (!rootNode) {
-            return; // Destroyed
-        }
-
-        let state = this.currentRefreshModelState;
-
-        let newRowData: any[] | null | undefined;
-        let rowDataChanged: boolean;
-        let ownsState = false;
-
-        const changedProps = params.changedProps;
-        const rowData = this.gos.get('rowData');
-        const started = this.started;
-        if (!state) {
-            ownsState = true;
-            rowDataChanged = (!started && !!rowData) || !!changedProps?.includes('rowData');
-            state = new RefreshModelState(this.gos, rootNode, params);
-            this.currentRefreshModelState = state;
-        } else {
-            rowDataChanged = rowData !== state.rowData;
-            state.updateParams(params);
-        }
-        state.rowData = rowData;
-
-        if (!state.started && started) {
-            state.started = true;
-            ownsState = true; // This was caused by the start() method
-        }
-
-        if (changedProps) {
-            state.setStepFromStages(this.orderedStages, changedProps);
-        }
-
-        const oldNodeManager = this.nodeManager;
-        const nodeManager = this.getNodeManagerToUse();
-        this.nodeManager = nodeManager;
-
-        // TODO: don't use changedProps and remove it
-
-        if (changedProps?.includes('treeData')) {
-            state.setStep('group');
-        }
-
-        const nodeManagerChanged = oldNodeManager !== nodeManager;
-        if (nodeManagerChanged || rowDataChanged) {
-            newRowData = state.rowData;
-            if (newRowData != null && !Array.isArray(newRowData)) {
-                newRowData = null;
-                _warn(1);
-            }
-        }
-
-        if (nodeManagerChanged) {
-            state.fullReload = true;
-            oldNodeManager?.deactivate();
-            this.nodeManager = nodeManager;
-        }
-
-        nodeManager.activate(state);
-
-        if (state.fullReload && !rowDataChanged) {
-            // No new rowData was passed, so to include user executed transaction we need to extract
-            // the row data from the node manager as it might be different from the original rowData
-            newRowData = oldNodeManager?.extractRowData() ?? newRowData;
-        }
-
-        if (newRowData) {
-            state.rowData = newRowData;
-
-            const gos = this.gos;
-            const deltaUpdate =
-                !nodeManagerChanged &&
-                !this.isEmpty() &&
-                newRowData.length > 0 &&
-                gos.exists('getRowId') &&
-                // this property is a backwards compatibility property, for those who want
-                // the old behaviour of Row IDs but NOT Immutable Data.
-                !gos.get('resetRowDataOnUpdate');
-
-            if (deltaUpdate && state.setDeltaUpdate()) {
-                this.nodeManager.setImmutableRowData(state, newRowData);
-            } else {
-                state.setNewData();
-
-                this.rowNodesCountReady = true;
-                this.nodeManager.setNewRowData(state, newRowData);
-            }
-        }
-
-        params.updateRowNodes?.(state);
-
-        if (state.hasChanges()) {
-            state.setStep('group');
-        }
-
-        this.nodeManager.refreshModel(state);
-
-        let stepsExecuted = false;
-        if (ownsState && this.started) {
-            stepsExecuted = this.executeRefreshSteps(state);
-            this.currentRefreshModelState = null;
-        }
-
-        if (stepsExecuted) {
-            this.eventSvc.dispatchEvent({
-                type: 'modelUpdated',
-                animate: state.animate,
-                keepRenderedRows: state.keepRenderedRows,
-                newData: state.newData,
-                newPage: false,
-                keepUndoRedoStack: state.keepUndoRedoStack,
-            });
-        }
-    }
-
-    private executeRefreshSteps(state: RefreshModelState): boolean {
-        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
-
-        if (state.rowDataUpdated) {
-            this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
-        }
-
-        if (state.step === 'nothing') {
-            return false;
-        }
-
-        if (this.colModel.changeEventsDispatching || this.isSuppressModelUpdateAfterUpdateTransaction(state)) {
-            return false;
-        }
-
-        // this goes through the pipeline of stages. what's in my head is similar
-        // to the diagram on this page:
-        // http://commons.apache.org/sandbox/commons-pipeline/pipeline_basics.html
-        // however we want to keep the results of each stage, hence we manually call
-        // each step rather than have them chain each other.
-
-        // fallthrough in below switch is on purpose,
-        // eg if STEP_FILTER, then all steps below this
-        // step get done
-        // let start: number;
-        // console.log('======= start =======');
-
-        switch (state.step) {
-            case 'group':
-                this.doRowGrouping(state);
-            /* eslint-disable no-fallthrough */
-            case 'filter':
-                this.doFilter(state);
-            case 'pivot':
-                this.doPivot(state);
-            case 'aggregate': // depends on agg fields
-                this.doAggregate(state.changedPath);
-            case 'filter_aggregates':
-                this.doFilterAggregates(state);
-            case 'sort':
-                this.doSort(state);
-            case 'map':
-                this.doRowsToDisplay(state);
-            /* eslint-enable no-fallthrough */
-        }
-
-        // set all row tops to null, then set row tops on all visible rows. if we don't
-        // do this, then the algorithm below only sets row tops, old row tops from old rows
-        // will still lie around
-        const displayedNodesMapped = this.setRowTopAndRowIndex();
-        this.clearRowTopAndRowIndex(state.changedPath, displayedNodesMapped);
-
-        return true;
     }
 
     public isEmpty(): boolean {
@@ -1013,95 +1213,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return index;
     }
 
-    // it's possible to recompute the aggregate without doing the other parts
-    // + api.refreshClientSideRowModel('aggregate')
-    public doAggregate(changedPath: ChangedPath): void {
-        this.aggStage?.aggregate(changedPath);
-    }
-
-    private doFilterAggregates(changedRowNodes: RefreshModelState): void {
-        const rootNode = this.rootNode!;
-        if (this.filterAggStage) {
-            this.filterAggStage.execute(changedRowNodes);
-        } else {
-            // If filterAggStage is undefined, then so is the grouping stage, so all children should be on the rootNode.
-            rootNode.childrenAfterAggFilter = rootNode.childrenAfterFilter;
-        }
-    }
-
-    private doSort(state: RefreshModelState) {
-        const { changedPath } = state;
-        const { groupHideOpenParentsSvc } = this.beans;
-        if (this.sortStage) {
-            this.sortStage.execute(state);
-        } else {
-            changedPath.forEachChangedNodeDepthFirst((rowNode) => {
-                // this needs to run before sorting
-                groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
-
-                rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-
-                updateRowNodeAfterSort(rowNode);
-            });
-        }
-
-        // this needs to run after sorting
-        groupHideOpenParentsSvc?.updateGroupDataForHideOpenParents(changedPath);
-    }
-
-    private doRowGrouping(state: RefreshModelState) {
-        const rootNode = state.rootNode;
-        if (!this.nodeManager.treeData) {
-            const groupStage = this.groupStage;
-            if (groupStage) {
-                groupStage.execute(state);
-            } else {
-                const sibling = rootNode.sibling;
-                rootNode.childrenAfterGroup = rootNode.allLeafChildren;
-                if (sibling) {
-                    sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
-                }
-                rootNode.updateHasChildren();
-            }
-        }
-
-        if (this.rowNodesCountReady) {
-            // only if row data has been set
-            this.rowCountReady = true;
-            this.eventSvc.dispatchEventOnce({ type: 'rowCountReady' });
-        }
-    }
-
-    private doFilter(state: RefreshModelState) {
-        const changedPath = state.changedPath;
-        if (this.filterStage) {
-            this.filterStage.execute(state);
-        } else {
-            changedPath.forEachChangedNodeDepthFirst((rowNode) => {
-                rowNode.childrenAfterFilter = rowNode.childrenAfterGroup;
-                updateRowNodeAfterFilter(rowNode);
-            }, true);
-        }
-    }
-
-    private doPivot(state: RefreshModelState) {
-        this.pivotStage?.execute(state);
-    }
-
-    private doRowsToDisplay(state: RefreshModelState) {
-        const { flattenStage } = this;
-        let rowsToDisplay: RowNode[];
-        if (flattenStage) {
-            rowsToDisplay = flattenStage.execute(state);
-        } else {
-            rowsToDisplay = state.rootNode.childrenAfterSort ?? [];
-            for (let i = 0, len = rowsToDisplay.length; i < len; i++) {
-                rowsToDisplay[i].setUiLevel(0);
-            }
-        }
-        this.rowsToDisplay = rowsToDisplay;
-    }
-
     public getRowNode(id: string): RowNode | undefined {
         const found = this.nodeManager.getRowNode(id);
         if (found !== undefined) {
@@ -1126,111 +1237,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         return undefined;
-    }
-
-    public applyTransactionAsync(
-        rowDataTransaction: RowDataTransaction,
-        callback?: (res: RowNodeTransaction) => void
-    ): void {
-        if (this.applyAsyncTransactionsTimeout == null) {
-            this.rowDataTransactionBatch = [];
-            const waitMillis = this.gos.get('asyncTransactionWaitMillis');
-            this.applyAsyncTransactionsTimeout = window.setTimeout(() => {
-                if (this.isAlive()) {
-                    // Handle case where grid is destroyed before timeout is triggered
-                    this.executeBatchUpdateRowData();
-                }
-            }, waitMillis);
-        }
-        this.rowDataTransactionBatch!.push({ rowDataTransaction: rowDataTransaction, callback });
-    }
-
-    public flushAsyncTransactions(): void {
-        if (this.applyAsyncTransactionsTimeout != null) {
-            clearTimeout(this.applyAsyncTransactionsTimeout);
-            this.executeBatchUpdateRowData();
-        }
-    }
-
-    private executeBatchUpdateRowData(): void {
-        const batch = this.rowDataTransactionBatch;
-        if (!batch) {
-            return; // Destroyed
-        }
-
-        let hasCallbacks = false;
-        const results: RowNodeTransaction[] = [];
-
-        this.refreshModel({
-            step: 'nothing',
-            keepRenderedRows: true,
-            animate: !this.gos.get('suppressAnimationFrame'),
-            updateRowNodes: (state) => {
-                this.rowNodesCountReady = true;
-                this.valueCache?.onDataChanged();
-                const getRowIdFunc = _getRowIdCallback(this.gos);
-                for (let i = 0; i < batch.length; ++i) {
-                    const { rowDataTransaction, callback } = batch[i];
-                    results.push(this.nodeManager.applyTransaction(state, rowDataTransaction, getRowIdFunc));
-                    if (callback) {
-                        hasCallbacks = true;
-                    }
-                }
-
-                this.rowDataTransactionBatch = null;
-                this.applyAsyncTransactionsTimeout = undefined;
-            },
-        });
-
-        if (hasCallbacks) {
-            // do callbacks in next VM turn so it's async
-            window.setTimeout(() => {
-                for (let i = 0; i < batch.length; ++i) {
-                    const tranItem = batch[i];
-                    if (tranItem.callback) {
-                        tranItem.callback(results[i]);
-                    }
-                }
-            }, 0);
-        }
-
-        if (results.length) {
-            this.eventSvc.dispatchEvent({ type: 'asyncTransactionsFlushed', results });
-        }
-    }
-
-    /**
-     * Used to apply transaction changes.
-     * Called by gridApi & rowDragFeature
-     */
-    public applyTransaction(rowDataTran: RowDataTransaction): RowNodeTransaction | null {
-        const rootNode = this.rootNode;
-        if (!rootNode) {
-            return null; // Destroyed
-        }
-
-        let rowNodeTransaction: RowNodeTransaction | null = null;
-        this.refreshModel({
-            step: 'nothing',
-            keepRenderedRows: true,
-            animate: !this.gos.get('suppressAnimationFrame'),
-            updateRowNodes: (state) => {
-                this.rowNodesCountReady = true;
-                this.valueCache?.onDataChanged();
-                const getRowIdFunc = _getRowIdCallback(this.gos);
-                rowNodeTransaction = this.nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
-            },
-        });
-
-        return rowNodeTransaction;
-    }
-
-    public onRowHeightChanged(): void {
-        this.refreshModel({
-            step: 'map',
-            keepRenderedRows: true,
-            keepUndoRedoStack: true,
-        });
     }
 
     /** This method is debounced. It is used for row auto-height. If we don't debounce,

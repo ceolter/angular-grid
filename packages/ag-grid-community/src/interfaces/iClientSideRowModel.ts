@@ -49,7 +49,7 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     onRowHeightChangedDebounced(): void;
     doAggregate(changedPath: ChangedPath): void;
     getTopLevelNodes(): RowNode[] | null;
-    ensureRowsAtPixel(rowNode: RowNode[], pixel: number, increment: number): boolean;
+    dragDropRowsAtPixel(rowNode: RowNode[], pixel: number, increment: number): boolean;
     highlightRowAtPixel(rowNode: RowNode | null, pixel?: number): void;
     getHighlightPosition(pixel: number, rowNode?: RowNode): RowHighlightPosition;
     getLastHighlightedRowNode(): RowNode | null;
