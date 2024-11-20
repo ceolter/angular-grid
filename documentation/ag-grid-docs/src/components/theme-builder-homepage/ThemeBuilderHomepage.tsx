@@ -45,6 +45,15 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-qu
         { ticker: 'JP10Y', performance: [94074, 19321], current: 94074, feb: 19321 },
     ];
 
+    const codeBlock = `
+    import { ${themeClass.split('-')[2]} } from 'ag-grid-community';
+    
+    <AgGridReact
+      theme="${themeClass}"
+      spacing={${spacing}}
+    />
+      `;
+
     return (
         <div className={styles.gridColumns}>
             <div className={styles.optionsColumns}>
@@ -87,11 +96,21 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-qu
                     </div>
                 </div>
             </div>
-            <div
-                style={gridHeight ? { height: gridHeight } : {}}
-                className={`${themeClass} ${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
-            >
-                <AgGridReact theme="legacy" columnDefs={columnDefs} rowData={rowData} defaultColDef={defaultColDef} />
+            <div className={styles.gridCodeBlock}>
+                <div
+                    style={gridHeight ? { height: gridHeight } : {}}
+                    className={`${themeClass} ${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
+                >
+                    <AgGridReact
+                        theme="legacy"
+                        columnDefs={columnDefs}
+                        rowData={rowData}
+                        defaultColDef={defaultColDef}
+                    />
+                </div>
+                <div className={styles.codeBlock}>
+                    <pre>{codeBlock}</pre>
+                </div>
             </div>
         </div>
     );

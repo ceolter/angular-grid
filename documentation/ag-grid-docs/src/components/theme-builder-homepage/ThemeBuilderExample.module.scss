@@ -15,6 +15,7 @@
     font-weight: var(--text-semibold);
     padding-bottom: 12px;
     font-size: var(--text-fs-sm);
+    opacity: 0.8;
 }
 
 .optionsColumns {
@@ -30,6 +31,7 @@
     display: flex;
     padding: 4px;
     background-color: var(--color-util-brand-50);
+
     border-radius: 8px;
     gap: 2px;
 
@@ -39,7 +41,7 @@
         border: none;
         background: transparent;
         border-radius: 6px;
-        color: #64748b;
+        color: var(--text-color-secondary);
         font-size: var(--text-fs-base);
         font-weight: var(--text-semibold);
         cursor: pointer;
@@ -55,6 +57,21 @@
             background-color: var(--color-bg-primary);
             color: var(--color-util-brand-500);
             box-shadow: var(--shadow-sm);
+
+            #{$selector-darkmode} & {
+                background-color: var(--color-brand-200);
+            }
         }
     }
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
+        color: white;
+    }
+}
+
+.codeBlock pre {
+    background: #111a4a;
+    color: var(--color-white);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
