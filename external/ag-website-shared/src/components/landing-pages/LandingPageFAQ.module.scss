@@ -55,7 +55,11 @@
 
     flex-shrink: 0;
     padding: $spacing-size-2;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease-in-out;
+
+    &.iconDown {
+        transform: rotate(90deg);
+    }
 }
 
 .iconRotate {

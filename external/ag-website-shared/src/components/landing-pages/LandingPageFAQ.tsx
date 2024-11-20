@@ -23,7 +23,7 @@ const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, isOpen, onClick }) 
         >
             <div className={styles.titleContainer}>
                 <span className={styles.question}>{itemData.question}</span>
-                <Icon svgClasses={styles.expandIcon} name={'chevronRight'} />
+                <Icon svgClasses={classnames(styles.expandIcon, { [styles.iconDown]: isOpen })} name={'chevronRight'} />
             </div>
 
             <Collapsible isOpen={isOpen}>
@@ -37,11 +37,7 @@ export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData }) => {
     const [activeItemIndex, setActiveItemIndex] = useState(-1);
 
     const clickHandler = (activeIndex) => {
-        if (activeIndex === activeItemIndex) {
-            setActiveItemIndex(-1);
-        } else {
-            setActiveItemIndex(activeIndex);
-        }
+        setActiveItemIndex(activeIndex !== activeItemIndex ? activeIndex : -1);
     };
 
     const getColumnItems = (columnIndex) => {
