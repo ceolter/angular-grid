@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import root from 'react-shadow';
 
+import { type ColDef, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
@@ -9,16 +11,15 @@ import { AgGridReact } from 'ag-grid-react';
 import styles from './ThemeBuilderExample.module.scss';
 
 interface Props {
-    gridTheme?: string;
     isDarkMode?: boolean;
     gridHeight?: number | null;
 }
 
-export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-quartz', gridHeight = null }) => {
-    const [themeClass, setTheme] = useState(gridTheme);
+export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => {
+    const [theme, setTheme] = useState(themeQuartz);
     const [spacing, setSpacing] = useState(12);
 
-    const columnDefs = useMemo(
+    const columnDefs = useMemo<ColDef[]>(
         () => [
             { field: 'ticker', width: 120 },
             { field: 'performance', type: 'gauge' },
@@ -45,11 +46,12 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-qu
         { ticker: 'JP10Y', performance: [94074, 19321], current: 94074, feb: 19321 },
     ];
 
+    const themeName = theme === themeAlpine ? 'themeAlpine' : theme === themeBalham ? 'themeBalham' : 'themeQuartz';
     const codeBlock = `
-    import { ${themeClass.split('-')[2]} } from 'ag-grid-community';
+    import { ${themeName} } from 'ag-grid-community';
     
     <AgGridReact
-      theme="${themeClass}"
+      theme={${themeName}}
       spacing={${spacing}}
     />
       `;
@@ -61,20 +63,20 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-qu
                     <div className={styles.label}>Theme</div>
                     <div className={styles.buttonGroup}>
                         <button
-                            className={themeClass === 'ag-theme-quartz' ? styles.active : ''}
-                            onClick={() => setTheme('ag-theme-quartz')}
+                            className={theme === themeQuartz ? styles.active : ''}
+                            onClick={() => setTheme(themeQuartz)}
                         >
                             Quartz
                         </button>
                         <button
-                            className={themeClass === 'ag-theme-balham' ? styles.active : ''}
-                            onClick={() => setTheme('ag-theme-balham')}
+                            className={theme === themeBalham ? styles.active : ''}
+                            onClick={() => setTheme(themeBalham)}
                         >
                             Balham
                         </button>
                         <button
-                            className={themeClass === 'ag-theme-alpine' ? styles.active : ''}
-                            onClick={() => setTheme('ag-theme-alpine')}
+                            className={theme === themeAlpine ? styles.active : ''}
+                            onClick={() => setTheme(themeAlpine)}
                         >
                             Alpine
                         </button>
@@ -99,14 +101,16 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-qu
             <div className={styles.gridCodeBlock}>
                 <div
                     style={gridHeight ? { height: gridHeight } : {}}
-                    className={`${themeClass} ${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
+                    className={`${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
                 >
-                    <AgGridReact
-                        theme="legacy"
-                        columnDefs={columnDefs}
-                        rowData={rowData}
-                        defaultColDef={defaultColDef}
-                    />
+                    <root.div style={{ height: '100%' }}>
+                        <AgGridReact
+                            theme={theme}
+                            columnDefs={columnDefs}
+                            rowData={rowData}
+                            defaultColDef={defaultColDef}
+                        />
+                    </root.div>
                 </div>
                 <div className={styles.codeBlock}>
                     <pre>{codeBlock}</pre>
