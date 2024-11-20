@@ -17,17 +17,14 @@ interface Props {
 
 const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, isOpen, onClick }) => {
     return (
-        <div
-            className={classnames(styles.questionContainer, 'plausible-event-name=react-table-expand-faq')}
-            onClick={onClick}
-        >
-            <div className={styles.titleContainer}>
+        <div className={classnames(styles.questionContainer, 'plausible-event-name=react-table-expand-faq')}>
+            <div className={styles.titleContainer} onClick={onClick}>
                 <span className={styles.question}>{itemData.question}</span>
                 <Icon svgClasses={classnames(styles.expandIcon, { [styles.iconDown]: isOpen })} name={'chevronRight'} />
             </div>
 
             <Collapsible isOpen={isOpen}>
-                <div className={styles.answerContainer}>{itemData.answer}</div>
+                <div className={styles.answerContainer} dangerouslySetInnerHTML={{ __html: itemData.answer }}></div>
             </Collapsible>
         </div>
     );
@@ -42,7 +39,7 @@ export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData }) => {
 
     const getColumnItems = (columnIndex) => {
         return FAQData.map((item, i) => {
-            if (i % 2 === columnIndex) return;
+            if (i % 2 !== columnIndex) return;
 
             return (
                 <FAQItem

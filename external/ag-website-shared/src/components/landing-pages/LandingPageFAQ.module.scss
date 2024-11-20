@@ -22,7 +22,6 @@
 .questionContainer {
     --question-border: 1px solid var(--color-util-gray-200);
 
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     padding: $spacing-size-5 0 $spacing-size-6;
@@ -38,20 +37,31 @@
 }
 
 .titleContainer {
+    --title-fg: var(--color-fg-secondary);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
     word-wrap: break-word;
     padding: $spacing-size-2 0;
+    cursor: pointer;
+
+    &:hover {
+        --title-fg: var(--color-brand-900);
+
+        #{$selector-darkmode} & {
+            --title-fg: var(--color-link-hover);
+        }
+    }
 }
 
 .question {
     font-weight: var(--text-semibold);
-    color: var(--color-fg-secondary);
+    color: var(--title-fg);
 }
 
 .expandIcon {
-    --icon-color: var(--color-fg-secondary);
+    --icon-color: var(--title-fg);
 
     flex-shrink: 0;
     padding: $spacing-size-2;
@@ -60,10 +70,6 @@
     &.iconDown {
         transform: rotate(90deg);
     }
-}
-
-.iconRotate {
-    transform: rotate(180deg);
 }
 
 .answerContainer {
