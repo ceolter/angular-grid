@@ -1,4 +1,5 @@
 import { ShadowDom } from '@components/ShadowDom';
+import { TickerCellRenderer } from '@components/demos/examples/finance/cell-renderers/TickerCellRenderer';
 import React, { useMemo, useState } from 'react';
 
 import {
@@ -31,7 +32,10 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
 
     const columnDefs = useMemo<ColDef[]>(
         () => [
-            { field: 'ticker', width: 120 },
+            {
+                field: 'ticker',
+                cellRenderer: TickerCellRenderer,
+            },
             { field: 'performance', type: 'gauge' },
             { field: 'current', type: 'rightAligned' },
             { field: 'feb', type: 'rightAligned' },
