@@ -1,14 +1,24 @@
+import { ShadowDom } from '@components/ShadowDom';
 import React, { useMemo, useState } from 'react';
-import root from 'react-shadow';
 
-import { type ColDef, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    type ColDef,
+    ModuleRegistry,
+    themeAlpine,
+    themeBalham,
+    themeQuartz,
+} from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
+import { RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import styles from './ThemeBuilderExample.module.scss';
+
+ModuleRegistry.registerModules([AllCommunityModule, RowGroupingPanelModule]);
 
 interface Props {
     isDarkMode?: boolean;
@@ -103,14 +113,14 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                     style={gridHeight ? { height: gridHeight } : {}}
                     className={`${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
                 >
-                    <root.div style={{ height: '100%' }}>
+                    <ShadowDom>
                         <AgGridReact
                             theme={theme}
                             columnDefs={columnDefs}
                             rowData={rowData}
                             defaultColDef={defaultColDef}
                         />
-                    </root.div>
+                    </ShadowDom>
                 </div>
                 <div className={styles.codeBlock}>
                     <pre>{codeBlock}</pre>
