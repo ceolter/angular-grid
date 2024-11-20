@@ -8,8 +8,14 @@ import { AgGridReact } from 'ag-grid-react';
 
 import styles from './ThemeBuilderExample.module.scss';
 
-export const StockPerformanceGrid = () => {
-    const [theme, setTheme] = useState('ag-theme-quartz');
+interface Props {
+    gridTheme?: string;
+    isDarkMode?: boolean;
+    gridHeight?: number | null;
+}
+
+export const StockPerformanceGrid: React.FC<Props> = ({ gridTheme = 'ag-theme-quartz', gridHeight = null }) => {
+    const [themeClass, setTheme] = useState(gridTheme);
     const [spacing, setSpacing] = useState(12);
 
     const columnDefs = useMemo(
@@ -40,40 +46,52 @@ export const StockPerformanceGrid = () => {
     ];
 
     return (
-        <div className="grid-container">
-            <div className="theme-options">
-                <button
-                    className={theme === 'ag-theme-quartz' ? 'active' : ''}
-                    onClick={() => setTheme('ag-theme-quartz')}
-                >
-                    Quartz
-                </button>
-                <button
-                    className={theme === 'ag-theme-balham' ? 'active' : ''}
-                    onClick={() => setTheme('ag-theme-balham')}
-                >
-                    Balham
-                </button>
-                <button
-                    className={theme === 'ag-theme-alpine' ? 'active' : ''}
-                    onClick={() => setTheme('ag-theme-alpine')}
-                >
-                    Alpine
-                </button>
+        <div className={styles.gridColumns}>
+            <div className={styles.optionsColumns}>
+                <div className={styles.themeOptions}>
+                    <div className={styles.label}>Theme</div>
+                    <div className={styles.buttonGroup}>
+                        <button
+                            className={themeClass === 'ag-theme-quartz' ? styles.active : ''}
+                            onClick={() => setTheme('ag-theme-quartz')}
+                        >
+                            Quartz
+                        </button>
+                        <button
+                            className={themeClass === 'ag-theme-balham' ? styles.active : ''}
+                            onClick={() => setTheme('ag-theme-balham')}
+                        >
+                            Balham
+                        </button>
+                        <button
+                            className={themeClass === 'ag-theme-alpine' ? styles.active : ''}
+                            onClick={() => setTheme('ag-theme-alpine')}
+                        >
+                            Alpine
+                        </button>
+                    </div>
+                </div>
+
+                <div className="spacing-options">
+                    <div className={styles.label}>Spacing</div>
+                    <div className={styles.buttonGroup}>
+                        <button className={spacing === 12 ? 'active' : ''} onClick={() => setSpacing(12)}>
+                            Compact
+                        </button>
+                        <button className={spacing === 16 ? 'active' : ''} onClick={() => setSpacing(16)}>
+                            Normal
+                        </button>
+                        <button className={spacing === 24 ? 'active' : ''} onClick={() => setSpacing(24)}>
+                            Large
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div className="spacing-options">
-                <button className={spacing === 12 ? 'active' : ''} onClick={() => setSpacing(12)}>
-                    Compact
-                </button>
-                <button className={spacing === 16 ? 'active' : ''} onClick={() => setSpacing(16)}>
-                    Normal
-                </button>
-                <button className={spacing === 24 ? 'active' : ''} onClick={() => setSpacing(24)}>
-                    Large
-                </button>
-            </div>
-            <div className={`${styles.gridWrapper} ag-grid-react ${theme}`}>
-                <AgGridReact columnDefs={columnDefs} rowData={rowData} defaultColDef={defaultColDef} />
+            <div
+                style={gridHeight ? { height: gridHeight } : {}}
+                className={`${themeClass} ${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
+            >
+                <AgGridReact theme="legacy" columnDefs={columnDefs} rowData={rowData} defaultColDef={defaultColDef} />
             </div>
         </div>
     );
