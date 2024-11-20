@@ -103,9 +103,9 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                     <div className={styles.label}>Spacing</div>
                     <div className={styles.buttonGroup}>
                         {[
-                            { value: 8, label: 'Compact' },
-                            { value: 12, label: 'Normal' },
-                            { value: 16, label: 'Large' },
+                            { value: 6, label: 'Compact' },
+                            { value: 8, label: 'Normal' },
+                            { value: 12, label: 'Large' },
                         ].map((spacingOption) => (
                             <button
                                 key={spacingOption.label}
