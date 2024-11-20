@@ -118,6 +118,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             this.flattenStage,
         ].filter((stage) => !!stage) as IRowNodeStage[];
 
+        const rootNode = new RowNode(this.beans);
+        this.rootNode = rootNode;
+        this.nodeManager = this.getNodeManagerToUse();
+
         const regroup = this.refreshModel.bind(this, { step: 'group' });
 
         const newColumnsLoaded = () => {
@@ -178,34 +182,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         // doesn't need done if doing full reset
         // Property listeners which call `refreshModel` at different stages
-        this.addPropertyListeners();
-
-        const rootNode = new RowNode(this.beans);
-        this.rootNode = rootNode;
-        this.nodeManager = this.getNodeManagerToUse();
-
-        const state = new RefreshModelState(this.gos, rootNode, { step: 'nothing' });
-        state.fullReload = true;
-
-        this.nodeManager.activate(state);
-    }
-
-    private getNodeManagerToUse(): AbstractClientSideNodeManager<any> {
-        const { gos, beans } = this;
-
-        const treeData = gos.get('treeData');
-        const childrenField = gos.get('treeDataChildrenField');
-        const isTree = childrenField || treeData;
-
-        let nodeManager: AbstractClientSideNodeManager<any> | undefined;
-        if (isTree) {
-            nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
-        }
-
-        return nodeManager ?? beans.csrmNodeSvc!;
-    }
-
-    private addPropertyListeners() {
         // Omitted Properties
         //
         // We do not act reactively on all functional properties, as it's possible the application is React and
@@ -251,6 +227,25 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         });
 
         this.addManagedPropertyListener('rowHeight', () => this.resetRowHeights());
+
+        const state = new RefreshModelState(this.gos, rootNode, { step: 'nothing' });
+        state.fullReload = true;
+        this.nodeManager.activate(state);
+    }
+
+    private getNodeManagerToUse(): AbstractClientSideNodeManager<any> {
+        const { gos, beans } = this;
+
+        const treeData = gos.get('treeData');
+        const childrenField = gos.get('treeDataChildrenField');
+        const isTree = childrenField || treeData;
+
+        let nodeManager: AbstractClientSideNodeManager<any> | undefined;
+        if (isTree) {
+            nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
+        }
+
+        return nodeManager ?? beans.csrmNodeSvc!;
     }
 
     public start(): void {
@@ -1249,22 +1244,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return;
         }
 
-        const atLeastOne = this.resetRowHeightsForAllRowNodes();
-
-        rootNode.setRowHeight(rootNode.rowHeight, true);
-        if (rootNode.sibling) {
-            rootNode.sibling.setRowHeight(rootNode.sibling.rowHeight, true);
-        }
-
-        // when pivotMode but pivot not active, root node is displayed on its own
-        // because it's only ever displayed alone, refreshing the model (onRowHeightChanged) is not required
-        if (atLeastOne) {
-            this.onRowHeightChanged();
-        }
-    }
-
-    private resetRowHeightsForAllRowNodes(): boolean {
         let atLeastOne = false;
+
+        // setRowHeight for all nodes
         this.forEachNode((rowNode) => {
             rowNode.setRowHeight(rowNode.rowHeight, true);
             // we keep the height each row is at, however we set estimated=true rather than clear the height.
@@ -1281,15 +1263,20 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             atLeastOne = true;
         });
 
-        return atLeastOne;
+        rootNode.setRowHeight(rootNode.rowHeight, true);
+        if (rootNode.sibling) {
+            rootNode.sibling.setRowHeight(rootNode.sibling.rowHeight, true);
+        }
+
+        // when pivotMode but pivot not active, root node is displayed on its own
+        // because it's only ever displayed alone, refreshing the model (onRowHeightChanged) is not required
+        if (atLeastOne) {
+            this.onRowHeightChanged();
+        }
     }
 
     private onGridStylesChanges(e: CssVariablesChanged) {
-        if (e.rowHeightChanged) {
-            if (this.beans.rowAutoHeight?.active) {
-                return;
-            }
-
+        if (e.rowHeightChanged && !this.beans.rowAutoHeight?.active) {
             this.resetRowHeights();
         }
     }

@@ -50,6 +50,8 @@ export interface RefreshModelParams<TData = any> {
 
     /** A callback to execute to update row nodes, or execute transactions */
     updateRowNodes?: (state: RefreshModelState<TData>) => void;
+
+    afterRefresh?: () => void;
 }
 
 const createInactiveChangedPath = (rootNode: RowNode) => {
