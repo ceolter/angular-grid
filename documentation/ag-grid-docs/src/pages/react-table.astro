@@ -108,34 +108,32 @@ const { data: examples } = await getEntry('react-landing-page', 'examples');
             heading="Get Started with React Table Examples"
             subHeading=" We have a range of examples, tutorials and documentation to help you start building your first React Table with AG Grid."
         >
-            <div class={styles.examplesSectioncontainer}>
-                <div class={styles.examplesSectionexamplesContainer}>
-                    <div class={styles.examplesSectioncardsContainer}>
-                        {
-                            examples.map((card) => (
-                                <div class={styles.examplesSectioncard}>
-                                    <img
-                                        class={styles.examplesSectioncardImage}
-                                        src={urlWithBaseUrl(`landing-pages/examples/${card.img}`)}
-                                        alt={card.img_alt}
-                                    />
-                                    <div class={styles.examplesSectioncardDetails}>
-                                        <h3>{card.title}</h3>
-                                        <p>{card.content}</p>
-                                    </div>
-                                    <div class={styles.examplesSectioncardCta}>
-                                        <a href={urlWithBaseUrl(card.demo)} target="_blank">
-                                            Live Demo
-                                        </a>
-                                        <a href={urlWithBaseUrl(card.docs)} target="_blank">
-                                            Docs
-                                        </a>
-                                    </div>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
+            <div class={styles.examplesSectionContainer}>
+                {
+                    examples.map((card) => (
+                        <div class={styles.examplesSectionCard}>
+                            <img
+                                class={styles.examplesSectionCardImage}
+                                src={urlWithBaseUrl(`landing-pages/examples/${card.img}`)}
+                                alt={card.img_alt}
+                            />
+
+                            <div class={styles.examplesSectionCardDetails}>
+                                <h3>{card.title}</h3>
+                                <p>{card.content}</p>
+                            </div>
+
+                            <div class={styles.examplesSectionCardCta}>
+                                <a href={urlWithBaseUrl(card.demo)} target="_blank">
+                                    Live Demo
+                                </a>
+                                <a href={urlWithBaseUrl(card.docs)} target="_blank">
+                                    Docs
+                                </a>
+                            </div>
+                        </div>
+                    ))
+                }
             </div>
         </LandingPageSection>
 
