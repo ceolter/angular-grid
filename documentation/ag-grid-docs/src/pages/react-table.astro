@@ -95,14 +95,10 @@ const { data: examples } = await getEntry('react-landing-page', 'examples');
             <Showcase client:load />
         </LandingPageSection>
 
-        <!-- TODO subheading markup/markdoc -->
-        <!-- subHeading="Over <b>90% of the Fortune 500</b> build React Tables using AG Grid, with <a href="https://www.npmjs.com/package/ag-grid-community" target="_blank"> 1,000,000+</a> npm downloads per week and over <a href="https://github.com/ag-grid/ag-grid/tree/latest" target="_blank"> 12,000</a> Stars on Github." -->
-        <!-- TODO add line break in heading? -->
-        <!-- <h3 class={styles.heading}>Loved By Developers<br />Trusted By The Worlds Largest Enterprises</h3> -->
         <LandingPageSection
             tag="Who Builds React Tables with AG Grid?"
-            heading={`Loved By Developers Trusted By The Worlds Largest Enterprises`}
-            subHeading="ADD MARKUP TO SUBHEADING"
+            headingHtml={'Loved By Developers<br />Trusted By The Worlds Largest Enterprises'}
+            subHeadingHtml={`Over <b>90% of the Fortune 500</b> build React Tables using AG Grid, with <a href="https://www.npmjs.com/package/ag-grid-community" target="_blank"> 1,000,000+</a> npm downloads per week and over <a href="https://github.com/ag-grid/ag-grid/tree/latest" target="_blank"> 12,000</a> Stars on Github.`}
         >
             <Customers client:load />
         </LandingPageSection>
