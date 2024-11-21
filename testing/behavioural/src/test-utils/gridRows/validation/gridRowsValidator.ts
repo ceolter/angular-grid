@@ -1,7 +1,7 @@
 import { RowNode } from 'ag-grid-community';
 import type { IRowNode } from 'ag-grid-community';
 
-import { rowIdAndIndexToString, rowIdToString } from '../../grid-test-utils';
+import { rowIdAndIndexToString } from '../../grid-test-utils';
 import type { GridRows } from '../gridRows';
 import type { GridRowsErrors } from '../gridRowsErrors';
 
