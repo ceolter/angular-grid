@@ -423,7 +423,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         let newRowData: any[] | null | undefined;
         let ownsState = false;
 
-        const rowData = this.gos.get('rowData');
+        const gos = this.gos;
+        const rowData = gos.get('rowData');
         let rowDataChanged: boolean;
         if (this.rowData !== rowData) {
             this.rowData = rowData;
@@ -435,7 +436,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (!state) {
             ownsState = this.started;
             rowDataChanged ||= !ownsState && !!rowData;
-            state = new RefreshModelState(this.gos, rootNode, params);
+            state = new RefreshModelState(gos, rootNode, params);
             this.currentRefreshModelState = state;
         } else {
             state.updateParams(params);
@@ -461,7 +462,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         nodeManager.beginRefreshModel?.(state);
 
         if (state.fullReload || rowDataChanged) {
-            newRowData = this.gos.get('rowData');
+            newRowData = rowData;
             if (newRowData != null && !Array.isArray(newRowData)) {
                 newRowData = null;
                 _warn(1);
@@ -484,8 +485,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (newRowData) {
-            const gos = this.gos;
-            const deltaUpdate =
+            const immutable =
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
                 gos.exists('getRowId') &&
@@ -493,7 +493,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 // the old behaviour of Row IDs but NOT Immutable Data.
                 !gos.get('resetRowDataOnUpdate');
 
-            if (deltaUpdate && state.setDeltaUpdate()) {
+            if (immutable && state.setDeltaUpdate()) {
                 nodeManager.setImmutableRowData(state, newRowData);
             } else {
                 state.setNewData();
