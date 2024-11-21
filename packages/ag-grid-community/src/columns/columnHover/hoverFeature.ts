@@ -13,8 +13,8 @@ export class HoverFeature extends BeanStub {
         if (this.gos.get('columnHoverHighlight')) {
             const colHover = this.beans.colHover!;
             this.addManagedListeners(this.element, {
-                mouseout: colHover.clearMouseOver.bind(this),
-                mouseover: colHover.setMouseOver.bind(this, this.columns),
+                mouseout: colHover.clearMouseOver.bind(colHover),
+                mouseover: colHover.setMouseOver.bind(colHover, this.columns),
             });
         }
     }
