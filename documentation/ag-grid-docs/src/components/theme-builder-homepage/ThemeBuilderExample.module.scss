@@ -1,7 +1,7 @@
 @use 'design-system' as *;
 
 .grid {
-    width: 500px;
+    width: 650px;
 }
 
 .gridColumns {
@@ -108,10 +108,12 @@
     border: none;
     color: var(--color-white);
     margin: 0;
-    white-space: pre;
+    white-space: pre-wrap;
     #{$selector-darkmode} & {
         background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
     }
+    padding: 0;
+    padding-top: 10px;
 }
 
 .lineNumbers {
@@ -119,6 +121,10 @@
     margin-right: 16px;
     text-align: right;
     user-select: none;
-    margin-top: 30px;
-    font-size: 14px;
+    margin-top: 35px;
+    font-size: 15px;
+}
+
+.commentLine {
+    opacity: 0.5;
 }

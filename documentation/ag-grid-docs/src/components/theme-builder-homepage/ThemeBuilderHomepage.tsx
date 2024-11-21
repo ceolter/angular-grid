@@ -1,5 +1,4 @@
 import { ShadowDom } from '@components/ShadowDom';
-import { TickerCellRenderer } from '@components/demos/examples/finance/cell-renderers/TickerCellRenderer';
 import React, { useMemo, useState } from 'react';
 
 import {
@@ -18,9 +17,9 @@ import { RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import styles from './ThemeBuilderExample.module.scss';
+import { TickerCellRenderer } from './cell-renderer/TickerCellRenderer';
 
 ModuleRegistry.registerModules([AllCommunityModule, RowGroupingPanelModule]);
-
 interface Props {
     isDarkMode?: boolean;
     gridHeight?: number | null;
@@ -53,7 +52,13 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
     );
 
     const rowData = [
-        { ticker: 'US10Y', performance: [98149, 78675], current: 98149, feb: 78675 },
+        {
+            ticker: 'US10Y',
+            performance: [98149, 78675],
+            current: 98149,
+            feb: 78675,
+            change: [0.75, -0.71, -0.35, 0.24, 0.54, 0.28, 0.36],
+        },
         { ticker: 'TSLA', performance: [97121, 21462], current: 97121, feb: 21462 },
         { ticker: 'AMZN', performance: [96528, 79786], current: 96528, feb: 79786 },
         { ticker: 'UBER', performance: [94390, 33186], current: 94390, feb: 33186 },
@@ -71,8 +76,7 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
     };
 
     const themeName = theme === themeAlpine ? 'themeAlpine' : theme === themeBalham ? 'themeBalham' : 'themeQuartz';
-    const codeBlock = `
-    import { ${themeName} } from 'ag-grid-community';
+    const codeBlock = `import { ${themeName} } from 'ag-grid-community';
     
     <AgGridReact
       theme={${themeName}}
@@ -148,7 +152,11 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                                 <div key={index}>{index + 1}</div>
                             ))}
                         </div>
-                        <pre className={styles.codeBlock}>{codeBlock}</pre>
+                        <pre className={styles.codeBlock}>
+                            {' '}
+                            <div className={styles.commentLine}>// Using the Theming API</div>
+                            {codeBlock}
+                        </pre>
                     </div>
                 </div>
             </div>
