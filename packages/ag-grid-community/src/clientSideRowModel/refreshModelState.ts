@@ -197,17 +197,14 @@ export class RefreshModelState<TData = any> {
         orderedStages: IRowNodeStageDefinition[],
         changedProps: (keyof GridOptions<TData>)[]
     ): void {
-        if (this.step === 'group') {
-            return; // Is already the minimum
-        }
         const changedPropsLen = changedProps.length;
         for (const { refreshProps, step } of orderedStages) {
             for (let i = 0; i < changedPropsLen; i++) {
                 if (refreshProps?.has(changedProps[i])) {
-                    // We disable delta updates if a property that affect a stage changes
-                    this.clearDeltaUpdate();
+                    this.clearDeltaUpdate(); // No delta updates if a property that affect a stage changes
 
-                    this.setStep(step);
+                    this.setStep(step); // Updates to the minimum step
+
                     return; // We found the minimum step
                 }
             }
@@ -232,8 +229,9 @@ export class RefreshModelState<TData = any> {
         this.setStep('group');
         this.rowDataUpdated = true;
         this.keepUndoRedoStack = false;
-        if (this.deltaUpdate !== null) {
-            return this.deltaUpdate;
+        const deltaUpdate = this.deltaUpdate;
+        if (deltaUpdate !== null) {
+            return deltaUpdate;
         }
         if (this.newData || this.fullReload || !this.started) {
             return false;
@@ -274,5 +272,25 @@ export class RefreshModelState<TData = any> {
 
     public hasChanges(): boolean {
         return this.newData || this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
+    }
+
+    public isSuppressModelUpdateAfterUpdateTransaction(): boolean {
+        const { rowDataUpdated, removals, updates } = this;
+
+        if (!rowDataUpdated || !this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
+            return false;
+        }
+
+        if (removals.size) {
+            return false; // Remove found
+        }
+
+        for (const update of updates.keys()) {
+            if (update.data && updates.get(update)) {
+                return false; // Add found
+            }
+        }
+
+        return true; // No add or remove found, only updates
     }
 }

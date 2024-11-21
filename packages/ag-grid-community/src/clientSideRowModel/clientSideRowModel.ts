@@ -82,7 +82,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public rootNode: RowNode | null = null;
 
     private rowsToDisplay: RowNode[] = []; // the rows mapped to rows to display
-    private nodeManager: AbstractClientSideNodeManager<any>;
+    private nodeManager: AbstractClientSideNodeManager<any> | null;
     private rowDataTransactionBatch: BatchTransactionItem[] | null;
     private lastHighlightedRow: RowNode | null;
     private applyAsyncTransactionsTimeout: number | undefined;
@@ -309,11 +309,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     /** Used to apply transaction changes.  Called by gridApi & rowDragFeature */
     public applyTransaction(rowDataTran: RowDataTransaction): RowNodeTransaction | null {
-        const rootNode = this.rootNode;
-        if (!rootNode) {
+        const nodeManager = this.nodeManager;
+        if (!nodeManager) {
             return null; // Destroyed
         }
-
         let rowNodeTransaction: RowNodeTransaction | null = null;
         this.refreshModel({
             step: 'nothing',
@@ -324,7 +323,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 this.rowNodesCountReady = true;
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
-                rowNodeTransaction = this.nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
+                rowNodeTransaction = nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
             },
         });
 
@@ -356,8 +355,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private executeBatchUpdateRowData(): void {
-        const batch = this.rowDataTransactionBatch;
-        if (!batch) {
+        const { nodeManager, rowDataTransactionBatch } = this;
+        if (!nodeManager || !rowDataTransactionBatch) {
             return; // Destroyed
         }
 
@@ -373,9 +372,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 this.rowNodesCountReady = true;
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
-                for (let i = 0; i < batch.length; ++i) {
-                    const { rowDataTransaction, callback } = batch[i];
-                    results.push(this.nodeManager.applyTransaction(state, rowDataTransaction, getRowIdFunc));
+                for (let i = 0; i < rowDataTransactionBatch.length; ++i) {
+                    const { rowDataTransaction, callback } = rowDataTransactionBatch[i];
+                    results.push(nodeManager.applyTransaction(state, rowDataTransaction, getRowIdFunc));
                     if (callback) {
                         hasCallbacks = true;
                     }
@@ -389,8 +388,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (hasCallbacks) {
             // do callbacks in next VM turn so it's async
             window.setTimeout(() => {
-                for (let i = 0; i < batch.length; ++i) {
-                    const tranItem = batch[i];
+                for (let i = 0; i < rowDataTransactionBatch.length; ++i) {
+                    const tranItem = rowDataTransactionBatch[i];
                     if (tranItem.callback) {
                         tranItem.callback(results[i]);
                     }
@@ -495,11 +494,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 !gos.get('resetRowDataOnUpdate');
 
             if (deltaUpdate && state.setDeltaUpdate()) {
-                this.nodeManager.setImmutableRowData(state, newRowData);
+                nodeManager.setImmutableRowData(state, newRowData);
             } else {
                 state.setNewData();
                 this.rowNodesCountReady = true;
-                this.nodeManager.setNewRowData(state, newRowData);
+                nodeManager.setNewRowData(state, newRowData);
             }
         }
 
@@ -513,7 +512,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             state.setStep('group');
         }
 
-        this.nodeManager.refreshModel(state);
+        nodeManager.refreshModel(state);
 
         const stepsExecuted = this.executeRefreshSteps(state);
         this.currentRefreshModelState = null;
@@ -529,28 +528,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private isSuppressModelUpdateAfterUpdateTransaction({
-        rowDataUpdated,
-        removals,
-        updates,
-    }: RefreshModelState): boolean {
-        if (!rowDataUpdated || !this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
-            return false;
-        }
-
-        if (removals.size) {
-            return false; // Remove found
-        }
-
-        for (const update of updates.keys()) {
-            if (update.data && updates.get(update)) {
-                return false; // Add found
-            }
-        }
-
-        return true; // No add or remove found, only updates
-    }
-
     private executeRefreshSteps(state: RefreshModelState): boolean {
         this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', state });
 
@@ -559,10 +536,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (state.step === 'nothing') {
-            return false;
+            return false; // Nothing to do
         }
 
-        if (this.colModel.changeEventsDispatching || this.isSuppressModelUpdateAfterUpdateTransaction(state)) {
+        if (this.colModel.changeEventsDispatching || state.isSuppressModelUpdateAfterUpdateTransaction()) {
             return false;
         }
 
@@ -607,13 +584,13 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     /** refreshModel row grouping stage (1) */
-    private doRowGrouping(state: RefreshModelState) {
-        const rootNode = state.rootNode;
-        if (!this.nodeManager.treeData) {
+    private doRowGrouping(state: RefreshModelState): void {
+        if (!this.nodeManager?.treeData) {
             const groupStage = this.groupStage;
             if (groupStage) {
                 groupStage.execute(state);
             } else {
+                const rootNode = state.rootNode;
                 const sibling = rootNode.sibling;
                 rootNode.childrenAfterGroup = rootNode.allLeafChildren;
                 if (sibling) {
@@ -1220,8 +1197,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public getRowNode(id: string): RowNode | undefined {
-        const found = this.nodeManager.getRowNode(id);
-        if (found !== undefined) {
+        const found = this.nodeManager?.getRowNode(id);
+        if (found) {
             return found;
         }
 
