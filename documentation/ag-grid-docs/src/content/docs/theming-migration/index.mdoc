@@ -24,10 +24,6 @@ None of this is changing - the grid is still styled with CSS and CSS custom prop
     * [Selector specificity](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity) has been reduced across the board, making it easier to override in your own stylesheets. For example, in v32 Themes if you added the following code to your application's stylesheet - `.ag-cell-inline-editing { box-shadow: none; }` - it would not have the intended effect of removing the shadow from cells being edited. This was because our CSS that added the shadow had a more specific selector. In the Theming API this code works as expected.
     * Custom properties have been added, removed and renamed to make a more consistent and logical set. See below for a list.
 
-## Incremental migration
-
-If your application is split between multiple pages, it can be migrated one page at a time. However a single HTML document can not contain both legacy styling and the Theming API, because the two styles conflict with each other.
-
 ## Updating your app for v33
 
 In v33, the `theme` grid option has a default value, and if no value is provided the quartz theme will be used.
@@ -206,3 +202,54 @@ body {
 ### 4. [Sass users only] Remove use of the Sass API
 
 The Theming API achieves in JavaScript what the old Sass API did in Sass.
+
+
+## Incremental migration
+
+If your application is split between multiple pages, it can be migrated one page at a time.
+
+If a single HTML document contains multiple grids, we recommend migrating all the grids at the same time if possible - this is the most straightforward way of avoiding conflicts between the v32 styles and the Theming API.
+
+In order to migrate one grid on a page that contains multiple grids, you can use shadow DOM to isolate grids using v32 styles from grids using the Theming API. Be aware however that this an advanced technique and requires you to understand how shadow DOM works, and how it interacts with your framework and your application structure. Shadow DOM has other effects than simply isolating styles, and using it it may require code changes in your application.
+
+{% if isFramework("react") %}
+
+At AG Grid we have had success using the `react-shadow` package to migrate our website.
+
+```jsx
+import root from 'react-shadow';
+
+// import of v32 themes
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+// Use a grid with v32 themes as part of the main page
+<div className="ag-theme-quartz" style={{height: '100%'}}>
+    <AgGridReact
+        theme='legacy'
+        ... grid options ...
+    />
+</div>
+
+// wrap a grid using Theming API in a shadow root
+<root.div style={{ height: '100%' }}>
+    <AgGridReact
+        theme={themeQuartz}
+        ... grid options ...
+    />
+</root.div>
+```
+{% /if %}
+
+{% if isFramework("javascript") %}
+See the [Shadow DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM) documentation for more information.
+{% /if %}
+
+
+{% if isFramework("vue") %}
+See the [Shadow DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM) documentation for more information.
+{% /if %}
+
+{% if isFramework("angular") %}
+For Angular, consider using [ViewEncapsulation.ShadowDom](https://angular.dev/guide/components/styling#viewencapsulationshadowdom) to create a shadow root for your grids using Theming API, leaving the grids using v32 themes in the main document. You can also use the [Shadow DOM API](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM) directly.
+{% /if %}

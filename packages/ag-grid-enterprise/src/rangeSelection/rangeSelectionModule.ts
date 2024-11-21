@@ -14,7 +14,7 @@ import { RangeService } from './rangeService';
  * @gridOption cellSelection
  */
 export const CellSelectionModule: _ModuleWithApi<_CellSelectionGridApi> = {
-    ...baseEnterpriseModule('CellSelectionModule'),
+    ...baseEnterpriseModule('CellSelection'),
     beans: [RangeService],
     dynamicBeans: { fillHandle: AgFillHandle, rangeHandle: AgRangeHandle },
     apiFunctions: {
@@ -31,6 +31,6 @@ export const CellSelectionModule: _ModuleWithApi<_CellSelectionGridApi> = {
  * @deprecated v33 Use `CellSelectionModule` instead
  */
 export const RangeSelectionModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RangeSelectionModule'),
+    ...baseEnterpriseModule('RangeSelection'),
     dependsOn: [CellSelectionModule],
 };

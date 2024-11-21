@@ -21,6 +21,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@vue/compiler-sfc": "3.5.13",
     "@types/postcss-import": "^14.0.3",
     "@types/postcss-url": "^10.0.4",
     "autoprefixer": "^10.4.20",

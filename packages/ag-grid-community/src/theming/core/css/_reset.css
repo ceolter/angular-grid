@@ -5,18 +5,10 @@
 :where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart),
 :where(.ag-root-wrapper, .ag-popup, .ag-dnd-ghost, .ag-chart) :where([class^='ag-']) {
     box-sizing: border-box;
-    outline: none;
 
-    &:focus,
     &::after,
-    &::before,
-    &:focus-within {
+    &::before {
         box-sizing: border-box;
-        outline: none;
-    }
-
-    &:focus-visible {
-        box-shadow: var(--ag-focus-shadow);
     }
 
     &:where(div, span, label):focus-visible {
@@ -24,6 +16,7 @@
                focussable by the grid, get an inset shadow since they are often
                right up against the edge of an overflow:hidden container that
                will crop a regular shadow  */
+        outline: none;
         box-shadow: inset var(--ag-focus-shadow);
     }
 }

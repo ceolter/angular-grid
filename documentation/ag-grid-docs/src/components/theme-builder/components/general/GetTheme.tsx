@@ -74,7 +74,9 @@ const renderThemeCodeSample = ({ overriddenParams, usedParts }: RenderedThemeInf
     code += `// to use myTheme in an application, pass it to the theme grid option\n`;
     const paramsJS = JSON.stringify(overriddenParams, null, 4)
         // strip quotes from keys
-        .replaceAll(/^(\s+)"([^"]+)"/gm, '$1$2');
+        .replaceAll(/^(\s+)"([^"]+)"/gm, '$1$2')
+        // replace string pixel values with numbers
+        .replaceAll(/(:\s*)"(\d+)px"/gm, '$1$2');
     code += `const myTheme = themeQuartz\n`;
     for (const part of usedParts) {
         const partImport = camelCase(part.id);

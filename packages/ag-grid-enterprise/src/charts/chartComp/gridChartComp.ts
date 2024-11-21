@@ -174,6 +174,8 @@ export class GridChartComp extends Component {
             this.addManagedEventListeners({
                 gridStylesChanged: this.updateTheme.bind(this),
             });
+        } else {
+            _removeFromParent(this.themeEl);
         }
         this.themeEl = el;
         this.updateTheme();
@@ -640,6 +642,9 @@ export class GridChartComp extends Component {
         _clearElement(eGui);
         // remove from parent, so if user provided container, we detach from the provided dom element
         _removeFromParent(eGui);
+        if (this.themeEl) {
+            _removeFromParent(this.themeEl);
+        }
 
         this.raiseChartDestroyedEvent();
     }

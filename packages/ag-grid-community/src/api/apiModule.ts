@@ -25,7 +25,7 @@ import {
  * @feature Rows
  */
 export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
-    ...baseCommunityModule('RowApiModule'),
+    ...baseCommunityModule('RowApi'),
     apiFunctions: {
         redrawRows,
         setRowNodeExpanded,
@@ -44,7 +44,7 @@ export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
  * @feature Scrolling
  */
 export const ScrollApiModule: _ModuleWithApi<_ScrollGridApi<any>> = {
-    ...baseCommunityModule('ScrollApiModule'),
+    ...baseCommunityModule('ScrollApi'),
     apiFunctions: {
         getVerticalPixelRange,
         getHorizontalPixelRange,

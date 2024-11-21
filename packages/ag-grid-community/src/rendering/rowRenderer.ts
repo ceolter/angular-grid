@@ -146,17 +146,24 @@ export class RowRenderer extends BeanStub implements NamedBean {
             () => this.redrawRows()
         );
 
-        this.stickyRowFeature = this.beans.stickyRowSvc?.createStickyRowFeature(
-            this,
-            this.createRowCon.bind(this),
-            this.destroyRowCtrls.bind(this)
-        );
+        const { stickyRowSvc, gos } = this.beans;
+        if (stickyRowSvc) {
+            this.stickyRowFeature = stickyRowSvc.createStickyRowFeature(
+                this,
+                this.createRowCon.bind(this),
+                this.destroyRowCtrls.bind(this)
+            );
+        } else {
+            const gridBodyCtrl = this.gridBodyCtrl;
+            gridBodyCtrl.setStickyTopHeight(0);
+            gridBodyCtrl.setStickyBottomHeight(0);
+        }
 
         this.registerCellEventListeners();
 
         this.initialiseCache();
-        this.printLayout = _isDomLayout(this.gos, 'print');
-        this.embedFullWidthRows = this.printLayout || this.gos.get('embedFullWidthRows');
+        this.printLayout = _isDomLayout(gos, 'print');
+        this.embedFullWidthRows = this.printLayout || gos.get('embedFullWidthRows');
 
         this.redrawAfterModelUpdate();
     }

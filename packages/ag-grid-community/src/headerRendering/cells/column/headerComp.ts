@@ -1,13 +1,10 @@
-import type { BeanCollection } from '../../../context/context';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { SortDirection } from '../../../entities/colDef';
 import { _isLegacyMenuEnabled } from '../../../gridOptionsUtils';
 import type { Column } from '../../../interfaces/iColumn';
 import type { AgGridCommon } from '../../../interfaces/iCommon';
 import type { IComponent } from '../../../interfaces/iComponent';
-import type { MenuService } from '../../../misc/menu/menuService';
 import type { SortIndicatorComp } from '../../../sort/sortIndicatorComp';
-import type { SortService } from '../../../sort/sortService';
 import { _removeFromParent, _setDisplayed } from '../../../utils/dom';
 import type { IconName } from '../../../utils/icon';
 import { _createIconNoSpan } from '../../../utils/icon';
@@ -109,14 +106,6 @@ function getHeaderCompTemplate(includeSortIndicator: boolean): string {
 }
 
 export class HeaderComp extends Component implements IHeaderComp {
-    private sortSvc?: SortService;
-    private menuSvc?: MenuService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.sortSvc = beans.sortSvc;
-        this.menuSvc = beans.menuSvc;
-    }
-
     private eFilter: HTMLElement = RefPlaceholder;
     public eFilterButton?: HTMLElement = RefPlaceholder;
     private eSortIndicator: SortIndicatorComp = RefPlaceholder;
@@ -157,7 +146,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         if (
             this.workOutTemplate() != this.currentTemplate ||
             this.workOutShowMenu() != this.currentShowMenu ||
-            this.workOutSort() != this.currentSort ||
+            params.enableSorting != this.currentSort ||
             this.shouldSuppressMenuHide() != this.currentSuppressMenuHide ||
             oldParams.enableFilterButton != params.enableFilterButton ||
             oldParams.enableFilterIcon != params.enableFilterIcon
@@ -171,19 +160,21 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private workOutTemplate(): string | null | undefined {
-        let template: string | null | undefined = this.params.template ?? getHeaderCompTemplate(!!this.sortSvc);
+        const { params, beans } = this;
+        const template: string | null | undefined = params.template ?? getHeaderCompTemplate(!!beans.sortSvc);
 
         // take account of any newlines & whitespace before/after the actual template
-        template = template && template.trim ? template.trim() : template;
-        return template;
+        return template?.trim ? template.trim() : template;
     }
 
     public init(params: IHeaderParams): void {
         this.params = params;
 
+        const { sortSvc, touchSvc } = this.beans;
+
         this.currentTemplate = this.workOutTemplate();
-        this.setTemplate(this.currentTemplate, this.sortSvc ? [this.sortSvc.getSortIndicatorSelector()] : undefined);
-        this.beans.touchSvc?.setupForHeader(this);
+        this.setTemplate(this.currentTemplate, sortSvc ? [sortSvc.getSortIndicatorSelector()] : undefined);
+        touchSvc?.setupForHeader(this);
         this.setMenu();
         this.setupSort();
         this.setupFilterIcon();
@@ -194,9 +185,10 @@ export class HeaderComp extends Component implements IHeaderComp {
     private setDisplayName(params: IHeaderParams): void {
         if (this.currentDisplayName != params.displayName) {
             this.currentDisplayName = params.displayName;
-            const displayNameSanitised = _escapeString(this.currentDisplayName, true);
-            if (this.eText) {
-                this.eText.textContent = displayNameSanitised!;
+            const { eText, currentDisplayName } = this;
+            const displayNameSanitised = _escapeString(currentDisplayName, true);
+            if (eText) {
+                eText.textContent = displayNameSanitised!;
             }
         }
     }
@@ -213,11 +205,11 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     private workOutShowMenu(): boolean {
-        return this.params.enableMenu && !!this.menuSvc?.isHeaderMenuButtonEnabled();
+        return this.params.enableMenu && !!this.beans.menuSvc?.isHeaderMenuButtonEnabled();
     }
 
     public shouldSuppressMenuHide(): boolean {
-        return !!this.menuSvc?.isHeaderMenuButtonAlwaysShowEnabled();
+        return !!this.beans.menuSvc?.isHeaderMenuButtonAlwaysShowEnabled();
     }
 
     private setMenu(): void {
@@ -233,54 +225,50 @@ export class HeaderComp extends Component implements IHeaderComp {
             return;
         }
 
-        const isLegacyMenu = _isLegacyMenuEnabled(this.gos);
-        this.addInIcon(isLegacyMenu ? 'menu' : 'menuAlt', this.eMenu, this.params.column as AgColumn);
-        this.eMenu.classList.toggle('ag-header-menu-icon', !isLegacyMenu);
+        const { gos, eMenu, params, currentSuppressMenuHide } = this;
+
+        const isLegacyMenu = _isLegacyMenuEnabled(gos);
+        this.addInIcon(isLegacyMenu ? 'menu' : 'menuAlt', eMenu, params.column as AgColumn);
+        eMenu.classList.toggle('ag-header-menu-icon', !isLegacyMenu);
 
         this.currentSuppressMenuHide = this.shouldSuppressMenuHide();
-        this.addManagedElementListeners(this.eMenu, { click: () => this.params.showColumnMenu(this.eMenu!) });
-        this.eMenu.classList.toggle('ag-header-menu-always-show', this.currentSuppressMenuHide);
+        this.addManagedElementListeners(eMenu, { click: () => params.showColumnMenu(eMenu!) });
+        eMenu.classList.toggle('ag-header-menu-always-show', currentSuppressMenuHide);
     }
 
     public onMenuKeyboardShortcut(isFilterShortcut: boolean): boolean {
-        const column = this.params.column as AgColumn;
-        const isLegacyMenuEnabled = _isLegacyMenuEnabled(this.gos);
+        const { params, gos, beans, eMenu, eFilterButton } = this;
+        const column = params.column as AgColumn;
+        const isLegacyMenuEnabled = _isLegacyMenuEnabled(gos);
         if (isFilterShortcut && !isLegacyMenuEnabled) {
-            if (this.menuSvc?.isFilterMenuInHeaderEnabled(column)) {
-                this.params.showFilter(this.eFilterButton ?? this.eMenu ?? this.getGui());
+            if (beans.menuSvc?.isFilterMenuInHeaderEnabled(column)) {
+                params.showFilter(eFilterButton ?? eMenu ?? this.getGui());
                 return true;
             }
-        } else if (this.params.enableMenu) {
-            this.params.showColumnMenu(this.eMenu ?? this.eFilterButton ?? this.getGui());
+        } else if (params.enableMenu) {
+            params.showColumnMenu(eMenu ?? eFilterButton ?? this.getGui());
             return true;
         }
         return false;
     }
 
-    private workOutSort(): boolean | undefined {
-        return this.params.enableSorting;
-    }
-
     private setupSort(): void {
-        if (!this.sortSvc) {
+        const { sortSvc } = this.beans;
+        if (!sortSvc) {
             return;
         }
-        this.currentSort = this.params.enableSorting;
+        const { enableSorting, column } = this.params;
+        this.currentSort = enableSorting;
 
         // eSortIndicator will not be present when customers provided custom header
         // templates, in that case, we need to look for provided sort elements and
         // manually create eSortIndicator.
         if (!this.eSortIndicator) {
-            this.eSortIndicator = this.createBean(this.sortSvc.createSortIndicator(true));
-            this.eSortIndicator.attachCustomElements(
-                this.eSortOrder,
-                this.eSortAsc,
-                this.eSortDesc,
-                this.eSortMixed,
-                this.eSortNone
-            );
+            this.eSortIndicator = this.createBean(sortSvc.createSortIndicator(true));
+            const { eSortIndicator, eSortOrder, eSortAsc, eSortDesc, eSortMixed, eSortNone } = this;
+            eSortIndicator.attachCustomElements(eSortOrder, eSortAsc, eSortDesc, eSortMixed, eSortNone);
         }
-        this.eSortIndicator.setupSort(this.params.column as AgColumn);
+        this.eSortIndicator.setupSort(column as AgColumn);
 
         // we set up the indicator prior to the check for whether this column is sortable, as it allows the indicator to
         // set up the multi sort indicator which can appear irrelevant of whether this column can itself be sorted.
@@ -289,34 +277,31 @@ export class HeaderComp extends Component implements IHeaderComp {
             return;
         }
 
-        this.sortSvc.setupHeader(this, this.params.column as AgColumn, this.eLabel);
+        sortSvc.setupHeader(this, column as AgColumn, this.eLabel);
     }
 
     private setupFilterIcon(): void {
-        if (!this.eFilter) {
+        const { eFilter, params } = this;
+        if (!eFilter) {
             return;
         }
-        this.configureFilter(
-            this.params.enableFilterIcon,
-            this.eFilter,
-            this.onFilterChangedIcon.bind(this),
-            'filterActive'
-        );
+        this.configureFilter(params.enableFilterIcon, eFilter, this.onFilterChangedIcon.bind(this), 'filterActive');
     }
 
     private setupFilterButton(): void {
-        if (!this.eFilterButton) {
+        const { eFilterButton, params } = this;
+        if (!eFilterButton) {
             return;
         }
         const configured = this.configureFilter(
-            this.params.enableFilterButton,
-            this.eFilterButton,
+            params.enableFilterButton,
+            eFilterButton,
             this.onFilterChangedButton.bind(this),
             'filter'
         );
         if (configured) {
-            this.addManagedElementListeners(this.eFilterButton, {
-                click: () => this.params.showFilter(this.eFilterButton!),
+            this.addManagedElementListeners(eFilterButton, {
+                click: () => params.showFilter(eFilterButton!),
             });
         } else {
             this.eFilterButton = undefined;
@@ -353,9 +338,10 @@ export class HeaderComp extends Component implements IHeaderComp {
     }
 
     public getAnchorElementForMenu(isFilter?: boolean): HTMLElement {
+        const { eFilterButton, eMenu } = this;
         if (isFilter) {
-            return this.eFilterButton ?? this.eMenu ?? this.getGui();
+            return eFilterButton ?? eMenu ?? this.getGui();
         }
-        return this.eMenu ?? this.eFilterButton ?? this.getGui();
+        return eMenu ?? eFilterButton ?? this.getGui();
     }
 }

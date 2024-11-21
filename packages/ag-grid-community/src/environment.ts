@@ -1,10 +1,9 @@
-import { themeQuartz } from 'ag-grid-community';
-
 import type { NamedBean } from './context/bean';
 import { BeanStub } from './context/beanStub';
 import type { BeanCollection } from './context/context';
 import { ThemeImpl } from './theming/Theme';
 import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './theming/inject';
+import { themeQuartz } from './theming/parts/theme/themes';
 import { _observeResize } from './utils/dom';
 import { _error, _warn } from './validation/logging';
 
@@ -22,6 +21,12 @@ const LIST_ITEM_HEIGHT: Variable = {
     cssName: '--ag-list-item-height',
     changeKey: 'listItemHeightChanged',
     defaultValue: 24,
+};
+const ROW_BORDER_WIDTH: Variable = {
+    cssName: '--ag-row-border',
+    changeKey: 'rowBorderWidthChanged',
+    defaultValue: 1,
+    border: true,
 };
 
 let paramsId = 0;
@@ -53,6 +58,8 @@ export class Environment extends BeanStub implements NamedBean {
         this.getSizeEl(ROW_HEIGHT);
         this.getSizeEl(HEADER_HEIGHT);
         this.getSizeEl(LIST_ITEM_HEIGHT);
+        this.getSizeEl(ROW_BORDER_WIDTH);
+        this.refreshRowBorderWidthVariable();
     }
 
     public getDefaultRowHeight(): number {
@@ -72,8 +79,12 @@ export class Environment extends BeanStub implements NamedBean {
         return Math.min(36, this.getDefaultRowHeight());
     }
 
-    public getDefaultListItemHeight() {
+    public getDefaultListItemHeight(): number {
         return this.getCSSVariablePixelValue(LIST_ITEM_HEIGHT);
+    }
+
+    public getRowBorderWidth(): number {
+        return this.getCSSVariablePixelValue(ROW_BORDER_WIDTH);
     }
 
     public applyThemeClasses(el: HTMLElement) {
@@ -160,20 +171,34 @@ export class Environment extends BeanStub implements NamedBean {
         return newSize;
     }
 
-    private getSizeEl(variable: Variable): HTMLElement {
-        let sizeEl = this.sizeEls.get(variable);
-        if (sizeEl) {
-            return sizeEl;
-        }
+    private getMeasurementContainer(): HTMLElement {
         let container = this.eMeasurementContainer;
         if (!container) {
             container = this.eMeasurementContainer = document.createElement('div');
             container.className = 'ag-measurement-container';
             this.eGridDiv.appendChild(container);
         }
+        return container;
+    }
+
+    private getSizeEl(variable: Variable): HTMLElement {
+        let sizeEl = this.sizeEls.get(variable);
+        if (sizeEl) {
+            return sizeEl;
+        }
+        const container = this.getMeasurementContainer();
 
         sizeEl = document.createElement('div');
-        sizeEl.style.width = `var(${variable.cssName}, ${NO_VALUE_SENTINEL}px)`;
+        const { border } = variable;
+        if (border) {
+            sizeEl.className = 'ag-measurement-element-border';
+            sizeEl.style.setProperty(
+                '--ag-measurement-border',
+                `var(${variable.cssName}, solid ${NO_VALUE_SENTINEL}px`
+            );
+        } else {
+            sizeEl.style.width = `var(${variable.cssName}, ${NO_VALUE_SENTINEL}px)`;
+        }
         container.appendChild(sizeEl);
         this.sizeEls.set(variable, sizeEl);
 
@@ -201,10 +226,18 @@ export class Environment extends BeanStub implements NamedBean {
     }
 
     private fireGridStylesChangedEvent(change: ChangeKey): void {
+        if (change === 'rowBorderWidthChanged') {
+            this.refreshRowBorderWidthVariable();
+        }
         this.eventSvc.dispatchEvent({
             type: 'gridStylesChanged',
             [change]: true,
         });
+    }
+
+    private refreshRowBorderWidthVariable(): void {
+        const width = this.getCSSVariablePixelValue(ROW_BORDER_WIDTH);
+        this.eGridDiv.style.setProperty('--ag-internal-row-border-width', `${width}px`);
     }
 
     private handleThemeGridOptionChange(): void {
@@ -246,9 +279,12 @@ export class Environment extends BeanStub implements NamedBean {
             this.applyThemeClasses(eGridDiv);
             this.fireGridStylesChangedEvent('themeChanged');
         }
-        // --ag-legacy-styles-loaded is defined by the legacy themes which
-        // shouldn't be used at the same time as Theming API
-        if (newGridTheme && getComputedStyle(document.body).getPropertyValue('--ag-legacy-styles-loaded')) {
+        // --ag-legacy-styles-loaded is defined on .ag-measurement-container by the
+        // legacy themes which shouldn't be used at the same time as Theming API
+        if (
+            newGridTheme &&
+            getComputedStyle(this.getMeasurementContainer()).getPropertyValue('--ag-legacy-styles-loaded')
+        ) {
             if (themeGridOption) {
                 _error(106);
             } else {
@@ -262,8 +298,14 @@ type Variable = {
     cssName: string;
     changeKey: ChangeKey;
     defaultValue: number;
+    border?: boolean;
 };
 
-type ChangeKey = 'themeChanged' | 'headerHeightChanged' | 'rowHeightChanged' | 'listItemHeightChanged';
+type ChangeKey =
+    | 'themeChanged'
+    | 'headerHeightChanged'
+    | 'rowHeightChanged'
+    | 'listItemHeightChanged'
+    | 'rowBorderWidthChanged';
 
 const NO_VALUE_SENTINEL = 15538;

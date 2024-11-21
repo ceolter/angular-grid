@@ -1,10 +1,15 @@
 {% if isFramework("vue") %}
 
+The interface for the cell editor component is as follows:
+
+{% interfaceDocumentation interfaceName="ICellEditor" config={"description": ""} /%}
+
 When a Vue component is instantiated the grid will make the grid APIs, a number of utility methods as well as the cell and
 row values available to you via a `params` object.
 
 You can access the `params` object via `this.params` in the usual methods (lifecycle hooks, methods etc), and via `props.params` when using `setup`.
 
 The editor `params` interface is as follows:
+
 
 {% /if %}

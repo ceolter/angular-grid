@@ -1,6 +1,7 @@
 import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
 import {
+    AllCommunityModule,
     CellDoubleClickedEvent,
     CellKeyDownEvent,
     ClientSideRowModelModule,

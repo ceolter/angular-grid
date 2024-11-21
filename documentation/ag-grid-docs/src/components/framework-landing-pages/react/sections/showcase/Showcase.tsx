@@ -1,16 +1,16 @@
-import Aerie from 'public/community/showcase/aerie.svg?react';
-import AIIcon from 'public/community/showcase/ai.svg?react';
-import DashboardIcon from 'public/community/showcase/dashboard.svg?react';
-import FinanceIcon from 'public/community/showcase/finance.svg?react';
-import MLFlowLogo from 'public/community/showcase/mlflow.svg?react';
-import ModelIcon from 'public/community/showcase/model.svg?react';
-import OpenBB from 'public/community/showcase/openbb.svg?react';
-import RA from 'public/community/showcase/ra.svg?react';
-import TerminalIcon from 'public/community/showcase/terminal.svg?react';
-import Windmill from 'public/community/showcase/windmill.svg?react';
 import React from 'react';
 
 import styles from './Showcase.module.scss';
+import Aerie from './images/aerie.svg?react';
+import AIIcon from './images/ai.svg?react';
+import DashboardIcon from './images/dashboard.svg?react';
+import FinanceIcon from './images/finance.svg?react';
+import MLFlowLogo from './images/mlflow.svg?react';
+import ModelIcon from './images/model.svg?react';
+import OpenBB from './images/openbb.svg?react';
+import RA from './images/ra.svg?react';
+import TerminalIcon from './images/terminal.svg?react';
+import Windmill from './images/windmill.svg?react';
 
 const Showcase: React.FC = () => {
     return (

@@ -1,5 +1,6 @@
 import type {
     AgColumn,
+    AriaAnnouncementService,
     BeanCollection,
     CellCtrl,
     CellPosition,
@@ -22,15 +23,18 @@ import type {
 import {
     BeanStub,
     Component,
+    _anchorElementToMouseMoveEvent,
     _areCellsEqual,
     _createIconNoSpan,
     _exists,
     _focusInto,
     _getPageBody,
+    _getRootNode,
     _isIOSUserAgent,
     _isKeyboardMode,
     _isNothingFocused,
     _isPromise,
+    _isVisible,
     _warn,
 } from 'ag-grid-community';
 
@@ -52,8 +56,9 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     private focusSvc: FocusService;
     private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
+    private ariaAnnounce?: AriaAnnouncementService;
     private destroyLoadingSpinner: (() => void) | null = null;
-    private promiseCount: number = 0;
+    private lastPromise: number = 0;
 
     public wireBeans(beans: BeanCollection): void {
         this.popupSvc = beans.popupSvc!;
@@ -234,17 +239,31 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         const menuItems = this.getMenuItems(node, column, value, mouseEvent);
 
         if (_isPromise<(DefaultMenuItem | MenuItemDef)[]>(menuItems)) {
-            this.promiseCount++;
+            const currentPromise = this.lastPromise + 1;
+            this.lastPromise = currentPromise;
             if (!this.destroyLoadingSpinner) {
                 this.createLoadingIcon(mouseEvent);
             }
 
             menuItems.then((menuItems) => {
-                if (menuItems) {
+                if (this.lastPromise !== currentPromise) {
+                    return;
+                }
+
+                const shouldShowMenu =
+                    // check if there are actual menu items to be displayed
+                    menuItems &&
+                    menuItems.length &&
+                    // check if the element that triggered the context menu was removed from the DOM
+                    _isVisible(mouseEvent.target as HTMLElement) &&
+                    // overlay was displayed
+                    !this.beans.overlays?.isExclusive();
+
+                if (shouldShowMenu) {
                     this.createContextMenu({ menuItems, node, column, value, mouseEvent, anchorToElement });
                 }
-                this.promiseCount--;
-                if (this.destroyLoadingSpinner && this.promiseCount === 0) {
+
+                if (this.destroyLoadingSpinner) {
                     this.destroyLoadingSpinner();
                 }
             });
@@ -260,50 +279,39 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         return true;
     }
 
-    private createLoadingIcon(e: MouseEvent | Touch) {
+    private createLoadingIcon(mouseEvent: MouseEvent | Touch) {
+        const { beans } = this;
         const translate = this.getLocaleTextFunc();
-
-        const loadingIcon = _createIconNoSpan('loadingMenuItems', this.beans) as HTMLElement;
+        const loadingIcon = _createIconNoSpan('loadingMenuItems', beans) as HTMLElement;
         const wrapperEl = document.createElement('div');
         wrapperEl.classList.add(CSS_CONTEXT_MENU_LOADING_ICON);
         wrapperEl.appendChild(loadingIcon);
 
-        const positionWrapper = (e: MouseEvent | Touch) => {
-            this.popupSvc.positionPopupUnderMouseEvent({
-                type: 'contextMenu',
-                ePopup: wrapperEl,
-                mouseEvent: e,
-                nudgeX: -15,
-                nudgeY: -15,
-            });
-        };
-
-        const hideFunc = this.popupSvc.addPopup({
-            eChild: wrapperEl,
-            ariaLabel: translate('ariaLabelLoading', 'Loading'),
-            click: e,
-            positionCallback: () => positionWrapper(e),
-        }).hideFunc;
-
-        const targetEl = _getPageBody(this.beans);
-        let listener: (() => void) | null = null;
+        const rootNode = _getRootNode(beans);
+        const targetEl = _getPageBody(beans);
 
         if (!targetEl) {
             _warn(54);
-        } else {
-            listener = this.addManagedElementListeners(targetEl as HTMLElement, {
-                mousemove: (e: MouseEvent) => {
-                    positionWrapper(e);
-                },
-            })[0];
+            return;
         }
 
-        this.destroyLoadingSpinner = () => {
-            if (listener) {
-                listener();
-            }
+        targetEl.appendChild(wrapperEl);
+        this.ariaAnnounce?.announceValue(
+            translate('ariaLabelLoadingContextMenu', 'Loading Context Menu'),
+            'contextmenu'
+        );
+        beans.environment.applyThemeClasses(wrapperEl);
+        _anchorElementToMouseMoveEvent(wrapperEl, mouseEvent, beans);
 
-            hideFunc();
+        const mouseMoveCallback = (e: MouseEvent) => {
+            _anchorElementToMouseMoveEvent(wrapperEl, e, beans);
+        };
+
+        rootNode.addEventListener('mousemove', mouseMoveCallback);
+
+        this.destroyLoadingSpinner = () => {
+            rootNode.removeEventListener('mousemove', mouseMoveCallback);
+            targetEl.removeChild(wrapperEl);
             this.destroyLoadingSpinner = null;
         };
     }

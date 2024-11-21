@@ -6,6 +6,9 @@
 /.idea/atlassian-ide-plugin.xml
 .vscode
 
+vite.config.ts.timestamp-*.mjs
+vite.config.mts.timestamp-*.mjs
+
 *.tar.gz
 
 .DS_Store

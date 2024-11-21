@@ -9,7 +9,7 @@ export { AgWatermark } from './license/watermark';
  * @internal
  */
 export const EnterpriseCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('EnterpriseCoreModule'),
+    ...baseEnterpriseModule('EnterpriseCore'),
     beans: [LicenseManager],
     icons: {
         // accordion open (filter tool panel group, charts group)

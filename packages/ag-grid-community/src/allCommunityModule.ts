@@ -41,10 +41,12 @@ import { CellStyleModule, RowStyleModule } from './styling/stylingModule';
 import { TooltipModule } from './tooltip/tooltipModule';
 import { ValidationModule } from './validation/validationModule';
 import { CellApiModule, ValueCacheModule } from './valueService/valueModule';
-import { PopupModule } from './widgets/popupModule';
 
+/**
+ * @feature All Community Features
+ */
 export const AllCommunityModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AllCommunityModule'),
+    ...baseCommunityModule('AllCommunity'),
     dependsOn: [
         ClientSideRowModelModule,
         CsvExportModule,
@@ -76,7 +78,6 @@ export const AllCommunityModule: _ModuleWithoutApi = {
         PinnedRowModule,
         RowSelectionModule,
         ValueCacheModule,
-        PopupModule,
         CellStyleModule,
         ColumnHoverModule,
         RowStyleModule,

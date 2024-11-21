@@ -6,6 +6,6 @@ import { AutoWidthCalculator } from './autoWidthCalculator';
  * @internal
  */
 export const AutoWidthModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AutoWidthModule'),
+    ...baseCommunityModule('AutoWidth'),
     beans: [AutoWidthCalculator],
 };

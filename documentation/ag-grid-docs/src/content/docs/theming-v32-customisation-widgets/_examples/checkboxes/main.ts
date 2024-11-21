@@ -3,9 +3,10 @@ import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGri
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
+    ColumnMenuModule,
     ColumnsToolPanelModule,
+    ContextMenuModule,
     FiltersToolPanelModule,
-    MenuModule,
     RowGroupingModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
@@ -15,7 +16,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
 ]);

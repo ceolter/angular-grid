@@ -9,26 +9,19 @@ import { _last } from '../../utils/array';
 import { _exists } from '../../utils/generic';
 
 export class SetLeftFeature extends BeanStub {
-    private eCell: HTMLElement;
     private ariaEl: HTMLElement;
 
     private actualLeft: number;
 
-    // if we are spanning columns, this tells what columns,
-    // otherwise this is empty
-    private colsSpanning: AgColumn[] | undefined;
-
     constructor(
         private readonly columnOrGroup: AgColumn | AgColumnGroup,
-        eCell: HTMLElement,
+        private eCell: HTMLElement,
         beans: BeanCollection,
-        colsSpanning?: AgColumn[]
+        private colsSpanning?: AgColumn[]
     ) {
         super();
         this.columnOrGroup = columnOrGroup;
-        this.eCell = eCell;
-        this.ariaEl = this.eCell.querySelector('[role=columnheader]') || this.eCell;
-        this.colsSpanning = colsSpanning;
+        this.ariaEl = eCell.querySelector('[role=columnheader]') || eCell;
         this.beans = beans;
     }
 
@@ -38,8 +31,9 @@ export class SetLeftFeature extends BeanStub {
     }
 
     public getColumnOrGroup(): AgColumn | AgColumnGroup {
-        if (this.beans.gos.get('enableRtl') && this.colsSpanning) {
-            return _last(this.colsSpanning);
+        const { beans, colsSpanning } = this;
+        if (beans.gos.get('enableRtl') && colsSpanning) {
+            return _last(colsSpanning);
         }
         return this.columnOrGroup;
     }
@@ -58,9 +52,10 @@ export class SetLeftFeature extends BeanStub {
     }
 
     private setLeftFirstTime(): void {
-        const suppressMoveAnimation = this.beans.gos.get('suppressColumnMoveAnimation');
+        const { gos, colAnimation } = this.beans;
+        const suppressMoveAnimation = gos.get('suppressColumnMoveAnimation');
         const oldLeftExists = _exists(this.columnOrGroup.getOldLeft());
-        const animateColumnMove = this.beans.colAnimation?.isActive() && oldLeftExists && !suppressMoveAnimation;
+        const animateColumnMove = colAnimation?.isActive() && oldLeftExists && !suppressMoveAnimation;
         if (animateColumnMove) {
             this.animateInLeft();
         } else {
@@ -99,7 +94,8 @@ export class SetLeftFeature extends BeanStub {
     }
 
     private modifyLeftForPrintLayout(colOrGroup: AgColumn | AgColumnGroup, leftPosition: number): number {
-        const printLayout = _isDomLayout(this.beans.gos, 'print');
+        const { gos, visibleCols } = this.beans;
+        const printLayout = _isDomLayout(gos, 'print');
 
         if (!printLayout) {
             return leftPosition;
@@ -109,10 +105,10 @@ export class SetLeftFeature extends BeanStub {
             return leftPosition;
         }
 
-        const leftWidth = this.beans.visibleCols.getColsLeftWidth();
+        const leftWidth = visibleCols.getColsLeftWidth();
 
         if (colOrGroup.getPinned() === 'right') {
-            const bodyWidth = this.beans.visibleCols.bodyWidth;
+            const bodyWidth = visibleCols.bodyWidth;
             return leftWidth + bodyWidth + leftPosition;
         }
 

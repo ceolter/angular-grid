@@ -1,10 +1,8 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { ColumnEventType } from '../events';
 import { dispatchColumnResizedEvent } from './columnEventUtils';
-import type { VisibleColsService } from './visibleColsService';
 
 type FlexItem = {
     col: AgColumn;
@@ -20,12 +18,6 @@ type FlexItem = {
 
 export class ColumnFlexService extends BeanStub implements NamedBean {
     beanName = 'colFlex' as const;
-
-    private visibleCols: VisibleColsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.visibleCols = beans.visibleCols;
-    }
 
     private flexViewportWidth: number;
 
@@ -51,7 +43,9 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
             return [];
         }
 
-        const visibleCenterCols = this.visibleCols.centerCols;
+        const { visibleCols } = this.beans;
+
+        const visibleCenterCols = visibleCols.centerCols;
         let flexAfterDisplayIndex = -1;
         if (params.resizingCols) {
             const allResizingCols = new Set(params.resizingCols);
@@ -186,11 +180,11 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
         }
 
         if (!params.skipSetLeft) {
-            this.visibleCols.setLeftValues(source);
+            visibleCols.setLeftValues(source);
         }
 
         if (params.updateBodyWidths) {
-            this.visibleCols.updateBodyWidths();
+            visibleCols.updateBodyWidths();
         }
 
         const unconstrainedFlexColumns = items

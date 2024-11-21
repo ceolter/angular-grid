@@ -17,7 +17,7 @@ import { StickyRowService } from './stickyRowService';
  * @internal
  */
 export const GroupCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupCellRendererModule'),
+    ...baseEnterpriseModule('GroupCellRenderer'),
     userComponents: {
         agGroupRowRenderer: GroupCellRenderer,
         agGroupCellRenderer: GroupCellRenderer,
@@ -37,7 +37,7 @@ export const GroupCellRendererModule: _ModuleWithoutApi = {
  * @internal
  */
 export const GroupColumnModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupColumnModule'),
+    ...baseEnterpriseModule('GroupColumn'),
     beans: [AutoColService, ShowRowGroupColsService, RowGroupColsSvc, PivotColsSvc, ValueColsSvc],
     dependsOn: [EnterpriseCoreModule, GroupCellRendererModule],
 };
@@ -46,7 +46,7 @@ export const GroupColumnModule: _ModuleWithoutApi = {
  * @internal
  */
 export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ClientSideRowModelHierarchyModule'),
+    ...baseEnterpriseModule('ClientSideRowModelHierarchy'),
     rowModels: ['clientSide'],
     beans: [FlattenStage, ClientSideExpansionService],
     dependsOn: [EnterpriseCoreModule],
@@ -56,6 +56,6 @@ export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
  * @internal
  */
 export const StickyRowModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('StickyRowModule'),
+    ...baseEnterpriseModule('StickyRow'),
     beans: [StickyRowService],
 };

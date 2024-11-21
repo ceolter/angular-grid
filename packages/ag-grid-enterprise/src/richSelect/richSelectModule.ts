@@ -9,7 +9,7 @@ import { RichSelectCellEditor } from './richSelectCellEditor';
  * @feature Editing -> Rich Select Editor
  */
 export const RichSelectModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RichSelectModule'),
+    ...baseEnterpriseModule('RichSelect'),
     beans: [],
     userComponents: { agRichSelect: RichSelectCellEditor, agRichSelectCellEditor: RichSelectCellEditor },
     icons: {

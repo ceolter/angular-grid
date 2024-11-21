@@ -11,77 +11,20 @@
       }
     },
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["build:types", "build:package"],
-      "inputs": [],
-      "outputs": [],
-      "configurations": {
-        "watch": {},
-        "production": {}
-      }
-    },
-    "build:types": {
-      "executor": "@nx/js:tsc",
-      "dependsOn": ["^build:types"],
+      "executor": "nx:run-script",
+      "dependsOn": ["ag-grid-community:build:package"],
       "inputs": [
-        "{projectRoot}/package.json",
-        "{projectRoot}/src/**/*",
-        "{projectRoot}/tsconfig.*.json",
         "tsDeclarations",
-        "sharedGlobals",
-        "defaultExcludes",
-        {
-          "externalDependencies": ["npm:typescript", "npm:esbuild"]
-        }
+        "{projectRoot}/src/**",
+        "{projectRoot}/vite.config.ts",
+        "!{projectRoot}/dist",
+        "{workspaceRoot}/packages/ag-grid-community/src/components/componentUtil.ts",
+        "{workspaceRoot}/packages/ag-grid-community/src/propertyKeys.ts"
       ],
-      "outputs": ["{options.outputPath}"],
+      "cache": true,
+      "outputs": ["{projectRoot}/dist"],
       "options": {
-        "outputPath": "packages/ag-grid-vue3/dist/types",
-        "main": "packages/ag-grid-vue3/src/main.ts",
-        "tsConfig": "packages/ag-grid-vue3/tsconfig.types.json",
-        "compiler": "tsc"
-      },
-      "configurations": {
-        "watch": {
-          "tsConfig": "packages/ag-grid-vue3/tsconfig.types.watch.json"
-        },
-        "production": {}
-      }
-    },
-    "build:package": {
-      "executor": "@nx/esbuild:esbuild",
-      "dependsOn": ["^build"],
-      "inputs": [
-        "{projectRoot}/package.json",
-        "{projectRoot}/src/**/*",
-        "{projectRoot}/tsconfig.*.json",
-        "tsDeclarations",
-        "sharedGlobals",
-        "defaultExcludes",
-        {
-          "externalDependencies": ["npm:typescript", "npm:esbuild"]
-        }
-      ],
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "packages/ag-grid-vue3/dist/package",
-        "main": "packages/ag-grid-vue3/src/main.ts",
-        "tsConfig": "packages/ag-grid-vue3/tsconfig.lib.json",
-        "esbuildConfig": "esbuild.config.cjs",
-        "external": ["ag-grid-community", "vue", "vue-property-decorator", "vue-class-component"],
-        "platform": "browser",
-        "target": "es2020",
-        "format": ["cjs", "esm"],
-        "sourcemap": true
-      },
-      "configurations": {
-        "watch": {
-          "tsConfig": "packages/ag-grid-vue3/tsconfig.watch.json"
-        },
-        "production": {
-          "sourcemap": false
-        },
-        "sizing": { "metafile": true }
+        "script": "build"
       }
     },
     "pack": {

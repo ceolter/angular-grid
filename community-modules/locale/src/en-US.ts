@@ -549,7 +549,8 @@ export const AG_GRID_LOCALE_EN = {
     ariaLabelCellEditor: 'Cell Editor',
     ariaLabelSelectField: 'Select Field',
 
-    ariaLabelLoading: 'Loading',
+    // aria labels for async context menus
+    ariaLabelLoadingContextMenu: 'Loading Context Menu',
 
     // aria labels for rich select
     ariaLabelRichSelectField: 'Rich Select Field',

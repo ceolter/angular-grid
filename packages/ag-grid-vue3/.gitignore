@@ -8,6 +8,9 @@ tests/e2e/screenshots/
 .env.local
 .env.*.local
 
+vite.config.d.ts
+vitest.config.d.ts
+
 # Log files
 npm-debug.log*
 yarn-debug.log*

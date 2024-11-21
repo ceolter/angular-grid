@@ -11,7 +11,7 @@ import { MultiFloatingFilterComp } from './multiFloatingFilter';
  * @feature Filtering -> Multi Filter
  */
 export const MultiFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MultiFilterModule'),
+    ...baseEnterpriseModule('MultiFilter'),
     userComponents: { agMultiColumnFilter: MultiFilter, agMultiColumnFloatingFilter: MultiFloatingFilterComp },
     dependsOn: [EnterpriseCoreModule, _ColumnFilterModule, MenuItemModule],
 };

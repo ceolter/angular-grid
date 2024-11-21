@@ -373,7 +373,7 @@ export class GridSerializer extends BeanStub implements NamedBean {
 
         if (skipRowGroups && !isTreeData) {
             columnsToExport = columnsToExport.filter(
-                (column) => isColumnGroupAutoCol(column) || isColumnSelectionCol(column)
+                (column) => !isColumnGroupAutoCol(column) && !isColumnSelectionCol(column)
             );
         }
 

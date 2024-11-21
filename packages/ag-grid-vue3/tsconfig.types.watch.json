@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.types.json",
-  "compilerOptions": {
-    "noUnusedParameters": false,
-    "noUnusedLocals": false
-  }
-}

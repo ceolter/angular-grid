@@ -16,21 +16,21 @@ import { TouchListener } from '../widgets/touchListener';
 export class TouchService extends BeanStub implements NamedBean {
     beanName = 'touchSvc' as const;
 
-    public mockBodyContextMenuForIPad(
+    public mockBodyContextMenu(
         ctrl: GridBodyCtrl,
         listener: (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => void
     ): void {
-        this.mockContextMenuForIPad(ctrl, ctrl.eBodyViewport, listener);
+        this.mockContextMenu(ctrl, ctrl.eBodyViewport, listener);
     }
 
-    public mockHeaderContextMenuForIPad(
+    public mockHeaderContextMenu(
         ctrl: GridHeaderCtrl,
         listener: (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => void
     ): void {
-        this.mockContextMenuForIPad(ctrl, ctrl.eGui, listener);
+        this.mockContextMenu(ctrl, ctrl.eGui, listener);
     }
 
-    public mockRowContextMenuForIPad(ctrl: RowContainerEventsFeature): void {
+    public mockRowContextMenu(ctrl: RowContainerEventsFeature): void {
         // we do NOT want this when not in iPad, otherwise we will be doing
         if (!_isIOSUserAgent()) {
             return;
@@ -40,10 +40,10 @@ export class TouchService extends BeanStub implements NamedBean {
             const { rowCtrl, cellCtrl } = ctrl.getControlsForEventTarget(touchEvent?.target ?? null);
             this.beans.contextMenuSvc?.handleContextMenuMouseEvent(undefined, touchEvent, rowCtrl, cellCtrl!);
         };
-        this.mockContextMenuForIPad(ctrl, ctrl.element, listener);
+        this.mockContextMenu(ctrl, ctrl.element, listener);
     }
 
-    public handleCellDoubleClickOnIPad(ctrl: CellMouseListenerFeature, mouseEvent: MouseEvent): boolean {
+    public handleCellDoubleClick(ctrl: CellMouseListenerFeature, mouseEvent: MouseEvent): boolean {
         const isDoubleClickOnIPad = () => {
             if (!_isIOSUserAgent() || _isEventSupported('dblclick')) {
                 return false;
@@ -127,7 +127,7 @@ export class TouchService extends BeanStub implements NamedBean {
         comp.addDestroyFunc(() => touchListener.destroy());
     }
 
-    private mockContextMenuForIPad(
+    private mockContextMenu(
         ctrl: BeanStub,
         element: HTMLElement,
         listener: (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => void

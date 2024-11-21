@@ -328,7 +328,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         if (!this.isAdvFilterEnabled()) {
             return;
         }
-        if (this.beans.dataTypeSvc?.isPendingInference()) {
+        if (this.beans.dataTypeSvc?.isPendingInference) {
             this.advFilterModelUpdateQueue.push(expression);
             return;
         }

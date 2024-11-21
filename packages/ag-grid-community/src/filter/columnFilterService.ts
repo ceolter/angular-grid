@@ -109,7 +109,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     public setFilterModel(model: FilterModel | null, source: FilterChangedEventSourceType = 'api'): void {
         const { colModel, dataTypeSvc, filterManager } = this.beans;
-        if (dataTypeSvc?.isPendingInference()) {
+        if (dataTypeSvc?.isPendingInference) {
             this.filterModelUpdateQueue.push({ model, source });
             return;
         }
@@ -854,7 +854,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     public setColumnFilterModel(key: string | AgColumn, model: any): Promise<void> {
         const { colModel, dataTypeSvc } = this.beans;
-        if (dataTypeSvc?.isPendingInference()) {
+        if (dataTypeSvc?.isPendingInference) {
             let resolve: () => void = () => {};
             const promise = new Promise<void>((res) => {
                 resolve = res;

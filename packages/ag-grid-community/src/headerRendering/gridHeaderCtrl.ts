@@ -47,7 +47,7 @@ export class GridHeaderCtrl extends BeanStub {
 
         const listener = this.onHeaderContextMenu.bind(this);
         this.addManagedElementListeners(this.eGui, { contextmenu: listener });
-        touchSvc?.mockHeaderContextMenuForIPad(this, listener);
+        touchSvc?.mockHeaderContextMenu(this, listener);
 
         ctrlsSvc.register('gridHeaderCtrl', this);
     }
@@ -178,12 +178,13 @@ export class GridHeaderCtrl extends BeanStub {
     protected onFocusOut(e: FocusEvent): void {
         const { relatedTarget } = e;
 
-        if (!relatedTarget && this.eGui.contains(_getActiveDomElement(this.beans))) {
+        const { eGui, beans } = this;
+        if (!relatedTarget && eGui.contains(_getActiveDomElement(beans))) {
             return;
         }
 
-        if (!this.eGui.contains(relatedTarget as HTMLElement)) {
-            this.beans.focusSvc.clearFocusedHeader();
+        if (!eGui.contains(relatedTarget as HTMLElement)) {
+            beans.focusSvc.focusedHeader = null;
         }
     }
 

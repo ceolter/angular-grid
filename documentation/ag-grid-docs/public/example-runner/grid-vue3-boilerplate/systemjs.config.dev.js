@@ -27,7 +27,7 @@
             tslib: 'npm:tslib@2.3.1/tslib.js',
             typescript: 'npm:typescript@5.4.5/lib/typescript.min.js',
 
-            vue: 'npm:vue@3.2.29/dist/vue.esm-browser.js',
+            vue: 'npm:vue@3.5.0/dist/vue.esm-browser.js',
             '@vue/reactivity': 'npm:@vue/reactivity@3.0.0/dist/reactivity.esm-browser.js',
             // vue class component
             'vue-class-component': 'npm:vue-class-component@^8.0.0-beta.3/dist/vue-class-component.cjs.js',
@@ -60,7 +60,7 @@
                 format: 'cjs',
             },
             'ag-grid-vue3': {
-                main: './dist/package/main.cjs.js',
+                main: './dist/main.umd.js',
                 defaultExtension: 'js',
                 format: 'cjs',
             },

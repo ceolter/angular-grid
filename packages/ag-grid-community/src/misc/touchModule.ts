@@ -6,6 +6,6 @@ import { TouchService } from './touchService';
  * @feature Interactivity -> Touch
  */
 export const TouchModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('TouchModule'),
+    ...baseCommunityModule('Touch'),
     beans: [TouchService],
 };

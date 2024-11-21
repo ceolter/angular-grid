@@ -17,11 +17,8 @@ export interface UpdateLayoutClassesParams {
 }
 
 export class LayoutFeature extends BeanStub {
-    private view: LayoutView;
-
-    constructor(view: LayoutView) {
+    constructor(private view: LayoutView) {
         super();
-        this.view = view;
     }
 
     public postConstruct(): void {

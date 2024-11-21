@@ -12,7 +12,7 @@ import { ColumnToolPanelFactory } from './columnToolPanelFactory';
  * @feature Accessories -> Columns Tool Panel
  */
 export const ColumnsToolPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ColumnsToolPanelModule'),
+    ...baseEnterpriseModule('ColumnsToolPanel'),
     beans: [ColumnToolPanelFactory],
     userComponents: { agColumnsToolPanel: ColumnToolPanel },
     icons: {

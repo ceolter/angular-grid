@@ -1,0 +1,14 @@
+.example-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.example-header {
+    margin-bottom: 10px;
+}
+
+#myGrid {
+    flex: 1 1 0px;
+    width: 100%;
+}

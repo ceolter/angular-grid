@@ -16,7 +16,7 @@ import {
  * @feature Rendering
  */
 export const RenderApiModule: _ModuleWithApi<_RenderGridApi<any>> = {
-    ...baseCommunityModule('RenderApiModule'),
+    ...baseCommunityModule('RenderApi'),
     apiFunctions: {
         setGridAriaProperty,
         refreshCells,

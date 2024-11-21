@@ -4,7 +4,7 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import classnames from 'classnames';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
@@ -13,15 +13,17 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     CellSelectionModule,
     ClipboardModule,
+    ColumnMenuModule,
     ColumnsToolPanelModule,
+    ContextMenuModule,
     ExcelExportModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
     MasterDetailModule,
-    MenuModule,
     MultiFilterModule,
     RichSelectModule,
     RowGroupingModule,
+    RowGroupingPanelModule,
     SetFilterModule,
     SideBarModule,
     SparklinesModule,
@@ -567,6 +569,7 @@ const ExampleInner = ({ darkMode }) => {
 
     const modules = useMemo(
         () => [
+            AllCommunityModule,
             ClientSideRowModelModule,
             CsvExportModule,
             ClipboardModule,
@@ -574,11 +577,13 @@ const ExampleInner = ({ darkMode }) => {
             ExcelExportModule,
             FiltersToolPanelModule,
             MasterDetailModule,
-            MenuModule,
+            ColumnMenuModule,
+            ContextMenuModule,
             MultiFilterModule,
             CellSelectionModule,
             RichSelectModule,
             RowGroupingModule,
+            RowGroupingPanelModule,
             SetFilterModule,
             SideBarModule,
             StatusBarModule,

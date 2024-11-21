@@ -1,27 +1,8 @@
 {
     "groups": [
         {
-            "moduleName": "AllCommunityModule",
-            "name": "All Community Features"
-        },
-        {
-            "moduleName": "AllEnterpriseModule",
-            "name": "All Enterprise Features",
-            "isEnterprise": true
-        },
-        {
             "moduleName": "ValidationModule",
             "name": "Validation (Dev Mode)"
-        },
-        {
-            "moduleName": "SparklinesModule",
-            "name": "Sparklines",
-            "isEnterprise": true
-        },
-        {
-            "moduleName": "IntegratedChartsModule",
-            "name": "Integrated Charts",
-            "isEnterprise": true
         },
         {
             "name": "Columns",

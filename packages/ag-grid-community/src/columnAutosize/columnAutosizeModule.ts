@@ -10,7 +10,7 @@ import { ColumnAutosizeService } from './columnAutosizeService';
  * @gridOption autoSizeStrategy
  */
 export const ColumnAutoSizeModule: _ModuleWithApi<_ColumnAutosizeApi> = {
-    ...baseCommunityModule('ColumnAutoSizeModule'),
+    ...baseCommunityModule('ColumnAutoSize'),
     beans: [ColumnAutosizeService],
     apiFunctions: {
         sizeColumnsToFit,

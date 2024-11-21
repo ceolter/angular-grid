@@ -46,7 +46,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
     private onCellClicked(mouseEvent: MouseEvent): void {
         // iPad doesn't have double click - so we need to mimic it to enable editing for iPad.
-        if (this.beans.touchSvc?.handleCellDoubleClickOnIPad(this, mouseEvent)) {
+        if (this.beans.touchSvc?.handleCellDoubleClick(this, mouseEvent)) {
             return;
         }
 

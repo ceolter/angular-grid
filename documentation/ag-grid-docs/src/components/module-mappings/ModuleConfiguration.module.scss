@@ -1,0 +1,20 @@
+@use 'design-system' as *;
+
+.configuration {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-size-4;
+}
+
+.rowModel,
+.bundles,
+.charts {
+    display: flex;
+    gap: $spacing-size-4;
+
+    label {
+        cursor: pointer;
+        display: flex;
+        gap: $spacing-size-1;
+    }
+}

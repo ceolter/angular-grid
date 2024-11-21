@@ -8,8 +8,9 @@ import type { ColDef, GridApi, GridOptions, MenuItemDef } from 'ag-grid-communit
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     IntegratedChartsModule,
-    MenuModule,
     RowGroupingModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
@@ -38,7 +39,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     RowGroupingModule,
     CellSelectionModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SideBarModule,
 ]);

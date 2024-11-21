@@ -1,17 +1,9 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 
 export class ColumnAnimationService extends BeanStub implements NamedBean {
     beanName = 'colAnimation' as const;
-
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
 
     private gridBodyCtrl: GridBodyCtrl;
 
@@ -27,7 +19,7 @@ export class ColumnAnimationService extends BeanStub implements NamedBean {
     private animationThreadCount = 0;
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => (this.gridBodyCtrl = p.gridBodyCtrl));
+        this.beans.ctrlsSvc.whenReady(this, (p) => (this.gridBodyCtrl = p.gridBodyCtrl));
     }
 
     public isActive(): boolean {
@@ -43,14 +35,16 @@ export class ColumnAnimationService extends BeanStub implements NamedBean {
             return;
         }
 
-        if (this.gos.get('suppressColumnMoveAnimation')) {
+        const { gos } = this;
+
+        if (gos.get('suppressColumnMoveAnimation')) {
             return;
         }
 
         // if doing RTL, we don't animate open / close as due to how the pixels are inverted,
         // the animation moves all the row the the right rather than to the left (ie it's the static
         // columns that actually get their coordinates updated)
-        if (this.gos.get('enableRtl')) {
+        if (gos.get('enableRtl')) {
             return;
         }
 
@@ -91,18 +85,20 @@ export class ColumnAnimationService extends BeanStub implements NamedBean {
         // by the time the 'wait' func executes
         this.animationThreadCount++;
         const animationThreadCountCopy = this.animationThreadCount;
-        this.gridBodyCtrl.setColumnMovingCss(true);
+        const { gridBodyCtrl } = this;
+        gridBodyCtrl.setColumnMovingCss(true);
 
         this.executeLaterFuncs.push(() => {
             // only remove the class if this thread was the last one to update it
             if (this.animationThreadCount === animationThreadCountCopy) {
-                this.gridBodyCtrl.setColumnMovingCss(false);
+                gridBodyCtrl.setColumnMovingCss(false);
             }
         });
     }
 
     private flush(callbackNext: () => void, callbackLater: () => void): void {
-        if (this.executeNextFuncs.length === 0 && this.executeLaterFuncs.length === 0) {
+        const { executeNextFuncs, executeLaterFuncs } = this;
+        if (executeNextFuncs.length === 0 && executeLaterFuncs.length === 0) {
             callbackNext();
             callbackLater();
             return;
@@ -120,14 +116,14 @@ export class ColumnAnimationService extends BeanStub implements NamedBean {
         this.beans.frameworkOverrides.wrapIncoming(() => {
             window.setTimeout(() => {
                 callbackNext();
-                runFuncs(this.executeNextFuncs);
+                runFuncs(executeNextFuncs);
             }, 0);
             window.setTimeout(() => {
                 // run the callback before executeLaterFuncs
                 // because some functions being executed later
                 // check if this service is `active`.
                 callbackLater();
-                runFuncs(this.executeLaterFuncs);
+                runFuncs(executeLaterFuncs);
             }, 200);
         });
     }

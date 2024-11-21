@@ -181,6 +181,7 @@ export const tabStyleQuartz = /*#__PURE__*/ createPart({
             ref: 'backgroundColor',
         },
     },
+    css: tabStyleBaseCSS,
 });
 
 /**

@@ -10,7 +10,7 @@ import { FiltersToolPanel } from './filtersToolPanel';
  * @feature Accessories -> Filters Tool Panel
  */
 export const FiltersToolPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('FiltersToolPanelModule'),
+    ...baseEnterpriseModule('FiltersToolPanel'),
     userComponents: { agFiltersToolPanel: FiltersToolPanel },
     icons: {
         // filter tool panel tab

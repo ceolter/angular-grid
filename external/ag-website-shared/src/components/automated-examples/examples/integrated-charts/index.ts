@@ -6,8 +6,9 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
     ClipboardModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     IntegratedChartsModule,
-    MenuModule,
     RowGroupingModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
@@ -21,7 +22,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ClipboardModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     SideBarModule,
 ]);

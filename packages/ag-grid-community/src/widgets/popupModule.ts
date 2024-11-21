@@ -6,6 +6,6 @@ import { PopupService } from './popupService';
  * @internal
  */
 export const PopupModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('PopupModule'),
+    ...baseCommunityModule('Popup'),
     beans: [PopupService],
 };

@@ -18,7 +18,7 @@ import { AdvancedFilterService } from './advancedFilterService';
  * @gridOption enableAdvanced Filter
  */
 export const AdvancedFilterModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
-    ...baseEnterpriseModule('AdvancedFilterModule'),
+    ...baseEnterpriseModule('AdvancedFilter'),
     beans: [AdvancedFilterService, AdvancedFilterExpressionService],
     icons: {
         // Builder button in Advanced Filter

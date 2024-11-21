@@ -1,19 +1,20 @@
+import { ShadowDom } from '@components/ShadowDom';
 import { useApplicationConfigAtom } from '@components/theme-builder/model/application-config';
 import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme';
 import styled from '@emotion/styled';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import { memo, useRef, useState } from 'react';
-import root from 'react-shadow';
 
 import { AllCommunityModule, ClientSideRowModelModule, type GridState, ModuleRegistry } from 'ag-grid-community';
 import {
     AdvancedFilterModule,
     CellSelectionModule,
     ClipboardModule,
+    ColumnMenuModule,
     ColumnsToolPanelModule,
+    ContextMenuModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
-    MenuModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -36,7 +37,8 @@ ModuleRegistry.registerModules([
     ClipboardModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     CellSelectionModule,
     RowGroupingModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
@@ -66,7 +68,7 @@ const GridPreview = () => {
                 <StyledInfoTooltip title="Page background color - this is not part of your theme" />
             </ColorPickerWrapper>
             <GridSizer>
-                <root.div style={{ height: '100%' }}>
+                <ShadowDom>
                     <div
                         ref={(el) => {
                             setContainer(el);
@@ -125,7 +127,7 @@ const GridPreview = () => {
                             />
                         )}
                     </div>
-                </root.div>
+                </ShadowDom>
             </GridSizer>
         </Wrapper>
     );

@@ -1,13 +1,8 @@
-import type { ColumnModel } from '../../columns/columnModel';
 import { _getLoadingOverlayCompDetails, _getNoRowsOverlayCompDetails } from '../../components/framework/userCompUtils';
-import type { UserComponentFactory } from '../../components/framework/userComponentFactory';
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { CtrlsService } from '../../ctrlsService';
 import type { GridOptions } from '../../entities/gridOptions';
 import { _isClientSideRowModel } from '../../gridOptionsUtils';
-import type { IRowModel } from '../../interfaces/iRowModel';
 import type { UserCompDetails } from '../../interfaces/iUserCompDetails';
 import { _warn } from '../../validation/logging';
 import type { ComponentSelector } from '../../widgets/component';
@@ -22,25 +17,13 @@ const enum OverlayServiceState {
 export class OverlayService extends BeanStub implements NamedBean {
     beanName = 'overlays' as const;
 
-    private userCompFactory: UserComponentFactory;
-    private rowModel: IRowModel;
-    private ctrlsSvc: CtrlsService;
     private isClientSide: boolean;
-    private colModel: ColumnModel;
-
     private state: OverlayServiceState = OverlayServiceState.Hidden;
     private showInitialOverlay: boolean = true;
     private exclusive?: boolean;
     private wrapperPadding: number = 0;
 
-    public wireBeans(beans: BeanCollection): void {
-        this.userCompFactory = beans.userCompFactory;
-        this.rowModel = beans.rowModel;
-        this.colModel = beans.colModel;
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
-
-    private overlayWrapperComp: OverlayWrapperComponent | undefined;
+    public eWrapper: OverlayWrapperComponent | undefined;
 
     public postConstruct(): void {
         this.isClientSide = _isClientSideRowModel(this.gos);
@@ -49,7 +32,7 @@ export class OverlayService extends BeanStub implements NamedBean {
         this.addManagedEventListeners({
             newColumnsLoaded: updateOverlayVisibility,
             rowDataUpdated: updateOverlayVisibility,
-            gridSizeChanged: this.onGridSizeChanged.bind(this),
+            gridSizeChanged: this.refreshWrapperPadding.bind(this),
             rowCountReady: () => {
                 // Support hiding the initial overlay when data is set via transactions.
                 this.showInitialOverlay = false;
@@ -61,30 +44,26 @@ export class OverlayService extends BeanStub implements NamedBean {
     }
 
     public setOverlayWrapperComp(overlayWrapperComp: OverlayWrapperComponent | undefined): void {
-        this.overlayWrapperComp = overlayWrapperComp;
+        this.eWrapper = overlayWrapperComp;
         this.updateOverlayVisibility();
     }
 
     /** Returns true if the overlay is visible. */
     public isVisible(): boolean {
-        return this.state !== OverlayServiceState.Hidden && !!this.overlayWrapperComp;
+        return this.state !== OverlayServiceState.Hidden && !!this.eWrapper;
     }
 
     /** Returns true if the overlay is visible and is exclusive (popup over the grid) */
     public isExclusive(): boolean {
-        return this.state === OverlayServiceState.Loading && !!this.overlayWrapperComp;
-    }
-
-    /** Gets the overlay wrapper component */
-    public getOverlayWrapper(): OverlayWrapperComponent | undefined {
-        return this.overlayWrapperComp;
+        return this.state === OverlayServiceState.Loading && !!this.eWrapper;
     }
 
     public showLoadingOverlay(): void {
         this.showInitialOverlay = false;
 
-        const loading = this.gos.get('loading');
-        if (!loading && (loading !== undefined || this.gos.get('suppressLoadingOverlay'))) {
+        const gos = this.gos;
+        const loading = gos.get('loading');
+        if (!loading && (loading !== undefined || gos.get('suppressLoadingOverlay'))) {
             return;
         }
 
@@ -94,7 +73,8 @@ export class OverlayService extends BeanStub implements NamedBean {
     public showNoRowsOverlay(): void {
         this.showInitialOverlay = false;
 
-        if (this.gos.get('loading') || this.gos.get('suppressNoRowsOverlay')) {
+        const gos = this.gos;
+        if (gos.get('loading') || gos.get('suppressNoRowsOverlay')) {
             return;
         }
 
@@ -121,11 +101,16 @@ export class OverlayService extends BeanStub implements NamedBean {
     }
 
     private updateOverlayVisibility(): void {
-        if (!this.overlayWrapperComp) {
+        if (!this.eWrapper) {
             this.state = OverlayServiceState.Hidden;
             return;
         }
 
+        const {
+            state,
+            isClientSide,
+            beans: { gos, colModel, rowModel },
+        } = this;
         let loading = this.gos.get('loading');
 
         if (loading !== undefined) {
@@ -133,35 +118,34 @@ export class OverlayService extends BeanStub implements NamedBean {
             this.showInitialOverlay = false;
         }
 
-        if (this.showInitialOverlay && loading === undefined && !this.gos.get('suppressLoadingOverlay')) {
-            loading =
-                !this.gos.get('columnDefs') || !this.colModel.ready || (!this.gos.get('rowData') && this.isClientSide);
+        if (this.showInitialOverlay && loading === undefined && !gos.get('suppressLoadingOverlay')) {
+            loading = !gos.get('columnDefs') || !colModel.ready || (!gos.get('rowData') && isClientSide);
         }
 
         if (loading) {
-            if (this.state !== OverlayServiceState.Loading) {
+            if (state !== OverlayServiceState.Loading) {
                 this.doShowLoadingOverlay();
             }
         } else {
             this.showInitialOverlay = false;
-            if (this.rowModel.isEmpty() && !this.gos.get('suppressNoRowsOverlay') && this.isClientSide) {
-                if (this.state !== OverlayServiceState.NoRows) {
+            if (rowModel.isEmpty() && !gos.get('suppressNoRowsOverlay') && isClientSide) {
+                if (state !== OverlayServiceState.NoRows) {
                     this.doShowNoRowsOverlay();
                 }
-            } else if (this.state !== OverlayServiceState.Hidden) {
+            } else if (state !== OverlayServiceState.Hidden) {
                 this.doHideOverlay();
             }
         }
     }
 
     private doShowLoadingOverlay(): void {
-        if (!this.overlayWrapperComp) {
+        if (!this.eWrapper) {
             return;
         }
 
         this.state = OverlayServiceState.Loading;
         this.showOverlay(
-            _getLoadingOverlayCompDetails(this.userCompFactory, {}),
+            _getLoadingOverlayCompDetails(this.beans.userCompFactory, {}),
             'ag-overlay-loading-wrapper',
             'loadingOverlayComponentParams'
         );
@@ -169,13 +153,13 @@ export class OverlayService extends BeanStub implements NamedBean {
     }
 
     private doShowNoRowsOverlay(): void {
-        if (!this.overlayWrapperComp) {
+        if (!this.eWrapper) {
             return;
         }
 
         this.state = OverlayServiceState.NoRows;
         this.showOverlay(
-            _getNoRowsOverlayCompDetails(this.userCompFactory, {}),
+            _getNoRowsOverlayCompDetails(this.beans.userCompFactory, {}),
             'ag-overlay-no-rows-wrapper',
             'noRowsOverlayComponentParams'
         );
@@ -183,12 +167,12 @@ export class OverlayService extends BeanStub implements NamedBean {
     }
 
     private doHideOverlay(): void {
-        if (!this.overlayWrapperComp) {
+        if (!this.eWrapper) {
             return;
         }
 
         this.state = OverlayServiceState.Hidden;
-        this.overlayWrapperComp.hideOverlay();
+        this.eWrapper.hideOverlay();
         this.updateExclusive();
     }
 
@@ -198,7 +182,7 @@ export class OverlayService extends BeanStub implements NamedBean {
         gridOption: keyof GridOptions
     ): void {
         const promise = compDetails?.newAgStackInstance() ?? null;
-        this.overlayWrapperComp?.showOverlay(promise, wrapperCssClass, this.isExclusive(), gridOption);
+        this.eWrapper?.showOverlay(promise, wrapperCssClass, this.isExclusive(), gridOption);
         this.refreshWrapperPadding();
     }
 
@@ -212,19 +196,16 @@ export class OverlayService extends BeanStub implements NamedBean {
         }
     }
 
-    private onGridSizeChanged(): void {
-        this.refreshWrapperPadding();
-    }
-
     private refreshWrapperPadding(): void {
-        if (!this.overlayWrapperComp) {
+        const eWrapper = this.eWrapper;
+        if (!eWrapper) {
             return;
         }
 
         let newPadding: number = 0;
 
         if (this.state === OverlayServiceState.NoRows) {
-            const headerCtrl = this.ctrlsSvc.get('gridHeaderCtrl');
+            const headerCtrl = this.beans.ctrlsSvc.get('gridHeaderCtrl');
             const headerHeight = headerCtrl?.headerHeight || 0;
 
             newPadding = headerHeight;
@@ -237,6 +218,6 @@ export class OverlayService extends BeanStub implements NamedBean {
         }
 
         this.wrapperPadding = newPadding;
-        this.overlayWrapperComp.updateOverlayWrapperPaddingTop(newPadding);
+        eWrapper.updateOverlayWrapperPaddingTop(newPadding);
     }
 }

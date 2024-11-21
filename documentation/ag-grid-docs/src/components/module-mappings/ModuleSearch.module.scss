@@ -1,0 +1,40 @@
+@use 'design-system' as *;
+
+.searchBox {
+    position: relative;
+    display: flex;
+    border-radius: var(--radius-md);
+    cursor: text;
+    #{$selector-darkmode} & {
+        input {
+            background: color-mix(in srgb, var(--color-bg-primary), var(--color-fg-primary) 6%);
+
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+    }
+}
+
+.searchIcon {
+    --icon-size: 20px;
+    --icon-color: var(--color-fg-secondary);
+
+    position: absolute;
+    top: 10px;
+    left: $spacing-size-2;
+}
+
+input[type='search'].searchInput {
+    width: 100%;
+    padding: $spacing-size-2 $spacing-size-2 $spacing-size-2 $spacing-size-8;
+
+    &::placeholder {
+        color: var(--color-fg-quinary);
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button {
+        display: none;
+    }
+}

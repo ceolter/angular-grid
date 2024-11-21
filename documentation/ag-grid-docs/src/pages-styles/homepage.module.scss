@@ -84,23 +84,13 @@ body {
     }
 }
 
-.heroGrid {
-    display: flex;
-    flex-direction: row-reverse;
+.heroSectiondemoContainer {
     height: 320px;
-    overflow: hidden;
-    width: 100%;
-    position: absolute;
-    padding: $spacing-size-8;
-    justify-content: center;
+    margin: 0 auto;
+    max-width: 1200px;
 
-    @media screen and (min-width: $breakpoint-hero-large) {
-        height: 416px;
-        margin-top: $spacing-size-12;
-        top: 375px;
-    }
     @media screen and (max-width: 500px) {
-        top: 450px;
+        padding: $spacing-size-4;
     }
 
     .loadingLogoContainer {
@@ -135,7 +125,11 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
-    margin-top: 200px;
+    margin-top: 260px;
+
+    @media screen and (max-width: 500px) {
+        margin-top: 360px;
+    }
 
     @media screen and (min-width: 640px) {
         flex-direction: row;

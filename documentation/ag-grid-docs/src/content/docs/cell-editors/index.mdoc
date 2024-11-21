@@ -24,32 +24,6 @@ The example below shows some Provided Editor Components and some Custom Editor C
 {% interfaceDocumentation interfaceName="ICellEditorParams" config={"description": ""} /%}
 {% /if %}
 
-{% if isFramework("vue") %}
-{% note %}
-## Vue 3 - Class Based Components & Typed Components
-
-If you're using a Class Based Component (i.e. you're using `vue-property-decorator`/`vue-class-component`), or if you're using a vanilla Vue 3 component
-with `lang='ts'` then you'll need to specify the `params` object as a `prop`.
-
-For example:
-
-{% /note %}
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-<script lang="ts">
-    import {defineComponent} from "vue";
-
-    export default defineComponent({
-        name: "MyComponent",
-        props: ['params'],  // required for TypeScript ...
-    })
-</script>
-```
-{% /if %}
-
-
 ## Selecting Components
 
 Cell Editor Components are configured using the `cellEditor` property of the [Column Definition](./column-definitions/).
@@ -67,13 +41,13 @@ const gridOptions = {
             field: 'name', 
             editable: true, 
             // uses a custom editor, referenced directly
-            cellEditor: CustomEditorComp
+            cellEditor: 'CustomEditorComp'
         },
     ]
 }
 ```
 
-See [Registering Custom Components](./components/#registering-custom-components) to optionally register components and refernce them by name.
+See [Registering Custom Components](./components/#registering-custom-components) for details on how to register your custom grid components.
 
 ## Dynamic Selection
 

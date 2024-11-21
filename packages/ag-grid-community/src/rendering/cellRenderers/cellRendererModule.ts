@@ -7,7 +7,7 @@ import { CheckboxCellRenderer } from './checkboxCellRenderer';
  * @colDef cellDataType
  */
 export const CheckboxCellRendererModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CheckboxCellRendererModule'),
+    ...baseCommunityModule('CheckboxCellRenderer'),
     userComponents: {
         agCheckboxCellRenderer: CheckboxCellRenderer,
     },

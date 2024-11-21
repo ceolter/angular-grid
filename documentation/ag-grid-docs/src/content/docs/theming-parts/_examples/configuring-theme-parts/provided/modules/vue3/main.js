@@ -20,10 +20,11 @@ import {
     themeQuartz,
 } from 'ag-grid-community';
 import {
+    ColumnMenuModule,
     ColumnsToolPanelModule,
+    ContextMenuModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    MenuModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -36,7 +37,8 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ExcelExportModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
 ]);
 
 const baseThemes = [

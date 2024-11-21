@@ -279,11 +279,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
 
         if (chartContainer) {
             // if container exists, means developer initiated chart create via API, so place in provided container
-            const themeEl = document.createElement('div');
-            themeEl.style.height = '100%';
-            chartComp.setThemeEl(themeEl);
-            themeEl.appendChild(chartComp.getGui());
-            chartContainer.appendChild(themeEl);
+            chartContainer.appendChild(chartRef.chartElement);
         } else if (createChartContainerFunc) {
             // otherwise, user created chart via grid UI, check if developer provides containers (e.g. if the application
             // is using its own dialogs rather than the grid provided dialogs)
@@ -300,6 +296,11 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     }
 
     private createChartRef(chartComp: GridChartComp): ChartRef {
+        const themeEl = document.createElement('div');
+        themeEl.style.height = '100%';
+        chartComp.setThemeEl(themeEl);
+        themeEl.appendChild(chartComp.getGui());
+
         const chartRef: ChartRef = {
             destroyChart: () => {
                 if (this.activeCharts.has(chartRef)) {
@@ -311,7 +312,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
             focusChart: () => {
                 _focusInto(chartComp.getGui());
             },
-            chartElement: chartComp.getGui(),
+            chartElement: themeEl,
             chart: chartComp.getUnderlyingChart(),
             chartId: chartComp.getChartModel().chartId,
         };

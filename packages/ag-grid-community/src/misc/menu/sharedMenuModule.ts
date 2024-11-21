@@ -8,7 +8,7 @@ import { MenuService } from './menuService';
  * @internal
  */
 export const SharedMenuModule: _ModuleWithApi<_CommunityMenuGridApi> = {
-    ...baseCommunityModule('SharedMenuModule'),
+    ...baseCommunityModule('SharedMenu'),
     beans: [MenuService],
     apiFunctions: {
         showColumnMenu,

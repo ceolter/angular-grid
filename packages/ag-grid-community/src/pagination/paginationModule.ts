@@ -22,7 +22,7 @@ import { PaginationService } from './paginationService';
  * @gridOption pagination
  */
 export const PaginationModule: _ModuleWithApi<_PaginationGridApi> = {
-    ...baseCommunityModule('PaginationModule'),
+    ...baseCommunityModule('Pagination'),
     beans: [PaginationService, PaginationAutoPageSizeService],
     icons: {
         // "go to first" button in pagination controls

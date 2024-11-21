@@ -24,7 +24,7 @@ import { SortStage } from './sortStage';
  * @feature Client-Side Row Model
  */
 export const ClientSideRowModelModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ClientSideRowModelModule'),
+    ...baseCommunityModule('ClientSideRowModel'),
     rowModels: ['clientSide'],
     beans: [ClientSideNodeManager, ClientSideRowModel, SortStage],
     dependsOn: [SortModule],
@@ -34,7 +34,7 @@ export const ClientSideRowModelModule: _ModuleWithoutApi = {
  * @feature Client-Side Row Model
  */
 export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGridApi<any>> = {
-    ...baseCommunityModule('ClientSideRowModelApiModule'),
+    ...baseCommunityModule('ClientSideRowModelApi'),
     rowModels: ['clientSide'],
     apiFunctions: {
         onGroupExpandedOrCollapsed,

@@ -1,5 +1,5 @@
+import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
-import { Collapsible } from '@components/Collapsible';
 import classnames from 'classnames';
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';

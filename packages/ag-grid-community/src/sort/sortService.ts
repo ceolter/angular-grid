@@ -45,7 +45,9 @@ export class SortService extends BeanStub implements NamedBean {
             sort = null;
         }
 
-        const isColumnsSortingCoupledToGroup = _isColumnsSortingCoupledToGroup(this.gos);
+        const { gos } = this;
+
+        const isColumnsSortingCoupledToGroup = _isColumnsSortingCoupledToGroup(gos);
         let columnsToUpdate = [column];
         if (isColumnsSortingCoupledToGroup) {
             if (column.getColDef().showRowGroup) {
@@ -60,7 +62,7 @@ export class SortService extends BeanStub implements NamedBean {
 
         columnsToUpdate.forEach((col) => this.setColSort(col, sort, source));
 
-        const doingMultiSort = (multiSort || this.gos.get('alwaysMultiSort')) && !this.gos.get('suppressMultiSort');
+        const doingMultiSort = (multiSort || gos.get('alwaysMultiSort')) && !gos.get('suppressMultiSort');
 
         // clear sort on all columns except those changed, and update the icons
         const updatedColumns: AgColumn[] = [];
@@ -77,14 +79,15 @@ export class SortService extends BeanStub implements NamedBean {
     }
 
     private updateSortIndex(lastColToChange: AgColumn) {
-        const isCoupled = _isColumnsSortingCoupledToGroup(this.gos);
-        const groupParent = this.showRowGroupCols?.getShowRowGroupCol(lastColToChange.getId());
+        const { gos, colModel, showRowGroupCols } = this;
+        const isCoupled = _isColumnsSortingCoupledToGroup(gos);
+        const groupParent = showRowGroupCols?.getShowRowGroupCol(lastColToChange.getId());
         const lastSortIndexCol = isCoupled ? groupParent || lastColToChange : lastColToChange;
 
         const allSortedCols = this.getColumnsWithSortingOrdered();
 
         // reset sort index on everything
-        this.colModel.getAllCols().forEach((col) => this.setColSortIndex(col, null));
+        colModel.getAllCols().forEach((col) => this.setColSortIndex(col, null));
         const allSortedColsWithoutChangesOrGroups = allSortedCols.filter((col) => {
             if (isCoupled && col.getColDef().showRowGroup) {
                 return false;
@@ -156,22 +159,23 @@ export class SortService extends BeanStub implements NamedBean {
      * @returns a map of sort indexes for every sorted column, if groups sort primaries then they will have equivalent indices
      */
     private getIndexedSortMap(): Map<AgColumn, number> {
+        const { gos, colModel, showRowGroupCols, rowGroupColsSvc } = this;
         // pull out all the columns that have sorting set
-        let allSortedCols = this.colModel.getAllCols().filter((col) => !!col.getSort());
+        let allSortedCols = colModel.getAllCols().filter((col) => !!col.getSort());
 
-        if (this.colModel.isPivotMode()) {
-            const isSortingLinked = _isColumnsSortingCoupledToGroup(this.gos);
+        if (colModel.isPivotMode()) {
+            const isSortingLinked = _isColumnsSortingCoupledToGroup(gos);
             allSortedCols = allSortedCols.filter((col) => {
                 const isAggregated = !!col.getAggFunc();
                 const isSecondary = !col.isPrimary();
                 const isGroup = isSortingLinked
-                    ? this.showRowGroupCols?.getShowRowGroupCol(col.getId())
+                    ? showRowGroupCols?.getShowRowGroupCol(col.getId())
                     : col.getColDef().showRowGroup;
                 return isAggregated || isSecondary || isGroup;
             });
         }
 
-        const sortedRowGroupCols = this.rowGroupColsSvc?.columns.filter((col) => !!col.getSort()) ?? [];
+        const sortedRowGroupCols = rowGroupColsSvc?.columns.filter((col) => !!col.getSort()) ?? [];
 
         // when both cols are missing sortIndex, we use the position of the col in all cols list.
         // this means if colDefs only have sort, but no sortIndex, we deterministically pick which
@@ -197,12 +201,12 @@ export class SortService extends BeanStub implements NamedBean {
             }
         });
 
-        const isSortLinked = _isColumnsSortingCoupledToGroup(this.gos) && !!sortedRowGroupCols.length;
+        const isSortLinked = _isColumnsSortingCoupledToGroup(gos) && !!sortedRowGroupCols.length;
         if (isSortLinked) {
             allSortedCols = [
                 ...new Set(
                     // if linked sorting, replace all columns with the display group column for index purposes, and ensure uniqueness
-                    allSortedCols.map((col) => this.showRowGroupCols?.getShowRowGroupCol(col.getId()) ?? col)
+                    allSortedCols.map((col) => showRowGroupCols?.getShowRowGroupCol(col.getId()) ?? col)
                 ),
             ];
         }
@@ -214,7 +218,7 @@ export class SortService extends BeanStub implements NamedBean {
         // add the row group cols back
         if (isSortLinked) {
             sortedRowGroupCols.forEach((col) => {
-                const groupDisplayCol = this.showRowGroupCols!.getShowRowGroupCol(col.getId())!;
+                const groupDisplayCol = showRowGroupCols!.getShowRowGroupCol(col.getId())!;
                 indexMap.set(col, indexMap.get(groupDisplayCol)!);
             });
         }

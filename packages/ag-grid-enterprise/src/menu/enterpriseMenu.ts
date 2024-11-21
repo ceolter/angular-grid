@@ -292,7 +292,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
     ) {
         const restoreFocusParams = {
             column,
-            headerPosition: this.focusSvc.getFocusedHeader(),
+            headerPosition: this.focusSvc.focusedHeader,
             columnIndex: this.visibleCols.allCols.indexOf(column as AgColumn),
             eventSource,
         };
