@@ -1,5 +1,6 @@
 import type { AgChartThemeOverrides } from 'ag-charts-types';
 
+import type { RefreshModelState } from './clientSideRowModel/refreshModelState';
 import type { ColDef } from './entities/colDef';
 import type { GridOptions } from './entities/gridOptions';
 import type { AgEventType, AgInternalEventType, AgPublicEventType } from './eventTypes';
@@ -7,7 +8,6 @@ import type { FilterRequestSource } from './filter/iColumnFilter';
 import type { CellRange, CellRangeParams } from './interfaces/IRangeService';
 import type { GridState } from './interfaces/gridState';
 import type { ChartType } from './interfaces/iChartOptions';
-import type { RefreshModelParams } from './interfaces/iClientSideRowModel';
 import type { Column, ColumnEventName, ColumnGroup, ColumnPinnedType, ProvidedColumnGroup } from './interfaces/iColumn';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
 import type { BuildEventTypeMap } from './interfaces/iEventEmitter';
@@ -277,7 +277,7 @@ export interface RowDataUpdatedEvent<TData = any, TContext = any>
 /** Raised by ClientSideRowModel */
 export interface BeforeRefreshModelEvent<TData = any, TContext = any>
     extends AgGlobalEvent<'beforeRefreshModel', TData, TContext> {
-    params: RefreshModelParams<TData>;
+    state: RefreshModelState<TData>;
 }
 
 export interface RowDataUpdateStartedEvent<TData = any, TContext = any>

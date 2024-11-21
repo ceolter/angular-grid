@@ -13,8 +13,8 @@ import type {
     IsGroupOpenByDefaultParams,
     KeyCreatorParams,
     NamedBean,
+    RefreshModelState,
     RowNodeTransaction,
-    StageExecuteParams,
     ValueService,
     WithoutGridCommon,
 } from 'ag-grid-community';
@@ -47,7 +47,7 @@ interface GroupingDetails {
     rootNode: RowNode;
     groupedCols: AgColumn[];
     groupedColCount: number;
-    transactions: RowNodeTransaction[];
+    transactions: RowNodeTransaction[] | null | undefined;
     rowNodesOrderChanged: boolean;
 
     groupAllowUnbalanced: boolean;
@@ -92,17 +92,16 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private oldGroupingDetails: GroupingDetails;
     private oldGroupDisplayColIds: string;
 
-    public execute(params: StageExecuteParams): void {
-        const details = this.createGroupingDetails(params);
+    public execute(state: RefreshModelState): void {
+        const details = this.createGroupingDetails(state);
 
         if (details.transactions) {
             this.handleTransaction(details);
         } else {
-            const afterColsChanged = params.afterColumnsChanged === true;
-            this.shotgunResetEverything(details, afterColsChanged);
+            this.shotgunResetEverything(details, state.columnsChanged);
         }
 
-        const changedPath = params.changedPath!;
+        const changedPath = state.changedPath!;
 
         this.positionLeafsAndGroups(changedPath);
         this.orderGroups(details);
@@ -138,19 +137,19 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         }, false);
     }
 
-    private createGroupingDetails(params: StageExecuteParams): GroupingDetails {
-        const { rowNode, changedPath, rowNodeTransactions, rowNodesOrderChanged } = params;
+    private createGroupingDetails(state: RefreshModelState): GroupingDetails {
+        const { rootNode, deltaUpdateTransactions, changedPath, rowsOrderChanged, rowsInserted } = state;
 
         const groupedCols = this.rowGroupColsSvc?.columns;
 
         const details: GroupingDetails = {
             expandByDefault: this.gos.get('groupDefaultExpanded'),
             groupedCols: groupedCols!,
-            rootNode: rowNode,
+            rootNode: rootNode,
             pivotMode: this.colModel.isPivotMode(),
             groupedColCount: groupedCols?.length ?? 0,
-            transactions: rowNodeTransactions!,
-            rowNodesOrderChanged: !!rowNodesOrderChanged,
+            transactions: deltaUpdateTransactions,
+            rowNodesOrderChanged: rowsOrderChanged || rowsInserted,
             // if no transaction, then it's shotgun, changed path would be 'not active' at this point anyway
             changedPath: changedPath!,
             groupAllowUnbalanced: this.gos.get('groupAllowUnbalanced'),
@@ -163,7 +162,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private handleTransaction(details: GroupingDetails): void {
-        details.transactions.forEach((tran) => {
+        details.transactions!.forEach((tran) => {
             const batchRemover = new BatchRemover();
 
             // the order here of [add, remove, update] needs to be the same as in ClientSideNodeManager,

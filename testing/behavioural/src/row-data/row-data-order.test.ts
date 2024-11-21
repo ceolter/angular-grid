@@ -4,7 +4,13 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridOptions, RowDataTransaction } from 'ag-grid-community';
 
 import type { GridRowsOptions } from '../test-utils';
-import { GridRows, TestGridsManager, cachedJSONObjects, executeTransactionsAsync } from '../test-utils';
+import {
+    GridRows,
+    TestGridsManager,
+    asyncSetTimeout,
+    cachedJSONObjects,
+    executeTransactionsAsync,
+} from '../test-utils';
 import { VERSION } from '../version';
 
 const defaultGridRowsOptions: GridRowsOptions = {
@@ -783,5 +789,70 @@ describe('ag-grid rows-ordering', () => {
                 └── LEAF id:13 x:13
             `);
         });
+    });
+
+    test('immutable update inside a rowDataUpdated event', async () => {
+        const rowData1 = [
+            { id: '1', x: 1 },
+            { id: '2', x: 2 },
+            { id: '3', x: 3 },
+            { id: '4', x: 4 },
+        ];
+        const rowData2 = [
+            { id: '1', x: 1 },
+            { id: '4', x: 4 },
+            { id: '5', x: 5 },
+            { id: '3', x: 33 },
+        ];
+        const rowData3 = [
+            { id: '4', x: 4 },
+            { id: '1', x: 1 },
+            { id: '5', x: 5 },
+            { id: '7', x: 77 },
+        ];
+
+        let rowDataUpdatedCalls = 0;
+        let modelUpdatedCalls = 0;
+
+        const api = gridsManager.createGrid('myGrid', {
+            columnDefs: [{ field: 'x' }],
+            animateRows: false,
+            rowData: rowData1,
+            onRowDataUpdated: (event) => {
+                expect(event.type).toBe('rowDataUpdated');
+                expect(event.api).toBe(api);
+
+                if (rowDataUpdatedCalls === 0) {
+                    api.setGridOption('rowData', rowData2);
+                }
+
+                ++rowDataUpdatedCalls;
+            },
+            onModelUpdated: (event) => {
+                expect(event.type).toBe('modelUpdated');
+                expect(event.newData).toBe(modelUpdatedCalls === 0);
+                if (modelUpdatedCalls === 1) {
+                    api.setGridOption('rowData', rowData3);
+                }
+
+                ++modelUpdatedCalls;
+            },
+            getRowId: (params) => params.data.id,
+        });
+
+        // Await the async events are executed
+        await asyncSetTimeout(0);
+        await asyncSetTimeout(1);
+
+        await new GridRows(api, 'data', defaultGridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:4 x:4
+            ├── LEAF id:1 x:1
+            ├── LEAF id:5 x:5
+            └── LEAF id:7 x:77
+        `);
+
+        expect(rowDataUpdatedCalls).toBe(2);
+        expect(modelUpdatedCalls).toBe(2);
     });
 });

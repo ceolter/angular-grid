@@ -273,7 +273,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
                 addIndex--;
             }
 
-            this.clientSideRowModel.updateRowData({
+            this.clientSideRowModel.applyTransaction({
                 add: rowNodes!
                     .filter(
                         (node) =>
@@ -298,7 +298,7 @@ export class RowDragFeature extends BeanStub implements DropTarget {
         const cellPosition = this.focusSvc.getFocusedCell();
         const cellCtrl = cellPosition && _getCellByPosition(this.beans, cellPosition);
 
-        const rowWasMoved = this.clientSideRowModel.ensureRowsAtPixel(rowNodes, pixel, increment);
+        const rowWasMoved = this.clientSideRowModel.dragDropRowsAtPixel(rowNodes, pixel, increment);
         if (rowWasMoved) {
             if (cellCtrl) {
                 cellCtrl.focusCell();

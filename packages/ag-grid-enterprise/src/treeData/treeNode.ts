@@ -1,6 +1,7 @@
 import { _EmptyArray } from 'ag-grid-community';
 import type { ITreeNode, RowNode } from 'ag-grid-community';
 
+import { clearTreeRootCommitted } from './treeRow';
 import type { TreeRow } from './treeRow';
 
 const treeNodePositionComparer = (a: RowNode, b: RowNode): number => a.treeNode!.sourceIdx - b.treeNode!.sourceIdx;
@@ -306,12 +307,17 @@ export class TreeNode implements ITreeNode {
      * @returns the next child node to be committed, or null if all children were already dequeued.
      */
     public dequeueInvalidated(): TreeNode | null {
-        const node = this.invalidatedHead;
-        if (node !== null) {
+        while (true) {
+            const node = this.invalidatedHead;
+            if (!node) {
+                return null; // Queue empty
+            }
             this.invalidatedHead = node.invalidatedNext ?? null;
             node.invalidatedNext = undefined; // Mark as not invalidated
+            if (node.parent === this) {
+                return node; // Not deleted
+            }
         }
-        return node;
     }
 
     /**
@@ -322,12 +328,20 @@ export class TreeNode implements ITreeNode {
      */
     public invalidate(): void {
         let node: TreeNode | null = this;
-        let parent = this.parent;
-        while (parent !== null && node.invalidatedNext === undefined) {
+        while (true) {
+            const parent: TreeNode | null = node.parent;
+            if (!parent) {
+                if (node.level < 0) {
+                    clearTreeRootCommitted(node.row);
+                }
+                break; // This is the parent or a deleted node
+            }
+            if (node.invalidatedNext !== undefined) {
+                break; // Already invalidated
+            }
             node.invalidatedNext = parent.invalidatedHead;
             parent.invalidatedHead = node;
             node = parent;
-            parent = node.parent;
         }
     }
 

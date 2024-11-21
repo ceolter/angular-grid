@@ -428,15 +428,9 @@ export { ICheckboxCellRendererParams } from './rendering/cellRenderers/checkboxC
 export type { PinnedRowModel } from './pinnedRowModel/pinnedRowModel';
 export { RowNodeTransaction } from './interfaces/rowNodeTransaction';
 export { RowDataTransaction } from './interfaces/rowDataTransaction';
-export {
-    IClientSideRowModel,
-    ClientSideRowModelStage,
-    ClientSideRowModelStep,
-    RefreshModelParams,
-    IChangedRowNodes,
-} from './interfaces/iClientSideRowModel';
-export { IClientSideNodeManager, ClientSideNodeManagerUpdateRowDataResult } from './interfaces/iClientSideNodeManager';
+export { IClientSideRowModel, ClientSideRowModelStage, ClientSideRowModelStep } from './interfaces/iClientSideRowModel';
 export { AbstractClientSideNodeManager } from './clientSideRowModel/abstractClientSideNodeManager';
+export type { RefreshModelState } from './clientSideRowModel/refreshModelState';
 export { IGroupHideOpenParentsService } from './interfaces/iGroupHideOpenParentsService';
 export type { RowAutoHeightService } from './rendering/row/rowAutoHeightService';
 
@@ -877,7 +871,7 @@ export {
     MouseShowContextMenuParams,
     TouchShowContextMenuParam,
 } from './interfaces/iContextMenu';
-export { IRowNodeStage, StageExecuteParams } from './interfaces/iRowNodeStage';
+export { IRowNodeStage, IRowNodeAggregationStage } from './interfaces/iRowNodeStage';
 export { IDateParams, IDate, IDateComp, BaseDate, BaseDateParams } from './interfaces/dateComponent';
 export { IAfterGuiAttachedParams, ContainerType } from './interfaces/iAfterGuiAttachedParams';
 export { IComponent } from './interfaces/iComponent';

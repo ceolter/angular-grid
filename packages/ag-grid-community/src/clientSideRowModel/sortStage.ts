@@ -6,18 +6,17 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
-import type { ClientSideRowModelStage, IChangedRowNodes } from '../interfaces/iClientSideRowModel';
+import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
 import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
-import type { IRowNode } from '../interfaces/iRowNode';
-import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
+import type { IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { SortOption } from '../interfaces/iSortOption';
-import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
 import type { SortService } from '../sort/sortService';
 import type { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
+import type { RefreshModelState } from './refreshModelState';
 
 function updateChildIndexes(rowNode: RowNode): void {
     if (_missing(rowNode.childrenAfterSort)) {
@@ -69,13 +68,13 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
     }
 
-    public execute(params: StageExecuteParams): void {
+    public execute(state: RefreshModelState): void {
         const sortOptions: SortOption[] = this.sortSvc.getSortOptions();
 
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
         const deltaSort =
             sortActive &&
-            !!params.changedRowNodes &&
+            !!state.deltaUpdate &&
             // in time we can remove this check, so that delta sort is always
             // on if transactions are present. it's off for now so that we can
             // selectively turn it on and test it with some select users before
@@ -89,22 +88,14 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
             return !!opt.column.getColDef().showRowGroup;
         });
-        this.sort(
-            sortOptions,
-            sortActive,
-            deltaSort,
-            params.changedRowNodes,
-            params.changedPath,
-            sortContainsGroupColumns
-        );
+        this.sort(sortOptions, sortActive, deltaSort, state, sortContainsGroupColumns);
     }
 
     private sort(
         sortOptions: SortOption[],
         sortActive: boolean,
         useDeltaSort: boolean,
-        changedRowNodes: IChangedRowNodes | undefined,
-        changedPath: ChangedPath | undefined,
+        refreshModelState: RefreshModelState,
         sortContainsGroupColumns: boolean
     ): void {
         const groupMaintainOrder = this.gos.get('groupMaintainOrder');
@@ -144,8 +135,13 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             } else if (!sortActive || skipSortingPivotLeafs) {
                 // if there's no sort to make, skip this step
                 rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-            } else if (useDeltaSort && changedRowNodes) {
-                rowNode.childrenAfterSort = this.doDeltaSort(rowNode, changedRowNodes, changedPath, sortOptions);
+            } else if (useDeltaSort) {
+                rowNode.childrenAfterSort = this.doDeltaSort(
+                    rowNode,
+                    refreshModelState!,
+                    refreshModelState.changedPath,
+                    sortOptions
+                );
             } else {
                 rowNode.childrenAfterSort = this.rowNodeSorter.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
             }
@@ -158,33 +154,12 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
         };
 
-        changedPath?.forEachChangedNodeDepthFirst(callback);
-    }
-
-    private calculateDirtyNodes(rowNodeTransactions?: RowNodeTransaction[] | null): { [nodeId: string]: true } {
-        const dirtyNodes: { [nodeId: string]: true } = {};
-
-        const addNodesFunc = (rowNodes: IRowNode[]) => {
-            if (rowNodes) {
-                rowNodes.forEach((rowNode) => (dirtyNodes[rowNode.id!] = true));
-            }
-        };
-
-        // all leaf level nodes in the transaction were impacted
-        if (rowNodeTransactions) {
-            rowNodeTransactions.forEach((tran) => {
-                addNodesFunc(tran.add);
-                addNodesFunc(tran.update);
-                addNodesFunc(tran.remove);
-            });
-        }
-
-        return dirtyNodes;
+        refreshModelState.changedPath.forEachChangedNodeDepthFirst(callback);
     }
 
     private doDeltaSort(
         rowNode: RowNode,
-        changedRowNodes: IChangedRowNodes,
+        refreshModelState: RefreshModelState,
         changedPath: ChangedPath | undefined,
         sortOptions: SortOption[]
     ): RowNode[] {
@@ -197,7 +172,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         const untouchedRows = new Set<string>();
         const touchedRows: SortedRowNode[] = [];
 
-        const updates = changedRowNodes.updates;
+        const updates = refreshModelState.updates;
         for (let i = 0, len = unsortedRows.length; i < len; ++i) {
             const row = unsortedRows[i];
             if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
