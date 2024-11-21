@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { getEntry } from 'astro:content';
 import styles from '../pages-styles/react-table.module.scss';
 import Customers from '../components/framework-landing-pages/react/sections/customers/Customers';
-import Faqs from '../components/framework-landing-pages/react/sections/faqs/Faqs';
+import { LandingPageFAQ } from '@ag-website-shared/components/landing-pages/LandingPageFAQ';
 import FeaturesSection from '../components/framework-landing-pages/react/sections/features/FeaturesSection';
 import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
@@ -13,6 +13,7 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Finance } from 'src/components/demos/examples/finance';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 
+const { data: FAQData } = await getEntry('react-landing-page', 'reactTableFAQs');
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { data: examples } = await getEntry('react-landing-page', 'examples');
 ---
@@ -142,7 +143,7 @@ const { data: examples } = await getEntry('react-landing-page', 'examples');
             heading="Frequently Asked Questions"
             subHeading="Answers to some commonly asked questions when building React Tables with AG Grid"
         >
-            <Faqs client:load />
+            <LandingPageFAQ client:load FAQData={FAQData} framework={'react'} />
         </LandingPageSection>
     </div>
 </Layout>
