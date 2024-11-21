@@ -102,13 +102,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
      */
     private currentRefreshModelState: RefreshModelState | null = null;
 
-    private rowNodesCountReady: boolean = false;
+    private rowDataInitialized: boolean = false;
     private rowCountReady: boolean = false;
 
     private orderedStages: IRowNodeStage[];
-
-    /** The old rowData, used to detect a row data changed safely */
-    private rowData: any[] | null | undefined;
 
     public postConstruct(): void {
         this.orderedStages = [
@@ -225,7 +222,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const changedProps = params.changeSet?.properties;
             if (changedProps) {
-                this.refreshModel({ step: 'nothing', changedProps, deltaUpdate: true });
+                this.refreshModel({ step: 'nothing', changedProps, allowDeltaUpdate: true });
             }
         });
 
@@ -291,7 +288,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
             rowsOrderChanged: true,
-            deltaUpdate: true,
+            allowDeltaUpdate: true,
         });
 
         return true;
@@ -318,9 +315,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             step: 'nothing',
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
-            deltaUpdate: true,
+            allowDeltaUpdate: true,
             updateRowNodes: (state) => {
-                this.rowNodesCountReady = true;
+                this.rowDataInitialized = true;
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
                 rowNodeTransaction = nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
@@ -367,9 +364,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             step: 'nothing',
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
-            deltaUpdate: true,
+            allowDeltaUpdate: true,
             updateRowNodes: (state) => {
-                this.rowNodesCountReady = true;
+                this.rowDataInitialized = true;
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
                 for (let i = 0; i < rowDataTransactionBatch.length; ++i) {
@@ -425,14 +422,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         const gos = this.gos;
         const rowData = gos.get('rowData');
-        let rowDataChanged: boolean;
-        if (this.rowData !== rowData) {
-            this.rowData = rowData;
-            rowDataChanged = true;
-        } else {
-            rowDataChanged = !!changedProps?.includes('rowData');
-        }
 
+        let rowDataChanged = !!changedProps?.includes('rowData');
         if (!state) {
             ownsState = this.started;
             rowDataChanged ||= !ownsState && !!rowData;
@@ -445,10 +436,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (!state.started && this.started) {
             state.started = true;
             ownsState = true; // This was caused by the start() method
-        }
-
-        if (changedProps) {
-            state.setStepFromStages(this.orderedStages, changedProps);
         }
 
         const oldNodeManager = this.nodeManager;
@@ -470,7 +457,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (state.fullReload) {
-            if (!rowDataChanged) {
+            if (!rowDataChanged && this.rowDataInitialized) {
                 // No new rowData was passed, so to include user executed transaction we need to extract
                 // the row data from the node manager as it might be different from the original rowData
                 newRowData = oldNodeManager?.extractRowData() ?? newRowData;
@@ -480,7 +467,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (oldNodeManager !== nodeManager) {
-            oldNodeManager?.deactivate();
+            oldNodeManager?.deactivate(state);
             nodeManager.activate(state);
         }
 
@@ -497,12 +484,17 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 nodeManager.setImmutableRowData(state, newRowData);
             } else {
                 state.setNewData();
-                this.rowNodesCountReady = true;
+                this.rowDataInitialized = true;
                 nodeManager.setNewRowData(state, newRowData);
             }
         }
 
         params.updateRowNodes?.(state);
+
+        // TODO move this before updating row nodes so we know there is no need to activate the changed path
+        if (changedProps && state.setStepFromStages(this.orderedStages, changedProps)) {
+            state.clearDeltaUpdate(); // A property needed by a step changed, so, disable delta update for the stages execution
+        }
 
         if (!ownsState) {
             return; // Not yet started, or, this is a nested refresh call
@@ -600,7 +592,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (this.rowNodesCountReady) {
+        if (this.rowDataInitialized) {
             // only if row data has been set
             this.rowCountReady = true;
             this.eventSvc.dispatchEventOnce({ type: 'rowCountReady' });

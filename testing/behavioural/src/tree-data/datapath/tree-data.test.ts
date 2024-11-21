@@ -64,6 +64,7 @@ describe('ag-grid tree data', () => {
         expect(hasLoadingOverlay()).toBe(true);
         expect(hasNoRowsOverlay()).toBe(false);
 
+        console.log('set rowData to empty array');
         api.setGridOption('rowData', []);
 
         expect(hasLoadingOverlay()).toBe(false);

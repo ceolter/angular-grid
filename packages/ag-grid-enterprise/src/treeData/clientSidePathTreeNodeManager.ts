@@ -17,13 +17,11 @@ export class ClientSidePathTreeNodeManager<TData>
         this.treeData = gos.get('treeData') && !!gos.get('getDataPath');
     }
 
-    protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {
+    protected override loadNewRowData(state: RefreshModelState<TData>, rowData: TData[]): void {
         this.treeReset();
-
-        super.loadNewRowData(refreshModelState, rowData);
-
+        super.loadNewRowData(state, rowData);
         const getDataPath = this.gos.get('getDataPath');
-        const allLeafChildren = refreshModelState.rootNode.allLeafChildren!;
+        const allLeafChildren = state.rootNode.allLeafChildren!;
         for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
@@ -33,7 +31,6 @@ export class ClientSidePathTreeNodeManager<TData>
         if (state.hasChanges()) {
             this.executeUpdates(state);
         }
-
         super.refreshModel(state);
     }
 

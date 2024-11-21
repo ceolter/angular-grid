@@ -279,13 +279,13 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     }
 
     private removeNodes(
-        leafRowNodes: Iterable<RowNode>,
+        nodesToRemove: Iterable<RowNode>,
         details: GroupingDetails,
         batchRemover: BatchRemover | undefined
     ): void {
-        this.removeNodesFromParents(leafRowNodes, details, batchRemover);
+        this.removeNodesFromParents(nodesToRemove, details, batchRemover);
         if (details.changedPath.active) {
-            for (const rowNode of leafRowNodes) {
+            for (const rowNode of nodesToRemove) {
                 details.changedPath.addParentNode(rowNode.parent);
             }
         }

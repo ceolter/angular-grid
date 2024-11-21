@@ -73,7 +73,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         }
     }
 
-    public deactivate(): void {
+    public deactivate(_state: RefreshModelState<TData>): void {
         if (this.rootNode) {
             this.allNodesMap = {};
             this.rootNode = null!;
@@ -242,13 +242,10 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
     /** Called when a node needs to be deleted */
     protected rowNodeDeleted(node: RowNode<TData>): void {
-        // so row renderer knows to fade row out (and not reposition it)
-        node.clearRowTopAndRowIndex();
+        node.clearRowTopAndRowIndex(); // so row renderer knows to fade row out (and not reposition it)
 
-        node.groupData = null;
-
-        const id = node.id!;
         const allNodesMap = this.allNodesMap;
+        const id = node.id!;
         if (allNodesMap[id] === node) {
             delete allNodesMap[id];
         }
@@ -444,32 +441,6 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         return rowNode || null;
     }
 
-    protected deselectNodes(state: RefreshModelState<TData> | null, nodesToUnselect: RowNode<TData>[]): void {
-        const source = 'rowDataChanged';
-        const selectionSvc = this.beans.selectionSvc;
-        const selectionChanged = nodesToUnselect.length > 0;
-        if (selectionChanged) {
-            selectionSvc?.setNodesSelected({
-                newValue: false,
-                nodes: nodesToUnselect,
-                suppressFinishActions: true,
-                source,
-            });
-        }
-
-        // we do this regardless of nodes to unselect or not, as it's possible
-        // a new node was inserted, so a parent that was previously selected (as all
-        // children were selected) should not be tri-state (as new one unselected against
-        // all other selected children).
-        if (selectionChanged || (state && !state.newData && state.hasChanges())) {
-            selectionSvc?.updateGroupsFromChildrenSelections?.(source);
-        }
-
-        if (selectionChanged) {
-            this.eventSvc.dispatchEvent({ type: 'selectionChanged', source: source });
-        }
-    }
-
     private deselectNodesAfterUpdate(state: RefreshModelState<TData>) {
         const nodesToUnselect: RowNode[] = [];
         for (const removedNode of state.removals) {
@@ -486,7 +457,29 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
             }
         }
 
-        this.deselectNodes(state, nodesToUnselect);
+        const source = 'rowDataChanged';
+        const selectionSvc = this.beans.selectionSvc;
+        const selectionChanged = nodesToUnselect.length > 0;
+        if (selectionChanged) {
+            selectionSvc?.setNodesSelected({
+                newValue: false,
+                nodes: nodesToUnselect,
+                suppressFinishActions: true,
+                source,
+            });
+        }
+
+        // we do this regardless of nodes to unselect or not, as it's possible
+        // a new node was inserted, so a parent that was previously selected (as all
+        // children were selected) should not be tri-state (as new one unselected against
+        // all other selected children).
+        if (selectionChanged || (state.updates.size && !state.newData)) {
+            selectionSvc?.updateGroupsFromChildrenSelections?.(source);
+        }
+
+        if (selectionChanged) {
+            this.eventSvc.dispatchEvent({ type: 'selectionChanged', source: source });
+        }
     }
 }
 

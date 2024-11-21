@@ -69,7 +69,7 @@ describe('ag-grid hierarchical tree data', () => {
         expect(hasNoRowsOverlay()).toBe(true);
     });
 
-    test.only('ag-grid hierarchical tree data (without id)', async () => {
+    test('ag-grid hierarchical tree data (without id)', async () => {
         const rowData = [
             {
                 x: 'A',
@@ -138,6 +138,7 @@ describe('ag-grid hierarchical tree data', () => {
             · · · └── 7 LEAF id:7 ag-Grid-AutoColumn:"7" x:"H"
         `);
 
+        console.log('START HERE!');
         api.setGridOption('treeData', false);
 
         await gridRows.check(`

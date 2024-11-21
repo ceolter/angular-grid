@@ -96,19 +96,133 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
                     country: 'Italy',
                     year: 2000,
                     name: 'Donald Knuth',
-                    children: [{ id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' }],
-                },
-                {
-                    id: '5',
-                    country: 'Ireland',
-                    year: 2001,
-                    name: 'Grace Hopper',
+                    children: [{ id: '4', country: 'Italy', year: 2000, name: 'Marvin Minsky' }],
                 },
             ])
         );
 
-        gridRows = new GridRows(api, 'add', gridRowsOptions);
+        gridRows = new GridRows(api, 'update 1', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler id:row-group-country-Ireland
+            │ ├─┬ filler id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ └── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ └─┬ filler id:row-group-country-Ireland-year-2001
+            │ · └── LEAF id:2 name:"Alan Turing" country:"Ireland" year:2001
+            └─┬ filler id:row-group-country-Italy
+            · └─┬ filler id:row-group-country-Italy-year-2000
+            · · ├── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2000
+        `);
 
+        api.setGridOption(
+            'rowData',
+            cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [
+                        { id: '1', country: 'Ireland', year: 2000, name: 'Ada Lovelace' },
+                        { id: '2', country: 'Ireland', year: 2001, name: 'Alan Turing' },
+                    ],
+                },
+                {
+                    id: '3',
+                    country: 'Italy',
+                    year: 2000,
+                    name: 'Donald Knuth',
+                    children: [{ id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' }],
+                },
+            ])
+        );
+
+        gridRows = new GridRows(api, 'update 2', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler id:row-group-country-Ireland
+            │ ├─┬ filler id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ └── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ └─┬ filler id:row-group-country-Ireland-year-2001
+            │ · └── LEAF id:2 name:"Alan Turing" country:"Ireland" year:2001
+            └─┬ filler id:row-group-country-Italy
+            · ├─┬ filler id:row-group-country-Italy-year-2000
+            · │ └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · └─┬ filler id:row-group-country-Italy-year-2001
+            · · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2001
+        `);
+
+        api.setGridOption(
+            'rowData',
+            cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [
+                        { id: '1', country: 'Ireland', year: 2000, name: 'Ada Lovelace' },
+                        { id: '2', country: 'Ireland', year: 2001, name: 'Alan Turing' },
+                    ],
+                },
+                {
+                    id: '3',
+                    country: 'Italy',
+                    year: 2000,
+                    name: 'Donald Knuth',
+                    children: [{ id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' }],
+                },
+                { id: '6', country: 'Ireland', year: 2001, name: 'xxx' },
+                { id: '5', country: 'Ireland', year: 2001, name: 'Grace Hopper' },
+            ])
+        );
+
+        gridRows = new GridRows(api, 'add', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler id:row-group-country-Ireland
+            │ ├─┬ filler id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ └── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ └─┬ filler id:row-group-country-Ireland-year-2001
+            │ · ├── LEAF id:2 name:"Alan Turing" country:"Ireland" year:2001
+            │ · ├── LEAF id:6 name:"xxx" country:"Ireland" year:2001
+            │ · └── LEAF id:5 name:"Grace Hopper" country:"Ireland" year:2001
+            └─┬ filler id:row-group-country-Italy
+            · ├─┬ filler id:row-group-country-Italy-year-2000
+            · │ └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · └─┬ filler id:row-group-country-Italy-year-2001
+            · · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2001
+        `);
+
+        api.setGridOption(
+            'rowData',
+            cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [
+                        { id: '1', country: 'Ireland', year: 2000, name: 'Ada Lovelace' },
+                        { id: '2', country: 'Ireland', year: 2001, name: 'Alan Turing' },
+                    ],
+                },
+                {
+                    id: '3',
+                    country: 'Italy',
+                    year: 2000,
+                    name: 'Donald Knuth',
+                    children: [{ id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' }],
+                },
+                { id: '5', country: 'Ireland', year: 2001, name: 'Grace Hopper' },
+            ])
+        );
+
+        gridRows = new GridRows(api, 'remove', gridRowsOptions);
         await gridRows.check(`
             ROOT id:ROOT_NODE_ID
             ├─┬ filler id:row-group-country-Ireland
@@ -128,78 +242,107 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
         api.setGridOption(
             'rowData',
             cachedJSONObjects.array([
-                { id: '0', country: 'Ireland', year: 2000, name: 'John Von Neumann' },
                 {
-                    id: '1',
+                    id: '0',
                     country: 'Ireland',
                     year: 2000,
-                    name: 'Ada Lovelace',
+                    name: 'John Von Neumann',
                     children: [
-                        { id: '2', country: 'Italy', year: 1940, name: 'Alan M. Turing' },
-                        { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky', children: [] },
+                        { id: '1', country: 'Ireland', year: 1940, name: 'Ada Lovelace' },
+                        { id: '2', country: 'Ireland', year: 2000, name: 'Alan M. Turing' },
                     ],
                 },
                 {
-                    id: '5',
+                    id: '3',
                     country: 'Italy',
                     year: 1940,
-                    name: 'Grace Brewster Murray Hopper',
-                    children: [{ id: '6', country: 'Italy', year: 1940, name: 'unknown' }],
+                    name: 'Donald Knuth',
+                    children: [
+                        { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' },
+                        { id: '7', country: 'Ireland', year: 2000, name: 'New' },
+                    ],
                 },
             ])
         );
+
+        // api.setGridOption(
+        //     'rowData',
+        //     cachedJSONObjects.array([
+        //         { id: '0', country: 'Ireland', year: 2000, name: 'John Von Neumann' },
+        //         {
+        //             id: '1',
+        //             country: 'Ireland',
+        //             year: 2000,
+        //             name: 'Ada Lovelace',
+        //             children: [
+        //                 { id: '2', country: 'Italy', year: 1940, name: 'Alan M. Turing' },
+        //                 { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky', children: [] },
+        //             ],
+        //         },
+        //         {
+        //             id: '5',
+        //             country: 'Italy',
+        //             year: 1940,
+        //             name: 'Grace Brewster Murray Hopper',
+        //             children: [{ id: '6', country: 'Italy', year: 1940, name: 'unknown' }],
+        //         },
+        //     ])
+        // );
 
         gridRows = new GridRows(api, 'remove, update, add', gridRowsOptions);
         await gridRows.check(`
             ROOT id:ROOT_NODE_ID
             ├─┬ filler id:row-group-country-Ireland
-            │ └─┬ filler id:row-group-country-Ireland-year-2000
-            │ · ├── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
-            │ · └── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ ├─┬ filler id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ ├── LEAF id:2 name:"Alan M. Turing" country:"Ireland" year:2000
+            │ │ └── LEAF id:7 name:"New" country:"Ireland" year:2000
+            │ └─┬ filler id:row-group-country-Ireland-year-1940
+            │ · └── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:1940
             └─┬ filler id:row-group-country-Italy
-            · ├─┬ filler id:row-group-country-Italy-year-1940
-            · │ ├── LEAF id:2 name:"Alan M. Turing" country:"Italy" year:1940
-            · │ ├── LEAF id:5 name:"Grace Brewster Murray Hopper" country:"Italy" year:1940
-            · │ └── LEAF id:6 name:"unknown" country:"Italy" year:1940
-            · └─┬ filler id:row-group-country-Italy-year-2001
-            · · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2001
+            · ├─┬ filler id:row-group-country-Italy-year-2001
+            · │ └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2001
+            · └─┬ filler id:row-group-country-Italy-year-1940
+            · · └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:1940
         `);
 
         api.setGridOption(
             'rowData',
             cachedJSONObjects.array([
+                { id: '7', country: 'Germany', year: 1900, name: 'unknown X' },
                 {
                     id: '5',
                     country: 'Italy',
                     year: 1940,
                     name: 'Grace Brewster Murray Hopper',
                     children: [
-                        { id: '1', country: 'Ireland', year: 2000, name: 'Ada Lovelace' },
-                        { id: '4', country: 'Italy', year: 1940, name: 'Marvin Minsky' },
                         { id: '2', country: 'Ireland', year: 1940, name: 'Alan M. Turing' },
+                        { id: '8', country: 'Germany', year: 1900, name: 'unknown Y' },
+                        { id: '4', country: 'Italy', year: 1940, name: 'Marvin Minsky' },
+                        { id: '1', country: 'Ireland', year: 2000, name: 'Ada Lovelace' },
                     ],
                 },
                 { id: '0', country: 'Ireland', year: 2000, name: 'John Von Neumann' },
-                { id: '6', country: 'Germany', year: 1900, name: 'unknown' },
             ])
         );
 
         gridRows = new GridRows(api, 'update, reorder', gridRowsOptions);
         await gridRows.check(`
             ROOT id:ROOT_NODE_ID
-            ├─┬ filler id:row-group-country-Italy
-            │ └─┬ filler id:row-group-country-Italy-year-1940
-            │ · ├── LEAF id:5 name:"Grace Brewster Murray Hopper" country:"Italy" year:1940
-            │ · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:1940
             ├─┬ filler id:row-group-country-Ireland
             │ ├─┬ filler id:row-group-country-Ireland-year-2000
             │ │ ├── LEAF id:1 name:"Ada Lovelace" country:"Ireland" year:2000
             │ │ └── LEAF id:0 name:"John Von Neumann" country:"Ireland" year:2000
             │ └─┬ filler id:row-group-country-Ireland-year-1940
             │ · └── LEAF id:2 name:"Alan M. Turing" country:"Ireland" year:1940
+            ├─┬ filler id:row-group-country-Italy
+            │ └─┬ filler id:row-group-country-Italy-year-1940
+            │ · ├── LEAF id:5 name:"Grace Brewster Murray Hopper" country:"Italy" year:1940
+            │ · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:1940
             └─┬ filler id:row-group-country-Germany
             · └─┬ filler id:row-group-country-Germany-year-1900
-            · · └── LEAF id:6 name:"unknown" country:"Germany" year:1900
+            · · ├── LEAF id:7 name:"unknown X" country:"Germany" year:1900
+            · · └── LEAF id:8 name:"unknown Y" country:"Germany" year:1900
         `);
 
         api.setGridOption('rowData', []);

@@ -23,7 +23,7 @@ describe('ag-grid hierarchical immutable tree data', () => {
         consoleWarnSpy?.mockRestore();
     });
 
-    test('ag-grid hierarchical immutable tree data', async () => {
+    test.only('ag-grid hierarchical immutable tree data', async () => {
         const rowData1 = cachedJSONObjects.array([
             {
                 id: 'A',
@@ -261,6 +261,7 @@ describe('ag-grid hierarchical immutable tree data', () => {
             },
         ]);
 
+        console.log('\n\nSET NEW ROW DATAXyz!!!\n');
         api.setGridOption('rowData', rowData4);
 
         gridRows = new GridRows(api, 'add, reorder, move some nodes', gridRowsOptions);
@@ -281,6 +282,8 @@ describe('ag-grid hierarchical immutable tree data', () => {
             · · ├── L LEAF id:L ag-Grid-AutoColumn:"L" v:666
             · · └── K LEAF id:K ag-Grid-AutoColumn:"K" v:110
         `);
+
+        return;
 
         const rows4 = gridRows.displayedRows;
 

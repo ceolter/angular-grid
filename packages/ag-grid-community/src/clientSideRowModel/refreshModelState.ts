@@ -27,7 +27,7 @@ export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
 
-    deltaUpdate?: boolean;
+    allowDeltaUpdate?: boolean;
 
     /** true if this update is due to columns changing, ie no rows were changed */
     columnsChanged?: boolean;
@@ -136,7 +136,7 @@ export class RefreshModelState<TData = any> {
             keepRenderedRows = false,
             keepUndoRedoStack = false,
             rowsOrderChanged = false,
-            deltaUpdate,
+            allowDeltaUpdate,
         }: RefreshModelParams<TData>,
 
         /**
@@ -151,7 +151,7 @@ export class RefreshModelState<TData = any> {
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
-        this.deltaUpdate = deltaUpdate;
+        this.deltaUpdate = allowDeltaUpdate ? undefined : false;
     }
 
     public updateParams({
@@ -161,7 +161,7 @@ export class RefreshModelState<TData = any> {
         keepRenderedRows = false,
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
-        deltaUpdate = false,
+        allowDeltaUpdate = false,
     }: RefreshModelParams<any>) {
         this.columnsChanged ||= columnsChanged;
         this.animate &&= animate;
@@ -170,7 +170,7 @@ export class RefreshModelState<TData = any> {
         if (rowsOrderChanged && !this.newData) {
             this.rowsOrderChanged = true;
         }
-        if (!deltaUpdate) {
+        if (!allowDeltaUpdate) {
             this.clearDeltaUpdate();
         }
         this.setStep(step);
@@ -190,19 +190,17 @@ export class RefreshModelState<TData = any> {
     public setStepFromStages(
         orderedStages: IRowNodeStageDefinition[],
         changedProps: (keyof GridOptions<TData>)[]
-    ): void {
+    ): boolean {
         const changedPropsLen = changedProps.length;
         for (const { refreshProps, step } of orderedStages) {
             for (let i = 0; i < changedPropsLen; i++) {
                 if (refreshProps?.has(changedProps[i])) {
-                    this.clearDeltaUpdate(); // No delta updates if a property that affect a stage changes
-
                     this.setStep(step); // Updates to the minimum step
-
-                    return; // We found the minimum step
+                    return true; // We found the minimum step
                 }
             }
         }
+        return false;
     }
 
     public setNewData(): void {
