@@ -1,6 +1,7 @@
-import { AgChartsCommunityModule } from 'ag-charts-community';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+import type { AgSeriesTooltipRendererParams, AgSparklineOptions } from 'ag-charts-enterprise';
 
-import type { GridApi, GridOptions, LineSparklineOptions, TooltipRendererParams } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -9,7 +10,7 @@ import { getData } from './data';
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
-    SparklinesModule.with(AgChartsCommunityModule),
+    SparklinesModule.with(AgChartsEnterpriseModule),
 ]);
 
 let gridApi: GridApi;
@@ -23,30 +24,30 @@ const gridOptions: GridOptions = {
             cellRenderer: 'agSparklineCellRenderer',
             cellRendererParams: {
                 sparklineOptions: {
-                    line: {
-                        stroke: 'rgb(52, 168, 83)',
-                    },
-                    highlightStyle: {
-                        size: 4,
-                        stroke: 'rgb(52, 168, 83)',
-                        fill: 'rgb(52, 168, 83)',
+                    type: 'line',
+                    stroke: 'rgb(52, 168, 83)',
+                    marker: {
+                        enabled: true,
+                        size: 0,
+                        itemStyler: (params: any) => {
+                            if (params.highlighted) {
+                                return {
+                                    size: 4,
+                                    stroke: 'rgb(52, 168, 83)',
+                                    fill: 'rgb(52, 168, 83)',
+                                };
+                            }
+                        },
                     },
                     tooltip: {
                         renderer: renderer,
                     },
-                    crosshairs: {
-                        xLine: {
-                            enabled: true,
-                            lineDash: 'dash',
-                            stroke: '#999',
-                        },
-                        yLine: {
-                            enabled: true,
-                            lineDash: 'dash',
-                            stroke: '#999',
-                        },
+                    crosshair: {
+                        enabled: true,
+                        lineDash: [3, 3],
+                        stroke: '#999',
                     },
-                } as LineSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -54,23 +55,28 @@ const gridOptions: GridOptions = {
             cellRenderer: 'agSparklineCellRenderer',
             cellRendererParams: {
                 sparklineOptions: {
-                    line: {
-                        stroke: 'rgb(168,52,137)',
-                    },
-                    highlightStyle: {
-                        size: 4,
-                        stroke: 'rgb(168,52,137)',
-                        fill: 'rgb(168,52,137)',
+                    type: 'line',
+                    stroke: 'rgb(168,52,137)',
+                    marker: {
+                        enabled: true,
+                        size: 0,
+                        itemStyler: (params) => {
+                            if (params.highlighted) {
+                                return {
+                                    size: 4,
+                                    stroke: 'rgb(168,52,137)',
+                                    fill: 'rgb(168,52,137)',
+                                };
+                            }
+                        },
                     },
                     tooltip: {
                         renderer: renderer,
                     },
-                    crosshairs: {
-                        xLine: {
-                            enabled: false,
-                        },
+                    crosshair: {
+                        enabled: false,
                     },
-                } as LineSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -87,13 +93,14 @@ const gridOptions: GridOptions = {
     rowHeight: 50,
 };
 
-function renderer(params: TooltipRendererParams) {
+function renderer(params: AgSeriesTooltipRendererParams) {
     return {
         backgroundColor: 'black',
         opacity: 0.9,
         color: 'white',
     };
 }
+
 // setup the grid after the page has finished loading
 document.addEventListener('DOMContentLoaded', function () {
     const gridDiv = document.querySelector<HTMLElement>('#myGrid')!;

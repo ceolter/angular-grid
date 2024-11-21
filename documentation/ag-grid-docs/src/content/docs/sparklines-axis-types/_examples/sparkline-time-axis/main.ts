@@ -1,6 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type { AreaSparklineOptions, GridApi, GridOptions } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -29,9 +30,10 @@ const gridOptions: GridOptions = {
                         type: 'time',
                     },
                     marker: {
+                        enabled: true,
                         size: 3,
                     },
-                } as AreaSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         { field: 'volume', type: 'numericColumn', maxWidth: 140 },

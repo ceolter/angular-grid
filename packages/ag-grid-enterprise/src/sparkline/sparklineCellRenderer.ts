@@ -45,9 +45,12 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
                 };
             }
 
+            // Only bar sparklines have itemStyler
             const theme = this.sparklineOptions?.theme as AgChartTheme;
-            if (theme?.overrides?.bar?.series?.itemStyler) {
-                this.wrapBarItemStyler();
+            if (this.sparklineOptions.type === 'bar' && this.sparklineOptions.itemStyler) {
+                this.wrapItemStyler(this.sparklineOptions);
+            } else if (theme?.overrides?.bar?.series?.itemStyler) {
+                this.wrapItemStyler(theme.overrides.bar.series);
             }
 
             // create new sparkline
@@ -84,12 +87,8 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         };
     }
 
-    private wrapBarItemStyler() {
-        // Only bar sparklines have itemStyler
-        const theme = this.sparklineOptions.theme as AgChartTheme;
-        const existing = theme.overrides!.bar!.series!.itemStyler!;
-
-        theme.overrides!.bar!.series!.itemStyler = wrapFn(existing, (fn, stylerParams: any): any => {
+    private wrapItemStyler(container: { itemStyler?: any }) {
+        container!.itemStyler = wrapFn(container.itemStyler, (fn, stylerParams: any): any => {
             return fn({
                 ...this.createParams(stylerParams),
                 ...stylerParams,
@@ -98,17 +97,20 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     private wrapTooltipRenderer() {
-        const existing = this.sparklineOptions.tooltip!.renderer!;
-
         this.sparklineOptions.tooltip = {
             ...this.sparklineOptions.tooltip,
-            renderer: wrapFn(existing, (fn, tooltipParams: any): any => {
+            renderer: wrapFn(this.sparklineOptions.tooltip!.renderer!, (fn, tooltipParams: any): any => {
+                const userResult = fn({
+                    ...this.createParams(tooltipParams),
+                    ...tooltipParams,
+                });
+
+                if (typeof userResult === 'string') {
+                    return userResult;
+                }
                 return {
                     ...this.createDefaultContent(tooltipParams),
-                    ...fn({
-                        ...this.createParams(tooltipParams),
-                        ...tooltipParams,
-                    }),
+                    ...userResult,
                 };
             }),
         };
