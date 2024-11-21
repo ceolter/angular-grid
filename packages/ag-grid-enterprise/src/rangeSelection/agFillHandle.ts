@@ -1,15 +1,11 @@
 import type {
     AgColumn,
-    BeanCollection,
     CellCtrl,
-    CellNavigationService,
     CellPosition,
     CellRange,
     FillOperationParams,
     RowNode,
     RowPosition,
-    ValueService,
-    VisibleColsService,
 } from 'ag-grid-community';
 import {
     _getCellByPosition,
@@ -40,17 +36,6 @@ interface ValueContext {
 type Direction = 'x' | 'y';
 
 export class AgFillHandle extends AbstractSelectionHandle {
-    private valueSvc: ValueService;
-    private cellNavigation: CellNavigationService;
-    private visibleCols: VisibleColsService;
-
-    public override wireBeans(beans: BeanCollection) {
-        super.wireBeans(beans);
-        this.valueSvc = beans.valueSvc;
-        this.cellNavigation = beans.cellNavigation!;
-        this.visibleCols = beans.visibleCols;
-    }
-
     private initialPosition: CellPosition | undefined;
     private initialXY: { x: number; y: number } | null;
     private lastCellMarked: CellPosition | undefined;
@@ -96,7 +81,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
 
     protected onDrag(_: MouseEvent) {
         if (!this.initialPosition) {
-            const cellCtrl = this.getCellCtrl();
+            const cellCtrl = this.cellCtrl;
             if (!cellCtrl) {
                 return;
             }
@@ -118,15 +103,15 @@ export class AgFillHandle extends AbstractSelectionHandle {
         }
 
         const isX = this.dragAxis === 'x';
-        const initialRange = this.getCellRange();
+        const { cellRange: initialRange, rangeStartRow, rangeEndRow, beans } = this;
         const colLen = initialRange.columns.length;
-        const rangeStartRow = this.getRangeStartRow();
-        const rangeEndRow = this.getRangeEndRow();
 
         let finalRange: CellRange | undefined;
 
+        const { rangeSvc, eventSvc } = beans;
+
         if (!this.isUp && !this.isLeft) {
-            finalRange = this.rangeSvc.createCellRangeFromCellRangeParams({
+            finalRange = rangeSvc!.createCellRangeFromCellRangeParams({
                 rowStartIndex: rangeStartRow.rowIndex,
                 rowStartPinned: rangeStartRow.rowPinned,
                 columnStart: initialRange.columns[0],
@@ -137,7 +122,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
         } else {
             const startRow = isX ? rangeStartRow : this.lastCellMarked;
 
-            finalRange = this.rangeSvc.createCellRangeFromCellRangeParams({
+            finalRange = rangeSvc!.createCellRangeFromCellRangeParams({
                 rowStartIndex: startRow!.rowIndex,
                 rowStartPinned: startRow!.rowPinned,
                 columnStart: isX ? this.lastCellMarked!.column : initialRange.columns[0],
@@ -149,14 +134,14 @@ export class AgFillHandle extends AbstractSelectionHandle {
 
         if (finalRange) {
             // raising fill events for undo / redo
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'fillStart',
             });
 
             this.handleValueChanged(initialRange, finalRange, e);
-            this.rangeSvc.setCellRanges([finalRange]);
+            rangeSvc!.setCellRanges([finalRange]);
 
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'fillEnd',
                 initialRange: initialRange,
                 finalRange: finalRange,
@@ -189,22 +174,23 @@ export class AgFillHandle extends AbstractSelectionHandle {
     }
 
     private handleValueChanged(initialRange: CellRange, finalRange: CellRange, e: MouseEvent) {
-        const initialRangeEndRow = this.rangeSvc.getRangeEndRow(initialRange);
-        const initialRangeStartRow = this.rangeSvc.getRangeStartRow(initialRange);
-        const finalRangeEndRow = this.rangeSvc.getRangeEndRow(finalRange);
-        const finalRangeStartRow = this.rangeSvc.getRangeStartRow(finalRange);
+        const { rangeSvc, gos, cellNavigation, valueSvc } = this.beans;
+        const initialRangeEndRow = rangeSvc!.getRangeEndRow(initialRange);
+        const initialRangeStartRow = rangeSvc!.getRangeStartRow(initialRange);
+        const finalRangeEndRow = rangeSvc!.getRangeEndRow(finalRange);
+        const finalRangeStartRow = rangeSvc!.getRangeStartRow(finalRange);
         const isVertical = this.dragAxis === 'y';
 
         // if the range is being reduced in size, all we need to do is
         // clear the cells that are no longer part of the range
-        if (this.isReduce && !_getFillHandle(this.gos)?.suppressClearOnFillReduction) {
+        if (this.isReduce && !_getFillHandle(gos)?.suppressClearOnFillReduction) {
             const columns = (
                 isVertical
                     ? initialRange.columns
                     : initialRange.columns.filter((col) => finalRange.columns.indexOf(col) < 0)
             ) as AgColumn[];
 
-            const startRow = isVertical ? this.cellNavigation.getRowBelow(finalRangeEndRow) : finalRangeStartRow;
+            const startRow = isVertical ? cellNavigation!.getRowBelow(finalRangeEndRow) : finalRangeStartRow;
 
             if (startRow) {
                 this.clearCellsInRange(startRow, initialRangeEndRow, columns);
@@ -266,8 +252,8 @@ export class AgFillHandle extends AbstractSelectionHandle {
                 finished = _isSameRow(currentRow, this.isUp ? finalRangeStartRow : finalRangeEndRow);
 
                 currentRow = this.isUp
-                    ? this.cellNavigation.getRowAbove(currentRow)
-                    : this.cellNavigation.getRowBelow(currentRow);
+                    ? cellNavigation!.getRowAbove(currentRow)
+                    : cellNavigation!.getRowBelow(currentRow);
             }
         };
 
@@ -281,10 +267,10 @@ export class AgFillHandle extends AbstractSelectionHandle {
             let skipValue: boolean = false;
 
             if (withinInitialRange) {
-                currentValue = this.valueSvc.getValue(col, rowNode);
+                currentValue = valueSvc.getValue(col, rowNode);
                 initialValues.push(currentValue);
-                initialNonAggregatedValues.push(this.valueSvc.getValue(col, rowNode, true));
-                initialFormattedValues.push(this.valueSvc.formatValue(col, rowNode, currentValue));
+                initialNonAggregatedValues.push(valueSvc.getValue(col, rowNode, true));
+                initialFormattedValues.push(valueSvc.formatValue(col, rowNode, currentValue));
                 withinInitialRange = updateInitialSet();
             } else {
                 const { value, fromUserFunction, sourceCol, sourceRowNode } = this.processValues({
@@ -300,17 +286,13 @@ export class AgFillHandle extends AbstractSelectionHandle {
 
                 currentValue = value;
                 if (col.isCellEditable(rowNode)) {
-                    const cellValue = this.valueSvc.getValue(col, rowNode);
+                    const cellValue = valueSvc.getValue(col, rowNode);
 
                     if (!fromUserFunction) {
                         if (sourceCol) {
                             const sourceColDef = sourceCol.getColDef();
                             if (sourceColDef.useValueFormatterForExport !== false && sourceColDef.valueFormatter) {
-                                const formattedValue = this.valueSvc.formatValue(
-                                    sourceCol,
-                                    sourceRowNode!,
-                                    currentValue
-                                );
+                                const formattedValue = valueSvc.formatValue(sourceCol, sourceRowNode!, currentValue);
 
                                 if (formattedValue != null) {
                                     currentValue = formattedValue;
@@ -318,7 +300,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
                             }
                         }
                         if (col.getColDef().useValueParserForImport !== false) {
-                            currentValue = this.valueSvc.parseValue(
+                            currentValue = valueSvc.parseValue(
                                 col,
                                 rowNode,
                                 // if no sourceCol, then currentValue is a number
@@ -361,7 +343,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
             columns,
             startColumn: columns[0],
         };
-        this.rangeSvc.clearCellRangeCellValues({ cellRanges: [cellRange] });
+        this.beans.rangeSvc!.clearCellRangeCellValues({ cellRanges: [cellRange] });
     }
 
     private processValues(params: {
@@ -395,7 +377,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
                 initialNonAggregatedValues,
                 initialFormattedValues,
                 currentIndex: idx,
-                currentCellValue: this.valueSvc.getValue(col, rowNode),
+                currentCellValue: this.beans.valueSvc.getValue(col, rowNode),
                 direction,
                 column: col,
                 rowNode: rowNode,
@@ -473,8 +455,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
             }
 
             const isBefore = _isRowBefore(currentPosition, initialPosition);
-            const rangeStartRow = this.getRangeStartRow();
-            const rangeEndRow = this.getRangeEndRow();
+            const { rangeStartRow, rangeEndRow } = this;
 
             if (
                 isBefore &&
@@ -497,13 +478,13 @@ export class AgFillHandle extends AbstractSelectionHandle {
             if (initialColumn === currentColumn) {
                 return;
             }
-            const displayedColumns = this.visibleCols.allCols;
+            const displayedColumns = this.beans.visibleCols.allCols;
             const initialIndex = displayedColumns.indexOf(initialColumn);
             const currentIndex = displayedColumns.indexOf(currentColumn);
 
             if (
                 currentIndex <= initialIndex &&
-                currentIndex >= displayedColumns.indexOf(this.getCellRange().columns[0] as AgColumn)
+                currentIndex >= displayedColumns.indexOf(this.cellRange.columns[0] as AgColumn)
             ) {
                 this.reduceHorizontal(initialPosition, currentPosition);
                 this.isReduce = true;
@@ -516,19 +497,20 @@ export class AgFillHandle extends AbstractSelectionHandle {
     }
 
     private extendVertical(initialPosition: CellPosition, endPosition: CellPosition, isMovingUp?: boolean) {
-        const { rangeSvc, beans } = this;
+        const beans = this.beans;
+        const { rangeSvc, cellNavigation } = beans;
 
         let row: RowPosition | null = initialPosition;
 
         do {
-            const cellRange = this.getCellRange();
+            const cellRange = this.cellRange;
             const colLen = cellRange.columns.length;
 
             for (let i = 0; i < colLen; i++) {
                 const column = cellRange.columns[i];
                 const rowPos = { rowIndex: row.rowIndex, rowPinned: row.rowPinned };
                 const cellPos = { ...rowPos, column };
-                const cellInRange = rangeSvc.isCellInSpecificRange(cellPos, cellRange);
+                const cellInRange = rangeSvc!.isCellInSpecificRange(cellPos, cellRange);
                 const isInitialRow = _isSameRow(row, initialPosition);
 
                 if (isMovingUp) {
@@ -560,22 +542,24 @@ export class AgFillHandle extends AbstractSelectionHandle {
             }
         } while (
             // tslint:disable-next-line
-            (row = isMovingUp ? this.cellNavigation.getRowAbove(row) : this.cellNavigation.getRowBelow(row))
+            (row = isMovingUp ? cellNavigation!.getRowAbove(row) : cellNavigation!.getRowBelow(row))
         );
     }
 
     private reduceVertical(initialPosition: CellPosition, endPosition: CellPosition) {
         let row: RowPosition | null = initialPosition;
+        const beans = this.beans;
+        const cellNavigation = beans.cellNavigation!;
 
         do {
-            const cellRange = this.getCellRange();
+            const cellRange = this.cellRange;
             const colLen = cellRange.columns.length;
             const isLastRow = _isSameRow(row, endPosition);
 
             for (let i = 0; i < colLen; i++) {
                 const rowPos = { rowIndex: row.rowIndex, rowPinned: row.rowPinned };
                 const celPos = { ...rowPos, column: cellRange.columns[i] };
-                const cell = _getCellByPosition(this.beans, celPos);
+                const cell = _getCellByPosition(beans, celPos);
 
                 if (cell) {
                     this.markedCells.push(cell);
@@ -587,20 +571,19 @@ export class AgFillHandle extends AbstractSelectionHandle {
                 break;
             }
             // tslint:disable-next-line
-        } while ((row = this.cellNavigation.getRowAbove(row)));
+        } while ((row = cellNavigation.getRowAbove(row)));
     }
 
     private extendHorizontal(initialPosition: CellPosition, endPosition: CellPosition, isMovingLeft?: boolean) {
-        const allCols = this.visibleCols.allCols;
+        const beans = this.beans;
+        const { visibleCols, cellNavigation } = beans;
+        const allCols = visibleCols.allCols;
         const startCol = allCols.indexOf((isMovingLeft ? endPosition.column : initialPosition.column) as AgColumn);
-        const endCol = allCols.indexOf(
-            (isMovingLeft ? this.getCellRange().columns[0] : endPosition.column) as AgColumn
-        );
+        const endCol = allCols.indexOf((isMovingLeft ? this.cellRange.columns[0] : endPosition.column) as AgColumn);
         const offset = isMovingLeft ? 0 : 1;
 
         const colsToMark = allCols.slice(startCol + offset, endCol + offset);
-        const rangeStartRow = this.getRangeStartRow();
-        const rangeEndRow = this.getRangeEndRow();
+        const { rangeStartRow, rangeEndRow } = this;
 
         colsToMark.forEach((column) => {
             let row: RowPosition = rangeStartRow;
@@ -608,7 +591,7 @@ export class AgFillHandle extends AbstractSelectionHandle {
 
             do {
                 isLastRow = _isSameRow(row, rangeEndRow);
-                const cell = _getCellByPosition(this.beans, {
+                const cell = _getCellByPosition(beans, {
                     rowIndex: row.rowIndex,
                     rowPinned: row.rowPinned,
                     column: column,
@@ -628,19 +611,20 @@ export class AgFillHandle extends AbstractSelectionHandle {
                     }
                 }
 
-                row = this.cellNavigation.getRowBelow(row)!;
+                row = cellNavigation!.getRowBelow(row)!;
             } while (!isLastRow);
         });
     }
 
     private reduceHorizontal(initialPosition: CellPosition, endPosition: CellPosition) {
-        const allCols = this.visibleCols.allCols;
+        const beans = this.beans;
+        const { visibleCols, cellNavigation } = beans;
+        const allCols = visibleCols.allCols;
         const startCol = allCols.indexOf(endPosition.column as AgColumn);
         const endCol = allCols.indexOf(initialPosition.column as AgColumn);
 
         const colsToMark = allCols.slice(startCol, endCol);
-        const rangeStartRow = this.getRangeStartRow();
-        const rangeEndRow = this.getRangeEndRow();
+        const { rangeStartRow, rangeEndRow } = this;
 
         colsToMark.forEach((column) => {
             let row: RowPosition = rangeStartRow;
@@ -659,13 +643,13 @@ export class AgFillHandle extends AbstractSelectionHandle {
                     cell.comp.addOrRemoveCssClass('ag-selection-fill-right', column === colsToMark[0]);
                 }
 
-                row = this.cellNavigation.getRowBelow(row)!;
+                row = cellNavigation!.getRowBelow(row)!;
             } while (!isLastRow);
         });
     }
 
     public override refresh(cellCtrl: CellCtrl) {
-        const cellRange = this.rangeSvc.getCellRanges()[0];
+        const cellRange = this.beans.rangeSvc!.getCellRanges()[0];
         const isColumnRange = !cellRange.startRow || !cellRange.endRow;
 
         if (isColumnRange) {

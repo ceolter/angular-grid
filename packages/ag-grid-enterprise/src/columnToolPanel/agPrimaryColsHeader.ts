@@ -1,4 +1,4 @@
-import type { AgCheckbox, AgInputTextField, BeanCollection, ColumnModel, ComponentSelector } from 'ag-grid-community';
+import type { AgCheckbox, AgInputTextField, ComponentSelector } from 'ag-grid-community';
 import {
     AgCheckboxSelector,
     AgInputTextFieldSelector,
@@ -21,12 +21,6 @@ export enum ExpandState {
 const DEBOUNCE_DELAY = 300;
 export type AgPrimaryColsHeaderEvent = 'unselectAll' | 'selectAll' | 'collapseAll' | 'expandAll' | 'filterChanged';
 export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
-    private colModel: ColumnModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colModel = beans.colModel;
-    }
-
     private readonly eExpand: Element = RefPlaceholder;
     private readonly eSelect: AgCheckbox = RefPlaceholder;
     private readonly eFilterTextField: AgInputTextField = RefPlaceholder;
@@ -94,29 +88,29 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
         this.eSelect.setReadOnly(readOnly);
         this.eSelect.addOrRemoveCssClass('ag-column-select-column-readonly', readOnly);
 
-        if (this.colModel.ready) {
+        if (this.beans.colModel.ready) {
             this.showOrHideOptions();
         }
     }
 
     private createExpandIcons() {
-        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', this.beans)!));
+        const beans = this.beans;
+        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('columnSelectOpen', beans)!));
 
-        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', this.beans)!));
+        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('columnSelectClosed', beans)!));
 
-        this.eExpand.appendChild(
-            (this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', this.beans)!)
-        );
+        this.eExpand.appendChild((this.eExpandIndeterminate = _createIconNoSpan('columnSelectIndeterminate', beans)!));
 
         this.setExpandState(ExpandState.EXPANDED);
     }
 
     // we only show expand / collapse if we are showing columns
     private showOrHideOptions(): void {
-        const showFilter = !this.params.suppressColumnFilter;
-        const showSelect = !this.params.suppressColumnSelectAll;
-        const showExpand = !this.params.suppressColumnExpandAll;
-        const groupsPresent = !!this.colModel.colDefCols?.treeDepth;
+        const params = this.params;
+        const showFilter = !params.suppressColumnFilter;
+        const showSelect = !params.suppressColumnSelectAll;
+        const showExpand = !params.suppressColumnExpandAll;
+        const groupsPresent = !!this.beans.colModel.colDefCols?.treeDepth;
         const translate = this.getLocaleTextFunc();
 
         this.eFilterTextField.setInputPlaceholder(translate('searchOoo', 'Search...'));
@@ -152,9 +146,9 @@ export class AgPrimaryColsHeader extends Component<AgPrimaryColsHeaderEvent> {
     public setExpandState(state: ExpandState): void {
         this.expandState = state;
 
-        _setDisplayed(this.eExpandChecked, this.expandState === ExpandState.EXPANDED);
-        _setDisplayed(this.eExpandUnchecked, this.expandState === ExpandState.COLLAPSED);
-        _setDisplayed(this.eExpandIndeterminate, this.expandState === ExpandState.INDETERMINATE);
+        _setDisplayed(this.eExpandChecked, state === ExpandState.EXPANDED);
+        _setDisplayed(this.eExpandUnchecked, state === ExpandState.COLLAPSED);
+        _setDisplayed(this.eExpandIndeterminate, state === ExpandState.INDETERMINATE);
     }
 
     public setSelectionState(state?: boolean): void {

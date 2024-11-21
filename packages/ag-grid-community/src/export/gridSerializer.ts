@@ -1,5 +1,4 @@
 import type { ColumnModel } from '../columns/columnModel';
-import type { ColumnNameService } from '../columns/columnNameService';
 import { isColumnGroupAutoCol, isColumnSelectionCol } from '../columns/columnUtils';
 import { GroupInstanceIdCreator } from '../columns/groupInstanceIdCreator';
 import type { VisibleColsService } from '../columns/visibleColsService';
@@ -17,10 +16,7 @@ import type {
     ShouldRowBeSkippedParams,
 } from '../interfaces/exportParams';
 import type { IRowModel } from '../interfaces/iRowModel';
-import type { ISelectionService } from '../interfaces/iSelectionService';
 import type { PinnedRowModel } from '../pinnedRowModel/pinnedRowModel';
-import type { RowNodeSorter } from '../sort/rowNodeSorter';
-import type { SortService } from '../sort/sortService';
 import { _last } from '../utils/array';
 import type { GridSerializingSession, RowAccumulator, RowSpanningAccumulator } from './iGridSerializer';
 
@@ -31,22 +27,14 @@ export class GridSerializer extends BeanStub implements NamedBean {
 
     private visibleCols: VisibleColsService;
     private colModel: ColumnModel;
-    private colNames: ColumnNameService;
     private rowModel: IRowModel;
     private pinnedRowModel?: PinnedRowModel;
-    private selectionSvc?: ISelectionService;
-    private rowNodeSorter?: RowNodeSorter;
-    private sortSvc?: SortService;
 
     public wireBeans(beans: BeanCollection): void {
         this.visibleCols = beans.visibleCols;
         this.colModel = beans.colModel;
-        this.colNames = beans.colNames;
         this.rowModel = beans.rowModel;
         this.pinnedRowModel = beans.pinnedRowModel;
-        this.selectionSvc = beans.selectionSvc;
-        this.rowNodeSorter = beans.rowNodeSorter;
-        this.sortSvc = beans.sortSvc;
     }
 
     public serialize<T>(gridSerializingSession: GridSerializingSession<T>, params: ExportParams<T> = {}): string {
@@ -266,7 +254,7 @@ export class GridSerializer extends BeanStub implements NamedBean {
             // onlySelectedNonStandardModel: if user wants selected in non standard row model
             // (eg viewport) then again RowModel cannot be used, so need to use selected instead.
             if (params.onlySelectedAllPages || onlySelectedNonStandardModel) {
-                const selectedNodes = this.selectionSvc?.getSelectedNodes() ?? [];
+                const selectedNodes = this.beans.selectionSvc?.getSelectedNodes() ?? [];
                 this.replicateSortedOrder(selectedNodes);
                 // serialize each node
                 selectedNodes.forEach(processRow);
@@ -288,10 +276,11 @@ export class GridSerializer extends BeanStub implements NamedBean {
     }
 
     private replicateSortedOrder(rows: RowNode[]) {
-        if (!this.sortSvc || !this.rowNodeSorter) {
+        const { sortSvc, rowNodeSorter } = this.beans;
+        if (!sortSvc || !rowNodeSorter) {
             return;
         }
-        const sortOptions = this.sortSvc.getSortOptions();
+        const sortOptions = sortSvc.getSortOptions();
         const compareNodes = (rowA: RowNode, rowB: RowNode): number => {
             if (rowA.rowIndex != null && rowB.rowIndex != null) {
                 // if the rows have rowIndexes, this is the easiest way to compare,
@@ -302,7 +291,7 @@ export class GridSerializer extends BeanStub implements NamedBean {
             // if the level is the same, compare these nodes, or their parents
             if (rowA.level === rowB.level) {
                 if (rowA.parent?.id === rowB.parent?.id) {
-                    return this.rowNodeSorter!.compareRowNodes(
+                    return rowNodeSorter!.compareRowNodes(
                         sortOptions,
                         {
                             rowNode: rowA,
@@ -355,20 +344,21 @@ export class GridSerializer extends BeanStub implements NamedBean {
         skipRowGroups: boolean = false,
         columnKeys?: (string | AgColumn)[]
     ): AgColumn[] {
-        const isPivotMode = this.colModel.isPivotMode();
+        const { colModel, gos, visibleCols } = this;
+        const isPivotMode = colModel.isPivotMode();
 
         if (columnKeys && columnKeys.length) {
-            return this.colModel.getColsForKeys(columnKeys);
+            return colModel.getColsForKeys(columnKeys);
         }
 
-        const isTreeData = this.gos.get('treeData');
+        const isTreeData = gos.get('treeData');
 
         let columnsToExport: AgColumn[] = [];
 
         if (allColumns && !isPivotMode) {
-            columnsToExport = this.colModel.getCols();
+            columnsToExport = colModel.getCols();
         } else {
-            columnsToExport = this.visibleCols.allCols;
+            columnsToExport = visibleCols.allCols;
         }
 
         if (skipRowGroups && !isTreeData) {
@@ -425,7 +415,7 @@ export class GridSerializer extends BeanStub implements NamedBean {
                     })
                 );
             } else {
-                name = this.colNames.getDisplayNameForColumnGroup(columnGroup, 'header')!;
+                name = this.beans.colNames.getDisplayNameForColumnGroup(columnGroup, 'header')!;
             }
 
             const collapsibleGroupRanges = columnGroup

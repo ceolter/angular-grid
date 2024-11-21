@@ -1,11 +1,4 @@
-import type {
-    AgColumn,
-    AgEvent,
-    AgInputTextField,
-    BeanCollection,
-    ColumnModel,
-    ComponentSelector,
-} from 'ag-grid-community';
+import type { AgColumn, AgEvent, AgInputTextField, ComponentSelector } from 'ag-grid-community';
 import {
     AgInputTextFieldSelector,
     Component,
@@ -24,12 +17,6 @@ export enum EXPAND_STATE {
 }
 export type AgFiltersToolPanelHeaderEvent = 'collapseAll' | 'expandAll' | 'searchChanged';
 export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeaderEvent> {
-    private colModel: ColumnModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colModel = beans.colModel;
-    }
-
     private readonly eExpand: Element = RefPlaceholder;
     private readonly eFilterTextField: AgInputTextField = RefPlaceholder;
 
@@ -69,31 +56,31 @@ export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeader
     public init(params: ToolPanelFiltersCompParams): void {
         this.params = params;
 
-        if (this.colModel.ready) {
+        if (this.beans.colModel.ready) {
             this.showOrHideOptions();
         }
     }
 
     private createExpandIcons() {
-        this.eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('accordionOpen', this.beans)!));
-        this.eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('accordionClosed', this.beans)!));
-        this.eExpand.appendChild(
-            (this.eExpandIndeterminate = _createIconNoSpan('accordionIndeterminate', this.beans)!)
-        );
+        const { eExpand, beans } = this;
+        eExpand.appendChild((this.eExpandChecked = _createIconNoSpan('accordionOpen', beans)!));
+        eExpand.appendChild((this.eExpandUnchecked = _createIconNoSpan('accordionClosed', beans)!));
+        eExpand.appendChild((this.eExpandIndeterminate = _createIconNoSpan('accordionIndeterminate', beans)!));
     }
 
     // we only show expand / collapse if we are showing filters
     private showOrHideOptions(): void {
-        const showFilterSearch = !this.params.suppressFilterSearch;
-        const showExpand = !this.params.suppressExpandAll;
+        const { params, eFilterTextField } = this;
+        const showFilterSearch = !params.suppressFilterSearch;
+        const showExpand = !params.suppressExpandAll;
         const translate = this.getLocaleTextFunc();
 
-        this.eFilterTextField.setInputPlaceholder(translate('searchOoo', 'Search...'));
+        eFilterTextField.setInputPlaceholder(translate('searchOoo', 'Search...'));
 
         const isFilterGroupPresent = (col: AgColumn) => col.getOriginalParent() && col.isFilterAllowed();
-        const filterGroupsPresent = this.colModel.getCols().some(isFilterGroupPresent);
+        const filterGroupsPresent = this.beans.colModel.getCols().some(isFilterGroupPresent);
 
-        _setDisplayed(this.eFilterTextField.getGui(), showFilterSearch);
+        _setDisplayed(eFilterTextField.getGui(), showFilterSearch);
         _setDisplayed(this.eExpand, showExpand && filterGroupsPresent);
     }
 
@@ -118,9 +105,9 @@ export class AgFiltersToolPanelHeader extends Component<AgFiltersToolPanelHeader
     public setExpandState(state: EXPAND_STATE): void {
         this.currentExpandState = state;
 
-        _setDisplayed(this.eExpandChecked, this.currentExpandState === EXPAND_STATE.EXPANDED);
-        _setDisplayed(this.eExpandUnchecked, this.currentExpandState === EXPAND_STATE.COLLAPSED);
-        _setDisplayed(this.eExpandIndeterminate, this.currentExpandState === EXPAND_STATE.INDETERMINATE);
+        _setDisplayed(this.eExpandChecked, state === EXPAND_STATE.EXPANDED);
+        _setDisplayed(this.eExpandUnchecked, state === EXPAND_STATE.COLLAPSED);
+        _setDisplayed(this.eExpandIndeterminate, state === EXPAND_STATE.INDETERMINATE);
     }
 }
 

@@ -1,29 +1,18 @@
-import type { BeanCollection, HorizontalResizeService } from 'ag-grid-community';
 import { Component } from 'ag-grid-community';
 
 export class AgHorizontalResize extends Component {
-    private horizontalResizeSvc: HorizontalResizeService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.horizontalResizeSvc = beans.horizontalResizeSvc!;
-    }
-
     private startingWidth: number;
-    private elementToResize: HTMLElement;
-    private inverted: boolean;
-    private minWidth: number = 100;
-    private maxWidth: number | null = null;
+    public elementToResize: HTMLElement;
+    public inverted: boolean;
+    public minWidth: number = 100;
+    public maxWidth: number | null = null;
 
     constructor() {
         super(/* html */ `<div class="ag-tool-panel-horizontal-resize"></div>`);
     }
 
-    public setElementToResize(elementToResize: HTMLElement): void {
-        this.elementToResize = elementToResize;
-    }
-
     public postConstruct(): void {
-        const finishedWithResizeFunc = this.horizontalResizeSvc.addResizeBar({
+        const finishedWithResizeFunc = this.beans.horizontalResizeSvc!.addResizeBar({
             eResizeBar: this.getGui(),
             dragStartPixels: 1,
             onResizeStart: this.onResizeStart.bind(this),
@@ -32,7 +21,7 @@ export class AgHorizontalResize extends Component {
         });
 
         this.addDestroyFunc(finishedWithResizeFunc);
-        this.setInverted(this.gos.get('enableRtl'));
+        this.inverted = this.gos.get('enableRtl');
     }
 
     private dispatchResizeEvent(start: boolean, end: boolean, width: number) {
@@ -62,21 +51,5 @@ export class AgHorizontalResize extends Component {
         }
         this.elementToResize.style.width = `${newWidth}px`;
         this.dispatchResizeEvent(false, isEnd, newWidth);
-    }
-
-    public setInverted(inverted: boolean) {
-        this.inverted = inverted;
-    }
-
-    public setMaxWidth(value: number | null) {
-        this.maxWidth = value;
-    }
-
-    public setMinWidth(value: number | null) {
-        if (value != null) {
-            this.minWidth = value;
-        } else {
-            this.minWidth = 100;
-        }
     }
 }

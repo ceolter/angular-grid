@@ -62,7 +62,7 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
         _mergeDeep(defaultParams, params);
         this.params = defaultParams as ToolPanelFiltersCompParams;
 
-        if (!this.params.suppressSyncLayoutWithGrid) {
+        if (!defaultParams.suppressSyncLayoutWithGrid) {
             this.addManagedEventListeners({ columnMoved: () => this.onColumnsChanged() });
         }
 
@@ -133,20 +133,22 @@ export class AgFiltersToolPanelList extends Component<AgFiltersToolPanelListEven
 
         this.destroyFilters();
 
-        this.filterGroupComps = this.recursivelyAddComps(columnTree, 0, expansionState) as ToolPanelFilterGroupComp[];
+        const filterGroupComps = this.recursivelyAddComps(columnTree, 0, expansionState) as ToolPanelFilterGroupComp[];
+        this.filterGroupComps = filterGroupComps;
 
-        const len = this.filterGroupComps.length;
+        const len = filterGroupComps.length;
 
         if (len) {
             // skip the destroy function because this will be managed
             // by the `destroyFilters` function
-            this.filterGroupComps.forEach((comp) => this.appendChild(comp));
+            filterGroupComps.forEach((comp) => this.appendChild(comp));
             this.setFirstAndLastVisible(0, len - 1);
         }
 
+        const searchFilterText = this.searchFilterText;
         // perform search if searchFilterText exists
-        if (_exists(this.searchFilterText)) {
-            this.searchFilters(this.searchFilterText);
+        if (_exists(searchFilterText)) {
+            this.searchFilters(searchFilterText);
         }
 
         // notify header of expand

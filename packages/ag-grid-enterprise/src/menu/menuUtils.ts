@@ -1,13 +1,4 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    FocusService,
-    HeaderNavigationService,
-    HeaderPosition,
-    NamedBean,
-    PopupEventParams,
-    VisibleColsService,
-} from 'ag-grid-community';
+import type { AgColumn, HeaderPosition, NamedBean, PopupEventParams } from 'ag-grid-community';
 import {
     BeanStub,
     _findTabbableParent,
@@ -28,16 +19,6 @@ export interface MenuRestoreFocusParams {
 
 export class MenuUtils extends BeanStub implements NamedBean {
     beanName = 'menuUtils' as const;
-
-    private focusSvc: FocusService;
-    private headerNavigation?: HeaderNavigationService;
-    private visibleCols: VisibleColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-        this.headerNavigation = beans.headerNavigation;
-        this.visibleCols = beans.visibleCols;
-    }
 
     public restoreFocusOnClose(
         restoreFocusParams: MenuRestoreFocusParams,
@@ -77,14 +58,16 @@ export class MenuUtils extends BeanStub implements NamedBean {
 
         hidePopupFunc(keyboardEvent && { keyboardEvent });
 
+        const beans = this.beans;
+        const focusSvc = beans.focusSvc;
         // this method only gets called when the menu was closed by selecting an option
         // in this case we focus the cell that was previously focused, otherwise the header
-        const focusedCell = this.focusSvc.getFocusedCell();
+        const focusedCell = focusSvc.getFocusedCell();
 
-        if (_isNothingFocused(this.beans)) {
+        if (_isNothingFocused(beans)) {
             if (focusedCell) {
                 const { rowIndex, rowPinned, column } = focusedCell;
-                this.focusSvc.setFocusedCell({
+                focusSvc.setFocusedCell({
                     rowIndex,
                     column,
                     rowPinned,
@@ -134,10 +117,11 @@ export class MenuUtils extends BeanStub implements NamedBean {
     // make this async for react
     private async focusHeaderCell(restoreFocusParams: MenuRestoreFocusParams): Promise<void> {
         const { column, columnIndex, headerPosition, eventSource } = restoreFocusParams;
+        const { visibleCols, headerNavigation, focusSvc } = this.beans;
 
         // DO NOT REMOVE `await` from the statement below
         // even though `getAllCols` is a synchronous method, we use `await` to make it async
-        const isColumnStillVisible = await this.visibleCols.allCols.some((col) => col === column);
+        const isColumnStillVisible = await visibleCols.allCols.some((col) => col === column);
 
         if (column && !column.isAlive()) {
             return;
@@ -147,7 +131,7 @@ export class MenuUtils extends BeanStub implements NamedBean {
             const focusableEl = _findTabbableParent(eventSource);
             if (focusableEl) {
                 if (column) {
-                    this.headerNavigation?.scrollToColumn(column);
+                    headerNavigation?.scrollToColumn(column);
                 }
                 focusableEl.focus();
             }
@@ -155,11 +139,11 @@ export class MenuUtils extends BeanStub implements NamedBean {
         // if the focusEl is no longer in the DOM, we try to focus
         // the header that is closest to the previous header position
         else if (headerPosition && columnIndex !== -1) {
-            const allColumns = this.visibleCols.allCols;
+            const allColumns = visibleCols.allCols;
             const columnToFocus = allColumns[columnIndex] || _last(allColumns);
 
             if (columnToFocus) {
-                this.focusSvc.focusHeaderPosition({
+                focusSvc.focusHeaderPosition({
                     headerPosition: {
                         headerRowIndex: headerPosition.headerRowIndex,
                         column: columnToFocus,

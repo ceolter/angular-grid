@@ -1,23 +1,8 @@
 import { BeanStub } from 'ag-grid-community';
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnModel,
-    IColsService,
-    IShowRowGroupColsService,
-    NamedBean,
-} from 'ag-grid-community';
+import type { AgColumn, IShowRowGroupColsService, NamedBean } from 'ag-grid-community';
 
 export class ShowRowGroupColsService extends BeanStub implements NamedBean, IShowRowGroupColsService {
     beanName = 'showRowGroupCols' as const;
-
-    private colModel: ColumnModel;
-    private rowGroupColsSvc?: IColsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-    }
 
     private showRowGroupCols: AgColumn[];
     private showRowGroupColsMap: { [originalColumnId: string]: AgColumn };
@@ -26,7 +11,9 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
         this.showRowGroupCols = [];
         this.showRowGroupColsMap = {};
 
-        this.colModel.getCols().forEach((col) => {
+        const { colModel, rowGroupColsSvc } = this.beans;
+
+        colModel.getCols().forEach((col) => {
             const colDef = col.getColDef();
             const showRowGroup = colDef.showRowGroup;
 
@@ -41,8 +28,8 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
 
             if (isString) {
                 this.showRowGroupColsMap[showRowGroup] = col;
-            } else if (this.rowGroupColsSvc) {
-                this.rowGroupColsSvc.columns.forEach((rowGroupCol) => {
+            } else if (rowGroupColsSvc) {
+                rowGroupColsSvc.columns.forEach((rowGroupCol) => {
                     this.showRowGroupColsMap[rowGroupCol.getId()] = col;
                 });
             }
@@ -63,11 +50,12 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
             return null;
         }
 
-        if (sourceColumnId === true && this.rowGroupColsSvc) {
-            return this.rowGroupColsSvc?.columns.slice(0);
+        const { rowGroupColsSvc, colModel } = this.beans;
+        if (sourceColumnId === true && rowGroupColsSvc) {
+            return rowGroupColsSvc.columns.slice(0);
         }
 
-        const column = this.colModel.getColDefCol(sourceColumnId as string);
+        const column = colModel.getColDefCol(sourceColumnId as string);
         return column ? [column] : null;
     }
 

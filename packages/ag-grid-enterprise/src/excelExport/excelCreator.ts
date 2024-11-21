@@ -1,19 +1,13 @@
 import type {
     AgColumn,
     AgColumnGroup,
-    BeanCollection,
-    CellStyleService,
-    ColumnModel,
-    ColumnNameService,
     ExcelExportMultipleSheetParams,
     ExcelExportParams,
     ExcelFactoryMode,
     ExcelRow,
     ExcelStyle,
-    IColsService,
     IExcelCreator,
     NamedBean,
-    ValueService,
 } from 'ag-grid-community';
 import { BaseCreator, _downloadFile, _getHeaderClassesFromColDef, _warn } from 'ag-grid-community';
 
@@ -251,20 +245,6 @@ export class ExcelCreator
 {
     beanName = 'excelCreator' as const;
 
-    private colModel: ColumnModel;
-    private colNames: ColumnNameService;
-    private rowGroupColsSvc?: IColsService;
-    private valueSvc: ValueService;
-    private cellStyles?: CellStyleService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colModel = beans.colModel;
-        this.colNames = beans.colNames;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.valueSvc = beans.valueSvc;
-        this.cellStyles = beans.cellStyles;
-    }
-
     protected getMergedParams(params?: ExcelExportParams): ExcelExportParams {
         const baseParams = this.gos.get('defaultExcelExportParams');
         return Object.assign({}, baseParams, params);
@@ -341,7 +321,7 @@ export class ExcelCreator
     }
 
     public createSerializingSession(params: ExcelExportParams): ExcelSerializingSession {
-        const { colModel, colNames, rowGroupColsSvc, valueSvc, gos } = this;
+        const { colModel, colNames, rowGroupColsSvc, valueSvc, gos } = this.beans;
 
         const config: ExcelGridSerializingParams = {
             ...params,
@@ -352,8 +332,8 @@ export class ExcelCreator
             gos,
             suppressRowOutline: params.suppressRowOutline || params.skipRowGroups,
             headerRowHeight: params.headerRowHeight || params.rowHeight,
-            baseExcelStyles: this.gos.get('excelStyles') || [],
-            rightToLeft: params.rightToLeft ?? this.gos.get('enableRtl'),
+            baseExcelStyles: gos.get('excelStyles') || [],
+            rightToLeft: params.rightToLeft ?? gos.get('enableRtl'),
             styleLinker: this.styleLinker.bind(this),
         };
 
@@ -366,6 +346,7 @@ export class ExcelCreator
         const isGroupHeader = rowType === 'HEADER_GROUPING';
         const col = (isHeader ? column : columnGroup) as AgColumn | AgColumnGroup | null;
         let headerClasses: string[] = [];
+        const { gos, cellStyles } = this.beans;
 
         if (isHeader || isGroupHeader) {
             headerClasses.push('header');
@@ -377,7 +358,7 @@ export class ExcelCreator
                 headerClasses = headerClasses.concat(
                     _getHeaderClassesFromColDef(
                         col.getDefinition(),
-                        this.gos,
+                        gos,
                         (column as AgColumn) || null,
                         (columnGroup as AgColumnGroup) || null
                     )
@@ -387,7 +368,7 @@ export class ExcelCreator
             return headerClasses;
         }
 
-        const styles = this.gos.get('excelStyles');
+        const styles = gos.get('excelStyles');
 
         const applicableStyles: string[] = ['cell'];
 
@@ -400,9 +381,9 @@ export class ExcelCreator
         });
 
         const colDef = (column as AgColumn).getDefinition();
-        this.cellStyles?.processAllCellClasses(
+        cellStyles?.processAllCellClasses(
             colDef,
-            this.gos.addGridCommonParams({
+            gos.addGridCommonParams({
                 value,
                 data: node!.data,
                 node: node!,

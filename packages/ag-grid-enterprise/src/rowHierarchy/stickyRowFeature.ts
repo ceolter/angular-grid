@@ -1,39 +1,17 @@
-import type {
-    BeanCollection,
-    CtrlsService,
-    GridBodyCtrl,
-    IRowModel,
-    IStickyRowFeature,
-    PageBoundsService,
-    RowCtrl,
-    RowNode,
-    RowRenderer,
-} from 'ag-grid-community';
+import type { GridBodyCtrl, IStickyRowFeature, RowCtrl, RowNode } from 'ag-grid-community';
 import { BeanStub, _getRowHeightForNode, _isClientSideRowModel, _isGroupRowsSticky, _last } from 'ag-grid-community';
 
 export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
-    private rowModel: IRowModel;
-    private rowRenderer: RowRenderer;
-    private ctrlsSvc: CtrlsService;
-    private pageBounds: PageBoundsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-        this.rowRenderer = beans.rowRenderer;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.pageBounds = beans.pageBounds;
-    }
-
-    private stickyTopRowCtrls: RowCtrl[] = [];
-    private stickyBottomRowCtrls: RowCtrl[] = [];
+    public stickyTopRowCtrls: RowCtrl[] = [];
+    public stickyBottomRowCtrls: RowCtrl[] = [];
     private gridBodyCtrl: GridBodyCtrl;
     private topContainerHeight: number;
     private bottomContainerHeight: number;
     private isClientSide: boolean;
 
     // sticky rows pulls in extra rows from other pages which impacts row position
-    private extraTopHeight = 0;
-    private extraBottomHeight = 0;
+    public extraTopHeight = 0;
+    public extraBottomHeight = 0;
 
     constructor(
         private readonly createRowCon: (rowNode: RowNode, animate: boolean, afterScroll: boolean) => RowCtrl,
@@ -48,19 +26,11 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
     public postConstruct(): void {
         this.isClientSide = _isClientSideRowModel(this.gos);
 
-        this.ctrlsSvc.whenReady(this, (params) => {
+        this.beans.ctrlsSvc.whenReady(this, (params) => {
             this.gridBodyCtrl = params.gridBodyCtrl;
         });
 
         this.resetStickyContainers();
-    }
-
-    public getStickyTopRowCtrls(): RowCtrl[] {
-        return this.stickyTopRowCtrls;
-    }
-
-    public getStickyBottomRowCtrls(): RowCtrl[] {
-        return this.stickyBottomRowCtrls;
     }
 
     private setOffsetTop(offset: number): void {
@@ -84,14 +54,6 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
     public resetOffsets() {
         this.setOffsetBottom(0);
         this.setOffsetTop(0);
-    }
-
-    public getExtraTopHeight(): number {
-        return this.extraTopHeight;
-    }
-
-    public getExtraBottomHeight(): number {
-        return this.extraBottomHeight;
     }
 
     /**
@@ -125,9 +87,11 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
             return this.refreshNodesAndContainerHeight(container, new Set(), newStickyContainerHeight);
         }
 
+        const { rowModel, rowRenderer } = this.beans;
+
         const pixelAtContainerBoundary = isTop
-            ? this.rowRenderer.firstVisibleVPixel - this.extraTopHeight
-            : this.rowRenderer.lastVisibleVPixel - this.extraTopHeight;
+            ? rowRenderer.firstVisibleVPixel - this.extraTopHeight
+            : rowRenderer.lastVisibleVPixel - this.extraTopHeight;
         const newStickyRows = new Set<RowNode>();
 
         const addStickyRow = (stickyRow: RowNode) => {
@@ -214,8 +178,8 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
             if (!isTop) {
                 firstPixelAfterStickyRows = pixelAtContainerBoundary - newStickyContainerHeight;
             }
-            const firstIndex = this.rowModel.getRowIndexAtPixel(firstPixelAfterStickyRows);
-            const firstRow = this.rowModel.getRow(firstIndex);
+            const firstIndex = rowModel.getRowIndexAtPixel(firstPixelAfterStickyRows);
+            const firstRow = rowModel.getRow(firstIndex);
 
             if (firstRow == null) {
                 break;
@@ -412,10 +376,11 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
         }
         newCtrlsList.forEach((ctrl) => ctrl.setRowTop(ctrl.rowNode.stickyRowTop));
 
+        const pageBounds = this.beans.pageBounds;
         let extraHeight = 0;
         if (isTop) {
             newStickyNodes.forEach((node) => {
-                if (node.rowIndex! < this.pageBounds.getFirstRow()) {
+                if (node.rowIndex! < pageBounds.getFirstRow()) {
                     extraHeight += node.rowHeight!;
                 }
             });
@@ -425,7 +390,7 @@ export class StickyRowFeature extends BeanStub implements IStickyRowFeature {
             this.setOffsetTop(extraHeight);
         } else {
             newStickyNodes.forEach((node) => {
-                if (node.rowIndex! > this.pageBounds.getLastRow()) {
+                if (node.rowIndex! > pageBounds.getLastRow()) {
                     extraHeight += node.rowHeight!;
                 }
             });

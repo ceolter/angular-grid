@@ -1,7 +1,5 @@
 import type {
-    BeanCollection,
     ComponentSelector,
-    FilterManager,
     ISideBar,
     IToolPanel,
     IToolPanelParams,
@@ -33,14 +31,6 @@ import type { SideBarService } from './sideBarService';
 import { ToolPanelWrapper } from './toolPanelWrapper';
 
 export class AgSideBar extends Component implements ISideBar {
-    private filterManager?: FilterManager;
-    private sideBarSvc: SideBarService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.filterManager = beans.filterManager;
-        this.sideBarSvc = beans.sideBar as SideBarService;
-    }
-
     private readonly sideBarButtons: AgSideBarButtons = RefPlaceholder;
 
     private toolPanelWrappers: ToolPanelWrapper[] = [];
@@ -60,15 +50,16 @@ export class AgSideBar extends Component implements ISideBar {
 
     public postConstruct(): void {
         this.sideBarButtons.addEventListener('sideBarButtonClicked', this.onToolPanelButtonClicked.bind(this));
-        const { sideBar: sideBarState } = this.gos.get('initialState') ?? {};
+        const { beans, gos } = this;
+        const { sideBar: sideBarState } = gos.get('initialState') ?? {};
         this.setSideBarDef({
-            sideBarDef: parseSideBarDef(this.gos.get('sideBar')),
+            sideBarDef: parseSideBarDef(gos.get('sideBar')),
             sideBarState,
         });
 
         this.addManagedPropertyListener('sideBar', this.onSideBarUpdated.bind(this));
 
-        this.sideBarSvc.registerSideBarComp(this);
+        (beans.sideBar as SideBarService).comp = this;
         const eGui = this.getFocusableElement();
         this.createManagedBean(
             new ManagedFocusFeature(eGui, {
@@ -77,7 +68,7 @@ export class AgSideBar extends Component implements ISideBar {
             })
         );
 
-        _addFocusableContainerListener(this.beans, this, eGui);
+        _addFocusableContainerListener(beans, this, eGui);
     }
 
     protected onTabKeyDown(e: KeyboardEvent) {
@@ -129,11 +120,12 @@ export class AgSideBar extends Component implements ISideBar {
     protected handleKeyDown(e: KeyboardEvent): void {
         const currentButton = _getActiveDomElement(this.beans);
 
-        if (!this.sideBarButtons.getGui().contains(currentButton)) {
+        const sideBarButtons = this.sideBarButtons;
+        if (!sideBarButtons.getGui().contains(currentButton)) {
             return;
         }
 
-        const sideBarGui = this.sideBarButtons.getGui();
+        const sideBarGui = sideBarButtons.getGui();
         const buttons: HTMLElement[] = Array.prototype.slice.call(sideBarGui.querySelectorAll('.ag-side-button'));
 
         const currentPos = buttons.findIndex((button) => button.contains(currentButton));
@@ -193,17 +185,17 @@ export class AgSideBar extends Component implements ISideBar {
 
         this.sideBar = sideBarDef;
 
-        if (!!this.sideBar && !!this.sideBar.toolPanels) {
-            const toolPanelDefs = this.sideBar.toolPanels as ToolPanelDef[];
+        if (!!sideBarDef && !!sideBarDef.toolPanels) {
+            const toolPanelDefs = sideBarDef.toolPanels as ToolPanelDef[];
             this.createToolPanelsAndSideButtons(toolPanelDefs, sideBarState, existingToolPanelWrappers);
             if (!this.toolPanelWrappers.length) {
                 return;
             }
 
-            const shouldDisplaySideBar = sideBarState ? sideBarState.visible : !this.sideBar.hiddenByDefault;
+            const shouldDisplaySideBar = sideBarState ? sideBarState.visible : !sideBarDef.hiddenByDefault;
             this.setDisplayed(shouldDisplaySideBar);
 
-            this.setSideBarPosition(sideBarState ? sideBarState.position : this.sideBar.position);
+            this.setSideBarPosition(sideBarState ? sideBarState.position : sideBarDef.position);
 
             if (shouldDisplaySideBar) {
                 if (sideBarState) {
@@ -212,7 +204,7 @@ export class AgSideBar extends Component implements ISideBar {
                         this.openToolPanel(openToolPanel, 'sideBarInitializing');
                     }
                 } else {
-                    this.openToolPanel(this.sideBar.defaultToolPanel, 'sideBarInitializing');
+                    this.openToolPanel(sideBarDef.defaultToolPanel, 'sideBarInitializing');
                 }
             }
         }
@@ -286,7 +278,7 @@ export class AgSideBar extends Component implements ISideBar {
         }
 
         if (def.toolPanel === 'agFiltersToolPanel') {
-            if (this.filterManager?.isAdvFilterEnabled()) {
+            if (this.beans.filterManager?.isAdvFilterEnabled()) {
                 _warn(213);
                 return false;
             }
@@ -326,7 +318,7 @@ export class AgSideBar extends Component implements ISideBar {
 
         const button = this.sideBarButtons.addButtonComp(def);
 
-        _setAriaControls(button.getButtonElement(), wrapperGui);
+        _setAriaControls(button.eToggleButton, wrapperGui);
     }
 
     public refresh(): void {
@@ -372,8 +364,9 @@ export class AgSideBar extends Component implements ISideBar {
         source: 'sideBarButtonClicked' | 'sideBarInitializing' | 'api'
     ): void {
         const switchingToolPanel = !!key && !!previousKey;
+        const eventSvc = this.eventSvc;
         if (previousKey) {
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'toolPanelVisibleChanged',
                 source,
                 key: previousKey,
@@ -382,7 +375,7 @@ export class AgSideBar extends Component implements ISideBar {
             });
         }
         if (key) {
-            this.eventSvc.dispatchEvent({
+            eventSvc.dispatchEvent({
                 type: 'toolPanelVisibleChanged',
                 source,
                 key,

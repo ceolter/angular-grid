@@ -1,16 +1,4 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnNameService,
-    DragAndDropIcon,
-    DragItem,
-    DropTarget,
-    IAggFuncService,
-    IColsService,
-    PopupService,
-    SortIndicatorComp,
-    SortService,
-} from 'ag-grid-community';
+import type { AgColumn, DragAndDropIcon, DragItem, DropTarget, SortIndicatorComp } from 'ag-grid-community';
 import { Component, DragSourceType, KeyCode, RefPlaceholder, _loadTemplate } from 'ag-grid-community';
 
 import { PillDragComp } from '../../widgets/pillDragComp';
@@ -19,23 +7,6 @@ import { isRowGroupColLocked } from '../rowGroupingUtils';
 import type { TDropZone } from './baseDropZonePanel';
 
 export class DropZoneColumnComp extends PillDragComp<AgColumn> {
-    private popupSvc: PopupService;
-    private sortSvc?: SortService;
-    private colNames: ColumnNameService;
-    private aggFuncSvc?: IAggFuncService;
-    private rowGroupColsSvc?: IColsService;
-    private valueColsSvc?: IColsService;
-
-    public override wireBeans(beans: BeanCollection) {
-        super.wireBeans(beans);
-        this.popupSvc = beans.popupSvc!;
-        this.sortSvc = beans.sortSvc;
-        this.colNames = beans.colNames;
-        this.aggFuncSvc = beans.aggFuncSvc;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.valueColsSvc = beans.valueColsSvc;
-    }
-
     private readonly eSortIndicator: SortIndicatorComp = RefPlaceholder;
 
     private displayName: string | null;
@@ -52,23 +23,24 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
     }
 
     public override postConstruct(): void {
+        const { sortSvc, colNames } = this.beans;
         this.template = /* html */ `
             <span role="option">
                 <span data-ref="eDragHandle" class="ag-drag-handle ag-column-drop-cell-drag-handle" role="presentation"></span>
                 <span data-ref="eText" class="ag-column-drop-cell-text" aria-hidden="true"></span>
-                ${this.sortSvc ? '<ag-sort-indicator data-ref="eSortIndicator"></ag-sort-indicator>' : ''}
+                ${sortSvc ? '<ag-sort-indicator data-ref="eSortIndicator"></ag-sort-indicator>' : ''}
                 <span data-ref="eButton" class="ag-column-drop-cell-button" role="presentation"></span>
             </span>
         `;
-        if (this.sortSvc) {
-            this.agComponents = [this.sortSvc.getSortIndicatorSelector()];
+        if (sortSvc) {
+            this.agComponents = [sortSvc.getSortIndicatorSelector()];
         }
 
-        this.displayName = this.colNames.getDisplayNameForColumn(this.column, 'columnDrop');
+        this.displayName = colNames.getDisplayNameForColumn(this.column, 'columnDrop');
 
         super.postConstruct();
 
-        if (this.sortSvc) {
+        if (sortSvc) {
             this.setupSort();
 
             this.addManagedEventListeners({
@@ -177,7 +149,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
             this.eSortIndicator.setupSort(this.column, true);
             const performSort = (event: MouseEvent | KeyboardEvent) => {
                 event.preventDefault();
-                this.sortSvc!.progressSortFromEvent(this.column, event);
+                this.beans.sortSvc!.progressSortFromEvent(this.column, event);
             };
 
             this.addGuiEventListener('click', performSort);
@@ -236,8 +208,10 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
 
         this.popupShowing = true;
 
+        const { aggFuncSvc, popupSvc } = this.beans;
+
         const virtualList = new VirtualList({ cssIdentifier: 'select-agg-func' });
-        const rows = this.aggFuncSvc!.getFuncNames(this.column);
+        const rows = aggFuncSvc!.getFuncNames(this.column);
         const eGui = this.getGui();
         const virtualListGui = virtualList.getGui();
 
@@ -281,7 +255,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = this.popupSvc.addPopup({
+        const addPopupRes = popupSvc!.addPopup({
             modal: true,
             eChild: ePopup,
             closeOnEsc: true,
@@ -309,7 +283,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
             }
         });
 
-        this.popupSvc.positionPopupByComponent({
+        popupSvc!.positionPopupByComponent({
             type: 'aggFuncSelect',
             eventSource: eGui,
             ePopup: ePopup,
@@ -332,7 +306,7 @@ export class DropZoneColumnComp extends PillDragComp<AgColumn> {
         const itemSelected = () => {
             hidePopup();
             this.getGui().focus();
-            this.valueColsSvc?.setColumnAggFunc?.(this.column, value, 'toolPanelDragAndDrop');
+            this.beans.valueColsSvc?.setColumnAggFunc?.(this.column, value, 'toolPanelDragAndDrop');
         };
 
         const localeTextFunc = this.getLocaleTextFunc();

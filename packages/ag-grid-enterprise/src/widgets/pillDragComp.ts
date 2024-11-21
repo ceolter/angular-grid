@@ -1,15 +1,12 @@
 import type {
     AgEvent,
-    BeanCollection,
     ComponentSelector,
     DragAndDropIcon,
-    DragAndDropService,
     DragItem,
     DragSource,
     DragSourceType,
     DropTarget,
     ITooltipCtrl,
-    Registry,
     TooltipFeature,
 } from 'ag-grid-community';
 import {
@@ -25,14 +22,6 @@ import {
 
 export type PillDragCompEvent = 'columnRemove';
 export abstract class PillDragComp<TItem> extends Component<PillDragCompEvent> {
-    private dragAndDrop?: DragAndDropService;
-    private registry: Registry;
-
-    public wireBeans(beans: BeanCollection) {
-        this.dragAndDrop = beans.dragAndDrop;
-        this.registry = beans.registry;
-    }
-
     private readonly eText: HTMLElement = RefPlaceholder;
     private readonly eDragHandle: HTMLElement = RefPlaceholder;
     private readonly eButton: HTMLElement = RefPlaceholder;
@@ -68,17 +57,19 @@ export abstract class PillDragComp<TItem> extends Component<PillDragCompEvent> {
         );
         const eGui = this.getGui();
 
+        const { beans, eDragHandle, eText, eButton } = this;
+
         this.addElementClasses(eGui);
-        this.addElementClasses(this.eDragHandle, 'drag-handle');
-        this.addElementClasses(this.eText, 'text');
-        this.addElementClasses(this.eButton, 'button');
+        this.addElementClasses(eDragHandle, 'drag-handle');
+        this.addElementClasses(eText, 'text');
+        this.addElementClasses(eButton, 'button');
 
-        this.eDragHandle.appendChild(_createIconNoSpan('columnDrag', this.beans)!);
+        eDragHandle.appendChild(_createIconNoSpan('columnDrag', beans)!);
 
-        this.eButton.appendChild(_createIconNoSpan('cancel', this.beans)!);
+        eButton.appendChild(_createIconNoSpan('cancel', beans)!);
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
             } as ITooltipCtrl)
         );
@@ -142,7 +133,10 @@ export abstract class PillDragComp<TItem> extends Component<PillDragCompEvent> {
     }
 
     private addDragSource(): void {
-        const { dragAndDrop, eDragHandle } = this;
+        const {
+            beans: { dragAndDrop },
+            eDragHandle,
+        } = this;
         const getDragItem = this.createGetDragItem();
         const defaultIconName = this.getDefaultIconName();
         const dragSource: DragSource = {

@@ -2,7 +2,6 @@ import type {
     AgColumn,
     BeanCollection,
     ColumnEvent,
-    ColumnNameService,
     FilterChangedEvent,
     FilterManager,
     IFloatingFilterComp,
@@ -13,11 +12,9 @@ import { AgInputTextField, AgPromise, Component, RefPlaceholder, _clearElement }
 import type { GroupFilter } from './groupFilter';
 
 export class GroupFloatingFilterComp extends Component implements IFloatingFilterComp<GroupFilter> {
-    private colNames: ColumnNameService;
     private filterManager?: FilterManager;
 
     public wireBeans(beans: BeanCollection) {
-        this.colNames = beans.colNames;
         this.filterManager = beans.filterManager;
     }
 
@@ -54,9 +51,10 @@ export class GroupFloatingFilterComp extends Component implements IFloatingFilte
                 }
             });
         }).then(() => {
+            const onColChange = this.onColChange.bind(this);
             this.addManagedListeners(this.parentFilterInstance, {
-                selectedColumnChanged: this.onSelectedColumnChanged.bind(this),
-                columnRowGroupChanged: this.onColumnRowGroupChanged.bind(this),
+                selectedColumnChanged: onColChange,
+                columnRowGroupChanged: onColChange,
             });
         });
     }
@@ -67,7 +65,7 @@ export class GroupFloatingFilterComp extends Component implements IFloatingFilte
     }
 
     private setParams(): void {
-        const displayName = this.colNames.getDisplayNameForColumn(this.params.column as AgColumn, 'header', true);
+        const displayName = this.beans.colNames.getDisplayNameForColumn(this.params.column as AgColumn, 'header', true);
         const translate = this.getLocaleTextFunc();
         this.eFloatingFilterText?.setInputAriaLabel(`${displayName} ${translate('ariaFilterInput', 'Filter Input')}`);
     }
@@ -148,37 +146,28 @@ export class GroupFloatingFilterComp extends Component implements IFloatingFilte
     }
 
     private updateDisplayedValue(): void {
-        if (!this.parentFilterInstance || !this.eFloatingFilterText) {
+        const { eFloatingFilterText, parentFilterInstance } = this;
+        if (!parentFilterInstance || !eFloatingFilterText) {
             return;
         }
-        const selectedFilter = this.parentFilterInstance.getSelectedFilter();
+        const selectedFilter = parentFilterInstance.getSelectedFilter();
         if (!selectedFilter) {
-            this.eFloatingFilterText.setValue('');
-            this.eFloatingFilterText.setDisplayed(false);
+            eFloatingFilterText.setValue('');
+            eFloatingFilterText.setDisplayed(false);
             return;
         }
-        this.eFloatingFilterText.setDisplayed(true);
+        eFloatingFilterText.setDisplayed(true);
         if (selectedFilter.getModelAsString) {
             const filterModel = selectedFilter.getModel();
-            this.eFloatingFilterText.setValue(filterModel == null ? '' : selectedFilter.getModelAsString(filterModel));
+            eFloatingFilterText.setValue(filterModel == null ? '' : selectedFilter.getModelAsString(filterModel));
         } else {
-            this.eFloatingFilterText.setValue('');
+            eFloatingFilterText.setValue('');
         }
     }
 
-    private onSelectedColumnChanged(): void {
+    private onColChange(): void {
         if (!this.showingUnderlyingFloatingFilter) {
             this.updateDisplayedValue();
         }
-    }
-
-    private onColumnRowGroupChanged(): void {
-        if (!this.showingUnderlyingFloatingFilter) {
-            this.updateDisplayedValue();
-        }
-    }
-
-    public override destroy(): void {
-        super.destroy();
     }
 }

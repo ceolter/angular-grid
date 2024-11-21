@@ -31,13 +31,13 @@ function extractAllLeafColumns(allItems: ColumnModelItem[]): AgColumn[] {
 
     const recursiveFunc = (items: ColumnModelItem[]) => {
         items.forEach((item) => {
-            if (!item.isPassesFilter()) {
+            if (!item.passesFilter) {
                 return;
             }
-            if (item.isGroup()) {
-                recursiveFunc(item.getChildren());
+            if (item.group) {
+                recursiveFunc(item.children);
             } else {
-                res.push(item.getColumn());
+                res.push(item.column);
             }
         });
     };
