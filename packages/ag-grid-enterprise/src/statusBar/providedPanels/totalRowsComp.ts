@@ -1,15 +1,9 @@
-import type { BeanCollection, IClientSideRowModel, IRowModel, IStatusPanelComp } from 'ag-grid-community';
+import type { IClientSideRowModel, IStatusPanelComp } from 'ag-grid-community';
 import { _formatNumberCommas, _isClientSideRowModel, _warn } from 'ag-grid-community';
 
 import { AgNameValue } from './agNameValue';
 
 export class TotalRowsComp extends AgNameValue implements IStatusPanelComp {
-    private rowModel: IRowModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.rowModel = beans.rowModel;
-    }
-
     public postConstruct(): void {
         this.setLabel('totalRows', 'Total Rows');
 
@@ -33,7 +27,7 @@ export class TotalRowsComp extends AgNameValue implements IStatusPanelComp {
 
     private getRowCountValue(): number {
         let totalRowCount = 0;
-        (this.rowModel as IClientSideRowModel).forEachLeafNode(() => (totalRowCount += 1));
+        (this.beans.rowModel as IClientSideRowModel).forEachLeafNode(() => (totalRowCount += 1));
         return totalRowCount;
     }
 
@@ -41,11 +35,5 @@ export class TotalRowsComp extends AgNameValue implements IStatusPanelComp {
 
     public refresh(): boolean {
         return true;
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
     }
 }

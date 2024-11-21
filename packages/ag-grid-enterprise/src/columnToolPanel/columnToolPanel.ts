@@ -245,8 +245,6 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
         };
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so this must be public.
     public override destroy(): void {
         this.destroyChildren();
         super.destroy();

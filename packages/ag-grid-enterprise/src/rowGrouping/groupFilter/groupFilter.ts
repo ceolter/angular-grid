@@ -311,8 +311,4 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
     public isFilterAllowed(): boolean {
         return !!this.selectedColumn;
     }
-
-    public override destroy(): void {
-        super.destroy();
-    }
 }

@@ -46,12 +46,6 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
         return this.ctrl && this.ctrl.refresh();
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     private selectAndSetTemplate(): void {
         const params = this.params;
         if (params.pinned) {
