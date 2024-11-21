@@ -10,9 +10,11 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override isTreeData(): boolean {
+    public override treeData: boolean = false;
+
+    public override beginRefreshModel(): void {
         const gos = this.gos;
-        return gos.get('treeData') && !!gos.get('getDataPath');
+        this.treeData = gos.get('treeData') && !!gos.get('getDataPath');
     }
 
     protected override loadNewRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): void {

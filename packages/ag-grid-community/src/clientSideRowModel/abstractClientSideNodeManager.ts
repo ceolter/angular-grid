@@ -36,6 +36,7 @@ export namespace AbstractClientSideNodeManager {
 export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStub {
     private nextId = 0;
     protected allNodesMap: { [id: string]: RowNode<TData> } = {};
+
     public treeData: boolean = false;
 
     public rootNode: AbstractClientSideNodeManager.RootNode<TData> | null = null;
@@ -48,10 +49,10 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         return this.rootNode?.allLeafChildren?.map((node) => node.data!);
     }
 
+    public beginRefreshModel?(state: RefreshModelState<TData>): void;
+
     public activate(state: RefreshModelState<TData>): void {
         if (state.fullReload) {
-            state.clearDeltaUpdate();
-
             const rootNode = state.rootNode;
             this.rootNode = rootNode;
 
@@ -63,6 +64,14 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
             rootNode.childrenAfterSort = [];
             rootNode.childrenAfterAggFilter = [];
             rootNode.childrenAfterFilter = [];
+        }
+    }
+
+    public refreshModel(state: RefreshModelState<TData>): void {
+        state.rootNode.updateHasChildren();
+
+        if (state.rowDataUpdated || state.hasChanges()) {
+            this.deselectNodesAfterUpdate(state);
         }
     }
 
@@ -498,14 +507,6 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         }
 
         this.deselectNodes(state, nodesToUnselect);
-    }
-
-    public refreshModel(state: RefreshModelState<TData>): void {
-        state.rootNode.updateHasChildren();
-
-        if (state.rowDataUpdated || state.hasChanges()) {
-            this.deselectNodesAfterUpdate(state);
-        }
     }
 }
 

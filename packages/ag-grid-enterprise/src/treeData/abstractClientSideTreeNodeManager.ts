@@ -72,34 +72,14 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     /** The root node of the tree. */
     public treeRoot: TreeNode | null = null;
 
-    protected abstract isTreeData(): boolean;
-
     public override activate(state: RefreshModelState<TData>): void {
-        const treeData = this.isTreeData();
-        const treeDataChanged = this.treeData !== treeData;
-        this.treeData = treeData;
-
         super.activate(state);
 
         const rootNode = state.rootNode;
-
-        if (treeDataChanged || state.fullReload || !rootNode.treeNode) {
+        if (state.fullReload || !rootNode.treeNode) {
             const treeRoot = (this.treeRoot ??= new TreeNode(null, '', -1));
             treeRoot.setRow(rootNode);
             treeRoot.invalidate();
-
-            if (treeDataChanged) {
-                treeRoot.childrenChanged = true;
-                const allLeafChildren = rootNode.allLeafChildren;
-                if (allLeafChildren && !state.newData) {
-                    for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
-                        const row = allLeafChildren[i];
-                        const treeNode = row.treeNode as TreeNode | null;
-                        treeNode?.invalidate();
-                        row.groupData = null;
-                    }
-                }
-            }
         }
     }
 
@@ -127,7 +107,6 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         super.deactivate();
         this.treeRoot = null;
         this.oldGroupDisplayColIds = '';
-        this.treeData = false;
     }
 
     /** Add or updates the row to a non-root node, preparing the tree correctly for the commit. */

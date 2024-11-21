@@ -27,19 +27,35 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.childrenGetter = null;
     }
 
-    protected override isTreeData(): boolean {
-        return this.gos.get('treeData') && !!this.childrenGetter?.path;
-    }
-
-    public override activate(state: RefreshModelState<TData>): void {
+    public override beginRefreshModel(state: RefreshModelState<TData>): void {
+        const gos = this.gos;
         const oldChildrenGetter = this.childrenGetter;
-        const childrenField = this.gos.get('treeDataChildrenField');
+        const childrenField = gos.get('treeDataChildrenField');
         if (!oldChildrenGetter || oldChildrenGetter.path !== childrenField) {
             this.childrenGetter = makeFieldPathGetter(childrenField);
             state.fullReload = true;
         }
 
-        super.activate(state);
+        const treeData = gos.get('treeData') && !!this.childrenGetter?.path;
+        if (this.treeData !== treeData) {
+            this.treeData = treeData;
+
+            const treeRoot = this.treeRoot;
+            if (treeRoot) {
+                state.setStep('group');
+                treeRoot.childrenChanged = true;
+                treeRoot.invalidate();
+                const allLeafChildren = state.rootNode.allLeafChildren;
+                if (allLeafChildren) {
+                    for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
+                        const row = allLeafChildren[i];
+                        const treeNode = row.treeNode as TreeNode | null;
+                        treeNode?.invalidate();
+                        row.groupData = null;
+                    }
+                }
+            }
+        }
     }
 
     protected override loadNewRowData(state: RefreshModelState<TData>, rowData: TData[]): void {

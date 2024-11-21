@@ -6,7 +6,7 @@ import type { ClientSideRowModelStage } from './iClientSideRowModel';
 
 export interface IRowNodeStageDefinition {
     step: ClientSideRowModelStage;
-    refreshProps: Set<keyof GridOptions>;
+    refreshProps: Set<keyof GridOptions> | null;
 }
 
 export interface IRowNodeStage<TData = any> extends IRowNodeStageDefinition {

@@ -27,6 +27,8 @@ export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
 
+    deltaUpdate?: boolean;
+
     /** true if this update is due to columns changing, ie no rows were changed */
     columnsChanged?: boolean;
 
@@ -50,8 +52,6 @@ export interface RefreshModelParams<TData = any> {
 
     /** A callback to execute to update row nodes, or execute transactions */
     updateRowNodes?: (state: RefreshModelState<TData>) => void;
-
-    afterRefresh?: () => void;
 }
 
 const createInactiveChangedPath = (rootNode: RowNode) => {
@@ -61,8 +61,6 @@ const createInactiveChangedPath = (rootNode: RowNode) => {
 };
 
 export class RefreshModelState<TData = any> {
-    public rowData: TData[] | null | undefined;
-
     /**
      * This flag indicates that a full refresh of the row data is required.
      * - true if the node manager changed
@@ -128,7 +126,7 @@ export class RefreshModelState<TData = any> {
     public newData: boolean = false;
 
     /** True if the changes were initiated by a delta update (immutable row data) or new data (reload of row data) */
-    public deltaUpdate: boolean = false;
+    public deltaUpdate: boolean | null = null;
 
     public constructor(
         /** The Grid Option Service instance to query grid options */
@@ -136,6 +134,7 @@ export class RefreshModelState<TData = any> {
 
         /** The CSRM rootNode */
         public readonly rootNode: AbstractClientSideNodeManager.RootNode<TData>,
+
         {
             step,
             columnsChanged = false,
@@ -143,6 +142,7 @@ export class RefreshModelState<TData = any> {
             keepRenderedRows = false,
             keepUndoRedoStack = false,
             rowsOrderChanged = false,
+            deltaUpdate,
         }: RefreshModelParams<TData>,
 
         /**
@@ -157,6 +157,7 @@ export class RefreshModelState<TData = any> {
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
+        this.deltaUpdate = deltaUpdate ?? null;
     }
 
     public updateParams({
@@ -166,6 +167,7 @@ export class RefreshModelState<TData = any> {
         keepRenderedRows = false,
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
+        deltaUpdate = false,
     }: RefreshModelParams<any>) {
         this.columnsChanged ||= columnsChanged;
         this.animate &&= animate;
@@ -173,6 +175,9 @@ export class RefreshModelState<TData = any> {
         this.keepUndoRedoStack &&= keepUndoRedoStack;
         if (rowsOrderChanged && !this.newData) {
             this.rowsOrderChanged = true;
+        }
+        if (!deltaUpdate) {
+            this.clearDeltaUpdate();
         }
         this.setStep(step);
     }
@@ -198,7 +203,10 @@ export class RefreshModelState<TData = any> {
         const changedPropsLen = changedProps.length;
         for (const { refreshProps, step } of orderedStages) {
             for (let i = 0; i < changedPropsLen; i++) {
-                if (refreshProps.has(changedProps[i])) {
+                if (refreshProps?.has(changedProps[i])) {
+                    // We disable delta updates if a property that affect a stage changes
+                    this.clearDeltaUpdate();
+
                     this.setStep(step);
                     return; // We found the minimum step
                 }
@@ -224,8 +232,8 @@ export class RefreshModelState<TData = any> {
         this.setStep('group');
         this.rowDataUpdated = true;
         this.keepUndoRedoStack = false;
-        if (this.deltaUpdate) {
-            return true;
+        if (this.deltaUpdate !== null) {
+            return this.deltaUpdate;
         }
         if (this.newData || this.fullReload || !this.started) {
             return false;
