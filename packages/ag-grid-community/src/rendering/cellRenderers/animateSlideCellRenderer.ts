@@ -1,5 +1,4 @@
-import type { BeanCollection } from '../../context/context';
-import type { FilterManager } from '../../filter/filterManager';
+import { _getDocument } from '../../gridOptionsUtils';
 import { _clearElement } from '../../utils/dom';
 import { _exists, _missing } from '../../utils/generic';
 import { Component } from '../../widgets/component';
@@ -13,17 +12,12 @@ export class AnimateSlideCellRenderer extends Component implements ICellRenderer
 
     private refreshCount = 0;
 
-    private filterManager?: FilterManager;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.filterManager = beans.filterManager;
-    }
-
     constructor() {
         super();
 
-        const template = document.createElement('span');
-        const slide = document.createElement('span');
+        const eDocument = _getDocument(this.beans);
+        const template = eDocument.createElement('span');
+        const slide = eDocument.createElement('span');
         slide.setAttribute('class', 'ag-value-slide-current');
         template.appendChild(slide);
 
@@ -49,17 +43,18 @@ export class AnimateSlideCellRenderer extends Component implements ICellRenderer
             this.getGui().removeChild(this.ePrevious);
         }
 
-        const prevElement = document.createElement('span');
+        const { beans, eCurrent } = this;
+        const prevElement = _getDocument(beans).createElement('span');
         prevElement.setAttribute('class', 'ag-value-slide-previous ag-value-slide-out');
         this.ePrevious = prevElement;
 
-        this.ePrevious.textContent = this.eCurrent.textContent;
-        this.getGui().insertBefore(this.ePrevious, this.eCurrent);
+        prevElement.textContent = eCurrent.textContent;
+        this.getGui().insertBefore(prevElement, eCurrent);
 
         // having timeout of 0 allows use to skip to the next css turn,
         // so we know the previous css classes have been applied. so the
         // complex set of setTimeout below creates the animation
-        this.beans.frameworkOverrides.wrapIncoming(() => {
+        beans.frameworkOverrides.wrapIncoming(() => {
             window.setTimeout(() => {
                 if (refreshCountCopy !== this.refreshCount) {
                     return;
@@ -90,7 +85,7 @@ export class AnimateSlideCellRenderer extends Component implements ICellRenderer
 
         // we don't show the delta if we are in the middle of a filter. see comment on FilterManager
         // with regards processingFilterChange
-        if (this.filterManager?.isSuppressFlashingCellsBecauseFiltering()) {
+        if (this.beans.filterManager?.isSuppressFlashingCellsBecauseFiltering()) {
             return false;
         }
 
@@ -100,12 +95,13 @@ export class AnimateSlideCellRenderer extends Component implements ICellRenderer
 
         this.lastValue = value;
 
+        const eCurrent = this.eCurrent;
         if (_exists(params.valueFormatted)) {
-            this.eCurrent.textContent = params.valueFormatted;
+            eCurrent.textContent = params.valueFormatted;
         } else if (_exists(params.value)) {
-            this.eCurrent.textContent = value;
+            eCurrent.textContent = value;
         } else {
-            _clearElement(this.eCurrent);
+            _clearElement(eCurrent);
         }
 
         return true;

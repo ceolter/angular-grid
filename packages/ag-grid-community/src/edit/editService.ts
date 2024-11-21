@@ -1,9 +1,7 @@
 import { _getCellEditorDetails } from '../components/framework/userCompUtils';
-import type { UserComponentFactory } from '../components/framework/userComponentFactory';
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
 import { _isElementInThisGrid } from '../gridBodyComp/mouseEventUtils';
@@ -11,31 +9,13 @@ import type { DefaultProvidedCellEditorParams, ICellEditorParams } from '../inte
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { IRowNode } from '../interfaces/iRowNode';
 import type { UserCompDetails } from '../interfaces/iUserCompDetails';
-import type { NavigationService } from '../navigation/navigationService';
 import type { CellCtrl, ICellComp } from '../rendering/cell/cellCtrl';
 import type { RowCtrl } from '../rendering/row/rowCtrl';
-import type { RowRenderer } from '../rendering/rowRenderer';
 import { _getTabIndex } from '../utils/browser';
-import type { ValueService } from '../valueService/valueService';
-import type { PopupService } from '../widgets/popupService';
 import { PopupEditorWrapper } from './cellEditors/popupEditorWrapper';
 
 export class EditService extends BeanStub implements NamedBean {
     beanName = 'editSvc' as const;
-
-    private navigation?: NavigationService;
-    private userCompFactory: UserComponentFactory;
-    private valueSvc: ValueService;
-    private rowRenderer: RowRenderer;
-    private popupSvc?: PopupService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.navigation = beans.navigation;
-        this.userCompFactory = beans.userCompFactory;
-        this.valueSvc = beans.valueSvc;
-        this.rowRenderer = beans.rowRenderer;
-        this.popupSvc = beans.popupSvc;
-    }
 
     public startEditing(
         cellCtrl: CellCtrl,
@@ -58,7 +38,7 @@ export class EditService extends BeanStub implements NamedBean {
 
         const editorParams = this.createCellEditorParams(cellCtrl, key, cellStartedEdit);
         const colDef = cellCtrl.column.getColDef();
-        const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
+        const compDetails = _getCellEditorDetails(this.beans.userCompFactory, colDef, editorParams);
 
         // if cellEditorSelector was used, we give preference to popup and popupPosition from the selector
         const popup = compDetails?.popupFromSelector != null ? compDetails.popupFromSelector : !!colDef.cellEditorPopup;
@@ -67,7 +47,7 @@ export class EditService extends BeanStub implements NamedBean {
                 ? compDetails.popupPositionFromSelector
                 : colDef.cellEditorPopupPosition;
 
-        this.setEditing(cellCtrl, true, compDetails);
+        setEditing(cellCtrl, true, compDetails);
         cellCtrl.comp.setEditDetails(compDetails, popup, position, this.gos.get('reactiveCustomComponents'));
 
         this.eventSvc.dispatchEvent(cellCtrl.createEvent(event, 'cellEditingStarted'));
@@ -87,15 +67,15 @@ export class EditService extends BeanStub implements NamedBean {
         }
 
         const { comp: cellComp, column, rowNode } = cellCtrl;
-        const { newValue, newValueExists } = this.takeValueFromCellEditor(cancel, cellComp);
-        const oldValue = this.valueSvc.getValueForDisplay(column, rowNode);
+        const { newValue, newValueExists } = takeValueFromCellEditor(cancel, cellComp);
+        const oldValue = this.beans.valueSvc.getValueForDisplay(column, rowNode);
         let valueChanged = false;
 
         if (newValueExists) {
-            valueChanged = this.saveNewValue(cellCtrl, oldValue, newValue, rowNode, column);
+            valueChanged = saveNewValue(cellCtrl, oldValue, newValue, rowNode, column);
         }
 
-        this.setEditing(cellCtrl, false, undefined);
+        setEditing(cellCtrl, false, undefined);
         cellComp.setEditDetails(); // passing nothing stops editing
 
         cellCtrl.updateAndFormatValue(false);
@@ -111,22 +91,13 @@ export class EditService extends BeanStub implements NamedBean {
         return valueChanged;
     }
 
-    private setEditing(cellCtrl: CellCtrl, editing: boolean, compDetails: UserCompDetails | undefined): void {
-        cellCtrl.editCompDetails = compDetails;
-        if (cellCtrl.editing === editing) {
-            return;
-        }
-
-        cellCtrl.editing = editing;
-    }
-
     public handleColDefChanged(cellCtrl: CellCtrl): void {
         const cellEditor = cellCtrl.comp?.getCellEditor();
         if (cellEditor?.refresh) {
             const { eventKey, cellStartedEdit } = cellCtrl.editCompDetails!.params;
             const editorParams = this.createCellEditorParams(cellCtrl, eventKey, cellStartedEdit);
             const colDef = cellCtrl.column.getColDef();
-            const compDetails = _getCellEditorDetails(this.userCompFactory, colDef, editorParams);
+            const compDetails = _getCellEditorDetails(this.beans.userCompFactory, colDef, editorParams);
             cellEditor.refresh(compDetails!.params);
         }
     }
@@ -175,7 +146,7 @@ export class EditService extends BeanStub implements NamedBean {
     }
 
     public stopAllEditing(cancel: boolean = false): void {
-        this.rowRenderer.getAllRowCtrls().forEach((rowCtrl) => this.stopRowEditing(rowCtrl, cancel));
+        this.beans.rowRenderer.getAllRowCtrls().forEach((rowCtrl) => this.stopRowEditing(rowCtrl, cancel));
     }
 
     public stopRowEditing(rowCtrl: RowCtrl, cancel: boolean = false): void {
@@ -230,7 +201,7 @@ export class EditService extends BeanStub implements NamedBean {
                 _isElementInThisGrid(this.gos, elementWithFocus);
 
             if (!clickInsideGrid) {
-                const popupSvc = this.popupSvc;
+                const popupSvc = this.beans.popupSvc;
 
                 clickInsideGrid =
                     !!popupSvc &&
@@ -305,58 +276,6 @@ export class EditService extends BeanStub implements NamedBean {
         }
     }
 
-    private takeValueFromCellEditor(cancel: boolean, cellComp: ICellComp): { newValue?: any; newValueExists: boolean } {
-        const noValueResult = { newValueExists: false };
-
-        if (cancel) {
-            return noValueResult;
-        }
-
-        const cellEditor = cellComp.getCellEditor();
-
-        if (!cellEditor) {
-            return noValueResult;
-        }
-
-        const userWantsToCancel = cellEditor.isCancelAfterEnd && cellEditor.isCancelAfterEnd();
-
-        if (userWantsToCancel) {
-            return noValueResult;
-        }
-
-        const newValue = cellEditor.getValue();
-
-        return {
-            newValue: newValue,
-            newValueExists: true,
-        };
-    }
-
-    /**
-     * @returns `True` if the value changes, otherwise `False`.
-     */
-    private saveNewValue(
-        cellCtrl: CellCtrl,
-        oldValue: any,
-        newValue: any,
-        rowNode: RowNode,
-        column: AgColumn
-    ): boolean {
-        if (newValue === oldValue) {
-            return false;
-        }
-
-        // we suppressRefreshCell because the call to rowNode.setDataValue() results in change detection
-        // getting triggered, which results in all cells getting refreshed. we do not want this refresh
-        // to happen on this call as we want to call it explicitly below. otherwise refresh gets called twice.
-        // if we only did this refresh (and not the one below) then the cell would flash and not be forced.
-        cellCtrl.suppressRefreshCell = true;
-        const valueChanged = rowNode.setDataValue(column, newValue, 'edit');
-        cellCtrl.suppressRefreshCell = false;
-
-        return valueChanged;
-    }
-
     private createCellEditorParams(
         cellCtrl: CellCtrl,
         key: string | null,
@@ -368,8 +287,9 @@ export class EditService extends BeanStub implements NamedBean {
             eGui,
             cellPosition: { rowIndex },
         } = cellCtrl;
-        return this.gos.addGridCommonParams({
-            value: this.valueSvc.getValueForDisplay(column, rowNode),
+        const { valueSvc, gos } = this.beans;
+        return gos.addGridCommonParams({
+            value: valueSvc.getValueForDisplay(column, rowNode),
             eventKey: key,
             column,
             colDef: column.getColDef(),
@@ -380,7 +300,7 @@ export class EditService extends BeanStub implements NamedBean {
             onKeyDown: cellCtrl.onKeyDown.bind(cellCtrl),
             stopEditing: cellCtrl.stopEditingAndFocus.bind(cellCtrl),
             eGridCell: eGui,
-            parseValue: (newValue: any) => this.valueSvc.parseValue(column, rowNode, newValue, cellCtrl.value),
+            parseValue: (newValue: any) => valueSvc.parseValue(column, rowNode, newValue, cellCtrl.value),
             formatValue: cellCtrl.formatValue.bind(cellCtrl),
         });
     }
@@ -390,7 +310,62 @@ export class EditService extends BeanStub implements NamedBean {
 
         if (enterNavigatesVerticallyAfterEdit) {
             const key = shiftKey ? KeyCode.UP : KeyCode.DOWN;
-            this.navigation?.navigateToNextCell(null, key, cellPosition, false);
+            this.beans.navigation?.navigateToNextCell(null, key, cellPosition, false);
         }
     }
+}
+
+function setEditing(cellCtrl: CellCtrl, editing: boolean, compDetails: UserCompDetails | undefined): void {
+    cellCtrl.editCompDetails = compDetails;
+    if (cellCtrl.editing === editing) {
+        return;
+    }
+
+    cellCtrl.editing = editing;
+}
+
+function takeValueFromCellEditor(cancel: boolean, cellComp: ICellComp): { newValue?: any; newValueExists: boolean } {
+    const noValueResult = { newValueExists: false };
+
+    if (cancel) {
+        return noValueResult;
+    }
+
+    const cellEditor = cellComp.getCellEditor();
+
+    if (!cellEditor) {
+        return noValueResult;
+    }
+
+    const userWantsToCancel = cellEditor.isCancelAfterEnd && cellEditor.isCancelAfterEnd();
+
+    if (userWantsToCancel) {
+        return noValueResult;
+    }
+
+    const newValue = cellEditor.getValue();
+
+    return {
+        newValue: newValue,
+        newValueExists: true,
+    };
+}
+
+/**
+ * @returns `True` if the value changes, otherwise `False`.
+ */
+function saveNewValue(cellCtrl: CellCtrl, oldValue: any, newValue: any, rowNode: RowNode, column: AgColumn): boolean {
+    if (newValue === oldValue) {
+        return false;
+    }
+
+    // we suppressRefreshCell because the call to rowNode.setDataValue() results in change detection
+    // getting triggered, which results in all cells getting refreshed. we do not want this refresh
+    // to happen on this call as we want to call it explicitly below. otherwise refresh gets called twice.
+    // if we only did this refresh (and not the one below) then the cell would flash and not be forced.
+    cellCtrl.suppressRefreshCell = true;
+    const valueChanged = rowNode.setDataValue(column, newValue, 'edit');
+    cellCtrl.suppressRefreshCell = false;
+
+    return valueChanged;
 }

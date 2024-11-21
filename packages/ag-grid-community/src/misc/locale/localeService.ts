@@ -8,7 +8,8 @@ export class LocaleService extends BeanStub implements NamedBean {
     beanName = 'localeSvc' as const;
 
     public override getLocaleTextFunc(): LocaleTextFunc {
-        const getLocaleText = this.gos.getCallback('getLocaleText');
+        const gos = this.gos;
+        const getLocaleText = gos.getCallback('getLocaleText');
         if (getLocaleText) {
             //key: string, defaultValue: string, variableValues?: string[]
             return (key: string, defaultValue: string, variableValues?: string[]) => {
@@ -21,7 +22,7 @@ export class LocaleService extends BeanStub implements NamedBean {
             };
         }
 
-        const localeText = this.gos.get('localeText');
+        const localeText = gos.get('localeText');
         return (key: string, defaultValue: string, variableValues?: string[]) => {
             let localisedText = localeText && localeText[key];
 

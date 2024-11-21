@@ -65,9 +65,10 @@ export class LargeTextCellEditor extends PopupComponent implements ICellEditorCo
 
     public getValue(): any {
         const value = this.eTextArea.getValue();
-        if (!_exists(value) && !_exists(this.params.value)) {
-            return this.params.value;
+        const params = this.params;
+        if (!_exists(value) && !_exists(params.value)) {
+            return params.value;
         }
-        return this.params.parseValue(value!);
+        return params.parseValue(value!);
     }
 }

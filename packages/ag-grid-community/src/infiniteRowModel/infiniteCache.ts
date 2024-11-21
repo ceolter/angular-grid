@@ -1,10 +1,7 @@
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { RowNode } from '../entities/rowNode';
-import type { FocusService } from '../focusService';
 import type { IDatasource } from '../interfaces/iDatasource';
 import type { SortModelItem } from '../interfaces/iSortModelItem';
-import type { RowRenderer } from '../rendering/rowRenderer';
 import { _logIfDebug } from '../utils/function';
 import { _exists } from '../utils/generic';
 import { InfiniteBlock } from './infiniteBlock';
@@ -30,26 +27,15 @@ export interface InfiniteCacheParams {
 const MAX_EMPTY_BLOCKS_TO_KEEP = 2;
 
 export class InfiniteCache extends BeanStub {
-    protected rowRenderer: RowRenderer;
-    private focusSvc: FocusService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowRenderer = beans.rowRenderer;
-        this.focusSvc = beans.focusSvc;
-    }
-
-    private readonly params: InfiniteCacheParams;
-
     private rowCount: number;
     private lastRowIndexKnown = false;
 
     private blocks: { [blockNumber: string]: InfiniteBlock } = {};
     private blockCount = 0;
 
-    constructor(params: InfiniteCacheParams) {
+    constructor(private readonly params: InfiniteCacheParams) {
         super();
         this.rowCount = params.initialRowCount;
-        this.params = params;
     }
 
     // the rowRenderer will not pass dontCreatePage, meaning when rendering the grid,
@@ -70,14 +56,15 @@ export class InfiniteCache extends BeanStub {
     }
 
     private createBlock(blockNumber: number): InfiniteBlock {
-        const newBlock = this.createBean(new InfiniteBlock(blockNumber, this, this.params));
+        const params = this.params;
+        const newBlock = this.createBean(new InfiniteBlock(blockNumber, this, params));
 
-        this.blocks[newBlock.getId()] = newBlock;
+        this.blocks[newBlock.id] = newBlock;
         this.blockCount++;
 
         this.purgeBlocksIfNeeded(newBlock);
 
-        this.params.rowNodeBlockLoader!.addBlock(newBlock);
+        params.rowNodeBlockLoader!.addBlock(newBlock);
 
         return newBlock;
     }
@@ -118,7 +105,7 @@ export class InfiniteCache extends BeanStub {
             return;
         }
 
-        _logIfDebug(this.gos, `InfiniteCache - onPageLoaded: page = ${block.getId()}, lastRow = ${lastRow}`);
+        _logIfDebug(this.gos, `InfiniteCache - onPageLoaded: page = ${block.id}, lastRow = ${lastRow}`);
 
         this.checkRowCount(block, lastRow);
         // we fire cacheUpdated even if the row count has not changed, as some items need updating even
@@ -131,8 +118,7 @@ export class InfiniteCache extends BeanStub {
         // we exclude checking for the page just created, as this has yet to be accessed and hence
         // the lastAccessed stamp will not be updated for the first time yet
         const blocksForPurging = this.getBlocksInOrder().filter((b) => b != blockToExclude);
-        const lastAccessedComparator = (a: InfiniteBlock, b: InfiniteBlock) =>
-            b.getLastAccessed() - a.getLastAccessed();
+        const lastAccessedComparator = (a: InfiniteBlock, b: InfiniteBlock) => b.lastAccessed - a.lastAccessed;
         blocksForPurging.sort(lastAccessedComparator);
 
         // we remove (maxBlocksInCache - 1) as we already excluded the 'just created' page.
@@ -143,7 +129,7 @@ export class InfiniteCache extends BeanStub {
         const emptyBlocksToKeep = MAX_EMPTY_BLOCKS_TO_KEEP - 1;
 
         blocksForPurging.forEach((block: InfiniteBlock, index: number) => {
-            const purgeBecauseBlockEmpty = block.getState() === 'needsLoading' && index >= emptyBlocksToKeep;
+            const purgeBecauseBlockEmpty = block.state === 'needsLoading' && index >= emptyBlocksToKeep;
 
             const purgeBecauseCacheFull = maxBlocksProvided ? index >= blocksToKeep! : false;
 
@@ -167,7 +153,7 @@ export class InfiniteCache extends BeanStub {
     }
 
     private isBlockFocused(block: InfiniteBlock): boolean {
-        const focusedCell = this.focusSvc.getFocusCellToUseAfterRefresh();
+        const focusedCell = this.beans.focusSvc.getFocusCellToUseAfterRefresh();
         if (!focusedCell) {
             return false;
         }
@@ -175,17 +161,15 @@ export class InfiniteCache extends BeanStub {
             return false;
         }
 
-        const blockIndexStart = block.getStartRow();
-        const blockIndexEnd = block.getEndRow();
+        const { startRow, endRow } = block;
 
-        const hasFocus = focusedCell.rowIndex >= blockIndexStart && focusedCell.rowIndex < blockIndexEnd;
+        const hasFocus = focusedCell.rowIndex >= startRow && focusedCell.rowIndex < endRow;
         return hasFocus;
     }
 
     private isBlockCurrentlyDisplayed(block: InfiniteBlock): boolean {
-        const startIndex = block.getStartRow();
-        const endIndex = block.getEndRow() - 1;
-        return this.rowRenderer.isRangeInRenderedViewport(startIndex, endIndex);
+        const { startRow, endRow } = block;
+        return this.beans.rowRenderer.isRangeInRenderedViewport(startRow, endRow - 1);
     }
 
     private removeBlockFromCache(blockToRemove: InfiniteBlock): void {
@@ -207,9 +191,10 @@ export class InfiniteCache extends BeanStub {
             this.rowCount = lastRow;
             this.lastRowIndexKnown = true;
         } else if (!this.lastRowIndexKnown) {
+            const { blockSize, overflowSize } = this.params;
             // otherwise, see if we need to add some virtual rows
-            const lastRowIndex = (block.getId() + 1) * this.params.blockSize!;
-            const lastRowIndexPlusOverflow = lastRowIndex + this.params.overflowSize;
+            const lastRowIndex = (block.id + 1) * blockSize!;
+            const lastRowIndexPlusOverflow = lastRowIndex + overflowSize;
 
             if (this.rowCount < lastRowIndexPlusOverflow) {
                 this.rowCount = lastRowIndexPlusOverflow;
@@ -245,13 +230,13 @@ export class InfiniteCache extends BeanStub {
 
     public getBlocksInOrder(): InfiniteBlock[] {
         // get all page id's as NUMBERS (not strings, as we need to sort as numbers) and in descending order
-        const blockComparator = (a: InfiniteBlock, b: InfiniteBlock) => a.getId() - b.getId();
+        const blockComparator = (a: InfiniteBlock, b: InfiniteBlock) => a.id - b.id;
         const blocks = Object.values(this.blocks).sort(blockComparator);
         return blocks;
     }
 
     private destroyBlock(block: InfiniteBlock): void {
-        delete this.blocks[block.getId()];
+        delete this.blocks[block.id];
         this.destroyBean(block);
         this.blockCount--;
         this.params.rowNodeBlockLoader!.removeBlock(block);
@@ -277,7 +262,7 @@ export class InfiniteCache extends BeanStub {
     private destroyAllBlocksPastVirtualRowCount(): void {
         const blocksToDestroy: InfiniteBlock[] = [];
         this.getBlocksInOrder().forEach((block) => {
-            const startRow = block.getId() * this.params.blockSize!;
+            const startRow = block.id * this.params.blockSize!;
             if (startRow >= this.rowCount) {
                 blocksToDestroy.push(block);
             }
@@ -315,12 +300,12 @@ export class InfiniteCache extends BeanStub {
                 return;
             }
 
-            if (inActiveRange && lastBlockId + 1 !== block.getId()) {
+            if (inActiveRange && lastBlockId + 1 !== block.id) {
                 foundGapInSelection = true;
                 return;
             }
 
-            lastBlockId = block.getId();
+            lastBlockId = block.id;
 
             block.forEachNode(
                 (rowNode) => {

@@ -108,8 +108,9 @@ export class TabGuardFeature extends BeanStub {
     }
 
     private addTabGuards(topTabGuard: HTMLElement, bottomTabGuard: HTMLElement): void {
-        this.eFocusableElement.insertAdjacentElement('afterbegin', topTabGuard);
-        this.eFocusableElement.insertAdjacentElement('beforeend', bottomTabGuard);
+        const eFocusableElement = this.eFocusableElement;
+        eFocusableElement.insertAdjacentElement('afterbegin', topTabGuard);
+        eFocusableElement.insertAdjacentElement('beforeend', bottomTabGuard);
     }
 
     public removeAllChildrenExceptTabGuards(): void {

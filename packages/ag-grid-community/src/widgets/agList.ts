@@ -1,6 +1,4 @@
-import type { Registry } from '../components/framework/registry';
 import { KeyCode } from '../constants/keyCode';
-import type { BeanCollection } from '../context/context';
 import { _getDocument } from '../gridOptionsUtils';
 import type { ITooltipCtrl, TooltipFeature } from '../tooltip/tooltipFeature';
 import { _setAriaPosInSet, _setAriaRole, _setAriaSelected, _setAriaSetSize } from '../utils/aria';
@@ -17,8 +15,6 @@ export type AgListEvent = 'fieldValueChanged' | 'selectedItem';
 export class AgList<TEventType extends string = AgListEvent, TValue = string> extends Component<
     TEventType | AgListEvent
 > {
-    private registry: Registry;
-
     private readonly activeClass = 'ag-active-item';
 
     private options: ListOption<TValue>[] = [];
@@ -32,10 +28,6 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         private readonly unFocusable: boolean = false
     ) {
         super(/* html */ `<div class="ag-list ag-${cssIdentifier}-list" role="listbox"></div>`);
-    }
-
-    public wireBeans(beans: BeanCollection): void {
-        this.registry = beans.registry;
     }
 
     public postConstruct(): void {
@@ -77,25 +69,27 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         const isDown = key === KeyCode.DOWN;
         let itemToHighlight: HTMLElement;
 
-        if (!this.highlightedEl) {
-            itemToHighlight = this.itemEls[isDown ? 0 : this.itemEls.length - 1];
+        const { itemEls, highlightedEl } = this;
+        if (!highlightedEl) {
+            itemToHighlight = itemEls[isDown ? 0 : itemEls.length - 1];
         } else {
-            const currentIdx = this.itemEls.indexOf(this.highlightedEl);
+            const currentIdx = itemEls.indexOf(highlightedEl);
             let nextPos = currentIdx + (isDown ? 1 : -1);
-            nextPos = Math.min(Math.max(nextPos, 0), this.itemEls.length - 1);
-            itemToHighlight = this.itemEls[nextPos];
+            nextPos = Math.min(Math.max(nextPos, 0), itemEls.length - 1);
+            itemToHighlight = itemEls[nextPos];
         }
         this.highlightItem(itemToHighlight);
     }
 
     private navigateToPage(key: 'PageUp' | 'PageDown' | 'Home' | 'End'): void {
-        if (!this.highlightedEl || this.itemEls.length === 0) {
+        const { itemEls, highlightedEl } = this;
+        if (!highlightedEl || itemEls.length === 0) {
             return;
         }
 
-        const currentIdx = this.itemEls.indexOf(this.highlightedEl);
+        const currentIdx = itemEls.indexOf(highlightedEl);
         const rowCount = this.options.length - 1;
-        const itemHeight = this.itemEls[0].clientHeight;
+        const itemHeight = itemEls[0].clientHeight;
         const pageSize = Math.floor(this.getGui().clientHeight / itemHeight);
 
         let newIndex = -1;
@@ -114,7 +108,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
             return;
         }
 
-        this.highlightItem(this.itemEls[newIndex]);
+        this.highlightItem(itemEls[newIndex]);
     }
 
     public addOptions(listOptions: ListOption<TValue>[]): this {
@@ -179,7 +173,7 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         });
 
         this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            this.beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getTooltipValue: () => text,
                 getGui: () => itemEl,
                 getLocation: () => 'UNKNOWN',
@@ -257,8 +251,8 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         this.clearHighlighted();
         this.highlightedEl = el;
 
-        this.highlightedEl.classList.add(this.activeClass);
-        _setAriaSelected(this.highlightedEl, true);
+        el.classList.add(this.activeClass);
+        _setAriaSelected(el, true);
 
         const eGui = this.getGui();
 
@@ -266,21 +260,22 @@ export class AgList<TEventType extends string = AgListEvent, TValue = string> ex
         const { offsetTop, offsetHeight } = el;
 
         if (offsetTop + offsetHeight > scrollTop + clientHeight || offsetTop < scrollTop) {
-            this.highlightedEl.scrollIntoView({ block: 'nearest' });
+            el.scrollIntoView({ block: 'nearest' });
         }
 
         if (!this.unFocusable) {
-            this.highlightedEl.focus();
+            el.focus();
         }
     }
 
     private clearHighlighted(): void {
-        if (!this.highlightedEl || !_isVisible(this.highlightedEl)) {
+        const highlightedEl = this.highlightedEl;
+        if (!highlightedEl || !_isVisible(highlightedEl)) {
             return;
         }
 
-        this.highlightedEl.classList.remove(this.activeClass);
-        _setAriaSelected(this.highlightedEl, false);
+        highlightedEl.classList.remove(this.activeClass);
+        _setAriaSelected(highlightedEl, false);
 
         this.highlightedEl = null;
     }

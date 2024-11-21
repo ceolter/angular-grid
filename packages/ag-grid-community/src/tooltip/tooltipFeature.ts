@@ -94,14 +94,12 @@ export class TooltipFeature extends BeanStub {
     }
 
     private createTooltipFeatureIfNeeded(): void {
-        if (this.tooltipManager != null) {
-            return;
+        if (this.tooltipManager == null) {
+            this.tooltipManager = this.createBean(
+                new TooltipStateManager(this.ctrl, () => this.tooltip),
+                this.beans.context
+            );
         }
-
-        this.tooltipManager = this.createBean(
-            new TooltipStateManager(this.ctrl, () => this.tooltip),
-            this.beans.context
-        );
     }
 
     public setTooltipAndRefresh(tooltip: any): void {
@@ -115,20 +113,15 @@ export class TooltipFeature extends BeanStub {
 
         if (this.browserTooltips) {
             this.setBrowserTooltip(this.tooltip);
-            if (this.tooltipManager) {
-                this.tooltipManager = this.destroyBean(this.tooltipManager, this.beans.context);
-            }
+            this.tooltipManager = this.destroyBean(this.tooltipManager, this.beans.context);
         } else {
             this.setBrowserTooltip(null);
             this.createTooltipFeatureIfNeeded();
         }
     }
 
-    // overriding to make public, as we don't dispose this bean via context
     public override destroy() {
-        if (this.tooltipManager) {
-            this.tooltipManager = this.destroyBean(this.tooltipManager, this.beans.context);
-        }
+        this.tooltipManager = this.destroyBean(this.tooltipManager, this.beans.context);
         super.destroy();
     }
 }

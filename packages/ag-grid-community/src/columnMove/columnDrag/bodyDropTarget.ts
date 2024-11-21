@@ -1,13 +1,5 @@
-import type { ColumnModel } from '../../columns/columnModel';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { CtrlsService } from '../../ctrlsService';
-import type {
-    DragAndDropIcon,
-    DragAndDropService,
-    DraggingEvent,
-    DropTarget,
-} from '../../dragAndDrop/dragAndDropService';
+import type { DragAndDropIcon, DraggingEvent, DropTarget } from '../../dragAndDrop/dragAndDropService';
 import { DragSourceType } from '../../dragAndDrop/dragAndDropService';
 import type { ColumnPinnedType } from '../../interfaces/iColumn';
 import { BodyDropPivotTarget } from './bodyDropPivotTarget';
@@ -23,64 +15,56 @@ export interface DropListener {
 }
 
 export class BodyDropTarget extends BeanStub implements DropTarget {
-    private dragAndDrop: DragAndDropService;
-    private colModel: ColumnModel;
-    private ctrlsSvc: CtrlsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.dragAndDrop = beans.dragAndDrop!;
-        this.colModel = beans.colModel;
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
-
-    private pinned: ColumnPinnedType;
-    // public because it's part of the DropTarget interface
-    private eContainer: HTMLElement;
-    // public because it's part of the DropTarget interface
     private eSecondaryContainers: HTMLElement[][];
     private currentDropListener: DropListener;
 
     private moveColumnFeature: MoveColumnFeature;
     private bodyDropPivotTarget: BodyDropPivotTarget;
 
-    constructor(pinned: ColumnPinnedType, eContainer: HTMLElement) {
+    constructor(
+        private readonly pinned: ColumnPinnedType,
+        private readonly eContainer: HTMLElement
+    ) {
         super();
-        this.pinned = pinned;
-        this.eContainer = eContainer;
     }
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => {
-            switch (this.pinned) {
+        const { ctrlsSvc, dragAndDrop } = this.beans;
+        const pinned = this.pinned;
+        ctrlsSvc.whenReady(this, (p) => {
+            let eSecondaryContainers: HTMLElement[][];
+            const eBodyViewport = p.gridBodyCtrl.eBodyViewport;
+            switch (pinned) {
                 case 'left':
-                    this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.eBodyViewport, p.left.eContainer],
+                    eSecondaryContainers = [
+                        [eBodyViewport, p.left.eContainer],
                         [p.bottomLeft.eContainer],
                         [p.topLeft.eContainer],
                     ];
                     break;
                 case 'right':
-                    this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.eBodyViewport, p.right.eContainer],
+                    eSecondaryContainers = [
+                        [eBodyViewport, p.right.eContainer],
                         [p.bottomRight.eContainer],
                         [p.topRight.eContainer],
                     ];
                     break;
                 default:
-                    this.eSecondaryContainers = [
-                        [p.gridBodyCtrl.eBodyViewport, p.center.eViewport],
+                    eSecondaryContainers = [
+                        [eBodyViewport, p.center.eViewport],
                         [p.bottomCenter.eViewport],
                         [p.topCenter.eViewport],
                     ];
                     break;
             }
+            this.eSecondaryContainers = eSecondaryContainers;
         });
 
-        this.moveColumnFeature = this.createManagedBean(new MoveColumnFeature(this.pinned));
-        this.bodyDropPivotTarget = this.createManagedBean(new BodyDropPivotTarget(this.pinned));
+        this.moveColumnFeature = this.createManagedBean(new MoveColumnFeature(pinned));
+        this.bodyDropPivotTarget = this.createManagedBean(new BodyDropPivotTarget(pinned));
 
-        this.dragAndDrop.addDropTarget(this);
-        this.addDestroyFunc(() => this.dragAndDrop.removeDropTarget(this));
+        dragAndDrop!.addDropTarget(this);
+        this.addDestroyFunc(() => dragAndDrop!.removeDropTarget(this));
     }
 
     public isInterestedIn(type: DragSourceType): boolean {
@@ -109,7 +93,7 @@ export class BodyDropTarget extends BeanStub implements DropTarget {
         // in pivot mode, then if moving a column (ie didn't come from toolpanel) then it's
         // a standard column move, however if it came from the toolpanel, then we are introducing
         // dimensions or values to the grid
-        return this.colModel.isPivotMode() && draggingEvent.dragSource.type === DragSourceType.ToolPanel;
+        return this.beans.colModel.isPivotMode() && draggingEvent.dragSource.type === DragSourceType.ToolPanel;
     }
 
     public onDragEnter(draggingEvent: DraggingEvent): void {

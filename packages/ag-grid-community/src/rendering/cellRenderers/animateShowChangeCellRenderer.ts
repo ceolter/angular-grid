@@ -1,5 +1,4 @@
-import type { BeanCollection } from '../../context/context';
-import type { FilterManager } from '../../filter/filterManager';
+import { _getDocument } from '../../gridOptionsUtils';
 import { _clearElement } from '../../utils/dom';
 import { _exists } from '../../utils/generic';
 import { Component } from '../../widgets/component';
@@ -9,12 +8,6 @@ const ARROW_UP = '\u2191';
 const ARROW_DOWN = '\u2193';
 
 export class AnimateShowChangeCellRenderer extends Component implements ICellRenderer {
-    private filterManager?: FilterManager;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.filterManager = beans.filterManager;
-    }
-
     private lastValue: number;
 
     private eValue: HTMLElement;
@@ -25,11 +18,12 @@ export class AnimateShowChangeCellRenderer extends Component implements ICellRen
     constructor() {
         super();
 
-        const template = document.createElement('span');
-        const delta = document.createElement('span');
+        const eDocument = _getDocument(this.beans);
+        const template = eDocument.createElement('span');
+        const delta = eDocument.createElement('span');
         delta.setAttribute('class', 'ag-value-change-delta');
 
-        const value = document.createElement('span');
+        const value = eDocument.createElement('span');
         value.setAttribute('class', 'ag-value-change-value');
 
         template.appendChild(delta);
@@ -53,15 +47,16 @@ export class AnimateShowChangeCellRenderer extends Component implements ICellRen
 
         const deltaUp = delta >= 0;
 
+        const eDelta = this.eDelta;
         if (deltaUp) {
-            this.eDelta.textContent = ARROW_UP + valueToUse;
+            eDelta.textContent = ARROW_UP + valueToUse;
         } else {
             // because negative, use ABS to remove sign
-            this.eDelta.textContent = ARROW_DOWN + valueToUse;
+            eDelta.textContent = ARROW_DOWN + valueToUse;
         }
 
-        this.eDelta.classList.toggle('ag-value-change-delta-up', deltaUp);
-        this.eDelta.classList.toggle('ag-value-change-delta-down', !deltaUp);
+        eDelta.classList.toggle('ag-value-change-delta-up', deltaUp);
+        eDelta.classList.toggle('ag-value-change-delta-down', !deltaUp);
     }
 
     private setTimerToRemoveDelta(): void {
@@ -87,33 +82,34 @@ export class AnimateShowChangeCellRenderer extends Component implements ICellRen
     public refresh(params: any, isInitialRender: boolean = false): boolean {
         const value = params.value;
 
-        if (value === this.lastValue) {
+        const { eValue, lastValue, beans } = this;
+        if (value === lastValue) {
             return false;
         }
 
         if (_exists(params.valueFormatted)) {
-            this.eValue.textContent = params.valueFormatted;
+            eValue.textContent = params.valueFormatted;
         } else if (_exists(params.value)) {
-            this.eValue.textContent = value;
+            eValue.textContent = value;
         } else {
-            _clearElement(this.eValue);
+            _clearElement(eValue);
         }
 
         // we don't show the delta if we are in the middle of a filter. see comment on FilterManager
         // with regards processingFilterChange
-        if (this.filterManager?.isSuppressFlashingCellsBecauseFiltering()) {
+        if (beans.filterManager?.isSuppressFlashingCellsBecauseFiltering()) {
             return false;
         }
 
-        if (typeof value === 'number' && typeof this.lastValue === 'number') {
-            const delta = value - this.lastValue;
+        if (typeof value === 'number' && typeof lastValue === 'number') {
+            const delta = value - lastValue;
             this.showDelta(params, delta);
         }
 
         // highlight the current value, but only if it's not new, otherwise it
         // would get highlighted first time the value is shown
-        if (this.lastValue) {
-            this.eValue.classList.add('ag-value-change-value-highlight');
+        if (lastValue) {
+            eValue.classList.add('ag-value-change-value-highlight');
         }
 
         if (!isInitialRender) {

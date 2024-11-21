@@ -1,6 +1,4 @@
-import type { Registry } from '../components/framework/registry';
 import { KeyCode } from '../constants/keyCode';
-import type { BeanCollection } from '../context/context';
 import type { AgPickerFieldParams } from '../interfaces/agFieldParams';
 import { _shouldDisplayTooltip } from '../tooltip/tooltipFeature';
 import type { ITooltipCtrl, TooltipFeature } from '../tooltip/tooltipFeature';
@@ -26,8 +24,6 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
     AgSelectEvent,
     AgList<AgSelectEvent, TValue>
 > {
-    private registry: Registry;
-
     protected listComponent: AgList<AgSelectEvent, TValue> | undefined;
     private tooltipFeature?: TooltipFeature;
 
@@ -44,14 +40,9 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
         this.registerCSS(agSelectCSS);
     }
 
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.registry = beans.registry;
-    }
-
     public override postConstruct(): void {
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            this.beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 shouldDisplayTooltip: _shouldDisplayTooltip(() => this.eDisplayField),
                 getGui: () => this.getGui(),
             } as ITooltipCtrl)
@@ -82,23 +73,24 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
     }
 
     private createListComponent(): void {
-        this.listComponent = this.createBean(new AgList<AgSelectEvent, TValue>('select', true));
-        this.listComponent.setParentComponent(this);
+        const listComponent = this.createBean(new AgList<AgSelectEvent, TValue>('select', true));
+        this.listComponent = listComponent;
+        listComponent.setParentComponent(this);
 
-        const eListAriaEl = this.listComponent.getAriaElement();
-        const listId = `ag-select-list-${this.listComponent.getCompId()}`;
+        const eListAriaEl = listComponent.getAriaElement();
+        const listId = `ag-select-list-${listComponent.getCompId()}`;
 
         eListAriaEl.setAttribute('id', listId);
         _setAriaControls(this.getAriaElement(), eListAriaEl);
 
-        this.listComponent.addManagedListeners(this.listComponent, {
+        listComponent.addManagedListeners(listComponent, {
             selectedItem: () => {
                 this.hidePicker();
                 this.dispatchLocalEvent({ type: 'selectedItem' });
             },
         });
 
-        this.listComponent.addManagedListeners(this.listComponent, {
+        listComponent.addManagedListeners(listComponent, {
             fieldValueChanged: () => {
                 if (!this.listComponent) {
                     return;
@@ -150,13 +142,14 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
     }
 
     public override showPicker() {
-        if (!this.listComponent) {
+        const listComponent = this.listComponent;
+        if (!listComponent) {
             return;
         }
 
         super.showPicker();
 
-        this.listComponent.refreshHighlighted();
+        listComponent.refreshHighlighted();
     }
 
     public addOptions(options: ListOption<TValue>[]): this {
@@ -178,36 +171,40 @@ export class AgSelect<TValue = string | null> extends AgPickerField<
     }
 
     public override setValue(value?: TValue, silent?: boolean, fromPicker?: boolean): this {
-        if (this.value === value || !this.listComponent) {
+        const {
+            listComponent,
+            config: { placeholder },
+            eDisplayField,
+            tooltipFeature,
+        } = this;
+        if (this.value === value || !listComponent) {
             return this;
         }
 
         if (!fromPicker) {
-            this.listComponent.setValue(value, true);
+            listComponent.setValue(value, true);
         }
 
-        const newValue = this.listComponent.getValue();
+        const newValue = listComponent.getValue();
 
         if (newValue === this.getValue()) {
             return this;
         }
 
-        let displayValue = this.listComponent.getDisplayValue();
-        if (displayValue == null && this.config.placeholder) {
-            displayValue = this.config.placeholder;
+        let displayValue = listComponent.getDisplayValue();
+        if (displayValue == null && placeholder) {
+            displayValue = placeholder;
         }
 
-        this.eDisplayField.textContent = displayValue!;
+        eDisplayField.textContent = displayValue!;
 
-        this.tooltipFeature?.setTooltipAndRefresh(displayValue ?? null);
+        tooltipFeature?.setTooltipAndRefresh(displayValue ?? null);
 
         return super.setValue(value, silent);
     }
 
     public override destroy(): void {
-        if (this.listComponent) {
-            this.listComponent = this.destroyBean(this.listComponent);
-        }
+        this.listComponent = this.destroyBean(this.listComponent);
 
         super.destroy();
     }

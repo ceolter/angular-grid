@@ -10,8 +10,9 @@ export class ValueCache extends BeanStub implements NamedBean {
     private neverExpires: boolean;
 
     public postConstruct(): void {
-        this.active = this.gos.get('valueCache');
-        this.neverExpires = this.gos.get('valueCacheNeverExpires');
+        const gos = this.gos;
+        this.active = gos.get('valueCache');
+        this.neverExpires = gos.get('valueCacheNeverExpires');
     }
 
     public onDataChanged(): void {
@@ -28,8 +29,9 @@ export class ValueCache extends BeanStub implements NamedBean {
 
     public setValue(rowNode: RowNode, colId: string, value: any): any {
         if (this.active) {
-            if (rowNode.__cacheVersion !== this.cacheVersion) {
-                rowNode.__cacheVersion = this.cacheVersion;
+            const cacheVersion = this.cacheVersion;
+            if (rowNode.__cacheVersion !== cacheVersion) {
+                rowNode.__cacheVersion = cacheVersion;
                 rowNode.__cacheData = {};
             }
 

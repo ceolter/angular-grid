@@ -1,6 +1,5 @@
 import { isColumnGroupAutoCol, isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { SelectAllMode } from '../entities/gridOptions';
 import type { SelectionEventSourceType } from '../events';
@@ -14,31 +13,19 @@ import {
     _isServerSideRowModel,
 } from '../gridOptionsUtils';
 import type { HeaderCellCtrl } from '../headerRendering/cells/column/headerCellCtrl';
-import type { IRowModel } from '../interfaces/iRowModel';
-import type { ISelectionService } from '../interfaces/iSelectionService';
 import { _setAriaRole } from '../utils/aria';
 import { _warn } from '../validation/logging';
 import { AgCheckbox } from '../widgets/agCheckbox';
 
 export class SelectAllFeature extends BeanStub {
-    private rowModel: IRowModel;
-    private selectionSvc: ISelectionService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-        this.selectionSvc = beans.selectionSvc!;
-    }
-
     private cbSelectAllVisible = false;
     private processingEventFromCheckbox = false;
-    private column: AgColumn;
     private headerCellCtrl: HeaderCellCtrl;
 
     private cbSelectAll: AgCheckbox;
 
-    constructor(column: AgColumn) {
+    constructor(private readonly column: AgColumn) {
         super();
-        this.column = column;
     }
 
     public onSpaceKeyDown(e: KeyboardEvent): void {
@@ -56,26 +43,23 @@ export class SelectAllFeature extends BeanStub {
 
     public setComp(ctrl: HeaderCellCtrl): void {
         this.headerCellCtrl = ctrl;
-        this.cbSelectAll = this.createManagedBean(new AgCheckbox());
-        this.cbSelectAll.addCssClass('ag-header-select-all');
-        _setAriaRole(this.cbSelectAll.getGui(), 'presentation');
+        const cbSelectAll = this.createManagedBean(new AgCheckbox());
+        this.cbSelectAll = cbSelectAll;
+        cbSelectAll.addCssClass('ag-header-select-all');
+        _setAriaRole(cbSelectAll.getGui(), 'presentation');
         this.showOrHideSelectAll();
 
         this.addManagedEventListeners({
-            newColumnsLoaded: this.onNewColumnsLoaded.bind(this),
+            newColumnsLoaded: this.showOrHideSelectAll.bind(this),
             displayedColumnsChanged: this.onDisplayedColumnsChanged.bind(this),
             selectionChanged: this.onSelectionChanged.bind(this),
             paginationChanged: this.onSelectionChanged.bind(this),
             modelUpdated: this.onModelChanged.bind(this),
         });
 
-        this.addManagedListeners(this.cbSelectAll, { fieldValueChanged: this.onCbSelectAll.bind(this) });
-        this.cbSelectAll.getInputElement().setAttribute('tabindex', '-1');
+        this.addManagedListeners(cbSelectAll, { fieldValueChanged: this.onCbSelectAll.bind(this) });
+        cbSelectAll.getInputElement().setAttribute('tabindex', '-1');
         this.refreshSelectAllLabel();
-    }
-
-    private onNewColumnsLoaded(): void {
-        this.showOrHideSelectAll();
     }
 
     private onDisplayedColumnsChanged(): void {
@@ -86,9 +70,10 @@ export class SelectAllFeature extends BeanStub {
     }
 
     private showOrHideSelectAll(): void {
-        this.cbSelectAllVisible = this.isCheckboxSelection();
-        this.cbSelectAll.setDisplayed(this.cbSelectAllVisible);
-        if (this.cbSelectAllVisible) {
+        const cbSelectAllVisible = this.isCheckboxSelection();
+        this.cbSelectAllVisible = cbSelectAllVisible;
+        this.cbSelectAll.setDisplayed(cbSelectAllVisible);
+        if (cbSelectAllVisible) {
             // in case user is trying this feature with the wrong model type
             this.checkRightRowModelType('selectAllCheckbox');
             // in case user is trying this feature with the wrong model type
@@ -122,11 +107,14 @@ export class SelectAllFeature extends BeanStub {
 
         const selectAllMode = this.getSelectAllMode();
 
-        const allSelected = this.selectionSvc.getSelectAllState(selectAllMode);
-        this.cbSelectAll.setValue(allSelected!);
+        const selectionSvc = this.beans.selectionSvc!;
+        const cbSelectAll = this.cbSelectAll;
 
-        const hasNodesToSelect = this.selectionSvc.hasNodesToSelect(selectAllMode);
-        this.cbSelectAll.setDisabled(!hasNodesToSelect);
+        const allSelected = selectionSvc.getSelectAllState(selectAllMode);
+        cbSelectAll.setValue(allSelected!);
+
+        const hasNodesToSelect = selectionSvc.hasNodesToSelect(selectAllMode);
+        cbSelectAll.setDisabled(!hasNodesToSelect);
 
         this.refreshSelectAllLabel();
 
@@ -135,18 +123,18 @@ export class SelectAllFeature extends BeanStub {
 
     private refreshSelectAllLabel(): void {
         const translate = this.getLocaleTextFunc();
-        const checked = this.cbSelectAll.getValue();
+        const { headerCellCtrl, cbSelectAll, cbSelectAllVisible } = this;
+        const checked = cbSelectAll.getValue();
         const ariaStatus = checked ? translate('ariaChecked', 'checked') : translate('ariaUnchecked', 'unchecked');
         const ariaLabel = translate('ariaRowSelectAll', 'Press Space to toggle all rows selection');
 
-        if (!this.cbSelectAllVisible) {
-            this.headerCellCtrl.setAriaDescriptionProperty('selectAll', null);
-        } else {
-            this.headerCellCtrl.setAriaDescriptionProperty('selectAll', `${ariaLabel} (${ariaStatus})`);
-        }
+        headerCellCtrl.setAriaDescriptionProperty(
+            'selectAll',
+            cbSelectAllVisible ? `${ariaLabel} (${ariaStatus})` : null
+        );
 
-        this.cbSelectAll.setInputAriaLabel(translate('ariaHeaderSelection', 'Column with Header Selection'));
-        this.headerCellCtrl.announceAriaDescription();
+        cbSelectAll.setInputAriaLabel(translate('ariaHeaderSelection', 'Column with Header Selection'));
+        headerCellCtrl.announceAriaDescription();
     }
 
     private checkSelectionType(feature: string): boolean {
@@ -160,10 +148,11 @@ export class SelectAllFeature extends BeanStub {
     }
 
     private checkRightRowModelType(feature: string): boolean {
-        const rowModelMatches = _isClientSideRowModel(this.gos) || _isServerSideRowModel(this.gos);
+        const { gos, rowModel } = this.beans;
+        const rowModelMatches = _isClientSideRowModel(gos) || _isServerSideRowModel(gos);
 
         if (!rowModelMatches) {
-            _warn(129, { feature, rowModel: this.rowModel.getType() });
+            _warn(129, { feature, rowModel: rowModel.getType() });
             return false;
         }
         return true;
@@ -188,10 +177,11 @@ export class SelectAllFeature extends BeanStub {
         }
 
         const params = { source, selectAll };
+        const selectionSvc = this.beans.selectionSvc!;
         if (value) {
-            this.selectionSvc.selectAllRowNodes(params);
+            selectionSvc.selectAllRowNodes(params);
         } else {
-            this.selectionSvc.deselectAllRowNodes(params);
+            selectionSvc.deselectAllRowNodes(params);
         }
     }
 
@@ -219,7 +209,7 @@ export class SelectAllFeature extends BeanStub {
         } else {
             // legacy selection config
             if (typeof headerCheckboxSelection === 'function') {
-                result = headerCheckboxSelection(this.gos.addGridCommonParams({ column, colDef }));
+                result = headerCheckboxSelection(gos.addGridCommonParams({ column, colDef }));
             } else {
                 result = !!headerCheckboxSelection;
             }

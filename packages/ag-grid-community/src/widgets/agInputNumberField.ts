@@ -24,9 +24,10 @@ export class AgInputNumberField extends AgInputTextField<AgInputNumberFieldParam
 
     public override postConstruct() {
         super.postConstruct();
-        this.addManagedListeners(this.eInput, {
+        const eInput = this.eInput;
+        this.addManagedListeners(eInput, {
             blur: () => {
-                const floatedValue = parseFloat(this.eInput.value);
+                const floatedValue = parseFloat(eInput.value);
                 const value = isNaN(floatedValue) ? '' : this.normalizeValue(floatedValue.toString());
 
                 if (this.value !== value) {
@@ -36,7 +37,7 @@ export class AgInputNumberField extends AgInputTextField<AgInputNumberFieldParam
             wheel: this.onWheel.bind(this),
         });
 
-        this.eInput.step = 'any';
+        eInput.step = 'any';
 
         const { precision, min, max, step } = this.config;
         if (typeof precision === 'number') this.setPrecision(precision);
@@ -63,31 +64,33 @@ export class AgInputNumberField extends AgInputTextField<AgInputNumberFieldParam
 
         const val = parseFloat(value);
 
-        if (this.min != null && val < this.min) {
-            value = this.min.toString();
-        } else if (this.max != null && val > this.max) {
-            value = this.max.toString();
+        const { min, max } = this;
+        if (min != null && val < min) {
+            value = min.toString();
+        } else if (max != null && val > max) {
+            value = max.toString();
         }
 
         return value;
     }
 
     private adjustPrecision(value: string, isScientificNotation?: boolean): string {
-        if (this.precision == null) {
+        const precision = this.precision;
+        if (precision == null) {
             return value;
         }
         if (isScientificNotation) {
-            const floatString = parseFloat(value).toFixed(this.precision);
+            const floatString = parseFloat(value).toFixed(precision);
             return parseFloat(floatString).toString();
         }
 
         // can't use toFixed here because we don't want to round up
         const parts = String(value).split('.');
         if (parts.length > 1) {
-            if (parts[1].length <= this.precision) {
+            if (parts[1].length <= precision) {
                 return value;
-            } else if (this.precision > 0) {
-                return `${parts[0]}.${parts[1].slice(0, this.precision)}`;
+            } else if (precision > 0) {
+                return `${parts[0]}.${parts[1].slice(0, precision)}`;
             }
         }
         return parts[0];
@@ -180,10 +183,11 @@ export class AgInputNumberField extends AgInputTextField<AgInputNumberFieldParam
     }
 
     public override getValue(): string | null | undefined {
-        if (!this.eInput.validity.valid) {
+        const eInput = this.eInput;
+        if (!eInput.validity.valid) {
             return undefined;
         }
-        const inputValue = this.eInput.value;
+        const inputValue = eInput.value;
         if (this.isScientificNotation(inputValue)) {
             return this.adjustPrecision(inputValue, true);
         }

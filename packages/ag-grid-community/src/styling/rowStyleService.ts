@@ -1,10 +1,8 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { RowClassParams, RowStyle } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { ExpressionService } from '../valueService/expressionService';
 import { processClassRules } from './stylingUtils';
 
 export function calculateRowLevel(rowNode: RowNode): number {
@@ -12,20 +10,16 @@ export function calculateRowLevel(rowNode: RowNode): number {
         return rowNode.level;
     }
 
+    const parent = rowNode.parent;
     // if a leaf, and a parent exists, put a level of the parent, else put level of 0 for top level item
-    return rowNode.parent ? rowNode.parent.level + 1 : 0;
+    return parent ? parent.level + 1 : 0;
 }
 
 export class RowStyleService extends BeanStub implements NamedBean {
     beanName = 'rowStyleSvc' as const;
 
-    private expressionSvc?: ExpressionService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.expressionSvc = beans.expressionSvc;
-    }
-
     public processClassesFromGridOptions(classes: string[], rowNode: RowNode): void {
+        const gos = this.gos;
         const process = (rowCls: string | string[] | undefined) => {
             if (typeof rowCls === 'string') {
                 classes.push(rowCls);
@@ -35,13 +29,13 @@ export class RowStyleService extends BeanStub implements NamedBean {
         };
 
         // part 1 - rowClass
-        const rowClass = this.gos.get('rowClass');
+        const rowClass = gos.get('rowClass');
         if (rowClass) {
             process(rowClass);
         }
 
         // part 2 - rowClassFunc
-        const rowClassFunc = this.gos.getCallback('getRowClass');
+        const rowClassFunc = gos.getCallback('getRowClass');
 
         if (rowClassFunc) {
             const params: WithoutGridCommon<RowClassParams> = {
@@ -72,16 +66,17 @@ export class RowStyleService extends BeanStub implements NamedBean {
         onApplicableClass: (className: string) => void,
         onNotApplicableClass?: (className: string) => void
     ): void {
-        const rowClassParams: RowClassParams = this.gos.addGridCommonParams({
+        const { gos, expressionSvc } = this.beans;
+        const rowClassParams: RowClassParams = gos.addGridCommonParams({
             data: rowNode.data,
             node: rowNode,
             rowIndex: rowNode.rowIndex!,
         });
 
         processClassRules(
-            this.expressionSvc,
+            expressionSvc,
             undefined,
-            this.gos.get('rowClassRules'),
+            gos.get('rowClassRules'),
             rowClassParams,
             onApplicableClass,
             onNotApplicableClass
@@ -89,11 +84,12 @@ export class RowStyleService extends BeanStub implements NamedBean {
     }
 
     public processStylesFromGridOptions(rowNode: RowNode): RowStyle | undefined {
+        const gos = this.gos;
         // part 1 - rowStyle
-        const rowStyle = this.gos.get('rowStyle');
+        const rowStyle = gos.get('rowStyle');
 
         // part 1 - rowStyleFunc
-        const rowStyleFunc = this.gos.getCallback('getRowStyle');
+        const rowStyleFunc = gos.getCallback('getRowStyle');
         let rowStyleFuncResult: any;
 
         if (rowStyleFunc) {

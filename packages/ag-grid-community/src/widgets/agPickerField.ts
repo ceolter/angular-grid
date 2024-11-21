@@ -1,5 +1,4 @@
 import { KeyCode } from '../constants/keyCode';
-import type { BeanCollection } from '../context/context';
 import { _isNothingFocused } from '../gridOptionsUtils';
 import type { AgPickerFieldParams } from '../interfaces/agFieldParams';
 import { _setAriaExpanded, _setAriaRole } from '../utils/aria';
@@ -11,7 +10,7 @@ import { AgAbstractField } from './agAbstractField';
 import { agPickerFieldCSS } from './agPickerField.css-GENERATED';
 import type { Component } from './component';
 import { RefPlaceholder } from './component';
-import type { AddPopupParams, PopupService } from './popupService';
+import type { AddPopupParams } from './popupService';
 
 export type AgPickerFieldEvent = AgAbstractFieldEvent;
 export abstract class AgPickerField<
@@ -20,12 +19,6 @@ export abstract class AgPickerField<
     TEventType extends string = AgPickerFieldEvent,
     TComponent extends Component<TEventType | AgPickerFieldEvent> = Component<TEventType | AgPickerFieldEvent>,
 > extends AgAbstractField<TValue, TConfig, TEventType | AgPickerFieldEvent> {
-    protected popupSvc: PopupService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.popupSvc = beans.popupSvc!;
-    }
-
     protected abstract createPickerComponent(): TComponent;
 
     protected pickerComponent: TComponent | undefined;
@@ -217,14 +210,22 @@ export abstract class AgPickerField<
 
         const translate = this.getLocaleTextFunc();
 
-        const { pickerAriaLabelKey, pickerAriaLabelValue, modalPicker = true } = this.config;
+        const {
+            config: { pickerAriaLabelKey, pickerAriaLabelValue, modalPicker = true },
+            maxPickerHeight,
+            minPickerWidth,
+            maxPickerWidth,
+            variableWidth,
+            beans,
+            eWrapper,
+        } = this;
 
         const popupParams: AddPopupParams = {
             modal: modalPicker,
             eChild: ePicker,
             closeOnEsc: true,
             closedCallback: () => {
-                const shouldRestoreFocus = _isNothingFocused(this.beans);
+                const shouldRestoreFocus = _isNothingFocused(beans);
                 this.beforeHidePicker();
 
                 if (shouldRestoreFocus && this.isAlive()) {
@@ -232,28 +233,27 @@ export abstract class AgPickerField<
                 }
             },
             ariaLabel: translate(pickerAriaLabelKey, pickerAriaLabelValue),
-            anchorToElement: this.eWrapper,
+            anchorToElement: eWrapper,
         };
 
         // need to set position before adding to the dom
         ePicker.style.position = 'absolute';
-        const addPopupRes = this.popupSvc.addPopup(popupParams);
-
-        const { maxPickerHeight, minPickerWidth, maxPickerWidth, variableWidth } = this;
+        const popupSvc = beans.popupSvc!;
+        const addPopupRes = popupSvc.addPopup(popupParams);
 
         if (variableWidth) {
             if (minPickerWidth) {
                 ePicker.style.minWidth = minPickerWidth;
             }
-            ePicker.style.width = _formatSize(_getAbsoluteWidth(this.eWrapper));
+            ePicker.style.width = _formatSize(_getAbsoluteWidth(eWrapper));
             if (maxPickerWidth) {
                 ePicker.style.maxWidth = maxPickerWidth;
             }
         } else {
-            _setElementWidth(ePicker, maxPickerWidth ?? _getAbsoluteWidth(this.eWrapper));
+            _setElementWidth(ePicker, maxPickerWidth ?? _getAbsoluteWidth(eWrapper));
         }
 
-        const maxHeight = maxPickerHeight ?? `${_getInnerHeight(this.popupSvc.getPopupParent())}px`;
+        const maxHeight = maxPickerHeight ?? `${_getInnerHeight(popupSvc.getPopupParent())}px`;
 
         ePicker.style.setProperty('max-height', maxHeight);
 
@@ -267,15 +267,20 @@ export abstract class AgPickerField<
             return;
         }
 
-        const { pickerType } = this.config;
-        const { pickerGap } = this;
+        const {
+            pickerGap,
+            config: { pickerType },
+            beans: { popupSvc, gos },
+            eWrapper,
+            pickerComponent,
+        } = this;
 
-        const alignSide = this.gos.get('enableRtl') ? 'right' : 'left';
+        const alignSide = gos.get('enableRtl') ? 'right' : 'left';
 
-        this.popupSvc.positionPopupByComponent({
+        popupSvc!.positionPopupByComponent({
             type: pickerType,
-            eventSource: this.eWrapper,
-            ePopup: this.pickerComponent.getGui(),
+            eventSource: eWrapper,
+            ePopup: pickerComponent.getGui(),
             position: 'under',
             alignSide,
             keepWithinBounds: true,
@@ -310,8 +315,9 @@ export abstract class AgPickerField<
 
         _setAriaExpanded(ariaEl, expanded);
 
-        this.eWrapper.classList.toggle('ag-picker-expanded', expanded);
-        this.eWrapper.classList.toggle('ag-picker-collapsed', !expanded);
+        const classList = this.eWrapper.classList;
+        classList.toggle('ag-picker-expanded', expanded);
+        classList.toggle('ag-picker-collapsed', !expanded);
     }
 
     private onPickerFocusIn(): void {
@@ -333,9 +339,7 @@ export abstract class AgPickerField<
     }
 
     public hidePicker(): void {
-        if (this.hideCurrentPicker) {
-            this.hideCurrentPicker();
-        }
+        this.hideCurrentPicker?.();
     }
 
     public setInputWidth(width: number | 'flex'): this {

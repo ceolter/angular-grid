@@ -1,4 +1,4 @@
-import type { AgPickerFieldParams, BeanCollection, ComponentSelector } from 'ag-grid-community';
+import type { AgPickerFieldParams, ComponentSelector } from 'ag-grid-community';
 import { AgPickerField, _getDocument } from 'ag-grid-community';
 
 import { AgDialog } from '../../widgets/agDialog';
@@ -28,10 +28,6 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
         });
     }
 
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-    }
-
     public override postConstruct() {
         const eDocument = _getDocument(this.beans);
         this.eDisplayFieldColor = eDocument.createElement('span');
@@ -50,7 +46,7 @@ export class AgColorPicker extends AgPickerField<string, AgColorPickerParams & A
 
     protected createPickerComponent() {
         const eGuiRect = this.eWrapper.getBoundingClientRect();
-        const parentRect = this.popupSvc.getParentRect();
+        const parentRect = this.beans.popupSvc!.getParentRect();
 
         const colorDialog = this.createBean(
             new AgDialog({

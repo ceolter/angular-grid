@@ -1,12 +1,11 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import { _areCellsEqual, _getRowNode, _isSameRow } from '../entities/positionUtils';
 import type { CellValueChangedEvent } from '../events';
 import type { GridBodyCtrl } from '../gridBodyComp/gridBodyCtrl';
 import { _isCellSelectionEnabled } from '../gridOptionsUtils';
-import type { CellRange, CellRangeParams, IRangeService } from '../interfaces/IRangeService';
+import type { CellRange, CellRangeParams } from '../interfaces/IRangeService';
 import type { CellPosition } from '../interfaces/iCellPosition';
 import type { RowPosition } from '../interfaces/iRowPosition';
 import type { CellValueChange, LastFocusedCell } from './iUndoRedo';
@@ -14,12 +13,6 @@ import { RangeUndoRedoAction, UndoRedoAction, UndoRedoStack } from './undoRedoSt
 
 export class UndoRedoService extends BeanStub implements NamedBean {
     beanName = 'undoRedo' as const;
-
-    private rangeSvc?: IRangeService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rangeSvc = beans.rangeSvc;
-    }
 
     private gridBodyCtrl: GridBodyCtrl;
 
@@ -35,11 +28,12 @@ export class UndoRedoService extends BeanStub implements NamedBean {
     private isRangeInAction = false;
 
     public postConstruct(): void {
-        if (!this.gos.get('undoRedoCellEditing')) {
+        const { gos, ctrlsSvc } = this.beans;
+        if (!gos.get('undoRedoCellEditing')) {
             return;
         }
 
-        const undoRedoLimit = this.gos.get('undoRedoCellEditingLimit');
+        const undoRedoLimit = gos.get('undoRedoCellEditingLimit');
 
         if (undoRedoLimit <= 0) {
             return;
@@ -70,7 +64,7 @@ export class UndoRedoService extends BeanStub implements NamedBean {
             rowDragEnd: listener,
         });
 
-        this.beans.ctrlsSvc.whenReady(this, (p) => {
+        ctrlsSvc.whenReady(this, (p) => {
             this.gridBodyCtrl = p.gridBodyCtrl;
         });
     }
@@ -105,22 +99,23 @@ export class UndoRedoService extends BeanStub implements NamedBean {
     };
 
     public getCurrentUndoStackSize(): number {
-        return this.undoStack ? this.undoStack.getCurrentStackSize() : 0;
+        return this.undoStack?.getCurrentStackSize() ?? 0;
     }
 
     public getCurrentRedoStackSize(): number {
-        return this.redoStack ? this.redoStack.getCurrentStackSize() : 0;
+        return this.redoStack?.getCurrentStackSize() ?? 0;
     }
 
     public undo(source: 'api' | 'ui'): void {
-        this.eventSvc.dispatchEvent({
+        const { eventSvc, undoStack, redoStack } = this;
+        eventSvc.dispatchEvent({
             type: 'undoStarted',
             source,
         });
 
-        const operationPerformed = this.undoRedo(this.undoStack, this.redoStack, 'initialRange', 'oldValue', 'undo');
+        const operationPerformed = this.undoRedo(undoStack, redoStack, 'initialRange', 'oldValue', 'undo');
 
-        this.eventSvc.dispatchEvent({
+        eventSvc.dispatchEvent({
             type: 'undoEnded',
             source,
             operationPerformed,
@@ -128,14 +123,15 @@ export class UndoRedoService extends BeanStub implements NamedBean {
     }
 
     public redo(source: 'api' | 'ui'): void {
-        this.eventSvc.dispatchEvent({
+        const { eventSvc, undoStack, redoStack } = this;
+        eventSvc.dispatchEvent({
             type: 'redoStarted',
             source,
         });
 
-        const operationPerformed = this.undoRedo(this.redoStack, this.undoStack, 'finalRange', 'newValue', 'redo');
+        const operationPerformed = this.undoRedo(redoStack, undoStack, 'finalRange', 'newValue', 'redo');
 
-        this.eventSvc.dispatchEvent({
+        eventSvc.dispatchEvent({
             type: 'redoEnded',
             source,
             operationPerformed,
@@ -166,7 +162,7 @@ export class UndoRedoService extends BeanStub implements NamedBean {
         );
 
         if (undoRedoAction instanceof RangeUndoRedoAction) {
-            this.processRange(this.rangeSvc!, undoRedoAction.ranges || [undoRedoAction[rangeProperty]]);
+            this.processRange(undoRedoAction.ranges || [undoRedoAction[rangeProperty]]);
         } else {
             this.processCell(undoRedoAction.cellValueChanges);
         }
@@ -195,8 +191,9 @@ export class UndoRedoService extends BeanStub implements NamedBean {
         });
     }
 
-    private processRange(rangeSvc: IRangeService, ranges: (CellRange | undefined)[]) {
+    private processRange(ranges: (CellRange | undefined)[]) {
         let lastFocusedCell: LastFocusedCell;
+        const rangeSvc = this.beans.rangeSvc!;
 
         rangeSvc.removeAllCellRanges(true);
         ranges.forEach((range, idx) => {
@@ -245,13 +242,14 @@ export class UndoRedoService extends BeanStub implements NamedBean {
         // when single cells are being processed, they should be considered
         // as ranges when the rangeSvc is present (singleCellRanges).
         // otherwise focus will be restore but the range will not.
-        this.setLastFocusedCell(lastFocusedCell, this.rangeSvc);
+        this.setLastFocusedCell(lastFocusedCell);
     }
 
-    private setLastFocusedCell(lastFocusedCell: LastFocusedCell, rangeSvc?: IRangeService) {
+    private setLastFocusedCell(lastFocusedCell: LastFocusedCell) {
         const { rowIndex, columnId, rowPinned } = lastFocusedCell;
+        const { colModel, focusSvc, rangeSvc } = this.beans;
 
-        const column: AgColumn | null = this.beans.colModel.getCol(columnId);
+        const column: AgColumn | null = colModel.getCol(columnId);
 
         if (!column) {
             return;
@@ -262,7 +260,7 @@ export class UndoRedoService extends BeanStub implements NamedBean {
         scrollFeature.ensureColumnVisible(column);
 
         const cellPosition: CellPosition = { rowIndex, column, rowPinned };
-        this.beans.focusSvc.setFocusedCell({ ...cellPosition, forceBrowserFocus: true });
+        focusSvc.setFocusedCell({ ...cellPosition, forceBrowserFocus: true });
 
         rangeSvc?.setRangeToCell(cellPosition);
     }
@@ -312,9 +310,10 @@ export class UndoRedoService extends BeanStub implements NamedBean {
             },
             keyShortcutChangedCellEnd: () => {
                 let action: UndoRedoAction;
-                if (this.rangeSvc && _isCellSelectionEnabled(this.gos)) {
+                const { rangeSvc, gos } = this.beans;
+                if (rangeSvc && _isCellSelectionEnabled(gos)) {
                     action = new RangeUndoRedoAction(this.cellValueChanges, undefined, undefined, [
-                        ...this.rangeSvc.getCellRanges(),
+                        ...rangeSvc.getCellRanges(),
                     ]);
                 } else {
                     action = new UndoRedoAction(this.cellValueChanges);

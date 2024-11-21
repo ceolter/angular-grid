@@ -1,5 +1,4 @@
 import type { NamedBean } from '../context/bean';
-import type { BeanCollection } from '../context/context';
 import type { RowSelectionMode, SelectAllMode } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import type { RowSelectedEvent, SelectionEventSourceType } from '../events';
@@ -15,7 +14,6 @@ import {
 import type { IClientSideRowModel } from '../interfaces/iClientSideRowModel';
 import type { ISelectionService, ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from '../interfaces/selectionState';
-import type { PageBoundsService } from '../pagination/pageBoundsService';
 import { _last } from '../utils/array';
 import { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
@@ -26,22 +24,15 @@ import { RowRangeSelectionContext } from './rowRangeSelectionContext';
 export class SelectionService extends BaseSelectionService implements NamedBean, ISelectionService {
     beanName = 'selectionSvc' as const;
 
-    private pageBounds: PageBoundsService;
-
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.pageBounds = beans.pageBounds;
-    }
-
     private selectedNodes: Map<string, RowNode> = new Map();
-    private selectionCtx: RowRangeSelectionContext = new RowRangeSelectionContext();
+    private readonly selectionCtx: RowRangeSelectionContext = new RowRangeSelectionContext();
 
     private groupSelectsDescendants: boolean;
     private rowSelectionMode?: RowSelectionMode = undefined;
 
     public override postConstruct(): void {
         super.postConstruct();
-        const { gos, rowModel, onRowSelected } = this;
+        const { gos, rowModel } = this.beans;
         this.selectionCtx.init(rowModel);
         this.rowSelectionMode = _getRowSelectionMode(gos);
         this.groupSelectsDescendants = _getGroupSelectsDescendants(gos);
@@ -56,7 +47,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             }
         });
 
-        this.addManagedEventListeners({ rowSelected: onRowSelected.bind(this) });
+        this.addManagedEventListeners({ rowSelected: this.onRowSelected.bind(this) });
     }
 
     public override destroy(): void {
@@ -107,6 +98,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         // to the sibling (the parent of the group)
         const filteredNodes = nodes.map((node) => (node.footer ? node.sibling! : node));
 
+        const selectionCtx = this.selectionCtx;
+
         if (rangeSelect) {
             if (filteredNodes.length > 1) {
                 _warn(131);
@@ -118,8 +111,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
             if (!this.isMultiSelect()) {
                 // let the normal selection logic handle this
-            } else if (this.selectionCtx.isInRange(node)) {
-                const partition = this.selectionCtx.truncate(node);
+            } else if (selectionCtx.isInRange(node)) {
+                const partition = selectionCtx.truncate(node);
 
                 // When we are selecting a range, we may need to de-select part of the previously
                 // selected range (see AG-9620)
@@ -130,10 +123,10 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
                 }
                 return this.selectRange(partition.keep, newSelectionValue, source);
             } else {
-                const fromNode = this.selectionCtx.getRoot();
+                const fromNode = selectionCtx.getRoot();
                 const toNode = node;
                 if (fromNode !== toNode) {
-                    const partition = this.selectionCtx.extend(node, this.groupSelectsDescendants);
+                    const partition = selectionCtx.extend(node, this.groupSelectsDescendants);
                     if (newSelectionValue) {
                         this.selectRange(partition.discard, false, source);
                     }
@@ -146,7 +139,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         // call is not a result of a user action, but rather a follow-on call (e.g
         // in this.clearOtherNodes).
         if (!suppressFinishActions) {
-            this.selectionCtx.setRoot(filteredNodes[0]);
+            selectionCtx.setRoot(filteredNodes[0]);
         }
 
         let updatedCount = 0;
@@ -285,12 +278,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         if (!this.groupSelectsDescendants) {
             return false;
         }
+        const { gos, rowModel } = this.beans;
         // also only do it if CSRM (code should never allow this anyway)
-        if (!_isClientSideRowModel(this.gos, this.rowModel)) {
+        if (!_isClientSideRowModel(gos, rowModel)) {
             return false;
         }
 
-        const rootNode = this.rowModel.rootNode;
+        const rootNode = rowModel.rootNode;
         if (!rootNode) {
             return false;
         }
@@ -429,14 +423,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     // Designed for use with 'children' as the group selection type,
     // where groups don't actually appear in the selection normally.
     public getBestCostNodeSelection(): RowNode[] | undefined {
-        if (!_isClientSideRowModel(this.gos, this.rowModel)) {
+        const { gos, rowModel } = this.beans;
+        if (!_isClientSideRowModel(gos, rowModel)) {
             // Error logged as part of gridApi as that is only call point for this method.
             return;
         }
 
-        const clientSideRowModel = this.rowModel;
-
-        const topLevelNodes = clientSideRowModel.getTopLevelNodes();
+        const topLevelNodes = rowModel.getTopLevelNodes();
 
         if (topLevelNodes === null) {
             return;
@@ -591,7 +584,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             return nodes;
         }
 
-        const clientSideRowModel = this.rowModel as IClientSideRowModel;
+        const clientSideRowModel = this.beans.rowModel as IClientSideRowModel;
         if (selectAll === 'filtered') {
             clientSideRowModel.forEachNodeAfterFilter((node) => {
                 nodes.push(node);
@@ -606,10 +599,11 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private forEachNodeOnPage(callback: (rowNode: RowNode) => void) {
-        const firstRow = this.pageBounds.getFirstRow();
-        const lastRow = this.pageBounds.getLastRow();
+        const { pageBounds, rowModel } = this.beans;
+        const firstRow = pageBounds.getFirstRow();
+        const lastRow = pageBounds.getLastRow();
         for (let i = firstRow; i <= lastRow; i++) {
-            const node = this.rowModel.getRow(i);
+            const node = rowModel.getRow(i);
             if (node) {
                 callback(node);
             }
@@ -617,12 +611,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
-        if (!_isRowSelection(this.gos)) {
+        const gos = this.gos;
+        if (!_isRowSelection(gos)) {
             _warn(132);
             return;
         }
 
-        if (_isUsingNewRowSelectionAPI(this.gos) && !_isMultiRowSelection(this.gos)) {
+        if (_isUsingNewRowSelectionAPI(gos) && !_isMultiRowSelection(gos)) {
             _warn(130);
             return;
         }
@@ -635,11 +630,12 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         const nodes = this.getNodesToSelect(selectAll);
         nodes.forEach((rowNode) => this.selectRowNode(rowNode, true, undefined, source));
 
-        this.selectionCtx.setRoot(nodes[0] ?? null);
-        this.selectionCtx.setEndRange(_last(nodes) ?? null);
+        const selectionCtx = this.selectionCtx;
+        selectionCtx.setRoot(nodes[0] ?? null);
+        selectionCtx.setEndRange(_last(nodes) ?? null);
 
         // the above does not clean up the parent rows if they are selected
-        if (_isClientSideRowModel(this.gos) && this.groupSelectsDescendants) {
+        if (_isClientSideRowModel(gos) && this.groupSelectsDescendants) {
             this.updateGroupsFromChildrenSelections(source);
         }
 
@@ -666,7 +662,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
         const rowIds = new Set(state);
         const nodes: RowNode[] = [];
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             if (rowIds.has(node.id!)) {
                 nodes.push(node);
             }
@@ -679,8 +675,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     private canSelectAll(): boolean {
-        if (!_isClientSideRowModel(this.gos)) {
-            _error(100, { rowModelType: this.rowModel.getType() });
+        const { gos, rowModel } = this.beans;
+        if (!_isClientSideRowModel(gos)) {
+            _error(100, { rowModelType: rowModel.getType() });
             return false;
         }
         return true;
@@ -695,7 +692,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
      *  - after grouping / treeData via `updateSelectableAfterGrouping`
      */
     protected updateSelectable(changedPath?: ChangedPath) {
-        const { gos } = this;
+        const { gos, rowModel } = this.beans;
 
         if (!_isRowSelection(gos)) {
             return;
@@ -730,13 +727,13 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         // Needs to be depth first in this case, so that parents can be updated based on child.
         if (isCSRMGroupSelectsDescendants) {
             if (changedPath === undefined) {
-                const rootNode = (this.rowModel as IClientSideRowModel).rootNode;
+                const rootNode = (rowModel as IClientSideRowModel).rootNode;
                 changedPath = rootNode ? new ChangedPath(false, rootNode) : undefined;
             }
             changedPath?.forEachChangedNodeDepthFirst(nodeCallback, !skipLeafNodes, !skipLeafNodes);
         } else {
             // Normal case, update all rows
-            this.rowModel.forEachNode(nodeCallback);
+            rowModel.forEachNode(nodeCallback);
         }
 
         if (nodesToDeselect.length) {
