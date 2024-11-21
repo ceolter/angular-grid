@@ -477,11 +477,11 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
 
             state.clearDeltaUpdate();
-            nodeManager.activate(state);
         }
 
         if (oldNodeManager !== nodeManager) {
             oldNodeManager?.deactivate();
+            nodeManager.activate(state);
         }
 
         if (newRowData) {

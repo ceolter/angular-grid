@@ -102,12 +102,6 @@ export class RefreshModelState<TData = any> {
      */
     public readonly updates = new Map<RowNode<TData>, boolean>();
 
-    /**
-     * The list of transactions that are being executed.
-     * Is null if no transactions are being executed, that can happen for newData or for immutable updates.
-     */
-    public deltaUpdateTransactions: RowNodeTransaction<TData>[] | null = null;
-
     /** true if rows were inserted in the middle of something else and not just appended or removed. */
     public rowsInserted = false;
 
@@ -126,7 +120,7 @@ export class RefreshModelState<TData = any> {
     public newData: boolean = false;
 
     /** True if the changes were initiated by a delta update (immutable row data) or new data (reload of row data) */
-    public deltaUpdate: boolean | null = null;
+    public deltaUpdate: boolean | undefined = undefined;
 
     public constructor(
         /** The Grid Option Service instance to query grid options */
@@ -157,7 +151,7 @@ export class RefreshModelState<TData = any> {
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
-        this.deltaUpdate = deltaUpdate ?? null;
+        this.deltaUpdate = deltaUpdate;
     }
 
     public updateParams({
@@ -230,7 +224,7 @@ export class RefreshModelState<TData = any> {
         this.rowDataUpdated = true;
         this.keepUndoRedoStack = false;
         const deltaUpdate = this.deltaUpdate;
-        if (deltaUpdate !== null) {
+        if (deltaUpdate !== undefined) {
             return deltaUpdate;
         }
         if (this.newData || this.fullReload || !this.started) {
@@ -246,7 +240,6 @@ export class RefreshModelState<TData = any> {
     public clearDeltaUpdate(): void {
         this.deltaUpdate = false;
         this.changedPath.active = false;
-        this.deltaUpdateTransactions = null;
     }
 
     /** Registers a node as removed. It has precedence over add and update. */

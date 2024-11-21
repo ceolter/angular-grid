@@ -76,11 +76,9 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         super.activate(state);
 
         const rootNode = state.rootNode;
-        if (state.fullReload || !rootNode.treeNode) {
-            const treeRoot = (this.treeRoot ??= new TreeNode(null, '', -1));
-            treeRoot.setRow(rootNode);
-            treeRoot.invalidate();
-        }
+        const treeRoot = (this.treeRoot ??= new TreeNode(null, '', -1));
+        treeRoot.setRow(rootNode);
+        treeRoot.invalidate();
     }
 
     public override destroy(): void {
@@ -183,13 +181,13 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     /** Commit the changes performed to the tree */
-    private treeCommit(refreshModelState: RefreshModelState<TData>): void {
+    private treeCommit(state: RefreshModelState<TData>): void {
         const { treeRoot, rootNode } = this;
         if (!treeRoot || !rootNode) {
             return;
         }
 
-        let activeChangedPath: ChangedPath | null = refreshModelState.changedPath;
+        let activeChangedPath: ChangedPath | null = state.changedPath;
         if (!activeChangedPath.active) {
             activeChangedPath = null;
         }
@@ -224,7 +222,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             rootRow.updateHasChildren();
         }
 
-        this.beans.selectionSvc?.updateSelectableAfterGrouping(refreshModelState.changedPath);
+        this.beans.selectionSvc?.updateSelectableAfterGrouping(state.changedPath);
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */
@@ -570,7 +568,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows(state);
 
-        if (state.columnsChanged) {
+        if (state.columnsChanged && !state.newData) {
             this.afterColumnsChanged();
         }
 

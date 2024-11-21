@@ -9,19 +9,6 @@ const treeNodePositionComparer = (a: RowNode, b: RowNode): number => a.treeNode!
 /** An empty iterator, to avoid null checking when we iterate the children map */
 const EMPTY_CHILDREN = (_EmptyArray as TreeNode[]).values();
 
-/** Disassociate a node from a row, breaking the association to the node. Only the row is modified, not the TreeNode. */
-const orphanRow = (row: TreeRow, root: boolean): void => {
-    row.parent = null;
-    row.treeNode = null;
-    if (root) {
-        row.childrenAfterGroup = [];
-    } else {
-        row.level = 0;
-        row.childrenAfterGroup = null;
-        row.allLeafChildren = null;
-    }
-};
-
 /**
  * We keep a secondary tree data structure based on TreeNode together with the RowNodes.
  * We associate a RowNode with a TreeNode, both storing the row in node.row and by storing the TreeNode in row.treeNode field.
@@ -164,7 +151,7 @@ export class TreeNode implements ITreeNode {
         }
         parent?.children?.delete(this.key);
         if (row !== null) {
-            orphanRow(row, true);
+            this.orphanRow(row, true);
         }
         this.parent = null;
     }
@@ -179,7 +166,7 @@ export class TreeNode implements ITreeNode {
         const { level, row: oldRow, childrenAfterGroup } = this;
         if (level < 0) {
             if (oldRow !== null && oldRow !== newRow) {
-                orphanRow(oldRow, true);
+                this.orphanRow(oldRow, true);
             }
         } else {
             if (oldRow === newRow) {
@@ -189,7 +176,7 @@ export class TreeNode implements ITreeNode {
                 if (newRow !== null) {
                     newRow.allLeafChildren = oldRow.allLeafChildren ?? this.allLeafChildren ?? _EmptyArray;
                 }
-                orphanRow(oldRow, false); // Unlink the old row, is being replaced
+                this.orphanRow(oldRow, false); // Unlink the old row, is being replaced
             } else if (newRow !== null) {
                 newRow.allLeafChildren = this.allLeafChildren ?? _EmptyArray;
             }
@@ -232,7 +219,7 @@ export class TreeNode implements ITreeNode {
                 this.duplicateRows = null; // Free memory
             }
         }
-        orphanRow(rowToRemove, level < 0);
+        this.orphanRow(rowToRemove, level < 0);
         return true;
     }
 
@@ -526,6 +513,19 @@ export class TreeNode implements ITreeNode {
 
         if (nodesChanged && parent) {
             parent.leafChildrenChanged = true; // Propagate to the parent, as it may need to rebuild its allLeafChildren too
+        }
+    }
+
+    /** Disassociate a node from a row, breaking the association to the node. Only the row is modified, not the TreeNode. */
+    private orphanRow(row: TreeRow, root: boolean): void {
+        row.parent = null;
+        row.treeNode = null;
+        if (root) {
+            row.childrenAfterGroup = [];
+        } else {
+            row.level = 0;
+            row.childrenAfterGroup = null;
+            row.allLeafChildren = null;
         }
     }
 }

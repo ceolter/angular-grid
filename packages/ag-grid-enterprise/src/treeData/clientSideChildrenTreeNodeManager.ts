@@ -98,7 +98,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         }
     }
 
-    public override setImmutableRowData(refreshModelState: RefreshModelState<TData>, rowData: TData[]): boolean {
+    public override setImmutableRowData(state: RefreshModelState<TData>, rowData: TData[]): boolean {
         this.dispatchRowDataUpdateStartedEvent(rowData);
 
         const gos = this.gos;
@@ -109,7 +109,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const processedData = new Map<TData, AbstractClientSideNodeManager.RowNode<TData>>();
 
-        const oldAllLeafChildren = refreshModelState.rootNode.allLeafChildren;
+        const oldAllLeafChildren = state.rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
 
         let orderChanged = false;
@@ -158,12 +158,12 @@ export class ClientSideChildrenTreeNodeManager<TData>
             row = this.getRowNode(id) as TreeRow<TData> | undefined;
             if (row) {
                 if (row.data !== data) {
-                    refreshModelState.update(row);
+                    state.update(row);
                     row.updateData(data);
                 }
             } else {
                 row = this.createRowNode(data, -1);
-                refreshModelState.add(row);
+                state.add(row);
                 created = true;
             }
 
@@ -201,7 +201,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 if (node) {
                     const data = row.data;
                     if (data && !processedData.has(data)) {
-                        refreshModelState.remove(row);
+                        state.remove(row);
                         this.treeRemove(node, row);
                     }
                 }
@@ -223,12 +223,12 @@ export class ClientSideChildrenTreeNodeManager<TData>
         }
 
         treeRoot.allLeafChildren = allLeafChildren;
-        refreshModelState.rootNode.allLeafChildren = allLeafChildren;
+        state.rootNode.allLeafChildren = allLeafChildren;
 
         if (orderChanged) {
-            refreshModelState.rowsOrderChanged = true;
+            state.rowsOrderChanged = true;
         }
 
-        return treeChanged || refreshModelState.hasChanges();
+        return treeChanged || state.hasChanges();
     }
 }
