@@ -1,26 +1,15 @@
 @use 'design-system' as *;
 
-.container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.sectionContent {
+.heroSection {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0 $spacing-size-48;
-    position: relative;
-
-    @media screen and (max-width: $breakpoint-landing-page-medium) {
-        padding: $spacing-size-8;
-    }
-
-    &:last-child {
-        padding-bottom: $spacing-size-12;
-    }
+    width: 100%;
+    max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
+    margin-right: auto;
+    margin-left: auto;
+    padding: 48px var(--layout-horizontal-margins) 96px;
 }
 
 .blueRectangle {
@@ -61,11 +50,7 @@
     }
 }
 
-div.sectionContent:nth-of-type(4n + 3) {
-    background-color: var(--color-bg-disabled_subtle);
-}
-
-.sectionInner {
+.heroSectionInner {
     max-width: calc(var(--layout-max-width) + var(--layout-horizontal-margins) * 2);
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {
@@ -97,7 +82,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     cursor: pointer;
 }
 
-.heroSectioncontainer {
+.heroSectionContainer {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -106,7 +91,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     max-width: 100%;
 }
 
-.heroSectionheadingContainer {
+.heroSectionHeadingContainer {
     display: flex;
     flex-direction: column;
     margin-top: $spacing-size-12;
@@ -116,7 +101,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionversionTagContainer {
+.heroSectionVersionTagContainer {
     display: flex;
     border-radius: var(--radius-4xl);
     justify-content: center;
@@ -135,7 +120,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionversion {
+.heroSectionVersion {
     border: 2px solid var(--color-util-brand-200);
     background: var(--color-white);
     border-radius: var(--radius-4xl);
@@ -156,7 +141,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionfeatureHighlight {
+.heroSectionFeatureHighlight {
     padding: 0px $spacing-size-2;
     font-size: var(--text-fs-sm);
     font-weight: var(--text-base);
@@ -173,7 +158,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionfeatureArrow {
+.heroSectionFeatureArrow {
     height: 16px !important;
     width: 16px !important;
     margin-left: $spacing-size-2 !important;
@@ -198,7 +183,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     margin-bottom: 0;
 }
 
-.heroSectionheading {
+.heroSectionHeading {
     font-size: 72px;
     text-align: center;
     line-height: 77px;
@@ -213,7 +198,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionsubHeading {
+.heroSectionSubHeading {
     font-size: var(--text-fs-lg);
     font-weight: var(--text-base);
     color: var(--color-text-primary);
@@ -227,7 +212,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectionbuttonContainer {
+.heroSectionButtonContainer {
     display: flex;
     justify-content: center;
     min-height: 48px;
@@ -238,7 +223,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectioncta1 {
+.heroSectionCta1 {
     color: var(--color-bg-primary);
     background: var(--color-button-primary-bg);
     align-content: center;
@@ -254,7 +239,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectioncta2 {
+.heroSectionCta2 {
     display: flex;
     min-width: 315px;
     align-items: center;
@@ -276,13 +261,13 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectiondemoContainer {
+.heroSectionDemoContainer {
     display: flex;
     flex-direction: column;
     height: 600px;
 }
 
-.heroSectionviewAllDemosLink {
+.heroSectionViewAllDemosLink {
     appearance: none;
     padding: 0;
     text-align: left;
@@ -300,7 +285,7 @@ div.sectionContent:nth-of-type(4n + 3) {
     }
 }
 
-.heroSectiondemosArrow {
+.heroSectionDemosArrow {
     height: 16px !important;
     width: 16px !important;
     margin-left: $spacing-size-2 !important;
