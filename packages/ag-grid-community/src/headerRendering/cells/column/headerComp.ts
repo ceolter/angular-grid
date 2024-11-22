@@ -130,12 +130,6 @@ export class HeaderComp extends Component implements IHeaderComp {
     private currentSuppressMenuHide: boolean;
     private currentSort: boolean | undefined;
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     public refresh(params: IHeaderParams): boolean {
         const oldParams = this.params;
 

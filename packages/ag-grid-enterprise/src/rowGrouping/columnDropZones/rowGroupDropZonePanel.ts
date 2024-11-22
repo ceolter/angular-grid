@@ -39,7 +39,7 @@ export class RowGroupDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]) {
-        this.rowGroupColsSvc?.setColumns(columns, 'toolPanelUi');
+        this.beans.rowGroupColsSvc?.setColumns(columns, 'toolPanelUi');
     }
 
     protected getIconName(): DragAndDropIcon {
@@ -47,6 +47,6 @@ export class RowGroupDropZonePanel extends BaseDropZonePanel {
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.rowGroupColsSvc?.columns ?? [];
+        return this.beans.rowGroupColsSvc?.columns ?? [];
     }
 }

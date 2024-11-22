@@ -1,5 +1,4 @@
 import type {
-    BeanCollection,
     ComponentType,
     IToolPanelComp,
     IToolPanelParams,
@@ -26,12 +25,6 @@ const ToolPanelComponent: ComponentType = {
 };
 
 export class ToolPanelWrapper extends Component {
-    private userCompFactory: UserComponentFactory;
-
-    public wireBeans(beans: BeanCollection) {
-        this.userCompFactory = beans.userCompFactory;
-    }
-
     private toolPanelCompInstance: IToolPanelComp | undefined;
     private toolPanelId: string;
     private resizeBar: AgHorizontalResize;
@@ -48,7 +41,7 @@ export class ToolPanelWrapper extends Component {
 
         eGui.setAttribute('id', `ag-${this.getCompId()}`);
 
-        resizeBar.setElementToResize(eGui);
+        resizeBar.elementToResize = eGui;
         this.appendChild(resizeBar);
     }
 
@@ -62,7 +55,7 @@ export class ToolPanelWrapper extends Component {
         this.toolPanelId = id;
         this.width = width;
 
-        const compDetails = getToolPanelCompDetails(this.userCompFactory, toolPanelDef, params);
+        const compDetails = getToolPanelCompDetails(this.beans.userCompFactory, toolPanelDef, params);
         if (compDetails == null) {
             return false;
         }
@@ -72,12 +65,13 @@ export class ToolPanelWrapper extends Component {
 
         componentPromise.then(this.setToolPanelComponent.bind(this));
 
+        const resizeBar = this.resizeBar;
         if (minWidth != null) {
-            this.resizeBar.setMinWidth(minWidth);
+            resizeBar.minWidth = minWidth;
         }
 
         if (maxWidth != null) {
-            this.resizeBar.setMaxWidth(maxWidth);
+            resizeBar.maxWidth = maxWidth;
         }
 
         return true;
@@ -91,8 +85,9 @@ export class ToolPanelWrapper extends Component {
             this.destroyBean(compInstance);
         });
 
-        if (this.width) {
-            this.getGui().style.width = `${this.width}px`;
+        const width = this.width;
+        if (width) {
+            this.getGui().style.width = `${width}px`;
         }
     }
 
@@ -105,7 +100,7 @@ export class ToolPanelWrapper extends Component {
         const isLeft = side === 'left';
         const inverted = isRtl ? isLeft : !isLeft;
 
-        this.resizeBar.setInverted(inverted);
+        this.resizeBar.inverted = inverted;
     }
 
     public refresh(): void {

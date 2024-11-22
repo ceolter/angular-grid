@@ -1,17 +1,13 @@
 import type { NamedBean } from '../../context/bean';
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
-import type { CtrlsService } from '../../ctrlsService';
 import type { AgColumn } from '../../entities/agColumn';
 import { isColumn } from '../../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../../entities/agProvidedColumnGroup';
 import type { ColumnEventType } from '../../events';
-import type { FilterManager } from '../../filter/filterManager';
 import { _isLegacyMenuEnabled } from '../../gridOptionsUtils';
 import type { HeaderCellCtrl } from '../../headerRendering/cells/column/headerCellCtrl';
 import type { ContainerType } from '../../interfaces/iAfterGuiAttachedParams';
 import type { Column } from '../../interfaces/iColumn';
-import type { IContextMenuService } from '../../interfaces/iContextMenu';
 import type { IMenuFactory } from '../../interfaces/iMenuFactory';
 import { _isIOSUserAgent } from '../../utils/browser';
 import { _requestAnimationFrame } from '../animationFrameService';
@@ -48,24 +44,11 @@ export type ShowFilterMenuParams = (MouseShowMenuParams | ButtonShowMenuParams |
 export class MenuService extends BeanStub implements NamedBean {
     beanName = 'menuSvc' as const;
 
-    private filterMenuFactory?: IMenuFactory;
-    private ctrlsSvc: CtrlsService;
-    private filterManager?: FilterManager;
-    private contextMenuSvc?: IContextMenuService;
-    private enterpriseMenuFactory?: IMenuFactory;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.filterMenuFactory = beans.filterMenuFactory;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.filterManager = beans.filterManager;
-        this.contextMenuSvc = beans.contextMenuSvc;
-        this.enterpriseMenuFactory = beans.enterpriseMenuFactory;
-    }
-
     private activeMenuFactory?: IMenuFactory;
 
     public postConstruct(): void {
-        this.activeMenuFactory = this.enterpriseMenuFactory ?? this.filterMenuFactory;
+        const { enterpriseMenuFactory, filterMenuFactory } = this.beans;
+        this.activeMenuFactory = enterpriseMenuFactory ?? filterMenuFactory;
     }
 
     public showColumnMenu(params: ShowColumnMenuParams): void {
@@ -73,10 +56,9 @@ export class MenuService extends BeanStub implements NamedBean {
     }
 
     public showFilterMenu(params: ShowFilterMenuParams): void {
+        const { enterpriseMenuFactory, filterMenuFactory } = this.beans;
         const menuFactory =
-            this.enterpriseMenuFactory && _isLegacyMenuEnabled(this.gos)
-                ? this.enterpriseMenuFactory
-                : this.filterMenuFactory;
+            enterpriseMenuFactory && _isLegacyMenuEnabled(this.gos) ? enterpriseMenuFactory : filterMenuFactory;
         this.showColumnMenuCommon(menuFactory, params, params.containerType, true);
     }
 
@@ -90,7 +72,7 @@ export class MenuService extends BeanStub implements NamedBean {
 
     public hidePopupMenu(): void {
         // hide the context menu if in enterprise
-        this.contextMenuSvc?.hideActiveMenu();
+        this.beans.contextMenuSvc?.hideActiveMenu();
         // and hide the column menu always
         this.activeMenuFactory?.hideActiveMenu();
     }
@@ -100,12 +82,12 @@ export class MenuService extends BeanStub implements NamedBean {
         return (
             !suppressHeaderMenuButton &&
             !!this.activeMenuFactory?.isMenuEnabled(column) &&
-            (_isLegacyMenuEnabled(this.gos) || !!this.enterpriseMenuFactory)
+            (_isLegacyMenuEnabled(this.gos) || !!this.beans.enterpriseMenuFactory)
         );
     }
 
     public isFilterMenuInHeaderEnabled(column: AgColumn): boolean {
-        return !column.getColDef().suppressHeaderFilterButton && !!this.filterManager?.isFilterAllowed(column);
+        return !column.getColDef().suppressHeaderFilterButton && !!this.beans.filterManager?.isFilterAllowed(column);
     }
 
     public isHeaderContextMenuEnabled(column?: AgColumn | AgProvidedColumnGroup): boolean {
@@ -139,7 +121,7 @@ export class MenuService extends BeanStub implements NamedBean {
 
     public isFilterMenuItemEnabled(column: AgColumn): boolean {
         return (
-            !!this.filterManager?.isFilterAllowed(column) &&
+            !!this.beans.filterManager?.isFilterAllowed(column) &&
             !_isLegacyMenuEnabled(this.gos) &&
             !this.isFilterMenuInHeaderEnabled(column) &&
             !this.isFloatingFilterButtonDisplayed(column)
@@ -155,10 +137,11 @@ export class MenuService extends BeanStub implements NamedBean {
     }
 
     private isSuppressMenuHide(): boolean {
-        const suppressMenuHide = this.gos.get('suppressMenuHide');
-        if (_isLegacyMenuEnabled(this.gos)) {
+        const gos = this.gos;
+        const suppressMenuHide = gos.get('suppressMenuHide');
+        if (_isLegacyMenuEnabled(gos)) {
             // default to false for legacy
-            return this.gos.exists('suppressMenuHide') ? suppressMenuHide : false;
+            return gos.exists('suppressMenuHide') ? suppressMenuHide : false;
         }
         return suppressMenuHide;
     }
@@ -178,11 +161,13 @@ export class MenuService extends BeanStub implements NamedBean {
             const { mouseEvent } = params;
             menuFactory?.showMenuAfterMouseEvent(column, mouseEvent, containerType, filtersOnly);
         } else if (column) {
+            const beans = this.beans;
+            const ctrlsSvc = beans.ctrlsSvc;
             // auto
-            this.ctrlsSvc.getScrollFeature().ensureColumnVisible(column, 'auto');
+            ctrlsSvc.getScrollFeature().ensureColumnVisible(column, 'auto');
             // make sure we've finished scrolling into view before displaying the menu
-            _requestAnimationFrame(this.beans, () => {
-                const headerCellCtrl = this.ctrlsSvc
+            _requestAnimationFrame(beans, () => {
+                const headerCellCtrl = ctrlsSvc
                     .getHeaderRowContainerCtrl(column.getPinned())
                     ?.getHeaderCtrlForColumn(column) as HeaderCellCtrl | undefined;
 

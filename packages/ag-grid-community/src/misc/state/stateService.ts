@@ -640,7 +640,7 @@ export class StateService extends BeanStub implements NamedBean {
     }
 
     private getSideBarState(): SideBarState | undefined {
-        return this.beans.sideBar?.getSideBarComp()?.getState();
+        return this.beans.sideBar?.comp?.getState();
     }
 
     private getFocusedCellState(): FocusedCellState | undefined {

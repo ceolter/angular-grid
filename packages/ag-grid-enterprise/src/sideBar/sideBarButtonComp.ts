@@ -3,15 +3,12 @@ import { Component, RefPlaceholder, _createIconNoSpan, _setAriaExpanded } from '
 
 export type SideBarButtonCompEvent = 'toggleButtonClicked';
 export class SideBarButtonComp extends Component<SideBarButtonCompEvent> {
-    private readonly eToggleButton: HTMLButtonElement = RefPlaceholder;
+    public readonly eToggleButton: HTMLButtonElement = RefPlaceholder;
     private readonly eIconWrapper: HTMLElement = RefPlaceholder;
     private readonly eLabel: HTMLElement = RefPlaceholder;
 
-    private readonly toolPanelDef: ToolPanelDef;
-
-    constructor(toolPanelDef: ToolPanelDef) {
+    constructor(private readonly toolPanelDef: ToolPanelDef) {
         super();
-        this.toolPanelDef = toolPanelDef;
     }
 
     public getToolPanelId(): string {
@@ -61,9 +58,5 @@ export class SideBarButtonComp extends Component<SideBarButtonCompEvent> {
     public setSelected(selected: boolean): void {
         this.addOrRemoveCssClass('ag-selected', selected);
         _setAriaExpanded(this.eToggleButton, selected);
-    }
-
-    public getButtonElement(): Element {
-        return this.eToggleButton;
     }
 }

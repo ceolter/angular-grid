@@ -1,54 +1,36 @@
-import type { BeanCollection, DragListenerParams, DragService, IRangeService } from 'ag-grid-community';
 import { BeanStub, _isCellSelectionEnabled } from 'ag-grid-community';
 
 export class DragListenerFeature extends BeanStub {
-    private dragSvc: DragService;
-    private rangeSvc: IRangeService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.dragSvc = beans.dragSvc!;
-        this.rangeSvc = beans.rangeSvc!;
-    }
-
-    private eContainer: HTMLElement;
-
-    constructor(eContainer: HTMLElement) {
+    constructor(private readonly eContainer: HTMLElement) {
         super();
-        this.eContainer = eContainer;
     }
-
-    private params: DragListenerParams;
 
     public postConstruct(): void {
-        this.params = {
-            eElement: this.eContainer,
-            onDragStart: this.rangeSvc.onDragStart.bind(this.rangeSvc),
-            onDragStop: this.rangeSvc.onDragStop.bind(this.rangeSvc),
-            onDragging: this.rangeSvc.onDragging.bind(this.rangeSvc),
+        const { beans, gos, eContainer } = this;
+        const rangeSvc = beans.rangeSvc!;
+        const params = {
+            eElement: eContainer,
+            onDragStart: rangeSvc.onDragStart.bind(rangeSvc),
+            onDragStop: rangeSvc.onDragStop.bind(rangeSvc),
+            onDragging: rangeSvc.onDragging.bind(rangeSvc),
         };
 
+        const dragSvc = beans.dragSvc!;
+        const enableFeature = dragSvc.addDragSource.bind(dragSvc, params);
+        const disableFeature = dragSvc.removeDragSource.bind(dragSvc, params);
+
         this.addManagedPropertyListeners(['enableRangeSelection', 'cellSelection'], () => {
-            const isEnabled = _isCellSelectionEnabled(this.gos);
-            if (isEnabled) {
-                this.enableFeature();
+            if (_isCellSelectionEnabled(gos)) {
+                enableFeature();
             } else {
-                this.disableFeature();
+                disableFeature();
             }
         });
 
-        this.addDestroyFunc(() => this.disableFeature());
+        this.addDestroyFunc(disableFeature);
 
-        const isRangeSelection = _isCellSelectionEnabled(this.gos);
-        if (isRangeSelection) {
-            this.enableFeature();
+        if (_isCellSelectionEnabled(gos)) {
+            enableFeature();
         }
-    }
-
-    private enableFeature() {
-        this.dragSvc.addDragSource(this.params);
-    }
-
-    private disableFeature() {
-        this.dragSvc.removeDragSource(this.params);
     }
 }

@@ -4,7 +4,7 @@ import { BeanStub } from 'ag-grid-community';
 export class StatusBarService extends BeanStub implements NamedBean {
     beanName = 'statusBarSvc' as const;
 
-    private allComponents: Map<string, IStatusPanelComp> = new Map();
+    private comps: Map<string, IStatusPanelComp> = new Map();
 
     // tslint:disable-next-line
     constructor() {
@@ -12,19 +12,19 @@ export class StatusBarService extends BeanStub implements NamedBean {
     }
 
     public registerStatusPanel(key: string, component: IStatusPanelComp): void {
-        this.allComponents.set(key, component);
+        this.comps.set(key, component);
     }
 
     public unregisterStatusPanel(key: string): void {
-        this.allComponents.delete(key);
+        this.comps.delete(key);
     }
 
     public unregisterAllComponents(): void {
-        this.allComponents.clear();
+        this.comps.clear();
     }
 
     public getStatusPanel(key: string): IStatusPanelComp {
-        return this.allComponents.get(key)!;
+        return this.comps.get(key)!;
     }
 
     public override destroy(): void {

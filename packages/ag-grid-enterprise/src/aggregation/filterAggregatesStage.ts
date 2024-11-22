@@ -1,7 +1,6 @@
 import type {
     BeanCollection,
     ClientSideRowModelStage,
-    ColumnModel,
     FilterManager,
     IRowNodeStage,
     NamedBean,
@@ -17,15 +16,13 @@ export class FilterAggregatesStage extends BeanStub implements NamedBean, IRowNo
     public step: ClientSideRowModelStage = 'filter_aggregates';
 
     private filterManager?: FilterManager;
-    private colModel: ColumnModel;
 
     public wireBeans(beans: BeanCollection): void {
         this.filterManager = beans.filterManager;
-        this.colModel = beans.colModel;
     }
 
     public execute(state: RefreshModelState): void {
-        const isPivotMode = this.colModel.isPivotMode();
+        const isPivotMode = this.beans.colModel.isPivotMode();
         const isAggFilterActive =
             this.filterManager?.isAggregateFilterPresent() || this.filterManager?.isAggregateQuickFilterPresent();
 

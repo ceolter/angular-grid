@@ -11,7 +11,8 @@ export class StickyRowService extends BeanStub implements NamedBean, IStickyRowS
         createRowCon: (rowNode: RowNode, animate: boolean, afterScroll: boolean) => RowCtrl,
         destroyRowCtrls: (rowCtrlsMap: Record<string, RowCtrl> | null | undefined, animate: boolean) => void
     ): StickyRowFeature | undefined {
-        if ((_isGroupRowsSticky(this.gos) && _isClientSideRowModel(this.gos)) || _isServerSideRowModel(this.gos)) {
+        const gos = this.gos;
+        if ((_isGroupRowsSticky(gos) && _isClientSideRowModel(gos)) || _isServerSideRowModel(gos)) {
             return ctrl.createManagedBean(new StickyRowFeature(createRowCon, destroyRowCtrls));
         }
         return undefined;

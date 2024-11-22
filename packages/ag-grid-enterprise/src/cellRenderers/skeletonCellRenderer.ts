@@ -50,10 +50,4 @@ export class SkeletonCellRenderer extends Component implements ILoadingCellRende
     public refresh(_params: ILoadingCellRendererParams): boolean {
         return false;
     }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
 }

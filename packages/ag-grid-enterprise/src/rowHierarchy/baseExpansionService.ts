@@ -1,23 +1,8 @@
-import type {
-    BeanCollection,
-    ColumnModel,
-    RowCtrl,
-    RowGroupOpenedEvent,
-    RowNode,
-    RowRenderer,
-} from 'ag-grid-community';
+import type { RowCtrl, RowGroupOpenedEvent, RowNode } from 'ag-grid-community';
 import { BeanStub, _createGlobalRowEvent, _setAriaExpanded } from 'ag-grid-community';
 
 export abstract class BaseExpansionService extends BeanStub {
-    private rowRenderer: RowRenderer;
-    protected colModel: ColumnModel;
-
     protected abstract dispatchExpandedEvent(event: RowGroupOpenedEvent, forceSync?: boolean): void;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowRenderer = beans.rowRenderer;
-        this.colModel = beans.colModel;
-    }
 
     public addExpandedCss(classes: string[], rowNode: RowNode): void {
         if (rowNode.isExpandable()) {
@@ -54,7 +39,7 @@ export abstract class BaseExpansionService extends BeanStub {
         // when using footers we need to refresh the group row, as the aggregation
         // values jump between group and footer, because the footer can be callback
         // we refresh regardless as the output of the callback could be a moving target
-        this.rowRenderer.refreshCells({ rowNodes: [rowNode] });
+        this.beans.rowRenderer.refreshCells({ rowNodes: [rowNode] });
     }
 
     public isExpandable(rowNode: RowNode): boolean {
@@ -62,7 +47,7 @@ export abstract class BaseExpansionService extends BeanStub {
             return false;
         }
 
-        if (this.colModel.isPivotMode()) {
+        if (this.beans.colModel.isPivotMode()) {
             // master detail and leaf groups aren't expandable in pivot mode.
             return rowNode.hasChildren() && !rowNode.leafGroup;
         }
@@ -74,9 +59,10 @@ export abstract class BaseExpansionService extends BeanStub {
         const expanded = rowNode.expanded == true;
 
         rowCtrl.forEachGui(undefined, (gui) => {
-            gui.rowComp.addOrRemoveCssClass('ag-row-group', expandable);
-            gui.rowComp.addOrRemoveCssClass('ag-row-group-expanded', expandable && expanded);
-            gui.rowComp.addOrRemoveCssClass('ag-row-group-contracted', expandable && !expanded);
+            const rowComp = gui.rowComp;
+            rowComp.addOrRemoveCssClass('ag-row-group', expandable);
+            rowComp.addOrRemoveCssClass('ag-row-group-expanded', expandable && expanded);
+            rowComp.addOrRemoveCssClass('ag-row-group-contracted', expandable && !expanded);
             _setAriaExpanded(gui.element, expandable && expanded);
         });
     }
