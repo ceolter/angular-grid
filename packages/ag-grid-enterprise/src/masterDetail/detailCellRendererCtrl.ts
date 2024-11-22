@@ -1,7 +1,5 @@
 import type {
-    BeanCollection,
     DetailGridInfo,
-    Environment,
     FullWidthRowFocusedEvent,
     GridApi,
     IDetailCellRenderer,
@@ -12,12 +10,6 @@ import type {
 import { BeanStub, _focusInto, _isSameRow, _missing, _warn } from 'ag-grid-community';
 
 export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRendererCtrl {
-    private environment: Environment;
-
-    public wireBeans(beans: BeanCollection) {
-        this.environment = beans.environment;
-    }
-
     private params: IDetailCellRendererParams;
 
     private comp: IDetailCellRenderer;
@@ -62,8 +54,9 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
         const parentClass = autoHeight ? 'ag-details-row-auto-height' : 'ag-details-row-fixed-height';
         const detailClass = autoHeight ? 'ag-details-grid-auto-height' : 'ag-details-grid-fixed-height';
 
-        this.comp.addOrRemoveCssClass(parentClass, true);
-        this.comp.addOrRemoveDetailGridCssClass(detailClass, true);
+        const comp = this.comp;
+        comp.addOrRemoveCssClass(parentClass, true);
+        comp.addOrRemoveDetailGridCssClass(detailClass, true);
     }
 
     private setupRefreshStrategy(): void {
@@ -84,7 +77,8 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
     }
 
     private createDetailGrid(): void {
-        if (_missing(this.params.detailGridOptions)) {
+        const { params, gos } = this;
+        if (_missing(params.detailGridOptions)) {
             _warn(171);
             return;
         }
@@ -92,28 +86,29 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
         // we clone the detail grid options, as otherwise it would be shared
         // across many instances, and that would be a problem because we set
         // api into gridOptions
-        const gridOptions = { ...this.params.detailGridOptions };
+        const gridOptions = { ...params.detailGridOptions };
 
-        const autoHeight = this.gos.get('detailRowAutoHeight');
+        const autoHeight = gos.get('detailRowAutoHeight');
         if (autoHeight) {
             gridOptions.domLayout = 'autoHeight';
         }
 
-        gridOptions.theme ||= this.gos.get('theme');
+        gridOptions.theme ||= gos.get('theme');
 
         this.comp.setDetailGrid(gridOptions);
     }
 
     public registerDetailWithMaster(api: GridApi): void {
-        const rowId = this.params.node.id!;
-        const masterGridApi = this.params.api;
+        const params = this.params;
+        const rowId = params.node.id!;
+        const masterGridApi = params.api;
 
         const gridInfo: DetailGridInfo = {
             id: rowId,
             api: api,
         };
 
-        const rowNode = this.params.node as RowNode;
+        const rowNode = params.node as RowNode;
 
         // register with api if the master api is still alive
         if (masterGridApi.isDestroyed()) {
@@ -143,13 +138,14 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
         this.loadRowDataVersion++;
         const versionThisCall = this.loadRowDataVersion;
 
-        if (this.params.detailGridOptions?.rowModelType === 'serverSide') {
-            const node = this.params.node as RowNode;
+        const params = this.params;
+        if (params.detailGridOptions?.rowModelType === 'serverSide') {
+            const node = params.node as RowNode;
             node.detailGridInfo?.api?.refreshServerSide({ purge: true });
             return;
         }
 
-        const userFunc = this.params.getDetailRowData;
+        const userFunc = params.getDetailRowData;
         if (!userFunc) {
             _warn(172);
             return;
@@ -163,10 +159,10 @@ export class DetailCellRendererCtrl extends BeanStub implements IDetailCellRende
         };
 
         const funcParams: any = {
-            node: this.params.node,
+            node: params.node,
             // we take data from node, rather than params.data
             // as the data could have been updated with new instance
-            data: this.params.node.data,
+            data: params.node.data,
             successCallback: successCallback,
             context: this.gos.getGridCommonParams().context,
         };

@@ -15,7 +15,6 @@ const VueExample = {
                 <ag-grid-vue
                     style="width: 100%; height: 100%;"
                     :columnDefs="columnDefs"
-                    @grid-ready="onGridReady"
                     :defaultColDef="defaultColDef"
                     :rowData="rowData">
                 </ag-grid-vue>

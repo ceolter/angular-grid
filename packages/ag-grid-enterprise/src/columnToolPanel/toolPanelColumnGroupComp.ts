@@ -2,15 +2,11 @@ import type {
     AgCheckbox,
     AgColumn,
     AgProvidedColumnGroup,
-    BeanCollection,
     ColumnEventType,
-    ColumnModel,
-    DragAndDropService,
     DragItem,
     DragSource,
     IAggFunc,
     ITooltipCtrl,
-    Registry,
     TooltipFeature,
 } from 'ag-grid-community';
 import {
@@ -35,16 +31,6 @@ import { createPivotState, selectAllChildren, updateColumns } from './modelItemU
 import { ToolPanelContextMenu } from './toolPanelContextMenu';
 
 export class ToolPanelColumnGroupComp extends Component {
-    private colModel: ColumnModel;
-    private dragAndDrop: DragAndDropService;
-    private registry: Registry;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colModel = beans.colModel;
-        this.dragAndDrop = beans.dragAndDrop!;
-        this.registry = beans.registry;
-    }
-
     private readonly cbSelect: AgCheckbox = RefPlaceholder;
     private readonly eLabel: HTMLElement = RefPlaceholder;
 
@@ -55,9 +41,9 @@ export class ToolPanelColumnGroupComp extends Component {
     private eDragHandle: Element;
 
     private readonly columnGroup: AgProvidedColumnGroup;
-    private readonly columnDept: number;
+    private readonly columnDepth: number;
 
-    private displayName: string | null;
+    private readonly displayName: string | null;
     private processingColumnStateChange = false;
     private tooltipFeature?: TooltipFeature;
 
@@ -68,11 +54,10 @@ export class ToolPanelColumnGroupComp extends Component {
         private readonly focusWrapper: HTMLElement
     ) {
         super();
-        this.modelItem = modelItem;
-        this.columnGroup = modelItem.getColumnGroup();
-        this.columnDept = modelItem.getDept();
-        this.displayName = modelItem.getDisplayName();
-        this.allowDragging = allowDragging;
+        const { columnGroup, depth, displayName } = modelItem;
+        this.columnGroup = columnGroup;
+        this.columnDepth = depth;
+        this.displayName = displayName;
     }
 
     public postConstruct(): void {
@@ -89,35 +74,48 @@ export class ToolPanelColumnGroupComp extends Component {
             [AgCheckboxSelector]
         );
 
-        this.eDragHandle = _createIconNoSpan('columnDrag', this.beans)!;
-        this.eDragHandle.classList.add('ag-drag-handle', 'ag-column-select-column-group-drag-handle');
+        const {
+            beans,
+            cbSelect,
+            eLabel,
+            displayName,
+            columnDepth: columnDept,
+            modelItem,
+            focusWrapper,
+            columnGroup,
+        } = this;
+        const { registry, gos } = beans;
 
-        const checkboxGui = this.cbSelect.getGui();
-        const checkboxInput = this.cbSelect.getInputElement();
+        const eDragHandle = _createIconNoSpan('columnDrag', beans)!;
+        this.eDragHandle = eDragHandle;
+        eDragHandle.classList.add('ag-drag-handle', 'ag-column-select-column-group-drag-handle');
 
-        checkboxGui.insertAdjacentElement('afterend', this.eDragHandle);
+        const checkboxGui = cbSelect.getGui();
+        const checkboxInput = cbSelect.getInputElement();
+
+        checkboxGui.insertAdjacentElement('afterend', eDragHandle);
         checkboxInput.setAttribute('tabindex', '-1');
 
-        this.eLabel.innerHTML = this.displayName ? this.displayName : '';
+        eLabel.innerHTML = displayName ?? '';
         this.setupExpandContract();
 
-        this.addCssClass('ag-column-select-indent-' + this.columnDept);
-        this.getGui().style.setProperty('--ag-indentation-level', String(this.columnDept));
+        this.addCssClass('ag-column-select-indent-' + columnDept);
+        this.getGui().style.setProperty('--ag-indentation-level', String(columnDept));
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'columnToolPanelColumnGroup',
-                shouldDisplayTooltip: _getShouldDisplayTooltip(this.gos, () => this.eLabel),
+                shouldDisplayTooltip: _getShouldDisplayTooltip(gos, () => eLabel),
             } as ITooltipCtrl)
         );
 
         this.addManagedEventListeners({ columnPivotModeChanged: this.onColumnStateChanged.bind(this) });
 
-        this.addManagedElementListeners(this.eLabel, { click: this.onLabelClicked.bind(this) });
-        this.addManagedListeners(this.cbSelect, { fieldValueChanged: this.onCheckboxChanged.bind(this) });
-        this.addManagedListeners(this.modelItem, { expandedChanged: this.onExpandChanged.bind(this) });
-        this.addManagedListeners(this.focusWrapper, {
+        this.addManagedElementListeners(eLabel, { click: this.onLabelClicked.bind(this) });
+        this.addManagedListeners(cbSelect, { fieldValueChanged: this.onCheckboxChanged.bind(this) });
+        this.addManagedListeners(modelItem, { expandedChanged: this.onExpandChanged.bind(this) });
+        this.addManagedListeners(focusWrapper, {
             keydown: this.handleKeyDown.bind(this),
             contextmenu: this.onContextMenu.bind(this),
         });
@@ -130,12 +128,7 @@ export class ToolPanelColumnGroupComp extends Component {
         this.refreshAriaLabel();
         this.setupTooltip();
 
-        const classes = _getToolPanelClassesFromColDef(
-            this.columnGroup.getColGroupDef(),
-            this.gos,
-            null,
-            this.columnGroup
-        );
+        const classes = _getToolPanelClassesFromColDef(columnGroup.getColGroupDef(), gos, null, columnGroup);
         classes.forEach((c) => this.addOrRemoveCssClass(c, true));
     }
 
@@ -161,11 +154,11 @@ export class ToolPanelColumnGroupComp extends Component {
         switch (e.key) {
             case KeyCode.LEFT:
                 e.preventDefault();
-                this.modelItem.setExpanded(false);
+                this.modelItem.expanded = false;
                 break;
             case KeyCode.RIGHT:
                 e.preventDefault();
-                this.modelItem.setExpanded(true);
+                this.modelItem.expanded = true;
                 break;
             case KeyCode.SPACE:
                 e.preventDefault();
@@ -209,7 +202,10 @@ export class ToolPanelColumnGroupComp extends Component {
             return;
         }
 
-        let hideColumnOnExit = !this.gos.get('suppressDragLeaveHidesColumns');
+        const beans = this.beans;
+        const { gos, eventSvc, dragAndDrop } = beans;
+
+        let hideColumnOnExit = !gos.get('suppressDragLeaveHidesColumns');
         const dragSource: DragSource = {
             type: DragSourceType.ToolPanel,
             eElement: this.eDragHandle,
@@ -217,21 +213,21 @@ export class ToolPanelColumnGroupComp extends Component {
             getDefaultIconName: () => (hideColumnOnExit ? 'hide' : 'notAllowed'),
             getDragItem: () => this.createDragItem(),
             onDragStarted: () => {
-                hideColumnOnExit = !this.gos.get('suppressDragLeaveHidesColumns');
-                this.eventSvc.dispatchEvent({
+                hideColumnOnExit = !gos.get('suppressDragLeaveHidesColumns');
+                eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragStart',
                     column: this.columnGroup,
                 });
             },
             onDragStopped: () => {
-                this.eventSvc.dispatchEvent({
+                eventSvc.dispatchEvent({
                     type: 'columnPanelItemDragEnd',
                 });
             },
             onGridEnter: (dragItem: DragItem | null) => {
                 if (hideColumnOnExit) {
                     // when dragged into the grid, restore the state that was active pre-drag
-                    updateColumns(this.beans, {
+                    updateColumns(beans, {
                         columns: this.columnGroup.getLeafColumns(),
                         visibleState: dragItem?.visibleState,
                         pivotState: dragItem?.pivotState,
@@ -248,8 +244,8 @@ export class ToolPanelColumnGroupComp extends Component {
             },
         };
 
-        this.dragAndDrop.addDragSource(dragSource, true);
-        this.addDestroyFunc(() => this.dragAndDrop.removeDragSource(dragSource));
+        dragAndDrop!.addDragSource(dragSource, true);
+        this.addDestroyFunc(() => dragAndDrop!.removeDragSource(dragSource));
     }
 
     private createDragItem() {
@@ -276,14 +272,15 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private setupExpandContract(): void {
-        this.eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', this.beans, null));
-        this.eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', this.beans, null));
+        const { beans, eGroupClosedIcon, eGroupOpenedIcon, eColumnGroupIcons } = this;
+        eGroupClosedIcon.appendChild(_createIcon('columnSelectClosed', beans, null));
+        eGroupOpenedIcon.appendChild(_createIcon('columnSelectOpen', beans, null));
 
         const listener = this.onExpandOrContractClicked.bind(this);
-        this.addManagedElementListeners(this.eGroupClosedIcon, { click: listener });
-        this.addManagedElementListeners(this.eGroupOpenedIcon, { click: listener });
+        this.addManagedElementListeners(eGroupClosedIcon, { click: listener });
+        this.addManagedElementListeners(eGroupOpenedIcon, { click: listener });
 
-        const touchListener = new TouchListener(this.eColumnGroupIcons, true);
+        const touchListener = new TouchListener(eColumnGroupIcons, true);
         this.addManagedListeners(touchListener, { tap: listener });
         this.addDestroyFunc(touchListener.destroy.bind(touchListener));
     }
@@ -302,18 +299,18 @@ export class ToolPanelColumnGroupComp extends Component {
 
         const extractCols = (children: ColumnModelItem[]) => {
             children.forEach((child) => {
-                if (!child.isPassesFilter()) {
+                if (!child.passesFilter) {
                     return;
                 }
-                if (child.isGroup()) {
-                    extractCols(child.getChildren());
+                if (child.group) {
+                    extractCols(child.children);
                 } else {
-                    childColumns.push(child.getColumn());
+                    childColumns.push(child.column);
                 }
             });
         };
 
-        extractCols(this.modelItem.getChildren());
+        extractCols(this.modelItem.children);
 
         return childColumns;
     }
@@ -325,13 +322,14 @@ export class ToolPanelColumnGroupComp extends Component {
             return;
         }
 
-        selectAllChildren(this.beans, this.modelItem.getChildren(), nextState, this.eventType);
+        selectAllChildren(this.beans, this.modelItem.children, nextState, this.eventType);
     }
 
     private refreshAriaLabel(): void {
+        const { cbSelect, focusWrapper, displayName } = this;
         const translate = this.getLocaleTextFunc();
         const columnLabel = translate('ariaColumnGroup', 'Column Group');
-        const checkboxValue = this.cbSelect.getValue();
+        const checkboxValue = cbSelect.getValue();
         const state =
             checkboxValue === undefined
                 ? translate('ariaIndeterminate', 'indeterminate')
@@ -340,23 +338,24 @@ export class ToolPanelColumnGroupComp extends Component {
                   : translate('ariaHidden', 'hidden');
         const visibilityLabel = translate('ariaToggleVisibility', 'Press SPACE to toggle visibility');
 
-        _setAriaLabel(this.focusWrapper, `${this.displayName} ${columnLabel}`);
-        this.cbSelect.setInputAriaLabel(`${visibilityLabel} (${state})`);
-        _setAriaDescribedBy(this.focusWrapper, this.cbSelect.getInputElement().id);
+        _setAriaLabel(focusWrapper, `${displayName} ${columnLabel}`);
+        cbSelect.setInputAriaLabel(`${visibilityLabel} (${state})`);
+        _setAriaDescribedBy(focusWrapper, cbSelect.getInputElement().id);
     }
 
     public onColumnStateChanged(): void {
         const selectedValue = this.workOutSelectedValue();
         const readOnlyValue = this.workOutReadOnlyValue();
         this.processingColumnStateChange = true;
-        this.cbSelect.setValue(selectedValue);
-        this.cbSelect.setReadOnly(readOnlyValue);
+        const cbSelect = this.cbSelect;
+        cbSelect.setValue(selectedValue);
+        cbSelect.setReadOnly(readOnlyValue);
         this.addOrRemoveCssClass('ag-column-select-column-group-readonly', readOnlyValue);
         this.processingColumnStateChange = false;
     }
 
     private workOutSelectedValue(): boolean | undefined {
-        const pivotMode = this.colModel.isPivotMode();
+        const pivotMode = this.beans.colModel.isPivotMode();
 
         const visibleLeafColumns = this.getVisibleLeafColumns();
 
@@ -383,7 +382,7 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private workOutReadOnlyValue(): boolean {
-        const pivotMode = this.colModel.isPivotMode();
+        const pivotMode = this.beans.colModel.isPivotMode();
 
         let colsThatCanAction = 0;
 
@@ -414,8 +413,9 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private onExpandOrContractClicked(): void {
-        const oldState = this.modelItem.isExpanded();
-        this.modelItem.setExpanded(!oldState);
+        const modelItem = this.modelItem;
+        const oldState = modelItem.expanded;
+        modelItem.expanded = !oldState;
     }
 
     private onExpandChanged() {
@@ -424,13 +424,13 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     private setOpenClosedIcons(): void {
-        const folderOpen = this.modelItem.isExpanded();
+        const folderOpen = this.modelItem.expanded;
         _setDisplayed(this.eGroupClosedIcon, !folderOpen);
         _setDisplayed(this.eGroupOpenedIcon, folderOpen);
     }
 
     private refreshAriaExpanded(): void {
-        _setAriaExpanded(this.focusWrapper, this.modelItem.isExpanded());
+        _setAriaExpanded(this.focusWrapper, this.modelItem.expanded);
     }
 
     public getDisplayName(): string | null {
@@ -438,11 +438,12 @@ export class ToolPanelColumnGroupComp extends Component {
     }
 
     public onSelectAllChanged(value: boolean): void {
-        const cbValue = this.cbSelect.getValue();
-        const readOnly = this.cbSelect.isReadOnly();
+        const cbSelect = this.cbSelect;
+        const cbValue = cbSelect.getValue();
+        const readOnly = cbSelect.isReadOnly();
 
         if (!readOnly && ((value && !cbValue) || (!value && cbValue))) {
-            this.cbSelect.toggle();
+            cbSelect.toggle();
         }
     }
 

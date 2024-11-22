@@ -1,12 +1,9 @@
 import type {
     AgColumn,
     AgProvidedColumnGroup,
-    BeanCollection,
-    ColumnNameService,
     FilterOpenedEvent,
     ITooltipCtrl,
     IconName,
-    Registry,
     TooltipFeature,
 } from 'ag-grid-community';
 import {
@@ -25,37 +22,19 @@ import { ToolPanelFilterComp } from './toolPanelFilterComp';
 export type ToolPanelFilterItem = ToolPanelFilterGroupComp | ToolPanelFilterComp;
 
 export class ToolPanelFilterGroupComp extends Component {
-    private colNames: ColumnNameService;
-    private registry: Registry;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colNames = beans.colNames;
-        this.registry = beans.registry;
-    }
-
     private filterGroupComp: AgGroupComponent = RefPlaceholder;
 
-    private readonly depth: number;
-    private readonly columnGroup: AgColumn | AgProvidedColumnGroup;
-    private readonly showingColumn: boolean;
-    private childFilterComps: (ToolPanelFilterGroupComp | ToolPanelFilterComp)[];
-    private expandedCallback: () => void;
     private filterGroupName: string | null;
     private tooltipFeature?: TooltipFeature;
 
     constructor(
-        columnGroup: AgColumn | AgProvidedColumnGroup,
-        childFilterComps: (ToolPanelFilterGroupComp | ToolPanelFilterComp)[],
-        expandedCallback: () => void,
-        depth: number,
-        showingColumn: boolean
+        private readonly columnGroup: AgColumn | AgProvidedColumnGroup,
+        private childFilterComps: (ToolPanelFilterGroupComp | ToolPanelFilterComp)[],
+        private readonly expandedCallback: () => void,
+        private readonly depth: number,
+        private readonly showingColumn: boolean
     ) {
         super();
-        this.columnGroup = columnGroup;
-        this.childFilterComps = childFilterComps;
-        this.depth = depth;
-        this.expandedCallback = expandedCallback;
-        this.showingColumn = showingColumn;
     }
 
     public postConstruct(): void {
@@ -72,25 +51,26 @@ export class ToolPanelFilterGroupComp extends Component {
         );
 
         this.setGroupTitle();
-        this.filterGroupComp.setAlignItems('stretch');
+        const { filterGroupComp, depth, childFilterComps, gos } = this;
+        filterGroupComp.setAlignItems('stretch');
 
-        this.filterGroupComp.addCssClass(`ag-filter-toolpanel-group-level-${this.depth}`);
-        this.filterGroupComp.getGui().style.setProperty('--ag-indentation-level', String(this.depth));
-        this.filterGroupComp.addCssClassToTitleBar(`ag-filter-toolpanel-group-level-${this.depth}-header`);
+        filterGroupComp.addCssClass(`ag-filter-toolpanel-group-level-${depth}`);
+        filterGroupComp.getGui().style.setProperty('--ag-indentation-level', String(depth));
+        filterGroupComp.addCssClassToTitleBar(`ag-filter-toolpanel-group-level-${depth}-header`);
 
-        this.childFilterComps.forEach((filterComp) => {
-            this.filterGroupComp.addItem(filterComp as Component);
-            filterComp.addCssClassToTitleBar(`ag-filter-toolpanel-group-level-${this.depth + 1}-header`);
-            filterComp.getGui().style.setProperty('--ag-indentation-level', String(this.depth + 1));
+        childFilterComps.forEach((filterComp) => {
+            filterGroupComp.addItem(filterComp as Component);
+            filterComp.addCssClassToTitleBar(`ag-filter-toolpanel-group-level-${depth + 1}-header`);
+            filterComp.getGui().style.setProperty('--ag-indentation-level', String(depth + 1));
         });
 
         this.tooltipFeature = this.createOptionalManagedBean(
-            this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
+            this.beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, {
                 getGui: () => this.getGui(),
                 getLocation: () => 'filterToolPanelColumnGroup',
                 shouldDisplayTooltip: _getShouldDisplayTooltip(
-                    this.gos,
-                    () => this.filterGroupComp.getGui().querySelector('.ag-group-title') as HTMLElement | undefined
+                    gos,
+                    () => filterGroupComp.getGui().querySelector('.ag-group-title') as HTMLElement | undefined
                 ),
             } as ITooltipCtrl)
         );
@@ -147,7 +127,7 @@ export class ToolPanelFilterGroupComp extends Component {
     }
 
     public getFilterGroupName(): string {
-        return this.filterGroupName ? this.filterGroupName : '';
+        return this.filterGroupName ?? '';
     }
 
     public getFilterGroupId(): string {
@@ -244,19 +224,21 @@ export class ToolPanelFilterGroupComp extends Component {
     }
 
     private setGroupTitle() {
-        this.filterGroupName = isProvidedColumnGroup(this.columnGroup)
-            ? this.getColumnGroupName(this.columnGroup)
-            : this.getColumnName(this.columnGroup);
+        const columnGroup = this.columnGroup;
+        const filterGroupName = isProvidedColumnGroup(columnGroup)
+            ? this.getColumnGroupName(columnGroup)
+            : this.getColumnName(columnGroup);
+        this.filterGroupName = filterGroupName;
 
-        this.filterGroupComp.setTitle(this.filterGroupName || '');
+        this.filterGroupComp.setTitle(filterGroupName || '');
     }
 
     private getColumnGroupName(columnGroup: AgProvidedColumnGroup): string | null {
-        return this.colNames.getDisplayNameForProvidedColumnGroup(null, columnGroup, 'filterToolPanel');
+        return this.beans.colNames.getDisplayNameForProvidedColumnGroup(null, columnGroup, 'filterToolPanel');
     }
 
     private getColumnName(column: AgColumn): string | null {
-        return this.colNames.getDisplayNameForColumn(column, 'filterToolPanel', false);
+        return this.beans.colNames.getDisplayNameForColumn(column, 'filterToolPanel', false);
     }
 
     private destroyFilters() {

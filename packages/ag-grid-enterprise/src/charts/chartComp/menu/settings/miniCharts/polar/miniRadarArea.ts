@@ -1,3 +1,5 @@
+import type { Path } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -6,7 +8,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniRadarArea extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radarArea';
-    private readonly areas: any[];
+    private readonly areas: Path[];
 
     private data = [
         [8, 10, 5, 7, 4, 1, 5, 8],

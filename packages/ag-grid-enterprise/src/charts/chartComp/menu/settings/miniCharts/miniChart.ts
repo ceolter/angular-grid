@@ -1,3 +1,5 @@
+import type { Group, Scene } from 'ag-charts-types/scene';
+
 import type { BeanCollection } from 'ag-grid-community';
 import { Component, _error } from 'ag-grid-community';
 
@@ -15,8 +17,8 @@ export abstract class MiniChart extends Component {
 
     protected readonly size: number = 58;
     protected readonly padding: number = 5;
-    protected readonly root: any;
-    protected readonly scene: any;
+    protected readonly root: Group;
+    protected readonly scene: Scene;
 
     constructor(
         container: HTMLElement,

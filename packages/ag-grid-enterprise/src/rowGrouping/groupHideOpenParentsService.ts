@@ -1,28 +1,10 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ChangedPath,
-    Column,
-    ColumnModel,
-    IGroupHideOpenParentsService,
-    IRowNode,
-    IShowRowGroupColsService,
-    RowNode,
-} from 'ag-grid-community';
+import type { AgColumn, ChangedPath, Column, IGroupHideOpenParentsService, IRowNode, RowNode } from 'ag-grid-community';
 import { BeanStub, _error, _missing } from 'ag-grid-community';
 
 import { setRowNodeGroupValue } from './rowGroupingUtils';
 
 export class GroupHideOpenParentsService extends BeanStub implements IGroupHideOpenParentsService {
     beanName = 'groupHideOpenParentsSvc' as const;
-
-    private colModel: ColumnModel;
-    private showRowGroupCols?: IShowRowGroupColsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.showRowGroupCols = beans.showRowGroupCols;
-    }
 
     public updateGroupDataForHideOpenParents(changedPath?: ChangedPath): void {
         if (!this.gos.get('groupHideOpenParents') || this.gos.get('treeData')) {
@@ -49,8 +31,10 @@ export class GroupHideOpenParentsService extends BeanStub implements IGroupHideO
             return;
         }
 
+        const { colModel, showRowGroupCols } = this.beans;
+
         rowNodes.forEach((childRowNode) => {
-            const groupDisplayCols = this.showRowGroupCols?.getShowRowGroupCols() ?? [];
+            const groupDisplayCols = showRowGroupCols?.getShowRowGroupCols() ?? [];
             groupDisplayCols.forEach((groupDisplayCol) => {
                 const showRowGroup = groupDisplayCol.getColDef().showRowGroup;
                 if (typeof showRowGroup !== 'string') {
@@ -59,7 +43,7 @@ export class GroupHideOpenParentsService extends BeanStub implements IGroupHideO
                 }
 
                 const displayingGroupKey = showRowGroup;
-                const rowGroupColumn = this.colModel.getColDefCol(displayingGroupKey);
+                const rowGroupColumn = colModel.getColDefCol(displayingGroupKey);
                 const thisRowNodeMatches = rowGroupColumn === childRowNode.rowGroupColumn;
 
                 if (thisRowNodeMatches) {
@@ -68,17 +52,12 @@ export class GroupHideOpenParentsService extends BeanStub implements IGroupHideO
 
                 if (clearOperation) {
                     // if doing a clear operation, we clear down the value for every possible group column
-                    setRowNodeGroupValue(childRowNode, this.colModel, groupDisplayCol.getId(), undefined);
+                    setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), undefined);
                 } else {
                     // if doing a set operation, we set only where the pull down is to occur
                     const parentToStealFrom = this.getFirstChildOfFirstChild(childRowNode, rowGroupColumn);
                     if (parentToStealFrom) {
-                        setRowNodeGroupValue(
-                            childRowNode,
-                            this.colModel,
-                            groupDisplayCol.getId(),
-                            parentToStealFrom.key
-                        );
+                        setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), parentToStealFrom.key);
                     }
                 }
             });

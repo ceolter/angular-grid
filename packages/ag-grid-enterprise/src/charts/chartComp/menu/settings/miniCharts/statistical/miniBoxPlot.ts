@@ -1,3 +1,5 @@
+import type { Group } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -7,7 +9,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniBoxPlot extends MiniChartWithAxes {
     static chartType: ChartType = 'boxPlot';
 
-    private readonly boxPlotGroups: any[];
+    private readonly boxPlotGroups: Group[];
 
     constructor(
         container: HTMLElement,

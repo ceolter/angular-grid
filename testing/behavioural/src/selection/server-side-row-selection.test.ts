@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { GridApi, GridOptions } from 'ag-grid-community';
+import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
@@ -38,7 +38,9 @@ describe('Row Selection Grid Options', () => {
     async function createGridAndWait(gridOptions: GridOptions): Promise<GridApi> {
         const api = createGrid(gridOptions);
 
-        return new Promise((resolve) => api.addEventListener('firstDataRendered', () => resolve(api)));
+        await waitForEvent('firstDataRendered', api);
+
+        return api;
     }
 
     const gridMgr = new TestGridsManager({
@@ -169,7 +171,7 @@ describe('Row Selection Grid Options', () => {
                 assertSelectedRowsByIndex([2], api);
             });
 
-            test('enableClickSelection="enableDeselection" allows deselection via clicking', async () => {
+            test('enableClickSelection="enableDeselection" allows deselection via CTRL-clicking', async () => {
                 const api = await createGridAndWait({
                     columnDefs,
                     rowSelection: { mode: 'multiRow', enableClickSelection: 'enableDeselection' },
@@ -182,7 +184,7 @@ describe('Row Selection Grid Options', () => {
                 });
 
                 toggleCheckboxByIndex(2);
-                assertSelectedRowsByIndex([2], api);
+                assertSelectedRowElementsById(['2'], api);
 
                 clickRowByIndex(2, { ctrlKey: true });
                 assertSelectedRowsByIndex([], api);
@@ -255,6 +257,31 @@ describe('Row Selection Grid Options', () => {
 
                 // Both rows should still be selected
                 assertSelectedRowsByIndex([2, 3], api);
+            });
+
+            test('must de-select with CTRL when `enableClickSelection: true`', async () => {
+                const api = await createGridAndWait({
+                    columnDefs,
+                    rowModelType: 'serverSide',
+                    serverSideDatasource: {
+                        getRows(params) {
+                            return params.success({ rowData, rowCount: rowData.length });
+                        },
+                    },
+                    rowSelection: {
+                        mode: 'multiRow',
+                        enableClickSelection: true,
+                    },
+                });
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3);
+                assertSelectedRowsByIndex([3], api);
+
+                clickRowByIndex(3, { ctrlKey: true });
+                assertSelectedRowsByIndex([], api);
             });
 
             describe('Range selection behaviour', () => {
@@ -474,8 +501,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test.skip('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(6, { shiftKey: true });
@@ -488,8 +519,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([3, 4, 5], api);
                 });
 
-                test.skip('SHIFT-click below range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('SHIFT-click below range after de-selection resets root and clears previous selection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -502,8 +537,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([3, 4, 5, 6], api);
                 });
 
-                test.skip('SHIFT-click above range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('SHIFT-click above range after de-selection resets root and clears previous selection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -516,8 +555,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([1, 2, 3], api);
                 });
 
-                test.skip('META+SHIFT-click within range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('META+SHIFT-click within range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(6, { shiftKey: true });
@@ -530,8 +573,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('META+SHIFT-click below range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -544,8 +591,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('META+SHIFT-click above range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -558,8 +609,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('CTRL+SHIFT-click within range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(6, { shiftKey: true });
@@ -572,8 +627,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('CTRL+SHIFT-click below range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -586,8 +645,12 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: { mode: 'multiRow' } });
+                test('CTRL+SHIFT-click above range allows batch deselection', () => {
+                    const api = createGrid({
+                        columnDefs,
+                        rowData,
+                        rowSelection: { mode: 'multiRow', enableClickSelection: true },
+                    });
 
                     clickRowByIndex(2);
                     clickRowByIndex(5, { shiftKey: true });
@@ -990,30 +1053,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', async () => {
-                    const api = await createGridAndWait({
-                        columnDefs,
-                        rowModelType: 'serverSide',
-                        serverSideDatasource: {
-                            getRows(params) {
-                                return params.success({ rowData, rowCount: rowData.length });
-                            },
-                        },
-                        rowSelection: { mode: 'multiRow', checkboxes: true },
-                    });
-
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
-                });
-
-                test.skip('META+SHIFT-click within range allows batch deselection', () => {
+                test('META+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1031,7 +1071,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', () => {
+                test('META+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1049,7 +1089,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', () => {
+                test('META+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1067,7 +1107,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', () => {
+                test('CTRL+SHIFT-click within range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1085,7 +1125,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', () => {
+                test('CTRL+SHIFT-click below range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1103,7 +1143,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', () => {
+                test('CTRL+SHIFT-click above range allows batch deselection', () => {
                     const api = createGrid({
                         columnDefs,
                         rowData,
@@ -1204,7 +1244,13 @@ describe('Row Selection Grid Options', () => {
             });
         });
 
-        describe('Group checkbox selection', () => {
+        describe('Group selection', () => {
+            function getRowIdRaw(params: Pick<GetRowIdParams, 'api' | 'data' | 'parentKeys'>) {
+                return getRowId({ ...params, level: -1, context: {} });
+            }
+            function getRowId(params: GetRowIdParams): string {
+                return (params.parentKeys ?? []).join('-') + ':' + JSON.stringify(params.data);
+            }
             const groupGridOptions: Partial<GridOptions> = {
                 columnDefs: [
                     { field: 'country', rowGroup: true, hide: true },
@@ -1225,9 +1271,7 @@ describe('Row Selection Grid Options', () => {
                         return params.success({ rowData: data, rowCount: data.length });
                     },
                 },
-                getRowId(params) {
-                    return JSON.stringify(params.data);
-                },
+                getRowId,
             };
 
             test('clicking group row selects only that row', async () => {
@@ -1248,26 +1292,23 @@ describe('Row Selection Grid Options', () => {
 
                 // Group selects children
                 toggleCheckboxByIndex(0);
-                const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
-                expandGroupRowByIndex(0);
-                await updated;
+                await expandGroupRowByIndex(api, 0);
 
                 assertSelectedRowElementsById(
                     [
-                        { country: 'United States' },
-                        { sport: 'Swimming' },
-                        { sport: 'Gymnastics' },
-                        { sport: 'Speed Skating' },
-                        { sport: 'Cross Country Skiing' },
-                    ].map((r) => JSON.stringify(r)),
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((p) => getRowIdRaw({ ...p, api })),
                     api
                 );
 
                 // Can un-select child row
-                toggleCheckboxByIndex(4);
+                toggleCheckboxByIndex(1);
+
                 assertSelectedRowElementsById(
-                    [{ sport: 'Swimming' }, { sport: 'Gymnastics' }, { sport: 'Speed Skating' }].map((r) =>
-                        JSON.stringify(r)
+                    [{ parentKeys: ['United States'], data: { sport: 'Gymnastics' } }].map((r) =>
+                        getRowIdRaw({ ...r, api })
                     ),
                     api
                 );
@@ -1276,18 +1317,46 @@ describe('Row Selection Grid Options', () => {
                 toggleCheckboxByIndex(0);
                 assertSelectedRowElementsById(
                     [
-                        { country: 'United States' },
-                        { sport: 'Swimming' },
-                        { sport: 'Gymnastics' },
-                        { sport: 'Speed Skating' },
-                        { sport: 'Cross Country Skiing' },
-                    ].map((r) => JSON.stringify(r)),
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
                     api
                 );
 
                 // Toggle group row again de-selects all children
                 toggleCheckboxByIndex(0);
                 assertSelectedRowElementsById([], api);
+            });
+
+            // This behaviour is actually explicitly disabled because it doesn't work in CSRM
+            // however, keep the test because it works (at time of writing) in SSRM and we may want
+            // to bring this behaviour back
+            test.skip('deselect group row with `groupSelects = "descendants"` and `enableClickSelection`', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: { mode: 'multiRow', groupSelects: 'descendants', enableClickSelection: true },
+                });
+
+                clickRowByIndex(0);
+                await expandGroupRowByIndex(api, 0);
+
+                assertSelectedRowElementsById(
+                    [
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
+                    api
+                );
+
+                clickRowByIndex(1, { ctrlKey: true });
+                assertSelectedRowElementsById(
+                    [{ parentKeys: ['United States'], data: { sport: 'Gymnastics' } }].map((r) =>
+                        getRowIdRaw({ ...r, api })
+                    ),
+                    api
+                );
             });
 
             test('Cannot select group rows where `isRowSelectable` returns false and `groupSelects` = "self"', async () => {
@@ -1299,16 +1368,16 @@ describe('Row Selection Grid Options', () => {
                     },
                 });
 
-                const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
-                expandGroupRowByIndex(0);
-                await updated;
+                await expandGroupRowByIndex(api, 0);
 
                 toggleCheckboxByIndex(0);
                 assertSelectedRowElementsById([], api);
 
                 toggleCheckboxByIndex(1);
                 assertSelectedRowElementsById(
-                    [{ sport: 'Swimming' }].map((r) => JSON.stringify(r)),
+                    [{ parentKeys: ['United States'], data: { sport: 'Swimming' } }].map((r) =>
+                        getRowIdRaw({ ...r, api })
+                    ),
                     api
                 );
             });
@@ -1323,9 +1392,7 @@ describe('Row Selection Grid Options', () => {
                     },
                 });
 
-                const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
-                expandGroupRowByIndex(0);
-                await updated;
+                await expandGroupRowByIndex(api, 0);
 
                 toggleCheckboxByIndex(0);
                 assertSelectedRowElementsById([], api);
@@ -1341,13 +1408,13 @@ describe('Row Selection Grid Options', () => {
                     },
                 });
 
-                const updated = waitForEvent('modelUpdated', api, 2); // attach listener first
-                expandGroupRowByIndex(0);
-                await updated;
+                await expandGroupRowByIndex(api, 0);
 
                 toggleCheckboxByIndex(1);
                 assertSelectedRowElementsById(
-                    [{ sport: 'Swimming' }].map((r) => JSON.stringify(r)),
+                    [{ parentKeys: ['United States'], data: { sport: 'Swimming' } }].map((r) =>
+                        getRowIdRaw({ ...r, api })
+                    ),
                     api
                 );
 
@@ -1358,7 +1425,98 @@ describe('Row Selection Grid Options', () => {
                 });
 
                 assertSelectedRowElementsById(
-                    [{ sport: 'Swimming' }].map((r) => JSON.stringify(r)),
+                    [{ parentKeys: ['United States'], data: { sport: 'Swimming' } }].map((r) =>
+                        getRowIdRaw({ ...r, api })
+                    ),
+                    api
+                );
+            });
+
+            test('Selection when `enableSelectionWithoutKeys` for defaultStrategy', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: { mode: 'multiRow', enableSelectionWithoutKeys: true, enableClickSelection: true },
+                });
+
+                await expandGroupRowByIndex(api, 0);
+
+                clickRowByIndex(1);
+                clickRowByIndex(2);
+
+                assertSelectedRowElementsById(
+                    [
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
+                    api
+                );
+            });
+
+            // This behaviour is actually explicitly disabled because it doesn't work in CSRM
+            // however, keep the test because it works (at time of writing) in SSRM and we may want
+            // to bring this behaviour back
+            test.skip('Selection when `enableSelectionWithoutKeys` for `groupSelects = "descendants"`', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    rowSelection: {
+                        mode: 'multiRow',
+                        groupSelects: 'descendants',
+                        enableSelectionWithoutKeys: true,
+                        enableClickSelection: true,
+                    },
+                });
+
+                await expandGroupRowByIndex(api, 0);
+
+                clickRowByIndex(1);
+                clickRowByIndex(2);
+
+                assertSelectedRowElementsById(
+                    [
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
+                    api
+                );
+            });
+
+            test('selecting footer node selects sibling (i.e. group node)', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    groupTotalRow: 'bottom',
+                    rowSelection: {
+                        mode: 'multiRow',
+                    },
+                });
+
+                await expandGroupRowByIndex(api, 0);
+
+                toggleCheckboxByIndex(3);
+
+                assertSelectedRowElementsById([':{"country":"United States"}'], api);
+            });
+
+            test('selecting footer node selects sibling (i.e. group node) when `groupSelects = "descendants"`', async () => {
+                const api = await createGridAndWait({
+                    ...groupGridOptions,
+                    groupTotalRow: 'bottom',
+                    rowSelection: {
+                        mode: 'multiRow',
+                        groupSelects: 'descendants',
+                    },
+                });
+
+                await expandGroupRowByIndex(api, 0);
+
+                toggleCheckboxByIndex(3);
+
+                assertSelectedRowElementsById(
+                    [
+                        { data: { country: 'United States' } },
+                        { parentKeys: ['United States'], data: { sport: 'Swimming' } },
+                        { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                    ].map((r) => getRowIdRaw({ ...r, api })),
                     api
                 );
             });
@@ -1529,24 +1687,28 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
 
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', async () => {
+                test('Range spanning across groups when `groupSelects = "descendants"', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
-                        rowSelection: { mode: 'multiRow' },
+                        rowSelection: { mode: 'multiRow', groupSelects: 'descendants' },
                     });
 
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
+                    await expandGroupRowByIndex(api, 0);
+                    await expandGroupRowByIndex(api, 3);
 
                     toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
                     toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
+                    assertSelectedRowElementsById(
+                        [
+                            { parentKeys: ['United States'], data: { sport: 'Gymnastics' } },
+                            { data: { country: 'Russia' } },
+                            { parentKeys: ['Russia'], data: { sport: 'Gymnastics' } },
+                        ].map((o) => getRowIdRaw({ ...o, api })),
+                        api
+                    );
                 });
 
-                test.skip('META+SHIFT-click within range allows batch deselection', async () => {
+                test('META+SHIFT-click within range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1563,7 +1725,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('META+SHIFT-click below range allows batch deselection', async () => {
+                test('META+SHIFT-click below range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1580,7 +1742,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('META+SHIFT-click above range allows batch deselection', async () => {
+                test('META+SHIFT-click above range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1597,7 +1759,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([4, 5], api);
                 });
 
-                test.skip('CTRL+SHIFT-click within range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click within range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1614,7 +1776,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2, 6], api);
                 });
 
-                test.skip('CTRL+SHIFT-click below range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click below range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1631,7 +1793,7 @@ describe('Row Selection Grid Options', () => {
                     assertSelectedRowsByIndex([2], api);
                 });
 
-                test.skip('CTRL+SHIFT-click above range allows batch deselection', async () => {
+                test('CTRL+SHIFT-click above range allows batch deselection', async () => {
                     const api = await createGridAndWait({
                         ...groupGridOptions,
                         rowSelection: { mode: 'multiRow' },
@@ -1646,6 +1808,45 @@ describe('Row Selection Grid Options', () => {
 
                     toggleCheckboxByIndex(1, { shiftKey: true, ctrlKey: true });
                     assertSelectedRowsByIndex([4, 5], api);
+                });
+
+                test('CTRL+SHIFT-click defaults to selection when root is selected', async () => {
+                    const api = await createGridAndWait({
+                        ...groupGridOptions,
+                        rowSelection: { mode: 'multiRow' },
+                    });
+
+                    toggleCheckboxByIndex(2);
+                    toggleCheckboxByIndex(5, { shiftKey: true, ctrlKey: true });
+                    assertSelectedRowsByIndex([2, 3, 4, 5], api);
+                });
+
+                test('CTRL+SHIFT-click within range allows batch deselection when `groupSelects: "descendants"`', async () => {
+                    const api = await createGridAndWait({
+                        ...groupGridOptions,
+                        rowSelection: { mode: 'multiRow', groupSelects: 'descendants' },
+                    });
+
+                    toggleCheckboxByIndex(2);
+                    toggleCheckboxByIndex(6, { shiftKey: true });
+                    assertSelectedRowsByIndex([2, 3, 4, 5, 6], api);
+
+                    toggleCheckboxByIndex(3, { metaKey: true });
+                    assertSelectedRowsByIndex([2, 4, 5, 6], api);
+
+                    toggleCheckboxByIndex(5, { shiftKey: true, ctrlKey: true });
+                    assertSelectedRowsByIndex([2, 6], api);
+                });
+
+                test('CTRL+SHIFT-click defaults to selection when root is selected when `groupSelects = "descendants"`', async () => {
+                    const api = await createGridAndWait({
+                        ...groupGridOptions,
+                        rowSelection: { mode: 'multiRow', groupSelects: 'descendants' },
+                    });
+
+                    toggleCheckboxByIndex(2);
+                    toggleCheckboxByIndex(5, { shiftKey: true, ctrlKey: true });
+                    assertSelectedRowsByIndex([2, 3, 4, 5], api);
                 });
             });
         });

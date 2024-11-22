@@ -1,3 +1,5 @@
+import type { Group } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -5,7 +7,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniSunburst extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'sunburst';
-    private readonly series: any[];
+    private readonly series: Group[];
 
     // Hierarchical data using multidimensional array
     private data = [

@@ -65,34 +65,38 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
             suppressPivots: false,
             suppressSyncLayoutWithGrid: false,
         });
-        this.params = {
+        const mergedParams = {
             ...defaultParams,
             ...params,
         };
+        this.params = mergedParams;
 
-        if (!this.params.suppressPivotMode && this.colToolPanelFactory) {
-            this.pivotModePanel = this.colToolPanelFactory.createPivotModePanel(this, this.childDestroyFuncs);
+        const { childDestroyFuncs, colToolPanelFactory } = this;
+
+        if (!mergedParams.suppressPivotMode && colToolPanelFactory) {
+            this.pivotModePanel = colToolPanelFactory.createPivotModePanel(this, childDestroyFuncs);
         }
 
         // DO NOT CHANGE TO createManagedBean
-        this.primaryColsPanel = this.createBean(new AgPrimaryCols());
-        this.childDestroyFuncs.push(() => this.destroyBean(this.primaryColsPanel));
+        const primaryColsPanel = this.createBean(new AgPrimaryCols());
+        this.primaryColsPanel = primaryColsPanel;
+        childDestroyFuncs.push(() => this.destroyBean(this.primaryColsPanel));
 
-        this.primaryColsPanel.init(true, this.params, 'toolPanelUi');
-        this.primaryColsPanel.addCssClass('ag-column-panel-column-select');
-        this.appendChild(this.primaryColsPanel);
+        primaryColsPanel.init(true, mergedParams, 'toolPanelUi');
+        primaryColsPanel.addCssClass('ag-column-panel-column-select');
+        this.appendChild(primaryColsPanel);
 
-        if (this.colToolPanelFactory) {
-            if (!this.params.suppressRowGroups) {
-                this.rowGroupDropZonePanel = this.colToolPanelFactory.createRowGroupPanel(this, this.childDestroyFuncs);
+        if (colToolPanelFactory) {
+            if (!mergedParams.suppressRowGroups) {
+                this.rowGroupDropZonePanel = colToolPanelFactory.createRowGroupPanel(this, childDestroyFuncs);
             }
 
-            if (!this.params.suppressValues) {
-                this.valuesDropZonePanel = this.colToolPanelFactory.createValuesPanel(this, this.childDestroyFuncs);
+            if (!mergedParams.suppressValues) {
+                this.valuesDropZonePanel = colToolPanelFactory.createValuesPanel(this, childDestroyFuncs);
             }
 
-            if (!this.params.suppressPivots) {
-                this.pivotDropZonePanel = this.colToolPanelFactory.createPivotPanel(this, this.childDestroyFuncs);
+            if (!mergedParams.suppressPivots) {
+                this.pivotDropZonePanel = colToolPanelFactory.createPivotPanel(this, childDestroyFuncs);
             }
 
             this.setLastVisible();
@@ -102,60 +106,64 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
                     this.setLastVisible();
                 },
             });
-            this.childDestroyFuncs.push(() => pivotModeListener!());
+            childDestroyFuncs.push(() => pivotModeListener!());
         }
 
         this.initialised = true;
     }
 
     public setPivotModeSectionVisible(visible: boolean): void {
-        if (!this.colToolPanelFactory) {
+        const colToolPanelFactory = this.colToolPanelFactory;
+        if (!colToolPanelFactory) {
             return;
         }
 
-        this.pivotModePanel = this.colToolPanelFactory.setPanelVisible(
+        this.pivotModePanel = colToolPanelFactory.setPanelVisible(
             this.pivotModePanel,
             visible,
-            this.colToolPanelFactory.createPivotModePanel.bind(this, this, this.childDestroyFuncs, true)
+            colToolPanelFactory.createPivotModePanel.bind(colToolPanelFactory, this, this.childDestroyFuncs, true)
         );
         this.setLastVisible();
     }
 
     public setRowGroupsSectionVisible(visible: boolean): void {
-        if (!this.colToolPanelFactory) {
+        const colToolPanelFactory = this.colToolPanelFactory;
+        if (!colToolPanelFactory) {
             return;
         }
 
-        this.rowGroupDropZonePanel = this.colToolPanelFactory.setPanelVisible(
+        this.rowGroupDropZonePanel = colToolPanelFactory.setPanelVisible(
             this.rowGroupDropZonePanel,
             visible,
-            this.colToolPanelFactory.createRowGroupPanel.bind(this, this, this.childDestroyFuncs)
+            colToolPanelFactory.createRowGroupPanel.bind(colToolPanelFactory, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }
 
     public setValuesSectionVisible(visible: boolean): void {
-        if (!this.colToolPanelFactory) {
+        const colToolPanelFactory = this.colToolPanelFactory;
+        if (!colToolPanelFactory) {
             return;
         }
 
-        this.valuesDropZonePanel = this.colToolPanelFactory.setPanelVisible(
+        this.valuesDropZonePanel = colToolPanelFactory.setPanelVisible(
             this.valuesDropZonePanel,
             visible,
-            this.colToolPanelFactory.createValuesPanel.bind(this, this, this.childDestroyFuncs)
+            colToolPanelFactory.createValuesPanel.bind(colToolPanelFactory, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }
 
     public setPivotSectionVisible(visible: boolean): void {
-        if (!this.colToolPanelFactory) {
+        const colToolPanelFactory = this.colToolPanelFactory;
+        if (!colToolPanelFactory) {
             return;
         }
 
-        this.pivotDropZonePanel = this.colToolPanelFactory.setPanelVisible(
+        this.pivotDropZonePanel = colToolPanelFactory.setPanelVisible(
             this.pivotDropZonePanel,
             visible,
-            this.colToolPanelFactory.createPivotPanel.bind(this, this, this.childDestroyFuncs)
+            colToolPanelFactory.createPivotPanel.bind(colToolPanelFactory, this, this.childDestroyFuncs)
         );
         this.setLastVisible();
     }
@@ -196,9 +204,9 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
         const children = eGui.children;
 
         for (let i = 0; i < children.length; i++) {
-            const child = children[i] as HTMLElement;
-            child.style.removeProperty('height');
-            child.style.removeProperty('flex');
+            const { style } = children[i] as HTMLElement;
+            style.removeProperty('height');
+            style.removeProperty('flex');
         }
     }
 
@@ -219,8 +227,9 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
     }
 
     public destroyChildren(): void {
-        this.childDestroyFuncs.forEach((func) => func());
-        this.childDestroyFuncs.length = 0;
+        const childDestroyFuncs = this.childDestroyFuncs;
+        childDestroyFuncs.forEach((func) => func());
+        childDestroyFuncs.length = 0;
         _clearElement(this.getGui());
     }
 
@@ -236,8 +245,6 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
         };
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so this must be public.
     public override destroy(): void {
         this.destroyChildren();
         super.destroy();

@@ -27,15 +27,14 @@ To granularly determine which groups should be expanded by default, use the `isG
 
 {% gridExampleRunner title="Open by Default" name="open-by-default" /%}
 
-The example above uses the following configuration to expand the `United States` and `2004` groups by default:
+The example above uses the following configuration to expand the `Australia` and its child `2004` groups by default:
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
     isGroupOpenByDefault: (params) => {
-        return (
-            (params.field === 'year' && params.key === '2004') ||
-            (params.field === 'country' && params.key === 'United States')
-        );
+        const route = params.rowNode.getRoute();
+        const destPath = ['Australia', '2004'];
+        return route.every((item, idx) => destPath[idx] === item);
     }
 }
 ```
@@ -44,6 +43,20 @@ const gridOptions = {
 Row keys are only unique within their groups, so it is recommended to instead use the entire [Row Route](./row-object/#reference-serverSide-getRoute)
 to identify the row.
 {% /note %}
+
+## Prevent Sticky Groups
+
+When scrolling through an expanded group, the group row will stick to the top of the grid. To prevent this behaviour, set the `suppressGroupRowsSticky` property to `true`.
+
+{% gridExampleRunner title="Sticky Groups" name="suppress-sticky-groups" /%}
+
+The example above uses the following configuration to prevent groups from sticking:
+
+```{% frameworkTransform=true %}
+const gridOptions = {
+    suppressGroupRowsSticky: true,
+}
+```
 
 ## Scrolling Child Rows into View
 
@@ -57,7 +70,7 @@ In the example below, if you expand a group at the bottom, the grid will scroll 
 ## API
 
 The grid exposes API methods to expand or collapse groups programmatically.
-{% apiDocumentation source="grid-api/api.json" section="rowGroupsCols" names=["setRowNodeExpanded", "expandAll", "collapseAll"] /%}
+{% apiDocumentation source="grid-api/api.json" section="rowExpansion" names=["setRowNodeExpanded", "expandAll", "collapseAll"] /%}
 
 ### Expand Row Ancestors
 

@@ -1,29 +1,25 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
-
-ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
-    ColumnsToolPanelModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-]);
+    ModuleRegistry,
+    createGrid,
+    themeQuartz,
+} from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+
+const myTheme = themeQuartz.withParams({
+    wrapperBorder: false,
+    headerRowBorder: false,
+    rowBorder: { style: 'dotted', width: 3, color: '#9696C8' },
+    columnBorder: { style: 'dashed', color: '#9696C8' },
+});
 
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
+    theme: myTheme,
     rowData: null,
     columnDefs: [
         { field: 'athlete', minWidth: 170 },
@@ -37,10 +33,6 @@ const gridOptions: GridOptions<IOlympicData> = {
         { field: 'bronze' },
         { field: 'total' },
     ],
-    defaultColDef: {
-        editable: true,
-        filter: true,
-    },
 };
 
 // setup the grid after the page has finished loading

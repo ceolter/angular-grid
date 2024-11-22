@@ -3,8 +3,8 @@ import type { SideBarState } from './gridState';
 import type { IToolPanel } from './iToolPanel';
 
 export interface ISideBarService {
-    getSideBarComp(): ISideBar;
-    getSideBarSelector(): ComponentSelector;
+    comp: ISideBar;
+    getSelector(): ComponentSelector;
 }
 
 export interface ISideBar {

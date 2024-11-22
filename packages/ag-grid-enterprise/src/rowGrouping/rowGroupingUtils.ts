@@ -35,7 +35,7 @@ export function setRowNodeGroup(rowNode: RowNode, beans: BeanCollection, group: 
 
     rowNode.group = group;
     rowNode.updateHasChildren();
-    beans.selectionSvc?.checkRowSelectable(rowNode);
+    beans.selectionSvc?.updateRowSelectable(rowNode);
     rowNode.dispatchRowEvent('groupChanged');
 }
 

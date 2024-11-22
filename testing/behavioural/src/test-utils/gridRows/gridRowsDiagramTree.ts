@@ -236,6 +236,10 @@ export class GridRowsDiagramTree {
             result += 'id:' + rowIdToString(row) + ' ';
         }
 
+        if (gridRows.options.printRowIndices) {
+            result += 'rowIndex:' + row.rowIndex + ' ';
+        }
+
         if (columns) {
             for (const column of columns) {
                 const value = gridRows.api.getCellValue({ rowNode: row, colKey: column });

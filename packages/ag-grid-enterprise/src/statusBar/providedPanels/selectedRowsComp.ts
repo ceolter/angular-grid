@@ -1,17 +1,12 @@
-import type { BeanCollection, ISelectionService, IStatusPanelComp } from 'ag-grid-community';
+import type { IStatusPanelComp } from 'ag-grid-community';
 import { _formatNumberCommas, _isClientSideRowModel, _isServerSideRowModel, _warn } from 'ag-grid-community';
 
 import { AgNameValue } from './agNameValue';
 
 export class SelectedRowsComp extends AgNameValue implements IStatusPanelComp {
-    private selectionSvc?: ISelectionService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.selectionSvc = beans.selectionSvc;
-    }
-
     public postConstruct(): void {
-        if (!_isClientSideRowModel(this.gos) && !_isServerSideRowModel(this.gos)) {
+        const gos = this.gos;
+        if (!_isClientSideRowModel(gos) && !_isServerSideRowModel(gos)) {
             _warn(223);
             return;
         }
@@ -28,7 +23,7 @@ export class SelectedRowsComp extends AgNameValue implements IStatusPanelComp {
     }
 
     private onRowSelectionChanged() {
-        const selectedRowCount = this.selectionSvc?.getSelectionCount() ?? 0;
+        const selectedRowCount = this.beans.selectionSvc?.getSelectionCount() ?? 0;
         if (selectedRowCount < 0) {
             this.setValue('?');
             this.setDisplayed(true);
@@ -42,11 +37,5 @@ export class SelectedRowsComp extends AgNameValue implements IStatusPanelComp {
 
     public refresh(): boolean {
         return true;
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
     }
 }

@@ -22,16 +22,19 @@ export default {
     },
     methods: {
         renderStats() {
-            this.numGold = 0;
-            this.numSilver = 0;
-            this.numBronze = 0;
+            let numGold = 0;
+            let numSilver = 0;
+            let numBronze = 0;
             this.title = this.params.title;
             this.params.api.forEachNode((rowNode) => {
                 const data = rowNode.data;
-                if (data.gold) this.numGold += data.gold;
-                if (data.silver) this.numSilver += data.silver;
-                if (data.bronze) this.numBronze += data.bronze;
+                if (data.gold) numGold += data.gold;
+                if (data.silver) numSilver += data.silver;
+                if (data.bronze) numBronze += data.bronze;
             });
+            this.numGold = numGold;
+            this.numSilver = numSilver;
+            this.numBronze = numBronze;
         },
     },
     created() {

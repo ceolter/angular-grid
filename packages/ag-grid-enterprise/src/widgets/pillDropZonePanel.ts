@@ -1,12 +1,4 @@
-import type {
-    BeanCollection,
-    DragAndDropIcon,
-    DragAndDropService,
-    DragItem,
-    DragSourceType,
-    DraggingEvent,
-    DropTarget,
-} from 'ag-grid-community';
+import type { DragAndDropIcon, DragItem, DragSourceType, DraggingEvent, DropTarget } from 'ag-grid-community';
 import {
     Component,
     KeyCode,
@@ -47,12 +39,6 @@ function _insertArrayIntoArray<T>(dest: T[], src: T[], toIndex: number) {
 }
 
 export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem> extends Component {
-    private dragAndDrop?: DragAndDropService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.dragAndDrop = beans.dragAndDrop;
-    }
-
     private state: PillState = 'notDragging';
 
     private dropTarget: DropTarget;
@@ -91,17 +77,13 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
     protected abstract getItems(dragItem: DragItem<TItem>): TItem[];
     protected abstract isInterestedIn(type: DragSourceType): boolean;
 
-    constructor(private horizontal: boolean) {
+    constructor(protected readonly horizontal: boolean) {
         super(/* html */ `<div class="ag-unselectable" role="presentation"></div>`);
         this.addElementClasses(this.getGui());
         this.ePillDropList = document.createElement('div');
         this.addElementClasses(this.ePillDropList, 'list');
         _setAriaRole(this.ePillDropList, 'listbox');
         this.registerCSS(pillDropZonePanelCSS);
-    }
-
-    public isHorizontal(): boolean {
-        return this.horizontal;
     }
 
     public toggleResizable(resizable: boolean) {
@@ -209,7 +191,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
             isInterestedIn: this.isInterestedIn.bind(this),
         };
 
-        this.dragAndDrop?.addDropTarget(this.dropTarget);
+        this.beans.dragAndDrop?.addDropTarget(this.dropTarget);
     }
 
     protected minimumAllowedNewInsertIndex(): number {
@@ -440,7 +422,7 @@ export abstract class PillDropZonePanel<TPill extends PillDragComp<TItem>, TItem
         this.addEmptyMessageToGui();
         this.addItemsToGui();
 
-        if (!this.isHorizontal()) {
+        if (!this.horizontal) {
             this.ePillDropList.scrollTop = scrollTop;
         }
 

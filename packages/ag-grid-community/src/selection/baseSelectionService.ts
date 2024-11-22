@@ -11,24 +11,31 @@ import {
     _getEnableDeselection,
     _getEnableSelection,
     _getEnableSelectionWithoutKeys,
+    _getGroupSelection,
     _getGroupSelectsDescendants,
     _getIsRowSelectable,
+    _isClientSideRowModel,
+    _isMultiRowSelection,
     _isRowSelection,
 } from '../gridOptionsUtils';
 import type { IRowNode } from '../interfaces/iRowNode';
-import type { ISetNodesSelectedParams, SetSelectedParams } from '../interfaces/iSelectionService';
+import type { ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import { _setAriaSelected } from '../utils/aria';
 import type { ChangedPath } from '../utils/changedPath';
 import { _warn } from '../validation/logging';
 import { CheckboxSelectionComponent } from './checkboxSelectionComponent';
+import { RowRangeSelectionContext } from './rowRangeSelectionContext';
 import { SelectAllFeature } from './selectAllFeature';
 
 export abstract class BaseSelectionService extends BeanStub {
     protected isRowSelectable?: IsRowSelectable;
+    protected selectionCtx: RowRangeSelectionContext;
 
     public postConstruct(): void {
-        const { gos } = this;
+        const { gos, beans } = this;
+        this.selectionCtx = new RowRangeSelectionContext(beans.rowModel);
+
         this.addManagedPropertyListeners(['isRowSelectable', 'rowSelection'], () => {
             const callback = _getIsRowSelectable(gos);
             if (callback !== this.isRowSelectable) {
@@ -40,6 +47,11 @@ export abstract class BaseSelectionService extends BeanStub {
         this.isRowSelectable = _getIsRowSelectable(gos);
     }
 
+    public override destroy(): void {
+        super.destroy();
+        this.selectionCtx.reset();
+    }
+
     public createCheckboxSelectionComponent(): CheckboxSelectionComponent {
         return new CheckboxSelectionComponent();
     }
@@ -48,69 +60,8 @@ export abstract class BaseSelectionService extends BeanStub {
         return new SelectAllFeature(column);
     }
 
-    public handleRowClick(rowNode: RowNode, mouseEvent: MouseEvent): void {
-        const { gos } = this;
-
-        // ctrlKey for windows, metaKey for Apple
-        const isMultiKey = mouseEvent.ctrlKey || mouseEvent.metaKey;
-        const isShiftKey = mouseEvent.shiftKey;
-
-        const isSelected = rowNode.isSelected();
-
-        // we do not allow selecting the group by clicking, when groupSelectChildren, as the logic to
-        // handle this is broken. to observe, change the logic below and allow groups to be selected.
-        // you will see the group gets selected, then all children get selected, then the grid unselects
-        // the children (as the default behaviour when clicking is to unselect other rows) which results
-        // in the group getting unselected (as all children are unselected). the correct thing would be
-        // to change this, so that children of the selected group are not then subsequently un-selected.
-        const groupSelectsChildren = _getGroupSelectsDescendants(gos);
-        const rowDeselectionWithCtrl = _getEnableDeselection(gos);
-        const rowClickSelection = _getEnableSelection(gos);
-        if (
-            // we do not allow selecting groups by clicking (as the click here expands the group), or if it's a detail row,
-            // so return if it's a group row
-            (groupSelectsChildren && rowNode.group) ||
-            this.isRowSelectionBlocked(rowNode) ||
-            // if selecting and click selection disabled, do nothing
-            (!rowClickSelection && !isSelected) ||
-            // if deselecting and click deselection disabled, do nothing
-            (!rowDeselectionWithCtrl && isSelected)
-        ) {
-            return;
-        }
-
-        const multiSelectOnClick = _getEnableSelectionWithoutKeys(gos);
-        const source = 'rowClicked';
-
-        if (isSelected) {
-            if (multiSelectOnClick) {
-                this.setSelectedParams({ rowNode, newValue: false, event: mouseEvent, source });
-            } else if (isMultiKey) {
-                if (rowDeselectionWithCtrl) {
-                    this.setSelectedParams({ rowNode, newValue: false, event: mouseEvent, source });
-                }
-            } else if (rowClickSelection) {
-                // selected with no multi key, must make sure anything else is unselected
-                this.setSelectedParams({
-                    rowNode,
-                    newValue: true,
-                    clearSelection: !isShiftKey,
-                    rangeSelect: isShiftKey,
-                    event: mouseEvent,
-                    source,
-                });
-            }
-        } else {
-            const clearSelection = multiSelectOnClick ? false : !isMultiKey;
-            this.setSelectedParams({
-                rowNode,
-                newValue: true,
-                clearSelection: clearSelection,
-                rangeSelect: isShiftKey,
-                event: mouseEvent,
-                source,
-            });
-        }
+    protected isMultiSelect(): boolean {
+        return _isMultiRowSelection(this.gos);
     }
 
     public onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void {
@@ -155,22 +106,24 @@ export abstract class BaseSelectionService extends BeanStub {
         });
     }
 
-    // should only be called if groupSelectsChildren=true
     public updateGroupsFromChildrenSelections?(source: SelectionEventSourceType, changedPath?: ChangedPath): boolean;
 
     public abstract setNodesSelected(params: ISetNodesSelectedParams): number;
 
-    public abstract updateSelectableAfterGrouping(changedPath?: ChangedPath): void;
-
     protected abstract updateSelectable(changedPath?: ChangedPath): void;
 
-    private isRowSelectionBlocked(rowNode: RowNode): boolean {
-        return !rowNode.selectable || !!rowNode.rowPinned || !_isRowSelection(this.gos);
+    protected isRowSelectionBlocked(rowNode: RowNode): boolean {
+        if (!_isRowSelection(this.gos)) {
+            _warn(132);
+            return false;
+        }
+        return !rowNode.selectable || !!rowNode.rowPinned;
     }
 
-    public checkRowSelectable(rowNode: RowNode): void {
-        const isRowSelectableFunc = _getIsRowSelectable(this.gos);
-        this.setRowSelectable(rowNode, isRowSelectableFunc ? isRowSelectableFunc!(rowNode) : true);
+    public updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean {
+        const selectable = this.isRowSelectable?.(rowNode) ?? true;
+        this.setRowSelectable(rowNode, selectable, suppressSelectionUpdate);
+        return selectable;
     }
 
     protected setRowSelectable(rowNode: RowNode, newVal: boolean, suppressSelectionUpdate?: boolean): void {
@@ -185,18 +138,17 @@ export abstract class BaseSelectionService extends BeanStub {
             const isGroupSelectsChildren = _getGroupSelectsDescendants(this.gos);
             if (isGroupSelectsChildren) {
                 const selected = this.calculateSelectedFromChildren(rowNode);
-                this.setSelectedParams({ rowNode, newValue: selected ?? false, source: 'selectableChanged' });
+                this.setNodesSelected({ nodes: [rowNode], newValue: selected ?? false, source: 'selectableChanged' });
                 return;
             }
 
             // if row is selected but shouldn't be selectable, then deselect.
             if (rowNode.isSelected() && !rowNode.selectable) {
-                this.setSelectedParams({ rowNode, newValue: false, source: 'selectableChanged' });
+                this.setNodesSelected({ nodes: [rowNode], newValue: false, source: 'selectableChanged' });
             }
         }
     }
 
-    // + selectionController.calculatedSelectedForAllGroupNodes()
     protected calculateSelectedFromChildren(rowNode: RowNode): boolean | undefined | null {
         let atLeastOneSelected = false;
         let atLeastOneDeSelected = false;
@@ -283,21 +235,6 @@ export abstract class BaseSelectionService extends BeanStub {
         return true;
     }
 
-    public setSelectedParams(params: SetSelectedParams & { event?: Event }): number {
-        const { rowNode } = params;
-        if (rowNode.rowPinned) {
-            _warn(59);
-            return 0;
-        }
-
-        if (rowNode.id === undefined) {
-            _warn(60);
-            return 0;
-        }
-
-        return this.setNodesSelected({ ...params, nodes: [rowNode.footer ? rowNode.sibling : rowNode] });
-    }
-
     public isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean {
         const so = this.gos.get('rowSelection');
 
@@ -308,4 +245,123 @@ export abstract class BaseSelectionService extends BeanStub {
             return column.isColumnFunc(rowNode, column.colDef.checkboxSelection);
         }
     }
+
+    protected inferNodeSelections(
+        node: RowNode,
+        shiftKey: boolean,
+        metaKey: boolean,
+        source: SelectionEventSourceType
+    ): null | NodeSelection {
+        const { gos, selectionCtx } = this;
+        const currentSelection = node.isSelected();
+        const groupSelectsDescendants = _getGroupSelectsDescendants(gos);
+        const enableClickSelection = _getEnableSelection(gos);
+        const enableDeselection = _getEnableDeselection(gos);
+        const isRowClicked = source === 'rowClicked';
+
+        // we do not allow selecting the group by clicking, when groupSelectChildren, as the logic to
+        // handle this is broken. to observe, change the logic below and allow groups to be selected.
+        // you will see the group gets selected, then all children get selected, then the grid unselects
+        // the children (as the default behaviour when clicking is to unselect other rows) which results
+        // in the group getting unselected (as all children are unselected). the correct thing would be
+        // to change this, so that children of the selected group are not then subsequently un-selected.
+        if (isRowClicked && groupSelectsDescendants && node.group) return null;
+
+        if (isRowClicked && !(enableClickSelection || enableDeselection)) return null;
+
+        if (shiftKey && metaKey && this.isMultiSelect()) {
+            // SHIFT+CTRL or SHIFT+CMD is used for bulk deselection, except where the selection root
+            // is still selected, in which case we default to normal bulk selection behaviour
+            const root = selectionCtx.getRoot();
+            if (root && !root.isSelected()) {
+                // range deselection mode
+                const partition = selectionCtx.extend(node, groupSelectsDescendants);
+                return {
+                    select: [],
+                    deselect: partition.keep,
+                    reset: false,
+                };
+            } else {
+                // default to range selection
+                const partition = selectionCtx.isInRange(node)
+                    ? selectionCtx.truncate(node)
+                    : selectionCtx.extend(node, groupSelectsDescendants);
+                return {
+                    deselect: partition.discard,
+                    select: partition.keep,
+                    reset: false,
+                };
+            }
+        } else if (shiftKey && this.isMultiSelect()) {
+            // SHIFT is used for bulk selection
+            const root = selectionCtx.getRoot();
+            const partition = selectionCtx.isInRange(node)
+                ? selectionCtx.truncate(node)
+                : selectionCtx.extend(node, groupSelectsDescendants);
+            return {
+                select: partition.keep,
+                deselect: partition.discard,
+                reset: !!(root && !root.isSelected()),
+            };
+        } else if (metaKey) {
+            // CTRL is used for deselection of a single node
+            selectionCtx.setRoot(node);
+
+            if (isRowClicked && currentSelection && !enableDeselection) {
+                return null;
+            }
+
+            return {
+                node,
+                newValue: currentSelection ? false : true,
+                clearSelection: !this.isMultiSelect(),
+            };
+        } else {
+            // Otherwise we just do normal selection of a single node
+            selectionCtx.setRoot(node);
+            const enableSelectionWithoutKeys = _getEnableSelectionWithoutKeys(gos);
+            const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
+            const shouldClear = isRowClicked && (!enableSelectionWithoutKeys || !enableClickSelection);
+
+            // Indeterminate states need to be handled differently if `groupSelects: 'filteredDescendants'` in CSRM.
+            // Specifically, clicking should toggle them _off_ instead of _on_
+            if (groupSelectsFiltered && currentSelection === undefined && _isClientSideRowModel(gos)) {
+                return {
+                    node,
+                    newValue: false,
+                    clearSelection: !this.isMultiSelect() || shouldClear,
+                };
+            }
+
+            if (isRowClicked) {
+                const newValue = currentSelection ? !enableSelectionWithoutKeys : enableClickSelection;
+                if (newValue === currentSelection) return null;
+
+                return {
+                    node,
+                    newValue,
+                    clearSelection: !this.isMultiSelect() || shouldClear,
+                };
+            }
+
+            return {
+                node,
+                newValue: !currentSelection,
+                clearSelection: !this.isMultiSelect() || shouldClear,
+            };
+        }
+    }
 }
+
+interface SingleNodeSelection {
+    node: RowNode;
+    newValue: boolean;
+    clearSelection: boolean;
+}
+
+interface MultiNodeSelection {
+    select: readonly RowNode[];
+    deselect: readonly RowNode[];
+    reset: boolean;
+}
+type NodeSelection = SingleNodeSelection | MultiNodeSelection;

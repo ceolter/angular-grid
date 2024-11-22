@@ -1,3 +1,5 @@
+import type { Rect } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -6,7 +8,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniHistogram extends MiniChartWithAxes {
     static chartType: ChartType = 'histogram';
 
-    private readonly bars: any[];
+    private readonly bars: Rect[];
 
     constructor(container: HTMLElement, agChartsExports: AgChartsExports, fills: string[], strokes: string[]) {
         super(container, agChartsExports, 'histogramTooltip');
