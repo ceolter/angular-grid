@@ -77,7 +77,12 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         super.activate(state);
 
         const rootNode = state.rootNode;
-        const treeRoot = (this.treeRoot ??= new TreeNode(null, '', -1));
+        let treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            treeRoot = new TreeNode(null, '', -1);
+            treeRoot.childrenAfterGroup = [];
+            this.treeRoot = treeRoot;
+        }
         treeRoot.setRow(rootNode);
         treeRoot.invalidate();
     }

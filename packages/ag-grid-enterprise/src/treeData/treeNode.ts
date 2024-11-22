@@ -217,10 +217,10 @@ export class TreeNode implements ITreeNode {
         duplicateRows.add(newRow);
         newRow.treeNode = this;
         if (newRow.childrenAfterGroup === this.childrenAfterGroup) {
-            newRow.childrenAfterGroup = _EmptyArray;
+            newRow.childrenAfterGroup = null;
         }
         if (newRow.allLeafChildren === this.allLeafChildren) {
-            newRow.allLeafChildren = _EmptyArray;
+            newRow.allLeafChildren = null;
         }
         return true;
     }
@@ -344,13 +344,13 @@ export class TreeNode implements ITreeNode {
      */
     public updateChildrenAfterGroup(treeData: boolean): boolean {
         this.childrenChanged = false; // Reset the flag for this node
-        const childrenCount = (treeData && this.children?.size) || 0;
-        if (childrenCount === 0) {
+        const childrenCount = treeData && this.children?.size;
+        if (!childrenCount) {
             if (this.childrenAfterGroup.length === 0) {
                 return false; // Nothing changed
             }
 
-            this.childrenAfterGroup = _EmptyArray;
+            this.childrenAfterGroup = this.level < 0 ? [] : _EmptyArray;
             this.leafChildrenChanged = true;
             return true; // Children cleared
         }
