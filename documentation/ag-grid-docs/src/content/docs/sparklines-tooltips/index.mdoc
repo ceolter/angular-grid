@@ -10,7 +10,6 @@ The following sections cover how sparkline tooltips can be customised:
 * [Disabling Tooltips](./sparklines-tooltips/#disabling-sparkline-tooltips) - shows how to disable tooltips.
 * [Tooltip Data](./sparklines-tooltips/#tooltip-data) - covers how to change title and content of the default tooltip and access data from other columns in the same row.
 * [Tooltip Styles](./ available to customise the default tooltip styles.
-* [Tooltip Container and Offset](./sparklines-tooltips/#tooltip-container-and-offset) - shows how the tooltip container and offset position from the mouse cursor can be modified.
 * [Custom Tooltip](./sparklines-tooltips/#custom-tooltip) - demonstrates how a completely custom HTML template can be used as the tooltip.
 
 ## Disabling Sparkline Tooltips
@@ -132,38 +131,6 @@ This is shown in the example below. Note that:
 * The default tooltip template is used and the style definitions are overriden in the styles.css file.
 
 {% gridExampleRunner title="Styling Sparkline Tooltips" name="sparkline-tooltip-advanced-styles"  exampleHeight=585 /%}
-
-## Tooltip Container and Offset
-
-The tooltip position relative to the mouse cursor can be modified using the `xOffset` and `yOffset` properties in `tooltip` options as shown below:
-
-```js
-sparklineOptions: {
-    tooltip: {
-            xOffset: 0, // positions tooltip 0px to the right of the top left of the mouse cursor
-            yOffset: 20, // positions tooltip 20px down from the top left of the mouse cursor
-    }
-}
-```
-
-By default the tooltip is confined to the length of the sparkline cell, which can be changed by providing a container HTML element to allow the tooltip to overflow the cell.
-
-In the snippet below, the tooltip container has been configured to be the `document.body` which allows the tooltip to be positioned anywhere within the `<body>` node of the current document.
-
-```js
-sparklineOptions: {
-    tooltip: {
-        container: document.body, // confines the tooltip to the document body node instead of the sparkline cell
-    }
-}
-```
-
-Here's a live example to demonstrate the configuration above.
-
-* Note that the tooltip is now positioned underneath the mouse cursor as `xOffset` is set to `0`px and `yOffset` to `20`px.
-* The effect of the tooltip `container` configuration is that the tooltip will not flip to the left of the mouse cursor when it reaches the end of the sparkline cell width, instead it will only flip if the tooltip position surpasses the document body element's width.
-
-{% gridExampleRunner title="Sparkline Tooltip Container" name="sparkline-tooltip-container"  exampleHeight=585 /%}
 
 ## Custom Tooltip
 
