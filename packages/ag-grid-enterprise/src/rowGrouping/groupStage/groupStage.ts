@@ -464,7 +464,10 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
             sibling.childrenMapped = rootNode.childrenMapped;
         }
 
-        this.insertNodes(rootNode.allLeafChildren!, details);
+        const allLeafChildren = rootNode.allLeafChildren!;
+        for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
+            this.insertOneNode(allLeafChildren[i], details);
+        }
     }
 
     private noChangeInGroupingColumns(details: GroupingDetails): boolean {
@@ -489,16 +492,6 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         this.oldGroupDisplayColIds = newGroupDisplayColIds;
 
         return noFurtherProcessingNeeded && !details.state.hasNodeChanges();
-    }
-
-    private insertNodes(newRowNodes: RowNode[], details: GroupingDetails): void {
-        const changedPath = details.state.changedPath;
-        newRowNodes.forEach((rowNode) => {
-            this.insertOneNode(rowNode, details);
-            if (changedPath.active) {
-                changedPath.addParentNode(rowNode.parent);
-            }
-        });
     }
 
     private insertOneNode(childNode: RowNode, details: GroupingDetails, batchRemover?: BatchRemover): void {

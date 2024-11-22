@@ -114,6 +114,7 @@
       }
     }
   ],
+  "vitest.workspaceConfig": "vitest.workspace.ts",
   "jest.rootPath": "testing/behavioural",
   "jest.runMode": "watch"
 }

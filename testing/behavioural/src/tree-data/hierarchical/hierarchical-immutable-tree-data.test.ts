@@ -23,7 +23,7 @@ describe('ag-grid hierarchical immutable tree data', () => {
         consoleWarnSpy?.mockRestore();
     });
 
-    test.only('ag-grid hierarchical immutable tree data', async () => {
+    test('ag-grid hierarchical immutable tree data', async () => {
         const rowData1 = cachedJSONObjects.array([
             {
                 id: 'A',

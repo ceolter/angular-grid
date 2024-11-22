@@ -102,6 +102,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         this.dispatchRowDataUpdateStartedEvent(rowData);
 
         const gos = this.gos;
+        const rootNode = state.rootNode;
         const treeRoot = this.treeRoot!;
         const childrenGetter = this.childrenGetter;
         const getRowIdFunc = _getRowIdCallback(gos)!;
@@ -109,7 +110,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const processedData = new Map<TData, AbstractClientSideNodeManager.RowNode<TData>>();
 
-        const oldAllLeafChildren = state.rootNode.allLeafChildren;
+        const oldAllLeafChildren = rootNode.allLeafChildren;
         const allLeafChildren: TreeRow[] = [];
 
         let orderChanged = false;
@@ -223,7 +224,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
         }
 
         treeRoot.allLeafChildren = allLeafChildren;
-        state.rootNode.allLeafChildren = allLeafChildren;
+        rootNode.allLeafChildren = allLeafChildren;
+        const sibling = rootNode.sibling;
+        if (sibling) {
+            sibling.allLeafChildren = allLeafChildren;
+        }
 
         if (orderChanged) {
             state.rowsOrderChanged = true;
