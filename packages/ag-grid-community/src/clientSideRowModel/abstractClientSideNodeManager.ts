@@ -141,10 +141,6 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         const processedNodes = new Set<ClientSideNodeManagerRowNode<TData>>();
 
         if (rowData) {
-            // split all the new data in the following:
-            // if new, push to 'add'
-            // if update, push to 'update'
-            // if not changed, do not include in the transaction
             for (let i = 0, len = rowData.length; i < len; i++) {
                 const data = rowData[i];
                 const id = getRowIdFunc({ data, level: 0 });
