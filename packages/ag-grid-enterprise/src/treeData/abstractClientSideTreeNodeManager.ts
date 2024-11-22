@@ -27,7 +27,6 @@ import {
 interface TreeCommitDetails<TData = any> {
     rootNode: AbstractClientSideNodeManager.RootNode<TData>;
     activeChangedPath: ChangedPath | null;
-    deltaUpdate: boolean;
     expandByDefault: number;
     isGroupOpenByDefault: IsGroupOpenByDefaultCallback;
 }
@@ -213,11 +212,8 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             activeChangedPath = null;
         }
 
-        const deltaUpdate = !!state.deltaUpdate;
-
         const details: TreeCommitDetails<TData> = {
             rootNode,
-            deltaUpdate,
             activeChangedPath,
             expandByDefault: this.gos.get('groupDefaultExpanded'),
             isGroupOpenByDefault: this.gos.getCallback('isGroupOpenByDefault'),

@@ -93,7 +93,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     public execute(state: RefreshModelState): void {
         const details = this.createGroupingDetails(state);
 
-        if (state.deltaUpdate) {
+        if (state.changedPath.active) {
             this.handleDeltaUpdate(state, details);
         } else {
             this.shotgunResetEverything(details, state.columnsChanged);

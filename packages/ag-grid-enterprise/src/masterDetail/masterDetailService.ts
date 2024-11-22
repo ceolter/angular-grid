@@ -100,7 +100,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
         };
 
         const updates = state.updates;
-        if (!enabledChanged && state.deltaUpdate) {
+        if (!enabledChanged && state.changedPath.active) {
             for (const node of updates.keys()) {
                 const created = updates.get(node)!;
                 setMaster(node, created, !created);

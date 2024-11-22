@@ -74,9 +74,9 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
         const deltaSort =
             sortActive &&
-            !!state.deltaUpdate &&
+            state.changedPath.active &&
             // in time we can remove this check, so that delta sort is always
-            // on if transactions are present. it's off for now so that we can
+            // on delta update (transactions or immutable data). it's off for now so that we can
             // selectively turn it on and test it with some select users before
             // rolling out to everyone.
             this.gos.get('deltaSort');

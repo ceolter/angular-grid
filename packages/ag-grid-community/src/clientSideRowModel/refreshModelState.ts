@@ -116,6 +116,7 @@ export class RefreshModelState<TData = any> {
      * If this is true, we consider this a new reload of data from scratch, or a first load of data.
      * In this case, removals will not contain the previous cleared rows.
      * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
+     * During a delta update instead changedPath.active will be true.
      */
     public newData: boolean = false;
 
