@@ -4,7 +4,6 @@ import type { GridOptionsService } from '../gridOptionsService';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
 import type { IRowNodeStageDefinition } from '../interfaces/iRowNodeStage';
-import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { ChangedPath } from '../utils/changedPath';
 import type { AbstractClientSideNodeManager } from './abstractClientSideNodeManager';
 
@@ -20,8 +19,6 @@ const orderedStepMap: Record<ClientSideRowModelStage, number> = {
 };
 
 const orderedSteps: Record<ClientSideRowModelStage, number> = Object.assign(Object.create(null), orderedStepMap);
-
-export type AsyncTransactionsCallback<TData = any> = (transaction: RowNodeTransaction<TData>) => void;
 
 export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
@@ -54,12 +51,6 @@ export interface RefreshModelParams<TData = any> {
     /** A callback to execute to update row nodes, or execute transactions */
     updateRowNodes?: (state: RefreshModelState<TData>) => void;
 }
-
-const createInactiveChangedPath = (rootNode: RowNode) => {
-    const changedPath = new ChangedPath(false, rootNode);
-    changedPath.active = false;
-    return changedPath;
-};
 
 export class RefreshModelState<TData = any> {
     /** how much of the pipeline to execute */
@@ -149,7 +140,7 @@ export class RefreshModelState<TData = any> {
          * The ChangedPath containing the changed parent nodes in DFS order.
          * By default is disabled, and it gets enabled only if running an immutable set data.
          */
-        public readonly changedPath: ChangedPath = createInactiveChangedPath(rootNode)
+        public readonly changedPath: ChangedPath = new ChangedPath(false, rootNode)
     ) {
         this.step = step;
         this.columnsChanged = columnsChanged;
@@ -158,6 +149,8 @@ export class RefreshModelState<TData = any> {
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
         this.allowChangedPath = allowChangedPath;
+
+        changedPath.active = false; // Initially inactive, will be set to active by setDeltaUpdate(), if allowed to
     }
 
     public updateParams({
