@@ -138,7 +138,6 @@ describe('ag-grid hierarchical tree data', () => {
             · · · └── 7 LEAF id:7 ag-Grid-AutoColumn:"7" x:"H"
         `);
 
-        console.log('START HERE!');
         api.setGridOption('treeData', false);
 
         await gridRows.check(`

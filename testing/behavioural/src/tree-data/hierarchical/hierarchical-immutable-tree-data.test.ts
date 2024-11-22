@@ -261,7 +261,6 @@ describe('ag-grid hierarchical immutable tree data', () => {
             },
         ]);
 
-        console.log('\n\nSET NEW ROW DATAXyz!!!\n');
         api.setGridOption('rowData', rowData4);
 
         gridRows = new GridRows(api, 'add, reorder, move some nodes', gridRowsOptions);
