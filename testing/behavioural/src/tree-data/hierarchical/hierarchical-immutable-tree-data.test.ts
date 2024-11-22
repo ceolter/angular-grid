@@ -282,8 +282,6 @@ describe('ag-grid hierarchical immutable tree data', () => {
             · · └── K LEAF id:K ag-Grid-AutoColumn:"K" v:110
         `);
 
-        return;
-
         const rows4 = gridRows.displayedRows;
 
         expect(rows3[0] === rows4[2]).toBe(true); // C swapped with A
