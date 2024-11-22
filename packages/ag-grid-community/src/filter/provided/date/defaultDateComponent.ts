@@ -26,12 +26,6 @@ export class DefaultDateComponent extends Component implements IDateComp {
     private isApply: boolean = false;
     private applyOnFocusOut: boolean = false;
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     public init(params: IDateParams): void {
         this.params = params;
         this.setParams(params);

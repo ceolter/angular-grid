@@ -3,13 +3,19 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 import { CountryCellRenderer } from './countryCellRenderer_typescript';
 import { createBase64FlagsFromResponse } from './imageUtils';
 import type { FlagContext } from './interfaces';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ExcelExportModule, MenuModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ExcelExportModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+]);
 
 const countryCodes: any = {};
 const base64flags: any = {};

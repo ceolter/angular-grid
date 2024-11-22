@@ -3,7 +3,7 @@ import { BeanStub } from '../context/beanStub';
 import { _getMaxConcurrentDatasourceRequests } from '../gridOptionsUtils';
 import { _removeFromArray } from '../utils/array';
 import { _debounce, _logIfDebug } from '../utils/function';
-import type { RowNodeBlock } from './rowNodeBlock';
+import type { InfiniteBlock } from './infiniteBlock';
 
 export type RowNodeBlockLoaderEvent = 'blockLoaded';
 export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implements NamedBean {
@@ -13,7 +13,7 @@ export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implem
     private checkBlockToLoadDebounce: () => void;
 
     private activeBlockLoadsCount = 0;
-    private blocks: RowNodeBlock[] = [];
+    private blocks: InfiniteBlock[] = [];
     private active = true;
 
     public postConstruct(): void {
@@ -29,7 +29,7 @@ export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implem
         }
     }
 
-    public addBlock(block: RowNodeBlock): void {
+    public addBlock(block: InfiniteBlock): void {
         this.blocks.push(block);
 
         // note that we do not remove this listener when removing the block. this is because the
@@ -40,7 +40,7 @@ export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implem
         this.checkBlockToLoad();
     }
 
-    public removeBlock(block: RowNodeBlock): void {
+    public removeBlock(block: InfiniteBlock): void {
         _removeFromArray(this.blocks, block);
     }
 
@@ -76,8 +76,8 @@ export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implem
 
         const loadAvailability =
             this.maxConcurrentRequests != null ? this.maxConcurrentRequests - this.activeBlockLoadsCount : 1;
-        const blocksToLoad: RowNodeBlock[] = this.blocks
-            .filter((block) => block.getState() === 'needsLoading')
+        const blocksToLoad: InfiniteBlock[] = this.blocks
+            .filter((block) => block.state === 'needsLoading')
             .slice(0, loadAvailability);
         this.activeBlockLoadsCount += blocksToLoad.length;
         blocksToLoad.forEach((block) => block.load());
@@ -86,7 +86,7 @@ export class RowNodeBlockLoader extends BeanStub<RowNodeBlockLoaderEvent> implem
 
     public getBlockState() {
         const result: { [key: string]: any } = {};
-        this.blocks.forEach((block: RowNodeBlock) => {
+        this.blocks.forEach((block: InfiniteBlock) => {
             const { id, state } = block.getBlockStateJson();
             result[id] = state;
         });

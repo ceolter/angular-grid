@@ -3,11 +3,11 @@ import type { ColDef, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, MenuModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
 
 const columnDefs: ColDef[] = [{ field: 'id' }, { field: 'color' }, { field: 'value1' }];
 const defaultColDef = {

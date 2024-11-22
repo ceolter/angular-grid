@@ -7,6 +7,6 @@ import { LocaleService } from './localeService';
  * @gridOption localeText, getLocaleText
  */
 export const LocaleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('LocaleModule'),
+    ...baseCommunityModule('Locale'),
     beans: [LocaleService],
 };

@@ -1,130 +1,126 @@
 @use 'design-system' as *;
 
 .container {
-    --avatar-size: #{$spacing-size-16};
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-collapse: collapse;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 0;
-    list-style: none;
+    @media screen and (max-width: $breakpoint-pricing-medium) {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+.socialProof {
+    --social-proof-bg: #fbfbfc;
 
-    @media screen and (min-width: $breakpoint-quotes-medium) {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: $spacing-size-6;
+    position: relative;
+    line-height: var(--text-lh-base);
+    background-color: var(--social-proof-bg);
+    border-right: 1px solid var(--color-border-secondary);
+    border-left: 1px solid var(--color-border-secondary);
+    box-shadow:
+        50vw 0 0 0 var(--social-proof-bg),
+        -50vw 0 0 0 var(--social-proof-bg);
+
+    #{$selector-darkmode} & {
+        --social-proof-bg: color-mix(in srgb, var(--color-fg-primary), var(--color-bg-primary) 98%);
+    }
+}
+
+.header {
+    padding-bottom: $spacing-size-10;
+
+    .cellsIllustration {
+        margin-left: auto;
+        left: 1px;
     }
 
-    @media screen and (min-width: $breakpoint-quotes-large) {
-        --avatar-size: #{$spacing-size-24};
-
-        gap: $spacing-size-10;
+    p,
+    h3 {
+        margin-right: $spacing-size-6;
+        margin-left: $spacing-size-6;
     }
 
-    blockquote {
-        --quote-background-color: var(--color-util-gray-200);
+    p {
+        margin-bottom: $spacing-size-2;
+        font-weight: var(--text-semibold);
+        color: var(--color-text-brand-primary);
 
-        position: relative;
-        margin-bottom: $spacing-size-6;
-        padding: $spacing-size-4 $spacing-size-6;
-        background-color: var(--quote-background-color);
-        border-radius: var(--radius-md);
-    }
-
-    figure {
-        max-width: 40em;
-        margin-bottom: $spacing-size-12;
-
-        li:last-child & {
-            margin-bottom: 0;
-        }
-    }
-
-    blockquote p {
-        position: relative;
-
-        &:before {
-            content: open-quote;
-            position: absolute;
-            left: -0.4em;
-        }
-
-        &:after {
-            content: close-quote;
-        }
-    }
-
-    figcaption {
-        display: grid;
-        grid-template-columns: var(--avatar-size) auto;
-        column-gap: $spacing-size-2;
-        grid-template-rows: auto;
-        grid-template-areas:
-            'avatar name'
-            'avatar orgContainer';
-        line-height: var(--text-lh-ultra-tight);
-    }
-
-    @media screen and (max-width: $breakpoint-quotes-large) {
-        li:nth-child(even) {
-            .quoteBubbleTail {
-                transform: scale(-1, 1);
-                left: auto;
-                right: var(--avatar-size);
-            }
-
-            figcaption {
-                grid-template-areas:
-                    'name avatar'
-                    'orgContainer avatar';
-                grid-template-columns: auto var(--avatar-size);
-                text-align: right;
-            }
-
-            .orgContainer {
-                justify-content: flex-end;
-            }
+        @media screen and (max-width: $breakpoint-pricing-medium) {
+            padding-top: $spacing-size-16;
         }
     }
 }
 
-.quoteBubbleTail {
-    position: absolute;
-    width: 18px;
-    height: 22px;
-    bottom: -$spacing-size-4;
-    left: var(--avatar-size);
-    fill: var(--quote-background-color);
+.quote {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: var(--text-fs-base);
+    line-height: var(--text-lh-2xl);
+    border: 1px solid var(--color-border-secondary);
+    margin: -1px;
+    padding: 24px;
+    background-color: var(--color-bg-primary);
 
-    @media screen and (min-width: $breakpoint-quotes-large) {
-        bottom: -22px;
+    @media screen and (max-width: $breakpoint-pricing-medium) {
+        width: 100%;
+    }
+
+    &:first-child {
+        padding: $spacing-size-6 $spacing-size-8 $spacing-size-6 $spacing-size-6;
+
+        @media screen and (max-width: $breakpoint-pricing-medium) {
+            border-bottom: 1px solid var(--color-border-secondary);
+        }
+    }
+
+    &:last-child {
+        padding: $spacing-size-6 $spacing-size-6 $spacing-size-6 $spacing-size-8;
+    }
+
+    blockquote p {
+        margin-bottom: $spacing-size-6;
+        text-indent: -0.5em;
+
+        &::before {
+            content: '“';
+        }
+
+        &::after {
+            content: '”';
+        }
+    }
+
+    footer {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    footer > div {
+        margin-left: $spacing-size-4;
     }
 }
 
 .avatar {
-    grid-area: avatar;
-    width: var(--avatar-size);
-    height: var(--avatar-size);
-    margin-right: $spacing-size-2;
-    border-radius: var(--radius-full);
+    width: $spacing-size-12;
+    height: $spacing-size-12;
+    border-radius: 50%;
+    outline: 2px solid var(--color-util-brand-300);
+    outline-offset: 4px;
+
+    #{$selector-darkmode} & {
+        outline: 2px solid var(--color-border-primary);
+    }
 }
 
 .name {
-    grid-area: name;
-    align-self: end;
-}
-
-.orgContainer {
-    grid-area: orgContainer;
-    align-self: start;
-    display: flex;
-    align-items: center;
-    gap: $spacing-size-1;
+    margin-bottom: 0;
 }
 
 .orgIcon {
-    width: 18px;
-    height: 18px;
-    border-radius: 2px;
+    width: 36px;
+    height: 36px;
+    margin-left: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-primary);
 }

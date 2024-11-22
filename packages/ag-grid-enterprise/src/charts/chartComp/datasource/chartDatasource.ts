@@ -281,7 +281,7 @@ export class ChartDatasource extends BeanStub {
             });
         });
 
-        if (this.gos.assertModuleRegistered('SharedRowGroupingModule', 1)) {
+        if (this.gos.assertModuleRegistered('SharedRowGrouping', 1)) {
             const aggStage = this.aggStage!;
             dataAggregated.forEach((groupItem) =>
                 params.valueCols.forEach((col) => {

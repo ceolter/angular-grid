@@ -1,22 +1,11 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { RowContainerCtrl } from '../gridBodyComp/rowContainer/rowContainerCtrl';
 import { _getRowHeightAsNumber } from '../gridOptionsUtils';
 import { _debounce } from '../utils/function';
-import type { PaginationService } from './paginationService';
 
 export class PaginationAutoPageSizeService extends BeanStub implements NamedBean {
     beanName = 'paginationAutoPageSizeSvc' as const;
-
-    private ctrlsSvc: CtrlsService;
-    private pagination: PaginationService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.pagination = beans.pagination!;
-    }
 
     private centerRowsCtrl: RowContainerCtrl;
 
@@ -25,7 +14,7 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
     private isBodyRendered: boolean;
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => {
+        this.beans.ctrlsSvc.whenReady(this, (p) => {
             this.centerRowsCtrl = p.center;
 
             const listener = this.checkPageSize.bind(this);
@@ -45,7 +34,7 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
 
     private onPaginationAutoSizeChanged(): void {
         if (this.notActive()) {
-            this.pagination.unsetAutoCalculatedPageSize();
+            this.beans.pagination!.unsetAutoCalculatedPageSize();
         } else {
             this.checkPageSize();
         }
@@ -59,10 +48,11 @@ export class PaginationAutoPageSizeService extends BeanStub implements NamedBean
         const bodyHeight = this.centerRowsCtrl.viewportSizeFeature!.getBodyHeight();
 
         if (bodyHeight > 0) {
+            const beans = this.beans;
             const update = () => {
-                const rowHeight = Math.max(_getRowHeightAsNumber(this.beans), 1); // prevent divide by zero error if row height is 0
+                const rowHeight = Math.max(_getRowHeightAsNumber(beans), 1); // prevent divide by zero error if row height is 0
                 const newPageSize = Math.floor(bodyHeight / rowHeight);
-                this.pagination.setPageSize(newPageSize, 'autoCalculated');
+                beans.pagination!.setPageSize(newPageSize, 'autoCalculated');
             };
 
             if (!this.isBodyRendered) {

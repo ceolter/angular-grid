@@ -12,9 +12,6 @@ export class AgPrimaryCols extends Component {
     private readonly primaryColsHeaderPanel: AgPrimaryColsHeader = RefPlaceholder;
     private readonly primaryColsListPanel: AgPrimaryColsList = RefPlaceholder;
 
-    private allowDragging: boolean;
-    private params: ToolPanelColumnCompParams;
-    private eventType: ColumnEventType;
     private positionableFeature: PositionableFeature;
 
     constructor() {
@@ -30,49 +27,41 @@ export class AgPrimaryCols extends Component {
 
     // we allow dragging in the toolPanel, but not when this component appears in the column menu
     public init(allowDragging: boolean, params: ToolPanelColumnCompParams, eventType: ColumnEventType): void {
-        this.allowDragging = allowDragging;
-        this.params = params;
-        this.eventType = eventType;
+        const { primaryColsHeaderPanel, primaryColsListPanel } = this;
 
-        this.primaryColsHeaderPanel.init(this.params);
+        primaryColsHeaderPanel.init(params);
 
-        const hideFilter = this.params.suppressColumnFilter;
-        const hideSelect = this.params.suppressColumnSelectAll;
-        const hideExpand = this.params.suppressColumnExpandAll;
+        const hideFilter = params.suppressColumnFilter;
+        const hideSelect = params.suppressColumnSelectAll;
+        const hideExpand = params.suppressColumnExpandAll;
 
         if (hideExpand && hideFilter && hideSelect) {
-            this.primaryColsHeaderPanel.setDisplayed(false);
+            primaryColsHeaderPanel.setDisplayed(false);
         }
 
-        this.addManagedListeners(this.primaryColsListPanel, {
-            groupExpanded: this.onGroupExpanded.bind(this),
-            selectionChanged: this.onSelectionChange.bind(this),
+        this.addManagedListeners(primaryColsListPanel, {
+            groupExpanded: (event) => {
+                primaryColsHeaderPanel.setExpandState(event.state);
+                params.onStateUpdated();
+            },
+            selectionChanged: (event) => primaryColsHeaderPanel.setSelectionState(event.state),
         });
 
-        this.primaryColsListPanel.init(this.params, this.allowDragging, this.eventType);
+        primaryColsListPanel.init(params, allowDragging, eventType);
 
-        this.addManagedListeners(this.primaryColsHeaderPanel, {
-            expandAll: this.onExpandAll.bind(this),
-            collapseAll: this.onCollapseAll.bind(this),
-            selectAll: this.onSelectAll.bind(this),
-            unselectAll: this.onUnselectAll.bind(this),
-            filterChanged: this.onFilterChanged.bind(this),
+        this.addManagedListeners(primaryColsHeaderPanel, {
+            expandAll: primaryColsListPanel.doSetExpandedAll.bind(primaryColsListPanel, true),
+            collapseAll: primaryColsListPanel.doSetExpandedAll.bind(primaryColsListPanel, false),
+            selectAll: primaryColsListPanel.doSetSelectedAll.bind(primaryColsListPanel, true),
+            unselectAll: primaryColsListPanel.doSetSelectedAll.bind(primaryColsListPanel, false),
+            filterChanged: (event) => primaryColsListPanel.setFilterText(event.filterText),
         });
 
-        this.positionableFeature = new PositionableFeature(this.getGui(), { minHeight: 100 });
-        this.createManagedBean(this.positionableFeature);
+        this.positionableFeature = this.createManagedBean(new PositionableFeature(this.getGui(), { minHeight: 100 }));
     }
 
     public toggleResizable(resizable: boolean) {
         this.positionableFeature.setResizable(resizable ? { bottom: true } : false);
-    }
-
-    public onExpandAll(): void {
-        this.primaryColsListPanel.doSetExpandedAll(true);
-    }
-
-    public onCollapseAll(): void {
-        this.primaryColsListPanel.doSetExpandedAll(false);
     }
 
     public expandGroups(groupIds?: string[]): void {
@@ -87,29 +76,8 @@ export class AgPrimaryCols extends Component {
         this.primaryColsListPanel.setColumnLayout(colDefs);
     }
 
-    private onFilterChanged(event: any): void {
-        this.primaryColsListPanel.setFilterText(event.filterText);
-    }
-
     public syncLayoutWithGrid(): void {
         this.primaryColsListPanel.onColumnsChanged();
-    }
-
-    private onSelectAll(): void {
-        this.primaryColsListPanel.doSetSelectedAll(true);
-    }
-
-    private onUnselectAll(): void {
-        this.primaryColsListPanel.doSetSelectedAll(false);
-    }
-
-    private onGroupExpanded(event: any): void {
-        this.primaryColsHeaderPanel.setExpandState(event.state);
-        this.params.onStateUpdated();
-    }
-
-    private onSelectionChange(event: any): void {
-        this.primaryColsHeaderPanel.setSelectionState(event.state);
     }
 
     public getExpandedGroups(): string[] {

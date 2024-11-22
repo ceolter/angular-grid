@@ -4,7 +4,7 @@ import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 import { DetailCellRenderer } from './detailCellRenderer_typescript';
 
@@ -13,7 +13,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     MasterDetailModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
 ]);
 
 let gridApi: GridApi<IAccount>;

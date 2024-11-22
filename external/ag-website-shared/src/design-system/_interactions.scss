@@ -17,3 +17,7 @@
 .no-transitions *::after {
     transition: none !important; // !important used to ensure no transitions fire whilst class is present
 }
+
+.no-overflow-anchor {
+    overflow-anchor: none; // Prevent expanding sections from moving the page up. E.g. mobile docs nav menu
+}

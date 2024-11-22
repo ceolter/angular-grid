@@ -22,7 +22,7 @@ import { ColumnGroupService } from './columnGroupService';
  * @colGroupDef
  */
 export const ColumnGroupModule: _ModuleWithApi<_ColumnGroupGridApi> = {
-    ...baseCommunityModule('ColumnGroupModule'),
+    ...baseCommunityModule('ColumnGroup'),
     dynamicBeans: { headerGroupCellCtrl: HeaderGroupCellCtrl as any },
     beans: [ColumnGroupService],
     apiFunctions: {

@@ -12,7 +12,7 @@ import { ClipboardModule } from 'ag-grid-enterprise';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -21,7 +21,8 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ExcelExportModule,
     MasterDetailModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
 ]);
 
 let gridApi: GridApi<IAccount>;

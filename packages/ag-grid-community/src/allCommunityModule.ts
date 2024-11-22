@@ -46,7 +46,7 @@ import { CellApiModule, ValueCacheModule } from './valueService/valueModule';
  * @feature All Community Features
  */
 export const AllCommunityModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AllCommunityModule'),
+    ...baseCommunityModule('AllCommunity'),
     dependsOn: [
         ClientSideRowModelModule,
         CsvExportModule,

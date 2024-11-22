@@ -3,14 +3,15 @@ import type { ColDef, GridApi, GridOptions, IDateFilterParams, IRowNode } from '
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     SetFilterModule,
 ]);
 

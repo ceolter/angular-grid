@@ -7,11 +7,10 @@ import type { BeanCollection } from '../context/context';
 import type { CtrlsService } from '../ctrlsService';
 import type { Environment } from '../environment';
 import { _stampTopLevelGridCompWithGridInstance } from '../gridBodyComp/mouseEventUtils';
-import { _getDocument, _getPageBody, _getRootNode } from '../gridOptionsUtils';
+import { _anchorElementToMouseMoveEvent, _getPageBody, _getRootNode } from '../gridOptionsUtils';
 import type { AgGridCommon } from '../interfaces/iCommon';
 import type { DragItem } from '../interfaces/iDragItem';
 import { _removeFromArray } from '../utils/array';
-import { _getElementRectWithOffset } from '../utils/dom';
 import type { AgPromise } from '../utils/promise';
 import { _warn } from '../validation/logging';
 import type { IDragAndDropImageComponent } from './dragAndDropImageComponent';
@@ -24,14 +23,6 @@ export enum DragSourceType {
     RowDrag,
     ChartPanel,
     AdvancedFilterBuilder,
-}
-
-function _getBodyWidth(): number {
-    return document.body?.clientWidth ?? (window.innerHeight || document.documentElement?.clientWidth || -1);
-}
-
-function _getBodyHeight(): number {
-    return document.body?.clientHeight ?? (window.innerHeight || document.documentElement?.clientHeight || -1);
 }
 
 export interface DragSource {
@@ -522,50 +513,7 @@ export class DragAndDropService extends BeanStub implements NamedBean {
             return;
         }
 
-        const eGui = dragAndDropImageComponent.getGui();
-        const eRect = eGui.getBoundingClientRect();
-        const height = eRect.height;
-
-        const browserWidth = _getBodyWidth() - 2; // 2px for 1px borderLeft and 1px borderRight
-        const browserHeight = _getBodyHeight() - 2; // 2px for 1px borderTop and 1px borderBottom
-
-        const offsetParent = eGui.offsetParent;
-
-        if (!offsetParent) {
-            return;
-        }
-
-        const offsetParentSize = _getElementRectWithOffset(eGui.offsetParent as HTMLElement);
-
-        const { clientY, clientX } = event;
-
-        let top = clientY - offsetParentSize.top - height / 2;
-        let left = clientX - offsetParentSize.left - 10;
-
-        const eDocument = _getDocument(this.beans);
-        const win = eDocument.defaultView || window;
-        const windowScrollY = win.pageYOffset || eDocument.documentElement.scrollTop;
-        const windowScrollX = win.pageXOffset || eDocument.documentElement.scrollLeft;
-
-        // check if the drag and drop image component is not positioned outside of the browser
-        if (browserWidth > 0 && left + eGui.clientWidth > browserWidth + windowScrollX) {
-            left = browserWidth + windowScrollX - eGui.clientWidth;
-        }
-
-        if (left < 0) {
-            left = 0;
-        }
-
-        if (browserHeight > 0 && top + eGui.clientHeight > browserHeight + windowScrollY) {
-            top = browserHeight + windowScrollY - eGui.clientHeight;
-        }
-
-        if (top < 0) {
-            top = 0;
-        }
-
-        eGui.style.left = `${left}px`;
-        eGui.style.top = `${top}px`;
+        _anchorElementToMouseMoveEvent(dragAndDropImageComponent.getGui(), event, this.beans);
     }
 
     private removeDragAndDropImageComponent(): void {

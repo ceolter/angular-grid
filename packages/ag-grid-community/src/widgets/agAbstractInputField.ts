@@ -41,12 +41,13 @@ export abstract class AgAbstractInputField<
         super.postConstruct();
         this.setInputType();
 
-        this.eLabel.classList.add(`${this.className}-label`);
-        this.eWrapper.classList.add(`${this.className}-input-wrapper`);
-        this.eInput.classList.add(`${this.className}-input`);
+        const { eLabel, eWrapper, eInput, className } = this;
+        eLabel.classList.add(`${className}-label`);
+        eWrapper.classList.add(`${className}-input-wrapper`);
+        eInput.classList.add(`${className}-input`);
         this.addCssClass('ag-input-field');
 
-        this.eInput.id = this.eInput.id || `ag-${this.getCompId()}-input`;
+        eInput.id = eInput.id || `ag-${this.getCompId()}-input`;
 
         const { inputName, inputWidth } = this.config;
         if (inputName != null) {
@@ -57,7 +58,7 @@ export abstract class AgAbstractInputField<
         }
 
         this.addInputListeners();
-        this.activateTabIndex([this.eInput]);
+        this.activateTabIndex([eInput]);
     }
 
     protected addInputListeners() {

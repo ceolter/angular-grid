@@ -12,7 +12,6 @@ const gridOptions: GridOptions<IOlympicData> = {
     columnDefs: [
         { field: 'country', rowGroup: true, hide: true },
         { field: 'year', rowGroup: true, hide: true },
-        { field: 'athlete' },
         { field: 'sport' },
         { field: 'total' },
     ],
@@ -31,10 +30,6 @@ const gridOptions: GridOptions<IOlympicData> = {
     // optional as 'singleColumn' is the default group display type
     groupDisplayType: 'singleColumn',
     groupDefaultExpanded: -1,
-    rowSelection: {
-        mode: 'singleRow',
-        checkboxLocation: 'autoGroupColumn',
-    },
 };
 
 // setup the grid after the page has finished loading

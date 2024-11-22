@@ -33,7 +33,7 @@ import { DataTypeService } from './dataTypeService';
  * @internal
  */
 export const DataTypeModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DataTypeModule'),
+    ...baseCommunityModule('DataType'),
     beans: [DataTypeService],
     dependsOn: [CheckboxCellRendererModule],
 };
@@ -42,7 +42,7 @@ export const DataTypeModule: _ModuleWithoutApi = {
  * @internal
  */
 export const ColumnFlexModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnFlexModule'),
+    ...baseCommunityModule('ColumnFlex'),
     beans: [ColumnFlexService],
 };
 
@@ -50,7 +50,7 @@ export const ColumnFlexModule: _ModuleWithoutApi = {
  * @feature Columns
  */
 export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
-    ...baseCommunityModule('ColumnApiModule'),
+    ...baseCommunityModule('ColumnApi'),
     beans: [ColumnDefFactory],
     apiFunctions: {
         getColumnDef,

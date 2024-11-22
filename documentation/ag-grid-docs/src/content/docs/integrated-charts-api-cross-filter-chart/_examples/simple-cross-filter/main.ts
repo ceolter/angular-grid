@@ -3,10 +3,11 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
+    ColumnMenuModule,
     ColumnsToolPanelModule,
+    ContextMenuModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
-    MenuModule,
     MultiFilterModule,
     RowGroupingModule,
     SetFilterModule,
@@ -20,7 +21,8 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     MultiFilterModule,
     SetFilterModule,
     RowGroupingModule,

@@ -23,12 +23,6 @@ export class ReadOnlyFloatingFilter extends Component implements IFloatingFilter
         );
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     public init(params: IFloatingFilterParams): void {
         this.params = params;
         const displayName = this.beans.colNames.getDisplayNameForColumn(params.column as AgColumn, 'header', true);

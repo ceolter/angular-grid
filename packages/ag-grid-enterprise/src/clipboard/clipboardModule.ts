@@ -17,7 +17,7 @@ import { ClipboardService } from './clipboardService';
  * @feature Import & Export -> Clipboard
  */
 export const ClipboardModule: _ModuleWithApi<_ClipboardGridApi> = {
-    ...baseEnterpriseModule('ClipboardModule'),
+    ...baseEnterpriseModule('Clipboard'),
     beans: [ClipboardService],
     apiFunctions: {
         copyToClipboard,

@@ -1,6 +1,5 @@
 import { isColumnSelectionCol } from '../columns/columnUtils';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { IsRowSelectable } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
@@ -19,10 +18,8 @@ import {
     _isMultiRowSelection,
     _isRowSelection,
 } from '../gridOptionsUtils';
-import type { IRowModel } from '../interfaces/iRowModel';
 import type { IRowNode } from '../interfaces/iRowNode';
 import type { ISetNodesSelectedParams } from '../interfaces/iSelectionService';
-import type { AriaAnnouncementService } from '../rendering/ariaAnnouncementService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import { _setAriaSelected } from '../utils/aria';
 import type { ChangedPath } from '../utils/changedPath';
@@ -32,20 +29,12 @@ import { RowRangeSelectionContext } from './rowRangeSelectionContext';
 import { SelectAllFeature } from './selectAllFeature';
 
 export abstract class BaseSelectionService extends BeanStub {
-    protected rowModel: IRowModel;
-    private ariaAnnounce?: AriaAnnouncementService;
-
     protected isRowSelectable?: IsRowSelectable;
     protected selectionCtx: RowRangeSelectionContext;
 
-    public wireBeans(beans: BeanCollection) {
-        this.rowModel = beans.rowModel;
-        this.ariaAnnounce = beans.ariaAnnounce;
-    }
-
     public postConstruct(): void {
-        const { gos, rowModel } = this;
-        this.selectionCtx = new RowRangeSelectionContext(rowModel);
+        const { gos, beans } = this;
+        this.selectionCtx = new RowRangeSelectionContext(beans.rowModel);
 
         this.addManagedPropertyListeners(['isRowSelectable', 'rowSelection'], () => {
             const callback = _getIsRowSelectable(gos);
@@ -81,9 +70,10 @@ export abstract class BaseSelectionService extends BeanStub {
         const selected = !!rowCtrl.rowNode.isSelected();
         rowCtrl.forEachGui(gui, (gui) => {
             gui.rowComp.addOrRemoveCssClass('ag-row-selected', selected);
-            _setAriaSelected(gui.element, selected);
+            const element = gui.element;
+            _setAriaSelected(element, selected);
 
-            const hasFocus = gui.element.contains(_getActiveDomElement(this.beans));
+            const hasFocus = element.contains(_getActiveDomElement(this.beans));
             if (hasFocus) {
                 hasFocusFunc(gui);
             }
@@ -106,7 +96,7 @@ export abstract class BaseSelectionService extends BeanStub {
             `Press SPACE to ${selected ? 'deselect' : 'select'} this row.`
         );
 
-        this.ariaAnnounce?.announceValue(label, 'rowSelection');
+        this.beans.ariaAnnounce?.announceValue(label, 'rowSelection');
     }
 
     protected dispatchSelectionChanged(source: SelectionEventSourceType): void {

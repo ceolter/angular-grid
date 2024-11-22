@@ -2,7 +2,7 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { CellClassParams, CellClassRules, ColDef } from '../entities/colDef';
-import type { CellStyle, CellStyleFunc } from '../entities/colDef';
+import type { CellStyle } from '../entities/colDef';
 import type { CellCtrl, ICellComp } from '../rendering/cell/cellCtrl';
 import { processClassRules } from './stylingUtils';
 
@@ -34,9 +34,10 @@ export class CellCustomStyleFeature extends BeanStub {
     }
 
     public applyCellClassRules(): void {
-        const colDef = this.column.getColDef();
-        const { cellClassRules } = colDef;
-        const cellClassParams = this.getCellClassParams(colDef);
+        const { column, cellComp } = this;
+        const colDef = column.colDef;
+        const cellClassRules = colDef.cellClassRules;
+        const cellClassParams = this.getCellClassParams(column, colDef);
 
         processClassRules(
             this.beans.expressionSvc,
@@ -44,27 +45,28 @@ export class CellCustomStyleFeature extends BeanStub {
             cellClassRules === this.cellClassRules ? undefined : this.cellClassRules,
             cellClassRules,
             cellClassParams,
-            (className) => this.cellComp.addOrRemoveCssClass(className, true),
-            (className) => this.cellComp.addOrRemoveCssClass(className, false)
+            (className) => cellComp.addOrRemoveCssClass(className, true),
+            (className) => cellComp.addOrRemoveCssClass(className, false)
         );
         this.cellClassRules = cellClassRules;
     }
 
     public applyUserStyles() {
-        const colDef = this.column.getColDef();
+        const column = this.column;
+        const colDef = column.colDef;
+        const cellStyle = colDef.cellStyle;
 
-        if (!colDef.cellStyle) {
+        if (!cellStyle) {
             return;
         }
 
         let styles: CellStyle | null | undefined;
 
-        if (typeof colDef.cellStyle === 'function') {
-            const cellStyleParams = this.getCellClassParams(colDef);
-            const cellStyleFunc = colDef.cellStyle as CellStyleFunc;
-            styles = cellStyleFunc(cellStyleParams);
+        if (typeof cellStyle === 'function') {
+            const cellStyleParams = this.getCellClassParams(column, colDef);
+            styles = cellStyle(cellStyleParams);
         } else {
-            styles = colDef.cellStyle;
+            styles = cellStyle;
         }
 
         if (styles) {
@@ -73,25 +75,20 @@ export class CellCustomStyleFeature extends BeanStub {
     }
 
     public applyClassesFromColDef() {
-        const colDef = this.column.getColDef();
-        const cellClassParams = this.getCellClassParams(colDef);
+        const { column, cellComp } = this;
+        const colDef = column.colDef;
+        const cellClassParams = this.getCellClassParams(column, colDef);
 
-        if (this.staticClasses.length) {
-            this.staticClasses.forEach((className) => this.cellComp.addOrRemoveCssClass(className, false));
-        }
+        this.staticClasses.forEach((className) => cellComp.addOrRemoveCssClass(className, false));
 
-        this.staticClasses = this.beans.cellStyles!.getStaticCellClasses(colDef, cellClassParams);
+        const newStaticClasses = this.beans.cellStyles!.getStaticCellClasses(colDef, cellClassParams);
+        this.staticClasses = newStaticClasses;
 
-        if (this.staticClasses.length) {
-            this.staticClasses.forEach((className) => this.cellComp.addOrRemoveCssClass(className, true));
-        }
+        newStaticClasses.forEach((className) => cellComp.addOrRemoveCssClass(className, true));
     }
 
-    private getCellClassParams(colDef: ColDef): CellClassParams {
-        const {
-            cellCtrl: { value, rowNode },
-            column,
-        } = this;
+    private getCellClassParams(column: AgColumn, colDef: ColDef): CellClassParams {
+        const { value, rowNode } = this.cellCtrl;
         return this.beans.gos.addGridCommonParams({
             value,
             data: rowNode.data,
@@ -100,10 +97,5 @@ export class CellCustomStyleFeature extends BeanStub {
             column,
             rowIndex: rowNode.rowIndex!,
         });
-    }
-
-    // overriding to make public, as we don't dispose this bean via context
-    public override destroy() {
-        super.destroy();
     }
 }

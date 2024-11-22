@@ -20,21 +20,23 @@ class DateCellEditorInput implements CellEditorInput<Date, IDateCellEditorParams
     public init(eInput: AgInputDateField, params: IDateCellEditorParams): void {
         this.eInput = eInput;
         this.params = params;
-        if (params.min != null) {
-            eInput.setMin(params.min);
+        const { min, max, step } = params;
+        if (min != null) {
+            eInput.setMin(min);
         }
-        if (params.max != null) {
-            eInput.setMax(params.max);
+        if (max != null) {
+            eInput.setMax(max);
         }
-        if (params.step != null) {
-            eInput.setStep(params.step);
+        if (step != null) {
+            eInput.setStep(step);
         }
     }
 
     getValue(): Date | null | undefined {
-        const value = this.eInput.getDate();
-        if (!_exists(value) && !_exists(this.params.value)) {
-            return this.params.value;
+        const { eInput, params } = this;
+        const value = eInput.getDate();
+        if (!_exists(value) && !_exists(params.value)) {
+            return params.value;
         }
         return value ?? null;
     }

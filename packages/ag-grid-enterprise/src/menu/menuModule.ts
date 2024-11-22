@@ -18,7 +18,7 @@ import { MenuUtils } from './menuUtils';
  * @internal
  */
 export const MenuCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MenuCoreModule'),
+    ...baseEnterpriseModule('MenuCore'),
     beans: [MenuItemMapper, ChartMenuItemMapper, MenuUtils],
     icons: {
         // context menu chart item
@@ -62,7 +62,7 @@ export const MenuCoreModule: _ModuleWithoutApi = {
  * @feature Accessories -> Column Menu
  */
 export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
-    ...baseEnterpriseModule('ColumnMenuModule'),
+    ...baseEnterpriseModule('ColumnMenu'),
     beans: [EnterpriseMenuFactory, ColumnMenuFactory, ColumnChooserFactory],
     icons: {
         // menu tab icon in legacy tabbed enterprise column menu
@@ -88,7 +88,7 @@ export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
  * @feature Accessories -> Context Menu
  */
 export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
-    ...baseEnterpriseModule('ContextMenuModule'),
+    ...baseEnterpriseModule('ContextMenu'),
     beans: [ContextMenuService],
     apiFunctions: {
         showContextMenu,
@@ -100,6 +100,6 @@ export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
  * @feature Accessories -> Column Menu / Context Menu
  */
 export const MenuModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MenuModule'),
+    ...baseEnterpriseModule('Menu'),
     dependsOn: [ColumnMenuModule, ContextMenuModule],
 };

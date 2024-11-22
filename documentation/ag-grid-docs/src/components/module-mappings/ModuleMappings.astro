@@ -9,4 +9,4 @@ const framework = getFrameworkFromPath(pathname);
 const { data: modules } = await getEntry('module-mappings', 'modules');
 ---
 
-<ModuleMappings client:load framework={framework} modules={modules} />
+<ModuleMappings client:only="react" framework={framework} modules={modules} />

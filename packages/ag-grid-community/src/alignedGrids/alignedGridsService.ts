@@ -1,12 +1,7 @@
 import type { GridApi } from '../api/gridApi';
-import type { ColumnResizeService } from '../columnResize/columnResizeService';
-import type { ColumnGroupService } from '../columns/columnGroups/columnGroupService';
-import type { ColumnModel } from '../columns/columnModel';
 import { _applyColumnState } from '../columns/columnStateUtils';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import type {
@@ -24,18 +19,6 @@ import { _error, _warn } from '../validation/logging';
 
 export class AlignedGridsService extends BeanStub implements NamedBean {
     beanName = 'alignedGridsSvc' as const;
-
-    private colModel: ColumnModel;
-    private colResize?: ColumnResizeService;
-    private ctrlsSvc: CtrlsService;
-    private colGroupSvc?: ColumnGroupService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.colResize = beans.colResize;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.colGroupSvc = beans.colGroupSvc;
-    }
 
     // flag to mark if we are consuming. to avoid cyclic events (ie other grid firing back to master
     // while processing a master event) we mark this if consuming an event, and if we are, then
@@ -137,7 +120,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
 
     private onScrollEvent(event: BodyScrollEvent): void {
         this.onEvent(() => {
-            this.ctrlsSvc.getScrollFeature().setHorizontalScrollPosition(event.left, true);
+            this.beans.ctrlsSvc.getScrollFeature().setHorizontalScrollPosition(event.left, true);
         });
     }
 
@@ -185,7 +168,7 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
     }
 
     private processGroupOpenedEvent(groupOpenedEvent: ColumnGroupOpenedEvent): void {
-        const { colGroupSvc } = this;
+        const { colGroupSvc } = this.beans;
         if (!colGroupSvc) {
             return;
         }
@@ -211,8 +194,10 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
         const masterColumn = colEvent.column;
         let otherColumn: AgColumn | null = null;
 
+        const beans = this.beans;
+        const { colResize, ctrlsSvc, colModel } = beans;
         if (masterColumn) {
-            otherColumn = this.colModel.getColDefCol(masterColumn.getColId());
+            otherColumn = colModel.getColDefCol(masterColumn.getColId());
         }
         // if event was with respect to a master column, that is not present in this
         // grid, then we ignore the event
@@ -223,7 +208,6 @@ export class AlignedGridsService extends BeanStub implements NamedBean {
         // in time, all the methods below should use the column ids, it's a more generic way
         // of handling columns, and also allows for single or multi column events
         const masterColumns = this.getMasterColumns(colEvent);
-        const { colResize, ctrlsSvc, beans } = this;
         switch (colEvent.type) {
             case 'columnMoved':
                 // when the user moves columns via applyColumnState, we can't depend on moving specific columns

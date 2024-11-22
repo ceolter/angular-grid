@@ -9,7 +9,7 @@ import { PinnedRowModel } from './pinnedRowModel';
  * @gridOption pinnedTopRowData, pinnedBottomRowData
  */
 export const PinnedRowModule: _ModuleWithApi<_PinnedRowGridApi> = {
-    ...baseCommunityModule('PinnedRowModule'),
+    ...baseCommunityModule('PinnedRow'),
     beans: [PinnedRowModel],
     apiFunctions: {
         getPinnedTopRowCount,

@@ -181,11 +181,11 @@ export class RowRenderer extends BeanStub implements NamedBean {
     }
 
     public getStickyTopRowCtrls(): RowCtrl[] {
-        return this.stickyRowFeature?.getStickyTopRowCtrls() ?? [];
+        return this.stickyRowFeature?.stickyTopRowCtrls ?? [];
     }
 
     public getStickyBottomRowCtrls(): RowCtrl[] {
-        return this.stickyRowFeature?.getStickyBottomRowCtrls() ?? [];
+        return this.stickyRowFeature?.stickyBottomRowCtrls ?? [];
     }
 
     private updateAllRowCtrls(): void {
@@ -574,7 +574,7 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
             // this is a hack, if sticky rows brings in rows from other pages
             // need to update the model height to include them.
-            const extraHeight = stickyRowFeature.getExtraTopHeight() + stickyRowFeature.getExtraBottomHeight();
+            const extraHeight = stickyRowFeature.extraTopHeight + stickyRowFeature.extraBottomHeight;
             if (extraHeight) {
                 this.updateContainerHeights(extraHeight);
             }
@@ -868,9 +868,10 @@ export class RowRenderer extends BeanStub implements NamedBean {
         const { afterScroll } = params;
         let cellFocused: CellPosition | undefined;
 
+        const stickyRowFeature = this.stickyRowFeature;
         // only try to refocus cells shifting in and out of sticky container
         // if the browser supports focus ({ preventScroll })
-        if (this.stickyRowFeature) {
+        if (stickyRowFeature) {
             cellFocused = this.getCellToRestoreFocusToAfterRefresh() || undefined;
         }
 
@@ -880,13 +881,12 @@ export class RowRenderer extends BeanStub implements NamedBean {
 
         let hasStickyRowChanges = false;
 
-        if (this.stickyRowFeature) {
-            hasStickyRowChanges = this.stickyRowFeature.checkStickyRows();
+        if (stickyRowFeature) {
+            hasStickyRowChanges = stickyRowFeature.checkStickyRows();
 
             // this is a hack, if sticky rows brings in rows from other pages
             // need to update the model height to include them.
-            const extraHeight =
-                this.stickyRowFeature.getExtraTopHeight() + this.stickyRowFeature.getExtraBottomHeight();
+            const extraHeight = stickyRowFeature.extraTopHeight + stickyRowFeature.extraBottomHeight;
             if (extraHeight) {
                 this.updateContainerHeights(extraHeight);
             }

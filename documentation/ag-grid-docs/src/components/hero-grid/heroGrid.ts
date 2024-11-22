@@ -8,7 +8,13 @@ import type { GetRowIdParams, GridApi, GridOptions, GridSizeChangedEvent, ISetFi
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
-import { ClipboardModule, MenuModule, SetFilterModule, SparklinesModule } from 'ag-grid-enterprise';
+import {
+    ClipboardModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    SetFilterModule,
+    SparklinesModule,
+} from 'ag-grid-enterprise';
 
 import { COLUMN_ID_PRIORITIES, FILTER_ROWS_BREAKPOINT, UPDATE_INTERVAL } from './constants';
 import { columnDefs, generateStockUpdate, generateStocks } from './data';
@@ -20,7 +26,8 @@ ModuleRegistry.registerModules([
     SparklinesModule.with(AgChartsCommunityModule),
     SetFilterModule,
     ClipboardModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
 ]);
 
 let api: GridApi;

@@ -6,7 +6,7 @@ import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { PivotModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -18,7 +18,8 @@ ModuleRegistry.registerModules([
 
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     PivotModule,
 ]);
 

@@ -11,7 +11,7 @@ import { SortService } from './sortService';
  * @colDef sortable, sort, sortIndex
  */
 export const SortModule: _ModuleWithApi<_SortGridApi> = {
-    ...baseCommunityModule('SortModule'),
+    ...baseCommunityModule('Sort'),
     beans: [SortService, RowNodeSorter],
     apiFunctions: {
         onSortChanged,

@@ -1,35 +1,15 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { RowNode } from '../entities/rowNode';
-import type { FilterManager } from '../filter/filterManager';
 import { _getRowHeightAsNumber, _getRowIdCallback } from '../gridOptionsUtils';
 import type { IDatasource } from '../interfaces/iDatasource';
 import type { IRowModel, RowBounds, RowModelType } from '../interfaces/iRowModel';
-import type { ISelectionService } from '../interfaces/iSelectionService';
-import type { RowRenderer } from '../rendering/rowRenderer';
-import type { SortService } from '../sort/sortService';
 import { _jsonEquals } from '../utils/generic';
 import type { InfiniteCacheParams } from './infiniteCache';
 import { InfiniteCache } from './infiniteCache';
-import type { RowNodeBlockLoader } from './rowNodeBlockLoader';
 
 export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     beanName = 'rowModel' as const;
-
-    private filterManager?: FilterManager;
-    private sortSvc?: SortService;
-    private selectionSvc?: ISelectionService;
-    private rowRenderer: RowRenderer;
-    private rowNodeBlockLoader: RowNodeBlockLoader;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.filterManager = beans.filterManager;
-        this.sortSvc = beans.sortSvc;
-        this.selectionSvc = beans.selectionSvc;
-        this.rowRenderer = beans.rowRenderer;
-        this.rowNodeBlockLoader = beans.rowNodeBlockLoader!;
-    }
 
     private infiniteCache: InfiniteCache | null | undefined;
     private datasource: IDatasource | null | undefined;
@@ -72,17 +52,17 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     private destroyDatasource(): void {
         if (this.datasource) {
             this.destroyBean(this.datasource);
-            this.rowRenderer.datasourceChanged();
+            this.beans.rowRenderer.datasourceChanged();
             this.datasource = null;
         }
     }
 
     private addEventListeners(): void {
         this.addManagedEventListeners({
-            filterChanged: this.onFilterChanged.bind(this),
-            sortChanged: this.onSortChanged.bind(this),
+            filterChanged: this.reset.bind(this),
+            sortChanged: this.reset.bind(this),
             newColumnsLoaded: this.onColumnEverything.bind(this),
-            storeUpdated: this.onCacheUpdated.bind(this),
+            storeUpdated: this.dispatchModelUpdatedEvent.bind(this),
         });
 
         this.addManagedPropertyListener('datasource', () => this.setDatasource(this.gos.get('datasource')));
@@ -94,21 +74,13 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         });
     }
 
-    private onFilterChanged(): void {
-        this.reset();
-    }
-
-    private onSortChanged(): void {
-        this.reset();
-    }
-
     private onColumnEverything(): void {
         let resetRequired;
         // if cache params, we require reset only if sort model has changed. we don't need to check
         // for filter model, as the filter manager will fire an event when columns change that result
         // in the filter changing.
         if (this.cacheParams) {
-            resetRequired = this.isSortModelDifferent();
+            resetRequired = !_jsonEquals(this.cacheParams.sortModel, this.beans.sortSvc?.getSortModel() ?? []);
         } else {
             // if no cacheParams, means first time creating the cache, so always create one
             resetRequired = true;
@@ -116,10 +88,6 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         if (resetRequired) {
             this.reset();
         }
-    }
-
-    private isSortModelDifferent(): boolean {
-        return !_jsonEquals(this.cacheParams.sortModel, this.sortSvc?.getSortModel() ?? []);
     }
 
     public getType(): RowModelType {
@@ -145,7 +113,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     public getNodesInRangeForSelection(firstInRange: RowNode, lastInRange: RowNode): RowNode[] {
-        return this.infiniteCache ? this.infiniteCache.getRowNodesInRange(firstInRange, lastInRange) : [];
+        return this.infiniteCache?.getRowNodesInRange(firstInRange, lastInRange) ?? [];
     }
 
     private reset() {
@@ -162,7 +130,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         const userGeneratingIds = getRowIdFunc != null;
 
         if (!userGeneratingIds) {
-            this.selectionSvc?.reset('rowDataChanged');
+            this.beans.selectionSvc?.reset('rowDataChanged');
         }
 
         this.resetCache();
@@ -185,30 +153,33 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
         // if not first time creating a cache, need to destroy the old one
         this.destroyCache();
 
+        const beans = this.beans;
+        const { filterManager, sortSvc, rowNodeBlockLoader, eventSvc, gos } = beans;
+
         this.cacheParams = {
             // the user provided datasource
             datasource: this.datasource,
 
             // sort and filter model
-            filterModel: this.filterManager?.getFilterModel() ?? {},
-            sortModel: this.sortSvc?.getSortModel() ?? [],
+            filterModel: filterManager?.getFilterModel() ?? {},
+            sortModel: sortSvc?.getSortModel() ?? [],
 
-            rowNodeBlockLoader: this.rowNodeBlockLoader,
+            rowNodeBlockLoader: rowNodeBlockLoader,
 
             // properties - this way we take a snapshot of them, so if user changes any, they will be
             // used next time we create a new cache, which is generally after a filter or sort change,
             // or a new datasource is set
-            initialRowCount: this.gos.get('infiniteInitialRowCount'),
-            maxBlocksInCache: this.gos.get('maxBlocksInCache'),
-            rowHeight: _getRowHeightAsNumber(this.beans),
+            initialRowCount: gos.get('infiniteInitialRowCount'),
+            maxBlocksInCache: gos.get('maxBlocksInCache'),
+            rowHeight: _getRowHeightAsNumber(beans),
 
             // if user doesn't provide overflow, we use default overflow of 1, so user can scroll past
             // the current page and request first row of next page
-            overflowSize: this.gos.get('cacheOverflowSize'),
+            overflowSize: gos.get('cacheOverflowSize'),
 
             // page size needs to be 1 or greater. having it at 1 would be silly, as you would be hitting the
             // server for one page at a time. so the default if not specified is 100.
-            blockSize: this.gos.get('cacheBlockSize'),
+            blockSize: gos.get('cacheBlockSize'),
 
             // the cache could create this, however it is also used by the pages, so handy to create it
             // here as the settings are also passed to the pages
@@ -217,7 +188,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
 
         this.infiniteCache = this.createBean(new InfiniteCache(this.cacheParams));
 
-        this.eventSvc.dispatchEventOnce({
+        eventSvc.dispatchEventOnce({
             type: 'rowCountReady',
         });
 
@@ -234,23 +205,18 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     private destroyCache(): void {
-        if (this.infiniteCache) {
-            this.infiniteCache = this.destroyBean(this.infiniteCache);
-        }
-    }
-
-    private onCacheUpdated(): void {
-        this.dispatchModelUpdatedEvent();
+        this.infiniteCache = this.destroyBean(this.infiniteCache);
     }
 
     public getRow(rowIndex: number): RowNode | undefined {
-        if (!this.infiniteCache) {
+        const infiniteCache = this.infiniteCache;
+        if (!infiniteCache) {
             return undefined;
         }
-        if (rowIndex >= this.infiniteCache.getRowCount()) {
+        if (rowIndex >= infiniteCache.getRowCount()) {
             return undefined;
         }
-        return this.infiniteCache.getRow(rowIndex);
+        return infiniteCache.getRow(rowIndex);
     }
 
     public getRowNode(id: string): RowNode | undefined {
@@ -264,9 +230,7 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     public forEachNode(callback: (rowNode: RowNode, index: number) => void): void {
-        if (this.infiniteCache) {
-            this.infiniteCache.forEachNodeDeep(callback);
-        }
+        this.infiniteCache?.forEachNodeDeep(callback);
     }
 
     public getTopLevelRowCount(): number {
@@ -295,33 +259,23 @@ export class InfiniteRowModel extends BeanStub implements NamedBean, IRowModel {
     }
 
     public isRowPresent(rowNode: RowNode): boolean {
-        const foundRowNode = this.getRowNode(rowNode.id!);
-        return !!foundRowNode;
+        return !!this.getRowNode(rowNode.id!);
     }
 
     public refreshCache(): void {
-        if (this.infiniteCache) {
-            this.infiniteCache.refreshCache();
-        }
+        this.infiniteCache?.refreshCache();
     }
 
     public purgeCache(): void {
-        if (this.infiniteCache) {
-            this.infiniteCache.purgeCache();
-        }
+        this.infiniteCache?.purgeCache();
     }
 
     // for iRowModel
     public isLastRowIndexKnown(): boolean {
-        if (this.infiniteCache) {
-            return this.infiniteCache.isLastRowIndexKnown();
-        }
-        return false;
+        return this.infiniteCache?.isLastRowIndexKnown() ?? false;
     }
 
     public setRowCount(rowCount: number, lastRowIndexKnown?: boolean): void {
-        if (this.infiniteCache) {
-            this.infiniteCache.setRowCount(rowCount, lastRowIndexKnown);
-        }
+        this.infiniteCache?.setRowCount(rowCount, lastRowIndexKnown);
     }
 }

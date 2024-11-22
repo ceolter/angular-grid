@@ -2,9 +2,8 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', headerName: 'The full Name of the athlete' },

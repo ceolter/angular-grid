@@ -1,12 +1,9 @@
 import type {
-    BeanCollection,
     BeanName,
     BeforeRefreshModelEvent,
     DetailGridInfo,
     IChangedRowNodes,
-    IColsService,
     IMasterDetailService,
-    IRowModel,
     NamedBean,
     RowCtrl,
 } from 'ag-grid-community';
@@ -26,8 +23,6 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
     public store: { [id: string]: DetailGridInfo | undefined } = {};
 
     private enabled: boolean;
-    private rowModel: IRowModel;
-    private rowGroupColsSvc?: IColsService;
 
     private isEnabled(): boolean {
         const gos = this.gos;
@@ -36,11 +31,6 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
             // TODO: AG-1752: [Tree Data] Allow tree data leaf rows to serve as master rows for detail grids (Tree Data hosting Master/Detail)"
             !gos.get('treeData')
         );
-    }
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.rowModel = beans.rowModel;
     }
 
     public postConstruct(): void {
@@ -95,7 +85,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                     row.expanded = true;
                 } else {
                     // need to take row group into account when determining level
-                    const masterRowLevel = this.rowGroupColsSvc?.columns.length ?? 0;
+                    const masterRowLevel = this.beans.rowGroupColsSvc?.columns.length ?? 0;
                     row.expanded = masterRowLevel < groupDefaultExpanded;
                 }
             } else if (!newMaster && oldMaster) {
@@ -169,7 +159,7 @@ export class MasterDetailService extends BeanStub implements NamedBean, IMasterD
                 // we do the update in a timeout, to make sure we are not calling from inside the grid
                 // doing another update
                 const updateRowHeightFunc = () => {
-                    const { rowModel } = this;
+                    const { rowModel } = this.beans;
                     const { rowNode } = rowCtrl;
                     rowNode.setRowHeight(clientHeight);
                     if (_isClientSideRowModel(gos, rowModel) || _isServerSideRowModel(gos, rowModel)) {

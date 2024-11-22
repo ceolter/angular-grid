@@ -4,18 +4,15 @@ import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
-import type {
-    ColDef,
-    GetRowIdParams,
-    IRowNode,
-    RowSelectedEvent,
-    RowSelectionOptions,
-    ValueFormatterParams,
-} from 'ag-grid-community';
+import type { ColDef, GetRowIdParams, IRowNode, RowSelectedEvent, RowSelectionOptions } from 'ag-grid-community';
 import { ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
-import { type SelectedModules, getModuleMappingsSnippet } from './getModuleMappingsSnippet';
+import { ModuleCellRenderer } from './ModuleCellRenderer';
+import { ModuleConfiguration } from './ModuleConfiguration';
+import styles from './ModuleMappings.module.scss';
+import { ModuleSearch } from './ModuleSearch';
+import { useModuleConfig } from './useModuleConfig';
 
 interface Props {
     framework: Framework;
@@ -32,8 +29,9 @@ ModuleRegistry.registerModules([
 ]);
 
 export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules }) => {
-    const allCommunityRef = useRef(false);
-    const allEnterpriseRef = useRef(false);
+    const gridRef = useRef<AgGridReact>(null);
+    const moduleConfig = useModuleConfig(gridRef);
+    const { selectedDependenciesSnippet, setSelectedModules, bundleOption } = moduleConfig;
 
     const [defaultColDef] = useState<ColDef>({
         flex: 1,
@@ -44,107 +42,102 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
     const [columnDefs] = useState([{ field: 'moduleName' }]);
     const [autoGroupColumnDef] = useState({
         headerName: 'Feature',
-        valueFormatter: (params: ValueFormatterParams) => `${params.value}${params.data.isEnterprise ? ' (e)' : ''}`,
+        cellRendererParams: {
+            innerRenderer: ModuleCellRenderer,
+        },
     });
-    const getRowId = useCallback((params: GetRowIdParams) => params.data.name, []);
-    const [update, setUpdate] = useState(0);
-    const [selectedModules, setSelectedModules] = useState<SelectedModules>({
-        community: [],
-        enterprise: [],
-    });
-    const selectedDependenciesSnippet = useMemo(() => getModuleMappingsSnippet(selectedModules), [selectedModules]);
+    const getRowId = useCallback(
+        (params: GetRowIdParams) => (params.data.children ? `${params.data.name} group` : params.data.moduleName),
+        []
+    );
 
-    const onRowSelected = useCallback((event: RowSelectedEvent) => {
-        const {
-            node,
-            data: { moduleName },
-            api,
-        } = event;
-        const isSelected = !!node.isSelected();
-        if (moduleName === 'AllEnterpriseModule') {
-            allEnterpriseRef.current = isSelected;
-            if (isSelected) {
-                api.selectAll('all');
-            } else {
-                api.deselectAll('all');
+    const onRowSelected = useCallback(
+        (event: RowSelectedEvent) => {
+            // All disabled, so nothing to select
+            if (bundleOption === 'AllEnterpriseModule') {
+                return;
             }
-        } else if (moduleName === 'AllCommunityModule') {
-            allCommunityRef.current = isSelected;
-            const nodesToToggle: IRowNode[] = [];
-            // toggle all community modules
-            api.forEachLeafNode((child) => {
-                if (!child.data.isEnterprise && child.data.moduleName) {
-                    nodesToToggle.push(child);
-                }
-            });
-            api.setNodesSelected({
-                nodes: nodesToToggle,
-                newValue: isSelected,
-            });
-        } else if (!moduleName && !isSelected && allCommunityRef.current) {
-            // when deselecting a group with all community selected, we need to prevent deselecting disabled children
-            const nodesToReselect: IRowNode[] = [];
-            node.allLeafChildren?.forEach((child) => {
-                if (!child.isSelected() && !child.data.isEnterprise) {
-                    nodesToReselect.push(child);
-                }
-                api.setNodesSelected({
-                    nodes: nodesToReselect,
-                    newValue: true,
+
+            const {
+                node,
+                data: { moduleName },
+                api,
+            } = event;
+            const isSelected = !!node.isSelected();
+            if (!moduleName && !isSelected && bundleOption === 'AllCommunityModule') {
+                // when deselecting a group with all community selected, we need to prevent deselecting disabled children
+                const nodesToReselect: IRowNode[] = [];
+                node.allLeafChildren?.forEach((child) => {
+                    if (!child.isSelected() && !child.data.isEnterprise) {
+                        nodesToReselect.push(child);
+                    }
+                    api.setNodesSelected({
+                        nodes: nodesToReselect,
+                        newValue: true,
+                    });
                 });
-            });
-        }
-        setUpdate((old) => old + 1);
-        const selectedCommunity: string[] = [];
-        const selectedEnterprise: string[] = [];
-        api.forEachLeafNode((leaf) => {
-            const { moduleName: leafModuleName, isEnterprise: leafIsEnterprise } = leaf.data;
-            if (leafModuleName && leaf.isSelected()) {
-                if (leafIsEnterprise) {
-                    selectedEnterprise.push(leafModuleName);
-                } else {
-                    selectedCommunity.push(leafModuleName);
-                }
             }
-        });
-        setSelectedModules({
-            community: allEnterpriseRef.current
-                ? []
-                : allCommunityRef.current
-                  ? ['AllCommunityModule']
-                  : selectedCommunity,
-            enterprise: allEnterpriseRef.current ? ['AllEnterpriseModule'] : selectedEnterprise,
-        });
-    }, []);
+
+            const selectedCommunity: string[] = [];
+            const selectedEnterprise: string[] = [];
+            api.forEachLeafNode((leaf) => {
+                const { moduleName: leafModuleName, isEnterprise: leafIsEnterprise } = leaf.data;
+                if (leafModuleName && leaf.isSelected()) {
+                    if (leafIsEnterprise) {
+                        selectedEnterprise.push(leafModuleName);
+                    } else {
+                        selectedCommunity.push(leafModuleName);
+                    }
+                }
+            });
+
+            setSelectedModules((curSelectedModules) => {
+                let community = selectedCommunity;
+
+                if (bundleOption === 'AllCommunityModule') {
+                    const communitySet = new Set(curSelectedModules.community);
+                    communitySet.add('AllCommunityModule');
+                    community = Array.from(communitySet);
+                }
+
+                return {
+                    community,
+                    enterprise: selectedEnterprise,
+                };
+            });
+        },
+        [bundleOption, setSelectedModules]
+    );
 
     const rowSelection = useMemo<RowSelectionOptions>(() => {
         return {
             mode: 'multiRow',
             checkboxes: (params) => {
-                if (allEnterpriseRef.current) {
-                    return params.data.moduleName === 'AllEnterpriseModule';
-                }
-                if (!allCommunityRef.current) {
-                    // neither is checked, so everything available
+                if (bundleOption === '') {
+                    // No bundles are checked, so everything available
                     return true;
+                } else if (bundleOption === 'AllCommunityModule') {
+                    // All community is checked, only enterprise values are available
+                    return params.node.allLeafChildren?.length
+                        ? params.node.allLeafChildren.some((child) => child.data.isEnterprise)
+                        : params.data.isEnterprise;
                 }
-                if (params.data.moduleName) {
-                    // when all community is checked, only enterprise or all community (leaf modules) are available
-                    return params.data.isEnterprise || params.data.moduleName === 'AllCommunityModule';
-                }
-                // when all community is checked, groups are available only if some of their children are enterprise
-                return params.node.allLeafChildren?.some((child) => child.data.isEnterprise);
+
+                // All enterprise is checked, none are available
+                return false;
             },
             groupSelects: 'descendants',
-            headerCheckbox: false,
+            headerCheckbox: bundleOption === '',
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [update]);
+    }, [bundleOption]);
 
     return (
-        <>
-            <div style={{ height: '600px' }}>
+        <div className={styles.container}>
+            <ModuleConfiguration moduleConfig={moduleConfig} />
+            <ModuleSearch gridRef={gridRef} />
+            <div style={{ height: '400px' }}>
                 <AgGridReact
+                    ref={gridRef}
                     defaultColDef={defaultColDef}
                     columnDefs={columnDefs}
                     autoGroupColumnDef={autoGroupColumnDef}
@@ -161,6 +154,6 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
             {selectedDependenciesSnippet && (
                 <Snippet framework={framework} content={selectedDependenciesSnippet} copyToClipboard />
             )}
-        </>
+        </div>
     );
 };

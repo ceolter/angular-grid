@@ -7,6 +7,6 @@ import { AlignedGridsService } from './alignedGridsService';
  * @gridOption alignedGrids
  */
 export const AlignedGridsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AlignedGridsModule'),
+    ...baseCommunityModule('AlignedGrids'),
     beans: [AlignedGridsService],
 };

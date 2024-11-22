@@ -4,14 +4,15 @@ import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
 ]);
 
 const rowData = [

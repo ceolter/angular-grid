@@ -1,0 +1,130 @@
+@use 'design-system' as *;
+
+.grid {
+    width: 650px;
+}
+
+.gridColumns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.label {
+    color: var(--color-fg-secondary);
+    font-weight: var(--text-semibold);
+    padding-bottom: 12px;
+    font-size: var(--text-fs-sm);
+    opacity: 0.8;
+}
+
+.optionsColumns {
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+    margin-top: $spacing-size-12;
+}
+.themeOptions {
+    padding-bottom: $spacing-size-5;
+    border-bottom: 1px solid var(--color-border-secondary);
+}
+.buttonGroup {
+    display: flex;
+    padding: 4px;
+    background-color: var(--color-util-brand-50);
+
+    border-radius: 8px;
+    gap: 2px;
+
+    button {
+        flex: 1;
+        padding: 8px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 6px;
+        color: var(--text-color-secondary);
+        font-size: var(--text-fs-base);
+        font-weight: var(--text-semibold);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        box-shadow: none;
+
+        &:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        &.active {
+            background-color: var(--color-bg-primary);
+            color: var(--color-util-brand-500);
+            box-shadow: var(--shadow-sm);
+
+            #{$selector-darkmode} & {
+                background-color: var(--color-brand-200);
+            }
+        }
+    }
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
+        color: white;
+    }
+}
+
+.codeBlockWrapper {
+    position: relative;
+    background-color: #111a4a;
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+    left: -100px;
+    bottom: 50px;
+    box-shadow: var(--shadow-md);
+
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+    }
+}
+
+.windowControls {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.codeBlock {
+    background: #111a4a;
+    border: none;
+    color: var(--color-white);
+    margin: 0;
+    white-space: pre-wrap;
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+    }
+    padding: 0;
+    padding-top: 10px;
+}
+
+.lineNumbers {
+    color: rgba(255, 255, 255, 0.6);
+    margin-right: 16px;
+    text-align: right;
+    user-select: none;
+    margin-top: 35px;
+    font-size: 15px;
+}
+
+.commentLine {
+    opacity: 0.5;
+}

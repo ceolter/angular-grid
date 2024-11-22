@@ -7,6 +7,6 @@ import { GridSerializer } from './gridSerializer';
  * @internal
  */
 export const SharedExportModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SharedExportModule'),
+    ...baseCommunityModule('SharedExport'),
     beans: [GridSerializer],
 };

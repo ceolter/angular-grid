@@ -1,7 +1,8 @@
 .installText {
     font-size: var(--text-fs-base);
     color: var(--color-white);
-    font-family: monospace; // refactor to use design system class
+    font-family: var(--text-monospace-font-family);
+    font-weight: 500;
 }
 
 .copyToClipboardIcon {

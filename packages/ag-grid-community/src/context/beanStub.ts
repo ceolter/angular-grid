@@ -105,7 +105,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     }
 
     public addManagedElementListeners<TEvent extends keyof HTMLElementEventMap>(
-        object: Element | Document,
+        object: Element | Document | ShadowRoot,
         handlers: EventHandlers<TEvent, HTMLElementEventMap[TEvent]>
     ) {
         return this._setupListeners<keyof HTMLElementEventMap>(object, handlers);

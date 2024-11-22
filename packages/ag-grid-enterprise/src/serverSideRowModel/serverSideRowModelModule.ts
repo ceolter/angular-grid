@@ -41,7 +41,7 @@ import { TransactionManager } from './transactionManager';
  * @feature Server-Side Row Model
  */
 export const ServerSideRowModelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ServerSideRowModelModule'),
+    ...baseEnterpriseModule('ServerSideRowModel'),
     rowModels: ['serverSide'],
     beans: [
         ServerSideRowModel,
@@ -74,7 +74,7 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
  * @feature Server-Side Row Model
  */
 export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGridApi<any>> = {
-    ...baseEnterpriseModule('ServerSideRowModelApiModule'),
+    ...baseEnterpriseModule('ServerSideRowModelApi'),
     rowModels: ['serverSide'],
     apiFunctions: {
         getServerSideSelectionState,

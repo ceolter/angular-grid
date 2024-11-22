@@ -3,17 +3,17 @@ import type { RowNode } from '../entities/rowNode';
 import type { RowCtrl } from '../rendering/row/rowCtrl';
 
 export interface IStickyRowFeature {
-    getStickyTopRowCtrls(): RowCtrl[];
+    stickyTopRowCtrls: RowCtrl[];
 
-    getStickyBottomRowCtrls(): RowCtrl[];
+    stickyBottomRowCtrls: RowCtrl[];
 
     refreshStickyNode(stickRowNode: RowNode): void;
 
     checkStickyRows(): boolean;
 
-    getExtraTopHeight(): number;
+    extraTopHeight: number;
 
-    getExtraBottomHeight(): number;
+    extraBottomHeight: number;
 
     resetOffsets(): void;
 

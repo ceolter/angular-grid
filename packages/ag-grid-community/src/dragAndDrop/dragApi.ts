@@ -2,7 +2,7 @@ import type { BeanCollection } from '../context/context';
 import type { RowDropZoneEvents, RowDropZoneParams } from './rowDragFeature';
 
 export function addRowDropZone(beans: BeanCollection, params: RowDropZoneParams): void {
-    beans.rowDragSvc?.getRowDragFeature()?.addRowDropZone(params);
+    beans.rowDragSvc?.rowDragFeature?.addRowDropZone(params);
 }
 
 export function removeRowDropZone(beans: BeanCollection, params: RowDropZoneParams): void {
@@ -14,5 +14,5 @@ export function removeRowDropZone(beans: BeanCollection, params: RowDropZonePara
 }
 
 export function getRowDropZoneParams(beans: BeanCollection, events?: RowDropZoneEvents): RowDropZoneParams | undefined {
-    return beans.rowDragSvc?.getRowDragFeature()?.getRowDropZone(events);
+    return beans.rowDragSvc?.rowDragFeature?.getRowDropZone(events);
 }

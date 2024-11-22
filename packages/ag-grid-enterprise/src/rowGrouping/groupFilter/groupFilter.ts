@@ -1,7 +1,6 @@
 import type {
     AgColumn,
     BeanCollection,
-    ColumnNameService,
     FilterDestroyedEvent,
     FilterManager,
     IAfterGuiAttachedParams,
@@ -29,12 +28,10 @@ interface FilterColumnPair {
 export type GroupFilterEvent = 'columnRowGroupChanged' | 'selectedColumnChanged';
 export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilterComp {
     private filterManager?: FilterManager;
-    private colNames: ColumnNameService;
     private showRowGroupCols?: IShowRowGroupColsService;
 
     public wireBeans(beans: BeanCollection) {
         this.filterManager = beans.filterManager;
-        this.colNames = beans.colNames;
         this.showRowGroupCols = beans.showRowGroupCols;
     }
 
@@ -116,7 +113,8 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
     }
 
     private updateGroupField(): AgColumn[] | null {
-        _clearElement(this.eGroupField);
+        const eGroupField = this.eGroupField;
+        _clearElement(eGroupField);
         if (this.eGroupFieldSelect) {
             this.destroyBean(this.eGroupFieldSelect);
         }
@@ -124,7 +122,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
         const sourceColumns = allSourceColumns.filter((sourceColumn) => sourceColumn.isFilterAllowed());
         if (!sourceColumns.length) {
             this.selectedColumn = undefined;
-            _setDisplayed(this.eGroupField, false);
+            _setDisplayed(eGroupField, false);
             return null;
         }
         if (allSourceColumns.length === 1) {
@@ -132,7 +130,7 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
             // If there's one group column that has a filter, but multiple columns in total,
             // we should still show the select so the user knows which column it's for.
             this.selectedColumn = sourceColumns[0];
-            _setDisplayed(this.eGroupField, false);
+            _setDisplayed(eGroupField, false);
         } else {
             // keep the old selected column if it's still valid
             if (
@@ -142,30 +140,31 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
                 this.selectedColumn = sourceColumns[0];
             }
             this.createGroupFieldSelectElement(sourceColumns);
-            this.eGroupField.appendChild(this.eGroupFieldSelect.getGui());
-            this.eGroupField.appendChild(_loadTemplate(/* html */ `<div class="ag-filter-separator"></div>`));
-            _setDisplayed(this.eGroupField, true);
+            eGroupField.appendChild(this.eGroupFieldSelect.getGui());
+            eGroupField.appendChild(_loadTemplate(/* html */ `<div class="ag-filter-separator"></div>`));
+            _setDisplayed(eGroupField, true);
         }
 
         return sourceColumns;
     }
 
     private createGroupFieldSelectElement(sourceColumns: AgColumn[]): void {
-        this.eGroupFieldSelect = this.createManagedBean(new AgSelect());
+        const eGroupFieldSelect = this.createManagedBean(new AgSelect());
+        this.eGroupFieldSelect = eGroupFieldSelect;
         const localeTextFunc = this.getLocaleTextFunc();
-        this.eGroupFieldSelect.setLabel(localeTextFunc('groupFilterSelect', 'Select field:'));
-        this.eGroupFieldSelect.setLabelAlignment('top');
-        this.eGroupFieldSelect.addOptions(
+        eGroupFieldSelect.setLabel(localeTextFunc('groupFilterSelect', 'Select field:'));
+        eGroupFieldSelect.setLabelAlignment('top');
+        eGroupFieldSelect.addOptions(
             sourceColumns.map((sourceColumn) => ({
                 value: sourceColumn.getId(),
-                text: this.colNames.getDisplayNameForColumn(sourceColumn, 'groupFilter', false) ?? undefined,
+                text: this.beans.colNames.getDisplayNameForColumn(sourceColumn, 'groupFilter', false) ?? undefined,
             }))
         );
-        this.eGroupFieldSelect.setValue(this.selectedColumn!.getId());
-        this.eGroupFieldSelect.onValueChange((newValue) => this.updateSelectedColumn(newValue));
-        this.eGroupFieldSelect.addCssClass('ag-group-filter-field-select-wrapper');
+        eGroupFieldSelect.setValue(this.selectedColumn!.getId());
+        eGroupFieldSelect.onValueChange((newValue) => this.updateSelectedColumn(newValue));
+        eGroupFieldSelect.addCssClass('ag-group-filter-field-select-wrapper');
         if (sourceColumns.length === 1) {
-            this.eGroupFieldSelect.setDisabled(true);
+            eGroupFieldSelect.setDisabled(true);
         }
     }
 
@@ -311,9 +310,5 @@ export class GroupFilter extends TabGuardComp<GroupFilterEvent> implements IFilt
 
     public isFilterAllowed(): boolean {
         return !!this.selectedColumn;
-    }
-
-    public override destroy(): void {
-        super.destroy();
     }
 }

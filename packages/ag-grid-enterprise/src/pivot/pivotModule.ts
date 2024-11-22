@@ -27,8 +27,8 @@ import { PivotStage } from './pivotStage';
  * @internal
  */
 export const SharedPivotModule: _ModuleWithApi<_PivotGridApi<any>> = {
-    ...baseEnterpriseModule('SharedPivotModule'),
-    beans: [PivotResultColsService, PivotColDefService, PivotColDefService, PivotColsSvc],
+    ...baseEnterpriseModule('SharedPivot'),
+    beans: [PivotResultColsService, PivotColDefService, PivotColsSvc],
     apiFunctions: {
         isPivotMode,
         getPivotResultColumn,
@@ -52,7 +52,7 @@ export const SharedPivotModule: _ModuleWithApi<_PivotGridApi<any>> = {
  * @gridOption pivotMode
  */
 export const PivotModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('PivotModule'),
+    ...baseEnterpriseModule('Pivot'),
     rowModels: ['clientSide'],
     beans: [PivotStage],
     dependsOn: [SharedPivotModule, RowGroupingModule, ClientSideRowModelHierarchyModule],

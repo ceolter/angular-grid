@@ -31,6 +31,7 @@ import type { WithoutGridCommon } from './interfaces/iCommon';
 import type { IRowModel, RowModelType } from './interfaces/iRowModel';
 import type { IRowNode } from './interfaces/iRowNode';
 import type { IServerSideRowModel } from './interfaces/iServerSideRowModel';
+import { _getElementRectWithOffset } from './utils/dom';
 import { _exists, _missing } from './utils/generic';
 import { _warn } from './validation/logging';
 
@@ -226,6 +227,66 @@ export function _getPageBody(beans: BeanCollection): HTMLElement | ShadowRoot {
     }
 
     return targetEl;
+}
+
+function _getBodyWidth(beans: BeanCollection): number {
+    const body = _getPageBody(beans) as HTMLElement;
+    return body?.clientWidth ?? (window.innerHeight || -1);
+}
+
+function _getBodyHeight(beans: BeanCollection): number {
+    const body = _getPageBody(beans) as HTMLElement;
+    return body?.clientHeight ?? (window.innerHeight || -1);
+}
+
+export function _anchorElementToMouseMoveEvent(
+    element: HTMLElement,
+    mouseMoveEvent: MouseEvent | Touch,
+    beans: BeanCollection
+): void {
+    const eRect = element.getBoundingClientRect();
+    const height = eRect.height;
+
+    const browserWidth = _getBodyWidth(beans) - 2; // 2px for 1px borderLeft and 1px borderRight
+    const browserHeight = _getBodyHeight(beans) - 2; // 2px for 1px borderTop and 1px borderBottom
+
+    const offsetParent = element.offsetParent;
+
+    if (!offsetParent) {
+        return;
+    }
+
+    const offsetParentSize = _getElementRectWithOffset(element.offsetParent as HTMLElement);
+
+    const { clientY, clientX } = mouseMoveEvent;
+
+    let top = clientY - offsetParentSize.top - height / 2;
+    let left = clientX - offsetParentSize.left - 10;
+
+    const eDocument = _getDocument(beans);
+    const win = eDocument.defaultView || window;
+    const windowScrollY = win.pageYOffset || eDocument.documentElement.scrollTop;
+    const windowScrollX = win.pageXOffset || eDocument.documentElement.scrollLeft;
+
+    // check if the drag and drop image component is not positioned outside of the browser
+    if (browserWidth > 0 && left + element.clientWidth > browserWidth + windowScrollX) {
+        left = browserWidth + windowScrollX - element.clientWidth;
+    }
+
+    if (left < 0) {
+        left = 0;
+    }
+
+    if (browserHeight > 0 && top + element.clientHeight > browserHeight + windowScrollY) {
+        top = browserHeight + windowScrollY - element.clientHeight;
+    }
+
+    if (top < 0) {
+        top = 0;
+    }
+
+    element.style.left = `${left}px`;
+    element.style.top = `${top}px`;
 }
 
 export function _isNothingFocused(beans: BeanCollection): boolean {
@@ -559,7 +620,7 @@ export function _getGroupSelectsDescendants(gos: GridOptionsService): boolean {
 }
 
 export function _isSetFilterByDefault(gos: GridOptionsService): boolean {
-    return gos.isModuleRegistered('SetFilterModule') && !gos.get('suppressSetFilterByDefault');
+    return gos.isModuleRegistered('SetFilter') && !gos.get('suppressSetFilterByDefault');
 }
 
 export function _isLegacyMenuEnabled(gos: GridOptionsService): boolean {

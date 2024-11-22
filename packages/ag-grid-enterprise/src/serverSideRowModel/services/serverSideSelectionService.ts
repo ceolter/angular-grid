@@ -171,7 +171,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
     }
 
     private shotgunResetNodeSelectionState(source?: SelectionEventSourceType) {
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             if (node.stub) {
                 return;
             }
@@ -246,7 +246,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy.selectAllRowNodes(params);
         this.selectionCtx.reset();
 
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             if (node.stub) {
                 return;
             }
@@ -263,7 +263,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy.deselectAllRowNodes(params);
         this.selectionCtx.reset();
 
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             if (node.stub) {
                 return;
             }
@@ -298,7 +298,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
         const nodesToDeselect: RowNode[] = [];
 
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             const rowSelectable = this.updateRowSelectable(node, true);
 
             if (!rowSelectable && node.isSelected()) {

@@ -1,10 +1,7 @@
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
-import type { Environment } from '../environment';
 import type { CssVariablesChanged } from '../events';
 import type { GridCtrl } from '../gridComp/gridCtrl';
 import { _getActiveDomElement, _getDocument } from '../gridOptionsUtils';
@@ -83,20 +80,12 @@ interface Position {
 export class PopupService extends BeanStub implements NamedBean {
     beanName = 'popupSvc' as const;
 
-    private ctrlsSvc: CtrlsService;
-    private environment: Environment;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.environment = beans.environment;
-    }
-
     private gridCtrl: GridCtrl;
 
     private popupList: AgPopup[] = [];
 
     public postConstruct(): void {
-        this.ctrlsSvc.whenReady(this, (p) => {
+        this.beans.ctrlsSvc.whenReady(this, (p) => {
             this.gridCtrl = p.gridCtrl;
         });
         this.addManagedEventListeners({ gridStylesChanged: this.handleThemeChange.bind(this) });
@@ -493,10 +482,11 @@ export class PopupService extends BeanStub implements NamedBean {
         // add env CSS class to child, in case user provided a popup parent, which means
         // theme class may be missing
         const eWrapper = document.createElement('div');
-        this.environment.applyThemeClasses(eWrapper);
+        const { environment, gos } = this.beans;
+        environment.applyThemeClasses(eWrapper);
 
         eWrapper.classList.add('ag-popup');
-        element.classList.add(this.gos.get('enableRtl') ? 'ag-rtl' : 'ag-ltr', 'ag-popup-child');
+        element.classList.add(gos.get('enableRtl') ? 'ag-rtl' : 'ag-ltr', 'ag-popup-child');
 
         if (!element.hasAttribute('role')) {
             _setAriaRole(element, 'dialog');
@@ -518,8 +508,9 @@ export class PopupService extends BeanStub implements NamedBean {
 
     private handleThemeChange(e: CssVariablesChanged) {
         if (e.themeChanged) {
+            const environment = this.beans.environment;
             for (const popup of this.popupList) {
-                this.environment.applyThemeClasses(popup.wrapper);
+                environment.applyThemeClasses(popup.wrapper);
             }
         }
     }
@@ -527,7 +518,8 @@ export class PopupService extends BeanStub implements NamedBean {
     private addEventListenersToPopup(
         params: AddPopupParams & { wrapperEl: HTMLElement }
     ): (popupParams?: PopupEventParams) => void {
-        const eDocument = _getDocument(this.beans);
+        const beans = this.beans;
+        const eDocument = _getDocument(beans);
         const ePopupParent = this.getPopupParent();
 
         const { wrapperEl, eChild: popupEl, closedCallback, afterGuiAttached, closeOnEsc, modal } = params;
@@ -535,7 +527,7 @@ export class PopupService extends BeanStub implements NamedBean {
         let popupHidden = false;
 
         const hidePopupOnKeyboardEvent = (event: KeyboardEvent) => {
-            if (!wrapperEl.contains(_getActiveDomElement(this.beans))) {
+            if (!wrapperEl.contains(_getActiveDomElement(beans))) {
                 return;
             }
 

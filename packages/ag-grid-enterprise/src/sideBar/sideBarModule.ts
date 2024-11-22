@@ -22,7 +22,7 @@ import { SideBarService } from './sideBarService';
  * @gridOption sideBar
  */
 export const SideBarModule: _ModuleWithApi<_SideBarGridApi<any>> = {
-    ...baseEnterpriseModule('SideBarModule'),
+    ...baseEnterpriseModule('SideBar'),
     beans: [SideBarService],
     apiFunctions: {
         isSideBarVisible,

@@ -520,6 +520,21 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 .ag-measurement-container {
     width: 0;
+    height: 0;
     overflow: hidden;
     visibility: hidden;
+}
+
+.ag-measurement-element-border {
+    display: inline-block;
+
+    /* ResizeObserver measures the content box of an element so i order to get
+       it to pick up a border width, the border needs to be on a child of the
+       mesasurement element */
+    &::before {
+        content: '';
+        display: block;
+        /* rtl:ignore */
+        border-left: var(--ag-measurement-border);
+    }
 }

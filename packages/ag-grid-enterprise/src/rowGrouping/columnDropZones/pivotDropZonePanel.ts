@@ -1,18 +1,11 @@
-import type { AgColumn, BeanCollection, DragAndDropIcon, DraggingEvent, IColsService } from 'ag-grid-community';
+import type { AgColumn, DragAndDropIcon, DraggingEvent } from 'ag-grid-community';
 import { _createIconNoSpan } from 'ag-grid-community';
 
 import { BaseDropZonePanel } from './baseDropZonePanel';
 
 export class PivotDropZonePanel extends BaseDropZonePanel {
-    private pivotColsSvc?: IColsService;
-
     constructor(horizontal: boolean) {
         super(horizontal, 'pivot');
-    }
-
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
-        this.pivotColsSvc = beans.pivotColsSvc;
     }
 
     public postConstruct(): void {
@@ -48,9 +41,10 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     private checkVisibility(): void {
-        const pivotMode = this.colModel.isPivotMode();
+        const colModel = this.beans.colModel;
+        const pivotMode = colModel.isPivotMode();
 
-        if (this.isHorizontal()) {
+        if (this.horizontal) {
             // what we do for horizontal (ie the pivot panel at the top) depends
             // on the user property as well as pivotMode.
             switch (this.gos.get('pivotPanelShow')) {
@@ -58,7 +52,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
                     this.setDisplayed(pivotMode);
                     break;
                 case 'onlyWhenPivoting': {
-                    const pivotActive = this.colModel.isPivotActive();
+                    const pivotActive = colModel.isPivotActive();
                     this.setDisplayed(pivotMode && pivotActive);
                     break;
                 }
@@ -83,7 +77,7 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected updateItems(columns: AgColumn[]): void {
-        this.pivotColsSvc?.setColumns(columns, 'toolPanelUi');
+        this.beans.pivotColsSvc?.setColumns(columns, 'toolPanelUi');
     }
 
     protected getIconName(): DragAndDropIcon {
@@ -91,6 +85,6 @@ export class PivotDropZonePanel extends BaseDropZonePanel {
     }
 
     protected getExistingItems(): AgColumn[] {
-        return this.pivotColsSvc?.columns ?? [];
+        return this.beans.pivotColsSvc?.columns ?? [];
     }
 }

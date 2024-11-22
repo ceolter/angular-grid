@@ -1,31 +1,15 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnModel,
-    IAggColumnNameService,
-    IAggFunc,
-    IColsService,
-    NamedBean,
-} from 'ag-grid-community';
+import type { AgColumn, IAggColumnNameService, IAggFunc, NamedBean } from 'ag-grid-community';
 import { BeanStub, _exists } from 'ag-grid-community';
 
 export class AggColumnNameService extends BeanStub implements NamedBean, IAggColumnNameService {
     beanName = 'aggColNameSvc' as const;
 
-    private valueColsSvc?: IColsService;
-    private rowGroupColsSvc?: IColsService;
-    private colModel: ColumnModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.valueColsSvc = beans.valueColsSvc;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.colModel = beans.colModel;
-    }
-
     public getHeaderName(column: AgColumn, headerName: string | null): string | null {
         if (this.gos.get('suppressAggFuncInHeader')) {
             return headerName;
         }
+
+        const { valueColsSvc, colModel, rowGroupColsSvc } = this.beans;
 
         // only columns with aggregation active can have aggregations
         const pivotValueColumn = column.getColDef().pivotValueColumn;
@@ -35,7 +19,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
 
         // otherwise we have a measure that is active, and we are doing aggregation on it
         if (pivotActiveOnThisColumn) {
-            const valueColumns = this.valueColsSvc?.columns ?? [];
+            const valueColumns = valueColsSvc?.columns ?? [];
             const isCollapsedHeaderEnabled =
                 this.gos.get('removePivotHeaderRowWhenSingleValueColumn') && valueColumns.length === 1;
             const isTotalColumn = column.getColDef().pivotTotalColumnIds !== undefined;
@@ -46,7 +30,7 @@ export class AggColumnNameService extends BeanStub implements NamedBean, IAggCol
             aggFuncFound = true;
         } else {
             const measureActive = column.isValueActive();
-            const aggregationPresent = this.colModel.isPivotMode() || this.rowGroupColsSvc?.columns.length !== 0;
+            const aggregationPresent = colModel.isPivotMode() || rowGroupColsSvc?.columns.length !== 0;
 
             if (measureActive && aggregationPresent) {
                 aggFunc = column.getAggFunc();

@@ -3,162 +3,62 @@
 The pages for each component type (cell renderer, cell editor etc) contain examples on how to register and use each component type.
 It is however useful here to step back and focus on the component registration process which is common across all component types.
 
-There are generally two ways to register custom components ("inline" components can only be registered by name):
-
-- By name
-- Direct reference (deprecated)
-
-Both options are fully supported by the grid - however we recommend referencing by name as registering by Direct Reference is deprecated.
-It's also the case that registering by name is the more flexible of the two options - given this, all of the examples in the documentation
-use registering by name.
-The direct reference approach is kept for backwards compatibility as this was the original way to do it in AG Grid.
-
-## Registering Inline Custom Components
-
-Inline Custom Components can only be registered within the Grid by name:
-
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-<template>
-  <ag-grid-vue :columnDefs="columnDefs" ...other properties>
-  </ag-grid-vue>
-</template>
-
-<script>
-//...other imports
-import {AgGridVue} from "ag-grid-vue3";
-
-export default {
-  components: {
-      AgGridVue,
-      CubeComponent: {
-          template: '<span>{{ valueCubed() }}</span>',
-          methods: {
-              valueCubed() {
-                  return this.params.value * this.params.value * this.params.value;
-              }
-          }
-      }
-  },
-  data() {
-      return {
-          columnDefs: [
-               {
-                  headerName: "Cube",
-                  field: "value",
-                  cellRenderer: 'CubeComponent',     
-              }
-          ]
-      }
-  }
-  //...other properties & methods
-}
-</script>
-```
-{% /if %}
-
-{% if isFramework("vue") %}
-## Registering Non-Inline Custom Components
-
-### 1. By Name
-To use a component within the grid you will reference components by **case-sensitive**
-name, for example:
-
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-<template>
-  <ag-grid-vue ...other properties>
-  </ag-grid-vue>
-</template>
-
-<script>
-//...other imports
-import {AgGridVue} from "ag-grid-vue3";
-import CubeComponent from './CubeComponent.vue';
-
-export default {
-  components: {
-      AgGridVue,
-      CubeComponent
-  }
-  data() {
-      return {
-          columnDefs: [
-               {
-                  headerName: "Cube",
-                  field: "value",
-                  cellRenderer: 'CubeComponent'     
-              }
-          ]
-      }
-  }
-  //...other properties & methods
-}
-</script>
-```
-{% /if %}
-
-{% if isFramework("vue") %}
-### 2. By Direct Reference
-{% /if %}
-
-{% if isFramework("vue") %}
 {% note %}
-**Deprecated.**
-
-This approach is supported but not recommend and will be removed in a future release.
-
+Nuxt's auto-import component is not supported with custom components within the grid. Please register any custom components manually as described below.
 {% /note %}
-{% /if %}
 
-{% if isFramework("vue") %}
-When registering components within the Grid by direct reference the target components _must_ be wrapped in `defineComponent(...)`:
-{% /if %}
+Custom Components can be registered in two ways:
 
-{% if isFramework("vue") %}
+- Globally
+- Locally using the `components` option
+- Locally using `defineExpose` with `script setup`
+
+### Global Component Registration
+
 ```js
-<template>
-  <ag-grid-vue ...other properties>
-  </ag-grid-vue>
-</template>
+import MyCustomerCellEditor from './App.vue'
 
-<script>
-//...other imports
-import Vue from "vue";
-import {AgGridVue} from "ag-grid-vue3";
+app.component('MyCustomerCellEditor', MyCustomerCellEditor)
+```
 
-const CubeComponent = defineComponent({
-  template: '<span>{{ valueCubed() }}</span>',
-  methods: {
-      valueCubed() {
-          return this.params.value * this.params.value * this.params.value;
-      }
-  }
-};
+### Locally using the `components` option
 
+```js
+import MyCustomerCellEditor from './App.vue'
 
 export default {
   components: {
-      AgGridVue,
-      // CubeComponent does not have to be registered here when registering by direct reference
+    MyCustomerCellEditor
+  },
+  setup() {
+    // ...
   }
-  data() {
-      return {
-          columnDefs: [
-               {
-                  headerName: "Cube",
-                  field: "value",
-                  cellRenderer: CubeComponent
-              }
-          ]
-      }
-  }
-  //...other properties & methods
 }
+```
+
+### Locally using `defineExpose` with `script setup`
+
+```js
+<template>
+  <ag-grid-vue v-model="rowData"
+               :columnDefs="columnDefs"
+               ...other props
+  >
+  </ag-grid-vue>
+</template>
+
+<script setup>
+import MyCustomerCellEditor from './App.vue'
+
+const columnDefs = ref([
+    { field: "make", cellEditor: 'MyCustomerCellEditor' }
+]);
+
+...other setup
+
+defineExpose({
+    MyCustomerCellEditor    // make MyCustomerCellEditor available to the grid
+})
 </script>
 ```
 {% /if %}

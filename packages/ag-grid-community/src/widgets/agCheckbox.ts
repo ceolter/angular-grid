@@ -99,8 +99,9 @@ export class AgCheckbox<TConfig extends AgCheckboxParams = AgCheckboxParams> ext
         this.previousValue = this.isSelected();
 
         selected = this.selected = typeof selected === 'boolean' ? selected : undefined;
-        this.eInput.checked = selected!;
-        this.eInput.indeterminate = selected === undefined;
+        const eInput = this.eInput;
+        eInput.checked = selected!;
+        eInput.indeterminate = selected === undefined;
 
         if (!silent) {
             this.dispatchChange(this.selected, this.previousValue);
@@ -132,8 +133,9 @@ export class AgCheckbox<TConfig extends AgCheckboxParams = AgCheckboxParams> ext
     }
 
     private refreshSelectedClass(value?: boolean | null) {
-        this.eWrapper.classList.toggle('ag-checked', value === true);
-        this.eWrapper.classList.toggle('ag-indeterminate', value == null);
+        const classList = this.eWrapper.classList;
+        classList.toggle('ag-checked', value === true);
+        classList.toggle('ag-indeterminate', value == null);
     }
 }
 

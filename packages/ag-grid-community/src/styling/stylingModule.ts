@@ -8,7 +8,7 @@ import { RowStyleService } from './rowStyleService';
  * @colDef cellStyle, cellClass, cellClassRules
  */
 export const CellStyleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CellStyleModule'),
+    ...baseCommunityModule('CellStyle'),
     beans: [CellStyleService],
 };
 
@@ -17,6 +17,6 @@ export const CellStyleModule: _ModuleWithoutApi = {
  * @gridOption rowStyle, getRowStyle, rowClass, getRowClass, rowClassRules
  */
 export const RowStyleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowStyleModule'),
+    ...baseCommunityModule('RowStyle'),
     beans: [RowStyleService],
 };

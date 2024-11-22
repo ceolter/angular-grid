@@ -632,6 +632,8 @@ export {
     _isNothingFocused,
     _getDocument,
     _getPageBody,
+    _anchorElementToMouseMoveEvent,
+    _getRootNode,
     _getGroupAggFiltering,
     _isRowSelection,
     _isGetRowHeightFunction,

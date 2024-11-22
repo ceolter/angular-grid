@@ -12,11 +12,22 @@ import type {
     RowSelectionOptions,
 } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
-import { ExcelExportModule, MenuModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    exportMultipleSheetsAsExcel,
+} from 'ag-grid-enterprise';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ExcelExportModule, MenuModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ExcelExportModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+]);
 
 @Component({
     standalone: true,

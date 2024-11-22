@@ -28,7 +28,7 @@ import { ViewportRowModelModule } from './viewportRowModel/viewportRowModelModul
 type AllEnterpriseModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
 const baseAllEnterpriseModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AllEnterpriseModule'),
+    ...baseEnterpriseModule('AllEnterprise'),
     dependsOn: [
         AllCommunityModule,
         ClipboardModule,

@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { RichSelectModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -16,7 +16,8 @@ import './styles.css';
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ColumnsToolPanelModule,
     RichSelectModule,
 ]);

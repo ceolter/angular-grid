@@ -82,7 +82,6 @@ export const buildGridOptions = (config: GridConfig): GridOptions => {
         domLayout: config.printLayout ? 'print' : undefined,
         columnMenu: config.legacyColumnMenu ? 'legacy' : 'new',
         animateRows: false,
-        rowDragManaged: true,
         autoGroupColumnDef: {
             headerName: 'Group',
             field: 'name',

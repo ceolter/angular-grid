@@ -11,7 +11,7 @@ import { TooltipService } from './tooltipService';
  * @colDef tooltipField, tooltipValueGetter, headerTooltip
  */
 export const TooltipModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('TooltipModule'),
+    ...baseCommunityModule('Tooltip'),
     beans: [TooltipService],
     dynamicBeans: {
         tooltipFeature: TooltipFeature as any,

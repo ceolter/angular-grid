@@ -624,9 +624,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     invalidColor: '#e02525',
     wrapperBorder: true,
     rowBorder: true,
-    headerRowBorder: {
-        ref: 'rowBorder',
-    },
+    headerRowBorder: true,
     footerRowBorder: {
         ref: 'rowBorder',
     },

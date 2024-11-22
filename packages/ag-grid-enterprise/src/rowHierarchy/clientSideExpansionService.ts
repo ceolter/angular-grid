@@ -1,5 +1,4 @@
 import type {
-    AnimationFrameService,
     BeanCollection,
     IClientSideRowModel,
     IExpansionService,
@@ -15,15 +14,12 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     beanName = 'expansionSvc' as const;
 
     private rowModel: IClientSideRowModel;
-    private animationFrameSvc?: AnimationFrameService;
 
     private events: RowGroupOpenedEvent[] = [];
     private dispatchExpandedDebounced: () => void;
 
-    public override wireBeans(beans: BeanCollection): void {
-        super.wireBeans(beans);
+    public wireBeans(beans: BeanCollection): void {
         this.rowModel = beans.rowModel as IClientSideRowModel;
-        this.animationFrameSvc = beans.animationFrameSvc;
     }
 
     public expandRows(rowIds: string[]): void {
@@ -37,8 +33,10 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     }
 
     public expandAll(expand: boolean): void {
-        const usingTreeData = this.gos.get('treeData');
-        const usingPivotMode = this.colModel.isPivotActive();
+        const { gos, colModel, eventSvc } = this.beans;
+        const rowModel = this.rowModel;
+        const usingTreeData = gos.get('treeData');
+        const usingPivotMode = colModel.isPivotActive();
 
         const recursiveExpandOrCollapse = (rowNodes: RowNode[] | null): void => {
             if (!rowNodes) {
@@ -73,14 +71,14 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
             });
         };
 
-        const rootNode = this.rowModel.rootNode;
+        const rootNode = rowModel.rootNode;
         if (rootNode) {
             recursiveExpandOrCollapse(rootNode.childrenAfterGroup);
         }
 
-        this.rowModel.refreshModel({ step: 'map' });
+        rowModel.refreshModel({ step: 'map' });
 
-        this.eventSvc.dispatchEvent({
+        eventSvc.dispatchEvent({
             type: 'expandOrCollapseAll',
             source: expand ? 'expandAll' : 'collapseAll',
         });
@@ -128,12 +126,13 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
     // to make sure all rendering is complete. we don't wait any milliseconds,
     // as this is intended to batch calls in one VM turn.
     private debounce(func: () => void) {
-        if (!this.animationFrameSvc) {
+        const animationFrameSvc = this.beans.animationFrameSvc;
+        if (!animationFrameSvc) {
             return () => window.setTimeout(func, 0);
         }
         let pending = false;
         return () => {
-            if (!this.animationFrameSvc!.active) {
+            if (!animationFrameSvc!.active) {
                 window.setTimeout(func, 0);
                 return;
             }
@@ -141,7 +140,7 @@ export class ClientSideExpansionService extends BaseExpansionService implements 
                 return;
             }
             pending = true;
-            this.animationFrameSvc!.addDestroyTask(() => {
+            animationFrameSvc!.addDestroyTask(() => {
                 pending = false;
                 func();
             });

@@ -209,21 +209,18 @@ const GridExample = () => {
         {
             field: 'product',
             enableRowGroup: true,
-            enablePivot: true,
             rowGroupIndex: 0,
             hide: true,
         },
         {
             field: 'portfolio',
             enableRowGroup: true,
-            enablePivot: true,
             rowGroupIndex: 1,
             hide: true,
         },
         {
             field: 'book',
             enableRowGroup: true,
-            enablePivot: true,
             rowGroupIndex: 2,
             hide: true,
         },
@@ -339,14 +336,12 @@ const GridExample = () => {
         {
             field: 'dealType',
             enableRowGroup: true,
-            enablePivot: true,
             filter: 'agTextColumnFilter',
         },
         {
             headerName: 'Bid',
             field: 'bidFlag',
             enableRowGroup: true,
-            enablePivot: true,
             width: 100,
             filter: 'agTextColumnFilter',
         },

@@ -8,7 +8,7 @@ import { addEventListener, addGlobalListener, removeEventListener, removeGlobalL
  * @feature API -> Grid Events
  */
 export const EventApiModule: _ModuleWithApi<_EventGridApi<any>> = {
-    ...baseCommunityModule('EventApiModule'),
+    ...baseCommunityModule('EventApi'),
     apiFunctions: {
         addEventListener,
         addGlobalListener,

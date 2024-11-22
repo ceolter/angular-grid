@@ -26,13 +26,13 @@ const COLUMN_DEFINITION_DEPRECATIONS: Deprecations<ColDef | ColGroupDef> = {
 };
 
 const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
-    aggFunc: { module: 'SharedAggregationModule' },
+    aggFunc: { module: 'SharedAggregation' },
     autoHeight: {
         supportedRowModels: ['clientSide', 'serverSide'],
-        module: 'RowAutoHeightModule',
+        module: 'RowAutoHeight',
     },
-    cellClass: { module: 'CellStyleModule' },
-    cellClassRules: { module: 'CellStyleModule' },
+    cellClass: { module: 'CellStyle' },
+    cellClassRules: { module: 'CellStyle' },
     cellEditor: ({ cellEditor }) => {
         if (typeof cellEditor !== 'string') {
             return null;
@@ -66,24 +66,24 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return null;
         },
     },
-    cellStyle: { module: 'CellStyleModule' },
+    cellStyle: { module: 'CellStyle' },
     children: () => COL_DEF_VALIDATORS,
     columnChooserParams: {
-        module: 'ColumnMenuModule',
+        module: 'ColumnMenu',
     },
-    contextMenuItems: { module: 'ContextMenuModule' },
-    dndSource: { module: 'DragAndDropModule' },
-    dndSourceOnRowDrag: { module: 'DragAndDropModule' },
+    contextMenuItems: { module: 'ContextMenu' },
+    dndSource: { module: 'DragAndDrop' },
+    dndSourceOnRowDrag: { module: 'DragAndDrop' },
     editable: {
-        module: 'EditCoreModule',
+        module: 'EditCore',
     },
-    enableCellChangeFlash: { module: 'HighlightChangesModule' },
-    enablePivot: { module: 'SharedPivotModule' },
-    enableRowGroup: { module: 'SharedRowGroupingModule' },
-    enableValue: { module: 'SharedAggregationModule' },
+    enableCellChangeFlash: { module: 'HighlightChanges' },
+    enablePivot: { module: 'SharedPivot' },
+    enableRowGroup: { module: 'SharedRowGrouping' },
+    enableValue: { module: 'SharedAggregation' },
     filter: ({ filter }) => {
         if (filter && typeof filter !== 'string' && typeof filter !== 'boolean') {
-            return { module: 'CustomFilterModule' };
+            return { module: 'CustomFilter' };
         }
         if (typeof filter === 'string') {
             const module = USER_COMP_MODULES[filter as UserComponentName];
@@ -91,9 +91,9 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
                 return { module };
             }
         }
-        return { module: 'ColumnFilterModule' };
+        return { module: 'ColumnFilter' };
     },
-    floatingFilter: { module: 'ColumnFilterModule' },
+    floatingFilter: { module: 'ColumnFilter' },
     headerCheckboxSelection: {
         supportedRowModels: ['clientSide', 'serverSide'],
         validate: (_options, { rowSelection }) =>
@@ -113,7 +113,7 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
                 ? null
                 : 'headerCheckboxSelectionFilteredOnly is only supported with rowSelection=multiple',
     },
-    headerTooltip: { module: 'TooltipModule' },
+    headerTooltip: { module: 'Tooltip' },
     headerValueGetter: {
         validate: (_options: AbstractColDef) => {
             const headerValueGetter = _options.headerValueGetter;
@@ -123,21 +123,21 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return 'headerValueGetter must be a function or a valid string expression';
         },
     },
-    mainMenuItems: { module: 'ColumnMenuModule' },
+    mainMenuItems: { module: 'ColumnMenu' },
     menuTabs: (options) => {
         const enterpriseMenuTabs: ColumnMenuTab[] = ['columnsMenuTab', 'generalMenuTab'];
         if (options.menuTabs?.some((tab) => enterpriseMenuTabs.includes(tab))) {
             return {
-                module: 'ColumnMenuModule',
+                module: 'ColumnMenu',
             };
         }
         return null;
     },
-    pivot: { module: 'SharedPivotModule' },
-    pivotIndex: { module: 'SharedPivotModule' },
-    rowDrag: { module: 'RowDragModule' },
-    rowGroup: { module: 'SharedRowGroupingModule' },
-    rowGroupIndex: { module: 'SharedRowGroupingModule' },
+    pivot: { module: 'SharedPivot' },
+    pivotIndex: { module: 'SharedPivot' },
+    rowDrag: { module: 'RowDrag' },
+    rowGroup: { module: 'SharedRowGrouping' },
+    rowGroupIndex: { module: 'SharedRowGrouping' },
     sortingOrder: {
         validate: (_options) => {
             const sortingOrder = _options.sortingOrder;
@@ -153,8 +153,8 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return null;
         },
     },
-    tooltipField: { module: 'TooltipModule' },
-    tooltipValueGetter: { module: 'TooltipModule' },
+    tooltipField: { module: 'Tooltip' },
+    tooltipValueGetter: { module: 'Tooltip' },
     type: {
         validate: (_options) => {
             const type = _options.type;

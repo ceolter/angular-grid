@@ -5,15 +5,12 @@ import { _createIconNoSpan } from '../utils/icon';
 import { Component } from '../widgets/component';
 
 export class DndSourceComp extends Component {
-    private readonly rowNode: RowNode;
-    private readonly column: AgColumn;
-    private readonly eCell: HTMLElement;
-
-    constructor(rowNode: RowNode, column: AgColumn, eCell: HTMLElement) {
+    constructor(
+        private readonly rowNode: RowNode,
+        private readonly column: AgColumn,
+        private readonly eCell: HTMLElement
+    ) {
         super(/* html */ `<div class="ag-drag-handle ag-row-drag" draggable="true"></div>`);
-        this.rowNode = rowNode;
-        this.column = column;
-        this.eCell = eCell;
     }
 
     public postConstruct(): void {
@@ -32,30 +29,29 @@ export class DndSourceComp extends Component {
     }
 
     private onDragStart(dragEvent: DragEvent): void {
-        const providedOnRowDrag = this.column.getColDef().dndSourceOnRowDrag;
+        const { rowNode, column, eCell, gos } = this;
+        const providedOnRowDrag = column.getColDef().dndSourceOnRowDrag;
 
-        dragEvent.dataTransfer!.setDragImage(this.eCell, 0, 0);
+        const dataTransfer = dragEvent.dataTransfer!;
 
-        // default behaviour is to convert data to json and set into drag component
-        const defaultOnRowDrag = () => {
-            try {
-                const jsonData = JSON.stringify(this.rowNode.data);
-
-                dragEvent.dataTransfer!.setData('application/json', jsonData);
-                dragEvent.dataTransfer!.setData('text/plain', jsonData);
-            } catch (e) {
-                // if we cannot convert the data to json, then we do not set the type
-            }
-        };
+        dataTransfer.setDragImage(eCell, 0, 0);
 
         if (providedOnRowDrag) {
-            const params: DndSourceOnRowDragParams = this.gos.addGridCommonParams({
-                rowNode: this.rowNode,
-                dragEvent: dragEvent,
+            const params: DndSourceOnRowDragParams = gos.addGridCommonParams({
+                rowNode,
+                dragEvent,
             });
             providedOnRowDrag(params);
         } else {
-            defaultOnRowDrag();
+            // default behaviour is to convert data to json and set into drag component
+            try {
+                const jsonData = JSON.stringify(rowNode.data);
+
+                dataTransfer.setData('application/json', jsonData);
+                dataTransfer.setData('text/plain', jsonData);
+            } catch (e) {
+                // if we cannot convert the data to json, then we do not set the type
+            }
         }
     }
 

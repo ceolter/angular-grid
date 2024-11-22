@@ -37,13 +37,14 @@ export class AgRadioButton extends AgCheckbox<AgRadioButtonParams> {
      * not deselected, so we need to use our own event.
      */
     private onChange(event: CheckboxChangedEvent) {
+        const eInput = this.eInput;
         if (
             event.selected &&
             event.name &&
-            this.eInput.name &&
-            this.eInput.name === event.name &&
+            eInput.name &&
+            eInput.name === event.name &&
             event.id &&
-            this.eInput.id !== event.id
+            eInput.id !== event.id
         ) {
             this.setValue(false, true);
         }

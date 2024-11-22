@@ -1,33 +1,22 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import type { RowNode } from '../entities/rowNode';
 import { _isCellSelectionEnabled, _isClientSideRowModel } from '../gridOptionsUtils';
-import type { DragAndDropService } from './dragAndDropService';
 import { RowDragComp } from './rowDragComp';
 import { RowDragFeature } from './rowDragFeature';
 
 export class RowDragService extends BeanStub implements NamedBean {
     beanName = 'rowDragSvc' as const;
 
-    private dragAndDrop: DragAndDropService;
-
-    private rowDragFeature?: RowDragFeature;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.dragAndDrop = beans.dragAndDrop!;
-    }
+    public rowDragFeature?: RowDragFeature;
 
     public setupRowDrag(element: HTMLElement, ctrl: BeanStub): void {
         const rowDragFeature = ctrl.createManagedBean(new RowDragFeature(element));
-        this.dragAndDrop.addDropTarget(rowDragFeature);
-        ctrl.addDestroyFunc(() => this.dragAndDrop.removeDropTarget(rowDragFeature));
+        const dragAndDrop = this.beans.dragAndDrop!;
+        dragAndDrop.addDropTarget(rowDragFeature);
+        ctrl.addDestroyFunc(() => dragAndDrop.removeDropTarget(rowDragFeature));
         this.rowDragFeature = rowDragFeature;
-    }
-
-    public getRowDragFeature(): RowDragFeature | undefined {
-        return this.rowDragFeature;
     }
 
     public createRowDragComp(
@@ -64,9 +53,10 @@ export class RowDragService extends BeanStub implements NamedBean {
         dragStartPixels?: number,
         suppressVisibilityChange?: boolean
     ): RowDragComp | undefined {
-        if (this.gos.get('rowDragManaged')) {
+        const gos = this.gos;
+        if (gos.get('rowDragManaged')) {
             // row dragging only available in default row model and when not using pagination
-            if (!_isClientSideRowModel(this.gos) || this.gos.get('pagination')) {
+            if (!_isClientSideRowModel(gos) || gos.get('pagination')) {
                 return undefined;
             }
         }

@@ -269,10 +269,10 @@ export class GridCoreCreator {
     ): SingletonBean[] | undefined {
         // assert that the relevant module has been loaded
         const rowModelModuleNames: Record<RowModelType, CommunityModuleName | EnterpriseModuleName> = {
-            clientSide: 'ClientSideRowModelModule',
-            infinite: 'InfiniteRowModelModule',
-            serverSide: 'ServerSideRowModelModule',
-            viewport: 'ViewportRowModelModule',
+            clientSide: 'ClientSideRowModel',
+            infinite: 'InfiniteRowModel',
+            serverSide: 'ServerSideRowModel',
+            viewport: 'ViewportRowModel',
         };
 
         const rowModuleModelName = rowModelModuleNames[rowModelType];
@@ -293,7 +293,7 @@ export class GridCoreCreator {
                     gridId,
                     rowModelType,
                 },
-                `Missing module ${rowModuleModelName} for rowModelType ${rowModelType}.`
+                `Missing module ${rowModuleModelName}Module for rowModelType ${rowModelType}.`
             );
             return;
         }

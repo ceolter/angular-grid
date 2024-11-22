@@ -29,6 +29,11 @@
     padding-left: var(--ag-input-padding-start);
     min-height: var(--ag-input-height);
 
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--ag-focus-shadow);
+    }
+
     &:where(:disabled) {
         background-color: var(--ag-input-disabled-background-color);
         border: var(--ag-input-disabled-border);

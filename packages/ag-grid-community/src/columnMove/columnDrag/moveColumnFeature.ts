@@ -38,7 +38,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     // the 'hold and pin' functionality
     private failedMoveAttempts: number;
 
-    constructor(private pinned: ColumnPinnedType) {
+    constructor(private readonly pinned: ColumnPinnedType) {
         super();
         this.isCenterContainer = !_exists(pinned);
     }
@@ -82,7 +82,8 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     public onDragEnter(draggingEvent: DraggingEvent): void {
         // we do dummy drag, so make sure column appears in the right location when first placed
 
-        const columns = draggingEvent.dragItem.columns as AgColumn[] | undefined;
+        const dragItem = draggingEvent.dragItem;
+        const columns = dragItem.columns as AgColumn[] | undefined;
         const dragCameFromToolPanel = draggingEvent.dragSource.type === DragSourceType.ToolPanel;
 
         if (dragCameFromToolPanel) {
@@ -93,7 +94,7 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
             // a group out, and then drags the group back in, only columns that were originally visible
             // will be visible again. otherwise a group with three columns (but only two visible) could
             // be dragged out, then when it's dragged in again, all three are visible. this stops that.
-            const visibleState = draggingEvent.dragItem.visibleState;
+            const visibleState = dragItem.visibleState;
             const visibleColumns: AgColumn[] = (columns || []).filter((column) => visibleState![column.getId()]);
             this.setColumnsVisible(visibleColumns, true, 'uiColumnDragged');
         }
@@ -176,11 +177,12 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
     private finishColumnMoving(): void {
         this.clearHighlighted();
 
-        if (!this.lastMovedInfo) {
+        const lastMovedInfo = this.lastMovedInfo;
+        if (!lastMovedInfo) {
             return;
         }
 
-        const { columns, toIndex } = this.lastMovedInfo;
+        const { columns, toIndex } = lastMovedInfo;
 
         this.beans.colMoves!.moveColumns(columns, toIndex, 'uiColumnMoved', true);
     }
@@ -551,15 +553,19 @@ export class MoveColumnFeature extends BeanStub implements DropListener {
         const firstVisiblePixel = centerCtrl.getCenterViewportScrollLeft();
         const lastVisiblePixel = firstVisiblePixel + centerCtrl.getCenterWidth();
 
+        let needToMoveRight: boolean;
+        let needToMoveLeft: boolean;
         if (this.gos.get('enableRtl')) {
-            this.needToMoveRight = xAdjustedForScroll < firstVisiblePixel + SCROLL_GAP_NEEDED_BEFORE_MOVE;
-            this.needToMoveLeft = xAdjustedForScroll > lastVisiblePixel - SCROLL_GAP_NEEDED_BEFORE_MOVE;
+            needToMoveRight = xAdjustedForScroll < firstVisiblePixel + SCROLL_GAP_NEEDED_BEFORE_MOVE;
+            needToMoveLeft = xAdjustedForScroll > lastVisiblePixel - SCROLL_GAP_NEEDED_BEFORE_MOVE;
         } else {
-            this.needToMoveLeft = xAdjustedForScroll < firstVisiblePixel + SCROLL_GAP_NEEDED_BEFORE_MOVE;
-            this.needToMoveRight = xAdjustedForScroll > lastVisiblePixel - SCROLL_GAP_NEEDED_BEFORE_MOVE;
+            needToMoveLeft = xAdjustedForScroll < firstVisiblePixel + SCROLL_GAP_NEEDED_BEFORE_MOVE;
+            needToMoveRight = xAdjustedForScroll > lastVisiblePixel - SCROLL_GAP_NEEDED_BEFORE_MOVE;
         }
+        this.needToMoveRight = needToMoveRight;
+        this.needToMoveLeft = needToMoveLeft;
 
-        if (this.needToMoveLeft || this.needToMoveRight) {
+        if (needToMoveLeft || needToMoveRight) {
             this.ensureIntervalStarted();
         } else {
             this.ensureIntervalCleared();

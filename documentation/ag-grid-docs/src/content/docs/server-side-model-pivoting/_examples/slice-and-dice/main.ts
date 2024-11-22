@@ -3,7 +3,7 @@ import { IServerSideDatasource, createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
@@ -16,7 +16,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     RowGroupingModule,
     ServerSideRowModelModule,
     SetFilterModule,

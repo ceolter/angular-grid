@@ -1,4 +1,3 @@
-import type { Registry } from '../components/framework/registry';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
@@ -14,12 +13,6 @@ import { _isShowTooltipWhenTruncated, _shouldDisplayTooltip } from './tooltipFea
 
 export class TooltipService extends BeanStub implements NamedBean {
     beanName = 'tooltipSvc' as const;
-
-    private registry: Registry;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.registry = beans.registry;
-    }
 
     public setupHeaderTooltip(
         existingTooltipFeature: TooltipFeature | undefined,
@@ -57,7 +50,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             shouldDisplayTooltip,
         };
 
-        let tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl);
+        let tooltipFeature = this.createTooltipFeature(tooltipCtrl);
         if (tooltipFeature) {
             tooltipFeature = ctrl.createBean(tooltipFeature);
             ctrl.setRefreshFunction('tooltip', () => tooltipFeature!.refreshTooltip());
@@ -97,7 +90,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             tooltipCtrl.getColDef = () => colGroupDef;
         }
 
-        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl);
+        const tooltipFeature = this.createTooltipFeature(tooltipCtrl);
         return tooltipFeature ? ctrl.createBean(tooltipFeature) : tooltipFeature;
     }
 
@@ -161,7 +154,7 @@ export class TooltipService extends BeanStub implements NamedBean {
             shouldDisplayTooltip,
         };
 
-        return this.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl, this.beans);
+        return this.createTooltipFeature(tooltipCtrl, this.beans);
     }
 
     public refreshRowTooltip(
@@ -177,23 +170,25 @@ export class TooltipService extends BeanStub implements NamedBean {
             shouldDisplayTooltip,
         };
 
+        const beans = this.beans;
+        const context = beans.context;
+
         if (existingTooltipFeature) {
-            ctrl.destroyBean(existingTooltipFeature, this.beans.context);
+            ctrl.destroyBean(existingTooltipFeature, context);
         }
 
-        const tooltipFeature = this.registry.createDynamicBean<TooltipFeature>(
-            'tooltipFeature',
-            false,
-            tooltipParams,
-            this.beans
-        );
+        const tooltipFeature = this.createTooltipFeature(tooltipParams, beans);
 
-        return ctrl.createBean(tooltipFeature, this.beans.context);
+        return ctrl.createBean(tooltipFeature, context);
     }
 
     public initCol(column: AgColumn): void {
         const { colDef } = column;
         column.tooltipEnabled =
             _exists(colDef.tooltipField) || _exists(colDef.tooltipValueGetter) || _exists(colDef.tooltipComponent);
+    }
+
+    private createTooltipFeature(tooltipCtrl: ITooltipCtrl, beans?: BeanCollection): TooltipFeature | undefined {
+        return this.beans.registry.createDynamicBean<TooltipFeature>('tooltipFeature', false, tooltipCtrl, beans);
     }
 }

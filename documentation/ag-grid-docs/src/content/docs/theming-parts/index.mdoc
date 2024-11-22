@@ -10,8 +10,6 @@ Using parts you can, for example, select a text input style that matches you app
 
 To add a part to a theme, call the `theme.withPart(...)` method which returns a new theme using that part. A theme can only have one part for a given feature, so for example because all color scheme parts have `feature: "colorScheme"`, adding a new color scheme to a theme will remove any existing part.
 
-The `theme.withPart(...)` method generates a new theme with the specified part:
-
 ```js
 import { themeQuartz, colorSchemeDark, iconSetMaterial } from 'ag-grid-community';
 

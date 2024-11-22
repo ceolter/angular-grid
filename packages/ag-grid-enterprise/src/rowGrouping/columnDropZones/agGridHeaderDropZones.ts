@@ -1,18 +1,10 @@
-import type { BeanCollection, ColumnModel, ComponentSelector, IColsService } from 'ag-grid-community';
+import type { ComponentSelector } from 'ag-grid-community';
 import { Component, _setAriaRole } from 'ag-grid-community';
 
 import { PivotDropZonePanel } from './pivotDropZonePanel';
 import { RowGroupDropZonePanel } from './rowGroupDropZonePanel';
 
 export class AgGridHeaderDropZones extends Component {
-    private colModel: ColumnModel;
-    private rowGroupColsSvc?: IColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.colModel = beans.colModel;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-    }
-
     private rowGroupComp: Component;
     private pivotComp: Component;
 
@@ -39,20 +31,20 @@ export class AgGridHeaderDropZones extends Component {
         topPanelGui.classList.add('ag-column-drop-wrapper');
         _setAriaRole(topPanelGui, 'presentation');
 
-        this.rowGroupComp = new RowGroupDropZonePanel(true);
-        this.createManagedBean(this.rowGroupComp);
+        const rowGroupComp = new RowGroupDropZonePanel(true);
+        this.rowGroupComp = this.createManagedBean(rowGroupComp);
 
-        this.pivotComp = new PivotDropZonePanel(true);
-        this.createManagedBean(this.pivotComp);
+        const pivotComp = new PivotDropZonePanel(true);
+        this.pivotComp = this.createManagedBean(pivotComp);
 
-        topPanelGui.appendChild(this.rowGroupComp.getGui());
-        topPanelGui.appendChild(this.pivotComp.getGui());
+        topPanelGui.appendChild(rowGroupComp.getGui());
+        topPanelGui.appendChild(pivotComp.getGui());
 
         const listener = this.onDropPanelVisible.bind(this);
-        this.addManagedListeners(this.rowGroupComp, {
+        this.addManagedListeners(rowGroupComp, {
             displayChanged: listener,
         });
-        this.addManagedListeners(this.pivotComp, {
+        this.addManagedListeners(pivotComp, {
             displayChanged: listener,
         });
 
@@ -62,43 +54,46 @@ export class AgGridHeaderDropZones extends Component {
     }
 
     private onDropPanelVisible(): void {
-        const bothDisplayed = this.rowGroupComp.isDisplayed() && this.pivotComp.isDisplayed();
+        const { rowGroupComp, pivotComp } = this;
+        const bothDisplayed = rowGroupComp.isDisplayed() && pivotComp.isDisplayed();
         const classStr = 'ag-column-drop-horizontal-half-width';
-        this.rowGroupComp.addOrRemoveCssClass(classStr, bothDisplayed);
-        this.pivotComp.addOrRemoveCssClass(classStr, bothDisplayed);
+        rowGroupComp.addOrRemoveCssClass(classStr, bothDisplayed);
+        pivotComp.addOrRemoveCssClass(classStr, bothDisplayed);
     }
 
     private onRowGroupChanged(): void {
-        if (!this.rowGroupComp) {
+        const rowGroupComp = this.rowGroupComp;
+        if (!rowGroupComp) {
             return;
         }
 
         const rowGroupPanelShow = this.gos.get('rowGroupPanelShow');
 
         if (rowGroupPanelShow === 'always') {
-            this.rowGroupComp.setDisplayed(true);
+            rowGroupComp.setDisplayed(true);
         } else if (rowGroupPanelShow === 'onlyWhenGrouping') {
-            const grouping = this.rowGroupColsSvc?.columns?.length !== 0;
-            this.rowGroupComp.setDisplayed(grouping);
+            const grouping = this.beans.rowGroupColsSvc?.columns?.length !== 0;
+            rowGroupComp.setDisplayed(grouping);
         } else {
-            this.rowGroupComp.setDisplayed(false);
+            rowGroupComp.setDisplayed(false);
         }
     }
 
     private onPivotPanelShow() {
-        if (!this.pivotComp) {
+        const pivotComp = this.pivotComp;
+        if (!pivotComp) {
             return;
         }
 
         const pivotPanelShow = this.gos.get('pivotPanelShow');
 
         if (pivotPanelShow === 'always') {
-            this.pivotComp.setDisplayed(true);
+            pivotComp.setDisplayed(true);
         } else if (pivotPanelShow === 'onlyWhenPivoting') {
-            const pivoting = this.colModel.isPivotActive();
-            this.pivotComp.setDisplayed(pivoting);
+            const pivoting = this.beans.colModel.isPivotActive();
+            pivotComp.setDisplayed(pivoting);
         } else {
-            this.pivotComp.setDisplayed(false);
+            pivotComp.setDisplayed(false);
         }
     }
 }

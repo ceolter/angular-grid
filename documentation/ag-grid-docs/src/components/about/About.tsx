@@ -380,10 +380,26 @@ export const About = () => {
                         <div>
                             <img
                                 src={urlWithBaseUrl('/images/team/seweety.jpeg')}
-                                alt="Seweety Kumar, Renewals Team Lead"
+                                alt="Seweety Kumar, Senior Renewals Team Manager"
                             />
                             <h3>Seweety Kumar</h3>
-                            <p>Renewals Team Lead</p>
+                            <p>Senior Renewals Team Manager</p>
+                        </div>
+                        <div>
+                            <img
+                                src={urlWithBaseUrl('/images/team/laiyan.jpeg')}
+                                alt="Laiyan Woo, Renewals Team Manager"
+                            />
+                            <h3>Laiyan Woo</h3>
+                            <p>Renewals Team Manager</p>
+                        </div>
+                        <div>
+                            <img
+                                src={urlWithBaseUrl('/images/team/amir.jpeg')}
+                                alt="Amir Hussain, Renewals Team Manager"
+                            />
+                            <h3>Amir Hussain</h3>
+                            <p>Renewals Team Manager</p>
                         </div>
                         <div>
                             <img
@@ -391,22 +407,6 @@ export const About = () => {
                                 alt="Rob Dunkiert, Customer Experience Manager"
                             />
                             <h3>Rob Dunkiert</h3>
-                            <p>Customer Experience Manager</p>
-                        </div>
-                        <div>
-                            <img
-                                src={urlWithBaseUrl('/images/team/laiyan.jpeg')}
-                                alt="Laiyan Woo, Customer Experience Manager"
-                            />
-                            <h3>Laiyan Woo</h3>
-                            <p>Customer Experience Manager</p>
-                        </div>
-                        <div>
-                            <img
-                                src={urlWithBaseUrl('/images/team/amir.jpeg')}
-                                alt="Amir Hussain, Customer Experience Manager"
-                            />
-                            <h3>Amir Hussain</h3>
                             <p>Customer Experience Manager</p>
                         </div>
                         <div>

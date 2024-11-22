@@ -11,7 +11,7 @@ import { ValueCache } from './valueCache';
  * @gridOption valueCache
  */
 export const ValueCacheModule: _ModuleWithApi<_ValueCacheApi> = {
-    ...baseCommunityModule('ValueCacheModule'),
+    ...baseCommunityModule('ValueCache'),
     beans: [ValueCache],
     apiFunctions: {
         expireValueCache,
@@ -22,7 +22,7 @@ export const ValueCacheModule: _ModuleWithApi<_ValueCacheApi> = {
  * @feature Cells -> Expression
  */
 export const ExpressionModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ExpressionModule'),
+    ...baseCommunityModule('Expression'),
     beans: [ExpressionService],
 };
 
@@ -31,7 +31,7 @@ export const ExpressionModule: _ModuleWithoutApi = {
  * @gridOption suppressChangeDetection
  */
 export const ChangeDetectionModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ChangeDetectionModule'),
+    ...baseCommunityModule('ChangeDetection'),
     beans: [ChangeDetectionService],
 };
 
@@ -39,7 +39,7 @@ export const ChangeDetectionModule: _ModuleWithoutApi = {
  * @feature Cells -> API
  */
 export const CellApiModule: _ModuleWithApi<_ValueApi<any>> = {
-    ...baseCommunityModule('CellApiModule'),
+    ...baseCommunityModule('CellApi'),
     apiFunctions: {
         getCellValue,
     },

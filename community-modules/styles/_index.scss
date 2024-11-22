@@ -396,7 +396,7 @@ $-theme-fonts: (
         @error "Internal error: $target to -param-default should start --ag-";
     }
     $value: null;
-    @if type-of($source) == 'color' {
+    @if meta.type-of($source) == 'color' {
         $value: $source;
     } @else {
         @if string.index($source, '--ag-') != 1 {

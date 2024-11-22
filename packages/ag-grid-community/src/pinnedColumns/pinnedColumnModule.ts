@@ -8,7 +8,7 @@ import { PinnedColumnService } from './pinnedColumnService';
  * @colDef pinned
  */
 export const PinnedColumnModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('PinnedColumnModule'),
+    ...baseCommunityModule('PinnedColumn'),
     beans: [PinnedColumnService],
     css: [pinnedColumnModuleCSS],
 };

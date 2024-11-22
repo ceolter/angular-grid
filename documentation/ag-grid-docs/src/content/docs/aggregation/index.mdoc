@@ -26,7 +26,7 @@ const gridOptions = {
 
 Aggregations can be configured using the following column properties:
 
-{% apiDocumentation source="column-properties/properties.json" section="grouping" names=["aggFunc", "defaultAggFunc", "allowedAggFuncs"] /%}
+{% apiDocumentation source="column-properties/properties.json" section="aggregation" /%}
 
 Aggregation functions can be registered with the grid using the following grid options:
 
@@ -35,8 +35,6 @@ Aggregation functions can be registered with the grid using the following grid o
 After the grid is initialised aggregations can be applied / retrieved / removed via the `api` with the following methods:
 
 {% apiDocumentation source="grid-api/api.json" section="aggregation" /%}
-
-When the grid initialises, any column definitions that have `aggFunc` set will be automatically added as a value column.
 
 ## Next Up
 

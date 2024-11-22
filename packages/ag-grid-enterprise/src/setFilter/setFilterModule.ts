@@ -10,7 +10,7 @@ import { SetFloatingFilterComp } from './setFloatingFilter';
  * @feature Filtering -> Set Filter
  */
 export const SetFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SetFilterModule'),
+    ...baseEnterpriseModule('SetFilter'),
     userComponents: { agSetColumnFilter: SetFilter, agSetColumnFloatingFilter: SetFloatingFilterComp },
     icons: {
         // set filter tree list group contracted (click to expand)

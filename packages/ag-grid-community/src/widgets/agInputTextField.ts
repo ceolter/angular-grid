@@ -26,9 +26,10 @@ export class AgInputTextField<
     }
 
     public override setValue(value?: string | null, silent?: boolean): this {
+        const eInput = this.eInput;
         // update the input before we call super.setValue, so it's updated before the value changed event is fired
-        if (this.eInput.value !== value) {
-            this.eInput.value = _exists(value) ? value : '';
+        if (eInput.value !== value) {
+            eInput.value = _exists(value) ? value : '';
         }
 
         return super.setValue(value, silent);

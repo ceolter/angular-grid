@@ -52,20 +52,21 @@ export abstract class AgAbstractLabel<
     }
 
     protected refreshLabel() {
-        _clearElement(this.eLabel);
+        const { label, eLabel } = this;
+        _clearElement(eLabel);
 
-        if (typeof this.label === 'string') {
-            this.eLabel.innerText = this.label + this.labelSeparator;
-        } else if (this.label) {
-            this.eLabel.appendChild(this.label);
+        if (typeof label === 'string') {
+            eLabel.innerText = label + this.labelSeparator;
+        } else if (label) {
+            eLabel.appendChild(label);
         }
 
-        if (this.label === '') {
-            _setDisplayed(this.eLabel, false);
-            _setAriaRole(this.eLabel, 'presentation');
+        if (label === '') {
+            _setDisplayed(eLabel, false);
+            _setAriaRole(eLabel, 'presentation');
         } else {
-            _setDisplayed(this.eLabel, true);
-            _setAriaRole(this.eLabel, null);
+            _setDisplayed(eLabel, true);
+            _setAriaRole(eLabel, null);
         }
     }
 
@@ -84,9 +85,10 @@ export abstract class AgAbstractLabel<
     }
 
     public getLabelId(): string {
-        this.eLabel.id = this.eLabel.id || `ag-${this.getCompId()}-label`;
+        const eLabel = this.eLabel;
+        eLabel.id = eLabel.id || `ag-${this.getCompId()}-label`;
 
-        return this.eLabel.id;
+        return eLabel.id;
     }
 
     public getLabel(): HTMLElement | string {

@@ -19,6 +19,7 @@ import {
     CellSelectionModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    PivotModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
 
@@ -33,6 +34,7 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     SetFilterModule,
     CellSelectionModule,
+    PivotModule,
 ]);
 
 @Component({

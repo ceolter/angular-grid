@@ -6,7 +6,7 @@ import type { ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
@@ -16,7 +16,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
 
     SetFilterModule,
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
 ]);

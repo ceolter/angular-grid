@@ -306,7 +306,7 @@ const updatePropertiesBuilt = () => {
 };
 
 console.log(`--------------------------------------------------------------------------------`);
-console.log(`Generate Angular Component Input / Outputs...`);
+console.log(`Generate Vue Component Input / Outputs...`);
 console.log('Using Typescript version: ', ts.version);
 
 updatePropertiesBuilt();

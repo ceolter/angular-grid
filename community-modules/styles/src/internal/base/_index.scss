@@ -24,7 +24,7 @@
 @use './parts/advanced-filter';
 
 @mixin general-styles() {
-    body {
+    .ag-measurement-container {
         --ag-legacy-styles-loaded: 'true';
     }
     @include icons.output();

@@ -21,22 +21,25 @@ class TextCellEditorInput<TValue = any>
     public init(eInput: AgInputTextField, params: ITextCellEditorParams<any, TValue>): void {
         this.eInput = eInput;
         this.params = params;
-        if (params.maxLength != null) {
-            eInput.setMaxLength(params.maxLength);
+        const maxLength = params.maxLength;
+        if (maxLength != null) {
+            eInput.setMaxLength(maxLength);
         }
     }
 
     public getValue(): TValue | null | undefined {
-        const value = this.eInput.getValue();
-        if (!_exists(value) && !_exists(this.params.value)) {
-            return this.params.value;
+        const { eInput, params } = this;
+        const value = eInput.getValue();
+        if (!_exists(value) && !_exists(params.value)) {
+            return params.value;
         }
-        return this.params.parseValue(value!);
+        return params.parseValue(value!);
     }
 
     public getStartValue(): string | null | undefined {
-        const formatValue = this.params.useFormatter || this.params.column.getColDef().refData;
-        return formatValue ? this.params.formatValue(this.params.value) : (this.params.value as any);
+        const params = this.params;
+        const formatValue = params.useFormatter || params.column.getColDef().refData;
+        return formatValue ? params.formatValue(params.value) : (params.value as any);
     }
 
     public setCaret(): void {
@@ -44,11 +47,12 @@ class TextCellEditorInput<TValue = any>
         // this comes into play in two scenarios:
         //   a) when user hits F2
         //   b) when user hits a printable character
-        const value = this.eInput.getValue();
+        const eInput = this.eInput;
+        const value = eInput.getValue();
         const len = (_exists(value) && value.length) || 0;
 
         if (len) {
-            this.eInput.getInputElement().setSelectionRange(len, len);
+            eInput.getInputElement().setSelectionRange(len, len);
         }
     }
 }

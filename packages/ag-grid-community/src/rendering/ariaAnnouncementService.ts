@@ -11,6 +11,7 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
     private descriptionContainer: HTMLElement | null = null;
 
     private pendingAnnouncements: Map<string, string> = new Map();
+    private lastAnnouncement: string = '';
 
     constructor() {
         super();
@@ -51,7 +52,14 @@ export class AriaAnnouncementService extends BeanStub implements NamedBean {
         this.descriptionContainer.textContent = '';
         setTimeout(() => {
             if (this.isAlive() && this.descriptionContainer) {
-                this.descriptionContainer.textContent = value;
+                let valueToAnnounce = value;
+                // if the announcement is the same (static announcement)
+                // we add a period at the end to force screen readers to announce
+                if (this.lastAnnouncement === valueToAnnounce) {
+                    valueToAnnounce = `${valueToAnnounce}.`;
+                }
+                this.lastAnnouncement = valueToAnnounce;
+                this.descriptionContainer.textContent = valueToAnnounce;
             }
         }, 50);
     }

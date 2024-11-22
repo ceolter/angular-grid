@@ -1,0 +1,7 @@
+@use 'design-system' as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-size-2;
+}

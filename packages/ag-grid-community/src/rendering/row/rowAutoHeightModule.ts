@@ -7,6 +7,6 @@ import { RowAutoHeightService } from './rowAutoHeightService';
  * @colDef autoHeight
  */
 export const RowAutoHeightModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowAutoHeightModule'),
+    ...baseCommunityModule('RowAutoHeight'),
     beans: [RowAutoHeightService],
 };

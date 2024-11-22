@@ -1,24 +1,13 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { RowNode } from '../entities/rowNode';
-import type { IRowModel } from '../interfaces/iRowModel';
 import type { RowPosition } from '../interfaces/iRowPosition';
 import { _exists } from '../utils/generic';
 import type { ComponentSelector } from '../widgets/component';
-import type { PageBoundsService } from './pageBoundsService';
 import { PaginationSelector } from './paginationComp';
 
 export class PaginationService extends BeanStub implements NamedBean {
     beanName = 'pagination' as const;
-
-    private rowModel: IRowModel;
-    private pageBounds: PageBoundsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.rowModel = beans.rowModel;
-        this.pageBounds = beans.pageBounds;
-    }
 
     private active: boolean;
     private paginateChildRows: boolean;
@@ -43,8 +32,9 @@ export class PaginationService extends BeanStub implements NamedBean {
     private masterRowCount: number = 0;
 
     public postConstruct() {
-        this.active = this.gos.get('pagination');
-        this.pageSizeFromGridOptions = this.gos.get('paginationPageSize');
+        const gos = this.gos;
+        this.active = gos.get('pagination');
+        this.pageSizeFromGridOptions = gos.get('paginationPageSize');
         this.paginateChildRows = this.isPaginateChildRows();
 
         this.addManagedPropertyListener('pagination', this.onPaginationGridOptionChanged.bind(this));
@@ -56,15 +46,16 @@ export class PaginationService extends BeanStub implements NamedBean {
     }
 
     private isPaginateChildRows(): boolean {
+        const gos = this.gos;
         const shouldPaginate =
-            this.gos.get('groupHideParentOfSingleChild') ||
+            gos.get('groupHideParentOfSingleChild') ||
             // following two properties deprecated v32.3.0
-            this.gos.get('groupRemoveSingleChildren') ||
-            this.gos.get('groupRemoveLowestSingleChildren');
+            gos.get('groupRemoveSingleChildren') ||
+            gos.get('groupRemoveLowestSingleChildren');
         if (shouldPaginate) {
             return true;
         }
-        return this.gos.get('paginateChildRows');
+        return gos.get('paginateChildRows');
     }
 
     private onPaginationGridOptionChanged(): void {
@@ -81,7 +72,8 @@ export class PaginationService extends BeanStub implements NamedBean {
     }
 
     public goToPage(page: number): void {
-        if (!this.active || this.currentPage === page || typeof this.currentPage !== 'number') {
+        const currentPage = this.currentPage;
+        if (!this.active || currentPage === page || typeof currentPage !== 'number') {
             return;
         }
 
@@ -135,7 +127,7 @@ export class PaginationService extends BeanStub implements NamedBean {
     }
 
     public goToLastPage(): void {
-        const rowCount = this.rowModel.getRowCount();
+        const rowCount = this.beans.rowModel.getRowCount();
         const lastPage = Math.floor(rowCount / this.pageSize);
         this.goToPage(lastPage);
     }
@@ -182,7 +174,7 @@ export class PaginationService extends BeanStub implements NamedBean {
             this.calculatedPagesNotActive();
         }
 
-        this.pageBounds.calculateBounds(this.topDisplayedRowIndex, this.bottomDisplayedRowIndex);
+        this.beans.pageBounds.calculateBounds(this.topDisplayedRowIndex, this.bottomDisplayedRowIndex);
     }
 
     public unsetAutoCalculatedPageSize(): void {
@@ -246,48 +238,52 @@ export class PaginationService extends BeanStub implements NamedBean {
     }
 
     private adjustCurrentPageIfInvalid() {
-        if (this.currentPage >= this.totalPages) {
-            this.currentPage = this.totalPages - 1;
+        const totalPages = this.totalPages;
+        if (this.currentPage >= totalPages) {
+            this.currentPage = totalPages - 1;
         }
 
-        if (!isFinite(this.currentPage) || isNaN(this.currentPage) || this.currentPage < 0) {
+        const currentPage = this.currentPage;
+
+        if (!isFinite(currentPage) || isNaN(currentPage) || currentPage < 0) {
             this.currentPage = 0;
         }
     }
 
     private calculatePagesMasterRowsOnly(): void {
-        // const csrm = <ClientSideRowModel> this.rowModel;
-        // const rootNode = csrm.rootNode;
-        // const masterRows = rootNode.childrenAfterSort;
+        const rowModel = this.beans.rowModel;
 
-        this.masterRowCount = this.rowModel.getTopLevelRowCount();
+        const masterRowCount = rowModel.getTopLevelRowCount();
+        this.masterRowCount = masterRowCount;
 
         // we say <=0 (rather than =0) as viewport returns -1 when no rows
-        if (this.masterRowCount <= 0) {
+        if (masterRowCount <= 0) {
             this.setZeroRows();
             return;
         }
 
-        const masterLastRowIndex = this.masterRowCount - 1;
-        this.totalPages = Math.floor(masterLastRowIndex / this.pageSize) + 1;
+        const { pageSize, currentPage } = this;
+
+        const masterLastRowIndex = masterRowCount - 1;
+        this.totalPages = Math.floor(masterLastRowIndex / pageSize) + 1;
 
         this.adjustCurrentPageIfInvalid();
 
-        const masterPageStartIndex = this.pageSize * this.currentPage;
-        let masterPageEndIndex = this.pageSize * (this.currentPage + 1) - 1;
+        const masterPageStartIndex = pageSize * currentPage;
+        let masterPageEndIndex = pageSize * (currentPage + 1) - 1;
 
         if (masterPageEndIndex > masterLastRowIndex) {
             masterPageEndIndex = masterLastRowIndex;
         }
 
-        this.topDisplayedRowIndex = this.rowModel.getTopLevelRowDisplayedIndex(masterPageStartIndex);
+        this.topDisplayedRowIndex = rowModel.getTopLevelRowDisplayedIndex(masterPageStartIndex);
         // masterRows[masterPageStartIndex].rowIndex;
 
         if (masterPageEndIndex === masterLastRowIndex) {
             // if showing the last master row, then we want to show the very last row of the model
-            this.bottomDisplayedRowIndex = this.rowModel.getRowCount() - 1;
+            this.bottomDisplayedRowIndex = rowModel.getRowCount() - 1;
         } else {
-            const firstIndexNotToShow = this.rowModel.getTopLevelRowDisplayedIndex(masterPageEndIndex + 1);
+            const firstIndexNotToShow = rowModel.getTopLevelRowDisplayedIndex(masterPageEndIndex + 1);
             //masterRows[masterPageEndIndex + 1].rowIndex;
             // this gets the index of the last child - eg current row is open, we want to display all children,
             // the index of the last child is one less than the index of the next parent row.
@@ -300,20 +296,22 @@ export class PaginationService extends BeanStub implements NamedBean {
     }
 
     private calculatePagesAllRows(): void {
-        this.masterRowCount = this.rowModel.getRowCount();
+        const masterRowCount = this.beans.rowModel.getRowCount();
+        this.masterRowCount = masterRowCount;
 
-        if (this.masterRowCount === 0) {
+        if (masterRowCount === 0) {
             this.setZeroRows();
             return;
         }
 
-        const maxRowIndex = this.masterRowCount - 1;
-        this.totalPages = Math.floor(maxRowIndex / this.pageSize) + 1;
+        const { pageSize, currentPage } = this;
+        const maxRowIndex = masterRowCount - 1;
+        this.totalPages = Math.floor(maxRowIndex / pageSize) + 1;
 
         this.adjustCurrentPageIfInvalid();
 
-        this.topDisplayedRowIndex = this.pageSize * this.currentPage;
-        this.bottomDisplayedRowIndex = this.pageSize * (this.currentPage + 1) - 1;
+        this.topDisplayedRowIndex = pageSize * currentPage;
+        this.bottomDisplayedRowIndex = pageSize * (currentPage + 1) - 1;
 
         if (this.bottomDisplayedRowIndex > maxRowIndex) {
             this.bottomDisplayedRowIndex = maxRowIndex;
@@ -327,7 +325,7 @@ export class PaginationService extends BeanStub implements NamedBean {
         this.totalPages = 1;
         this.currentPage = 0;
         this.topDisplayedRowIndex = 0;
-        this.bottomDisplayedRowIndex = this.rowModel.getRowCount() - 1;
+        this.bottomDisplayedRowIndex = this.beans.rowModel.getRowCount() - 1;
     }
 
     private dispatchPaginationChangedEvent(params: {

@@ -4,7 +4,7 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { CellSelectionModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
@@ -14,7 +14,8 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
 
-    MenuModule,
+    ColumnMenuModule,
+    ContextMenuModule,
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,

@@ -8,7 +8,8 @@ interface Props {
     tag: string;
     heading?: string;
     headingHtml?: string;
-    subHeading: string;
+    subHeading?: string;
+    subHeadingHtml?: string;
     learnMoreTitle?: string;
     ctaTitle?: string;
     ctaUrl?: string;
@@ -21,6 +22,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     heading,
     headingHtml,
     subHeading,
+    subHeadingHtml,
     ctaTitle,
     ctaUrl,
     sectionClass,
@@ -40,7 +42,11 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                     <h3 className={styles.heading}>{heading}</h3>
                 )}
 
-                <h4 className={styles.subHeading}>{subHeading}</h4>
+                {subHeadingHtml ? (
+                    <h4 className={styles.subHeading} dangerouslySetInnerHTML={{ __html: subHeadingHtml }}></h4>
+                ) : (
+                    <h4 className={styles.subHeading}>{subHeading}</h4>
+                )}
 
                 {ctaUrl && (
                     <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>

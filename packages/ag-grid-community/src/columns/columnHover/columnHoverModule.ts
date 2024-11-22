@@ -9,7 +9,7 @@ import { ColumnHoverService } from './columnHoverService';
  * @gridOption columnHoverHighlight
  */
 export const ColumnHoverModule: _ModuleWithApi<_ColumnHoverApi> = {
-    ...baseCommunityModule('ColumnHoverModule'),
+    ...baseCommunityModule('ColumnHover'),
     beans: [ColumnHoverService],
     apiFunctions: {
         isColumnHovered,
