@@ -2,6 +2,7 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { baseEnterpriseModule } from '../moduleUtils';
 import { AgMenuItemRenderer } from './agMenuItemRenderer';
+import { menuCSS } from './menu.css-GENERATED';
 
 /**
  * @internal
@@ -19,4 +20,5 @@ export const MenuItemModule: _ModuleWithoutApi = {
         // version of subMenuOpen used in RTL mode
         subMenuOpenRtl: 'small-left',
     },
+    css: [menuCSS],
 };

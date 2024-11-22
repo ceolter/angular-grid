@@ -281,48 +281,6 @@ describe('Row Selection Legacy Grid Options', () => {
                     clickRowByIndex(2, { shiftKey: true });
                     assertSelectedRowsByIndex([2, 3, 4], api);
                 });
-
-                test.skip('SHIFT-click within range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: 'multiple' });
-
-                    clickRowByIndex(2);
-                    clickRowByIndex(6, { shiftKey: true });
-                    assertSelectedRowsByIndex([2, 3, 4, 5, 6], api);
-
-                    clickRowByIndex(3, { metaKey: true });
-                    assertSelectedRowsByIndex([2, 4, 5, 6], api);
-
-                    clickRowByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([3, 4, 5], api);
-                });
-
-                test.skip('SHIFT-click below range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: 'multiple' });
-
-                    clickRowByIndex(2);
-                    clickRowByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([2, 3, 4, 5], api);
-
-                    clickRowByIndex(3, { metaKey: true });
-                    assertSelectedRowsByIndex([2, 4, 5], api);
-
-                    clickRowByIndex(6, { shiftKey: true });
-                    assertSelectedRowsByIndex([3, 4, 5, 6], api);
-                });
-
-                test.skip('SHIFT-click above range after de-selection resets root and clears previous selection', () => {
-                    const api = createGrid({ columnDefs, rowData, rowSelection: 'multiple' });
-
-                    clickRowByIndex(2);
-                    clickRowByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([2, 3, 4, 5], api);
-
-                    clickRowByIndex(3, { metaKey: true });
-                    assertSelectedRowsByIndex([2, 4, 5], api);
-
-                    clickRowByIndex(1, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3], api);
-                });
             });
         });
 
@@ -620,24 +578,6 @@ describe('Row Selection Legacy Grid Options', () => {
 
                     toggleCheckboxByIndex(2, { shiftKey: true });
                     assertSelectedRowsByIndex([2, 3, 4], api);
-                });
-
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', () => {
-                    const api = createGrid({
-                        columnDefs: columnDefs.map((d) => ({ ...d, checkboxSelection: true })),
-                        rowData,
-                        rowSelection: 'multiple',
-                    });
-
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
                 });
             });
         });
@@ -969,23 +909,6 @@ describe('Row Selection Legacy Grid Options', () => {
 
                     toggleCheckboxByIndex(2, { shiftKey: true });
                     assertSelectedRowsByIndex([2, 3, 4], api);
-                });
-
-                test('SHIFT can be used for range de-selection (Checkbox selection ONLY)', async () => {
-                    const api = await createGridAndWait({
-                        ...groupGridOptions,
-                        rowSelection: 'multiple',
-                    });
-
-                    toggleCheckboxByIndex(1);
-                    toggleCheckboxByIndex(5, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 2, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(2);
-                    assertSelectedRowsByIndex([1, 3, 4, 5], api);
-
-                    toggleCheckboxByIndex(4, { shiftKey: true });
-                    assertSelectedRowsByIndex([1, 5], api);
                 });
             });
         });

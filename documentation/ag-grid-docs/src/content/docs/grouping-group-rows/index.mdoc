@@ -19,7 +19,7 @@ const gridOptions = {
 }
 ```
 
-## Cell Renderer
+## Cell Component
 The group rows use the `agGroupCellRenderer` component to display the group information, as well as the chevron control
 for expanding and collapsing rows.
 
@@ -48,6 +48,25 @@ const gridOptions = {
 ### Configurable Options
 
 {% interfaceDocumentation interfaceName="IGroupCellRendererParams" overrideSrc="group-cell-renderer/group-cell-renderer.json" config={ "description": "" } /%}
+
+### Checkbox Selection
+
+The `agGroupCellRenderer` can be configured to show checkboxes for row selection. Setting the [Row Selection](./row-selection/)
+`checkboxLocation` property to `'autoGroupColumn'` hides the [Checkbox Column](./row-selection-single-row/#customising-the-checkbox-column)
+instead using the group cell renderer to display checkboxes.
+
+{% gridExampleRunner title="Group Cell Renderer Checkbox Selection" name="renderer-config-checkbox" /%}
+
+The example above demonstrates the following configuration:
+```{% frameworkTransform=true %}
+const gridOptions = {
+    rowSelection: {
+        mode: 'multiRow',
+        selectAll: 'all',
+        checkboxLocation: 'autoGroupColumn',
+    },
+}
+```
 
 ### Custom Inner Renderer
 

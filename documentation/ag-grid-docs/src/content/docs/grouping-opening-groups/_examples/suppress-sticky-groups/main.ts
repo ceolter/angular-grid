@@ -1,27 +1,34 @@
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import type { GridApi, GridOptions } from 'ag-grid-community';
+import type { GridApi, GridOptions, IsGroupOpenByDefaultParams } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
 
-let gridApi: GridApi;
+let gridApi: GridApi<IOlympicData>;
 
-const gridOptions: GridOptions = {
-    columnDefs: [{ field: 'country', rowGroup: true }, { field: 'athlete' }],
-    autoGroupColumnDef: {
-        cellRendererSelector: (params) => {
-            if (['Australia', 'Norway'].includes(params.node.key!)) {
-                return; // use Default Cell Renderer
-            }
-            return { component: 'agGroupCellRenderer' };
-        },
+const gridOptions: GridOptions<IOlympicData> = {
+    columnDefs: [
+        { field: 'country', rowGroup: true },
+        { field: 'year', rowGroup: true },
+        { field: 'sport' },
+        { field: 'athlete' },
+        { field: 'total' },
+    ],
+    defaultColDef: {
+        flex: 1,
+        minWidth: 100,
     },
+    autoGroupColumnDef: {
+        minWidth: 200,
+    },
+    suppressGroupRowsSticky: true,
+    groupDefaultExpanded: 1,
 };
 
 // setup the grid after the page has finished loading
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
     const gridDiv = document.querySelector<HTMLElement>('#myGrid')!;
     gridApi = createGrid(gridDiv, gridOptions);
 

@@ -1,3 +1,5 @@
+import type { Rect } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -6,7 +8,7 @@ import { MiniChart } from '../miniChart';
 
 export class MiniTreemap extends MiniChart {
     static chartType: ChartType = 'treemap';
-    private readonly rects: any[];
+    private readonly rects: Rect[];
 
     constructor(
         container: HTMLElement,
@@ -74,7 +76,7 @@ export class MiniTreemap extends MiniChart {
             rects.push(...xRects);
 
             return rects;
-        }, []);
+        }, [] as Rect[]);
 
         this.updateColors(fills, strokes, themeTemplate, isCustomTheme);
 

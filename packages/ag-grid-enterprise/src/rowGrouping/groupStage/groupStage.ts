@@ -357,8 +357,8 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
                         this.removeFromParent(rowNode, batchRemover);
                         // we remove selection on filler nodes here, as the selection would not be removed
                         // from the RowNodeManager, as filler nodes don't exist on the RowNodeManager
-                        this.selectionSvc?.setSelectedParams({
-                            rowNode,
+                        this.selectionSvc?.setNodesSelected({
+                            nodes: [rowNode],
                             newValue: false,
                             source: 'rowGroupChanged',
                         });
@@ -445,7 +445,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         }
 
         // groups are about to get disposed, so need to deselect any that are selected
-        this.selectionSvc?.filterFromSelection?.((node: RowNode) => node && !node.group);
+        this.selectionSvc?.filterFromSelection?.((node) => !node.group);
 
         const { groupedCols } = details;
         const rootNode: GroupRow = details.state.rootNode;

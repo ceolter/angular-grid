@@ -1,147 +1,142 @@
 @use 'design-system' as *;
 
-.container {
+.showcaseContainer {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     border-collapse: collapse;
     padding-top: $spacing-size-8;
     padding-bottom: $spacing-size-8;
 
-    @media screen and (max-width: 768px) {
-        grid-template-columns: repeat(1, 1fr);
+    @media screen and (min-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-.iconWrapper {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-
-    .logo {
-        opacity: 0.5;
-        height: 40px;
-        transition: opacity 1.5s ease;
-
-        path {
-            fill: var(--color-fg-secondary);
-        }
-    }
-
-    .icon {
-        width: 32px;
-        height: 32px;
-        path {
-            fill: var(--color-util-brand-500);
-
-            #{$selector-darkmode} & {
-                fill: var(--color-white);
-            }
-        }
-    }
-}
-
-.gridItem {
-    background-color: var(--color-bg-primary);
-    padding: $spacing-size-8;
-    margin: -1px;
-    border: 1px solid var(--color-border-secondary);
-    transition: all 0.5s;
+.showcaseGridItem {
     position: relative;
-    z-index: 1;
+    margin: -1px 0 0 -1px;
+    padding: $spacing-size-8;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border-secondary);
+    transition: background-color 0.5s ease-in-out;
 
-    &:nth-child(1) {
-        border-top-left-radius: $spacing-size-2;
-
-        @media screen and (max-width: $breakpoint-hero-small) {
-            border-top-right-radius: $spacing-size-2;
-        }
-
-        &:hover {
-            z-index: 6;
-        }
-    }
-    &:nth-child(2) {
-        &:hover {
-            z-index: 5;
-        }
-    }
-    &:nth-child(3) {
-        border-top-right-radius: $spacing-size-2;
-
-        &:hover {
-            z-index: 4;
-        }
-    }
-    &:nth-child(4) {
-        border-bottom-left-radius: $spacing-size-2;
-
-        &:hover {
-            z-index: 3;
-        }
-    }
-    &:nth-child(5) {
-        border-bottom-right-radius: $spacing-size-2;
-
-        @media screen and (max-width: $breakpoint-hero-small) {
-            border-bottom-left-radius: $spacing-size-2;
-        }
-
-        &:hover {
-            z-index: 2;
-        }
-    }
-
-    a {
-        padding-right: $spacing-size-4;
+    // ::after used for hover border to avoid stacked border issues
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        bottom: -1px;
+        left: -1px;
+        border: 1px solid transparent;
+        z-index: 1;
+        pointer-events: none;
+        transition: border-color 0.5s ease-in-out;
     }
 
     &:hover {
-        border: 1px solid var(--color-util-brand-500);
         background-color: var(--color-brand-50);
-        cursor: pointer;
 
-        .logo {
-            opacity: 1;
-            path {
-                #{$selector-darkmode} & {
-                    fill: var(--color-bg-primary);
-                }
-            }
-        }
-
-        .icon {
-            path {
-                #{$selector-darkmode} & {
-                    fill: var(--color-bg-primary);
-                }
-            }
-        }
-
-        #{$selector-darkmode} & {
-            h3,
-            p,
-            a {
-                color: var(--color-bg-primary);
-            }
-
-            background-color: var(--color-brand-200);
-            border: 1px solid var(--color-white);
+        &::after {
+            border-color: var(--color-util-brand-500);
         }
     }
 
-    .title {
-        font-size: 18px;
-        font-weight: 500;
-        margin-bottom: 12px;
+    @media screen and (max-width: 768px) {
+        &:first-child,
+        &:first-child::after {
+            border-top-left-radius: var(--radius-md);
+            border-top-right-radius: var(--radius-md);
+        }
+
+        &:last-child,
+        &:last-child::after {
+            border-bottom-left-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+        }
     }
 
-    .description {
-        font-size: var(--text-fs-sm);
-        color: var(--color-text-secondary);
-        opacity: 0.8;
+    @media screen and (min-width: 768px) {
+        &:nth-child(1),
+        &:nth-child(1)::after {
+            border-top-left-radius: var(--radius-md);
+        }
+
+        &:nth-child(3),
+        &:nth-child(3)::after {
+            border-top-right-radius: var(--radius-md);
+        }
+
+        &:nth-child(4),
+        &:nth-child(4)::after {
+            border-bottom-left-radius: var(--radius-md);
+        }
+
+        &:nth-child(5),
+        &:nth-child(5)::after {
+            border-bottom-right-radius: var(--radius-md);
+        }
     }
 
     #{$selector-darkmode} & {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); // sharper transition for dark mode
+        &:hover {
+            background-color: var(--color-util-gray-100);
+
+            &::after {
+                border-color: var(--color-util-gray-500);
+            }
+        }
     }
+}
+
+.showcaseIconWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: $spacing-size-4;
+}
+
+.showcaseLogo path,
+.showcaseIcon path {
+    fill: var(--icon-color);
+}
+
+.showcaseLogo {
+    --icon-color: var(--color-fg-secondary);
+
+    height: $spacing-size-10;
+    opacity: 0.5;
+    transition: opacity 0.5s ease-in-out;
+
+    .showcaseGridItem:hover & {
+        opacity: 1;
+    }
+}
+
+.showcaseIcon {
+    --icon-color: var(--color-util-brand-500);
+
+    width: $spacing-size-8;
+    height: $spacing-size-8;
+
+    #{$selector-darkmode} & {
+        --icon-color: var(--color-white);
+    }
+}
+
+.showcaseTitle {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: $spacing-size-3;
+}
+
+.showcaseDescription {
+    font-size: var(--text-fs-sm);
+    color: var(--color-text-secondary);
+    opacity: 0.8;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.showcaseLinksWrapper {
+    display: flex;
+    gap: $spacing-size-6;
 }

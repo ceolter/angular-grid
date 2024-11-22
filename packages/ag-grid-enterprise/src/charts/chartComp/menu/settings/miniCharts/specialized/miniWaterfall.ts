@@ -1,3 +1,5 @@
+import type { Rect } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -8,7 +10,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniWaterfall extends MiniChartWithAxes {
     static chartType: ChartType = 'waterfall';
 
-    private readonly bars: any[];
+    private readonly bars: Rect[];
 
     private data = [4, 3, -3, 6, -3];
 

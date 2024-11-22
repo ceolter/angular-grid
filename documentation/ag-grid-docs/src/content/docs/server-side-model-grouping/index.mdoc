@@ -86,12 +86,6 @@ Below shows `isServerSideGroupOpenByDefault()` and `getRoute` in action. Note th
 
 {% gridExampleRunner title="Open by Default" name="open-by-default" /%}
 
-## Suppressing Sticky Groups
-
-By default the group nodes stick to the top of the Grid, to disable this behaviour, set the `suppressGroupRowsSticky` property to true. This behaviour applies to all row group levels.
-
-{% gridExampleRunner title="Sticky Groups" name="suppress-sticky-groups" /%}
-
 ## Group Total Rows
 
 To enable [Group Total Rows](./aggregation-total-rows/), set the `groupTotalRow` property to 'top' or 'bottom'. Note that the grand total row is not supported by the SSRM.
@@ -112,7 +106,7 @@ of its children, and only when collapsed is the group row is shown again.
 {% gridExampleRunner title="Hide Open Parents" name="hide-open-parents" /%}
 
 {% note %}
-When `groupHideOpenParents=true` the Grid automatically disables the [Sticky Groups](./server-side-model-grouping/#suppressing-sticky-groups) behaviour of the rows as well as [Full Width Loading](./component-loading-cell-renderer/#skeleton-loading).
+When `groupHideOpenParents=true` the Grid automatically disables the [Sticky Groups](./grouping-opening-groups/#prevent-sticky-groups) behaviour of the rows as well as [Full Width Loading](./component-loading-cell-renderer/#skeleton-loading).
 {% /note %}
 
 ## Unbalanced Groups

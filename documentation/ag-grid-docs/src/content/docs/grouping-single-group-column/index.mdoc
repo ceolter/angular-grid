@@ -23,14 +23,14 @@ const gridOptions = {
 ## Configuration
 
 The Single Group Column is added to the grid when row grouping is present, and can be configured via the `autoGroupColumnDef` grid
-option.
+option to define [Column Options](./column-properties/).
 
 {% gridExampleRunner title="Single Group Column Configuration" name="single-group-column-configuration" /%}
 
 The example above uses the configuration demonstrated below to change the columns header name, apply a minimum width, and display
 `athlete` values in the leaf level rows.
-It also [Configures the Group Cell Component](./group-cell-renderer/) using the `cellRendererParams` option to remove
-the count from each row group, and [Configures Row Selection](./grouping-row-selection/#checkboxes-in-group-cells) to render selection checkboxes to the group cells.
+It also [Configures the Group Cell Component](./grouping-single-group-column/#cell-component) using the `cellRendererParams` option to remove
+the count from each row group.
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
@@ -42,15 +42,11 @@ const gridOptions = {
             suppressCount: true,
         }
     },
-    rowSelection: {
-        mode: 'singleRow',
-        checkboxLocation: 'autoGroupColumn',
-    }
 }
 ```
 
-## Cell Renderer
-The column uses the `agGroupCellRenderer` component to display the group information, as well as the chevron control
+## Cell Component
+The group column uses the `agGroupCellRenderer` component to display the group information, as well as the chevron control
 for expanding and collapsing rows. The renderer also embeds the grouped columns renderer and displays this inside of the group cell.
 
 This can be configured with several [Group Renderer Properties](./grouping-single-group-column/#configurable-options) using
@@ -80,6 +76,25 @@ const gridOptions = {
 ### Configurable Options
 
 {% interfaceDocumentation interfaceName="IGroupCellRendererParams" overrideSrc="group-cell-renderer/group-cell-renderer.json" config={ "description": "" } /%}
+
+### Checkbox Selection
+
+The `agGroupCellRenderer` can be configured to show checkboxes for row selection. Setting the [Row Selection](./row-selection/)
+`checkboxLocation` property to `'autoGroupColumn'` hides the [Checkbox Column](./row-selection-single-row/#customising-the-checkbox-column)
+instead using the group cell renderer to display checkboxes.
+
+{% gridExampleRunner title="Group Cell Renderer Checkbox Selection" name="renderer-config-checkbox" /%}
+
+The example above demonstrates the following configuration:
+```{% frameworkTransform=true %}
+const gridOptions = {
+    rowSelection: {
+        mode: 'multiRow',
+        selectAll: 'all',
+        checkboxLocation: 'autoGroupColumn',
+    },
+}
+```
 
 ### Custom Inner Renderer
 
@@ -119,8 +134,8 @@ The grid filters leaf rows by default, if all of a groups children are filtered 
 
 ### Inherit Row Grouped Columns Filters
 
-Applying filters to the columns with row grouping active impacts which row groups are displayed. The grid provides the `agGroupColumnFilter`
-to allow users to filter the columns with row grouping enabled via the group column.
+The single group column content changes depending on the columns which have row grouping enabled. The `agGroupColumnFilter` can
+be used to display the filters for the columns with row grouping enabled.
 
 {% gridExampleRunner title="Group Column Filtering" name="filtering-grouped-columns" /%}
 
@@ -133,6 +148,10 @@ const gridOptions = {
     },
 }
 ```
+
+{% warning %}
+When accessing filter instances via API, access the filters on the columns with row grouping.
+{% /warning %}
 
 ### Tree Filter
 

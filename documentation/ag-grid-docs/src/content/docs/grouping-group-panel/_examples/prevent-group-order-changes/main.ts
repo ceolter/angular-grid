@@ -15,8 +15,8 @@ let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
     columnDefs: [
-        { field: 'country', enableRowGroup: true, rowGroup: true, hide: true },
-        { field: 'year', enableRowGroup: true, rowGroup: true, hide: true },
+        { field: 'country', rowGroup: true, hide: true },
+        { field: 'year', rowGroup: true, hide: true },
         { field: 'athlete', minWidth: 180 },
         { field: 'total' },
     ],
@@ -28,7 +28,7 @@ const gridOptions: GridOptions<IOlympicData> = {
         minWidth: 200,
     },
     rowGroupPanelShow: 'always',
-    groupLockGroupColumns: 2,
+    groupLockGroupColumns: -1,
 };
 
 // setup the grid after the page has finished loading

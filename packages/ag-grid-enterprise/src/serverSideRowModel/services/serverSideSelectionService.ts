@@ -68,6 +68,44 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         this.selectionStrategy = this.createManagedBean(new Strategy());
     }
 
+    public handleSelectionEvent(
+        event: MouseEvent | KeyboardEvent,
+        rowNode: RowNode<any>,
+        source: SelectionEventSourceType
+    ): number {
+        if (this.isRowSelectionBlocked(rowNode)) return 0;
+
+        let updatedRows = 0;
+
+        const selection = this.inferNodeSelections(rowNode, event.shiftKey, event.metaKey || event.ctrlKey, source);
+
+        if (selection == null) {
+            return 0;
+        }
+
+        if ('select' in selection) {
+            if (selection.reset) {
+                this.selectionStrategy.deselectAllRowNodes({ source: 'api' });
+            } else {
+                this.selectionStrategy.setNodesSelected({ nodes: selection.deselect, newValue: false, source });
+            }
+            updatedRows = this.selectionStrategy.setNodesSelected({ nodes: selection.select, newValue: true, source });
+        } else {
+            updatedRows = this.selectionStrategy.setNodesSelected({
+                nodes: [selection.node],
+                newValue: selection.newValue,
+                clearSelection: selection.clearSelection,
+                event,
+                source,
+            });
+        }
+
+        this.shotgunResetNodeSelectionState();
+        this.dispatchSelectionChanged(source);
+
+        return updatedRows;
+    }
+
     public getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null {
         return this.selectionStrategy.getSelectedState();
     }
@@ -99,11 +137,6 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
         if (nodes.length > 1 && this.selectionMode !== 'multiRow') {
             _warn(130);
-            return 0;
-        }
-
-        if (nodes.length > 1 && params.rangeSelect) {
-            _warn(131);
             return 0;
         }
 
@@ -188,6 +221,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
 
     public reset(): void {
         this.selectionStrategy.deselectAllRowNodes({ source: 'api' });
+        this.selectionCtx.reset();
     }
 
     public isEmpty(): boolean {
@@ -210,6 +244,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         }
 
         this.selectionStrategy.selectAllRowNodes(params);
+        this.selectionCtx.reset();
 
         this.beans.rowModel.forEachNode((node) => {
             if (node.stub) {
@@ -226,6 +261,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         validateSelectionParameters(params);
 
         this.selectionStrategy.deselectAllRowNodes(params);
+        this.selectionCtx.reset();
 
         this.beans.rowModel.forEachNode((node) => {
             if (node.stub) {
@@ -263,8 +299,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         const nodesToDeselect: RowNode[] = [];
 
         this.beans.rowModel.forEachNode((node) => {
-            const rowSelectable = this.isRowSelectable?.(node) ?? true;
-            this.setRowSelectable(node, rowSelectable, true);
+            const rowSelectable = this.updateRowSelectable(node, true);
 
             if (!rowSelectable && node.isSelected()) {
                 nodesToDeselect.push(node);
@@ -280,7 +315,7 @@ export class ServerSideSelectionService extends BaseSelectionService implements 
         }
     }
 
-    public override updateSelectableAfterGrouping(): void {
+    public updateSelectableAfterGrouping(): void {
         return _error(194, { method: 'updateSelectableAfterGrouping' }) as undefined;
     }
 }

@@ -274,7 +274,7 @@ function select({ rowGroupCols, groupKeys }: IServerSideGetRowsRequest, rows: Ro
 
 function where({ rowGroupCols, groupKeys }: IServerSideGetRowsRequest): RowData {
     if (groupKeys.length) {
-        GROUP_ROW_DATA.filter((row) => {
+        return GROUP_ROW_DATA.filter((row) => {
             for (let i = 0; i < groupKeys.length; i++) {
                 const field = rowGroupCols[i].field! as keyof Row;
                 if (row[field] === groupKeys[i]) {

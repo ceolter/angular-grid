@@ -9,22 +9,6 @@ import type { ChangedPath } from '../utils/changedPath';
 import type { IRowNode } from './iRowNode';
 import type { ServerSideRowGroupSelectionState, ServerSideRowSelectionState } from './selectionState';
 
-export interface SetSelectedParams {
-    rowNode: RowNode;
-    /** true or false, whatever you want to set selection to */
-    newValue: boolean;
-    /** whether to remove other selections after this selection is done */
-    clearSelection?: boolean;
-    /** true when action is NOT on this node, ie user clicked a group and this is the child of a group */
-    suppressFinishActions?: boolean;
-    /** gets used when user shift-selects a range */
-    rangeSelect?: boolean;
-    /** used in group selection, if true, filtered out children will not be selected */
-    groupSelectsFiltered?: boolean;
-    /** event source, if from an event */
-    source: SelectionEventSourceType;
-}
-
 export interface ISelectionService {
     getSelectionState(): string[] | ServerSideRowSelectionState | ServerSideRowGroupSelectionState | null;
     setSelectionState(
@@ -36,6 +20,7 @@ export interface ISelectionService {
     getSelectionCount(): number;
     setNodesSelected(params: ISetNodesSelectedParams): number;
     filterFromSelection?(predicate: (node: RowNode) => boolean): void;
+    /** Should only be called if groupSelects = 'descendants' or 'filteredDescendants' in CSRM */
     updateGroupsFromChildrenSelections?(source: SelectionEventSourceType, changedPath?: ChangedPath): boolean;
     syncInRowNode(rowNode: RowNode, oldNode?: RowNode): void;
     reset(source: SelectionEventSourceType): void;
@@ -51,36 +36,31 @@ export interface ISelectionService {
     deselectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }): void;
     createCheckboxSelectionComponent(): CheckboxSelectionComponent;
     createSelectAllFeature(column: AgColumn): SelectAllFeature;
-    handleRowClick(rowNode: RowNode, mouseEvent: MouseEvent): void;
     onRowCtrlSelected(rowCtrl: RowCtrl, hasFocusFunc: (gui: RowGui) => void, gui?: RowGui): void;
     announceAriaRowSelection(rowNode: RowNode): void;
     /** Called after grouping / treeData */
     updateSelectableAfterGrouping(changedPath: ChangedPath | undefined): void;
-    checkRowSelectable(rowNode: RowNode): void;
+    updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean;
     selectRowNode(rowNode: RowNode, newValue?: boolean, e?: Event, source?: SelectionEventSourceType): boolean;
-    setSelectedParams(params: SetSelectedParams & { event?: Event }): number;
     createDaemonNode?(rowNode: RowNode): RowNode | undefined;
+    handleSelectionEvent(event: MouseEvent | KeyboardEvent, rowNode: RowNode, source: SelectionEventSourceType): number;
     isCellCheckboxSelection(column: AgColumn, rowNode: IRowNode): boolean;
 }
 
-interface INodeSelectionParams {
-    // true or false, whatever you want to set selection to
+interface ICommonSelectionParams {
+    /** true or false, whatever you want to set selection to */
     newValue: boolean;
-    // whether to remove other selections after this selection is done
+    /** whether to remove other selections after this selection is done */
     clearSelection?: boolean;
-    // true when action is NOT on this node, ie user clicked a group and this is the child of a group
+    /** true when action is NOT on this node, ie user clicked a group and this is the child of a group */
     suppressFinishActions?: boolean;
-    // gets used when user shift-selects a range
-    rangeSelect?: boolean;
-    // used in group selection, if true, filtered out children will not be selected
-    groupSelectsFiltered?: boolean;
-    // event source, if from an event
+    /** event source, if from an event */
     source: SelectionEventSourceType;
-    // event
+    /** originating event */
     event?: Event;
 }
 
-export interface ISetNodesSelectedParams extends INodeSelectionParams {
-    // node to change selection of
-    nodes: RowNode[];
+export interface ISetNodesSelectedParams extends ICommonSelectionParams {
+    /** nodes to change selection of */
+    nodes: readonly RowNode[];
 }

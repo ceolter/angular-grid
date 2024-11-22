@@ -1,3 +1,5 @@
+import type { Group } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -6,7 +8,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 
 export class MiniRadialColumn extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radialColumn';
-    private readonly series: any[];
+    private readonly series: Group[];
 
     private data = [
         [6, 8, 10, 2, 6, 5],

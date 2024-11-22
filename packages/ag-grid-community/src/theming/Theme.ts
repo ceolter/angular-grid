@@ -1,6 +1,6 @@
 import { _error, _logPreCreationError, _warn } from '../validation/logging';
 import type { Part } from './Part';
-import { PartImpl, createPart } from './Part';
+import { PartImpl, createPart, defaultModeName } from './Part';
 import type { CoreParams } from './core/core-css';
 import { coreDefaults } from './core/core-css';
 import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './inject';
@@ -56,7 +56,7 @@ export class ThemeImpl {
         return new ThemeImpl([...this.parts, part]);
     }
 
-    withParams(params: WithParamTypes<unknown>, mode = 'default'): ThemeImpl {
+    withParams(params: WithParamTypes<unknown>, mode = defaultModeName): ThemeImpl {
         return this.withPart(
             createPart({
                 modeParams: { [mode]: params },
@@ -110,26 +110,45 @@ export class ThemeImpl {
     _getModeParams(): ModalParamValues {
         let paramsCache = this._paramsCache;
         if (!paramsCache) {
-            const mergedParams: ModalParamValues = {
-                // defining `default` here is important, it ensures that the default
-                // mode is first in iteration order, which puts it first in outputted
-                // CSS, allowing other modes to override it
-                default: { ...coreDefaults },
+            const mergedModeParams: ModalParamValues = {
+                // NOTE: defining the default mode here is important, it ensures
+                // that the default mode is first in iteration order, which puts
+                // it first in outputted CSS, allowing other modes to override it
+                [defaultModeName]: { ...coreDefaults },
             };
             for (const part of deduplicatePartsByFeature(this.parts)) {
-                for (const [mode, otherParams] of Object.entries(part.modeParams)) {
-                    if (otherParams) {
-                        const existingParams = mergedParams[mode] ?? {};
-                        for (const [name, otherValue] of Object.entries(otherParams)) {
-                            if (otherValue !== undefined) {
-                                existingParams[name] = otherValue;
+                for (const [partMode, partParams] of Object.entries(part.modeParams)) {
+                    if (partParams) {
+                        const mergedParams = (mergedModeParams[partMode] ??= {});
+                        const partParamNames = new Set<string>();
+                        for (const [partParamName, partParamValue] of Object.entries(partParams)) {
+                            if (partParamValue !== undefined) {
+                                mergedParams[partParamName] = partParamValue;
+                                partParamNames.add(partParamName);
                             }
                         }
-                        mergedParams[mode] = existingParams;
+                        // If a later part has added default mode params, remove any non-default mode
+                        // values for the same param. We need to do this because the last value set
+                        // for a param should always take precedence. Consider this:
+                        // const redInDarkMode = themeQuartz.withParams({accentColor: 'red'}, 'dark');
+                        // const alwaysBlue = redInDarkMode.withParams({accentColor: 'blue'});
+                        // Setting theme.withParams({accentColor: 'blue'}) is expected to produce a theme
+                        // whose accent color is always blue, end of story. So we remove the accentColor
+                        // value from the `dark` mode params otherwise it would override the default
+                        // accent color.
+                        if (partMode === defaultModeName) {
+                            for (const [mergedMode, mergedParams] of Object.entries(mergedModeParams)) {
+                                if (mergedMode !== defaultModeName) {
+                                    for (const partParamName of partParamNames) {
+                                        delete mergedParams[partParamName];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-            this._paramsCache = paramsCache = mergedParams;
+            this._paramsCache = paramsCache = mergedModeParams;
         }
         return paramsCache;
     }
@@ -163,7 +182,7 @@ export class ThemeImpl {
             let inheritanceCss = '';
 
             for (const [mode, params] of Object.entries(this._getModeParams())) {
-                if (mode !== 'default') {
+                if (mode !== defaultModeName) {
                     const escapedMode = typeof CSS === 'object' ? CSS.escape(mode) : mode; // check for CSS global in case we're running in tests
                     const wrapPrefix = `:where([data-ag-theme-mode="${escapedMode}"]) & {\n`;
                     variablesCss += wrapPrefix;
@@ -180,7 +199,7 @@ export class ThemeImpl {
                         inheritanceCss += `\t${inheritedName}: var(${cssName});\n`;
                     }
                 }
-                if (mode !== 'default') {
+                if (mode !== defaultModeName) {
                     variablesCss += '}\n';
                     inheritanceCss += '}\n';
                 }
@@ -204,11 +223,9 @@ type ModalParamValues = {
 
 // Remove parts with the same feature, keeping only the last one
 const deduplicatePartsByFeature = (parts: readonly PartImpl[]): PartImpl[] => {
-    const lastPartByFeature = new Map<string, PartImpl>();
+    const lastPartByFeature = new Map<string | undefined, PartImpl>();
     for (const part of parts) {
-        if (part.feature) {
-            lastPartByFeature.set(part.feature, part);
-        }
+        lastPartByFeature.set(part.feature, part);
     }
     const result: PartImpl[] = [];
     for (const part of parts) {

@@ -12,168 +12,81 @@ import RA from './images/ra.svg?react';
 import TerminalIcon from './images/terminal.svg?react';
 import Windmill from './images/windmill.svg?react';
 
+const SHOWCASE_ITEMS = [
+    {
+        title: 'Finance',
+        titleIcon: <FinanceIcon />,
+        description:
+            'Analyse complex financial data, perform calculations and visualise the data in AG Grid, with standalone charts from AG Charts.',
+        projectLogo: <OpenBB />,
+        projectHref: 'https://openbb.co/',
+        sourceHref: 'https://github.com/OpenBB-finance/OpenBBTerminal',
+    },
+    {
+        title: 'ML/AI',
+        titleIcon: <AIIcon />,
+        description:
+            'Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to powers the tables in its dashboard',
+        projectLogo: <MLFlowLogo />,
+        projectHref: 'https://mlflow.org',
+        sourceHref: 'https://github.com/mlflow/mlflow/tree/master',
+    },
+    {
+        title: 'Data Modelling',
+        titleIcon: <ModelIcon />,
+        description:
+            'Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to help visualise mission data.',
+        projectLogo: <Windmill />,
+        projectHref: 'https://www.windmill.dev/docs/apps/app_configuration_settings/aggrid_table#aggird-table-input',
+        sourceHref: 'https://github.com/windmill-labs/windmill',
+    },
+    {
+        title: 'Dashboards',
+        titleIcon: <DashboardIcon />,
+        description:
+            'An open source React library for building dashboards, with AG Grid enterprise support for building React tables with advanced features.',
+        projectLogo: <RA />,
+        projectHref: 'https://marmelab.com/react-admin/DatagridAG.html',
+        sourceHref: 'https://github.com/marmelab/react-admin',
+    },
+    {
+        title: 'Developer Platforms',
+        titleIcon: <TerminalIcon />,
+        description:
+            'Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI builder.',
+        projectLogo: <Aerie />,
+        projectHref: 'https://nasa-ammos.github.io/aerie-docs/',
+        sourceHref: 'https://github.com/NASA-AMMOS/aerie-ui',
+    },
+];
+
+const ShowcaseItem: React.FC = ({ title, titleIcon, description, projectLogo, projectHref, sourceHref }) => {
+    return (
+        <div className={styles.showcaseGridItem}>
+            <div className={styles.showcaseIconWrapper}>
+                <span className={styles.showcaseIcon}>{titleIcon}</span>
+                <span className={styles.showcaseLogo}>{projectLogo}</span>
+            </div>
+            <h3 className={styles.showcaseTitle}>{title}</h3>
+            <p className={styles.showcaseDescription}>{description}</p>
+            <div className={styles.showcaseLinksWrapper}>
+                <a href={projectHref} target="_blank" rel="noopener noreferrer">
+                    Visit Site
+                </a>{' '}
+                <a href={sourceHref} target="_blank" rel="noopener noreferrer">
+                    Source code
+                </a>
+            </div>
+        </div>
+    );
+};
+
 const Showcase: React.FC = () => {
     return (
-        <div className={styles.container}>
-            <div className={styles.gridItem}>
-                <div className={styles.iconWrapper}>
-                    <FinanceIcon className={styles.icon} />
-                    <OpenBB className={styles.logo} />
-                </div>
-                <h3 className={styles.title}>Finance</h3>
-                <p className={styles.description}>
-                    Analyse complex financial data, perform calculations and visualise the data in AG Grid, with
-                    standalone charts from AG Charts.
-                </p>
-                <a
-                    href="https://openbb.co/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Visit Site
-                    </span>
-                </a>
-                <a
-                    href="https://github.com/OpenBB-finance/OpenBBTerminal"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Source code
-                    </span>
-                </a>
-            </div>
-
-            <div className={styles.gridItem}>
-                <div className={styles.iconWrapper}>
-                    <AIIcon className={styles.icon} />
-                    <MLFlowLogo className={styles.logo} />
-                </div>
-                <h3 className={styles.title}>ML/AI</h3>
-                <p className={styles.description}>
-                    Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to
-                    powers the tables in its dashboard
-                </p>
-                <a
-                    href="https://mlflow.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Visit Site
-                    </span>
-                </a>
-                <a
-                    href="https://github.com/mlflow/mlflow/tree/master"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Source code
-                    </span>
-                </a>
-            </div>
-
-            <div className={styles.gridItem}>
-                <div className={styles.iconWrapper}>
-                    <ModelIcon className={styles.icon} />
-                    <Windmill className={styles.logo} />
-                </div>
-                <h3 className={styles.title}>Data Modelling</h3>
-                <p className={styles.description}>
-                    Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to
-                    help visualise mission data.
-                </p>
-                <a
-                    href="https://www.windmill.dev/docs/apps/app_configuration_settings/aggrid_table#aggird-table-input"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Visit Site
-                    </span>
-                </a>
-                <a
-                    href="https://github.com/windmill-labs/windmill"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Source code
-                    </span>
-                </a>
-            </div>
-
-            <div className={styles.gridItem}>
-                <div className={styles.iconWrapper}>
-                    <DashboardIcon className={styles.icon} />
-                    <RA className={styles.logo} />
-                </div>
-                <h3 className={styles.title}>Dashboards</h3>
-                <p className={styles.description}>
-                    An open source React library for building dashboards, with AG Grid enterprise support for building
-                    React tables with advanced features.
-                </p>
-                <a
-                    href="https://marmelab.com/react-admin/DatagridAG.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Visit Site
-                    </span>
-                </a>
-                <a
-                    href="https://github.com/marmelab/react-admin"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Source code
-                    </span>
-                </a>
-            </div>
-
-            <div className={styles.gridItem}>
-                <div className={styles.iconWrapper}>
-                    <TerminalIcon className={styles.icon} />
-                    <Aerie className={styles.logo} />
-                </div>
-                <h3 className={styles.title}>Developer Platforms</h3>
-                <p className={styles.description}>
-                    Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI
-                    builder.
-                </p>
-                <a
-                    href="https://nasa-ammos.github.io/aerie-docs/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Visit Site
-                    </span>
-                </a>
-                <a
-                    href="https://github.com/NASA-AMMOS/aerie-ui"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-                >
-                    <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                        Source code
-                    </span>
-                </a>
-            </div>
+        <div className={styles.showcaseContainer}>
+            {SHOWCASE_ITEMS.map((showcaseItem) => {
+                return <ShowcaseItem key={showcaseItem.title} {...showcaseItem} />;
+            })}
         </div>
     );
 };

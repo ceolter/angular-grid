@@ -1,13 +1,7 @@
 import type { AgColumn } from '../entities/agColumn';
 import type { CheckboxSelectionCallback } from '../entities/colDef';
 import type { RowNode } from '../entities/rowNode';
-import {
-    _getCheckboxes,
-    _getGroupSelection,
-    _getHideDisabledCheckboxes,
-    _getIsRowSelectable,
-    _isClientSideRowModel,
-} from '../gridOptionsUtils';
+import { _getCheckboxes, _getHideDisabledCheckboxes, _getIsRowSelectable } from '../gridOptionsUtils';
 import type { GroupCheckboxSelectionCallback } from '../interfaces/groupCellRenderer';
 import { _getAriaCheckboxStateName } from '../utils/aria';
 import { _stopPropagationForAgGrid } from '../utils/event';
@@ -68,19 +62,6 @@ export class CheckboxSelectionComponent extends Component {
         eCheckbox.setInputAriaLabel(`${translatedLabel} (${stateName})`);
     }
 
-    private onClicked(newValue: boolean, groupSelectsFiltered: boolean | undefined, event: MouseEvent): number {
-        return (
-            this.beans.selectionSvc?.setSelectedParams({
-                rowNode: this.rowNode,
-                newValue,
-                rangeSelect: event.shiftKey,
-                groupSelectsFiltered,
-                event,
-                source: 'checkboxSelected',
-            }) ?? 0
-        );
-    }
-
     public init(params: {
         rowNode: RowNode;
         column?: AgColumn;
@@ -98,26 +79,13 @@ export class CheckboxSelectionComponent extends Component {
 
         this.addManagedListeners(this.eCheckbox.getInputElement(), {
             // we don't want double click on this icon to open a group
-            dblclick: (event) => _stopPropagationForAgGrid(event),
-            click: (event) => {
+            dblclick: _stopPropagationForAgGrid,
+            click: (event: MouseEvent) => {
                 // we don't want the row clicked event to fire when selecting the checkbox, otherwise the row
                 // would possibly get selected twice
                 _stopPropagationForAgGrid(event);
 
-                const groupSelectsFiltered = _getGroupSelection(this.gos) === 'filteredDescendants';
-                const isSelected = this.eCheckbox.getValue();
-
-                if (this.shouldHandleIndeterminateState(isSelected, groupSelectsFiltered)) {
-                    // try toggling children to determine action.
-                    const result = this.onClicked(true, groupSelectsFiltered, event || {});
-                    if (result === 0) {
-                        this.onClicked(false, groupSelectsFiltered, event);
-                    }
-                } else if (isSelected) {
-                    this.onClicked(false, groupSelectsFiltered, event);
-                } else {
-                    this.onClicked(true, groupSelectsFiltered, event || {});
-                }
+                this.beans.selectionSvc?.handleSelectionEvent(event, this.rowNode, 'checkboxSelected');
             },
         });
 
@@ -151,16 +119,6 @@ export class CheckboxSelectionComponent extends Component {
         }
 
         this.eCheckbox.getInputElement().setAttribute('tabindex', '-1');
-    }
-
-    private shouldHandleIndeterminateState(isSelected: boolean | undefined, groupSelectsFiltered: boolean): boolean {
-        // for CSRM groupSelectsFiltered, we can get an indeterminate state where all filtered children are selected,
-        // and we would expect clicking to deselect all rather than select all
-        return (
-            groupSelectsFiltered &&
-            (this.eCheckbox.getPreviousValue() === undefined || isSelected === undefined) &&
-            _isClientSideRowModel(this.gos)
-        );
     }
 
     private showOrHideSelect(): void {

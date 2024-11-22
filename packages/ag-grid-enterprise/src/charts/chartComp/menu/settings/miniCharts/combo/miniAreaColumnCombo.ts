@@ -1,3 +1,5 @@
+import type { Path, Rect } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -11,8 +13,8 @@ export interface Coordinate {
 export class MiniAreaColumnCombo extends MiniChartWithAxes {
     static chartType: ChartType = 'areaColumnCombo';
 
-    private columns: any[];
-    private areas: any[];
+    private columns: Rect[];
+    private areas: Path[];
 
     private columnData = [3, 4.5];
 

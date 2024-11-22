@@ -86,10 +86,10 @@ removing or reordering columns. Providing `-1` will lock all columns, or provide
 
 {% gridExampleRunner title="Prevent Group Order Changes" name="prevent-group-order-changes" /%}
 
-The example above demonstrates locking the first two columns from being reordered or removed:
+The example above demonstrates locking the columns from their grouping being moved or removed:
 ```{% frameworkTransform=true %}
 const gridOptions = { 
-    groupLockGroupColumns: 2,
+    groupLockGroupColumns: -1,
 }
 ```
 

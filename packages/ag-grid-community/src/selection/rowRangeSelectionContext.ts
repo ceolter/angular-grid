@@ -1,16 +1,34 @@
 import type { RowNode } from '../entities/rowNode';
 import type { IRowModel } from '../interfaces/iRowModel';
 
+interface RangePartition<TNode> {
+    keep: readonly TNode[];
+    discard: readonly TNode[];
+}
+
 export interface ISelectionContext<TNode> {
-    init(rowModel: IRowModel): void;
     reset(): void;
     setRoot(node: TNode): void;
     setEndRange(node: TNode): void;
-    getRange(): RowNode[];
+    getRange(): readonly TNode[];
     getRoot(): TNode | null;
     isInRange(node: TNode): boolean;
-    truncate(node: TNode): { keep: RowNode[]; discard: RowNode[] };
-    extend(node: TNode, groupSelectsChildren?: boolean): { keep: RowNode[]; discard: RowNode[] };
+    /**
+     * Truncates the range to the given node (assumed to be within the current range).
+     * Returns nodes that remain in the current range and those that should be removed
+     *
+     * @param node - Node at which to truncate the range
+     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
+     */
+    truncate(node: TNode): RangePartition<TNode>;
+    /**
+     * Extends the range to the given node. Returns nodes that remain in the current range
+     * and those that should be removed.
+     *
+     * @param node - Node marking the new end of the range
+     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
+     */
+    extend(node: TNode, groupSelectsChildren?: boolean): RangePartition<TNode>;
 }
 
 /**
@@ -23,37 +41,37 @@ export interface ISelectionContext<TNode> {
  * See AG-9620 for more
  */
 export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
-    private root: RowNode | null = null;
+    private rootId: string | null = null;
     /**
      * Note that the "end" `RowNode` may come before or after the "root" `RowNode` in the
      * actual grid.
      */
-    private end: RowNode | null = null;
+    private endId: string | null = null;
     private rowModel: IRowModel;
     private cachedRange: RowNode[] = [];
 
-    public init(rowModel: IRowModel): void {
+    constructor(rowModel: IRowModel) {
         this.rowModel = rowModel;
     }
 
     public reset(): void {
-        this.root = null;
-        this.end = null;
+        this.rootId = null;
+        this.endId = null;
         this.cachedRange.length = 0;
     }
 
     public setRoot(node: RowNode): void {
-        this.root = node;
-        this.end = null;
+        this.rootId = node.id!;
+        this.endId = null;
         this.cachedRange.length = 0;
     }
 
     public setEndRange(end: RowNode): void {
-        this.end = end;
+        this.endId = end.id!;
         this.cachedRange.length = 0;
     }
 
-    public getRange(): RowNode[] {
+    public getRange(): readonly RowNode[] {
         if (this.cachedRange.length === 0) {
             const root = this.getRoot();
             const end = this.getEnd();
@@ -69,7 +87,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
     }
 
     public isInRange(node: RowNode): boolean {
-        if (this.root === null) {
+        if (this.rootId === null) {
             return false;
         }
 
@@ -77,29 +95,20 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
     }
 
     public getRoot(): RowNode | null {
-        if (this.root && this.root?.key === null) {
-            this.root = this.rowModel.getRowNode(this.root.id!) ?? null;
+        if (this.rootId) {
+            return this.rowModel.getRowNode(this.rootId) ?? null;
         }
-
-        return this.root;
+        return null;
     }
 
     private getEnd(): RowNode | null {
-        if (this.end && this.end?.key === null) {
-            this.end = this.rowModel.getRowNode(this.end.id!) ?? null;
+        if (this.endId) {
+            return this.rowModel.getRowNode(this.endId) ?? null;
         }
-
-        return this.end;
+        return null;
     }
 
-    /**
-     * Truncates the range to the given node (assumed to be within the current range).
-     * Returns nodes that remain in the current range and those that should be removed
-     *
-     * @param node - Node at which to truncate the range
-     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
-     */
-    public truncate(node: RowNode): { keep: RowNode[]; discard: RowNode[] } {
+    public truncate(node: RowNode): RangePartition<RowNode> {
         const range = this.getRange();
 
         if (range.length === 0) {
@@ -108,7 +117,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
 
         // if root is first, then selection range goes "down" the table
         // so we should be unselecting the range _after_ the given `node`
-        const discardAfter = range[0].id === this.root!.id;
+        const discardAfter = range[0].id === this.rootId;
 
         const idx = range.findIndex((rowNode) => rowNode.id === node.id);
         if (idx > -1) {
@@ -121,14 +130,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
         }
     }
 
-    /**
-     * Extends the range to the given node. Returns nodes that remain in the current range
-     * and those that should be removed.
-     *
-     * @param node - Node marking the new end of the range
-     * @returns Object of nodes to either keep or discard (i.e. deselect) from the range
-     */
-    public extend(node: RowNode, groupSelectsChildren = false): { keep: RowNode[]; discard: RowNode[] } {
+    public extend(node: RowNode, groupSelectsChildren = false): RangePartition<RowNode> {
         const root = this.getRoot();
 
         // If the root node is null, we cannot iterate from the root to the given `node`.
@@ -148,7 +150,7 @@ export class RowRangeSelectionContext implements ISelectionContext<RowNode> {
 
         const newRange = this.rowModel.getNodesInRangeForSelection(root, node);
 
-        if (newRange.find((newRangeNode) => newRangeNode.id === this.end?.id)) {
+        if (newRange.find((newRangeNode) => newRangeNode.id === this.endId)) {
             // Range between root and given node contains the current "end"
             // so this is an extension of the current range direction
             this.setEndRange(node);
