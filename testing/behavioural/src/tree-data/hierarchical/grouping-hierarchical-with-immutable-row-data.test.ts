@@ -265,30 +265,6 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
             ])
         );
 
-        // api.setGridOption(
-        //     'rowData',
-        //     cachedJSONObjects.array([
-        //         { id: '0', country: 'Ireland', year: 2000, name: 'John Von Neumann' },
-        //         {
-        //             id: '1',
-        //             country: 'Ireland',
-        //             year: 2000,
-        //             name: 'Ada Lovelace',
-        //             children: [
-        //                 { id: '2', country: 'Italy', year: 1940, name: 'Alan M. Turing' },
-        //                 { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky', children: [] },
-        //             ],
-        //         },
-        //         {
-        //             id: '5',
-        //             country: 'Italy',
-        //             year: 1940,
-        //             name: 'Grace Brewster Murray Hopper',
-        //             children: [{ id: '6', country: 'Italy', year: 1940, name: 'unknown' }],
-        //         },
-        //     ])
-        // );
-
         gridRows = new GridRows(api, 'remove, update, add', gridRowsOptions);
         await gridRows.check(`
             ROOT id:ROOT_NODE_ID
