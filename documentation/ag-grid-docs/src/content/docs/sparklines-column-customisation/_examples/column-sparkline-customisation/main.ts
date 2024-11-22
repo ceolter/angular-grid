@@ -32,8 +32,12 @@ const gridOptions: GridOptions = {
                             fill: 'orange',
                         },
                     },
-                    paddingInner: 0.3,
-                    paddingOuter: 0.1,
+                    theme: {
+                        overrides: {
+                            paddingInner: 0.3,
+                            paddingOuter: 0.1,
+                        },
+                    },
                 } as AgSparklineOptions,
             },
         },

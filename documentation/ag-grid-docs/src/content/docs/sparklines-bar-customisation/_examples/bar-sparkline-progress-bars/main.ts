@@ -42,10 +42,6 @@ const gridOptions: GridOptions = {
                     },
                     min: 0,
                     max: 100,
-                    axis: {
-                        strokeWidth: 0,
-                        paddingOuter: 0,
-                    },
                     tooltip: {
                         enabled: false,
                     },

@@ -33,7 +33,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
                 width,
                 height,
                 ...params.sparklineOptions,
-                data: params.value,
+                data: this.processData(params.value),
             } as AgSparklineOptions;
 
             if (this.sparklineOptions.tooltip?.renderer) {
@@ -60,13 +60,21 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             const data = params?.value;
             this.sparklineOptions.width = width;
             this.sparklineOptions.height = height;
-            this.sparklineOptions.data = data;
+            this.sparklineOptions.data = this.processData(data);
 
             this.sparklineInstance.updateDelta(this.sparklineOptions);
 
             return true;
         }
         return false;
+    }
+
+    private processData(data: any[] = []) {
+        if (data.length === 0) {
+            return data;
+        }
+
+        return data.filter((item) => item != null);
     }
 
     private createParams(params: any) {

@@ -40,10 +40,8 @@ const gridOptions: GridOptions = {
                         },
                     },
                     padding: {
-                        series: {
-                            top: 5,
-                            bottom: 5,
-                        },
+                        top: 5,
+                        bottom: 5,
                     },
                 } as AgSparklineOptions,
             },

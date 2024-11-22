@@ -27,7 +27,9 @@ const gridOptions: GridOptions = {
                     type: 'bar',
                     fill: '#fac858',
                     highlightStyle: {
-                        stroke: '#fac858',
+                        series: {
+                            stroke: '#fac858',
+                        },
                     },
                     padding: {
                         top: 10,
@@ -41,6 +43,7 @@ const gridOptions: GridOptions = {
                         padding: 1,
                     },
                     axis: {
+                        type: 'category',
                         stroke: '##cccccc',
                         strokeWidth: 2,
                     },

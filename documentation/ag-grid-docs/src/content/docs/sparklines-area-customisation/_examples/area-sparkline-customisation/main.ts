@@ -40,6 +40,7 @@ const gridOptions: GridOptions = {
                         },
                     },
                     axis: {
+                        type: 'category',
                         stroke: 'rgb(204, 204, 235)',
                     },
                 } as AgSparklineOptions,

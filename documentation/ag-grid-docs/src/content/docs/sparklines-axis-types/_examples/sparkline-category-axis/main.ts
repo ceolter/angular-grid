@@ -26,7 +26,7 @@ const gridOptions: GridOptions = {
                 sparklineOptions: {
                     type: 'area',
                     axis: {
-                        // this can be omitted as the axis type is 'category' by default
+                        // set axis to 'category'
                         type: 'category',
                     },
                 } as AgSparklineOptions,
