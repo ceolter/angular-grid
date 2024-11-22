@@ -102,7 +102,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 const row = node.row;
                 if (row && !row.data) {
                     this.rowNodeDeleted(row); // Delete filler node
-                    state.remove(row);
+                    state.removeNode(row);
                 }
                 for (const child of node.enumChildren()) {
                     unlinkChild(child);
@@ -526,7 +526,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 this.rowNodeDeleted(row);
                 (row.treeNode as TreeNode | null)?.unlink();
                 if (state !== null && (isTreeRowCommitted(row) || row.isSelected())) {
-                    state.remove(row);
+                    state.removeNode(row);
                 }
             }
             this.rowsPendingDestruction = null;

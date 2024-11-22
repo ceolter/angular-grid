@@ -27,7 +27,8 @@ export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
 
-    allowDeltaUpdate?: boolean;
+    /** This flag indicates that changedPath.active is allowed during this refresh flow. */
+    allowChangedPath?: boolean;
 
     /** true if this update is due to columns changing, ie no rows were changed */
     columnsChanged?: boolean;
@@ -61,17 +62,6 @@ const createInactiveChangedPath = (rootNode: RowNode) => {
 };
 
 export class RefreshModelState<TData = any> {
-    /**
-     * This flag indicates that a full refresh of the row data is required.
-     * - true if the node manager changed
-     * - true if a client side node manager needs a full reload of the data due to a property change,
-     *   with extract row data from row nodes if needed
-     */
-    public fullReload: boolean = false;
-
-    /** The CSRM might still not be in a started state during initialization */
-    public started: boolean = false;
-
     /** how much of the pipeline to execute */
     public step: ClientSideRowModelStage;
 
@@ -90,23 +80,28 @@ export class RefreshModelState<TData = any> {
     /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
     public keepUndoRedoStack: boolean;
 
-    /**
-     * The set of removed nodes.
-     * Mutually exclusive, if a node is here, it cannot be in the updates map.
-     */
-    public readonly removals = new Set<RowNode<TData>>();
+    /** true if the order of root.allLeafChildren has changed. */
+    public rowsOrderChanged: boolean;
 
     /**
-     * Map of row nodes that have been updated.
-     * The value is true if the row node is a new node. is false if it was just updated.
+     * This flag indicates that changedPath.active is allowed during this refresh flow.
+     * This will false if a full model refresh is requested, or if the grid is not started yet.
      */
-    public readonly updates = new Map<RowNode<TData>, boolean>();
+    private allowChangedPath: boolean;
+
+    /**
+     * This flag indicates that a full refresh of the row data is required.
+     * - true if the node manager changed
+     * - true if a client side node manager needs a full reload of the data due to a property change,
+     *   with extract row data from row nodes if needed
+     */
+    public fullReload: boolean = false;
+
+    /** The CSRM might still not be in a started state during initialization */
+    public started: boolean = false;
 
     /** true if rows were inserted in the middle of something else and not just appended or removed. */
     public rowsInserted = false;
-
-    /** true if the order of root.allLeafChildren has changed. */
-    public rowsOrderChanged: boolean;
 
     /** True if new data or delta update */
     public rowDataUpdated: boolean = false;
@@ -120,8 +115,18 @@ export class RefreshModelState<TData = any> {
      */
     public newData: boolean = false;
 
-    /** True if the changes were initiated by a delta update (immutable row data) or new data (reload of row data) */
-    public deltaUpdate: boolean | undefined = undefined;
+    /**
+     * The set of removed nodes.
+     * Mutually exclusive, if a node is here, it cannot be in the updates map.
+     * This can contain deleted filler nodes, or nodes that were removed from the data or via transactions.
+     */
+    public readonly removals = new Set<RowNode<TData>>();
+
+    /**
+     * Map of row nodes that have been updated.
+     * The value is true if the row node is a new node. is false if it was just updated.
+     */
+    public readonly updates = new Map<RowNode<TData>, boolean>();
 
     public constructor(
         /** The Grid Option Service instance to query grid options */
@@ -137,7 +142,7 @@ export class RefreshModelState<TData = any> {
             keepRenderedRows = false,
             keepUndoRedoStack = false,
             rowsOrderChanged = false,
-            allowDeltaUpdate,
+            allowChangedPath = false,
         }: RefreshModelParams<TData>,
 
         /**
@@ -152,7 +157,7 @@ export class RefreshModelState<TData = any> {
         this.keepRenderedRows = keepRenderedRows;
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
-        this.deltaUpdate = allowDeltaUpdate ? undefined : false;
+        this.allowChangedPath = allowChangedPath;
     }
 
     public updateParams({
@@ -162,7 +167,7 @@ export class RefreshModelState<TData = any> {
         keepRenderedRows = false,
         keepUndoRedoStack = false,
         rowsOrderChanged = false,
-        allowDeltaUpdate = false,
+        allowChangedPath = false,
     }: RefreshModelParams<any>) {
         this.columnsChanged ||= columnsChanged;
         this.animate &&= animate;
@@ -171,8 +176,8 @@ export class RefreshModelState<TData = any> {
         if (rowsOrderChanged && !this.newData) {
             this.rowsOrderChanged = true;
         }
-        if (!allowDeltaUpdate) {
-            this.clearDeltaUpdate();
+        if (!allowChangedPath) {
+            this.disableChangedPath();
         }
         this.setStep(step);
     }
@@ -188,20 +193,25 @@ export class RefreshModelState<TData = any> {
         }
     }
 
+    /**
+     * Given a list of changed properties, update the minimum step to execute
+     * and disables the changedPath if a property needed by a step changed.
+     */
     public setStepFromStages(
         orderedStages: IRowNodeStageDefinition[],
         changedProps: (keyof GridOptions<TData>)[]
-    ): boolean {
+    ): void {
         const changedPropsLen = changedProps.length;
         for (const { refreshProps, step } of orderedStages) {
             for (let i = 0; i < changedPropsLen; i++) {
                 if (refreshProps?.has(changedProps[i])) {
                     this.setStep(step); // Updates to the minimum step
-                    return true; // We found the minimum step
+
+                    // A property needed by a step changed, so, disable changed path for the stages execution
+                    this.disableChangedPath();
                 }
             }
         }
-        return false;
     }
 
     public setNewData(): void {
@@ -215,40 +225,38 @@ export class RefreshModelState<TData = any> {
         this.rowsOrderChanged = false;
         this.removals.clear();
         this.updates.clear();
-        this.clearDeltaUpdate();
+        this.disableChangedPath();
     }
 
     public setDeltaUpdate(): boolean {
         this.setStep('group');
         this.rowDataUpdated = true;
         this.keepUndoRedoStack = false;
-        const deltaUpdate = this.deltaUpdate;
-        if (deltaUpdate !== undefined) {
-            return deltaUpdate;
-        }
         if (this.newData || this.fullReload || !this.started) {
-            return false;
+            return false; // Cannot do delta update if new data or full reload
         }
-        this.deltaUpdate = true;
-        this.changedPath.active = true;
+        if (this.allowChangedPath) {
+            this.changedPath.active = true;
+        }
         this.keepRenderedRows = true;
         this.animate = !this.gos.get('suppressAnimationFrame');
         return true;
     }
 
-    public clearDeltaUpdate(): void {
-        this.deltaUpdate = false;
+    /** Forces allowChangedPath to false and changedPath.active to false */
+    public disableChangedPath(): void {
+        this.allowChangedPath = false;
         this.changedPath.active = false;
     }
 
     /** Registers a node as removed. It has precedence over add and update. */
-    public remove(node: IRowNode<TData>): void {
+    public removeNode(node: IRowNode<TData>): void {
         this.removals.add(node as RowNode<TData>);
         this.updates.delete(node as RowNode<TData>);
     }
 
     /** Registers a node as updated. Note that add has the precedence. */
-    public update(node: IRowNode<TData>): boolean {
+    public updateNode(node: IRowNode<TData>): boolean {
         const updates = this.updates;
         if (updates.has(node as RowNode<TData>)) {
             return false;
@@ -258,11 +266,11 @@ export class RefreshModelState<TData = any> {
     }
 
     /** Registers a node as added. Add has the precedence over update. */
-    public add(node: IRowNode<TData>): void {
+    public addNode(node: IRowNode<TData>): void {
         this.updates.set(node as RowNode<TData>, true);
     }
 
-    public hasChanges(): boolean {
+    public hasNodeChanges(): boolean {
         return this.newData || this.rowsOrderChanged || this.removals.size > 0 || this.updates.size > 0;
     }
 

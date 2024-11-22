@@ -80,7 +80,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
             row = this.createRowNode(data, allLeafChildren.length);
             processedData.set(data, row);
             allLeafChildren.push(row);
-            state.add(row);
+            state.addNode(row);
 
             node = node.upsertKey(row.id!);
             this.treeSetRow(node, row, true);
@@ -158,12 +158,12 @@ export class ClientSideChildrenTreeNodeManager<TData>
             row = this.getRowNode(id) as TreeRow<TData> | undefined;
             if (row) {
                 if (row.data !== data) {
-                    state.update(row);
+                    state.updateNode(row);
                     row.updateData(data);
                 }
             } else {
                 row = this.createRowNode(data, -1);
-                state.add(row);
+                state.addNode(row);
                 created = true;
             }
 
@@ -201,7 +201,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 if (node) {
                     const data = row.data;
                     if (data && !processedData.has(data)) {
-                        state.remove(row);
+                        state.removeNode(row);
                         this.treeRemove(node, row);
                     }
                 }
@@ -229,6 +229,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
             state.rowsOrderChanged = true;
         }
 
-        return treeChanged || state.hasChanges();
+        return treeChanged || state.hasNodeChanges();
     }
 }

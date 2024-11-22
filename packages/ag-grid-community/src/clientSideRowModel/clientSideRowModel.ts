@@ -176,7 +176,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             newColumnsLoaded,
             filterChanged,
             sortChanged,
-
             gridStylesChanged: this.onGridStylesChanges.bind(this),
         });
 
@@ -222,7 +221,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const changedProps = params.changeSet?.properties;
             if (changedProps) {
-                this.refreshModel({ step: 'nothing', changedProps, allowDeltaUpdate: true });
+                this.refreshModel({ step: 'nothing', changedProps, allowChangedPath: true });
             }
         });
 
@@ -288,7 +287,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
             rowsOrderChanged: true,
-            allowDeltaUpdate: true,
+            allowChangedPath: true,
         });
 
         return true;
@@ -315,7 +314,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             step: 'nothing',
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
-            allowDeltaUpdate: true,
+            allowChangedPath: true,
             updateRowNodes: (state) => {
                 this.rowDataInitialized = true;
                 this.valueCache?.onDataChanged();
@@ -364,7 +363,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             step: 'nothing',
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
-            allowDeltaUpdate: true,
+            allowChangedPath: true,
             updateRowNodes: (state) => {
                 this.rowDataInitialized = true;
                 this.valueCache?.onDataChanged();
@@ -414,11 +413,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         const changedProps = params.changedProps;
-
+        let ownsState = false; // If true, the refresh will be completed during this call
         let state = this.currentRefreshModelState;
-
-        let newRowData: any[] | null | undefined;
-        let ownsState = false;
 
         const gos = this.gos;
         const rowData = gos.get('rowData');
@@ -448,6 +444,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         nodeManager.beginRefreshModel?.(state);
 
+        let newRowData: any[] | null | undefined;
         if (state.fullReload || rowDataChanged) {
             newRowData = rowData;
             if (newRowData != null && !Array.isArray(newRowData)) {
@@ -457,18 +454,22 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         if (state.fullReload) {
+            state.disableChangedPath();
             if (!rowDataChanged && this.rowDataInitialized) {
                 // No new rowData was passed, so to include user executed transaction we need to extract
                 // the row data from the node manager as it might be different from the original rowData
                 newRowData = oldNodeManager?.extractRowData() ?? newRowData;
             }
-
-            state.clearDeltaUpdate();
         }
 
         if (oldNodeManager !== nodeManager) {
+            // Swap the node managers
             oldNodeManager?.deactivate(state);
             nodeManager.activate(state);
+        }
+
+        if (changedProps) {
+            state.setStepFromStages(this.orderedStages, changedProps);
         }
 
         if (newRowData) {
@@ -484,30 +485,23 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 nodeManager.setImmutableRowData(state, newRowData);
             } else {
                 state.setNewData();
-                this.rowDataInitialized = true;
                 nodeManager.setNewRowData(state, newRowData);
+                this.rowDataInitialized = true;
             }
         }
 
-        params.updateRowNodes?.(state);
-
-        // TODO move this before updating row nodes so we know there is no need to activate the changed path
-        if (changedProps && state.setStepFromStages(this.orderedStages, changedProps)) {
-            state.clearDeltaUpdate(); // A property needed by a step changed, so, disable delta update for the stages execution
-        }
+        params.updateRowNodes?.(state); // Invoke the provided callback, for example, to execute transactions
 
         if (!ownsState) {
             return; // Not yet started, or, this is a nested refresh call
         }
 
-        if (state.hasChanges()) {
-            state.setStep('group');
-        }
-
         nodeManager.refreshModel(state);
 
         const stepsExecuted = this.executeRefreshSteps(state);
-        this.currentRefreshModelState = null;
+
+        this.currentRefreshModelState = null; // Refresh completed
+
         if (stepsExecuted) {
             this.eventSvc.dispatchEvent({
                 type: 'modelUpdated',

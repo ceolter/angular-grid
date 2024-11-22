@@ -68,7 +68,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
     public refreshModel(state: RefreshModelState<TData>): void {
         state.rootNode.updateHasChildren();
 
-        if (state.rowDataUpdated || state.hasChanges()) {
+        if (state.rowDataUpdated || state.hasNodeChanges()) {
             this.deselectNodesAfterUpdate(state);
         }
     }
@@ -126,7 +126,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         for (let i = 0, len = rowData.length; i < len; ++i) {
             const node = this.createRowNode(rowData[i], i);
             allLeafChildren[i] = node;
-            state.add(node);
+            state.addNode(node);
         }
         state.rootNode.allLeafChildren = allLeafChildren;
     }
@@ -152,13 +152,13 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
                 if (!node) {
                     node = this.createRowNode(data, -1);
-                    state.add(node);
+                    state.addNode(node);
                     if (!reorder) {
                         addedNodes.push(node);
                     }
                 } else if (node.data !== data) {
                     node.updateData(data);
-                    state.update(node);
+                    state.updateNode(node);
                 }
 
                 processedNodes.add(node);
@@ -176,7 +176,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
                 const node = oldAllLeafChildren![i];
                 if (!removals.has(node) && !processedNodes.has(node)) {
                     this.rowNodeDeleted(node);
-                    state.remove(node);
+                    state.removeNode(node);
                 }
             }
 
@@ -201,7 +201,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
                 if (!removals.has(node)) {
                     if (!processedNodes.has(node)) {
                         this.rowNodeDeleted(node);
-                        state.remove(node);
+                        state.removeNode(node);
                     } else {
                         node.sourceRowIndex = newAllLeafChildren.push(node) - 1;
                     }
@@ -214,7 +214,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
             }
         }
 
-        if (!state.hasChanges() && oldAllLeafChildren) {
+        if (!state.hasNodeChanges() && oldAllLeafChildren) {
             return false; // Nothing changed, we keep the old array.
         }
 
@@ -266,7 +266,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         for (let i = 0; i < removeLen; i++) {
             const rowNode = this.lookupRowNode(getRowIdFunc, remove[i]);
             if (rowNode) {
-                state.remove(rowNode);
+                state.removeNode(rowNode);
             }
         }
 
@@ -308,7 +308,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
                 const rowNode = this.lookupRowNode(getRowIdFunc, item);
                 if (rowNode) {
                     rowNode.updateData(item);
-                    state.update(rowNode);
+                    state.updateNode(rowNode);
                     result.push(rowNode);
                 }
             }
@@ -357,7 +357,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         for (let i = 0; i < addLength; ++i) {
             const newNode = this.createRowNode(add[i], addIndex + i);
             newNodes[i] = newNode;
-            state.add(newNode);
+            state.addNode(newNode);
         }
 
         if (addIndex < allLeafChildrenLen) {

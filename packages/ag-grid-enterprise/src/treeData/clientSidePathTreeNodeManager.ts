@@ -28,7 +28,7 @@ export class ClientSidePathTreeNodeManager<TData>
     }
 
     public override refreshModel(state: RefreshModelState<TData>): void {
-        if (state.hasChanges()) {
+        if (state.hasNodeChanges()) {
             this.executeUpdates(state);
         }
         super.refreshModel(state);
