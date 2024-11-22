@@ -31,3 +31,5 @@ export { PivotModule } from './pivot/pivotModule';
 export { GridChartsModule, IntegratedChartsModule } from './charts/integratedChartsModule';
 
 export { AllEnterpriseModule } from './allEnterpriseModule';
+
+export * from 'ag-grid-community';
