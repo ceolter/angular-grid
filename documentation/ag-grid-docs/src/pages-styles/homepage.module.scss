@@ -700,18 +700,14 @@ body {
 
 .latestNewsVersions {
     --versions-gap: #{$spacing-size-4};
+    --background-gradient-top-offset: 50%;
+    --background-gradient-height: 15%;
 
     container-type: inline-size;
     display: flex;
     gap: var(--versions-gap);
     margin-top: $spacing-size-8;
     margin-bottom: $spacing-size-8;
-}
-
-.faqSection {
-    .blueRectangle {
-        transform: translate(-50%, 250px);
-    }
 }
 
 .customerSubheading {
