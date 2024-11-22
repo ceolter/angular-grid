@@ -67,11 +67,11 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private maxUniqueValues: number = -1;
 
-    public execute(state: RefreshModelState): void {
+    public execute({ changedPath }: RefreshModelState): void {
         if (this.colModel.isPivotActive()) {
-            this.executePivotOn(state.changedPath);
+            this.executePivotOn(changedPath);
         } else {
-            this.executePivotOff(state.changedPath);
+            this.executePivotOff(changedPath);
         }
     }
 
