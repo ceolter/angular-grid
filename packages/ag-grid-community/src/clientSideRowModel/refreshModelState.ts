@@ -207,9 +207,13 @@ export class RefreshModelState<TData = any> {
         }
     }
 
-    public setNewData(): void {
-        this.setStep('group');
+    public setRowDataUpdated() {
         this.rowDataUpdated = true;
+        this.setStep('group');
+    }
+
+    public setNewData(): void {
+        this.setRowDataUpdated();
         this.newData = true;
         this.columnsChanged = false;
         this.animate = false;
@@ -222,9 +226,6 @@ export class RefreshModelState<TData = any> {
     }
 
     public setDeltaUpdate(): boolean {
-        this.setStep('group');
-        this.rowDataUpdated = true;
-        this.keepUndoRedoStack = false;
         if (this.newData || this.fullReload || !this.started) {
             return false; // Cannot do delta update if new data or full reload
         }
@@ -232,6 +233,7 @@ export class RefreshModelState<TData = any> {
             this.changedPath.active = true;
         }
         this.keepRenderedRows = true;
+        this.keepUndoRedoStack = false;
         this.animate = !this.gos.get('suppressAnimationFrame');
         return true;
     }

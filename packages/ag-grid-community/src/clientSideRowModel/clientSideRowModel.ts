@@ -316,7 +316,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             animate: !this.gos.get('suppressAnimationFrame'),
             allowChangedPath: true,
             updateRowNodes: (state) => {
-                this.rowDataInitialized = true;
+                if (!this.rowDataInitialized) {
+                    this.rowDataInitialized = true;
+                    state.setRowDataUpdated();
+                }
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
                 rowNodeTransaction = nodeManager.applyTransaction(state, rowDataTran, getRowIdFunc);
@@ -365,7 +368,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             animate: !this.gos.get('suppressAnimationFrame'),
             allowChangedPath: true,
             updateRowNodes: (state) => {
-                this.rowDataInitialized = true;
+                if (!this.rowDataInitialized) {
+                    this.rowDataInitialized = true;
+                    state.setRowDataUpdated();
+                }
                 this.valueCache?.onDataChanged();
                 const getRowIdFunc = _getRowIdCallback(this.gos);
                 for (let i = 0; i < rowDataTransactionBatch.length; ++i) {
@@ -482,7 +488,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 !gos.get('resetRowDataOnUpdate');
 
             if (immutable && state.setDeltaUpdate()) {
-                nodeManager.setImmutableRowData(state, newRowData);
+                if (nodeManager.setImmutableRowData(state, newRowData) || !this.started) {
+                    state.setRowDataUpdated();
+                }
             } else {
                 state.setNewData();
                 nodeManager.setNewRowData(state, newRowData);

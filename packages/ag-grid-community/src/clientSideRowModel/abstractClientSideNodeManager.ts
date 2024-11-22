@@ -215,6 +215,11 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         }
 
         rootNode.allLeafChildren = newAllLeafChildren;
+        const sibling = rootNode.sibling;
+        if (sibling) {
+            sibling.allLeafChildren = newAllLeafChildren;
+        }
+
         return true;
     }
 
@@ -225,15 +230,16 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
     ): RowNodeTransaction<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
-        state.setDeltaUpdate();
-
         const remove = this.executeRemove(state, rowDataTran.remove, getRowIdFunc);
         const update = this.executeUpdate(state, rowDataTran.update, getRowIdFunc);
         const add = this.executeAdd(state, rowDataTran.addIndex, rowDataTran.add);
 
-        const rowNodeTran: RowNodeTransaction<TData> = { remove, update, add };
+        state.setDeltaUpdate();
+        if (remove.length || update.length || add.length) {
+            state.setRowDataUpdated();
+        }
 
-        return rowNodeTran;
+        return { remove, update, add };
     }
 
     /** Called when a node needs to be deleted */
