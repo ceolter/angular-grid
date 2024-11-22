@@ -62,28 +62,28 @@ const SHOWCASE_ITEMS = [
 
 const ShowcaseItem: React.FC = ({ title, titleIcon, description, projectLogo, projectHref, sourceHref }) => {
     return (
-        <div className={styles.gridItem}>
-            <div className={styles.iconWrapper}>
-                <span className={styles.icon}>{titleIcon}</span>
-                <span className={styles.logo}>{projectLogo}</span>
+        <div className={styles.showcaseGridItem}>
+            <div className={styles.showcaseIconWrapper}>
+                <span className={styles.showcaseIcon}>{titleIcon}</span>
+                <span className={styles.showcaseLogo}>{projectLogo}</span>
             </div>
-
-            <h3 className={styles.title}>{title}</h3>
-            <p className={styles.description}>{description}</p>
-
-            <a href={projectHref} target="_blank" rel="noopener noreferrer">
-                Visit Site
-            </a>
-            <a href={sourceHref} target="_blank" rel="noopener noreferrer">
-                Source code
-            </a>
+            <h3 className={styles.showcaseTitle}>{title}</h3>
+            <p className={styles.showcaseDescription}>{description}</p>
+            <div className={styles.showcaseLinksWrapper}>
+                <a href={projectHref} target="_blank" rel="noopener noreferrer">
+                    Visit Site
+                </a>{' '}
+                <a href={sourceHref} target="_blank" rel="noopener noreferrer">
+                    Source code
+                </a>
+            </div>
         </div>
     );
 };
 
 const Showcase: React.FC = () => {
     return (
-        <div className={styles.container}>
+        <div className={styles.showcaseContainer}>
             {SHOWCASE_ITEMS.map((showcaseItem) => {
                 return <ShowcaseItem key={showcaseItem.title} {...showcaseItem} />;
             })}
