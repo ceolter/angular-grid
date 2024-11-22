@@ -69,29 +69,13 @@ const ShowcaseItem: React.FC = ({ title, titleIcon, description, projectLogo, pr
             </div>
 
             <h3 className={styles.title}>{title}</h3>
-
             <p className={styles.description}>{description}</p>
 
-            <a
-                href={projectHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-            >
-                <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                    Visit Site
-                </span>
+            <a href={projectHref} target="_blank" rel="noopener noreferrer">
+                Visit Site
             </a>
-
-            <a
-                href={sourceHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-black/5 transition-opacity duration-300"
-            >
-                <span className="bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium">
-                    Source code
-                </span>
+            <a href={sourceHref} target="_blank" rel="noopener noreferrer">
+                Source code
             </a>
         </div>
     );
