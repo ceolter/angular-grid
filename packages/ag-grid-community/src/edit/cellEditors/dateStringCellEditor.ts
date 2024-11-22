@@ -1,5 +1,4 @@
 import type { DataTypeService } from '../../columns/dataTypeService';
-import type { BeanCollection } from '../../context/context';
 import type { AgColumn } from '../../entities/agColumn';
 import { _parseDateTimeFromString, _serialiseDate } from '../../utils/date';
 import { _exists } from '../../utils/generic';
@@ -25,23 +24,25 @@ class DateStringCellEditorInput implements CellEditorInput<string, IDateStringCe
     public init(eInput: AgInputDateField, params: IDateStringCellEditorParams): void {
         this.eInput = eInput;
         this.params = params;
-        if (params.min != null) {
-            eInput.setMin(params.min);
+        const { min, max, step } = params;
+        if (min != null) {
+            eInput.setMin(min);
         }
-        if (params.max != null) {
-            eInput.setMax(params.max);
+        if (max != null) {
+            eInput.setMax(max);
         }
-        if (params.step != null) {
-            eInput.setStep(params.step);
+        if (step != null) {
+            eInput.setStep(step);
         }
     }
 
     public getValue(): string | null | undefined {
-        const value = this.formatDate(this.eInput.getDate());
-        if (!_exists(value) && !_exists(this.params.value)) {
-            return this.params.value;
+        const { params, eInput } = this;
+        const value = this.formatDate(eInput.getDate());
+        if (!_exists(value) && !_exists(params.value)) {
+            return params.value;
         }
-        return this.params.parseValue(value ?? '');
+        return params.parseValue(value ?? '');
     }
 
     public getStartValue(): string | null | undefined {
@@ -64,13 +65,7 @@ class DateStringCellEditorInput implements CellEditorInput<string, IDateStringCe
 }
 
 export class DateStringCellEditor extends SimpleCellEditor<string, IDateStringCellEditorParams, AgInputDateField> {
-    private dataTypeSvc?: DataTypeService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.dataTypeSvc = beans.dataTypeSvc;
-    }
-
     constructor() {
-        super(new DateStringCellEditorInput(() => this.dataTypeSvc));
+        super(new DateStringCellEditorInput(() => this.beans.dataTypeSvc));
     }
 }

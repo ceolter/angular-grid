@@ -6,24 +6,34 @@ import { _getRowHeightForNode, _getRowIdCallback } from '../gridOptionsUtils';
 import type { RowPinnedType } from '../interfaces/iRowNode';
 import { _warn } from '../validation/logging';
 
+/**
+ * Cache that maintains record of insertion order
+ *
+ * Allows lookup by key as well as insertion order (which is why we didn't use Map)
+ */
+interface OrderedCache<T extends { id: string | undefined }> {
+    cache: Partial<Record<string, T>>;
+    order: string[];
+}
+
 export class PinnedRowModel extends BeanStub implements NamedBean {
     beanName = 'pinnedRowModel' as const;
 
     private nextId = 0;
-    private pinnedTopRows = new OrderedCache<RowNode>();
-    private pinnedBottomRows = new OrderedCache<RowNode>();
+    private pinnedTopRows: OrderedCache<RowNode> = { cache: {}, order: [] };
+    private pinnedBottomRows: OrderedCache<RowNode> = { cache: {}, order: [] };
 
     public postConstruct(): void {
-        this.setPinnedRowData(this.gos.get('pinnedTopRowData'), 'top');
-        this.setPinnedRowData(this.gos.get('pinnedBottomRowData'), 'bottom');
+        const gos = this.gos;
+        this.setPinnedRowData(gos.get('pinnedTopRowData'), 'top');
+        this.setPinnedRowData(gos.get('pinnedBottomRowData'), 'bottom');
         this.addManagedPropertyListener('pinnedTopRowData', (e) => this.setPinnedRowData(e.currentValue, 'top'));
         this.addManagedPropertyListener('pinnedBottomRowData', (e) => this.setPinnedRowData(e.currentValue, 'bottom'));
         this.addManagedEventListeners({ gridStylesChanged: this.onGridStylesChanges.bind(this) });
     }
 
     public isEmpty(floating: RowPinnedType): boolean {
-        const rows = floating === 'top' ? this.pinnedTopRows : this.pinnedBottomRows;
-        return rows.isEmpty();
+        return this.getCache(floating).order.length === 0;
     }
 
     public isRowsToRender(floating: RowPinnedType): boolean {
@@ -35,8 +45,8 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
             const estimateRowHeight = (rowNode: RowNode) => {
                 rowNode.setRowHeight(rowNode.rowHeight, true);
             };
-            this.pinnedBottomRows.forEach(estimateRowHeight);
-            this.pinnedTopRows.forEach(estimateRowHeight);
+            forEach(this.pinnedBottomRows, estimateRowHeight);
+            forEach(this.pinnedTopRows, estimateRowHeight);
         }
     }
 
@@ -52,9 +62,9 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
                 anyChange = true;
             }
         };
-        this.pinnedBottomRows?.forEach(updateRowHeight);
+        forEach(this.pinnedBottomRows, updateRowHeight);
         rowTop = 0;
-        this.pinnedTopRows?.forEach(updateRowHeight);
+        forEach(this.pinnedTopRows, updateRowHeight);
 
         this.eventSvc.dispatchEvent({
             type: 'pinnedHeightChanged',
@@ -76,10 +86,11 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
      * Setting data as `undefined` will clear row nodes
      */
     private updateNodesFromRowData(allData: any[] | undefined, floating: NonNullable<RowPinnedType>): void {
-        const nodes = floating === 'top' ? this.pinnedTopRows : this.pinnedBottomRows;
+        const nodes = this.getCache(floating);
 
         if (allData === undefined) {
-            nodes.clear();
+            nodes.order.length = 0;
+            nodes.cache = {};
             return;
         }
 
@@ -87,7 +98,7 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
         const idPrefix = floating === 'top' ? ROW_ID_PREFIX_TOP_PINNED : ROW_ID_PREFIX_BOTTOM_PINNED;
 
         // We'll want to remove all nodes that aren't matched to data
-        const nodesToRemove = nodes.getIds();
+        const nodesToRemove = new Set(nodes.order);
 
         // Data that matches based on ID can nonetheless still appear in a different order than before
         const newOrder: string[] = [];
@@ -109,7 +120,7 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
             dataIds.add(id);
             newOrder.push(id);
 
-            const existingNode = nodes.getById(id);
+            const existingNode = getById(nodes, id);
             if (existingNode !== undefined) {
                 if (existingNode.data !== data) {
                     existingNode.setData(data);
@@ -125,16 +136,17 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
                 rowNode.data = data;
                 rowNode.rowPinned = floating;
                 nextRowTop += this.setRowTopAndRowIndex(rowNode, nextRowTop, i);
-                nodes.push(rowNode);
+                nodes.cache[id] = rowNode;
+                nodes.order.push(id);
             }
         }
 
         nodesToRemove.forEach((id) => {
-            nodes.getById(id)?.clearRowTopAndRowIndex();
+            getById(nodes, id)?.clearRowTopAndRowIndex();
+            delete nodes.cache[id];
         });
-        nodes.removeAllById(nodesToRemove);
 
-        nodes.setOrder(newOrder);
+        nodes.order = newOrder;
     }
 
     private setRowTopAndRowIndex(rowNode: RowNode, rowTop: number, rowIndex: number): number {
@@ -145,111 +157,77 @@ export class PinnedRowModel extends BeanStub implements NamedBean {
     }
 
     public getPinnedTopTotalHeight(): number {
-        return this.getTotalHeight(this.pinnedTopRows);
+        return getTotalHeight(this.pinnedTopRows);
     }
 
     public getPinnedBottomTotalHeight(): number {
-        return this.getTotalHeight(this.pinnedBottomRows);
+        return getTotalHeight(this.pinnedBottomRows);
     }
 
     public getPinnedTopRowCount(): number {
-        return this.pinnedTopRows.getSize();
+        return getSize(this.pinnedTopRows);
     }
 
     public getPinnedBottomRowCount(): number {
-        return this.pinnedBottomRows.getSize();
+        return getSize(this.pinnedBottomRows);
     }
 
     public getPinnedTopRow(index: number): RowNode | undefined {
-        return this.pinnedTopRows.getByIndex(index);
+        return getByIndex(this.pinnedTopRows, index);
     }
 
     public getPinnedBottomRow(index: number): RowNode | undefined {
-        return this.pinnedBottomRows.getByIndex(index);
+        return getByIndex(this.pinnedBottomRows, index);
     }
 
     public getPinnedRowById(id: string, floating: NonNullable<RowPinnedType>): RowNode | undefined {
-        return floating === 'top' ? this.pinnedTopRows.getById(id) : this.pinnedBottomRows.getById(id);
+        return getById(this.getCache(floating), id);
     }
 
     public forEachPinnedRow(
         floating: NonNullable<RowPinnedType>,
         callback: (node: RowNode, index: number) => void
     ): void {
-        return floating === 'top' ? this.pinnedTopRows.forEach(callback) : this.pinnedBottomRows.forEach(callback);
+        return forEach(this.getCache(floating), callback);
     }
 
-    private getTotalHeight(rowNodes: OrderedCache<RowNode>): number {
-        const size = rowNodes.getSize();
-        if (size === 0) {
-            return 0;
-        }
-
-        const node = rowNodes.getByIndex(size - 1);
-        if (node === undefined) {
-            return 0;
-        }
-
-        return node.rowTop! + node.rowHeight!;
+    private getCache(floating: RowPinnedType): OrderedCache<RowNode> {
+        return floating === 'top' ? this.pinnedTopRows : this.pinnedBottomRows;
     }
 }
 
-/**
- * Cache that maintains record of insertion order
- *
- * Allows lookup by key as well as insertion order (which is why we didn't use Map)
- */
-class OrderedCache<T extends { id: string | undefined }> {
-    private cache: Partial<Record<string, T>> = {};
-    private ordering: string[] = [];
-
-    public getById(id: string): T | undefined {
-        return this.cache[id];
+function getTotalHeight(rowNodes: OrderedCache<RowNode>): number {
+    const size = getSize(rowNodes);
+    if (size === 0) {
+        return 0;
     }
 
-    public getByIndex(i: number): T | undefined {
-        const id = this.ordering[i];
-        return this.cache[id];
+    const node = getByIndex(rowNodes, size - 1);
+    if (node === undefined) {
+        return 0;
     }
 
-    public push(item: T): void {
-        this.cache[item.id!] = item;
-        this.ordering.push(item.id!);
-    }
+    return node.rowTop! + node.rowHeight!;
+}
 
-    public removeAllById(ids: Set<string>): void {
-        for (const id of ids) {
-            delete this.cache[id];
-        }
+function getById<T extends { id: string | undefined }>(cache: OrderedCache<T>, id: string): T | undefined {
+    return cache.cache[id];
+}
 
-        this.ordering = this.ordering.filter((id) => !ids.has(id));
-    }
+function getByIndex<T extends { id: string | undefined }>(cache: OrderedCache<T>, i: number): T | undefined {
+    return getById(cache, cache.order[i]);
+}
 
-    public setOrder(orderedIds: string[]): void {
-        this.ordering = orderedIds;
-    }
+function forEach<T extends { id: string | undefined }>(
+    cache: OrderedCache<T>,
+    callback: (item: T, index: number) => void
+): void {
+    cache.order.forEach((id, index) => {
+        const node = getById(cache, id);
+        node && callback(node, index);
+    });
+}
 
-    public forEach(callback: (item: T, index: number) => void): void {
-        this.ordering.forEach((id, index) => {
-            const node = this.cache[id];
-            node && callback(node, index);
-        });
-    }
-
-    public clear(): void {
-        this.ordering.length = 0;
-        this.cache = {};
-    }
-
-    public isEmpty(): boolean {
-        return this.ordering.length === 0;
-    }
-
-    public getSize(): number {
-        return this.ordering.length;
-    }
-
-    public getIds(): Set<string> {
-        return new Set(this.ordering);
-    }
+function getSize<T extends { id: string | undefined }>(cache: OrderedCache<T>): number {
+    return cache.order.length;
 }

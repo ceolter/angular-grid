@@ -51,8 +51,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     private ariaAnnounce?: AriaAnnouncementService;
     private registry: Registry;
 
-    public override wireBeans(beans: BeanCollection) {
-        super.wireBeans(beans);
+    public wireBeans(beans: BeanCollection) {
         this.userCompFactory = beans.userCompFactory;
         this.ariaAnnounce = beans.ariaAnnounce;
         this.registry = beans.registry;

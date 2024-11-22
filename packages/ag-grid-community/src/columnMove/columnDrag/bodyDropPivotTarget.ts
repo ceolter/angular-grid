@@ -1,31 +1,16 @@
 import { BeanStub } from '../../context/beanStub';
-import type { BeanCollection } from '../../context/context';
 import type { DragAndDropIcon, DraggingEvent } from '../../dragAndDrop/dragAndDropService';
 import type { AgColumn } from '../../entities/agColumn';
-import type { IColsService } from '../../interfaces/iColsService';
 import type { ColumnPinnedType } from '../../interfaces/iColumn';
 import type { DropListener } from './bodyDropTarget';
 
 export class BodyDropPivotTarget extends BeanStub implements DropListener {
-    private rowGroupColsSvc?: IColsService;
-    private pivotColsSvc?: IColsService;
-    private valueColsSvc?: IColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.pivotColsSvc = beans.pivotColsSvc;
-        this.valueColsSvc = beans.valueColsSvc;
-    }
-
     private columnsToAggregate: AgColumn[] = [];
     private columnsToGroup: AgColumn[] = [];
     private columnsToPivot: AgColumn[] = [];
 
-    private pinned: ColumnPinnedType;
-
-    constructor(pinned: ColumnPinnedType) {
+    constructor(private readonly pinned: ColumnPinnedType) {
         super();
-        this.pinned = pinned;
     }
 
     /** Callback for when drag enters */
@@ -92,14 +77,15 @@ export class BodyDropPivotTarget extends BeanStub implements DropListener {
     /** Callback for when drag stops */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onDragStop(draggingEvent: DraggingEvent): void {
+        const { valueColsSvc, rowGroupColsSvc, pivotColsSvc } = this.beans;
         if (this.columnsToAggregate.length > 0) {
-            this.valueColsSvc?.addColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
+            valueColsSvc?.addColumns(this.columnsToAggregate, 'toolPanelDragAndDrop');
         }
         if (this.columnsToGroup.length > 0) {
-            this.rowGroupColsSvc?.addColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
+            rowGroupColsSvc?.addColumns(this.columnsToGroup, 'toolPanelDragAndDrop');
         }
         if (this.columnsToPivot.length > 0) {
-            this.pivotColsSvc?.addColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
+            pivotColsSvc?.addColumns(this.columnsToPivot, 'toolPanelDragAndDrop');
         }
     }
 

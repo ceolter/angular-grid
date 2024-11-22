@@ -1,6 +1,6 @@
-import { _error, _warn } from '../validation/logging';
-import type { Part, PartImpl } from './Part';
-import { createPart } from './Part';
+import { _error, _logPreCreationError, _warn } from '../validation/logging';
+import type { Part } from './Part';
+import { PartImpl, createPart } from './Part';
 import type { CoreParams } from './core/core-css';
 import { coreDefaults } from './core/core-css';
 import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './inject';
@@ -48,7 +48,12 @@ export class ThemeImpl {
 
     withPart(part: Part | (() => Part)): ThemeImpl {
         if (typeof part === 'function') part = part();
-        return new ThemeImpl([...this.parts, part as PartImpl]);
+        if (!(part instanceof PartImpl)) {
+            // Can't use validation service as this is API is designed to be used before modules are registered
+            _logPreCreationError(259, { part }, 'Invalid part');
+            return this;
+        }
+        return new ThemeImpl([...this.parts, part]);
     }
 
     withParams(params: WithParamTypes<unknown>, mode = 'default'): ThemeImpl {
@@ -85,7 +90,7 @@ export class ThemeImpl {
         }
 
         for (const part of this.parts) {
-            (part as PartImpl).use(container);
+            part.use(container);
         }
     }
 

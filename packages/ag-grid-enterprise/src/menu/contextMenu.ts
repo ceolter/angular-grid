@@ -56,7 +56,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     private focusSvc: FocusService;
     private valueSvc: ValueService;
     private rowRenderer: RowRenderer;
-    private ariaAnnounce?: AriaAnnouncementService;
+    private ariaAnnounce: AriaAnnouncementService;
     private destroyLoadingSpinner: (() => void) | null = null;
     private lastPromise: number = 0;
 
@@ -67,6 +67,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         this.focusSvc = beans.focusSvc;
         this.valueSvc = beans.valueSvc;
         this.rowRenderer = beans.rowRenderer;
+        this.ariaAnnounce = beans.ariaAnnounce;
     }
 
     private activeMenu: ContextMenu | null;

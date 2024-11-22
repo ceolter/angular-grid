@@ -553,6 +553,8 @@ export const AG_GRID_ERRORS = {
     256: () => 'Unable to initialise. See validation error, or load ValidationModule if missing.' as const,
     257: () => missingChartsWithModule('IntegratedChartsModule'),
     258: () => missingChartsWithModule('SparklinesModule'),
+    259: ({ part }: { part: any }) =>
+        `the argument to theme.withPart must be a Theming API part object, received: ${part}` as const,
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

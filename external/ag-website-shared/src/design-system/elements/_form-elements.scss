@@ -84,7 +84,6 @@ input[type='number'] {
             border-color: var(--color-input-border-hover);
         }
 
-        &:focus:not(:disabled):not([readonly]),
         &:focus-visible:not(:disabled):not([readonly]) {
             box-shadow:
                 0 0 0 $spacing-size-1 var(--color-input-shadow-focus),
@@ -110,7 +109,6 @@ input[type='radio']#{$selector-exclude-grid} {
     height: $spacing-size-5;
     outline: none;
 
-    &:focus:not(:disabled):not([readonly]),
     &:focus-visible:not(:disabled):not([readonly]) {
         box-shadow: 0 0 0 $spacing-size-1 var(--color-input-shadow-focus);
     }

@@ -1,14 +1,11 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import { AgColumn } from '../entities/agColumn';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
-import type { IAutoColService } from '../interfaces/iAutoColService';
-import type { ColumnGroupService } from './columnGroups/columnGroupService';
-import type { ColKey, ColumnCollections, ColumnModel } from './columnModel';
+import type { ColKey, ColumnCollections } from './columnModel';
 import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
     _areColIdsEqual,
@@ -18,26 +15,13 @@ import {
     _updateColsMap,
     isColumnSelectionCol,
 } from './columnUtils';
-import type { VisibleColsService } from './visibleColsService';
 
 export const CONTROLS_COLUMN_ID_PREFIX = 'ag-Grid-SelectionColumn' as const;
 
 export class SelectionColService extends BeanStub implements NamedBean {
     beanName = 'selectionColSvc' as const;
 
-    private colGroupSvc?: ColumnGroupService;
-    private autoColSvc?: IAutoColService;
-    private colModel: ColumnModel;
-    private visibleCols: VisibleColsService;
-    // selection checkbox columns
     public selectionCols: ColumnCollections | null;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colGroupSvc = beans.colGroupSvc;
-        this.autoColSvc = beans.autoColSvc;
-        this.colModel = beans.colModel;
-        this.visibleCols = beans.visibleCols;
-    }
 
     public postConstruct(): void {
         this.addManagedPropertyListener('rowSelection', (event) => {
@@ -50,11 +34,12 @@ export class SelectionColService extends BeanStub implements NamedBean {
     }
 
     public addSelectionCols(cols: ColumnCollections): void {
-        if (this.selectionCols == null) {
+        const selectionCols = this.selectionCols;
+        if (selectionCols == null) {
             return;
         }
-        cols.list = this.selectionCols.list.concat(cols.list);
-        cols.tree = this.selectionCols.tree.concat(cols.tree);
+        cols.list = selectionCols.list.concat(cols.list);
+        cols.tree = selectionCols.tree.concat(cols.tree);
         _updateColsMap(cols);
     }
 
@@ -80,7 +65,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
 
         destroyCollection();
-        const { colGroupSvc } = this;
+        const { colGroupSvc } = this.beans;
         const treeDepth = colGroupSvc?.findDepth(cols.tree) ?? 0;
         const tree = colGroupSvc?.balanceTreeForAutoCols(list, treeDepth) ?? [];
         this.selectionCols = {
@@ -124,8 +109,9 @@ export class SelectionColService extends BeanStub implements NamedBean {
             return [];
         }
 
-        const selectionColumnDef = this.gos.get('selectionColumnDef');
-        const enableRTL = this.gos.get('enableRtl');
+        const gos = this.gos;
+        const selectionColumnDef = gos.get('selectionColumnDef');
+        const enableRTL = gos.get('enableRtl');
         const colDef: ColDef = {
             // overridable properties
             width: 50,
@@ -186,7 +172,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         const locationChanged = currLocation !== prevLocation;
 
         if (checkboxHasChanged || headerCheckboxHasChanged || locationChanged) {
-            this.colModel.refreshAll(source);
+            this.beans.colModel.refreshAll(source);
         }
     }
 
@@ -200,7 +186,8 @@ export class SelectionColService extends BeanStub implements NamedBean {
             return;
         }
 
-        const visibleColumns = this.visibleCols.getAllTrees() ?? [];
+        const beans = this.beans;
+        const visibleColumns = beans.visibleCols.getAllTrees() ?? [];
 
         if (visibleColumns.length === 0) {
             return;
@@ -214,18 +201,18 @@ export class SelectionColService extends BeanStub implements NamedBean {
                 return;
             }
 
-            _applyColumnState(this.beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
+            _applyColumnState(beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
 
             return;
         }
 
         // case 2: multiple columns showing -- none are selection column
         if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
-            const existingState = _getColumnState(this.beans).find((state) => isColumnSelectionCol(state.colId));
+            const existingState = _getColumnState(beans).find((state) => isColumnSelectionCol(state.colId));
 
             if (existingState) {
                 _applyColumnState(
-                    this.beans,
+                    beans,
                     {
                         state: [{ colId: existingState.colId, hide: !existingState.hide }],
                     },

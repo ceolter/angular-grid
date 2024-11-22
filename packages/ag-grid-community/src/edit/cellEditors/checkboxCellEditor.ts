@@ -23,14 +23,15 @@ export class CheckboxCellEditor extends PopupComponent implements ICellEditorCom
         this.params = params;
         const isSelected = params.value ?? undefined;
 
-        this.eCheckbox.setValue(isSelected);
+        const eCheckbox = this.eCheckbox;
+        eCheckbox.setValue(isSelected);
 
-        const inputEl = this.eCheckbox.getInputElement();
+        const inputEl = eCheckbox.getInputElement();
         inputEl.setAttribute('tabindex', '-1');
 
         this.setAriaLabel(isSelected);
 
-        this.addManagedListeners(this.eCheckbox, {
+        this.addManagedListeners(eCheckbox, {
             fieldValueChanged: (event: { selected?: boolean }) => this.setAriaLabel(event.selected),
         });
     }

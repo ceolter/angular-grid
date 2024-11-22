@@ -251,7 +251,7 @@ export class Environment extends BeanStub implements NamedBean {
             if (themeOrDefault instanceof ThemeImpl) {
                 newGridTheme = themeOrDefault;
             } else {
-                _error(240, { theme: newGridTheme });
+                _error(240, { theme: themeOrDefault });
             }
         }
         if (newGridTheme !== oldGridTheme) {

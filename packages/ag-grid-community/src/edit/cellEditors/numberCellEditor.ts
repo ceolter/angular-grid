@@ -21,17 +21,18 @@ class NumberCellEditorInput implements CellEditorInput<number, INumberCellEditor
     public init(eInput: AgInputNumberField, params: INumberCellEditorParams): void {
         this.eInput = eInput;
         this.params = params;
-        if (params.max != null) {
-            eInput.setMax(params.max);
+        const { max, min, precision, step } = params;
+        if (max != null) {
+            eInput.setMax(max);
         }
-        if (params.min != null) {
-            eInput.setMin(params.min);
+        if (min != null) {
+            eInput.setMin(min);
         }
-        if (params.precision != null) {
-            eInput.setPrecision(params.precision);
+        if (precision != null) {
+            eInput.setPrecision(precision);
         }
-        if (params.step != null) {
-            eInput.setStep(params.step);
+        if (step != null) {
+            eInput.setStep(step);
         }
 
         const inputEl = eInput.getInputElement();
@@ -49,11 +50,12 @@ class NumberCellEditorInput implements CellEditorInput<number, INumberCellEditor
     }
 
     public getValue(): number | null | undefined {
-        const value = this.eInput.getValue();
-        if (!_exists(value) && !_exists(this.params.value)) {
-            return this.params.value;
+        const { eInput, params } = this;
+        const value = eInput.getValue();
+        if (!_exists(value) && !_exists(params.value)) {
+            return params.value;
         }
-        let parsedValue = this.params.parseValue(value!);
+        let parsedValue = params.parseValue(value!);
         if (parsedValue == null) {
             return parsedValue;
         }

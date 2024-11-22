@@ -35,7 +35,7 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                 field: 'ticker',
                 cellRenderer: TickerCellRenderer,
             },
-            { field: 'performance', type: 'gauge' },
+            { field: 'performance', type: 'rightAligned' },
             { field: 'current', type: 'rightAligned' },
             { field: 'feb', type: 'rightAligned' },
         ],
@@ -54,15 +54,14 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
     const rowData = [
         {
             ticker: 'US10Y',
-            performance: [98149, 78675],
+            performance: 93521,
             current: 98149,
             feb: 78675,
-            change: [0.75, -0.71, -0.35, 0.24, 0.54, 0.28, 0.36],
         },
-        { ticker: 'TSLA', performance: [97121, 21462], current: 97121, feb: 21462 },
-        { ticker: 'AMZN', performance: [96528, 79786], current: 96528, feb: 79786 },
-        { ticker: 'UBER', performance: [94390, 33186], current: 94390, feb: 33186 },
-        { ticker: 'JP10Y', performance: [94074, 19321], current: 94074, feb: 19321 },
+        { ticker: 'TSLA', performance: 97121, current: 97121, feb: 21462 },
+        { ticker: 'AMZN', performance: 96528, current: 96528, feb: 79786 },
+        { ticker: 'UBER', performance: 94390, current: 94390, feb: 33186 },
+        { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
     ];
 
     const handleThemeChange = (newTheme: typeof themeQuartz | typeof themeBalham | typeof themeAlpine) => {

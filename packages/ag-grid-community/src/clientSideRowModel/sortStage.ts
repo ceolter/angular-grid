@@ -1,24 +1,22 @@
-import type { ColumnModel } from '../columns/columnModel';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
-import type { IColsService } from '../interfaces/iColsService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { SortOption } from '../interfaces/iSortOption';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
-import type { SortService } from '../sort/sortService';
-import type { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
 import type { RefreshModelState } from './refreshModelState';
 
-function updateChildIndexes(rowNode: RowNode): void {
+export function updateRowNodeAfterSort(rowNode: RowNode): void {
+    if (rowNode.sibling) {
+        rowNode.sibling.childrenAfterSort = rowNode.childrenAfterSort;
+    }
+
     if (_missing(rowNode.childrenAfterSort)) {
         return;
     }
@@ -40,38 +38,27 @@ function updateChildIndexes(rowNode: RowNode): void {
     }
 }
 
-export function updateRowNodeAfterSort(rowNode: RowNode): void {
-    if (rowNode.sibling) {
-        rowNode.sibling.childrenAfterSort = rowNode.childrenAfterSort;
-    }
-
-    updateChildIndexes(rowNode);
-}
-
 export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
     beanName = 'sortStage' as const;
 
     public refreshProps: Set<keyof GridOptions<any>> = new Set(['postSortRows', 'groupDisplayType', 'accentedSort']);
     public step: ClientSideRowModelStage = 'sort';
 
-    private sortSvc: SortService;
-    private colModel: ColumnModel;
-    private rowGroupColsSvc?: IColsService;
-    private rowNodeSorter: RowNodeSorter;
-    private groupHideOpenParentsSvc?: IGroupHideOpenParentsService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.sortSvc = beans.sortSvc!;
-        this.colModel = beans.colModel;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-        this.rowNodeSorter = beans.rowNodeSorter!;
-        this.groupHideOpenParentsSvc = beans.groupHideOpenParentsSvc;
-    }
-
     public execute(state: RefreshModelState): void {
-        const sortOptions: SortOption[] = this.sortSvc.getSortOptions();
+        const beans = this.beans;
+        const { gos, sortSvc, colModel, rowGroupColsSvc, groupHideOpenParentsSvc, rowNodeSorter } = beans;
+        const sortOptions: SortOption[] = sortSvc!.getSortOptions();
 
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
+
+        const sortContainsGroupColumns = sortOptions.some(({ column }) => {
+            const isSortingCoupled = _isColumnsSortingCoupledToGroup(beans.gos);
+            if (isSortingCoupled) {
+                return column.isPrimary() && column.isRowGroupActive();
+            }
+            return !!column.getColDef().showRowGroup;
+        });
+
         const deltaSort =
             sortActive &&
             state.changedPath.active &&
@@ -81,32 +68,15 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             // rolling out to everyone.
             this.gos.get('deltaSort');
 
-        const sortContainsGroupColumns = sortOptions.some((opt) => {
-            const isSortingCoupled = _isColumnsSortingCoupledToGroup(this.gos);
-            if (isSortingCoupled) {
-                return opt.column.isPrimary() && opt.column.isRowGroupActive();
-            }
-            return !!opt.column.getColDef().showRowGroup;
-        });
-        this.sort(sortOptions, sortActive, deltaSort, state, sortContainsGroupColumns);
-    }
+        const groupMaintainOrder = gos.get('groupMaintainOrder');
+        const groupColumnsPresent = colModel.getCols().some((c) => c.isRowGroupActive());
 
-    private sort(
-        sortOptions: SortOption[],
-        sortActive: boolean,
-        useDeltaSort: boolean,
-        refreshModelState: RefreshModelState,
-        sortContainsGroupColumns: boolean
-    ): void {
-        const groupMaintainOrder = this.gos.get('groupMaintainOrder');
-        const groupColumnsPresent = this.colModel.getCols().some((c) => c.isRowGroupActive());
-
-        const isPivotMode = this.colModel.isPivotMode();
-        const postSortFunc = this.gos.getCallback('postSortRows');
+        const isPivotMode = colModel.isPivotMode();
+        const postSortFunc = gos.getCallback('postSortRows');
 
         const callback = (rowNode: RowNode) => {
             // we clear out the 'pull down open parents' first, as the values mix up the sorting
-            this.groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
+            groupHideOpenParentsSvc?.pullDownGroupDataForHideOpenParents(rowNode.childrenAfterAggFilter, true);
 
             // It's pointless to sort rows which aren't being displayed. in pivot mode we don't need to sort the leaf group children.
             const skipSortingPivotLeafs = isPivotMode && rowNode.leafGroup;
@@ -116,8 +86,9 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             // are going to inspect the original array position. This is what sortedRowNodes is for.
             const skipSortingGroups =
                 groupMaintainOrder && groupColumnsPresent && !rowNode.leafGroup && !sortContainsGroupColumns;
+            let newChildrenAfterSort: RowNode[];
             if (skipSortingGroups) {
-                const nextGroup = this.rowGroupColsSvc?.columns?.[rowNode.level + 1];
+                const nextGroup = rowGroupColsSvc?.columns?.[rowNode.level + 1];
                 // if the sort is null, then sort was explicitly removed, so remove sort from this group.
                 const wasSortExplicitlyRemoved = nextGroup?.getSort() === null;
 
@@ -131,20 +102,16 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
                         (row1, row2) => (indexedOrders[row1.id!] ?? 0) - (indexedOrders[row2.id!] ?? 0)
                     );
                 }
-                rowNode.childrenAfterSort = childrenToBeSorted;
+                newChildrenAfterSort = childrenToBeSorted;
             } else if (!sortActive || skipSortingPivotLeafs) {
                 // if there's no sort to make, skip this step
-                rowNode.childrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-            } else if (useDeltaSort) {
-                rowNode.childrenAfterSort = this.doDeltaSort(
-                    rowNode,
-                    refreshModelState!,
-                    refreshModelState.changedPath,
-                    sortOptions
-                );
+                newChildrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
+            } else if (deltaSort) {
+                newChildrenAfterSort = doDeltaSort(rowNodeSorter!, rowNode, state, sortOptions);
             } else {
-                rowNode.childrenAfterSort = this.rowNodeSorter.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
+                newChildrenAfterSort = rowNodeSorter!.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
             }
+            rowNode.childrenAfterSort = newChildrenAfterSort;
 
             updateRowNodeAfterSort(rowNode);
 
@@ -154,84 +121,89 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
         };
 
-        refreshModelState.changedPath.forEachChangedNodeDepthFirst(callback);
+        state.changedPath.forEachChangedNodeDepthFirst(callback);
+    }
+}
+
+function doDeltaSort(
+    rowNodeSorter: RowNodeSorter,
+    rowNode: RowNode,
+    state: RefreshModelState,
+    sortOptions: SortOption[]
+): RowNode[] {
+    const unsortedRows = rowNode.childrenAfterAggFilter!;
+    const oldSortedRows = rowNode.childrenAfterSort;
+    if (!oldSortedRows) {
+        return rowNodeSorter.doFullSort(unsortedRows, sortOptions);
     }
 
-    private doDeltaSort(
-        rowNode: RowNode,
-        refreshModelState: RefreshModelState,
-        changedPath: ChangedPath | undefined,
-        sortOptions: SortOption[]
-    ): RowNode[] {
-        const unsortedRows = rowNode.childrenAfterAggFilter!;
-        const oldSortedRows = rowNode.childrenAfterSort;
-        if (!oldSortedRows) {
-            return this.rowNodeSorter.doFullSort(unsortedRows, sortOptions);
+    const untouchedRows = new Set<string>();
+    const touchedRows: SortedRowNode[] = [];
+
+    const updates = state.updates;
+    const changedPath = state.changedPath;
+    for (let i = 0, len = unsortedRows.length; i < len; ++i) {
+        const row = unsortedRows[i];
+        if (updates.has(row) || !changedPath.canSkip(row)) {
+            touchedRows.push({
+                currentPos: touchedRows.length,
+                rowNode: row,
+            });
+        } else {
+            untouchedRows.add(row.id!);
         }
-
-        const untouchedRows = new Set<string>();
-        const touchedRows: SortedRowNode[] = [];
-
-        const updates = refreshModelState.updates;
-        for (let i = 0, len = unsortedRows.length; i < len; ++i) {
-            const row = unsortedRows[i];
-            if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
-                touchedRows.push({
-                    currentPos: touchedRows.length,
-                    rowNode: row,
-                });
-            } else {
-                untouchedRows.add(row.id!);
-            }
-        }
-
-        const sortedUntouchedRows = oldSortedRows
-            .filter((child) => untouchedRows.has(child.id!))
-            .map((rowNode: RowNode, currentPos: number): SortedRowNode => ({ currentPos, rowNode }));
-
-        touchedRows.sort((a, b) => this.rowNodeSorter.compareRowNodes(sortOptions, a, b));
-
-        return this.mergeSortedArrays(sortOptions, touchedRows, sortedUntouchedRows);
     }
 
-    // Merge two sorted arrays into each other
-    private mergeSortedArrays(sortOptions: SortOption[], arr1: SortedRowNode[], arr2: SortedRowNode[]): RowNode[] {
-        const res: RowNode[] = [];
-        let i = 0;
-        let j = 0;
-        const arr1Length = arr1.length;
-        const arr2Length = arr2.length;
-        const rowNodeSorter = this.rowNodeSorter;
+    const sortedUntouchedRows = oldSortedRows
+        .filter((child) => untouchedRows.has(child.id!))
+        .map((rowNode: RowNode, currentPos: number): SortedRowNode => ({ currentPos, rowNode }));
 
-        // Traverse both array, adding them in order
-        while (i < arr1Length && j < arr2Length) {
-            const a = arr1[i];
-            const b = arr2[j];
-            // Check if current element of first array is smaller than current element
-            // of second array. If yes, store first array element and increment first array index.
-            // Otherwise do same with second array
-            const compareResult = rowNodeSorter.compareRowNodes(sortOptions, a, b);
-            let chosen: SortedRowNode;
-            if (compareResult < 0) {
-                chosen = a;
-                ++i;
-            } else {
-                chosen = b;
-                ++j;
-            }
-            res.push(chosen.rowNode);
+    touchedRows.sort((a, b) => rowNodeSorter.compareRowNodes(sortOptions, a, b));
+
+    return mergeSortedArrays(rowNodeSorter, sortOptions, touchedRows, sortedUntouchedRows);
+}
+
+// Merge two sorted arrays into each other
+function mergeSortedArrays(
+    rowNodeSorter: RowNodeSorter,
+    sortOptions: SortOption[],
+    arr1: SortedRowNode[],
+    arr2: SortedRowNode[]
+): RowNode[] {
+    const res: RowNode[] = [];
+    let i = 0;
+    let j = 0;
+    const arr1Length = arr1.length;
+    const arr2Length = arr2.length;
+
+    // Traverse both array, adding them in order
+    while (i < arr1Length && j < arr2Length) {
+        const a = arr1[i];
+        const b = arr2[j];
+        // Check if current element of first array is smaller than current element
+        // of second array. If yes, store first array element and increment first array index.
+        // Otherwise do same with second array
+        const compareResult = rowNodeSorter.compareRowNodes(sortOptions, a, b);
+        let chosen: SortedRowNode;
+        if (compareResult < 0) {
+            chosen = a;
+            ++i;
+        } else {
+            chosen = b;
+            ++j;
         }
-
-        // add remaining from arr1
-        while (i < arr1Length) {
-            res.push(arr1[i++].rowNode);
-        }
-
-        // add remaining from arr2
-        while (j < arr2Length) {
-            res.push(arr2[j++].rowNode);
-        }
-
-        return res;
+        res.push(chosen.rowNode);
     }
+
+    // add remaining from arr1
+    while (i < arr1Length) {
+        res.push(arr1[i++].rowNode);
+    }
+
+    // add remaining from arr2
+    while (j < arr2Length) {
+        res.push(arr2[j++].rowNode);
+    }
+
+    return res;
 }

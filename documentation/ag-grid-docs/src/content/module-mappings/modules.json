@@ -44,6 +44,7 @@
         },
         {
             "name": "Cells",
+            "path": "cell-content",
             "children": [
                 {
                     "moduleName": "CellStyleModule",
@@ -61,6 +62,7 @@
         },
         {
             "name": "Filtering",
+            "path": "filtering-overview",
             "children": [
                 {
                     "name": "Column Filters",
@@ -110,6 +112,7 @@
         },
         {
             "name": "Selection",
+            "path": "row-selection",
             "children": [
                 {
                     "moduleName": "RowSelectionModule",
@@ -124,6 +127,7 @@
         },
         {
             "name": "Editing",
+            "path": "cell-editing",
             "children": [
                 {
                     "name": "Provided Cell Editors",
@@ -179,7 +183,8 @@
             ]
         },
         {
-            "name": "Row Grouping ",
+            "name": "Row Grouping",
+            "path": "grouping",
             "children": [
                 {
                     "moduleName": "RowGroupingModule",
@@ -298,6 +303,7 @@
         },
         {
             "name": "API",
+            "path": "reference",
             "children": [
                 {
                     "moduleName": "GridStateModule",

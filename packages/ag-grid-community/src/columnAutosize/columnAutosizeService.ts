@@ -1,20 +1,13 @@
 import { dispatchColumnResizedEvent } from '../columns/columnEventUtils';
-import type { ColKey, ColumnModel, Maybe } from '../columns/columnModel';
+import type { ColKey, Maybe } from '../columns/columnModel';
 import { getWidthOfColsInList } from '../columns/columnUtils';
-import type { VisibleColsService } from '../columns/visibleColsService';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
-import type { CtrlsService } from '../ctrlsService';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColumnEventType } from '../events';
-import type { ScrollVisibleService } from '../gridBodyComp/scrollVisibleService';
 import type { HeaderGroupCellCtrl } from '../headerRendering/cells/columnGroup/headerGroupCellCtrl';
 import type { IColumnLimit, ISizeColumnsToFitParams } from '../interfaces/autoSize';
-import type { IRenderStatusService } from '../interfaces/renderStatusService';
-import type { AnimationFrameService } from '../misc/animationFrameService';
-import type { AutoWidthCalculator } from '../rendering/autoWidthCalculator';
 import { _removeFromArray } from '../utils/array';
 import { _getInnerWidth } from '../utils/dom';
 import { _warn } from '../validation/logging';
@@ -23,29 +16,11 @@ import { TouchListener } from '../widgets/touchListener';
 export class ColumnAutosizeService extends BeanStub implements NamedBean {
     beanName = 'colAutosize' as const;
 
-    private colModel: ColumnModel;
-    private visibleCols: VisibleColsService;
-    private animationFrameSvc?: AnimationFrameService;
-    private autoWidthCalc: AutoWidthCalculator;
-    private ctrlsSvc: CtrlsService;
-    private renderStatus?: IRenderStatusService;
-    private scrollVisibleSvc: ScrollVisibleService;
-
     private timesDelayed = 0;
 
     // when we're waiting for cell data types to be inferred, we need to defer column resizing
     public shouldQueueResizeOperations: boolean = false;
     private resizeOperationQueue: (() => void)[] = [];
-
-    public wireBeans(beans: BeanCollection): void {
-        this.colModel = beans.colModel;
-        this.visibleCols = beans.visibleCols;
-        this.animationFrameSvc = beans.animationFrameSvc;
-        this.autoWidthCalc = beans.autoWidthCalc!;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.renderStatus = beans.renderStatus;
-        this.scrollVisibleSvc = beans.scrollVisibleSvc;
-    }
 
     public postConstruct(): void {
         this.addManagedEventListeners({ firstDataRendered: () => this.onFirstDataRendered() });
@@ -72,12 +47,14 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         // the LHS sized, but RHS no. so we keep looping through the visible columns until
         // no more cols are available (rendered) to be resized
 
+        const { animationFrameSvc, renderStatus, colModel, autoWidthCalc, visibleCols } = this.beans;
+
         // we autosize after animation frames finish in case any cell renderers need to complete first. this can
         // happen eg if client code is calling api.autoSizeAllColumns() straight after grid is initialised, but grid
         // hasn't fully drawn out all the cells yet (due to cell renderers in animation frames).
-        this.animationFrameSvc?.flushAllFrames();
+        animationFrameSvc?.flushAllFrames();
 
-        if (this.timesDelayed < 5 && this.renderStatus && !this.renderStatus.areHeaderCellsRendered()) {
+        if (this.timesDelayed < 5 && renderStatus && !renderStatus.areHeaderCellsRendered()) {
             // This is needed for React, as it doesn't render the headers synchronously all the time.
             // Added a defensive check to avoid infinite loop in case headers are never rendered.
             this.timesDelayed++;
@@ -107,7 +84,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                 if (!key) {
                     return;
                 }
-                const column = this.colModel.getCol(key);
+                const column = colModel.getCol(key);
                 if (!column) {
                     return;
                 }
@@ -118,11 +95,11 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                 }
 
                 // get how wide this col should be
-                const preferredWidth = this.autoWidthCalc.getPreferredWidthForColumn(column, shouldSkipHeader);
+                const preferredWidth = autoWidthCalc!.getPreferredWidthForColumn(column, shouldSkipHeader);
 
                 // preferredWidth = -1 if this col is not on the screen
                 if (preferredWidth > 0) {
-                    const newWidth = this.normaliseColumnWidth(column, preferredWidth);
+                    const newWidth = normaliseColumnWidth(column, preferredWidth);
                     column.setActualWidth(newWidth, source);
                     columnsAutosized.push(column);
                     changesThisTimeAround++;
@@ -135,7 +112,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                 continue;
             }
 
-            this.visibleCols.refresh(source);
+            visibleCols.refresh(source);
         }
 
         if (!shouldSkipHeaderGroups) {
@@ -156,8 +133,9 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         source: ColumnEventType,
         stopAtGroup?: AgColumnGroup
     ): AgColumn[] {
+        const { colModel, ctrlsSvc } = this.beans;
         const columnGroups: Set<AgColumnGroup> = new Set();
-        const columns = this.colModel.getColsForKeys(keys);
+        const columns = colModel.getColsForKeys(keys);
 
         columns.forEach((col) => {
             let parent: AgColumnGroup | null = col.getParent();
@@ -174,7 +152,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         const resizedColumns: AgColumn[] = [];
 
         for (const columnGroup of columnGroups) {
-            for (const headerContainerCtrl of this.ctrlsSvc.getHeaderRowContainerCtrls()) {
+            for (const headerContainerCtrl of ctrlsSvc.getHeaderRowContainerCtrls()) {
                 headerGroupCtrl = headerContainerCtrl.getHeaderCtrlForColumn(columnGroup) as
                     | HeaderGroupCellCtrl
                     | undefined;
@@ -196,7 +174,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
             return;
         }
 
-        const allDisplayedColumns = this.visibleCols.allCols;
+        const allDisplayedColumns = this.beans.visibleCols.allCols;
         this.autoSizeCols({ colKeys: allDisplayedColumns, skipHeader, source });
     }
 
@@ -257,9 +235,10 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
             return;
         }
 
-        const gridBodyCtrl = this.ctrlsSvc.getGridBodyCtrl();
+        const { ctrlsSvc, scrollVisibleSvc } = this.beans;
+        const gridBodyCtrl = ctrlsSvc.getGridBodyCtrl();
         const removeScrollWidth = gridBodyCtrl.isVerticalScrollShowing();
-        const scrollWidthToRemove = removeScrollWidth ? this.scrollVisibleSvc.getScrollbarWidth() : 0;
+        const scrollWidthToRemove = removeScrollWidth ? scrollVisibleSvc.getScrollbarWidth() : 0;
         // bodyViewportWidth should be calculated from eGridBody, not eBodyViewport
         // because we change the width of the bodyViewport to hide the real browser scrollbar
         const bodyViewportWidth = _getInnerWidth(gridBodyCtrl.eGridBody);
@@ -308,7 +287,7 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         }
 
         // avoid divide by zero
-        const allDisplayedColumns = this.visibleCols.allCols;
+        const allDisplayedColumns = this.beans.visibleCols.allCols;
 
         const doColumnsAlreadyFit = gridWidth === getWidthOfColsInList(allDisplayedColumns);
         if (gridWidth <= 0 || !allDisplayedColumns.length || doColumnsAlreadyFit) {
@@ -415,8 +394,9 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
             col.fireColumnWidthChangedEvent(source);
         });
 
-        this.visibleCols.setLeftValues(source);
-        this.visibleCols.updateBodyWidths();
+        const visibleCols = this.beans.visibleCols;
+        visibleCols.setLeftValues(source);
+        visibleCols.updateBodyWidths();
 
         if (silent) {
             return;
@@ -450,22 +430,6 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
                 this.sizeColumnsToFit(autoSizeStrategy.width, 'sizeColumnsToFit');
             }
         });
-    }
-
-    // returns the width we can set to this col, taking into consideration min and max widths
-    private normaliseColumnWidth(column: AgColumn, newWidth: number): number {
-        const minWidth = column.getMinWidth();
-
-        if (newWidth < minWidth) {
-            newWidth = minWidth;
-        }
-
-        const maxWidth = column.getMaxWidth();
-        if (column.isGreaterThanMax(newWidth)) {
-            newWidth = maxWidth;
-        }
-
-        return newWidth;
     }
 
     private onFirstDataRendered(): void {
@@ -503,4 +467,20 @@ export class ColumnAutosizeService extends BeanStub implements NamedBean {
         this.resizeOperationQueue.length = 0;
         super.destroy();
     }
+}
+
+/** returns the width we can set to this col, taking into consideration min and max widths */
+function normaliseColumnWidth(column: AgColumn, newWidth: number): number {
+    const minWidth = column.getMinWidth();
+
+    if (newWidth < minWidth) {
+        newWidth = minWidth;
+    }
+
+    const maxWidth = column.getMaxWidth();
+    if (column.isGreaterThanMax(newWidth)) {
+        newWidth = maxWidth;
+    }
+
+    return newWidth;
 }

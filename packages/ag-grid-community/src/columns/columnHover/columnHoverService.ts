@@ -22,7 +22,8 @@ export class ColumnHoverService extends BeanStub implements NamedBean {
     }
 
     public isHovered(column: AgColumn): boolean {
-        return !!this.selectedColumns && this.selectedColumns.indexOf(column) >= 0;
+        const selectedColumns = this.selectedColumns;
+        return !!selectedColumns && selectedColumns.indexOf(column) >= 0;
     }
 
     public addHeaderColumnHoverListener(compBean: BeanStub, comp: IHeaderCellComp, column: AgColumn): void {

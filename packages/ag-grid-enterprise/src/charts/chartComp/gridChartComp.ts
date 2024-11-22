@@ -98,6 +98,7 @@ export class GridChartComp extends Component {
     }
 
     private readonly eChart: HTMLElement = RefPlaceholder;
+    private readonly eWrapper: HTMLElement = RefPlaceholder;
     private readonly eChartContainer: HTMLElement = RefPlaceholder;
     private readonly eMenuContainer: HTMLElement = RefPlaceholder;
     private readonly eEmpty: HTMLElement = RefPlaceholder;
@@ -119,13 +120,17 @@ export class GridChartComp extends Component {
     private onDestroyColorSchemeChangeListener: () => void;
 
     constructor(params: GridChartParams) {
-        super(/* html */ `<div class="ag-chart">
-            <div data-ref="eChartContainer" class="ag-chart-components-wrapper ag-chart-menu-hidden">
-                <div data-ref="eChart" class="ag-chart-canvas-wrapper"></div>
-                <div data-ref="eEmpty" class="ag-chart-empty-text ag-unselectable"></div>
+        super(/* html */ `
+            <div style="height: 100%; width: 100%;">
+                <div class="ag-chart" data-ref="eWrapper">
+                    <div data-ref="eChartContainer" class="ag-chart-components-wrapper ag-chart-menu-hidden">
+                        <div data-ref="eChart" class="ag-chart-canvas-wrapper"></div>
+                        <div data-ref="eEmpty" class="ag-chart-empty-text ag-unselectable"></div>
+                    </div>
+                    <div data-ref="eMenuContainer" class="ag-chart-docked-container"></div>
+                </div>
             </div>
-            <div data-ref="eMenuContainer" class="ag-chart-docked-container"></div>
-            </div>`);
+            `);
         this.params = params;
     }
 
@@ -138,7 +143,7 @@ export class GridChartComp extends Component {
 
         const isRtl = this.gos.get('enableRtl');
 
-        this.addCssClass(isRtl ? 'ag-rtl' : 'ag-ltr');
+        this.eWrapper.classList.add(isRtl ? 'ag-rtl' : 'ag-ltr');
 
         // only the chart controller interacts with the chart model
         const model = this.createBean(new ChartDataModel(modelParams));
@@ -152,6 +157,13 @@ export class GridChartComp extends Component {
 
         if (this.params.insideDialog) {
             this.addDialog();
+        } else {
+            // don't add the theme if we're in a dialog, since dialogs already
+            // add a theme, and legacy themes don't like being applied twice
+            this.addManagedEventListeners({
+                gridStylesChanged: this.updateTheme.bind(this),
+            });
+            this.updateTheme();
         }
 
         this.addMenu();
@@ -168,23 +180,8 @@ export class GridChartComp extends Component {
         this.raiseChartCreatedEvent();
     }
 
-    private themeEl?: HTMLElement;
-    public setThemeEl(el: HTMLElement): void {
-        if (!this.themeEl) {
-            this.addManagedEventListeners({
-                gridStylesChanged: this.updateTheme.bind(this),
-            });
-        } else {
-            _removeFromParent(this.themeEl);
-        }
-        this.themeEl = el;
-        this.updateTheme();
-    }
-
     private updateTheme() {
-        if (this.themeEl) {
-            this.environment.applyThemeClasses(this.themeEl);
-        }
+        this.environment.applyThemeClasses(this.getGui());
     }
 
     private createChart(): void {
@@ -642,9 +639,6 @@ export class GridChartComp extends Component {
         _clearElement(eGui);
         // remove from parent, so if user provided container, we detach from the provided dom element
         _removeFromParent(eGui);
-        if (this.themeEl) {
-            _removeFromParent(this.themeEl);
-        }
 
         this.raiseChartDestroyedEvent();
     }

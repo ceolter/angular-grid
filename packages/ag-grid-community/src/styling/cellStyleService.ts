@@ -3,18 +3,11 @@ import { BeanStub } from '../context/beanStub';
 import type { BeanCollection } from '../context/context';
 import type { CellClassParams, ColDef } from '../entities/colDef';
 import type { CellCtrl } from '../rendering/cell/cellCtrl';
-import type { ExpressionService } from '../valueService/expressionService';
 import { CellCustomStyleFeature } from './cellCustomStyleFeature';
 import { processClassRules } from './stylingUtils';
 
 export class CellStyleService extends BeanStub implements NamedBean {
     beanName = 'cellStyles' as const;
-
-    private expressionSvc?: ExpressionService;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.expressionSvc = beans.expressionSvc;
-    }
 
     public processAllCellClasses(
         colDef: ColDef,
@@ -23,7 +16,7 @@ export class CellStyleService extends BeanStub implements NamedBean {
         onNotApplicableClass?: (className: string) => void
     ) {
         processClassRules(
-            this.expressionSvc,
+            this.beans.expressionSvc,
             undefined,
             colDef.cellClassRules,
             params,

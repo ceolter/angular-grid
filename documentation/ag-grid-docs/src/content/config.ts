@@ -102,11 +102,13 @@ const moduleItemBase = {
 
 const moduleGroupLevel2 = z.object({
     name: z.string(),
+    path: z.string().optional(),
     children: z.array(z.object(moduleItemBase)).optional(),
 });
 
 const moduleGroupLevel1 = z.object({
     name: z.string(),
+    path: z.string().optional(),
     children: z.array(z.object(moduleItemBase).or(moduleGroupLevel2)).optional(),
 });
 

@@ -1,4 +1,5 @@
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classNames from 'classnames';
 
 import styles from './Quotes.module.scss';
@@ -20,41 +21,22 @@ const QuoteItems = ({ quotes }: { quotes: QuotesDataItem[] }) => {
         <>
             {quotes.map(({ name, avatarUrl, orgName, orgIconUrl, orgRole, text }) => {
                 return (
-                    <li key={name}>
-                        <figure>
-                            <blockquote>
-                                <svg
-                                    className={styles.quoteBubbleTail}
-                                    version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 18 22"
-                                >
-                                    <path d="M0 21V0h18L1.8 21.6c-.577.769-1.8.361-1.8-.6Z" />
-                                </svg>
+                    <div className={styles.quote}>
+                        <blockquote>
+                            <p>{text}</p>
+                        </blockquote>
 
-                                <p>{text}</p>
-                            </blockquote>
-                            <figcaption>
-                                <img
-                                    className={styles.avatar}
-                                    title={name}
-                                    src={urlWithBaseUrl(avatarUrl)}
-                                    alt={name}
-                                />
-                                <span className={classNames(styles.name, 'text-xl', 'text-bold')}>{name}</span>
-                                <div className={styles.orgContainer}>
-                                    <span className="text-xs text-secondary">{orgRole}</span>
-                                    <img
-                                        className={styles.orgIcon}
-                                        title={orgName}
-                                        src={urlWithBaseUrl(orgIconUrl)}
-                                        alt={orgName}
-                                    />
-                                    <span className="text-xs">{orgName}</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </li>
+                        <footer>
+                            <img className={styles.avatar} src={urlWithBaseUrl(avatarUrl)} alt={name} />
+                            <div>
+                                <h4 className={classNames(styles.name, 'text-lg')}>{name}</h4>
+                                <p className={classNames(styles.role, 'text-base')}>
+                                    {orgRole} {orgName}
+                                </p>
+                            </div>
+                            <img className={styles.orgIcon} src={urlWithPrefix({ url: orgIconUrl })} alt={orgName} />
+                        </footer>
+                    </div>
                 );
             })}
         </>

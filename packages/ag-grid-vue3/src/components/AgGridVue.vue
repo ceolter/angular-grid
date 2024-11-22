@@ -109,6 +109,8 @@ import type {
 import type { AgEventType, ColDef, GridApi, GridOptions, IRowNode } from 'ag-grid-community';
 import {
     ALWAYS_SYNC_GLOBAL_EVENTS,
+    ModuleRegistry,
+    RowApiModule,
     _ALL_EVENTS,
     _ALL_GRID_OPTIONS,
     _combineAttributesAndGridOptions,
@@ -241,6 +243,8 @@ const getProvides = () => {
 };
 
 onMounted(() => {
+    // Row API module is required for getRowData to work
+    ModuleRegistry.registerModules([RowApiModule]);
     const frameworkComponentWrapper = new VueFrameworkComponentWrapper(getCurrentInstance(), getProvides());
 
     const gridParams = {

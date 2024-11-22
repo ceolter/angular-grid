@@ -28,18 +28,19 @@ export class RowDragComp extends Component {
     }
 
     public postConstruct(): void {
+        const { beans, rowNode, column, gos } = this;
         if (!this.customGui) {
             this.setTemplate(/* html */ `<div class="ag-drag-handle ag-row-drag" aria-hidden="true"></div>`);
-            this.getGui().appendChild(_createIconNoSpan('rowDrag', this.beans, null)!);
+            this.getGui().appendChild(_createIconNoSpan('rowDrag', beans, null)!);
             this.addDragSource();
         } else {
             this.setDragElement(this.customGui, this.dragStartPixels);
         }
 
         if (!this.suppressVisibilityChange) {
-            const strategy = this.gos.get('rowDragManaged')
-                ? new ManagedVisibilityStrategy(this, this.rowNode, this.column)
-                : new NonManagedVisibilityStrategy(this, this.rowNode, this.column);
+            const strategy = gos.get('rowDragManaged')
+                ? new ManagedVisibilityStrategy(this, rowNode, column)
+                : new NonManagedVisibilityStrategy(this, rowNode, column);
 
             this.createManagedBean(strategy, this.beans.context);
         }
@@ -53,21 +54,23 @@ export class RowDragComp extends Component {
     }
 
     private getSelectedNodes(): RowNode[] {
+        const rowNode = this.rowNode;
         const isRowDragMultiRow = this.gos.get('rowDragMultiRow');
         if (!isRowDragMultiRow) {
-            return [this.rowNode];
+            return [rowNode];
         }
 
         const selection = this.beans.selectionSvc?.getSelectedNodes() ?? [];
 
-        return selection.indexOf(this.rowNode) !== -1 ? selection : [this.rowNode];
+        return selection.indexOf(rowNode) !== -1 ? selection : [rowNode];
     }
 
     private getDragItem(): IRowDragItem {
+        const { column, rowNode } = this;
         return {
-            rowNode: this.rowNode,
+            rowNode,
             rowNodes: this.getSelectedNodes(),
-            columns: this.column ? [this.column] : undefined,
+            columns: column ? [column] : undefined,
             defaultTextValue: this.cellValueFn(),
         };
     }
@@ -152,15 +155,12 @@ export class RowDragComp extends Component {
 }
 
 class VisibilityStrategy extends BeanStub {
-    private readonly parent: RowDragComp;
-    private readonly column: AgColumn | undefined;
-    protected readonly rowNode: RowNode;
-
-    constructor(parent: RowDragComp, rowNode: RowNode, column?: AgColumn) {
+    constructor(
+        private readonly parent: RowDragComp,
+        protected readonly rowNode: RowNode,
+        private readonly column?: AgColumn
+    ) {
         super();
-        this.parent = parent;
-        this.rowNode = rowNode;
-        this.column = column;
     }
 
     protected setDisplayedOrVisible(neverDisplayed: boolean): void {
@@ -171,20 +171,21 @@ class VisibilityStrategy extends BeanStub {
             let shown: boolean = true;
             let isShownSometimes: boolean = false;
 
-            if (this.column) {
-                shown = this.column.isRowDrag(this.rowNode) || this.parent.isCustomGui();
-                isShownSometimes = typeof this.column.getColDef().rowDrag === 'function';
+            const { column, rowNode, parent } = this;
+            if (column) {
+                shown = column.isRowDrag(rowNode) || parent.isCustomGui();
+                isShownSometimes = typeof column.getColDef().rowDrag === 'function';
             }
 
             // if shown sometimes, them some rows can have drag handle while other don't,
             // so we use setVisible to keep the handles horizontally aligned (as _setVisible
             // keeps the empty space, whereas setDisplayed looses the space)
             if (isShownSometimes) {
-                this.parent.setDisplayed(true, displayedOptions);
-                this.parent.setVisible(shown, displayedOptions);
+                parent.setDisplayed(true, displayedOptions);
+                parent.setVisible(shown, displayedOptions);
             } else {
-                this.parent.setDisplayed(shown, displayedOptions);
-                this.parent.setVisible(true, displayedOptions);
+                parent.setDisplayed(shown, displayedOptions);
+                parent.setVisible(true, displayedOptions);
             }
         }
     }
@@ -192,10 +193,6 @@ class VisibilityStrategy extends BeanStub {
 
 // when non managed, the visibility depends on suppressRowDrag property only
 class NonManagedVisibilityStrategy extends VisibilityStrategy {
-    constructor(parent: RowDragComp, rowNode: RowNode, column?: AgColumn) {
-        super(parent, rowNode, column);
-    }
-
     public postConstruct(): void {
         this.addManagedPropertyListener('suppressRowDrag', this.onSuppressRowDrag.bind(this));
 
@@ -224,10 +221,6 @@ class NonManagedVisibilityStrategy extends VisibilityStrategy {
 
 // when managed, the visibility depends on sort, filter and row group, as well as suppressRowDrag property
 class ManagedVisibilityStrategy extends VisibilityStrategy {
-    constructor(parent: RowDragComp, rowNode: RowNode, column?: AgColumn) {
-        super(parent, rowNode, column);
-    }
-
     public postConstruct(): void {
         const listener = this.workOutVisibility.bind(this);
         // we do not show the component if sort, filter or grouping is active
@@ -254,11 +247,12 @@ class ManagedVisibilityStrategy extends VisibilityStrategy {
     }
 
     private workOutVisibility(): void {
+        const { rowDragSvc, dragAndDrop, gos } = this.beans;
         // only show the drag if both sort and filter are not present
-        const rowDragFeature = this.beans.rowDragSvc!.getRowDragFeature();
+        const rowDragFeature = rowDragSvc!.rowDragFeature;
         const shouldPreventRowMove = rowDragFeature && rowDragFeature.shouldPreventRowMove();
-        const suppressRowDrag = this.gos.get('suppressRowDrag');
-        const hasExternalDropZones = this.beans.dragAndDrop!.hasExternalDropZones();
+        const suppressRowDrag = gos.get('suppressRowDrag');
+        const hasExternalDropZones = dragAndDrop!.hasExternalDropZones();
         const neverDisplayed = (shouldPreventRowMove && !hasExternalDropZones) || suppressRowDrag;
 
         this.setDisplayedOrVisible(neverDisplayed);

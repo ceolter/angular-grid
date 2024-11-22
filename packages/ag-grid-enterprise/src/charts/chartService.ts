@@ -296,11 +296,6 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     }
 
     private createChartRef(chartComp: GridChartComp): ChartRef {
-        const themeEl = document.createElement('div');
-        themeEl.style.height = '100%';
-        chartComp.setThemeEl(themeEl);
-        themeEl.appendChild(chartComp.getGui());
-
         const chartRef: ChartRef = {
             destroyChart: () => {
                 if (this.activeCharts.has(chartRef)) {
@@ -312,7 +307,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
             focusChart: () => {
                 _focusInto(chartComp.getGui());
             },
-            chartElement: themeEl,
+            chartElement: chartComp.getGui(),
             chart: chartComp.getUnderlyingChart(),
             chartId: chartComp.getChartModel().chartId,
         };

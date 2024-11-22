@@ -56,15 +56,16 @@ export class CheckboxSelectionComponent extends Component {
 
     private onSelectionChanged(): void {
         const translate = this.getLocaleTextFunc();
-        const state = this.rowNode.isSelected();
+        const { rowNode, eCheckbox } = this;
+        const state = rowNode.isSelected();
         const stateName = _getAriaCheckboxStateName(translate, state);
-        const [ariaKey, ariaLabel] = this.rowNode.selectable
+        const [ariaKey, ariaLabel] = rowNode.selectable
             ? ['ariaRowToggleSelection', 'Press Space to toggle row selection']
             : ['ariaRowSelectionDisabled', 'Row Selection is disabled for this row'];
         const translatedLabel = translate(ariaKey, ariaLabel);
 
-        this.eCheckbox.setValue(state, true);
-        this.eCheckbox.setInputAriaLabel(`${translatedLabel} (${stateName})`);
+        eCheckbox.setValue(state, true);
+        eCheckbox.setInputAriaLabel(`${translatedLabel} (${stateName})`);
     }
 
     private onClicked(newValue: boolean, groupSelectsFiltered: boolean | undefined, event: MouseEvent): number {
@@ -163,8 +164,9 @@ export class CheckboxSelectionComponent extends Component {
     }
 
     private showOrHideSelect(): void {
+        const { column, rowNode, overrides, gos } = this;
         // if the isRowSelectable() is not provided the row node is selectable by default
-        let selectable = this.rowNode.selectable;
+        let selectable = rowNode.selectable;
 
         // checkboxSelection callback is deemed a legacy solution however we will still consider it's result.
         // If selectable, then also check the colDef callback. if not selectable, this it short circuits - no need
@@ -172,13 +174,13 @@ export class CheckboxSelectionComponent extends Component {
         const isVisible = this.getIsVisible();
         if (selectable) {
             if (typeof isVisible === 'function') {
-                const extraParams = this.overrides?.callbackParams;
+                const extraParams = overrides?.callbackParams;
 
-                if (!this.column) {
+                if (!column) {
                     // full width row
-                    selectable = isVisible({ ...extraParams, node: this.rowNode, data: this.rowNode.data });
+                    selectable = isVisible({ ...extraParams, node: rowNode, data: rowNode.data });
                 } else {
-                    const params = this.column.createColumnFunctionCallbackParams(this.rowNode);
+                    const params = column.createColumnFunctionCallbackParams(rowNode);
                     selectable = isVisible({ ...extraParams, ...params });
                 }
             } else {
@@ -186,11 +188,9 @@ export class CheckboxSelectionComponent extends Component {
             }
         }
 
-        const so = this.gos.get('rowSelection');
+        const so = gos.get('rowSelection');
         const disableInsteadOfHide =
-            so && typeof so !== 'string'
-                ? !_getHideDisabledCheckboxes(so)
-                : this.column?.getColDef().showDisabledCheckboxes;
+            so && typeof so !== 'string' ? !_getHideDisabledCheckboxes(so) : column?.getColDef().showDisabledCheckboxes;
         if (disableInsteadOfHide) {
             this.eCheckbox.setDisabled(!selectable);
             this.setVisible(true);
@@ -198,7 +198,7 @@ export class CheckboxSelectionComponent extends Component {
             return;
         }
 
-        if (this.overrides?.removeHidden) {
+        if (overrides?.removeHidden) {
             this.setDisplayed(selectable);
             return;
         }
@@ -207,8 +207,9 @@ export class CheckboxSelectionComponent extends Component {
     }
 
     private getIsVisible(): boolean | CheckboxSelectionCallback<any> | undefined {
-        if (this.overrides) {
-            return this.overrides.isVisible;
+        const overrides = this.overrides;
+        if (overrides) {
+            return overrides.isVisible;
         }
 
         const so = this.gos.get('rowSelection');
