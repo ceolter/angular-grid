@@ -26,11 +26,6 @@ const gridOptions: GridOptions = {
                 sparklineOptions: {
                     type: 'bar',
                     fill: '#fac858',
-                    highlightStyle: {
-                        series: {
-                            stroke: '#fac858',
-                        },
-                    },
                     padding: {
                         top: 10,
                         bottom: 10,
@@ -46,6 +41,13 @@ const gridOptions: GridOptions = {
                         type: 'category',
                         stroke: '##cccccc',
                         strokeWidth: 2,
+                    },
+                    itemStyler: (params) => {
+                        if (params.highlighted) {
+                            return {
+                                stroke: '#fac858',
+                            };
+                        }
                     },
                 } as AgSparklineOptions,
             },
