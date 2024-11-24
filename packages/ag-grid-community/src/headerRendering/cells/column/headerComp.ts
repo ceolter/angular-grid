@@ -1,3 +1,5 @@
+import { _getInnerHeaderCompDetails } from '../../../components/framework/userCompUtils';
+import type { UserComponentFactory } from '../../../components/framework/userComponentFactory';
 import type { AgColumn } from '../../../entities/agColumn';
 import type { SortDirection } from '../../../entities/colDef';
 import { _isLegacyMenuEnabled } from '../../../gridOptionsUtils';
@@ -69,6 +71,10 @@ export interface IHeaderParams<TData = any, TContext = any> extends AgGridCommon
 
     /** Custom header template if provided to `headerComponentParams`, otherwise will be `undefined`. See [Header Templates](https://ag-grid.com/javascript-data-grid/column-headers/#header-templates) */
     template?: string;
+    /** The renderer to use for inside the header (replaces the text value and leaves the remainder of the Grid's original components). */
+    innerRenderer?: any;
+    /** Additional params to customise to the `innerRenderer`. */
+    innerRendererParams?: any;
     /**
      * The header the grid provides.
      * The custom header component is a child of the grid provided header.
@@ -92,6 +98,13 @@ export interface IHeader {
 }
 
 export interface IHeaderComp extends IHeader, IComponent<IHeaderParams> {}
+
+export interface IInnerHeaderComponent<
+    TData = any,
+    TContext = any,
+    TParams extends Readonly<IHeaderParams<TData, TContext>> = IHeaderParams<TData, TContext>,
+> extends IComponent<TParams>,
+        IHeader {}
 
 function getHeaderCompTemplate(includeSortIndicator: boolean): string {
     return /* html */ `<div class="ag-cell-label-container" role="presentation">
@@ -129,12 +142,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     private currentShowMenu: boolean;
     private currentSuppressMenuHide: boolean;
     private currentSort: boolean | undefined;
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
+    private innerRenderer: IInnerHeaderComponent | undefined;
 
     public refresh(params: IHeaderParams): boolean {
         const oldParams = this.params;
@@ -149,12 +157,13 @@ export class HeaderComp extends Component implements IHeaderComp {
             params.enableSorting != this.currentSort ||
             this.shouldSuppressMenuHide() != this.currentSuppressMenuHide ||
             oldParams.enableFilterButton != params.enableFilterButton ||
-            oldParams.enableFilterIcon != params.enableFilterIcon
+            oldParams.enableFilterIcon != params.enableFilterIcon ||
+            !this.innerRenderer
         ) {
             return false;
         }
 
-        this.setDisplayName(params);
+        this.setDisplayName(params, true);
 
         return true;
     }
@@ -170,7 +179,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     public init(params: IHeaderParams): void {
         this.params = params;
 
-        const { sortSvc, touchSvc } = this.beans;
+        const { sortSvc, touchSvc, userCompFactory } = this.beans;
 
         this.currentTemplate = this.workOutTemplate();
         this.setTemplate(this.currentTemplate, sortSvc ? [sortSvc.getSortIndicatorSelector()] : undefined);
@@ -179,17 +188,43 @@ export class HeaderComp extends Component implements IHeaderComp {
         this.setupSort();
         this.setupFilterIcon();
         this.setupFilterButton();
+        this.workOutInnerRenderer(userCompFactory, params);
         this.setDisplayName(params);
     }
 
-    private setDisplayName(params: IHeaderParams): void {
-        if (this.currentDisplayName != params.displayName) {
-            this.currentDisplayName = params.displayName;
-            const { eText, currentDisplayName } = this;
-            const displayNameSanitised = _escapeString(currentDisplayName, true);
-            if (eText) {
-                eText.textContent = displayNameSanitised!;
+    private workOutInnerRenderer(userCompFactory: UserComponentFactory, params: IHeaderParams): void {
+        const userCompDetails = _getInnerHeaderCompDetails(userCompFactory, params, params);
+
+        if (userCompDetails) {
+            userCompDetails.newAgStackInstance().then((comp) => {
+                if (!comp) {
+                    return;
+                }
+                this.innerRenderer = comp;
+
+                if (this.isAlive()) {
+                    this.eText.appendChild(comp.getGui());
+                }
+            });
+        }
+    }
+
+    private setDisplayName(params: IHeaderParams, fromRefresh?: boolean) {
+        const { displayName } = params;
+        const oldDisplayName = this.currentDisplayName;
+        this.currentDisplayName = displayName;
+
+        if (oldDisplayName === displayName) {
+            return;
+        }
+
+        if (this.innerRenderer) {
+            if (fromRefresh) {
+                this.innerRenderer.refresh?.(params);
             }
+        } else {
+            const displayNameSanitised = _escapeString(displayName, true);
+            this.eText.innerText = displayNameSanitised!;
         }
     }
 
@@ -343,5 +378,15 @@ export class HeaderComp extends Component implements IHeaderComp {
             return eFilterButton ?? eMenu ?? this.getGui();
         }
         return eMenu ?? eFilterButton ?? this.getGui();
+    }
+
+    // this is a user component, and IComponent has "public destroy()" as part of the interface.
+    // so we need to override destroy() just to make the method public.
+    public override destroy(): void {
+        super.destroy();
+
+        if (this.innerRenderer) {
+            this.destroyBean(this.innerRenderer);
+        }
     }
 }
