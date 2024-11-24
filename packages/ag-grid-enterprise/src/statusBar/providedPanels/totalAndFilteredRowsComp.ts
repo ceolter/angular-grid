@@ -1,15 +1,9 @@
-import type { BeanCollection, IClientSideRowModel, IRowModel, IStatusPanelComp } from 'ag-grid-community';
+import type { IClientSideRowModel, IStatusPanelComp } from 'ag-grid-community';
 import { _formatNumberCommas, _isClientSideRowModel, _warn } from 'ag-grid-community';
 
 import { AgNameValue } from './agNameValue';
 
 export class TotalAndFilteredRowsComp extends AgNameValue implements IStatusPanelComp {
-    private rowModel: IRowModel;
-
-    public wireBeans(beans: BeanCollection) {
-        this.rowModel = beans.rowModel;
-    }
-
     public postConstruct(): void {
         if (!_isClientSideRowModel(this.gos)) {
             _warn(224);
@@ -42,7 +36,7 @@ export class TotalAndFilteredRowsComp extends AgNameValue implements IStatusPane
 
     private getFilteredRowCountValue(): number {
         let filteredRowCount = 0;
-        (this.rowModel as IClientSideRowModel).forEachNodeAfterFilter((node) => {
+        (this.beans.rowModel as IClientSideRowModel).forEachNodeAfterFilter((node) => {
             if (!node.group) {
                 filteredRowCount++;
             }
@@ -52,7 +46,7 @@ export class TotalAndFilteredRowsComp extends AgNameValue implements IStatusPane
 
     private getTotalRowCount(): number {
         let totalRowCount = 0;
-        this.rowModel.forEachNode((node) => {
+        this.beans.rowModel.forEachNode((node) => {
             if (!node.group) {
                 totalRowCount++;
             }
@@ -64,11 +58,5 @@ export class TotalAndFilteredRowsComp extends AgNameValue implements IStatusPane
 
     public refresh(): boolean {
         return true;
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
     }
 }

@@ -2,7 +2,7 @@ import { KeyCode } from '../../constants/keyCode';
 import { BeanStub } from '../../context/beanStub';
 import type { BeanCollection } from '../../context/context';
 import type { RowNode } from '../../entities/rowNode';
-import { _getGroupSelection, _isCellSelectionEnabled, _isRowSelection } from '../../gridOptionsUtils';
+import { _isCellSelectionEnabled, _isRowSelection } from '../../gridOptionsUtils';
 import { _isMacOsUserAgent } from '../../utils/browser';
 import type { RowCtrl } from '../row/rowCtrl';
 import type { CellCtrl } from './cellCtrl';
@@ -168,7 +168,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         }
 
         const key = event.key;
-        if (key === ' ') {
+        if (key === KeyCode.SPACE) {
             this.onSpaceKeyDown(event);
         } else {
             if (this.beans.editSvc?.startRowOrCellEdit(this.cellCtrl, key, event)) {
@@ -186,28 +186,7 @@ export class CellKeyboardListenerFeature extends BeanStub {
         const { gos } = this.beans;
 
         if (!this.cellCtrl.editing && _isRowSelection(gos)) {
-            const currentSelection = this.rowNode.isSelected();
-            const newSelection = !currentSelection;
-            const groupSelectsFiltered = _getGroupSelection(gos) === 'filteredDescendants';
-            const { selectionSvc } = this.beans;
-            const updatedCount = selectionSvc?.setSelectedParams({
-                rowNode: this.rowNode,
-                newValue: newSelection,
-                rangeSelect: event.shiftKey,
-                groupSelectsFiltered,
-                event,
-                source: 'spaceKey',
-            });
-            if (currentSelection === undefined && updatedCount === 0) {
-                selectionSvc?.setSelectedParams({
-                    rowNode: this.rowNode,
-                    newValue: false,
-                    rangeSelect: event.shiftKey,
-                    groupSelectsFiltered,
-                    event,
-                    source: 'spaceKey',
-                });
-            }
+            this.beans.selectionSvc?.handleSelectionEvent(event, this.rowNode, 'spaceKey');
         }
 
         // prevent default as space key, by default, moves browser scroll down

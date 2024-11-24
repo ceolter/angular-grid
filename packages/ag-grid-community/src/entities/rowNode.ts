@@ -308,7 +308,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         this.data = data;
         this.beans.valueCache?.onDataChanged();
         this.updateDataOnDetailNode();
-        this.beans.selectionSvc?.checkRowSelectable(this);
+        this.beans.selectionSvc?.updateRowSelectable(this);
         this.resetQuickFilterAggregateText();
 
         const event: DataChangedEvent<TData> = this.createDataChangedEvent(data, oldData, update);
@@ -366,7 +366,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         this.updateDataOnDetailNode();
         this.setId(id);
         if (selectionSvc) {
-            selectionSvc.checkRowSelectable(this);
+            selectionSvc.updateRowSelectable(this);
             selectionSvc.syncInRowNode(this, oldNode);
         }
 
@@ -506,7 +506,7 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         const valueChanged = valueSvc.setValue(this, column, newValue, eventSource);
 
         this.dispatchCellChangedEvent(column, newValue, oldValue);
-        selectionSvc?.checkRowSelectable(this);
+        selectionSvc?.updateRowSelectable(this);
 
         return valueChanged;
     }
@@ -600,11 +600,10 @@ export class RowNode<TData = any> implements IEventEmitter<RowNodeEventType>, IR
         clearSelection: boolean = false,
         source: SelectionEventSourceType = 'api'
     ): void {
-        this.beans.selectionSvc?.setSelectedParams({
-            rowNode: this,
+        this.beans.selectionSvc?.setNodesSelected({
+            nodes: [this],
             newValue,
             clearSelection,
-            rangeSelect: false,
             source,
         });
     }

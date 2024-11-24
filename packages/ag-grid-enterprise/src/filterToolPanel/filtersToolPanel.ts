@@ -52,31 +52,36 @@ export class FiltersToolPanel extends Component implements IFiltersToolPanel, IT
             suppressFilterSearch: false,
             suppressSyncLayoutWithGrid: false,
         });
-        this.params = {
+        const newParams = {
             ...defaultParams,
             ...params,
         };
+        this.params = newParams;
 
-        this.filtersToolPanelHeaderPanel.init(this.params);
-        this.filtersToolPanelListPanel.init(this.params);
+        const { filtersToolPanelHeaderPanel, filtersToolPanelListPanel } = this;
+        filtersToolPanelHeaderPanel.init(newParams);
+        filtersToolPanelListPanel.init(newParams);
 
-        const hideExpand = this.params.suppressExpandAll;
-        const hideSearch = this.params.suppressFilterSearch;
+        const hideExpand = newParams.suppressExpandAll;
+        const hideSearch = newParams.suppressFilterSearch;
 
         if (hideExpand && hideSearch) {
-            this.filtersToolPanelHeaderPanel.setDisplayed(false);
+            filtersToolPanelHeaderPanel.setDisplayed(false);
         }
 
         // this is necessary to prevent a memory leak while refreshing the tool panel
         this.listenerDestroyFuncs.push(
-            ...this.addManagedListeners(this.filtersToolPanelHeaderPanel, {
-                expandAll: this.onExpandAll.bind(this),
-                collapseAll: this.onCollapseAll.bind(this),
-                searchChanged: this.onSearchChanged.bind(this),
+            ...this.addManagedListeners(filtersToolPanelHeaderPanel, {
+                expandAll: filtersToolPanelListPanel.expandFilterGroups.bind(filtersToolPanelListPanel, true),
+                collapseAll: filtersToolPanelListPanel.expandFilterGroups.bind(filtersToolPanelListPanel, false),
+                searchChanged: (event) => filtersToolPanelListPanel.performFilterSearch(event.searchText),
             }),
-            ...this.addManagedListeners(this.filtersToolPanelListPanel, {
-                filterExpanded: this.onFilterExpanded.bind(this),
-                groupExpanded: this.onGroupExpanded.bind(this),
+            ...this.addManagedListeners(filtersToolPanelListPanel, {
+                filterExpanded: newParams.onStateUpdated,
+                groupExpanded: (event) => {
+                    filtersToolPanelHeaderPanel.setExpandState(event.state);
+                    newParams.onStateUpdated();
+                },
             })
         );
     }
@@ -89,29 +94,8 @@ export class FiltersToolPanel extends Component implements IFiltersToolPanel, IT
         }
     }
 
-    public onExpandAll(): void {
-        this.filtersToolPanelListPanel.expandFilterGroups(true);
-    }
-
-    public onCollapseAll(): void {
-        this.filtersToolPanelListPanel.expandFilterGroups(false);
-    }
-
-    private onSearchChanged(event: any): void {
-        this.filtersToolPanelListPanel.performFilterSearch(event.searchText);
-    }
-
     public setFilterLayout(colDefs: (ColDef | ColGroupDef)[]): void {
         this.filtersToolPanelListPanel.setFiltersLayout(colDefs);
-    }
-
-    private onFilterExpanded(): void {
-        this.params.onStateUpdated();
-    }
-
-    private onGroupExpanded(event: any): void {
-        this.filtersToolPanelHeaderPanel.setExpandState(event.state);
-        this.params.onStateUpdated();
     }
 
     public expandFilterGroups(groupIds?: string[]): void {
@@ -141,11 +125,5 @@ export class FiltersToolPanel extends Component implements IFiltersToolPanel, IT
 
     public getState(): FiltersToolPanelState {
         return this.filtersToolPanelListPanel.getExpandedFiltersAndGroups();
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
     }
 }

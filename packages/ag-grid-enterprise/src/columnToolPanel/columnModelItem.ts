@@ -5,71 +5,39 @@ export type ColumnModelItemEvent = 'expandedChanged';
 export class ColumnModelItem implements IEventEmitter<ColumnModelItemEvent> {
     private localEventService: LocalEventService<ColumnModelItemEvent> = new LocalEventService();
 
-    private readonly group: boolean;
-    private readonly displayName: string | null;
-    private readonly columnGroup: AgProvidedColumnGroup;
-    private readonly column: AgColumn;
-    private readonly dept: number;
-    private readonly children: ColumnModelItem[];
+    public readonly columnGroup: AgProvidedColumnGroup;
+    public readonly column: AgColumn;
+    public readonly children: ColumnModelItem[];
 
-    private expanded: boolean | undefined;
-    private passesFilter: boolean;
+    private _expanded: boolean | undefined;
+    public passesFilter: boolean;
 
     constructor(
-        displayName: string | null,
+        public readonly displayName: string | null,
         columnOrGroup: AgColumn | AgProvidedColumnGroup,
-        dept: number,
-        group = false,
+        public readonly depth: number,
+        public readonly group = false,
         expanded?: boolean
     ) {
-        this.displayName = displayName;
-        this.dept = dept;
-        this.group = group;
-
         if (group) {
             this.columnGroup = columnOrGroup as AgProvidedColumnGroup;
-            this.expanded = expanded;
+            this._expanded = expanded;
             this.children = [];
         } else {
             this.column = columnOrGroup as AgColumn;
         }
     }
 
-    public isGroup(): boolean {
-        return this.group;
-    }
-    public getDisplayName(): string | null {
-        return this.displayName;
-    }
-    public getColumnGroup(): AgProvidedColumnGroup {
-        return this.columnGroup;
-    }
-    public getColumn(): AgColumn {
-        return this.column;
-    }
-    public getDept(): number {
-        return this.dept;
-    }
-    public isExpanded(): boolean {
-        return !!this.expanded;
-    }
-    public getChildren(): ColumnModelItem[] {
-        return this.children;
-    }
-    public isPassesFilter(): boolean {
-        return this.passesFilter;
+    public get expanded(): boolean {
+        return !!this._expanded;
     }
 
-    public setExpanded(expanded: boolean): void {
-        if (expanded === this.expanded) {
+    public set expanded(expanded: boolean) {
+        if (expanded === this._expanded) {
             return;
         }
-        this.expanded = expanded;
+        this._expanded = expanded;
         this.localEventService.dispatchEvent({ type: 'expandedChanged' });
-    }
-
-    public setPassesFilter(passesFilter: boolean): void {
-        this.passesFilter = passesFilter;
     }
 
     public addEventListener<T extends ColumnModelItemEvent>(

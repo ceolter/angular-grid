@@ -2,8 +2,6 @@ import type {
     AgColumn,
     AggregationStatusPanelAggFunc,
     AggregationStatusPanelParams,
-    BeanCollection,
-    IRangeService,
     IStatusPanelComp,
     LocaleTextFunc,
     RowPosition,
@@ -34,12 +32,6 @@ function _formatNumberTwoDecimalPlacesAndCommas(value: number, getLocaleTextFunc
 }
 
 export class AggregationComp extends Component implements IStatusPanelComp {
-    private rangeSvc?: IRangeService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.rangeSvc = beans.rangeSvc;
-    }
-
     private readonly sumAggregationComp: AgNameValue = RefPlaceholder;
     private readonly countAggregationComp: AgNameValue = RefPlaceholder;
     private readonly minAggregationComp: AgNameValue = RefPlaceholder;
@@ -59,12 +51,6 @@ export class AggregationComp extends Component implements IStatusPanelComp {
         </div>`,
             [AgNameValueSelector]
         );
-    }
-
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
     }
 
     public postConstruct(): void {
@@ -132,7 +118,9 @@ export class AggregationComp extends Component implements IStatusPanelComp {
     }
 
     private onCellSelectionChanged(): void {
-        const cellRanges = this.rangeSvc?.getCellRanges();
+        const beans = this.beans;
+        const { rangeSvc, valueSvc, cellNavigation } = beans;
+        const cellRanges = rangeSvc?.getCellRanges();
 
         let sum = 0;
         let count = 0;
@@ -142,12 +130,12 @@ export class AggregationComp extends Component implements IStatusPanelComp {
 
         const cellsSoFar: any = {};
 
-        if (cellRanges?.length && this.rangeSvc) {
+        if (cellRanges?.length && rangeSvc) {
             for (let i = 0; i < cellRanges.length; i++) {
                 const cellRange = cellRanges[i];
 
-                let currentRow: RowPosition | null = this.rangeSvc.getRangeStartRow(cellRange);
-                const lastRow = this.rangeSvc.getRangeEndRow(cellRange);
+                let currentRow: RowPosition | null = rangeSvc.getRangeStartRow(cellRange);
+                const lastRow = rangeSvc.getRangeEndRow(cellRange);
 
                 while (true) {
                     const finishedAllRows = _missing(currentRow) || !currentRow || _isRowBefore(lastRow, currentRow);
@@ -171,12 +159,12 @@ export class AggregationComp extends Component implements IStatusPanelComp {
                         }
                         cellsSoFar[cellId] = true;
 
-                        const rowNode = _getRowNode(this.beans, currentRow);
+                        const rowNode = _getRowNode(beans, currentRow);
                         if (_missing(rowNode)) {
                             return;
                         }
 
-                        let value = this.beans.valueSvc.getValue(col, rowNode);
+                        let value = valueSvc.getValue(col, rowNode);
 
                         // if empty cell, skip it, doesn't impact count or anything
                         if (_missing(value) || value === '') {
@@ -214,7 +202,7 @@ export class AggregationComp extends Component implements IStatusPanelComp {
                         }
                     });
 
-                    currentRow = this.beans.cellNavigation!.getRowBelow(currentRow);
+                    currentRow = cellNavigation!.getRowBelow(currentRow);
                 }
             }
         }

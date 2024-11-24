@@ -1,13 +1,4 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnEventType,
-    ColumnModel,
-    DragItem,
-    DraggingEvent,
-    DropTarget,
-    IColsService,
-} from 'ag-grid-community';
+import type { AgColumn, ColumnEventType, DragItem, DraggingEvent, DropTarget } from 'ag-grid-community';
 import { DragSourceType, _shouldUpdateColVisibilityAfterGroup } from 'ag-grid-community';
 
 import type { PillDropZonePanelParams } from '../../widgets/pillDropZonePanel';
@@ -17,15 +8,6 @@ import { DropZoneColumnComp } from './dropZoneColumnComp';
 export type TDropZone = 'rowGroup' | 'pivot' | 'aggregation';
 
 export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumnComp, AgColumn> {
-    protected colModel: ColumnModel;
-    protected rowGroupColsSvc?: IColsService;
-
-    public override wireBeans(beans: BeanCollection) {
-        super.wireBeans(beans);
-        this.colModel = beans.colModel;
-        this.rowGroupColsSvc = beans.rowGroupColsSvc;
-    }
-
     constructor(
         horizontal: boolean,
         private dropZonePurpose: TDropZone
@@ -54,8 +36,9 @@ export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumn
     }
 
     protected override minimumAllowedNewInsertIndex(): number {
-        const numberOfLockedCols = this.gos.get('groupLockGroupColumns');
-        const numberOfGroupCols = this.rowGroupColsSvc?.columns.length ?? 0;
+        const { gos, rowGroupColsSvc } = this.beans;
+        const numberOfLockedCols = gos.get('groupLockGroupColumns');
+        const numberOfGroupCols = rowGroupColsSvc?.columns.length ?? 0;
         if (numberOfLockedCols === -1) {
             return numberOfGroupCols;
         }
@@ -91,7 +74,7 @@ export abstract class BaseDropZonePanel extends PillDropZonePanel<DropZoneColumn
     public setColumnsVisible(columns: AgColumn[] | null | undefined, visible: boolean, source: ColumnEventType) {
         if (columns) {
             const allowedCols = columns.filter((c) => !c.getColDef().lockVisible);
-            this.colModel.setColsVisible(allowedCols, visible, source);
+            this.beans.colModel.setColsVisible(allowedCols, visible, source);
         }
     }
 

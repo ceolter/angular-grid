@@ -1,6 +1,12 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type {
+    AgBarSeriesItemStylerParams,
+    AgBarSeriesStyle,
+    AgChartLabelFormatterParams,
+    AgSparklineOptions,
+} from 'ag-charts-community';
 
-import type { BarFormat, BarFormatterParams, GridApi, GridOptions, LabelFormatterParams } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -24,29 +30,23 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
+                    direction: 'horizontal',
                     label: {
                         enabled: true,
                         color: 'white',
                         fontSize: 10,
                         fontWeight: 'bold',
-                        formatter: (params: LabelFormatterParams) => {
+                        formatter: (params: AgChartLabelFormatterParams) => {
                             return `${params.value}%`;
                         },
                     },
-                    paddingOuter: 0,
-                    padding: {
-                        top: 0,
-                        bottom: 0,
-                    },
-                    valueAxisDomain: [0, 100],
-                    axis: {
-                        strokeWidth: 0,
-                    },
+                    min: 0,
+                    max: 100,
                     tooltip: {
                         enabled: false,
                     },
-                    formatter: formatter,
-                },
+                    itemStyler: itemStyler,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -63,7 +63,7 @@ const gridOptions: GridOptions = {
     rowHeight: 50,
 };
 
-function formatter(params: BarFormatterParams): BarFormat {
+function itemStyler(params: AgBarSeriesItemStylerParams<any>): AgBarSeriesStyle {
     const { yValue } = params;
     return {
         fill: yValue <= 20 ? '#4fa2d9' : yValue < 60 ? '#277cb5' : '#195176',

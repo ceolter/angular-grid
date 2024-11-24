@@ -142,6 +142,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     private currentShowMenu: boolean;
     private currentSuppressMenuHide: boolean;
     private currentSort: boolean | undefined;
+
     private innerRenderer: IInnerHeaderComponent | undefined;
 
     public refresh(params: IHeaderParams): boolean {

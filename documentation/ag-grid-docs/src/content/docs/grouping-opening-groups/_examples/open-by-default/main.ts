@@ -25,10 +25,9 @@ const gridOptions: GridOptions<IOlympicData> = {
         minWidth: 200,
     },
     isGroupOpenByDefault: (params: IsGroupOpenByDefaultParams) => {
-        return (
-            (params.field === 'year' && params.key === '2004') ||
-            (params.field === 'country' && params.key === 'United States')
-        );
+        const route = params.rowNode.getRoute();
+        const destPath = ['Australia', '2004'];
+        return !!route?.every((item, idx) => destPath[idx] === item);
     },
 };
 

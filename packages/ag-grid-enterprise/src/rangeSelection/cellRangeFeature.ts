@@ -45,10 +45,8 @@ function _isFillHandleEnabled(gos: GridOptionsService): boolean {
 }
 
 export class CellRangeFeature implements ICellRangeFeature {
-    private beans: BeanCollection;
     private rangeSvc: IRangeService;
     private cellComp: ICellComp;
-    private cellCtrl: CellCtrl;
     private eGui: HTMLElement;
 
     private rangeCount: number;
@@ -56,11 +54,12 @@ export class CellRangeFeature implements ICellRangeFeature {
 
     private selectionHandle: AgFillHandle | AgRangeHandle | null | undefined;
 
-    constructor(beans: BeanCollection, ctrl: CellCtrl) {
-        this.beans = beans;
+    constructor(
+        private readonly beans: BeanCollection,
+        private readonly cellCtrl: CellCtrl
+    ) {
         // We know these are defined otherwise the feature wouldn't be registered
         this.rangeSvc = beans.rangeSvc!;
-        this.cellCtrl = ctrl;
     }
 
     public setComp(cellComp: ICellComp, eGui: HTMLElement): void {
@@ -70,23 +69,28 @@ export class CellRangeFeature implements ICellRangeFeature {
     }
 
     public onCellSelectionChanged(): void {
+        const cellComp = this.cellComp;
         // when using reactUi, given UI is async, it's possible this method is called before the comp is registered
-        if (!this.cellComp) {
+        if (!cellComp) {
             return;
         }
 
-        this.rangeCount = this.rangeSvc.getCellRangeCount(this.cellCtrl.cellPosition);
-        this.hasChartRange = this.getHasChartRange();
+        const { rangeSvc, cellCtrl, eGui } = this;
 
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SELECTED, this.rangeCount !== 0);
-        this.cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-1`, this.rangeCount === 1);
-        this.cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-2`, this.rangeCount === 2);
-        this.cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-3`, this.rangeCount === 3);
-        this.cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-4`, this.rangeCount >= 4);
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_CHART, this.hasChartRange);
+        const rangeCount = rangeSvc.getCellRangeCount(cellCtrl.cellPosition);
+        this.rangeCount = rangeCount;
+        const hasChartRange = this.getHasChartRange();
+        this.hasChartRange = hasChartRange;
 
-        _setAriaSelected(this.eGui, this.rangeCount > 0 ? true : undefined);
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SINGLE_CELL, this.isSingleCell());
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SELECTED, rangeCount !== 0);
+        cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-1`, rangeCount === 1);
+        cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-2`, rangeCount === 2);
+        cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-3`, rangeCount === 3);
+        cellComp.addOrRemoveCssClass(`${CSS_CELL_RANGE_SELECTED}-4`, rangeCount >= 4);
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_CHART, hasChartRange);
+
+        _setAriaSelected(eGui, rangeCount > 0 ? true : undefined);
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_SINGLE_CELL, this.isSingleCell());
 
         this.updateRangeBorders();
 
@@ -101,19 +105,20 @@ export class CellRangeFeature implements ICellRangeFeature {
         const isBottom = !isSingleCell && rangeBorders.bottom;
         const isLeft = !isSingleCell && rangeBorders.left;
 
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_TOP, isTop);
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_RIGHT, isRight);
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_BOTTOM, isBottom);
-        this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_LEFT, isLeft);
+        const cellComp = this.cellComp;
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_TOP, isTop);
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_RIGHT, isRight);
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_BOTTOM, isBottom);
+        cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_LEFT, isLeft);
     }
 
     private isSingleCell(): boolean {
-        const { rangeSvc } = this.beans;
+        const { rangeSvc } = this;
         return this.rangeCount === 1 && !!rangeSvc && !rangeSvc.isMoreThanOneCell();
     }
 
     private getHasChartRange(): boolean {
-        const { rangeSvc } = this.beans;
+        const { rangeSvc } = this;
 
         if (!this.rangeCount || !rangeSvc) {
             return false;
@@ -227,7 +232,8 @@ export class CellRangeFeature implements ICellRangeFeature {
 
     private shouldHaveSelectionHandle(): boolean {
         const gos = this.beans.gos;
-        const cellRanges = this.rangeSvc.getCellRanges();
+        const rangeSvc = this.rangeSvc;
+        const cellRanges = rangeSvc.getCellRanges();
         const rangesLen = cellRanges.length;
 
         if (this.rangeCount < 1 || rangesLen < 1) {
@@ -244,7 +250,7 @@ export class CellRangeFeature implements ICellRangeFeature {
 
         if (this.hasChartRange) {
             const hasCategoryRange = cellRanges[0].type === CellRangeType.DIMENSION;
-            const isCategoryCell = hasCategoryRange && this.rangeSvc.isCellInSpecificRange(cellPosition, cellRanges[0]);
+            const isCategoryCell = hasCategoryRange && rangeSvc.isCellInSpecificRange(cellPosition, cellRanges[0]);
 
             this.cellComp.addOrRemoveCssClass(CSS_CELL_RANGE_CHART_CATEGORY, isCategoryCell);
             handleIsAvailable = cellRange.type === CellRangeType.VALUE;
@@ -253,8 +259,8 @@ export class CellRangeFeature implements ICellRangeFeature {
         return (
             handleIsAvailable &&
             cellRange.endRow != null &&
-            this.rangeSvc.isContiguousRange(cellRange) &&
-            this.rangeSvc.isBottomRightCell(cellRange, cellPosition)
+            rangeSvc.isContiguousRange(cellRange) &&
+            rangeSvc.isBottomRightCell(cellRange, cellPosition)
         );
     }
 

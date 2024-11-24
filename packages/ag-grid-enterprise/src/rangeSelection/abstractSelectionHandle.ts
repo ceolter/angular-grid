@@ -1,12 +1,4 @@
-import type {
-    BeanCollection,
-    CellCtrl,
-    CellPosition,
-    CellRange,
-    CtrlsService,
-    DragService,
-    RowPosition,
-} from 'ag-grid-community';
+import type { CellCtrl, CellPosition, CellRange, RowPosition } from 'ag-grid-community';
 import {
     Component,
     _areCellsEqual,
@@ -25,21 +17,11 @@ export enum SelectionHandleType {
 }
 
 export abstract class AbstractSelectionHandle extends Component {
-    protected dragSvc: DragService;
-    protected rangeSvc: RangeService;
-    protected ctrlsSvc: CtrlsService;
+    protected cellCtrl: CellCtrl;
+    protected cellRange: CellRange;
 
-    public wireBeans(beans: BeanCollection) {
-        this.dragSvc = beans.dragSvc!;
-        this.rangeSvc = beans.rangeSvc as RangeService;
-        this.ctrlsSvc = beans.ctrlsSvc;
-    }
-
-    private cellCtrl: CellCtrl;
-    private cellRange: CellRange;
-
-    private rangeStartRow: RowPosition;
-    private rangeEndRow: RowPosition;
+    protected rangeStartRow: RowPosition;
+    protected rangeEndRow: RowPosition;
 
     private cellHoverListener: (() => void) | undefined;
     private lastCellHovered: CellPosition | null | undefined;
@@ -50,13 +32,14 @@ export abstract class AbstractSelectionHandle extends Component {
     protected shouldDestroyOnEndDragging: boolean = false;
 
     public postConstruct() {
-        this.dragSvc.addDragSource({
+        const { dragSvc, rangeSvc } = this.beans;
+        dragSvc!.addDragSource({
             dragStartPixels: 0,
             eElement: this.getGui(),
             onDragStart: this.onDragStart.bind(this),
             onDragging: (e: MouseEvent | Touch) => {
                 this.dragging = true;
-                this.rangeSvc.autoScrollService.check(e as MouseEvent);
+                (rangeSvc as RangeService).autoScrollService.check(e as MouseEvent);
 
                 if (this.changedCalculatedValues) {
                     this.onDrag(e);
@@ -86,42 +69,6 @@ export abstract class AbstractSelectionHandle extends Component {
     protected abstract onDragEnd(e: MouseEvent | Touch): void;
     protected abstract onDragCancel(): void;
 
-    protected isDragging(): boolean {
-        return this.dragging;
-    }
-
-    protected getCellCtrl(): CellCtrl | undefined {
-        return this.cellCtrl;
-    }
-
-    protected setCellCtrl(cellComp: CellCtrl) {
-        this.cellCtrl = cellComp;
-    }
-
-    protected getCellRange(): CellRange {
-        return this.cellRange;
-    }
-
-    protected setCellRange(range: CellRange) {
-        this.cellRange = range;
-    }
-
-    protected getRangeStartRow(): RowPosition {
-        return this.rangeStartRow;
-    }
-
-    protected setRangeStartRow(row: RowPosition) {
-        this.rangeStartRow = row;
-    }
-
-    protected getRangeEndRow(): RowPosition {
-        return this.rangeEndRow;
-    }
-
-    protected setRangeEndRow(row: RowPosition) {
-        this.rangeEndRow = row;
-    }
-
     protected getLastCellHovered(): CellPosition | null | undefined {
         return this.lastCellHovered;
     }
@@ -131,7 +78,7 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     protected onDragStart(_: MouseEvent) {
-        [this.cellHoverListener] = this.addManagedElementListeners(this.ctrlsSvc.get('gridCtrl').getGui(), {
+        [this.cellHoverListener] = this.addManagedElementListeners(this.beans.ctrlsSvc.get('gridCtrl').getGui(), {
             mousemove: this.updateValuesOnMove.bind(this),
         });
 
@@ -155,7 +102,7 @@ export abstract class AbstractSelectionHandle extends Component {
 
     private clearDragProperties(): void {
         this.clearValues();
-        this.rangeSvc.autoScrollService.ensureCleared();
+        (this.beans.rangeSvc as RangeService).autoScrollService.ensureCleared();
 
         // TODO: this causes a bug where if there are multiple grids in the same page, all of them will
         // be affected by a drag on any. Move it to the root element.
@@ -167,10 +114,10 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     public refresh(cellCtrl: CellCtrl) {
-        const oldCellComp = this.getCellCtrl();
+        const oldCellComp = this.cellCtrl;
         const eGui = this.getGui();
 
-        const cellRange = _last(this.rangeSvc.getCellRanges());
+        const cellRange = _last(this.beans.rangeSvc!.getCellRanges());
 
         const start = cellRange.startRow;
         const end = cellRange.endRow;
@@ -179,23 +126,23 @@ export abstract class AbstractSelectionHandle extends Component {
             const isBefore = _isRowBefore(end, start);
 
             if (isBefore) {
-                this.setRangeStartRow(end);
-                this.setRangeEndRow(start);
+                this.rangeStartRow = end;
+                this.rangeEndRow = start;
             } else {
-                this.setRangeStartRow(start);
-                this.setRangeEndRow(end);
+                this.rangeStartRow = start;
+                this.rangeEndRow = end;
             }
         }
 
         if (oldCellComp !== cellCtrl || !_isVisible(eGui)) {
-            this.setCellCtrl(cellCtrl);
+            this.cellCtrl = cellCtrl;
             const eParentOfValue = cellCtrl.comp.getParentOfValue();
             if (eParentOfValue) {
                 eParentOfValue.appendChild(eGui);
             }
         }
 
-        this.setCellRange(cellRange);
+        this.cellRange = cellRange;
     }
 
     protected clearValues() {
@@ -204,14 +151,15 @@ export abstract class AbstractSelectionHandle extends Component {
     }
 
     private removeListeners() {
-        if (this.cellHoverListener) {
-            this.cellHoverListener();
+        const cellHoverListener = this.cellHoverListener;
+        if (cellHoverListener) {
+            cellHoverListener();
             this.cellHoverListener = undefined;
         }
     }
 
     public override destroy() {
-        if (!this.shouldDestroyOnEndDragging && this.isDragging()) {
+        if (!this.shouldDestroyOnEndDragging && this.dragging) {
             _setDisplayed(this.getGui(), false);
             this.shouldDestroyOnEndDragging = true;
             return;
@@ -224,8 +172,6 @@ export abstract class AbstractSelectionHandle extends Component {
 
         const eGui = this.getGui();
 
-        if (eGui.parentElement) {
-            eGui.parentElement.removeChild(eGui);
-        }
+        eGui.parentElement?.removeChild(eGui);
     }
 }

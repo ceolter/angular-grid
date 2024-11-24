@@ -1,11 +1,4 @@
-import type {
-    AgColumn,
-    BeanCollection,
-    ColumnChooserParams,
-    FocusService,
-    NamedBean,
-    VisibleColsService,
-} from 'ag-grid-community';
+import type { AgColumn, ColumnChooserParams, NamedBean } from 'ag-grid-community';
 import { BeanStub, _findNextFocusableElement } from 'ag-grid-community';
 
 import { AgPrimaryCols } from '../columnToolPanel/agPrimaryCols';
@@ -20,16 +13,6 @@ interface ShowColumnChooserParams {
 
 export class ColumnChooserFactory extends BeanStub implements NamedBean {
     beanName = 'colChooserFactory' as const;
-
-    private focusSvc: FocusService;
-    private menuUtils: MenuUtils;
-    private visibleCols: VisibleColsService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.focusSvc = beans.focusSvc;
-        this.menuUtils = beans.menuUtils as MenuUtils;
-        this.visibleCols = beans.visibleCols;
-    }
 
     private activeColumnChooser: AgPrimaryCols | undefined;
     private activeColumnChooserDialog: AgDialog | undefined;
@@ -83,8 +66,10 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
 
         const columnSelectPanel = this.createColumnSelectPanel(this, column, true, chooserParams);
         const translate = this.getLocaleTextFunc();
-        const columnIndex = this.visibleCols.allCols.indexOf(column as AgColumn);
-        const headerPosition = column ? this.focusSvc.focusedHeader : null;
+        const beans = this.beans;
+        const { visibleCols, focusSvc, menuUtils } = beans;
+        const columnIndex = visibleCols.allCols.indexOf(column as AgColumn);
+        const headerPosition = column ? focusSvc.focusedHeader : null;
 
         this.activeColumnChooserDialog = this.createBean(
             new AgDialog({
@@ -97,7 +82,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
                 centered: true,
                 closable: true,
                 afterGuiAttached: () => {
-                    _findNextFocusableElement(this.beans, columnSelectPanel.getGui())?.focus({
+                    _findNextFocusableElement(beans, columnSelectPanel.getGui())?.focus({
                         preventScroll: true,
                     });
                     this.dispatchVisibleChangedEvent(true, column);
@@ -109,7 +94,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
                     this.activeColumnChooserDialog = undefined;
                     this.dispatchVisibleChangedEvent(false, column);
                     if (column) {
-                        this.menuUtils.restoreFocusOnClose(
+                        (menuUtils as MenuUtils).restoreFocusOnClose(
                             { column, headerPosition, columnIndex, eventSource },
                             eComp,
                             event,
@@ -129,9 +114,7 @@ export class ColumnChooserFactory extends BeanStub implements NamedBean {
     }
 
     public hideActiveColumnChooser(): void {
-        if (this.activeColumnChooserDialog) {
-            this.destroyBean(this.activeColumnChooserDialog);
-        }
+        this.destroyBean(this.activeColumnChooserDialog);
     }
 
     private dispatchVisibleChangedEvent(visible: boolean, column?: AgColumn | null): void {

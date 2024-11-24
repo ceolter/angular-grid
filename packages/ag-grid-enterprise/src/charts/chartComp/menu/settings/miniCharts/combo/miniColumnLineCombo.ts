@@ -1,3 +1,5 @@
+import type { Path, Rect } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -7,8 +9,8 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 export class MiniColumnLineCombo extends MiniChartWithAxes {
     static chartType: ChartType = 'columnLineCombo';
 
-    private columns: any[];
-    private lines: any[];
+    private columns: Rect[];
+    private lines: Path[];
 
     private columnData = [3, 4];
 

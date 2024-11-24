@@ -354,8 +354,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
                 return;
             }
 
-            // do delete - setting 'suppressFinishActions = true' to ensure EVENT_SELECTION_CHANGED is not raised for
-            // each row node updated, instead it is raised once by the calling code if any selected nodes exist.
             if (rowNode.isSelected()) {
                 nodesToUnselect.push(rowNode);
             }

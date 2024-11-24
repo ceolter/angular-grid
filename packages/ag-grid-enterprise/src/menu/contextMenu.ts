@@ -1,24 +1,17 @@
 import type {
     AgColumn,
-    AriaAnnouncementService,
-    BeanCollection,
     CellCtrl,
     CellPosition,
-    CtrlsService,
     DefaultMenuItem,
     EventShowContextMenuParams,
-    FocusService,
     IAfterGuiAttachedParams,
     IContextMenuService,
     MenuItemDef,
     MouseShowContextMenuParams,
     NamedBean,
-    PopupService,
     RowCtrl,
     RowNode,
-    RowRenderer,
     TouchShowContextMenuParam,
-    ValueService,
 } from 'ag-grid-community';
 import {
     BeanStub,
@@ -50,25 +43,8 @@ const CSS_CONTEXT_MENU_LOADING_ICON = 'ag-context-menu-loading-icon';
 export class ContextMenuService extends BeanStub implements NamedBean, IContextMenuService {
     beanName = 'contextMenuSvc' as const;
 
-    private popupSvc: PopupService;
-    private ctrlsSvc: CtrlsService;
-    private menuUtils: MenuUtils;
-    private focusSvc: FocusService;
-    private valueSvc: ValueService;
-    private rowRenderer: RowRenderer;
-    private ariaAnnounce: AriaAnnouncementService;
     private destroyLoadingSpinner: (() => void) | null = null;
     private lastPromise: number = 0;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.popupSvc = beans.popupSvc!;
-        this.ctrlsSvc = beans.ctrlsSvc;
-        this.menuUtils = beans.menuUtils as MenuUtils;
-        this.focusSvc = beans.focusSvc;
-        this.valueSvc = beans.valueSvc;
-        this.rowRenderer = beans.rowRenderer;
-        this.ariaAnnounce = beans.ariaAnnounce;
-    }
 
     private activeMenu: ContextMenu | null;
 
@@ -170,7 +146,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         let { anchorToElement, value } = params;
 
         if (rowNode && column && value == null) {
-            value = this.valueSvc.getValueForDisplay(column, rowNode);
+            value = this.beans.valueSvc.getValueForDisplay(column, rowNode);
         }
 
         if (anchorToElement == null) {
@@ -196,15 +172,16 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         const rowNode = rowComp?.rowNode ?? null;
         const column = cellCtrl?.column ?? null;
         let value = null;
+        const { valueSvc, ctrlsSvc } = this.beans;
 
         if (column) {
             const event = mouseEvent ? mouseEvent : touchEvent;
             cellCtrl.dispatchCellContextMenuEvent(event ?? null);
-            value = this.valueSvc.getValue(column, rowNode);
+            value = valueSvc.getValue(column, rowNode);
         }
 
         // if user clicked on a cell, anchor to that cell, otherwise anchor to the grid panel
-        const gridBodyCon = this.ctrlsSvc.getGridBodyCtrl();
+        const gridBodyCon = ctrlsSvc.getGridBodyCtrl();
         const anchorToElement = cellCtrl ? cellCtrl.eGui : gridBodyCon.eGridBody;
 
         this.showContextMenu({
@@ -225,7 +202,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         value: any,
         anchorToElement: HTMLElement
     ): void {
-        this.menuUtils.onContextMenu(mouseEvent, touchEvent, (eventOrTouch) =>
+        (this.beans.menuUtils as MenuUtils).onContextMenu(mouseEvent, touchEvent, (eventOrTouch) =>
             this.showMenu(rowNode, column, value, eventOrTouch, anchorToElement)
         );
     }
@@ -297,7 +274,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }
 
         targetEl.appendChild(wrapperEl);
-        this.ariaAnnounce?.announceValue(
+        beans.ariaAnnounce?.announceValue(
             translate('ariaLabelLoadingContextMenu', 'Loading Context Menu'),
             'contextmenu'
         );
@@ -326,8 +303,9 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         anchorToElement: HTMLElement;
     }): void {
         const { menuItems, node, column, value, mouseEvent, anchorToElement } = params;
+        const { ctrlsSvc, focusSvc, popupSvc } = this.beans;
 
-        const eGridBodyGui = this.ctrlsSvc.getGridBodyCtrl().eGridBody;
+        const eGridBodyGui = ctrlsSvc.getGridBodyCtrl().eGridBody;
         const menu = new ContextMenu(menuItems, column, node, value);
         this.createBean(menu);
 
@@ -336,7 +314,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         if (!column) {
             // the context menu has been opened not on a cell, therefore we don't want to
             // display the previous cell as focused, or return focus there after
-            this.focusSvc.clearFocusedCell();
+            focusSvc.clearFocusedCell();
         }
 
         const positionParams = {
@@ -352,7 +330,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = this.popupSvc.addPopup({
+        const addPopupRes = popupSvc!.addPopup({
             modal: true,
             eChild: eMenuGui,
             closeOnEsc: true,
@@ -364,7 +342,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             click: mouseEvent,
             positionCallback: () => {
                 const isRtl = this.gos.get('enableRtl');
-                this.popupSvc.positionPopupUnderMouseEvent({
+                popupSvc!.positionPopupUnderMouseEvent({
                     ...positionParams,
                     nudgeX: isRtl ? (eMenuGui.offsetWidth + 1) * -1 : 1,
                 });
@@ -428,7 +406,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             return;
         }
 
-        return this.rowRenderer.getRowByPosition({ rowIndex, rowPinned }) || undefined;
+        return this.beans.rowRenderer.getRowByPosition({ rowIndex, rowPinned }) || undefined;
     }
 
     private getCellGui(rowCtrl?: RowCtrl, column?: AgColumn | null): HTMLElement | undefined {
@@ -442,7 +420,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     private getContextMenuAnchorElement(rowNode?: RowNode | null, column?: AgColumn | null): HTMLElement {
-        const gridBodyEl = this.ctrlsSvc.getGridBodyCtrl().eGridBody;
+        const gridBodyEl = this.beans.ctrlsSvc.getGridBodyCtrl().eGridBody;
         const rowCtrl = this.getRowCtrl(rowNode);
 
         if (!rowCtrl) {
@@ -471,14 +449,6 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 export type ContextMenuEvent = 'closeMenu';
 
 class ContextMenu extends Component<ContextMenuEvent> {
-    private focusSvc: FocusService;
-    private menuItemMapper: MenuItemMapper;
-
-    public wireBeans(beans: BeanCollection): void {
-        this.focusSvc = beans.focusSvc;
-        this.menuItemMapper = beans.menuItemMapper as MenuItemMapper;
-    }
-
     private menuList: AgMenuList | null = null;
     private focusedCell: CellPosition | null = null;
 
@@ -499,7 +469,7 @@ class ContextMenu extends Component<ContextMenuEvent> {
                 value: this.value,
             })
         );
-        const menuItemsMapped = this.menuItemMapper.mapWithStockItems(
+        const menuItemsMapped = (this.beans.menuItemMapper as MenuItemMapper).mapWithStockItems(
             this.menuItems,
             null,
             () => this.getGui(),
@@ -519,21 +489,24 @@ class ContextMenu extends Component<ContextMenuEvent> {
             this.addDestroyFunc(params.hidePopup);
         }
 
-        this.focusedCell = this.focusSvc.getFocusedCell();
+        this.focusedCell = this.beans.focusSvc.getFocusedCell();
 
-        if (this.menuList) {
-            _focusInto(this.menuList.getGui());
+        const menuList = this.menuList;
+        if (menuList) {
+            _focusInto(menuList.getGui());
         }
     }
 
     private restoreFocusedCell(): void {
-        const currentFocusedCell = this.focusSvc.getFocusedCell();
+        const { beans, focusedCell } = this;
+        const focusSvc = beans.focusSvc;
+        const currentFocusedCell = focusSvc.getFocusedCell();
 
-        if (currentFocusedCell && this.focusedCell && _areCellsEqual(currentFocusedCell, this.focusedCell)) {
-            const { rowIndex, rowPinned, column } = this.focusedCell;
+        if (currentFocusedCell && focusedCell && _areCellsEqual(currentFocusedCell, focusedCell)) {
+            const { rowIndex, rowPinned, column } = focusedCell;
 
-            if (_isNothingFocused(this.beans)) {
-                this.focusSvc.setFocusedCell({
+            if (_isNothingFocused(beans)) {
+                focusSvc.setFocusedCell({
                     rowIndex,
                     column,
                     rowPinned,

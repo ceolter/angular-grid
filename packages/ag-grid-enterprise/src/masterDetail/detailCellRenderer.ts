@@ -46,14 +46,9 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
         return this.ctrl && this.ctrl.refresh();
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
-    public override destroy(): void {
-        super.destroy();
-    }
-
     private selectAndSetTemplate(): void {
-        if (this.params.pinned) {
+        const params = this.params;
+        if (params.pinned) {
             this.setTemplate(/* html*/ `<div class="ag-details-row"></div>`);
             return;
         }
@@ -64,16 +59,16 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
             </div>`);
         };
 
-        if (_missing(this.params.template)) {
+        if (_missing(params.template)) {
             // use default template
             setDefaultTemplate();
         } else {
             // use user provided template
-            if (typeof this.params.template === 'string') {
-                this.setTemplate(this.params.template, []);
-            } else if (typeof this.params.template === 'function') {
-                const templateFunc = this.params.template;
-                const template = templateFunc(this.params);
+            if (typeof params.template === 'string') {
+                this.setTemplate(params.template, []);
+            } else if (typeof params.template === 'function') {
+                const templateFunc = params.template;
+                const template = templateFunc(params);
                 this.setTemplate(template, []);
             } else {
                 _warn(168);
@@ -116,6 +111,6 @@ export class DetailCellRenderer extends Component implements ICellRenderer {
 
     private setRowData(rowData: any[]): void {
         // ensure detail grid api still exists (grid may be destroyed when async call tries to set data)
-        this.detailApi && this.detailApi.setGridOption('rowData', rowData);
+        this.detailApi?.setGridOption('rowData', rowData);
     }
 }

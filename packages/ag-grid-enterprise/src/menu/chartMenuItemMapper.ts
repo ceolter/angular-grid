@@ -12,24 +12,20 @@ import { BeanStub, _createIconNoSpan, _warn } from 'ag-grid-community';
 export class ChartMenuItemMapper extends BeanStub implements NamedBean {
     beanName = 'chartMenuItemMapper' as const;
 
-    private chartSvc?: IChartService;
-
-    public wireBeans(beans: BeanCollection) {
-        this.chartSvc = beans.chartSvc;
-    }
-
     public getChartItems(key: 'pivotChart' | 'chartRange'): MenuItemDef | null {
+        const beans = this.beans;
+        const chartSvc = beans.chartSvc;
         const isPivot = key === 'pivotChart';
-        if (!this.chartSvc) {
+        if (!chartSvc) {
             return null;
         }
 
         const getLocaleTextFunc = this.getLocaleTextFunc.bind(this);
         const builder = isPivot
-            ? new PivotMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc)
-            : new RangeMenuItemMapper(this.beans, this.chartSvc, getLocaleTextFunc);
+            ? new PivotMenuItemMapper(beans, chartSvc, getLocaleTextFunc)
+            : new RangeMenuItemMapper(beans, chartSvc, getLocaleTextFunc);
 
-        const isEnterprise = this.chartSvc.isEnterprise();
+        const isEnterprise = chartSvc.isEnterprise();
 
         let topLevelMenuItem: MenuItemDefWithKey | null = builder.getMenuItem();
 

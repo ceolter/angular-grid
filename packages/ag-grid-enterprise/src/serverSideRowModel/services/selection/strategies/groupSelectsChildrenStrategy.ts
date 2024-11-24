@@ -9,12 +9,10 @@ import type {
     IServerSideSelectionState,
     ISetNodesSelectedParams,
     RowNode,
-    SelectionEventSourceType,
 } from 'ag-grid-community';
-import { BeanStub, _error, _isMultiRowSelection, _last, _warn, isSelectionUIEvent } from 'ag-grid-community';
+import { BeanStub, _error, _isMultiRowSelection, _warn } from 'ag-grid-community';
 
 import type { LazyStore } from '../../../stores/lazy/lazyStore';
-import { ServerSideRowRangeSelectionContext } from '../serverSideRowRangeSelectionContext';
 import type { ISelectionStrategy } from './iSelectionStrategy';
 
 interface SelectionState {
@@ -27,7 +25,6 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
     private rowGroupColsSvc?: IColsService;
     private filterManager?: FilterManager;
     private selectionSvc: ISelectionService;
-    private selectionCtx = new ServerSideRowRangeSelectionContext();
 
     public wireBeans(beans: BeanCollection) {
         this.rowModel = beans.rowModel;
@@ -45,8 +42,6 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             // when the grouping changes, the state no longer makes sense, so reset the state.
             columnRowGroupChanged: () => this.selectionSvc.reset('rowGroupChanged'),
         });
-
-        this.selectionCtx.init(this.rowModel);
     }
 
     public getSelectedState() {
@@ -161,56 +156,10 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
         return anyStateChanged;
     }
 
-    private overrideSelectionValue(newValue: boolean, source: SelectionEventSourceType): boolean {
-        if (!isSelectionUIEvent(source)) {
-            return newValue;
-        }
-
-        const root = this.selectionCtx.getRoot();
-        const node = root ? this.rowModel.getRowNode(root) : null;
-
-        return node ? node.isSelected() ?? false : true;
-    }
-
-    public setNodesSelected({ nodes, newValue, rangeSelect, clearSelection, source }: ISetNodesSelectedParams): number {
+    public setNodesSelected({ nodes, newValue, clearSelection }: ISetNodesSelectedParams): number {
         if (nodes.length === 0) return 0;
 
-        if (rangeSelect) {
-            if (nodes.length > 1) {
-                _error(242);
-                return 0;
-            }
-            const node = nodes[0];
-            const newSelectionValue = this.overrideSelectionValue(newValue, source);
-
-            if (this.selectionCtx.isInRange(node.id!)) {
-                const partition = this.selectionCtx.truncate(node.id!);
-
-                // When we are selecting a range, we may need to de-select part of the previously
-                // selected range (see AG-9620)
-                // When we are de-selecting a range, we can/should leave the other nodes unchanged
-                // (i.e. selected nodes outside the current range should remain selected - see AG-10215)
-                if (newSelectionValue) {
-                    this.selectRange(partition.discard, false);
-                }
-                this.selectRange(partition.keep, newSelectionValue);
-                return 1;
-            } else {
-                const fromNode = this.selectionCtx.getRoot();
-                const toNode = node;
-                if (fromNode !== toNode.id) {
-                    const partition = this.selectionCtx.extend(node.id!, true);
-                    if (newSelectionValue) {
-                        this.selectRange(partition.discard, false);
-                    }
-                    this.selectRange(partition.keep, newSelectionValue);
-                    return 1;
-                }
-            }
-            return 1;
-        }
-
-        const onlyThisNode = clearSelection && newValue && !rangeSelect;
+        const onlyThisNode = clearSelection && newValue;
         if (!_isMultiRowSelection(this.gos) || onlyThisNode) {
             if (nodes.length > 1) {
                 _error(241);
@@ -219,31 +168,13 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
             this.deselectAllRowNodes();
         }
 
-        nodes.forEach((node) => {
+        nodes.forEach((rowNode) => {
+            const node = rowNode.footer ? rowNode.sibling : rowNode;
             const idPathToNode = this.getRouteToNode(node);
             this.recursivelySelectNode(idPathToNode, this.selectedState, newValue);
         });
         this.removeRedundantState();
-        this.selectionCtx.setRoot(_last(nodes).id!);
         return 1;
-    }
-
-    private selectRange(nodes: RowNode[], newValue: boolean) {
-        // sort routes longest to shortest, meaning we can do the lowest level children first
-        const routes = nodes.map(this.getRouteToNode).sort((a, b) => b.length - a.length);
-
-        // keep track of nodes we've seen so we can skip branches we've visited already
-        const seen = new Set<RowNode>();
-        routes.forEach((route) => {
-            if (seen.has(_last(route))) {
-                return;
-            }
-            route.forEach((part) => seen.add(part));
-
-            this.recursivelySelectNode(route, this.selectedState, newValue);
-        });
-
-        this.removeRedundantState();
     }
 
     public isNodeSelected(node: RowNode): boolean | undefined {
@@ -415,12 +346,10 @@ export class GroupSelectsChildrenStrategy extends BeanStub implements ISelection
 
     public selectAllRowNodes(): void {
         this.selectedState = { selectAllChildren: true, toggledNodes: new Map() };
-        this.selectionCtx.reset();
     }
 
     public deselectAllRowNodes(): void {
         this.selectedState = { selectAllChildren: false, toggledNodes: new Map() };
-        this.selectionCtx.reset();
     }
 
     public getSelectAllState(): boolean | null {

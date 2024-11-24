@@ -1,6 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type { BarSparklineOptions, GridApi, GridOptions } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -24,21 +25,18 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
+                    direction: 'horizontal',
+                    min: 0,
+                    max: 1,
                     fill: '#5470c6',
                     stroke: '#91cc75',
+                    strokeWidth: 1,
                     highlightStyle: {
-                        fill: '#fac858',
+                        item: {
+                            fill: '#fac858',
+                        },
                     },
-                    valueAxisDomain: [0, 1],
-                    paddingOuter: 0,
-                    padding: {
-                        top: 0,
-                        bottom: 0,
-                    },
-                    axis: {
-                        strokeWidth: 0,
-                    },
-                } as BarSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {

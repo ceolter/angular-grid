@@ -68,7 +68,7 @@ export class GridCtrl extends BeanStub {
         return {
             paginationSelector: beans.pagination?.getPaginationSelector(),
             gridHeaderDropZonesSelector: beans.registry.getSelector('AG-GRID-HEADER-DROP-ZONES'),
-            sideBarSelector: beans.sideBar?.getSideBarSelector(),
+            sideBarSelector: beans.sideBar?.getSelector(),
             statusBarSelector: beans.registry?.getSelector('AG-STATUS-BAR'),
             watermarkSelector: (beans.licenseManager as IWatermark)?.getWatermarkSelector(),
         };

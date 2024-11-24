@@ -1037,7 +1037,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         const { eventSvc, selectionSvc } = this.beans;
         eventSvc.dispatchEvent(this.createRowEventWithSource('rowClicked', mouseEvent));
 
-        selectionSvc?.handleRowClick(this.rowNode, mouseEvent);
+        selectionSvc?.handleSelectionEvent(mouseEvent, this.rowNode, 'rowClicked');
     }
 
     public setupDetailRowAutoHeight(eDetailGui: HTMLElement): void {

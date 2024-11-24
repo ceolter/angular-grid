@@ -1,3 +1,5 @@
+import type { Path } from 'ag-charts-types/scene';
+
 import type { ChartType } from 'ag-grid-community';
 
 import type { AgChartsExports } from '../../../../../agChartsExports';
@@ -9,7 +11,7 @@ import { MiniChartWithAxes } from '../miniChartWithAxes';
 
 export class MiniArea extends MiniChartWithAxes {
     static chartType: ChartType = 'area';
-    protected readonly areas: any[];
+    protected readonly areas: Path[];
 
     static readonly data = MiniLine.data;
 

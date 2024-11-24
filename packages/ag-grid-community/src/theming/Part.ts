@@ -55,10 +55,12 @@ type CreatePartArgs<T> = {
 export const createPart = <T = unknown>(args: CreatePartArgs<T>): Part<ExpandTypeKeys<WithParamTypes<T>>> =>
     new PartImpl(args) as any;
 
+export const defaultModeName = '$default';
+
 let partCounter = 0;
 export class PartImpl implements Part {
     feature?: string | undefined;
-    modeParams: Record<string, unknown>;
+    modeParams: Record<string, Record<string, unknown>>;
     css?: string | (() => string) | undefined;
 
     _inject?: { css: string; class: string } | false;
@@ -67,11 +69,16 @@ export class PartImpl implements Part {
         this.feature = feature;
         this.css = css;
         this.modeParams = {
-            ...modeParams,
-            default: {
-                ...(modeParams.default ?? {}),
+            // NOTE: it's important that default is defined first, putting it
+            // first in iteration order, because when merging params the default
+            // params override any prior modal params, so modal params in this
+            // part need to come after default params to prevent them from being
+            // immediately overridden.
+            [defaultModeName]: {
+                ...(modeParams[defaultModeName] ?? {}),
                 ...(params ?? {}),
             },
+            ...modeParams,
         };
     }
 

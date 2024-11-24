@@ -27,10 +27,6 @@ const gridOptions: GridOptions<IOlympicData> = {
         },
     },
     groupDisplayType: 'multipleColumns',
-    rowSelection: {
-        mode: 'singleRow',
-        checkboxLocation: 'autoGroupColumn',
-    },
 };
 
 // setup the grid after the page has finished loading
