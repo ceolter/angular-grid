@@ -218,6 +218,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
 
         if (this.innerHeaderGroupComponent) {
             this.destroyBean(this.innerHeaderGroupComponent);
+            this.innerHeaderGroupComponent = undefined;
         }
     }
 }

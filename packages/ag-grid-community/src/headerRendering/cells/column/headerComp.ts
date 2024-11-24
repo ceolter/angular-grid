@@ -392,6 +392,7 @@ export class HeaderComp extends Component implements IHeaderComp {
 
         if (this.innerHeaderComponent) {
             this.destroyBean(this.innerHeaderComponent);
+            this.innerHeaderComponent = undefined;
         }
     }
 }
