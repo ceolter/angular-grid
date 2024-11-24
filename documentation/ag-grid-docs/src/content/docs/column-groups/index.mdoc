@@ -238,6 +238,45 @@ As with Column Headers, the grid will always handle resize and column moving. Th
 {% partial file="./_open-close-react.mdoc" /%}
 {% partial file="./_open-close-vue.mdoc" /%}
 
+### Inner Header Group Component
+
+When using the Header Group Component, the `agColumnHeaderGroup` component will display the header group name,
+adjacent to the expand / collapse button.
+
+This text value can be overridden with a [Custom Component](./components/) by setting the `innerHeaderGroupComponent` and `innerHeaderGroupComponentParams` properties
+on the `headerGroupComponentParams` property. This is useful when you only need to implement a Component to customise the **Column Group Name** without having to reimplement
+the other header group functionality such as the expand / collapse.
+
+{% if isFramework("javascript", "angular", "react") %}
+```js
+colDef = {
+    ...
+    headerGroupComponentParams : {
+        innerHeaderComponent: MyInnerHeaderGroupComponent,
+        innerHeaderComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% if isFramework("vue") %}
+```js
+colDef = {
+    ...
+    headerGroupComponentParams : {
+        innerHeaderGroupComponent: 'MyInnerHeaderGroupComponent',
+        innerHeaderGroupComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% gridExampleRunner title="Custom Inner Header Group Component" name="inner-header-group-component" /%}
+
 ### Dynamic Tooltips
 
 When using Custom Header Components it might be necessary to have a better control of how `Tooltips` are added instead of simply using the `headerTooltip` config. For this purpose, we provide the `setTooltip` method.

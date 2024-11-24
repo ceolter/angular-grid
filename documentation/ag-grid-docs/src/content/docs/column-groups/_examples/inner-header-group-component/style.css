@@ -1,0 +1,14 @@
+.customInnerHeaderGroup {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.customInnerHeaderGroup span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fa {
+    color: cornflowerblue;
+}
