@@ -144,6 +144,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     private currentSort: boolean | undefined;
 
     private innerHeaderComponent: IInnerHeaderComponent | undefined;
+    private isLoadingInnerComponent: boolean = false;
 
     public refresh(params: IHeaderParams): boolean {
         const oldParams = this.params;
@@ -158,13 +159,10 @@ export class HeaderComp extends Component implements IHeaderComp {
             params.enableSorting != this.currentSort ||
             this.shouldSuppressMenuHide() != this.currentSuppressMenuHide ||
             oldParams.enableFilterButton != params.enableFilterButton ||
-            oldParams.enableFilterIcon != params.enableFilterIcon ||
-            !this.innerHeaderComponent
+            oldParams.enableFilterIcon != params.enableFilterIcon
         ) {
             return false;
         }
-
-        this.setDisplayName(params, true);
 
         return true;
     }
@@ -196,18 +194,26 @@ export class HeaderComp extends Component implements IHeaderComp {
     private workOutInnerHeaderComponent(userCompFactory: UserComponentFactory, params: IHeaderParams): void {
         const userCompDetails = _getInnerHeaderCompDetails(userCompFactory, params, params);
 
-        if (userCompDetails) {
-            userCompDetails.newAgStackInstance().then((comp) => {
-                if (!comp) {
-                    return;
-                }
-                this.innerHeaderComponent = comp;
-
-                if (this.isAlive()) {
-                    this.eText.appendChild(comp.getGui());
-                }
-            });
+        if (!userCompDetails) {
+            return;
         }
+
+        this.isLoadingInnerComponent = true;
+
+        userCompDetails.newAgStackInstance().then((comp) => {
+            this.isLoadingInnerComponent = false;
+
+            if (!comp) {
+                return;
+            }
+
+            if (this.isAlive()) {
+                this.innerHeaderComponent = comp;
+                this.eText.appendChild(comp.getGui());
+            } else {
+                this.destroyBean(comp);
+            }
+        });
     }
 
     private setDisplayName(params: IHeaderParams, fromRefresh?: boolean) {
@@ -223,7 +229,7 @@ export class HeaderComp extends Component implements IHeaderComp {
             if (fromRefresh) {
                 this.innerHeaderComponent.refresh?.(params);
             }
-        } else {
+        } else if (!this.isLoadingInnerComponent) {
             const displayNameSanitised = _escapeString(displayName, true);
             this.eText.innerText = displayNameSanitised!;
         }

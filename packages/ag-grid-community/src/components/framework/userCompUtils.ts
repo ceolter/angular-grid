@@ -34,8 +34,8 @@ const DragAndDropImageComponent: ComponentType = {
 
 const HeaderComponent: ComponentType = { name: 'headerComponent', optionalMethods: ['refresh'] };
 
-const InnerHeaderComponent: ComponentType = { name: 'innerHeaderComponent', optionalMethods: ['refresh'] };
-const InnerHeaderGroupComponent: ComponentType = { name: 'innerHeaderGroupComponent', optionalMethods: ['refresh'] };
+const InnerHeaderComponent: ComponentType = { name: 'innerHeaderComponent' };
+const InnerHeaderGroupComponent: ComponentType = { name: 'innerHeaderGroupComponent' };
 
 const HeaderGroupComponent: ComponentType = { name: 'headerGroupComponent' };
 

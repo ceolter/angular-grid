@@ -56,6 +56,7 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     private readonly agLabel: HTMLElement = RefPlaceholder;
 
     private innerHeaderGroupComponent: IInnerHeaderGroupComponent | undefined;
+    private isLoadingInnerComponent: boolean = false;
 
     constructor() {
         super(/* html */ `<div class="ag-header-group-cell-label" role="presentation">
@@ -87,18 +88,24 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     private workOutInnerHeaderGroupComponent(userCompFactory: UserComponentFactory, params: IHeaderGroupParams): void {
         const userCompDetails = _getInnerHeaderGroupCompDetails(userCompFactory, params, params);
 
-        if (userCompDetails) {
-            userCompDetails.newAgStackInstance().then((comp) => {
-                if (!comp) {
-                    return;
-                }
-                this.innerHeaderGroupComponent = comp;
-
-                if (this.isAlive()) {
-                    this.agLabel.appendChild(comp.getGui());
-                }
-            });
+        if (!userCompDetails) {
+            return;
         }
+
+        this.isLoadingInnerComponent = true;
+        userCompDetails.newAgStackInstance().then((comp) => {
+            this.isLoadingInnerComponent = false;
+            if (!comp) {
+                return;
+            }
+
+            if (this.isAlive()) {
+                this.innerHeaderGroupComponent = comp;
+                this.agLabel.appendChild(comp.getGui());
+            } else {
+                this.destroyBean(comp);
+            }
+        });
     }
 
     private setupExpandIcons(): void {
@@ -196,7 +203,9 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         // no renderer, default text render
         const { displayName, columnGroup } = params;
 
-        if (_exists(displayName) && !this.innerHeaderGroupComponent) {
+        const hasInnerComponent = this.innerHeaderGroupComponent || this.isLoadingInnerComponent;
+
+        if (_exists(displayName) && !hasInnerComponent) {
             const displayNameSanitised = _escapeString(displayName, true);
             this.agLabel.textContent = displayNameSanitised!;
         }
