@@ -2,7 +2,11 @@ import type { IDragAndDropImageComponent, IDragAndDropImageParams } from '../../
 import type { ColDef } from '../../entities/colDef';
 import type { IFloatingFilterComp, IFloatingFilterParams } from '../../filter/floating/floatingFilter';
 import type { IHeaderComp, IHeaderParams, IInnerHeaderComponent } from '../../headerRendering/cells/column/headerComp';
-import type { IHeaderGroupComp, IHeaderGroupParams } from '../../headerRendering/cells/columnGroup/headerGroupComp';
+import type {
+    IHeaderGroupComp,
+    IHeaderGroupParams,
+    IInnerHeaderGroupComponent,
+} from '../../headerRendering/cells/columnGroup/headerGroupComp';
 import type { IDateComp, IDateParams } from '../../interfaces/dateComponent';
 import type { ICellEditorComp, ICellEditorParams } from '../../interfaces/iCellEditor';
 import type { AgGridCommon, WithoutGridCommon } from '../../interfaces/iCommon';
@@ -31,6 +35,7 @@ const DragAndDropImageComponent: ComponentType = {
 const HeaderComponent: ComponentType = { name: 'headerComponent', optionalMethods: ['refresh'] };
 
 const InnerHeaderComponent: ComponentType = { name: 'innerHeaderComponent', optionalMethods: ['refresh'] };
+const InnerHeaderGroupComponent: ComponentType = { name: 'innerHeaderGroupComponent', optionalMethods: ['refresh'] };
 
 const HeaderGroupComponent: ComponentType = { name: 'headerGroupComponent' };
 
@@ -153,8 +158,8 @@ export function _getInnerHeaderGroupCompDetails(
     userCompFactory: UserComponentFactory,
     headerGroupCompParams: IHeaderGroupParams,
     params: WithoutGridCommon<IHeaderGroupParams>
-): UserCompDetails<IInnerHeaderComponent> | undefined {
-    return userCompFactory.getCompDetails(headerGroupCompParams, InnerHeaderComponent, undefined, params);
+): UserCompDetails<IInnerHeaderGroupComponent> | undefined {
+    return userCompFactory.getCompDetails(headerGroupCompParams, InnerHeaderGroupComponent, undefined, params);
 }
 // this one is unusual, as it can be LoadingCellRenderer, DetailCellRenderer, FullWidthCellRenderer or GroupRowRenderer.
 // so we have to pass the type in.

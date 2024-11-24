@@ -1,3 +1,5 @@
+import { _getInnerHeaderGroupCompDetails } from '../../../components/framework/userCompUtils';
+import type { UserComponentFactory } from '../../../components/framework/userComponentFactory';
 import type { BeanCollection } from '../../../context/context';
 import type { AgColumnGroup } from '../../../entities/agColumnGroup';
 import type { ColumnGroup } from '../../../interfaces/iColumn';
@@ -28,11 +30,23 @@ export interface IHeaderGroupParams<TData = any, TContext = any> extends AgGridC
      * @param shouldDisplayTooltip A function returning a boolean that allows the tooltip to be displayed conditionally. This option does not work when `enableBrowserTooltips={true}`.
      */
     setTooltip: (value: string, shouldDisplayTooltip?: () => boolean) => void;
+
+    /** The component to use for inside the header group (replaces the text value and leaves the remainder of the Grid's original component). */
+    innerHeaderGroupComponent?: any;
+    /** Additional params to customise to the `innerHeaderGroupComponent`. */
+    innerHeaderGroupComponentParams?: any;
 }
 
 export interface IHeaderGroup {}
 
 export interface IHeaderGroupComp extends IHeaderGroup, IComponent<IHeaderGroupParams> {}
+
+export interface IInnerHeaderGroupComponent<
+    TData = any,
+    TContext = any,
+    TParams extends Readonly<IHeaderGroupParams<TData, TContext>> = IHeaderGroupParams<TData, TContext>,
+> extends IComponent<TParams>,
+        IHeaderGroup {}
 
 export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     private params: IHeaderGroupParams;
@@ -40,6 +54,8 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     private readonly agOpened: HTMLElement = RefPlaceholder;
     private readonly agClosed: HTMLElement = RefPlaceholder;
     private readonly agLabel: HTMLElement = RefPlaceholder;
+
+    private innerHeaderGroupComponent: IInnerHeaderGroupComponent | undefined;
 
     constructor() {
         super(/* html */ `<div class="ag-header-group-cell-label" role="presentation">
@@ -50,10 +66,11 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
     }
 
     public init(params: IHeaderGroupParams): void {
+        const { userCompFactory } = this.beans;
         this.params = params;
 
         this.checkWarnings();
-
+        this.workOutInnerHeaderGroupComponent(userCompFactory, params);
         this.setupLabel(params);
         this.addGroupExpandIcon(params);
         this.setupExpandIcons();
@@ -64,6 +81,23 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
 
         if (paramsAny.template) {
             _warn(89);
+        }
+    }
+
+    private workOutInnerHeaderGroupComponent(userCompFactory: UserComponentFactory, params: IHeaderGroupParams): void {
+        const userCompDetails = _getInnerHeaderGroupCompDetails(userCompFactory, params, params);
+
+        if (userCompDetails) {
+            userCompDetails.newAgStackInstance().then((comp) => {
+                if (!comp) {
+                    return;
+                }
+                this.innerHeaderGroupComponent = comp;
+
+                if (this.isAlive()) {
+                    this.agLabel.appendChild(comp.getGui());
+                }
+            });
         }
     }
 
@@ -162,11 +196,19 @@ export class HeaderGroupComp extends Component implements IHeaderGroupComp {
         // no renderer, default text render
         const { displayName, columnGroup } = params;
 
-        if (_exists(displayName)) {
+        if (_exists(displayName) && !this.innerHeaderGroupComponent) {
             const displayNameSanitised = _escapeString(displayName, true);
             this.agLabel.textContent = displayNameSanitised!;
         }
 
         this.addOrRemoveCssClass('ag-sticky-label', !columnGroup.getColGroupDef()?.suppressStickyLabel);
+    }
+
+    public override destroy(): void {
+        super.destroy();
+
+        if (this.innerHeaderGroupComponent) {
+            this.destroyBean(this.innerHeaderGroupComponent);
+        }
     }
 }
