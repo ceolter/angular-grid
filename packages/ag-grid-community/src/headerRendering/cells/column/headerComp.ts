@@ -381,8 +381,6 @@ export class HeaderComp extends Component implements IHeaderComp {
         return eMenu ?? eFilterButton ?? this.getGui();
     }
 
-    // this is a user component, and IComponent has "public destroy()" as part of the interface.
-    // so we need to override destroy() just to make the method public.
     public override destroy(): void {
         super.destroy();
 
