@@ -164,6 +164,8 @@ export class HeaderComp extends Component implements IHeaderComp {
             return false;
         }
 
+        this.setDisplayName(params);
+
         return true;
     }
 
@@ -216,23 +218,17 @@ export class HeaderComp extends Component implements IHeaderComp {
         });
     }
 
-    private setDisplayName(params: IHeaderParams, fromRefresh?: boolean) {
+    private setDisplayName(params: IHeaderParams) {
         const { displayName } = params;
         const oldDisplayName = this.currentDisplayName;
         this.currentDisplayName = displayName;
 
-        if (oldDisplayName === displayName) {
+        if (oldDisplayName === displayName || this.innerHeaderComponent || this.isLoadingInnerComponent) {
             return;
         }
 
-        if (this.innerHeaderComponent) {
-            if (fromRefresh) {
-                this.innerHeaderComponent.refresh?.(params);
-            }
-        } else if (!this.isLoadingInnerComponent) {
-            const displayNameSanitised = _escapeString(displayName, true);
-            this.eText.innerText = displayNameSanitised!;
-        }
+        const displayNameSanitised = _escapeString(displayName, true);
+        this.eText.innerText = displayNameSanitised!;
     }
 
     private addInIcon(iconName: IconName, eParent: HTMLElement, column: AgColumn): void {
