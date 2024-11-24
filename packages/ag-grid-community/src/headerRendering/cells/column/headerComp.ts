@@ -72,9 +72,9 @@ export interface IHeaderParams<TData = any, TContext = any> extends AgGridCommon
     /** Custom header template if provided to `headerComponentParams`, otherwise will be `undefined`. See [Header Templates](https://ag-grid.com/javascript-data-grid/column-headers/#header-templates) */
     template?: string;
     /** The renderer to use for inside the header (replaces the text value and leaves the remainder of the Grid's original components). */
-    innerRenderer?: any;
-    /** Additional params to customise to the `innerRenderer`. */
-    innerRendererParams?: any;
+    innerHeaderComponent?: any;
+    /** Additional params to customise to the `innerHeaderComponent`. */
+    innerHeaderComponentParams?: any;
     /**
      * The header the grid provides.
      * The custom header component is a child of the grid provided header.
@@ -143,7 +143,7 @@ export class HeaderComp extends Component implements IHeaderComp {
     private currentSuppressMenuHide: boolean;
     private currentSort: boolean | undefined;
 
-    private innerRenderer: IInnerHeaderComponent | undefined;
+    private innerHeaderComponent: IInnerHeaderComponent | undefined;
 
     public refresh(params: IHeaderParams): boolean {
         const oldParams = this.params;
@@ -159,7 +159,7 @@ export class HeaderComp extends Component implements IHeaderComp {
             this.shouldSuppressMenuHide() != this.currentSuppressMenuHide ||
             oldParams.enableFilterButton != params.enableFilterButton ||
             oldParams.enableFilterIcon != params.enableFilterIcon ||
-            !this.innerRenderer
+            !this.innerHeaderComponent
         ) {
             return false;
         }
@@ -189,11 +189,11 @@ export class HeaderComp extends Component implements IHeaderComp {
         this.setupSort();
         this.setupFilterIcon();
         this.setupFilterButton();
-        this.workOutInnerRenderer(userCompFactory, params);
+        this.workOutInnerHeaderComponent(userCompFactory, params);
         this.setDisplayName(params);
     }
 
-    private workOutInnerRenderer(userCompFactory: UserComponentFactory, params: IHeaderParams): void {
+    private workOutInnerHeaderComponent(userCompFactory: UserComponentFactory, params: IHeaderParams): void {
         const userCompDetails = _getInnerHeaderCompDetails(userCompFactory, params, params);
 
         if (userCompDetails) {
@@ -201,7 +201,7 @@ export class HeaderComp extends Component implements IHeaderComp {
                 if (!comp) {
                     return;
                 }
-                this.innerRenderer = comp;
+                this.innerHeaderComponent = comp;
 
                 if (this.isAlive()) {
                     this.eText.appendChild(comp.getGui());
@@ -219,9 +219,9 @@ export class HeaderComp extends Component implements IHeaderComp {
             return;
         }
 
-        if (this.innerRenderer) {
+        if (this.innerHeaderComponent) {
             if (fromRefresh) {
-                this.innerRenderer.refresh?.(params);
+                this.innerHeaderComponent.refresh?.(params);
             }
         } else {
             const displayNameSanitised = _escapeString(displayName, true);
@@ -386,8 +386,8 @@ export class HeaderComp extends Component implements IHeaderComp {
     public override destroy(): void {
         super.destroy();
 
-        if (this.innerRenderer) {
-            this.destroyBean(this.innerRenderer);
+        if (this.innerHeaderComponent) {
+            this.destroyBean(this.innerHeaderComponent);
         }
     }
 }
