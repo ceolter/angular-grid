@@ -135,7 +135,7 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
         <div className={styles.container}>
             <ModuleConfiguration moduleConfig={moduleConfig} />
             <ModuleSearch gridRef={gridRef} />
-            <div style={{ height: '400px' }}>
+            <div style={{ height: '410px' }}>
                 <AgGridReact
                     ref={gridRef}
                     defaultColDef={defaultColDef}
