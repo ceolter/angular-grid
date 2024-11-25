@@ -146,11 +146,11 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
+
         border-right: 1px solid var(--color-border-secondary);
 
         &:last-child {
             border-right: none;
-        }
     }
 
     h4 {
@@ -163,11 +163,11 @@
         #{$selector-darkmode} & {
             color: var(--color-util-brand-900);
         }
-    }
-    #{$selector-darkmode} & {
-        background: color-mix(in srgb, var(--color-fg-primary), var(--color-bg-primary) 98%);
+
     }
 
+    h4 {
+        color: var(--color-util-brand-500);
     @media screen and (max-width: $breakpoint-pricing-large) {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
