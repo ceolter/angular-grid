@@ -1,6 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type { AreaSparklineOptions, GridApi, GridOptions } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -25,16 +26,24 @@ const gridOptions: GridOptions = {
                 sparklineOptions: {
                     type: 'area',
                     fill: 'rgba(216, 204, 235, 0.3)',
-                    line: {
-                        stroke: 'rgb(119,77,185)',
-                    },
-                    highlightStyle: {
-                        fill: 'rgb(143,185,77)',
+                    stroke: 'rgb(119,77,185)',
+                    marker: {
+                        enabled: true,
+                        size: 0,
+                        itemStyler: (params: any) => {
+                            if (params.highlighted) {
+                                return {
+                                    size: 4,
+                                    fill: 'rgb(143,185,77)',
+                                };
+                            }
+                        },
                     },
                     axis: {
+                        type: 'category',
                         stroke: 'rgb(204, 204, 235)',
                     },
-                } as AreaSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {

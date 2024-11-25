@@ -170,53 +170,6 @@ Custom axis line
 It is possible to remove the axis line entirely by setting the axis `strokeWidth` to `0`.
 {% /note %}
 
-## Crosshairs Options
-
-Crosshairs display a vertical and horizontal line running across the sparklines when hovering on a data point. When the mouse is moved, the crosshairs will snap to the closest data point.
-
-By default, the vertical crosshair line has been enabled for area sparklines and is displayed as a solid grey line.
-
-The horizontal and vertical crosshair lines can be enabled or disabled independently by adding `crosshairs` options as shown below:
-
-```js
-sparklineOptions: {
-    crosshairs: {
-        xLine: {
-            enabled: false // enabled by default, set to false to remove the default vertical crosshair line
-        },
-        yLine: {
-            enabled: false // disabled by default, set to true to enable the horizontal crosshair line
-        }
-    }
-}
-```
-
-The style of the crosshair line, including `stroke`, `strokeWidth`, `lineDash` and `lineCap`, can be customised via the `xLine` and `yLine` options:
-
-```js
-sparklineOptions: {
-    crosshairs: {
-        xLine: {
-            enabled: true, // enabled by default
-            lineDash: 'dash',
-            stroke: '#999',
-        },
-        yLine: {
-            enabled: true,
-            lineDash: 'dash',
-            stroke: '#999',
-        },
-    }
-}
-```
-
-Below is an example to show crosshair customisation. Note that:
-
-* The sparklines in the **Change** column have been configured so that both the vertical and horizontal crosshairs (xLine and yLine) are displayed as a dashed grey line.
-* The sparklines in the **Rate Of Change** column have been configured so that no crosshairs are displayed when the sparklines are hovered.
-
-{% gridExampleRunner title="Sparkline Crosshairs" name="sparkline-crosshairs"  exampleHeight=585 /%}
-
 ## Sparkline Padding Options
 
 To add extra space around the sparklines, custom `padding` options can be applied as shown in the code snippet below.

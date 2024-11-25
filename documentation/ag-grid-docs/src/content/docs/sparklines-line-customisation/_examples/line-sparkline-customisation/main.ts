@@ -1,4 +1,5 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
@@ -24,30 +25,25 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'line',
-                    theme: {
-                        overrides: {
-                            line: {
-                                series: {
-                                    stroke: 'rgb(124, 255, 178)',
-                                    strokeWidth: 2,
-                                },
-                            },
-                            padding: {
-                                series: {
-                                    top: 5,
-                                    bottom: 5,
-                                },
-                            },
-                            highlightStyle: {
-                                series: {
+                    stroke: 'rgb(124, 255, 178)',
+                    strokeWidth: 2,
+                    marker: {
+                        enabled: true,
+                        size: 0,
+                        itemStyler: (params: any) => {
+                            if (params.highlighted) {
+                                return {
                                     size: 7,
                                     fill: 'rgb(124, 255, 178)',
-                                    strokeWidth: 0,
-                                },
-                            },
+                                };
+                            }
                         },
                     },
-                },
+                    padding: {
+                        top: 5,
+                        bottom: 5,
+                    },
+                } as AgSparklineOptions,
             },
         },
         {

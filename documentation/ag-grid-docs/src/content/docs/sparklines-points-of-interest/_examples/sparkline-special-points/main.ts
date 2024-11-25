@@ -1,16 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type {
-    AreaSparklineOptions,
-    BarFormatterParams,
-    BarSparklineOptions,
-    ColumnFormatterParams,
-    ColumnSparklineOptions,
-    GridApi,
-    GridOptions,
-    LineSparklineOptions,
-    MarkerFormatterParams,
-} from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -42,26 +33,26 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
-                    valueAxisDomain: [0, 100],
+                    direction: 'horizontal',
+                    min: 0,
+                    max: 100,
                     label: {
-                        color: '#5577CC',
                         enabled: true,
-                        placement: 'outsideEnd',
+                        color: '#5577CC',
+                        placement: 'outside-end',
                         formatter: function (params) {
                             return `${params.value}%`;
                         },
+                        fontSize: 8,
                         fontWeight: 'bold',
                         fontFamily: 'Arial, Helvetica, sans-serif',
-                    },
-                    highlightStyle: {
-                        strokeWidth: 0,
                     },
                     padding: {
                         top: 15,
                         bottom: 15,
                     },
-                    formatter: barFormatter,
-                } as BarSparklineOptions,
+                    itemStyler: barItemStyler,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -71,17 +62,17 @@ const gridOptions: GridOptions = {
             cellRenderer: 'agSparklineCellRenderer',
             cellRendererParams: {
                 sparklineOptions: {
-                    line: {
-                        stroke: 'rgb(63,141,119)',
-                    },
+                    type: 'line',
+                    stroke: 'rgb(63,141,119)',
                     padding: {
                         top: 10,
                         bottom: 10,
                     },
                     marker: {
-                        formatter: lineMarkerFormatter,
+                        enabled: true,
+                        itemStyler: lineItemStyler,
                     },
-                } as LineSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -96,18 +87,16 @@ const gridOptions: GridOptions = {
                     label: {
                         color: '#5577CC',
                         enabled: true,
-                        placement: 'outsideEnd',
+                        placement: 'outside-end',
+                        fontSize: 8,
                         fontFamily: 'Arial, Helvetica, sans-serif',
-                    },
-                    highlightStyle: {
-                        strokeWidth: 0,
                     },
                     padding: {
                         top: 15,
                         bottom: 15,
                     },
-                    formatter: columnFormatter,
-                } as ColumnSparklineOptions,
+                    itemStyler: columnItemStyler,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -119,17 +108,16 @@ const gridOptions: GridOptions = {
                 sparklineOptions: {
                     type: 'area',
                     fill: 'rgba(75,168,142, 0.2)',
-                    line: {
-                        stroke: 'rgb(63,141,119)',
-                    },
+                    stroke: 'rgb(63,141,119)',
                     padding: {
                         top: 10,
                         bottom: 10,
                     },
                     marker: {
-                        formatter: areaMarkerFormatter,
+                        enabled: true,
+                        itemStyler: areaItemStyler,
                     },
-                } as AreaSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
     ],
@@ -140,7 +128,7 @@ const gridOptions: GridOptions = {
     rowData: getData(),
 };
 
-function barFormatter(params: BarFormatterParams) {
+function barItemStyler(params: any) {
     const { yValue, highlighted } = params;
 
     if (highlighted) {
@@ -149,7 +137,7 @@ function barFormatter(params: BarFormatterParams) {
     return { fill: yValue <= 50 ? palette.lightBlue : palette.blue };
 }
 
-function lineMarkerFormatter(params: MarkerFormatterParams) {
+function lineItemStyler(params: any) {
     const { first, last, highlighted } = params;
 
     const color = highlighted ? palette.blue : last ? palette.lightBlue : palette.green;
@@ -161,7 +149,7 @@ function lineMarkerFormatter(params: MarkerFormatterParams) {
     };
 }
 
-function columnFormatter(params: ColumnFormatterParams) {
+function columnItemStyler(params: any) {
     const { yValue, highlighted } = params;
 
     if (highlighted) {
@@ -170,7 +158,7 @@ function columnFormatter(params: ColumnFormatterParams) {
     return { fill: yValue < 0 ? palette.lightBlue : palette.blue };
 }
 
-function areaMarkerFormatter(params: MarkerFormatterParams) {
+function areaItemStyler(params: any) {
     const { min, highlighted } = params;
 
     return {

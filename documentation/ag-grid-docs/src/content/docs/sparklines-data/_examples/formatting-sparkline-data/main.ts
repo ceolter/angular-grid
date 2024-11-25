@@ -1,6 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type { AreaSparklineOptions, GridApi, GridOptions, ValueGetterParams } from 'ag-grid-community';
+import type { GridApi, GridOptions, ValueGetterParams } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -24,7 +25,7 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'area',
-                } as AreaSparklineOptions,
+                } as AgSparklineOptions,
             },
             valueGetter: (params: ValueGetterParams) => {
                 const formattedData: any = [];

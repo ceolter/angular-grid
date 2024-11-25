@@ -1,6 +1,7 @@
 import { AgChartsCommunityModule } from 'ag-charts-community';
+import type { AgSparklineOptions } from 'ag-charts-community';
 
-import type { GridApi, GridOptions, LineSparklineOptions, TooltipRendererParams } from 'ag-grid-community';
+import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { SparklinesModule } from 'ag-grid-enterprise';
 
@@ -25,20 +26,12 @@ const gridOptions: GridOptions = {
             cellRenderer: 'agSparklineCellRenderer',
             cellRendererParams: {
                 sparklineOptions: {
-                    line: {
-                        stroke: 'rgb(94,94,224)',
-                    },
+                    type: 'line',
+                    stroke: 'rgb(94,94,224)',
                     tooltip: {
-                        container: body,
-                        xOffset: 20,
-                        yOffset: -20,
                         renderer: tooltipRenderer,
                     },
-                    highlightStyle: {
-                        fill: 'rgb(94,94,224)',
-                        strokeWidth: 0,
-                    },
-                } as LineSparklineOptions,
+                } as AgSparklineOptions,
             },
         },
         {
@@ -56,7 +49,7 @@ const gridOptions: GridOptions = {
     rowHeight: 50,
 };
 
-function tooltipRenderer(params: TooltipRendererParams) {
+function tooltipRenderer(params: any) {
     const { yValue, context } = params;
     return `<div class='my-custom-tooltip my-custom-tooltip-arrow'>
               <div class='tooltip-title'>${context.data.symbol}</div>

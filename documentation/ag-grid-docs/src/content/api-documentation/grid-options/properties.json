@@ -1234,7 +1234,7 @@
         "groupRowRendererParams": {
             "more": {
                 "name": "Configuring Group Row Cell Renderer",
-                "url": "./grouping-group-rows/#cell-renderer"
+                "url": "./grouping-group-rows/#cell-component"
             }
         },
         "showOpenedGroup": {
@@ -1283,7 +1283,7 @@
         "suppressGroupRowsSticky": {
             "more": {
                 "name": "Suppressing Sticky Groups",
-                "url": "./server-side-model-grouping/#suppressing-sticky-groups"
+                "url": "./grouping-opening-groups/#prevent-sticky-groups"
             }
         },
         "rowGroupPanelShow": {
@@ -1360,7 +1360,7 @@
         "suppressGroupRowsSticky": {
             "more": {
                 "name": "Suppressing Sticky Groups",
-                "url": "./server-side-model-grouping/#suppressing-sticky-groups"
+                "url": "./grouping-opening-groups/#prevent-sticky-groups"
             }
         }
     },
