@@ -1,3 +1,4 @@
+import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import { ShadowDom } from '@components/ShadowDom';
 import { useDarkmode } from '@utils/hooks/useDarkmode';
 import React, { useMemo, useState } from 'react';
@@ -24,6 +25,8 @@ interface Props {
     gridHeight?: number | null;
 }
 
+type ThemeSelection = 'themeQuartz' | 'themeCustom';
+
 const themeCustom = themeQuartz
     .withParams(
         {
@@ -46,10 +49,26 @@ const themeCustom = themeQuartz
         'dark-blue'
     );
 
-export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => {
+const THEME_SELECTIONS = [
+    {
+        value: themeQuartz,
+        label: 'Choose from AG Grid Themes',
+        description: 'Use our built-in themes Quartz, Alpine or Balham',
+        themeName: 'themeQuartz',
+    },
+    {
+        value: themeCustom,
+        label: 'Custom theme',
+        description: 'Use the Theming API or CSS variables to create your theme',
+        themeName: 'themeCustom',
+    },
+];
+
+export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => {
     const [baseTheme, setBaseTheme] = useState<Theme>(themeQuartz);
     const [spacing, setSpacing] = useState(8);
     const theme = useMemo(() => baseTheme.withParams({ spacing }), [baseTheme, spacing]);
+    const [themeSelection, setThemeSelection] = useState<ThemeSelection>('themeQuartz');
     const [isDarkMode] = useDarkmode();
 
     const columnDefs = useMemo<ColDef[]>(
@@ -87,15 +106,13 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
         { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
     ];
 
-    const themeName = theme === themeAlpine ? 'themeAlpine' : theme === themeBalham ? 'themeBalham' : 'themeQuartz';
-    const codeBlock = `import { ${themeName} } from 'ag-grid-community';
+    const codeBlock = `// Using the Theming API
+import { ${themeSelection} } from 'ag-grid-community';
     
-    <AgGridReact
-      theme={${themeName}}
-      spacing={${spacing}}
-    />
-      `;
-    const lines = codeBlock.split('\n');
+<AgGridReact
+    theme={${themeSelection}}
+    spacing={${spacing}}
+/>`;
 
     return (
         <div className={styles.gridColumns}>
@@ -103,22 +120,14 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                 <div className={styles.themeOptions}>
                     <div className={styles.label}>Theme</div>
                     <div className={styles.buttonGroup}>
-                        {[
-                            {
-                                value: themeQuartz,
-                                label: 'Choose from AG Grid Themes',
-                                description: 'Use our built-in themes Quartz, Alpine or Balham',
-                            },
-                            {
-                                value: themeCustom,
-                                label: 'Custom theme',
-                                description: 'Use the Theming API or CSS variables to create your theme',
-                            },
-                        ].map((themeOption) => (
+                        {THEME_SELECTIONS.map((themeOption) => (
                             <div
                                 key={themeOption.label}
                                 className={`${styles.buttonItem} ${baseTheme === themeOption.value ? styles.active : ''}`}
-                                onClick={() => setBaseTheme(themeOption.value)}
+                                onClick={() => {
+                                    setThemeSelection(themeOption.themeName as ThemeSelection);
+                                    setBaseTheme(themeOption.value);
+                                }}
                             >
                                 <div className={styles.title}>{themeOption.label}</div>
                                 <div className={styles.description}> {themeOption.description}</div>
@@ -171,18 +180,8 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                         <div className={styles.dot}></div>
                         <div className={styles.dot}></div>
                     </div>
-                    <div style={{ display: 'flex' }}>
-                        <div className={styles.lineNumbers}>
-                            {lines.map((_, index) => (
-                                <div key={index}>{index + 1}</div>
-                            ))}
-                        </div>
-                        <pre className={styles.codeBlock}>
-                            {' '}
-                            <div className={styles.commentLine}>// Using the Theming API</div>
-                            {codeBlock}
-                        </pre>
-                    </div>
+
+                    <Snippet framework="react" language={'jsx'} content={codeBlock} transform={false} lineNumbers />
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@ import { LandingPageSection } from '@ag-website-shared/components/landing-pages/
 import { LandingPageFAQ } from '@ag-website-shared/components/landing-pages/LandingPageFAQ';
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 import { Finance } from 'src/components/demos/examples/finance';
-import { StockPerformanceGrid } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
+import { ThemeBuilderHomepage } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { data: FAQData } = await getEntry('homepage', 'homepageFAQs');
@@ -116,7 +116,7 @@ const frameworksData = [
         ctaTitle="Use the Theme Builder"
         ctaUrl={urlWithBaseUrl('/theme-builder/')}
     >
-        <StockPerformanceGrid gridHeight={261} client:visible />
+        <ThemeBuilderHomepage gridHeight={261} client:visible />
     </LandingPageSection>
 
     <LandingPageSection

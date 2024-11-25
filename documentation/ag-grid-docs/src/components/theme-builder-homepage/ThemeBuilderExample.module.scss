@@ -97,6 +97,11 @@
     #{$selector-darkmode} & {
         background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
     }
+
+    pre {
+        height: 100%;
+        margin: 26px 0 16px 0;
+    }
 }
 
 .windowControls {
