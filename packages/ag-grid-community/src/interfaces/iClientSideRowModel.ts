@@ -1,4 +1,5 @@
 import type { RefreshModelParams } from '../clientSideRowModel/refreshModelState';
+import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition, RowNode } from '../entities/rowNode';
 import type { ChangedPath } from '../utils/changedPath';
 import type { IRowModel } from './iRowModel';
@@ -31,6 +32,14 @@ export type ClientSideRowModelStage =
 export interface IClientSideRowModel<TData = any> extends IRowModel {
     /** The root row containing all the rows */
     readonly rootNode: RowNode | null;
+
+    /**
+     * TODO: we are exporting here all the properties we listen to to start a refresh.
+     * This is a temporary fix for AG-13089 to ensure that the column model register to those events
+     * in such a way the order of execution of column model refresh and csrm refresh is always consistent.
+     * Remove this once AG-13089 is fixed
+     */
+    readonly allRefreshProps: (keyof GridOptions)[];
 
     refreshAfterRowGroupOpened(keepRenderedRows: boolean): void;
     refreshModel(params: RefreshModelParams): void;
