@@ -67,11 +67,18 @@ export class ColumnModel extends BeanStub implements NamedBean {
         this.pivotMode = this.gos.get('pivotMode');
 
         // TODO: Due to https://ag-grid.atlassian.net/browse/AG-13089 - Order of grouped property listener changed is not deterministic
-        // and when both rowData and treeData are changed in the same batch, the order of the events is CSRM and ColumnModel is inverted.
+        // and when both rowData and treeData are changed in the same batch, the order of the events is CSRM and ColumnModel might be inverted.
         //
         // we need to listen to the rowData change here or else this event might fire AFTER clientSideRowModel calls refresh
         // and this will cause the old grouping columns to be available in the row model
         // We have also to ignore it if the change is not related to the columns
+        //
+        // The properties listened both by columnModel and clientSideRowModel are:
+        // - treeData
+        // - groupDisplayType
+        //
+        // See the test testing/behavioural/src/tree-data/hierarchical/hierarchical-tree-data.test.ts
+        // 'ag-grid hierarchical override tree data is insensitive to updateGridOptions object order'
 
         const refreshProps = new Set<keyof GridOptions>([
             'groupDisplayType',
