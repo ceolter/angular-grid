@@ -3,15 +3,7 @@ import { ShadowDom } from '@components/ShadowDom';
 import { useDarkmode } from '@utils/hooks/useDarkmode';
 import React, { useMemo, useState } from 'react';
 
-import {
-    AllCommunityModule,
-    type ColDef,
-    ModuleRegistry,
-    type Theme,
-    themeAlpine,
-    themeBalham,
-    themeQuartz,
-} from 'ag-grid-community';
+import { AllCommunityModule, type ColDef, ModuleRegistry, type Theme, themeQuartz } from 'ag-grid-community';
 import { RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
