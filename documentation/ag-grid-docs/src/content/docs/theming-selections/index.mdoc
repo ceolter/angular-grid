@@ -4,46 +4,42 @@ title: "Theming: Customising Selections"
 
 Control how selected rows and cells appear.
 
-{% warning %}
-## TODO: content due in AG-13129
-This page is a copy of the v32 theme docs, and needs updating for the Theming API.
-{% /warning %}
-
 ## Row Selections
 
-When [row selection](./row-selection/) is enabled, you can set the color of selected rows using `--ag-selected-row-background-color`. If your grid uses alternating row colours we recommend setting this to a semi-transparent colour so that the alternating row colours are visible below it.
+When [row selection](./row-selection/) is enabled, you can set the color of selected rows using the `selectedRowBackgroundColor` parameter. If your grid uses alternating row colours we recommend setting this to a semi-transparent colour so that the alternating row colours are visible below it.
 
-```css
-.ag-theme-quartz {
+```js
+const myTheme = themeQuartz.withParams({
     /* bright green, 10% opacity */
-    --ag-selected-row-background-color: rgb(0, 255, 0, 0.1);
-}
+    selectedRowBackgroundColor: 'rgba(0, 255, 0, 0.1)',
+});
 ```
 
 {% gridExampleRunner title="Custom Row Selection Colour" name="custom-row-selection-color"  exampleHeight=450 /%}
 
 ## Cell Selections
 
-[Cell selections](./cell-selection/) can be created by clicking and dragging on the grid. Multiple overlapping range selections can be made by holding {% kbd "^ Ctrl" /%} while creating a new range outside the existing range. Copying from a selection will briefly highlight the range of cells ({% kbd "Ctrl + C" /%}). There are several variables to control the selection and highlight style:
+[Cell selections](./cell-selection/) can be created by clicking and dragging on the grid. Copying from a selection will briefly highlight the range of cells ({% kbd "Ctrl + C" /%}). There are several variables to control the selection and highlight style:
 
-```css
-.ag-theme-quartz {
-    --ag-range-selection-border-color: rgb(193, 0, 97);
-    --ag-range-selection-border-style: dashed;
-    --ag-range-selection-background-color: rgb(255, 0, 128, 0.1);
-    /* these next 3 variables control the background colour when 2, 3 or 4+ ranges overlap,
-       and should have progressively greater opacity to look realistic - see the docs below
-       for the correct formulas to use */
-    --ag-range-selection-background-color-2: rgb(255, 0, 128, 0.19);
-    --ag-range-selection-background-color-3: rgb(255, 0, 128, 0.27);
-    --ag-range-selection-background-color-4: rgb(255, 0, 128, 0.34);
-
-    --ag-range-selection-highlight-color: rgb(60, 188, 0, 0.3);
-}
+```js
+const myTheme = themeQuartz.withParams({
+    // color and style of border around selection
+    rangeSelectionBorderColor: 'rgb(193, 0, 97)',
+    rangeSelectionBorderStyle: 'dashed',
+    // background color of selection - you can use a semi-transparent color
+    // and it wil overlay on top of the existing cells
+    rangeSelectionBackgroundColor: 'rgb(255, 0, 128, 0.1)',
+    // color used to indicate that data has been copied form the cell range
+    rangeSelectionHighlightColor: 'rgb(60, 188, 0, 0.3)',
+});
 ```
 
 {% gridExampleRunner title="Custom Range Selection Style" name="custom-range-selection-style" /%}
 
-### Cell Selection CSS Variables
+### Cell Selection for Integrated Charts
 
-{% apiDocumentation source="global-style-customisation-variables/variables.json" section="variables" names=["--ag-range-selection-border-color", "--ag-range-selection-border-style", "--ag-range-selection-background-color", "--ag-range-selection-background-color-2", "--ag-range-selection-background-color-3", "--ag-range-selection-background-color-4", "--ag-range-selection-highlight-color", "--ag-range-selection-chart-category-background-color", "--ag-range-selection-chart-background-color"] config={"hideHeader": true} /%}
+When using [integrated charts](./charts-integrated/) with cell selections, the grid uses different colors to indicate the purpose of the cell ranges:
+
+* `rangeSelectionChartBackgroundColor` - background color for cells used as chart data
+* `rangeSelectionChartCategoryBackgroundColor` - background color for cells used as categories / axis labels
+    

@@ -25,6 +25,7 @@ const App = () => {
     const [colDefs] = useState<ColDef<RowData>[]>([{ field: 'make' }, { field: 'model' }, { field: 'price' }]);
 
     useEffect(() => {
+        // eslint-disable-next-line no-console
         console.log(gridRef.current?.api.setGridOption('rowData', [{ make: 'Toyota', model: 'Celica', price: 35000 }]));
     }, []);
 

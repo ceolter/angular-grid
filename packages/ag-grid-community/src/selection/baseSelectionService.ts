@@ -23,7 +23,6 @@ import type { ISetNodesSelectedParams } from '../interfaces/iSelectionService';
 import type { RowCtrl, RowGui } from '../rendering/row/rowCtrl';
 import { _setAriaSelected } from '../utils/aria';
 import type { ChangedPath } from '../utils/changedPath';
-import { _warn } from '../validation/logging';
 import { CheckboxSelectionComponent } from './checkboxSelectionComponent';
 import { RowRangeSelectionContext } from './rowRangeSelectionContext';
 import { SelectAllFeature } from './selectAllFeature';
@@ -113,11 +112,7 @@ export abstract class BaseSelectionService extends BeanStub {
     protected abstract updateSelectable(changedPath?: ChangedPath): void;
 
     protected isRowSelectionBlocked(rowNode: RowNode): boolean {
-        if (!_isRowSelection(this.gos)) {
-            _warn(132);
-            return false;
-        }
-        return !rowNode.selectable || !!rowNode.rowPinned;
+        return !rowNode.selectable || !!rowNode.rowPinned || !_isRowSelection(this.gos);
     }
 
     public updateRowSelectable(rowNode: RowNode, suppressSelectionUpdate?: boolean): boolean {

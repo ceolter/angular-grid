@@ -11,9 +11,9 @@ export interface UserCompDetails<TComp extends IComponent<any> = any> {
     newAgStackInstance: () => AgPromise<TComp>;
 }
 
-export interface ComponentType {
+export interface ComponentType<TComp = any> {
     name: string;
     cellRenderer?: boolean;
-    mandatoryMethods?: string[];
-    optionalMethods?: string[];
+    mandatoryMethods?: (keyof TComp & string)[];
+    optionalMethods?: (keyof TComp & string)[];
 }

@@ -4,7 +4,7 @@ import * as path from 'path';
 export async function exists(filePath: string) {
     try {
         return (await fs.stat(filePath))?.isFile();
-    } catch (e) {
+    } catch {
         return false;
     }
 }

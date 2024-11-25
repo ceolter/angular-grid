@@ -8,8 +8,10 @@ export const clamp = (value: number, min: number, max: number) => Math.max(min, 
 
 export const logErrorMessage = (message: unknown, error?: unknown) => {
     if (error) {
+        // eslint-disable-next-line no-console
         console.error(message, error);
     } else {
+        // eslint-disable-next-line no-console
         console.error(message);
     }
 };

@@ -54,7 +54,7 @@ export const AG_TEXT_FIELD = '.ag-text-field';
 export const AG_TEXT_FIELD_INPUT = '.ag-text-field-input';
 
 export const AG_CHARTS_CANVAS = '.ag-charts-canvas';
-export const AG_CHARTS_LEGEND_ITEM_ID_PREFIX = 'ag-charts-legend-item-';
+export const AG_CHARTS_LEGEND_BUTTONS_SELECTOR = '[aria-label="Legend"] button';
 
 // Row group toggle
 export const AG_GROUP_CONTRACTED = '.ag-group-contracted';

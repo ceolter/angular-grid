@@ -25,6 +25,10 @@
       "outputs": ["{projectRoot}/dist"],
       "options": {
         "script": "build"
+      },
+      "configurations": {
+        "production": {},
+        "archive": {}
       }
     },
     "pack": {

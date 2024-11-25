@@ -77,7 +77,7 @@ const HeaderLinks = ({
                             href={href}
                             onClick={() => {
                                 if (isOpen) {
-                                    toggleIsOpen && toggleIsOpen();
+                                    toggleIsOpen?.();
                                 }
                             }}
                             aria-label={`AG Grid ${title}`}

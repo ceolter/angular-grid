@@ -1,6 +1,7 @@
 import type { IDragAndDropImageComponent, IDragAndDropImageParams } from '../../dragAndDrop/dragAndDropImageComponent';
 import type { ColDef } from '../../entities/colDef';
 import type { IFloatingFilterComp, IFloatingFilterParams } from '../../filter/floating/floatingFilter';
+import type { ISimpleFilter } from '../../filter/provided/iSimpleFilter';
 import type { IHeaderComp, IHeaderParams, IInnerHeaderComponent } from '../../headerRendering/cells/column/headerComp';
 import type {
     IHeaderGroupComp,
@@ -18,16 +19,16 @@ import type { ICellRendererComp, ICellRendererParams } from '../../rendering/cel
 import type { ILoadingOverlayComp, ILoadingOverlayParams } from '../../rendering/overlays/loadingOverlayComponent';
 import type { INoRowsOverlayComp, INoRowsOverlayParams } from '../../rendering/overlays/noRowsOverlayComponent';
 import type { ITooltipComp, ITooltipParams } from '../../tooltip/tooltipComponent';
-import { _getUserCompKeys } from './userComponentFactory';
 import type { UserComponentFactory } from './userComponentFactory';
+import { _getUserCompKeys } from './userComponentFactory';
 
-const DateComponent: ComponentType = {
+const DateComponent: ComponentType<IDateComp> = {
     name: 'dateComponent',
     mandatoryMethods: ['getDate', 'setDate'],
     optionalMethods: ['afterGuiAttached', 'setInputPlaceholder', 'setInputAriaLabel', 'setDisabled', 'refresh'],
 };
 
-const DragAndDropImageComponent: ComponentType = {
+const DragAndDropImageComponent: ComponentType<IDragAndDropImageComponent> = {
     name: 'dragAndDropImageComponent',
     mandatoryMethods: ['setIcon', 'setLabel'],
 };
@@ -58,7 +59,7 @@ const EditorRendererComponent: ComponentType = {
 
 const LoadingCellRendererComponent: ComponentType = { name: 'loadingCellRenderer', cellRenderer: true };
 
-const CellEditorComponent: ComponentType = {
+const CellEditorComponent: ComponentType<ICellEditorComp> = {
     name: 'cellEditor',
     mandatoryMethods: ['getValue'],
     optionalMethods: [
@@ -79,7 +80,7 @@ const NoRowsOverlayComponent: ComponentType = { name: 'noRowsOverlayComponent', 
 
 const TooltipComponent: ComponentType = { name: 'tooltipComponent' };
 
-const FilterComponent: ComponentType = {
+const FilterComponent: ComponentType<ISimpleFilter> = {
     name: 'filter',
     mandatoryMethods: ['isFilterActive', 'doesFilterPass', 'getModel', 'setModel'],
     optionalMethods: [
@@ -93,7 +94,7 @@ const FilterComponent: ComponentType = {
     ],
 };
 
-const FloatingFilterComponent: ComponentType = {
+const FloatingFilterComponent: ComponentType<IFloatingFilterComp> = {
     name: 'floatingFilterComponent',
     mandatoryMethods: ['onParentModelChanged'],
     optionalMethods: ['afterGuiAttached', 'refresh'],

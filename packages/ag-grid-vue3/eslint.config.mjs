@@ -9,6 +9,7 @@ export default [
             '@typescript-eslint/no-unused-vars': 'error',
             '@typescript-eslint/ban-types': 'error',
             '@typescript-eslint/no-this-alias': 'off',
+            'no-console': 'error',
         },
     },
     {

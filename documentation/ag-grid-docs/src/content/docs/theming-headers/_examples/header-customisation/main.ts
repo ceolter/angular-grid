@@ -1,14 +1,26 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    themeQuartz,
+} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 let gridApi: GridApi<IOlympicData>;
 
+const myTheme = themeQuartz.withParams({
+    headerHeight: '30px',
+    headerTextColor: 'white',
+    headerBackgroundColor: 'black',
+    headerCellHoverBackgroundColor: 'rgba(80, 40, 140, 0.66)',
+    headerCellMovingBackgroundColor: 'rgb(80, 40, 140)',
+});
+
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
+    theme: myTheme,
     rowData: null,
     columnDefs: [
         {

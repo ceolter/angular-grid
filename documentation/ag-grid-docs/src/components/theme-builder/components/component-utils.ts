@@ -69,4 +69,4 @@ export const useClickAwayListener = (onHide: () => void, ignoreElements: Array<E
     }, [onHide]);
 };
 
-export const getThemeDefaultParams = (theme: Theme) => _theming.asThemeImpl(theme)._getModeParams().default ?? {};
+export const getThemeDefaultParams = (theme: Theme) => _theming.asThemeImpl(theme)._getModeParams().$default ?? {};

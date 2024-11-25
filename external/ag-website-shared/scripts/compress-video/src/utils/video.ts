@@ -70,7 +70,7 @@ export async function reduceVideo({
                 video.setVideoFormat(videoFormat);
             }
 
-            video.save(destination, function (error, file) {
+            video.save(destination, function (error: any, file: any) {
                 if (error) {
                     return reject(new Error('Error saving video file: ' + file));
                 }
@@ -134,17 +134,16 @@ export async function reduceVideos({
                 }
             }
 
-            onVideoProcessComplete &&
-                onVideoProcessComplete({
-                    skipReplace,
-                    source,
-                    destination,
-                    originalFileSize,
-                    fileSize: videoFileSize,
-                    metadata,
-                    width,
-                    frameRate,
-                });
+            onVideoProcessComplete?.({
+                skipReplace,
+                source,
+                destination,
+                originalFileSize,
+                fileSize: videoFileSize,
+                metadata,
+                width,
+                frameRate,
+            });
         })
     );
 }

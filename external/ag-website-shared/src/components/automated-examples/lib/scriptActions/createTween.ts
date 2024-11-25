@@ -34,7 +34,7 @@ export const createTween = ({ group, fromPos, toPos, onChange, speed, duration, 
         const tween = new Tween(coords, group)
             .to(toPos, tweenDuration)
             .onUpdate((object, elapsed) => {
-                onChange && onChange({ elapsed, coords: object });
+                onChange?.({ elapsed, coords: object });
             })
             .onComplete(resolve);
 

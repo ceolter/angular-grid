@@ -31,6 +31,7 @@ export default [
             '@typescript-eslint/no-this-alias': 'off',
             '@typescript-eslint/no-for-in-array': 'error',
             'no-restricted-syntax': ['error', 'ForInStatement'],
+            'no-console': 'error',
         },
     },
     {

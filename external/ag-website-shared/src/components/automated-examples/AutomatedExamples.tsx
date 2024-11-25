@@ -41,6 +41,7 @@ export const AutomatedExamples: FunctionComponent = () => {
                 subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
                 ctaTitle="Build your first Grid"
                 ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
+                showBackgroundGradient
             >
                 <section className={styles.automatedRowGroupingOuter}>
                     <div className={styles.automatedRowGrouping}>
@@ -61,6 +62,7 @@ export const AutomatedExamples: FunctionComponent = () => {
                 subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
                 ctaTitle="Get started with Integrated Charts"
                 ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
+                showBackgroundGradient
             >
                 <section className={styles.automatedIntegratedChartsOuter}>
                     <div className={styles.automatedIntegratedCharts}>

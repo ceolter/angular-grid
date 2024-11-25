@@ -1,23 +1,15 @@
+import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import { ShadowDom } from '@components/ShadowDom';
+import { useDarkmode } from '@utils/hooks/useDarkmode';
 import React, { useMemo, useState } from 'react';
 
-import {
-    AllCommunityModule,
-    type ColDef,
-    ModuleRegistry,
-    themeAlpine,
-    themeBalham,
-    themeQuartz,
-} from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import { AllCommunityModule, type ColDef, ModuleRegistry, type Theme, themeQuartz } from 'ag-grid-community';
 import { RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import styles from './ThemeBuilderExample.module.scss';
 import { TickerCellRenderer } from './cell-renderer/TickerCellRenderer';
+import SpacingIcon from './spacing.svg?react';
 
 ModuleRegistry.registerModules([AllCommunityModule, RowGroupingPanelModule]);
 interface Props {
@@ -25,9 +17,51 @@ interface Props {
     gridHeight?: number | null;
 }
 
-export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => {
-    const [theme, setTheme] = useState(themeQuartz);
+type ThemeSelection = 'themeQuartz' | 'themeCustom';
+
+const themeCustom = themeQuartz
+    .withParams(
+        {
+            backgroundColor: '#e6bc9a',
+            foregroundColor: '#340c52',
+            borderColor: '#f59342',
+            chromeBackgroundColor: '#e3f5c4',
+            browserColorScheme: 'light',
+        },
+        'light'
+    )
+    .withParams(
+        {
+            backgroundColor: '#38200c',
+            foregroundColor: '#FFF',
+            borderColor: '#f59342',
+            chromeBackgroundColor: '#633713',
+            browserColorScheme: 'dark',
+        },
+        'dark-blue'
+    );
+
+const THEME_SELECTIONS = [
+    {
+        value: themeQuartz,
+        label: 'Choose from AG Grid Themes',
+        description: 'Use our built-in themes Quartz, Alpine or Balham',
+        themeName: 'themeQuartz',
+    },
+    {
+        value: themeCustom,
+        label: 'Custom theme',
+        description: 'Use the Theming API or CSS variables to create your theme',
+        themeName: 'themeCustom',
+    },
+];
+
+export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => {
+    const [baseTheme, setBaseTheme] = useState<Theme>(themeQuartz);
     const [spacing, setSpacing] = useState(8);
+    const theme = useMemo(() => baseTheme.withParams({ spacing }), [baseTheme, spacing]);
+    const [themeSelection, setThemeSelection] = useState<ThemeSelection>('themeQuartz');
+    const [isDarkMode] = useDarkmode();
 
     const columnDefs = useMemo<ColDef[]>(
         () => [
@@ -64,25 +98,13 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
         { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
     ];
 
-    const handleThemeChange = (newTheme: typeof themeQuartz | typeof themeBalham | typeof themeAlpine) => {
-        setTheme(newTheme.withParams({ spacing }));
-        setTheme(newTheme);
-    };
-
-    const handleSpacingChange = (newSpacing: number) => {
-        setSpacing(newSpacing);
-        setTheme(theme.withParams({ spacing: newSpacing }));
-    };
-
-    const themeName = theme === themeAlpine ? 'themeAlpine' : theme === themeBalham ? 'themeBalham' : 'themeQuartz';
-    const codeBlock = `import { ${themeName} } from 'ag-grid-community';
+    const codeBlock = `// Using the Theming API
+import { ${themeSelection} } from 'ag-grid-community';
     
-    <AgGridReact
-      theme={${themeName}}
-      spacing={${spacing}}
-    />
-      `;
-    const lines = codeBlock.split('\n');
+<AgGridReact
+    theme={${themeSelection}}
+    spacing={${spacing}}
+/>`;
 
     return (
         <div className={styles.gridColumns}>
@@ -90,34 +112,37 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                 <div className={styles.themeOptions}>
                     <div className={styles.label}>Theme</div>
                     <div className={styles.buttonGroup}>
-                        {[
-                            { value: themeQuartz, label: 'Quartz' },
-                            { value: themeBalham, label: 'Balham' },
-                            { value: themeAlpine, label: 'Alpine' },
-                        ].map((themeOption) => (
-                            <button
+                        {THEME_SELECTIONS.map((themeOption) => (
+                            <div
                                 key={themeOption.label}
-                                className={theme === themeOption.value ? styles.active : ''}
-                                onClick={() => handleThemeChange(themeOption.value)}
+                                className={`${styles.buttonItem} ${baseTheme === themeOption.value ? styles.active : ''}`}
+                                onClick={() => {
+                                    setThemeSelection(themeOption.themeName as ThemeSelection);
+                                    setBaseTheme(themeOption.value);
+                                }}
                             >
-                                {themeOption.label}
-                            </button>
+                                <div className={styles.title}>{themeOption.label}</div>
+                                <div className={styles.description}> {themeOption.description}</div>
+                            </div>
                         ))}
                     </div>
                 </div>
 
-                <div className="spacing-options">
-                    <div className={styles.label}>Spacing</div>
+                <div className={styles.spacingOptions}>
+                    <div className={styles.label}>
+                        <SpacingIcon />
+                        Spacing
+                    </div>
                     <div className={styles.buttonGroup}>
                         {[
-                            { value: 6, label: 'Compact' },
+                            { value: 4, label: 'Tiny' },
                             { value: 8, label: 'Normal' },
                             { value: 12, label: 'Large' },
                         ].map((spacingOption) => (
                             <button
                                 key={spacingOption.label}
                                 className={spacing === spacingOption.value ? styles.active : ''}
-                                onClick={() => handleSpacingChange(spacingOption.value)}
+                                onClick={() => setSpacing(spacingOption.value)}
                             >
                                 {spacingOption.label}
                             </button>
@@ -131,12 +156,14 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                     className={`${styles.grid} ${gridHeight ? '' : styles.gridHeight}`}
                 >
                     <ShadowDom>
-                        <AgGridReact
-                            theme={theme}
-                            columnDefs={columnDefs}
-                            rowData={rowData}
-                            defaultColDef={defaultColDef}
-                        />
+                        <div style={{ height: '100%' }} data-ag-theme-mode={isDarkMode ? 'dark-blue' : 'light'}>
+                            <AgGridReact
+                                theme={theme}
+                                columnDefs={columnDefs}
+                                rowData={rowData}
+                                defaultColDef={defaultColDef}
+                            />
+                        </div>
                     </ShadowDom>
                 </div>
                 <div className={styles.codeBlockWrapper}>
@@ -145,18 +172,8 @@ export const StockPerformanceGrid: React.FC<Props> = ({ gridHeight = null }) => 
                         <div className={styles.dot}></div>
                         <div className={styles.dot}></div>
                     </div>
-                    <div style={{ display: 'flex' }}>
-                        <div className={styles.lineNumbers}>
-                            {lines.map((_, index) => (
-                                <div key={index}>{index + 1}</div>
-                            ))}
-                        </div>
-                        <pre className={styles.codeBlock}>
-                            {' '}
-                            <div className={styles.commentLine}>// Using the Theming API</div>
-                            {codeBlock}
-                        </pre>
-                    </div>
+
+                    <Snippet framework="react" language={'jsx'} content={codeBlock} transform={false} lineNumbers />
                 </div>
             </div>
         </div>

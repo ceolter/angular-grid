@@ -14,7 +14,6 @@
                 "package-lock.json",
                 "nx.json",
                 "project.json",
-                ".eslintrc.json",
                 "tsconfig{.{base,lib,spec,tools},}.json",
                 ".vscode/*.json"
             ],

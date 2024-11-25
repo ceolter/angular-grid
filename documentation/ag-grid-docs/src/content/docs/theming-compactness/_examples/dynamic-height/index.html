@@ -1,8 +1,15 @@
 <div style="height: 100%; display: flex; flex-direction: column; gap: 0.5rem">
-    <div style="flex: none">
-        <button onclick="changeSize('large')">Large</button>
-        <button onclick="changeSize('normal')">Normal</button>
-        <button onclick="changeSize('compact')">Compact</button>
+    <div style="flex: none; display: flex; gap: 8px; align-items: center">
+        spacing = <span style="min-width: 50px"><span id="spacing">8.0</span>px</span>
+        <input
+            type="range"
+            oninput="changeSize(event.target.valueAsNumber)"
+            value="8"
+            min="0"
+            max="20"
+            step="0.1"
+            style="width: 200px"
+        />
     </div>
-    <div id="myGrid" style="flex: 1 1 auto" class="ag-theme-quartz"></div>
+    <div id="myGrid" style="flex: 1 1 auto"></div>
 </div>

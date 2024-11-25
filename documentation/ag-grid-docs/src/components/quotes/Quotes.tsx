@@ -21,7 +21,7 @@ const QuoteItems = ({ quotes }: { quotes: QuotesDataItem[] }) => {
         <>
             {quotes.map(({ name, avatarUrl, orgName, orgIconUrl, orgRole, text }) => {
                 return (
-                    <div className={styles.quote}>
+                    <div className={styles.quote} key={name}>
                         <blockquote>
                             <p>{text}</p>
                         </blockquote>

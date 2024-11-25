@@ -1,19 +1,36 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    themeQuartz,
+} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+
+const myTheme = themeQuartz.withParams({
+    headerColumnBorder: { color: 'purple' },
+    headerColumnBorderHeight: '80%',
+
+    headerColumnResizeHandleColor: 'orange',
+    headerColumnResizeHandleHeight: '25%',
+    headerColumnResizeHandleWidth: '5px',
+});
 
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
+    theme: myTheme,
     rowData: null,
     columnDefs: [
         {
             headerName: 'Group 1',
-            children: [{ field: 'athlete', minWidth: 170 }, { field: 'age' }],
+            children: [
+                { field: 'athlete', minWidth: 170, resizable: true },
+                { field: 'age', resizable: true },
+            ],
+            resizable: true,
         },
         {
             headerName: 'Group 2',
@@ -32,6 +49,7 @@ const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         editable: true,
         filter: true,
+        resizable: false,
     },
 };
 

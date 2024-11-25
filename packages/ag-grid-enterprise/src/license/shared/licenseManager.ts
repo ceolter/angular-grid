@@ -305,10 +305,12 @@ export class LicenseManager {
 
     private centerPadAndOutput(input: string) {
         const paddingRequired = this.totalMessageLength - input.length;
+        // eslint-disable-next-line no-console
         console.error(input.padStart(paddingRequired / 2 + input.length, '*').padEnd(this.totalMessageLength, '*'));
     }
 
     private padAndOutput(input: string, padding = '*', terminateWithPadding = '') {
+        // eslint-disable-next-line no-console
         console.error(
             input.padEnd(this.totalMessageLength - terminateWithPadding.length, padding) + terminateWithPadding
         );

@@ -1,0 +1,15 @@
+// refactor where this icon lives
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="1.5"
+>
+    <path d="M21 4L18 4L18 20L21 20" />
+    <path d="M12 7L12 17" />
+    <path d="M3 4L6 4L6 20L3 20" />
+</svg>

@@ -10,10 +10,11 @@ import {
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
 const myTheme = themeQuartz.withParams({
+    borderColor: '#9696C8',
     wrapperBorder: false,
     headerRowBorder: false,
-    rowBorder: { style: 'dotted', width: 3, color: '#9696C8' },
-    columnBorder: { style: 'dashed', color: '#9696C8' },
+    rowBorder: { style: 'dotted', width: 3 },
+    columnBorder: { style: 'dashed' },
 });
 
 let gridApi: GridApi<IOlympicData>;
