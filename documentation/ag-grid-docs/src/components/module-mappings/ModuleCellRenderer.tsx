@@ -1,4 +1,4 @@
-import { EnterpriseIcon } from '@ag-website-shared/components/icon/EnterpriseIcon';
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
 
@@ -24,9 +24,9 @@ export function ModuleCellRenderer({ data }: CustomCellRendererProps) {
 
     return isEnterprise ? (
         <span className={styles.container}>
-            {moduleValue} <EnterpriseIcon />
+            {moduleValue} <Icon name="enterprise" />
         </span>
     ) : (
-        moduleValue
+        <span className={styles.container}>{moduleValue}</span>
     );
 }
