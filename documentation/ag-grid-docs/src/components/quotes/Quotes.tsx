@@ -1,6 +1,10 @@
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classNames from 'classnames';
+import { TerminalIcon } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { Code } from 'lucide-react';
+import { GitMerge } from 'lucide-react';
 
 import styles from './Quotes.module.scss';
 import type { QuotesData, QuotesDataItem } from './quotesData';
@@ -50,20 +54,35 @@ export const Quotes = ({ data }: { data: QuotesData }) => {
         <div>
             <div className={styles.statsOuter}>
                 <div className={styles.stat}>
-                    <h4 className="text-2xl">90%</h4>
+                    <h4 className="text-2xl">
+                        {' '}
+                        <TerminalIcon />
+                        90%
+                    </h4>
                     <p>Of the Fortune 500 use AG Grid</p>
                 </div>
 
                 <div className={styles.stat}>
-                    <h4 className="text-2xl">5M+</h4>
+                    <h4 className="text-2xl">
+                        {' '}
+                        <Download />
+                        5M+
+                    </h4>
                     <p>Weekly NPM downloads</p>
                 </div>
                 <div className={styles.stat}>
-                    <h4 className="text-2xl">5+</h4>
+                    <h4 className="text-2xl">
+                        <Code />
+                        5+
+                    </h4>
                     <p>Frameworks supported</p>
                 </div>
                 <div className={styles.stat}>
-                    <h4 className="text-2xl">300+</h4>
+                    <h4 className="text-2xl">
+                        {' '}
+                        <GitMerge />
+                        300+
+                    </h4>
                     <p>Updates and features in the last three years</p>
                 </div>
             </div>

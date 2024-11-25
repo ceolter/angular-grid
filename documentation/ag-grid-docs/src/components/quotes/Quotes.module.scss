@@ -133,8 +133,14 @@
     gap: $spacing-size-8;
     border: 1px solid var(--color-border-secondary);
 
+    margin-top: $spacing-size-20;
     border-bottom: 1px solid var(--color-border-secondary);
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
 
+    svg {
+        stroke: var(--color-util-brand-500);
+    }
     .stat {
         width: 100%;
         display: flex;
@@ -143,7 +149,15 @@
     }
 
     h4 {
-        color: var(--color-util-brand-500);
+        color: var(--color-fg-primary);
+        display: flex;
+        gap: $spacing-size-4;
+        align-items: left;
+        flex-direction: column;
+
+        #{$selector-darkmode} & {
+            color: var(--color-util-brand-900);
+        }
     }
     #{$selector-darkmode} & {
         background: color-mix(in srgb, var(--color-fg-primary), var(--color-bg-primary) 98%);
