@@ -5,8 +5,4 @@ export default {
         <span>{{ params.displayName }}</span>
       </div>
     `,
-    data: function () {},
-    beforeMount() {},
-    mounted() {},
-    methods: {},
 };
