@@ -4,6 +4,7 @@ import { BeanStub } from '../context/beanStub';
 import type { AgColumn } from '../entities/agColumn';
 import type { AgProvidedColumnGroup } from '../entities/agProvidedColumnGroup';
 import type { ColDef, ColGroupDef } from '../entities/colDef';
+import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _shouldMaintainColumnOrder } from '../gridOptionsUtils';
 import type { Column } from '../interfaces/iColumn';
@@ -65,10 +66,38 @@ export class ColumnModel extends BeanStub implements NamedBean {
     public postConstruct(): void {
         this.pivotMode = this.gos.get('pivotMode');
 
-        this.addManagedPropertyListeners(
-            ['groupDisplayType', 'treeData', 'treeDataDisplayType', 'groupHideOpenParents'],
-            (event) => this.refreshAll(_convertColumnEventSourceType(event.source))
-        );
+        // TODO: Due to https://ag-grid.atlassian.net/browse/AG-13089 - Order of grouped property listener changed is not deterministic
+        // and when both rowData and treeData are changed in the same batch, the order of the events is CSRM and ColumnModel.
+        //
+        // we need to listen to the rowData change here or else this event might fire AFTER clientSideRowModel calls refresh
+        // and this will cause the old grouping columns to be available in the row model
+        // We have also to ignore it if the change is not related to the columns
+
+        const refreshProps = new Set<keyof GridOptions>([
+            'groupDisplayType',
+            'treeData',
+            'treeDataDisplayType',
+            'groupHideOpenParents',
+        ]);
+
+        this.addManagedPropertyListeners([...refreshProps, 'rowData'], (event) => {
+            const properties = event.changeSet?.properties;
+            let refresh = true;
+            if (properties) {
+                // Ignore the event if the change is not related to the columns
+                refresh = false;
+                for (let i = 0, len = properties.length; i < len; i++) {
+                    if (refreshProps.has(properties[i])) {
+                        refresh = true;
+                        break;
+                    }
+                }
+            }
+            if (refresh) {
+                this.refreshAll(_convertColumnEventSourceType(event.source));
+            }
+        });
+
         this.addManagedPropertyListeners(
             ['defaultColDef', 'defaultColGroupDef', 'columnTypes', 'suppressFieldDotNotation'],
             (event) => this.recreateColumnDefs(_convertColumnEventSourceType(event.source))
