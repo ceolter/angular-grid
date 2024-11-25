@@ -3,12 +3,9 @@ import type {
     BeanCollection,
     CheckboxSelectionComponent,
     ColumnModel,
-    ComponentType,
     CtrlsService,
     ExpressionService,
     GroupCellRendererParams,
-    ICellRendererComp,
-    ICellRendererParams,
     IColsService,
     IGroupCellRenderer,
     IGroupCellRendererCtrl,
@@ -21,7 +18,6 @@ import type {
     UserComponentFactory,
     ValueService,
     VisibleColsService,
-    WithoutGridCommon,
 } from 'ag-grid-community';
 import {
     BeanStub,
@@ -31,6 +27,7 @@ import {
     _getCheckboxLocation,
     _getCheckboxes,
     _getGrandTotalRow,
+    _getInnerCellRendererDetails,
     _isElementInEventPath,
     _isStopPropagationForAgGrid,
     _missing,
@@ -39,28 +36,6 @@ import {
     _stopPropagationForAgGrid,
     _warn,
 } from 'ag-grid-community';
-
-const InnerRendererComponent: ComponentType = {
-    name: 'innerRenderer',
-    cellRenderer: true,
-    optionalMethods: ['afterGuiAttached'],
-};
-
-function getInnerRendererDetails(
-    userCompFactory: UserComponentFactory,
-    def: GroupCellRendererParams,
-    params: WithoutGridCommon<ICellRendererParams>
-): UserCompDetails<ICellRendererComp> | undefined {
-    return userCompFactory.getCompDetails(def, InnerRendererComponent, undefined, params);
-}
-
-function getFullWidthGroupRowInnerCellRenderer(
-    userCompFactory: UserComponentFactory,
-    def: any,
-    params: WithoutGridCommon<ICellRendererParams>
-): UserCompDetails<ICellRendererComp> | undefined {
-    return userCompFactory.getCompDetails(def, InnerRendererComponent, undefined, params);
-}
 
 export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendererCtrl {
     private expressionSvc?: ExpressionService;
@@ -429,11 +404,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
     private getInnerCompDetails(params: GroupCellRendererParams): UserCompDetails | undefined {
         // for full width rows, we don't do any of the below
         if (params.fullWidth) {
-            return getFullWidthGroupRowInnerCellRenderer(
-                this.userCompFactory,
-                this.gos.get('groupRowRendererParams'),
-                params
-            );
+            return _getInnerCellRendererDetails(this.userCompFactory, this.gos.get('groupRowRendererParams'), params);
         }
 
         // when grouping, the normal case is we use the cell renderer of the grouped column. eg if grouping by country
@@ -450,7 +421,11 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         // 3) groupedColDef.cellRendererParams.innerRenderer
 
         // we check if cell renderer provided for the group cell renderer, eg colDef.cellRendererParams.innerRenderer
-        const innerCompDetails = getInnerRendererDetails(this.userCompFactory, params, params);
+        const innerCompDetails = _getInnerCellRendererDetails<GroupCellRendererParams>(
+            this.userCompFactory,
+            params,
+            params
+        );
 
         // avoid using GroupCellRenderer again, otherwise stack overflow, as we insert same renderer again and again.
         // this covers off chance user is grouping by a column that is also configured with GroupCellRenderer
@@ -484,7 +459,11 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         ) {
             // edge case - this comes from a column which has been grouped dynamically, that has a renderer 'group'
             // and has an inner cell renderer
-            return getInnerRendererDetails(this.userCompFactory, relatedColDef.cellRendererParams, params);
+            return _getInnerCellRendererDetails<GroupCellRendererParams>(
+                this.userCompFactory,
+                relatedColDef.cellRendererParams,
+                params
+            );
         }
     }
 

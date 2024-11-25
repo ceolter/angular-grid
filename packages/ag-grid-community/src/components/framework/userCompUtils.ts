@@ -2,8 +2,12 @@ import type { IDragAndDropImageComponent, IDragAndDropImageParams } from '../../
 import type { ColDef } from '../../entities/colDef';
 import type { IFloatingFilterComp, IFloatingFilterParams } from '../../filter/floating/floatingFilter';
 import type { ISimpleFilter } from '../../filter/provided/iSimpleFilter';
-import type { IHeaderComp, IHeaderParams } from '../../headerRendering/cells/column/headerComp';
-import type { IHeaderGroupComp, IHeaderGroupParams } from '../../headerRendering/cells/columnGroup/headerGroupComp';
+import type { IHeaderComp, IHeaderParams, IInnerHeaderComponent } from '../../headerRendering/cells/column/headerComp';
+import type {
+    IHeaderGroupComp,
+    IHeaderGroupParams,
+    IInnerHeaderGroupComponent,
+} from '../../headerRendering/cells/columnGroup/headerGroupComp';
 import type { IDateComp, IDateParams } from '../../interfaces/dateComponent';
 import type { ICellEditorComp, ICellEditorParams } from '../../interfaces/iCellEditor';
 import type { AgGridCommon, WithoutGridCommon } from '../../interfaces/iCommon';
@@ -31,7 +35,16 @@ const DragAndDropImageComponent: ComponentType<IDragAndDropImageComponent> = {
 
 const HeaderComponent: ComponentType = { name: 'headerComponent', optionalMethods: ['refresh'] };
 
+const InnerHeaderComponent: ComponentType = { name: 'innerHeaderComponent' };
+const InnerHeaderGroupComponent: ComponentType = { name: 'innerHeaderGroupComponent' };
+
 const HeaderGroupComponent: ComponentType = { name: 'headerGroupComponent' };
+
+const InnerCellRendererComponent: ComponentType = {
+    name: 'innerRenderer',
+    cellRenderer: true,
+    optionalMethods: ['afterGuiAttached'],
+};
 
 const CellRendererComponent: ComponentType = {
     name: 'cellRenderer',
@@ -110,6 +123,14 @@ export function _getDragAndDropImageCompDetails(
     return userCompFactory.getCompDetailsFromGridOptions(DragAndDropImageComponent, 'agDragAndDropImage', params, true);
 }
 
+export function _getInnerCellRendererDetails<TDefinition = any>(
+    userCompFactory: UserComponentFactory,
+    def: TDefinition,
+    params: WithoutGridCommon<ICellRendererParams>
+): UserCompDetails<ICellRendererComp> | undefined {
+    return userCompFactory.getCompDetails(def, InnerCellRendererComponent, undefined, params);
+}
+
 export function _getHeaderCompDetails(
     userCompFactory: UserComponentFactory,
     colDef: ColDef,
@@ -118,12 +139,28 @@ export function _getHeaderCompDetails(
     return userCompFactory.getCompDetails(colDef, HeaderComponent, 'agColumnHeader', params);
 }
 
+export function _getInnerHeaderCompDetails(
+    userCompFactory: UserComponentFactory,
+    headerCompParams: IHeaderParams,
+    params: WithoutGridCommon<IHeaderParams>
+): UserCompDetails<IInnerHeaderComponent> | undefined {
+    return userCompFactory.getCompDetails(headerCompParams, InnerHeaderComponent, undefined, params);
+}
+
 export function _getHeaderGroupCompDetails(
     userCompFactory: UserComponentFactory,
     params: WithoutGridCommon<IHeaderGroupParams>
 ): UserCompDetails<IHeaderGroupComp> | undefined {
     const colGroupDef = params.columnGroup.getColGroupDef()!;
     return userCompFactory.getCompDetails(colGroupDef, HeaderGroupComponent, 'agColumnGroupHeader', params);
+}
+
+export function _getInnerHeaderGroupCompDetails(
+    userCompFactory: UserComponentFactory,
+    headerGroupCompParams: IHeaderGroupParams,
+    params: WithoutGridCommon<IHeaderGroupParams>
+): UserCompDetails<IInnerHeaderGroupComponent> | undefined {
+    return userCompFactory.getCompDetails(headerGroupCompParams, InnerHeaderGroupComponent, undefined, params);
 }
 // this one is unusual, as it can be LoadingCellRenderer, DetailCellRenderer, FullWidthCellRenderer or GroupRowRenderer.
 // so we have to pass the type in.
