@@ -158,7 +158,9 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
                 />
             </div>
             {selectedDependenciesSnippet && (
-                <Snippet framework={framework} content={selectedDependenciesSnippet} copyToClipboard />
+                <div className={styles.moduleSnippet}>
+                    <Snippet framework={framework} content={selectedDependenciesSnippet} copyToClipboard />
+                </div>
             )}
         </div>
     );
