@@ -106,8 +106,8 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
     with: (params) => {
         params.setup();
-        params.setGridContext(true);
-        if (params.isEnterprise) {
+        params.setGridContext?.(true);
+        if (params.isEnterprise && params.setLicenseKey) {
             const chartsManager: ILicenseManager = {
                 setLicenseKey: params.setLicenseKey,
             };
