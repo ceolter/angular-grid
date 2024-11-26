@@ -4,6 +4,7 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
 import MenuIcon from '@ag-website-shared/images/inline-svgs/menu-icon.svg?react';
 import { getPageNameFromPath } from '@components/docs/utils/urlPaths';
 import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
+import { resetScrollPosition } from '@utils/navScrollPosition';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classnames from 'classnames';
 import { useState } from 'react';
@@ -57,7 +58,7 @@ const HeaderLinks = ({
 
     return (
         <ul className={classnames(styles.navItemList, 'list-style-none')}>
-            {items.map(({ title, path, url, icon }) => {
+            {items.map(({ title, path, url, icon, ignoreNavScrollSync }) => {
                 const linkClasses = classnames(styles.navItem, {
                     [styles.navItemActive]: getIsActiveNav({ title, path: currentPath, allPaths, apiPaths }),
                     [styles.buttonItem]: title === 'Github',
@@ -79,6 +80,9 @@ const HeaderLinks = ({
                                 if (isOpen) {
                                     toggleIsOpen?.();
                                 }
+
+                                // Reset docs nav scroll position when using header nav
+                                resetScrollPosition();
                             }}
                             aria-label={`AG Grid ${title}`}
                         >
