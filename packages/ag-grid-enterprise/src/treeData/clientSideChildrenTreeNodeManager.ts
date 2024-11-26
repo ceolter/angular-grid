@@ -220,6 +220,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         this.treeCommit(changedPath);
 
+        const sibling = rootNode.sibling;
+        if (sibling) {
+            sibling.allLeafChildren = allLeafChildren;
+        }
+
         if (rowsChanged || orderChanged) {
             params.step = 'group';
             params.rowDataUpdated = true;

@@ -157,6 +157,8 @@ export class GridRowsValidator {
             );
         }
 
+        this.validateSiblingArrays(row);
+
         const childrenAfterGroupSet = this.validateChildren(gridRows, row, 'childrenAfterGroup', null);
         const childrenAfterFilterSet = this.validateChildren(
             gridRows,
@@ -194,6 +196,26 @@ export class GridRowsValidator {
         const detailGrid = gridRows.getDetailGridRows(row);
         if (detailGrid) {
             this.validate(detailGrid);
+        }
+    }
+
+    private validateSiblingArrays(row: RowNode<any>) {
+        if (row.sibling) {
+            if (row.sibling.childrenAfterGroup !== row.childrenAfterGroup) {
+                this.errors.get(row).add('Sibling childrenAfterGroup is different');
+            }
+            if (row.sibling.childrenAfterFilter !== row.childrenAfterFilter) {
+                this.errors.get(row).add('Sibling childrenAfterFilter is different');
+            }
+            if (row.sibling.childrenAfterAggFilter !== row.childrenAfterAggFilter) {
+                this.errors.get(row).add('Sibling childrenAfterAggFilter is different');
+            }
+            if (row.sibling.childrenAfterSort !== row.childrenAfterSort) {
+                this.errors.get(row).add('Sibling childrenAfterSort is different');
+            }
+            if (row.sibling.allLeafChildren !== row.allLeafChildren) {
+                this.errors.get(row).add('Sibling allLeafChildren is different');
+            }
         }
     }
 

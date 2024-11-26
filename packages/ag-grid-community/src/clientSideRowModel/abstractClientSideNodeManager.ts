@@ -69,6 +69,8 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         rootNode.childrenAfterSort = [];
         rootNode.childrenAfterAggFilter = [];
         rootNode.childrenAfterFilter = [];
+
+        this.updateRootSiblingArrays(rootNode);
     }
 
     public deactivate(): void {
@@ -94,8 +96,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         this.dispatchRowDataUpdateStartedEvent(rowData);
 
-        const sibling = rootNode.sibling;
-
         rootNode.childrenAfterFilter = null;
         rootNode.childrenAfterGroup = null;
         rootNode.childrenAfterAggFilter = null;
@@ -110,6 +110,11 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         this.loadNewRowData(rowData);
 
+        this.updateRootSiblingArrays(rootNode);
+    }
+
+    private updateRootSiblingArrays(rootNode: AbstractClientSideNodeManager.RootNode<TData>): void {
+        const sibling = rootNode.sibling;
         if (sibling) {
             sibling.childrenAfterFilter = rootNode.childrenAfterFilter;
             sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
@@ -267,7 +272,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
             return;
         }
 
-        const allLeafChildren = this.rootNode!.allLeafChildren!;
+        let allLeafChildren = this.rootNode!.allLeafChildren!;
         let addIndex = allLeafChildren.length;
 
         if (typeof rowDataTran.addIndex === 'number') {
@@ -315,15 +320,16 @@ export abstract class AbstractClientSideNodeManager<TData = any>
                 nodesAfterIndex[index].sourceRowIndex = nodesAfterIndexFirstIndex + index;
             }
 
-            rootNode!.allLeafChildren = [...nodesBeforeIndex, ...newNodes, ...nodesAfterIndex];
+            allLeafChildren = [...nodesBeforeIndex, ...newNodes, ...nodesAfterIndex];
 
             // Mark the result as rows inserted
             result.rowsInserted = true;
         } else {
             // Just append at the end
-            rootNode.allLeafChildren = allLeafChildren.concat(newNodes);
+            allLeafChildren = allLeafChildren.concat(newNodes);
         }
 
+        rootNode.allLeafChildren = allLeafChildren;
         const sibling = rootNode.sibling;
         if (sibling) {
             sibling.allLeafChildren = allLeafChildren;
