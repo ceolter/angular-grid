@@ -11,6 +11,11 @@
 .charts {
     display: flex;
 
+    span {
+        min-width: 94px;
+        font-weight: var(--text-semibold);
+    }
+
     > div {
         display: flex;
         gap: $spacing-size-8;

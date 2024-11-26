@@ -9,6 +9,7 @@ import styles from './ModuleCellRenderer.module.scss';
 export function ModuleCellRenderer({ data }: CustomCellRendererProps) {
     const { isEnterprise, path, name } = data;
     const framework = getFrameworkFromPath(window.location.pathname);
+
     const moduleValue = path ? (
         <a
             href={urlWithPrefix({
