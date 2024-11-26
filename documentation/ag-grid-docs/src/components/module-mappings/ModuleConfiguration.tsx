@@ -21,79 +21,87 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
     return (
         <div className={styles.configuration}>
             <div className={styles.rowModel}>
-                Row Model:
-                {ROW_MODEL_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
-                    return (
-                        <label key={name}>
-                            <input
-                                type="radio"
-                                name="rowModel"
-                                value={moduleName}
-                                checked={rowModelOption === moduleName}
-                                onChange={() => {
-                                    updateRowModelOption(moduleName);
-                                }}
-                            />{' '}
-                            {name}
-                            {isEnterprise && (
-                                <>
-                                    {' '}
-                                    <EnterpriseIcon />
-                                </>
-                            )}
-                        </label>
-                    );
-                })}
+                <span>Row Model:</span>
+                <div>
+                    {ROW_MODEL_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
+                        return (
+                            <label key={name}>
+                                <input
+                                    type="radio"
+                                    name="rowModel"
+                                    value={moduleName}
+                                    checked={rowModelOption === moduleName}
+                                    onChange={() => {
+                                        updateRowModelOption(moduleName);
+                                    }}
+                                />{' '}
+                                {name}
+                                {isEnterprise && (
+                                    <>
+                                        {' '}
+                                        <EnterpriseIcon />
+                                    </>
+                                )}
+                            </label>
+                        );
+                    })}
+                </div>
             </div>
+
             <div className={styles.bundles}>
-                Bundles:
-                {BUNDLE_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
-                    return (
-                        <label key={name}>
-                            <input
-                                type="radio"
-                                name="bundles"
-                                value={moduleName}
-                                checked={bundleOption === moduleName}
-                                onChange={() => {
-                                    updateBundleOption(moduleName as BundleOptionValue);
-                                }}
-                            />{' '}
-                            {name}
-                            {isEnterprise && (
-                                <>
-                                    {' '}
-                                    <EnterpriseIcon />
-                                </>
-                            )}
-                        </label>
-                    );
-                })}
+                <span>Bundles:</span>
+                <div>
+                    {BUNDLE_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
+                        return (
+                            <label key={name}>
+                                <input
+                                    type="radio"
+                                    name="bundles"
+                                    value={moduleName}
+                                    checked={bundleOption === moduleName}
+                                    onChange={() => {
+                                        updateBundleOption(moduleName as BundleOptionValue);
+                                    }}
+                                />{' '}
+                                {name}
+                                {isEnterprise && (
+                                    <>
+                                        {' '}
+                                        <EnterpriseIcon />
+                                    </>
+                                )}
+                            </label>
+                        );
+                    })}
+                </div>
             </div>
+
             <div className={styles.charts}>
-                Charts:
-                {CHART_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
-                    return (
-                        <label key={name}>
-                            <input
-                                type="checkbox"
-                                name="charts"
-                                value={moduleName}
-                                checked={chartOptions[name as ChartModuleName]}
-                                onChange={() => {
-                                    updateChartOption(name as ChartModuleName);
-                                }}
-                            />{' '}
-                            {name}
-                            {isEnterprise && (
-                                <>
-                                    {' '}
-                                    <EnterpriseIcon />
-                                </>
-                            )}
-                        </label>
-                    );
-                })}
+                <span>Charts:</span>
+                <div>
+                    {CHART_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
+                        return (
+                            <label key={name}>
+                                <input
+                                    type="checkbox"
+                                    name="charts"
+                                    value={moduleName}
+                                    checked={chartOptions[name as ChartModuleName]}
+                                    onChange={() => {
+                                        updateChartOption(name as ChartModuleName);
+                                    }}
+                                />{' '}
+                                {name}
+                                {isEnterprise && (
+                                    <>
+                                        {' '}
+                                        <EnterpriseIcon />
+                                    </>
+                                )}
+                            </label>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

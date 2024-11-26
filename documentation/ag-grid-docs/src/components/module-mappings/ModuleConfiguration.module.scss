@@ -10,11 +10,17 @@
 .bundles,
 .charts {
     display: flex;
-    gap: $spacing-size-4;
+
+    > div {
+        display: flex;
+        gap: $spacing-size-8;
+        margin-left: $spacing-size-3;
+    }
 
     label {
         cursor: pointer;
         display: flex;
-        gap: $spacing-size-1;
+        align-items: center;
+        gap: 6px;
     }
 }
