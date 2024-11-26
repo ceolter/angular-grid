@@ -62,7 +62,7 @@
             box-shadow: none;
 
             &:hover:not(.active) {
-                background-color: rgba(255, 255, 255, 0.5);
+                background-color: rgba(255, 255, 255, 0.164);
             }
 
             &.active {
@@ -94,6 +94,18 @@
     bottom: 50px;
     box-shadow: var(--shadow-md);
 
+    code {
+        background-color: #111a4a !important;
+        border: none;
+
+        .line-numbers-rows {
+            border-right: none !important;
+        }
+        #{$selector-darkmode} & {
+            background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%) !important;
+        }
+    }
+
     #{$selector-darkmode} & {
         background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
     }
@@ -101,6 +113,7 @@
     pre {
         height: 100%;
         margin: 26px 0 16px 0;
+        border: none;
     }
 }
 
@@ -128,6 +141,7 @@
     #{$selector-darkmode} & {
         background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
     }
+
     padding: 0;
     padding-top: 10px;
 }

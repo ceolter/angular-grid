@@ -166,7 +166,7 @@ import { ${themeSelection} } from 'ag-grid-community';
                         </div>
                     </ShadowDom>
                 </div>
-                <div className={styles.codeBlockWrapper}>
+                <div className={`${styles.codeBlockWrapper} code-block-homepage`}>
                     <div className={styles.windowControls}>
                         <div className={styles.dot}></div>
                         <div className={styles.dot}></div>
