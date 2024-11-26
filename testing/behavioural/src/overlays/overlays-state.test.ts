@@ -87,12 +87,7 @@ describe('ag-grid overlays state', () => {
         });
 
         test('should show no-rows overlay when empty rows are loaded via a transaction', () => {
-            const api = gridsManager.createGrid('myGrid', {
-                columnDefs,
-                onRowDataUpdated: () => {
-                    console.log('onRowDataUpdated');
-                },
-            });
+            const api = gridsManager.createGrid('myGrid', { columnDefs });
             expect(hasNoRowsOverlay()).toBeFalsy();
 
             api.applyTransaction({
