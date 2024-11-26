@@ -58,7 +58,7 @@ const HeaderLinks = ({
 
     return (
         <ul className={classnames(styles.navItemList, 'list-style-none')}>
-            {items.map(({ title, path, url, icon, ignoreNavScrollSync }) => {
+            {items.map(({ title, path, url, icon }) => {
                 const linkClasses = classnames(styles.navItem, {
                     [styles.navItemActive]: getIsActiveNav({ title, path: currentPath, allPaths, apiPaths }),
                     [styles.buttonItem]: title === 'Github',
