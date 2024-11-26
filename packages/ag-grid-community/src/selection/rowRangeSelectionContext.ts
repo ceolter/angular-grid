@@ -55,7 +55,7 @@ export class RowRangeSelectionContext {
                 return this.cachedRange;
             }
 
-            this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end);
+            this.cachedRange = this.rowModel.getNodesInRangeForSelection(root, end) ?? [];
         }
 
         return this.cachedRange;
@@ -138,6 +138,10 @@ export class RowRangeSelectionContext {
         }
 
         const newRange = this.rowModel.getNodesInRangeForSelection(root, node);
+        if (!newRange) {
+            this.setRoot(node);
+            return { keep: [node], discard: [] };
+        }
 
         if (newRange.find((newRangeNode) => newRangeNode.id === this.endId)) {
             // Range between root and given node contains the current "end"

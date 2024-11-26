@@ -638,7 +638,7 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
         return res;
     }
 
-    public getNodesInRangeForSelection(firstInRange: RowNode, lastInRange: RowNode): RowNode[] {
+    public getNodesInRangeForSelection(firstInRange: RowNode, lastInRange: RowNode): RowNode[] | null {
         const startIndex = firstInRange.rowIndex;
         const endIndex = lastInRange.rowIndex;
 
@@ -669,7 +669,7 @@ export class ServerSideRowModel extends BeanStub implements NamedBean, IServerSi
 
         // don't allow range selection if we don't have the full range of rows
         if (nodeRange.length !== lastIndex - firstIndex + 1) {
-            return firstInRange ? [firstInRange, lastInRange] : [];
+            return null;
         }
 
         return nodeRange;
