@@ -11,6 +11,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ModuleCellRenderer } from './ModuleCellRenderer';
 import { ModuleConfiguration } from './ModuleConfiguration';
 import styles from './ModuleMappings.module.scss';
+import { ModuleNameCellRenderer } from './ModuleNameCellRenderer';
 import { ModuleSearch } from './ModuleSearch';
 import { useModuleConfig } from './useModuleConfig';
 
@@ -39,7 +40,12 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
         resizable: false,
         suppressMovable: true,
     });
-    const [columnDefs] = useState([{ field: 'moduleName' }]);
+    const [columnDefs] = useState([
+        {
+            field: 'moduleName',
+            cellRenderer: ModuleNameCellRenderer,
+        },
+    ]);
     const [autoGroupColumnDef] = useState({
         headerName: 'Feature',
         cellRendererParams: {
