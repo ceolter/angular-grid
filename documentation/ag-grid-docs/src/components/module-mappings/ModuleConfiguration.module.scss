@@ -10,11 +10,28 @@
 .bundles,
 .charts {
     display: flex;
-    gap: $spacing-size-4;
+    align-items: center;
+
+    .label {
+        width: 100px;
+        font-weight: var(--text-semibold);
+    }
+
+    > div {
+        display: flex;
+        gap: $spacing-size-8;
+        margin-left: $spacing-size-3;
+    }
 
     label {
         cursor: pointer;
         display: flex;
-        gap: $spacing-size-1;
+        align-items: center;
+        gap: 6px;
     }
+}
+
+.enterpriseIcon {
+    --icon-size: var(--text-fs-lg);
+    --icon-color: var(--color-enterprise-icon);
 }

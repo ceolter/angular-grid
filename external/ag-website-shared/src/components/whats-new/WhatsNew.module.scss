@@ -33,7 +33,7 @@
     padding: $spacing-size-4;
     border-radius: 8px;
     background-color: var(--color-bg-primary);
-    border: 1px solid var(--color-border-primary);
+    border: 1px solid var(--color-border-secondary);
     gap: $spacing-size-4;
 
     @container (min-width: 640px) {

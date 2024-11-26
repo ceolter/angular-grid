@@ -2,6 +2,7 @@ import type { MenuItem } from '@ag-grid-types';
 import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import MenuIcon from '@ag-website-shared/images/inline-svgs/menu-icon.svg?react';
+import { resetScrollPosition } from '@ag-website-shared/utils/navScrollPosition';
 import { getPageNameFromPath } from '@components/docs/utils/urlPaths';
 import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
 import { urlWithPrefix } from '@utils/urlWithPrefix';
@@ -79,6 +80,9 @@ const HeaderLinks = ({
                                 if (isOpen) {
                                     toggleIsOpen?.();
                                 }
+
+                                // Reset docs nav scroll position when using header nav
+                                resetScrollPosition();
                             }}
                             aria-label={`AG Grid ${title}`}
                         >

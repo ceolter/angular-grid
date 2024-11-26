@@ -98,13 +98,16 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
         { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
     ];
 
-    const codeBlock = `// Using the Theming API
-import { ${themeSelection} } from 'ag-grid-community';
-    
+    const codeBlock = useMemo(() => {
+        const importPath = themeSelection === 'themeCustom' ? '../themeCustom' : 'ag-grid-community';
+        return `// Using the Theming API
+import { ${themeSelection} } from '${importPath}';
+
 <AgGridReact
     theme={${themeSelection}}
     spacing={${spacing}}
 />`;
+    }, [themeSelection, spacing]);
 
     return (
         <div className={styles.gridColumns}>
@@ -121,8 +124,21 @@ import { ${themeSelection} } from 'ag-grid-community';
                                     setBaseTheme(themeOption.value);
                                 }}
                             >
-                                <div className={styles.title}>{themeOption.label}</div>
-                                <div className={styles.description}> {themeOption.description}</div>
+                                <div className={styles.buttonItems}>
+                                    <input
+                                        type="radio"
+                                        name="charts"
+                                        checked={baseTheme === themeOption.value}
+                                        onChange={() => {
+                                            setThemeSelection(themeOption.themeName as ThemeSelection);
+                                            setBaseTheme(themeOption.value);
+                                        }}
+                                    />
+                                    <div className={styles.titleDescription}>
+                                        <div className={styles.title}>{themeOption.label}</div>
+                                        <div className={styles.description}> {themeOption.description}</div>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -166,7 +182,7 @@ import { ${themeSelection} } from 'ag-grid-community';
                         </div>
                     </ShadowDom>
                 </div>
-                <div className={styles.codeBlockWrapper}>
+                <div className={`${styles.codeBlockWrapper} code-block-homepage`}>
                     <div className={styles.windowControls}>
                         <div className={styles.dot}></div>
                         <div className={styles.dot}></div>

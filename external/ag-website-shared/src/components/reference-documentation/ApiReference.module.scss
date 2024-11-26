@@ -59,7 +59,6 @@
     position: relative;
     table-layout: fixed;
     width: 100%;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-border-primary), var(--color-bg-primary) 30%);
 
     @container (max-width: #{$breakpoint-table-small}) {
         display: block;
@@ -104,6 +103,7 @@
         }
 
         &:last-child {
+            padding-bottom: 0;
             border-bottom: none;
         }
     }

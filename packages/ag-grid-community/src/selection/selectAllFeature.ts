@@ -190,7 +190,7 @@ export class SelectAllFeature extends BeanStub {
      * or `headerCheckboxSelection` is enabled in the legacy API.
      */
     private isCheckboxSelection(): boolean {
-        const { column, gos } = this;
+        const { column, gos, beans } = this;
         const rowSelection = gos.get('rowSelection');
         const colDef = column.getColDef();
         const { headerCheckboxSelection } = colDef;
@@ -203,7 +203,10 @@ export class SelectAllFeature extends BeanStub {
             const isAutoCol = isColumnGroupAutoCol(column);
             // default to displaying header checkbox in the selection column
             const location = _getCheckboxLocation(rowSelection);
-            if ((location === 'autoGroupColumn' && isAutoCol) || (location === 'selectionColumn' && isSelectionCol)) {
+            if (
+                (location === 'autoGroupColumn' && isAutoCol) ||
+                (isSelectionCol && beans.selectionColSvc?.isSelectionColumnEnabled())
+            ) {
                 result = _getHeaderCheckbox(rowSelection);
             }
         } else {

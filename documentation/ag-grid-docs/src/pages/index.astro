@@ -99,7 +99,10 @@ const frameworksData = [
     </div>
 
     <div class={styles.homepageCustomers}>
-        <CustomerLogos client:load />
+        <LandingPageSection>
+            <CustomerLogos client:load />
+            <Quotes client:load data={quotesData} />
+        </LandingPageSection>
     </div>
 
     <LandingPageSection
@@ -150,14 +153,6 @@ const frameworksData = [
         ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >
         <Showcase client:load />
-    </LandingPageSection>
-
-    <LandingPageSection
-        tag="Who Builds Data Grids with AG Grid?"
-        heading="Loved By Developers, Trusted By The Worlds Largest Enterprises"
-        subHeading="Over 90% of the Fortune 500 use AG Grid, with 1,000,000+ npm downloads per week and over 12,000 Stars on GitHub."
-    >
-        <Quotes client:load data={quotesData} />
     </LandingPageSection>
 
     <LandingPageSection
