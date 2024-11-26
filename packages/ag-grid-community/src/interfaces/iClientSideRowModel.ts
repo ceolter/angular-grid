@@ -33,6 +33,14 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     /** The root row containing all the rows */
     readonly rootNode: RowNode | null;
 
+    /**
+     * TODO: we are exporting here all the properties we listen to to start a refresh.
+     * This is a temporary fix for AG-13089 to ensure that the column model register to those events
+     * in such a way the order of execution of column model refresh and csrm refresh is always consistent.
+     * Remove this once AG-13089 is fixed
+     */
+    readonly allRefreshProps: (keyof GridOptions)[];
+
     onRowGroupOpened(): void;
     updateRowData(rowDataTran: RowDataTransaction<TData>): RowNodeTransaction<TData> | null;
     refreshModel(params: RefreshModelParams): void;
