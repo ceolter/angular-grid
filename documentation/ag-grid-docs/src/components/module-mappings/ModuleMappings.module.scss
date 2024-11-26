@@ -4,4 +4,25 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-size-2;
+
+    :global(.ag-root-wrapper) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    :global(.ag-group-child-count) {
+        opacity: 0.6666;
+        margin-left: 4px;
+    }
+}
+
+.moduleSnippet pre {
+    margin-top: -9px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    // Use same colour border as Quartz theme
+    #{$selector-darkmode} & {
+        border-color: color-mix(in srgb, var(--color-fg-primary) 15%, transparent);
+    }
 }

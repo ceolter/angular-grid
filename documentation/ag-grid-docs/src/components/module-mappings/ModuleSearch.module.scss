@@ -3,8 +3,10 @@
 .searchBox {
     position: relative;
     display: flex;
+    margin-top: $spacing-size-4;
     border-radius: var(--radius-md);
     cursor: text;
+
     #{$selector-darkmode} & {
         input {
             background: color-mix(in srgb, var(--color-bg-primary), var(--color-fg-primary) 6%);
@@ -22,12 +24,12 @@
 
     position: absolute;
     top: 10px;
-    left: $spacing-size-2;
+    left: $spacing-size-4;
 }
 
 input[type='search'].searchInput {
     width: 100%;
-    padding: $spacing-size-2 $spacing-size-2 $spacing-size-2 $spacing-size-8;
+    padding: $spacing-size-2 $spacing-size-2 $spacing-size-2 $spacing-size-10;
 
     &::placeholder {
         color: var(--color-fg-quinary);
