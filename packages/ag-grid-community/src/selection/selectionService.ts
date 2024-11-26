@@ -543,8 +543,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
         }
 
         clientSideRowModel.forEachNode((node) => {
-            nodes.push(node);
-        });
+            nodes.push(node.footer ? node.sibling : node);
+        }, true);
         return nodes;
     }
 
