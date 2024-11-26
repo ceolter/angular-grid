@@ -62,7 +62,7 @@ export function createScriptRunner({
                 removeDragAndDropHandles();
             }
 
-            onStateChange && onStateChange(state);
+            onStateChange?.(state);
         },
         scriptDebugger,
         defaultEasing,

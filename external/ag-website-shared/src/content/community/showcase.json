@@ -1,7 +1,7 @@
 {
     "favourites": [
         {
-            "link": "https://docs.openbb.co/pro/widgets/tabular-data",
+            "link": "https://docs.openbb.co/terminal/widgets#widget-structure",
             "repo": "https://github.com/OpenBB-finance/OpenBBTerminal",
             "title": "Terminal Pro @ OpenBB",
             "description": "A sleek graphical interface that is intuitive and fully customizable, making it easier for you to access and analyze financial information with ease.",
@@ -1227,7 +1227,7 @@
             "open_source": true,
             "stars": 90,
             "type": "Product",
-            "link": "https://https://www.aoe2companion.com/"
+            "link": "https://www.aoe2companion.com/"
         },
         {
             "title": "Federal Geospatial Platform Visualiser (FGPV)",
@@ -1254,7 +1254,7 @@
             "open_source": true,
             "stars": 40,
             "type": "Product",
-            "link": "https://wizardmc.fr/"
+            "link": "https://github.com/EvoWide/wizardmc.fr"
         },
         {
             "title": "PIMS",

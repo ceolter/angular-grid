@@ -2014,7 +2014,7 @@ export function deepToRaw<T extends Record<string, any>>(sourceObj: T): T {
         if (isRef(input) || isReactive(input) || isProxy(input)) {
             return objectIterator(toRaw(input));
         }
-        if (input && typeof input === 'object') {
+        if (input && typeof input === 'object' && Object.keys(input).length > 0) {
             return Object.keys(input).reduce((acc, key) => {
                 acc[key as keyof typeof acc] = objectIterator(input[key]);
                 return acc;

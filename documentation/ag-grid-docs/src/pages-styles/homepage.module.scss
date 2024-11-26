@@ -88,6 +88,11 @@ body {
     height: 320px;
     margin: 0 auto;
     max-width: 1200px;
+    padding: 24px;
+
+    @media screen and (max-width: 500px) {
+        padding-top: 0;
+    }
 
     @media screen and (max-width: 500px) {
         padding: $spacing-size-4;
@@ -125,9 +130,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
-    margin-top: 260px;
+    margin-top: 280px;
 
     @media screen and (max-width: 500px) {
+        margin-top: 360px;
+    }
+
+    @media screen and (max-width: 1020px) {
         margin-top: 360px;
     }
 
@@ -700,18 +709,14 @@ body {
 
 .latestNewsVersions {
     --versions-gap: #{$spacing-size-4};
+    --background-gradient-top-offset: 50%;
+    --background-gradient-height: 15%;
 
     container-type: inline-size;
     display: flex;
     gap: var(--versions-gap);
     margin-top: $spacing-size-8;
     margin-bottom: $spacing-size-8;
-}
-
-.faqSection {
-    .blueRectangle {
-        transform: translate(-50%, 250px);
-    }
 }
 
 .customerSubheading {

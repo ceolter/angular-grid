@@ -1,7 +1,7 @@
 import type { GetElement } from '.';
 import {
     AG_CHARTS_CANVAS,
-    AG_CHARTS_LEGEND_ITEM_ID_PREFIX,
+    AG_CHARTS_LEGEND_BUTTONS_SELECTOR,
     AG_CHART_MENU_TOOLBAR_BUTTON_SELECTOR,
     AG_CHART_SERIES_GROUP_TITLE_SELECTOR,
     AG_CHART_THEMES_CONTAINER_SELECTOR,
@@ -389,7 +389,9 @@ export const agElementsConfig: AgElementsConfigItem = {
     chartsLegendItem: {
         find: ({ params }) => {
             const { index } = params;
-            return document.getElementById(`${AG_CHARTS_LEGEND_ITEM_ID_PREFIX}${index}`) || undefined;
+            return (
+                (document.querySelectorAll(`${AG_CHARTS_LEGEND_BUTTONS_SELECTOR}`)[index] as HTMLElement) || undefined
+            );
         },
     },
 };

@@ -42,6 +42,7 @@ export default [
                     message: 'There should be no direct imports of ag-charts-enterprise',
                 },
             ],
+            'no-console': 'error',
         },
     },
     {

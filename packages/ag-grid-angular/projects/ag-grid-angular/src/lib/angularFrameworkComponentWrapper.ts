@@ -47,9 +47,13 @@ export class AngularFrameworkComponentWrapper
 
             callMethod(name: string, args: IArguments): void {
                 const componentRef = this.getFrameworkComponentInstance();
-                return angularFrameworkOverrides.runInsideAngular(() =>
-                    wrapper.getFrameworkComponentInstance()[name].apply(componentRef, args)
-                );
+                const methodCall = componentRef[name];
+                // Special case for `doesFilterPass` as it's called very often and current implementation has
+                // this filter logic as part of the component when really it is just part of the filter model.
+                if (name === 'doesFilterPass') {
+                    return methodCall.apply(componentRef, args);
+                }
+                return angularFrameworkOverrides.runInsideAngular(() => methodCall.apply(componentRef, args));
             }
 
             addMethod(name: string, callback: (...args: any[]) => any): void {

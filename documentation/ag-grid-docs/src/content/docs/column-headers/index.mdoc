@@ -438,6 +438,45 @@ The example below demonstrates using the Dynamic Tooltips with a Custom Header C
 
 See the [Touch](./touch/) documentation for how the grid will handle touch support, particularly for [Touch Events](./touch/#custom-header-components).
 
+### Inner Header Component
+
+When using the Header Component, the `agColumnHeader` component will display the header name,
+adjacent to any configured menu, filter, and checkbox.
+
+This text value can be overridden with a [Custom Component](./components/) by setting the `innerHeaderComponent` and `innerHeaderComponentParams` properties
+on the `headerComponentParams` property. This is useful when you only need to implement a Component to customise the **Column Name** without having to reimplement
+the whole header functionality (sorting, filter, menu, etc...).
+
+{% if isFramework("javascript", "angular", "react") %}
+```js
+colDef = {
+    ...
+    headerComponentParams : {
+        innerHeaderComponent: MyInnerHeaderComponent,
+        innerHeaderComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% if isFramework("vue") %}
+```js
+colDef = {
+    ...
+        headerComponentParams : {
+        innerHeaderComponent: 'MyInnerHeaderComponent',
+        innerHeaderComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% gridExampleRunner title="Custom Inner Header Component" name="inner-header-component" /%}
+
 ## Tooltips
 
 Tooltips can be added to the Column Header by using the `headerTooltip` property of the `ColDef`.

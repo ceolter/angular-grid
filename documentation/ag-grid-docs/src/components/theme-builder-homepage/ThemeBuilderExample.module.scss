@@ -2,6 +2,8 @@
 
 .grid {
     width: 650px;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--radius-md);
 }
 
 .gridColumns {
@@ -14,13 +16,20 @@
     color: var(--color-fg-secondary);
     font-weight: var(--text-semibold);
     padding-bottom: 12px;
-    font-size: var(--text-fs-sm);
+    font-size: var(--text-fs-base);
     opacity: 0.8;
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-size-2;
+    svg {
+        transform: scale(0.8);
+        opacity: 0.6;
+    }
 }
 
 .optionsColumns {
     display: flex;
-    gap: 16px;
+    gap: $spacing-size-12;
     flex-direction: column;
     margin-top: $spacing-size-12;
 }
@@ -28,48 +37,50 @@
     padding-bottom: $spacing-size-5;
     border-bottom: 1px solid var(--color-border-secondary);
 }
-.buttonGroup {
-    display: flex;
-    padding: 4px;
-    background-color: var(--color-util-brand-50);
 
-    border-radius: 8px;
-    gap: 2px;
+.spacingOptions {
+    .buttonGroup {
+        display: flex;
+        padding: 4px;
+        background-color: var(--color-util-brand-50);
 
-    button {
-        flex: 1;
-        padding: 8px 16px;
-        border: none;
-        background: transparent;
-        border-radius: 6px;
-        color: var(--text-color-secondary);
-        font-size: var(--text-fs-base);
-        font-weight: var(--text-semibold);
-        cursor: pointer;
-        transition: all 0.2s ease;
+        border-radius: 8px;
+        gap: 2px;
 
-        box-shadow: none;
+        button {
+            flex: 1;
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            color: var(--text-color-secondary);
+            font-size: var(--text-fs-base);
+            font-weight: var(--text-semibold);
+            cursor: pointer;
+            transition: all 0.2s ease;
 
-        &:hover:not(.active) {
-            background-color: rgba(255, 255, 255, 0.5);
-        }
+            box-shadow: none;
 
-        &.active {
-            background-color: var(--color-bg-primary);
-            color: var(--color-util-brand-500);
-            box-shadow: var(--shadow-sm);
+            &:hover:not(.active) {
+                background-color: rgba(255, 255, 255, 0.5);
+            }
 
-            #{$selector-darkmode} & {
-                background-color: var(--color-brand-200);
+            &.active {
+                background-color: var(--color-bg-primary);
+                color: var(--color-util-brand-500);
+                box-shadow: var(--shadow-sm);
+
+                #{$selector-darkmode} & {
+                    background-color: var(--color-brand-200);
+                }
             }
         }
-    }
-    #{$selector-darkmode} & {
-        background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
-        color: white;
+        #{$selector-darkmode} & {
+            background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
+            color: white;
+        }
     }
 }
-
 .codeBlockWrapper {
     position: relative;
     background-color: #111a4a;
@@ -85,6 +96,11 @@
 
     #{$selector-darkmode} & {
         background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+    }
+
+    pre {
+        height: 100%;
+        margin: 26px 0 16px 0;
     }
 }
 
@@ -127,4 +143,62 @@
 
 .commentLine {
     opacity: 0.5;
+}
+
+.themeOptions {
+    .buttonGroup {
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+
+        gap: 16px;
+        width: 440px;
+
+        .buttonItem {
+            padding: $spacing-size-5;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            gap: $spacing-size-2;
+            flex-direction: column;
+            border: 1px solid transparent;
+
+            &:hover {
+                color: var(--color-fg-primary);
+            }
+        }
+    }
+
+    .active {
+        justify-content: left;
+        background-color: var(--color-util-brand-50);
+        color: var(--color-util-brand-500);
+        border: 1px solid var(--color-util-brand-200) !important;
+        box-shadow: var(--shadow-xs);
+
+        .title {
+            color: var(--color-util-brand-500);
+
+            #{$selector-darkmode} & {
+                color: var(--color-fg-primary);
+            }
+        }
+
+        #{$selector-darkmode} & {
+            background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+    }
+    .description {
+        font-weight: var(--text-regular);
+        color: var(--color-text-tertiary);
+        opacity: 0.8;
+        #{$selector-darkmode} & {
+            opacity: 0.9;
+        }
+    }
+
+    .title {
+        font-weight: var(--text-semibold);
+    }
 }

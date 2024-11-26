@@ -59,7 +59,7 @@ function getMenuItemCompDetails(
     return userCompFactory.getCompDetails(def, MenuItemComponent, 'agMenuItem', params, true);
 }
 
-const MenuItemComponent: ComponentType = {
+const MenuItemComponent: ComponentType<IMenuItemComp> = {
     name: 'menuItem',
     optionalMethods: ['setActive', 'select', 'setExpanded', 'configureDefaults'],
 };

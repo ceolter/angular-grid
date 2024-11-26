@@ -55,6 +55,7 @@ export {
     _getFloatingFilterCompDetails,
     _getCellRendererDetails,
     _getEditorRendererDetails,
+    _getInnerCellRendererDetails,
 } from './components/framework/userCompUtils';
 export { _unwrapUserComp } from './components/framework/unwrapUserComp';
 

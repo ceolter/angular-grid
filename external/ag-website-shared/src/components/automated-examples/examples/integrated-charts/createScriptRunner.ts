@@ -62,7 +62,7 @@ export function createScriptRunner({
                 mouse.hide();
             }
 
-            onStateChange && onStateChange(state);
+            onStateChange?.(state);
         },
         scriptDebugger,
         defaultEasing,

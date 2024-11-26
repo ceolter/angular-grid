@@ -23,7 +23,7 @@ function initListeners({ onSpace, mousePositionSelector, onMouseMove }) {
     // Listen to keyboard
     document.addEventListener('keydown', function onEvent(event) {
         if (event.code === 'Space') {
-            onSpace && onSpace();
+            onSpace?.();
         }
     });
 }

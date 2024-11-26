@@ -66,7 +66,7 @@ export const OpenInCTA: FunctionComponent<Props> = (props) => {
                     aria-label={DISPLAY_NAME[type]}
                     onClick={(event) => {
                         onClick(event);
-                        tracking && tracking();
+                        tracking?.();
                     }}
                 >
                     <Icon name={type} />
@@ -83,7 +83,7 @@ export const OpenInCTA: FunctionComponent<Props> = (props) => {
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => {
-                        tracking && tracking();
+                        tracking?.();
                     }}
                     aria-label={DISPLAY_NAME[type]}
                 >

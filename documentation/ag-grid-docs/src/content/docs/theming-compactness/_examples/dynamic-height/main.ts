@@ -1,13 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    RowGroupingModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -19,12 +18,9 @@ ModuleRegistry.registerModules([
     SetFilterModule,
 ]);
 
-function changeSize(value: string) {
-    const sizes = ['large', 'normal', 'compact'];
-
-    const el = document.getElementById('myGrid')!;
-
-    sizes.forEach((size) => el.classList.toggle(size, size === value));
+function changeSize(value: number) {
+    document.documentElement.style.setProperty('--ag-spacing', `${value}px`);
+    document.getElementById('spacing')!.innerText = value.toFixed(1);
 }
 
 const columnDefs: ColDef[] = [
@@ -43,7 +39,6 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {
@@ -51,6 +46,7 @@ const gridOptions: GridOptions<IOlympicData> = {
         filter: true,
     },
     sideBar: 'columns',
+    animateRows: false,
 };
 
 // setup the grid after the page has finished loading

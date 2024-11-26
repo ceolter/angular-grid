@@ -7,6 +7,7 @@ describe('object', () => {
         try {
             _mergeDeep(victim, BAD_JSON);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
         }
         // @ts-expect-error polluted could be there

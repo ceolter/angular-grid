@@ -323,7 +323,7 @@ export function createScriptRunner({
                                 } as CancelledPromise);
                             }
 
-                            onError && onError({ error, index, action });
+                            onError?.({ error, index, action });
                         }) as Promise<void>;
                 }, Promise.resolve())
                 .then(resolve)
@@ -515,7 +515,7 @@ export function createScriptRunner({
             pauseIndex: pausedState?.scriptIndex,
         });
         runScriptState = state;
-        onStateChange && onStateChange(state);
+        onStateChange?.(state);
     };
 
     // Initial playState

@@ -1,9 +1,18 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    themeQuartz,
+} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+
+const myTheme = themeQuartz.withParams({
+    /* bright green, 10% opacity */
+    selectedRowBackgroundColor: 'rgba(0, 255, 0, 0.1)',
+});
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },
@@ -21,7 +30,7 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
+    theme: myTheme,
     rowData: null,
     columnDefs: columnDefs,
     rowSelection: { mode: 'multiRow' },
@@ -38,5 +47,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
         .then((response) => response.json())
-        .then((data: IOlympicData[]) => gridApi!.setGridOption('rowData', data));
+        .then((data: IOlympicData[]) => {
+            gridApi.setGridOption('rowData', data);
+            gridApi.forEachNode((node) => {
+                if (node.rowIndex === 2 || node.rowIndex === 3 || node.rowIndex === 4) {
+                    node.setSelected(true);
+                }
+            });
+        });
 });

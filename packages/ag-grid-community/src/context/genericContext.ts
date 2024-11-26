@@ -59,6 +59,7 @@ export class GenericContext<TBeanName extends string, TBeanCollection extends { 
             if (instance.beanName) {
                 this.beans[instance.beanName] = instance as any;
             } else {
+                // eslint-disable-next-line no-console
                 console.error(`Bean ${BeanClass.name} is missing beanName`);
             }
             this.createdBeans.push(instance);

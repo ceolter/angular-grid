@@ -7,6 +7,7 @@ describe('ColumnDefFactory', () => {
         try {
             victim = _deepCloneDefinition(BAD_JSON);
         } catch (e) {
+            // eslint-disable-next-line no-console
             console.error(e);
         }
         // @ts-expect-error polluted could be there

@@ -14,6 +14,7 @@ interface Props {
     ctaTitle?: string;
     ctaUrl?: string;
     sectionClass?: string;
+    showBackgroundGradient?: boolean;
     children: ReactNode;
 }
 
@@ -26,10 +27,15 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     ctaTitle,
     ctaUrl,
     sectionClass,
+    showBackgroundGradient,
     children,
 }) => {
     return (
-        <div className={classnames(styles.sectionContent, sectionClass)}>
+        <div
+            className={classnames(styles.sectionContent, sectionClass, {
+                [styles.withBackgroundGradient]: showBackgroundGradient,
+            })}
+        >
             <header className={styles.headingContainer}>
                 <h2 className={styles.tag}>{tag}</h2>
 

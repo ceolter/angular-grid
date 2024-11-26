@@ -86,7 +86,7 @@ export const createMoveMouse = ({
             .to(toPos, tweenDuration)
             .onUpdate((object: Point, elapsed) => {
                 moveMouse({ mouse, coords: object, offset, scriptDebugger });
-                tweenOnChange && tweenOnChange({ coords: object, elapsed });
+                tweenOnChange?.({ coords: object, elapsed });
             })
             .onComplete(() => {
                 resolve();

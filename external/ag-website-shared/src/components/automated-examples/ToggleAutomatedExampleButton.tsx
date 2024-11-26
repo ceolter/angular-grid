@@ -19,7 +19,7 @@ export const ToggleAutomatedExampleButton: FunctionComponent<Props> = ({ isHover
                     [styles.isActive]: scriptIsActive,
                 })}
                 onClick={() => {
-                    onClick && onClick();
+                    onClick?.();
                 }}
             >
                 <span className={styles.controlInner}>

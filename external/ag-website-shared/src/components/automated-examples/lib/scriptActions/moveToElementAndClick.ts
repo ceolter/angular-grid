@@ -43,7 +43,7 @@ export async function moveToElementAndClick({
 }: MoveToElementAndClickParams) {
     let element = agElementFinder.get(target, targetParams);
     if (!element) {
-        throw new Error(`No element found: ${target}`);
+        throw new Error(`No element found: ${target} - ${JSON.stringify(targetParams)}`);
     }
 
     // Same logic as [tabbedChartMenu](https://github.com/ag-grid/ag-grid/blob/3d71e5b4e4c0fcba593d6783a7ba1f815c32e2f8/enterprise-modules/charts/src/charts/chartComp/menu/tabbedChartMenu.ts#L78)
@@ -67,7 +67,7 @@ export async function moveToElementAndClick({
 
     const toPos = element?.getPos();
     if (!toPos) {
-        throw new Error(`Element position not found: ${target}`);
+        throw new Error(`Element position not found: ${target} - ${JSON.stringify(targetParams)}`);
     }
 
     await createMoveMouse({

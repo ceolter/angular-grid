@@ -4,45 +4,53 @@ title: "Theming: Compactness & Row Height"
 
 Add more white space or pack more data into the UI.
 
-{% warning %}
-## TODO: content due in AG-13129
-This page is a copy of the v32 theme docs, and needs updating for the Theming API.
-{% /warning %}
-
-`--ag-grid-size` is the main control for affecting how tightly data and UI elements are packed together. It should be a value with pixel units e.g. `8px`. All padding and spacing in the grid is defined as a multiple of grid-size, so increasing it will make most components larger by increasing their internal white space while leaving the size of text and icons unchanged.
-
-```css
-.ag-theme-quartz {
-    --ag-grid-size: 3px; /* very compact */
-}
-```
-
-After grid size, the most common variables to change are:
-
-* `--ag-row-height` and `--ag-header-height` set the height of rows and headers.
-* `--ag-list-item-height` sets the height of items in lists of values, such as the [rich select editor](./provided-cell-editors-rich-select/) and [set filter](./filter-set/).
+`spacing` is the main theme parameter that controls how tightly data and UI elements are packed together. All padding in the grid is defined as a multiple of this value, so increasing it will make most components larger by increasing their internal white space while leaving the size of text and icons unchanged.
 
 In the following example, classes are applied to the grid container that change compactness dynamically:
 
 {% gridExampleRunner title="Dynamic Height" name="dynamic-height"  exampleHeight=450 /%}
 
-## Full list of compactness variables
+## Row Height
 
-{% apiDocumentation source="global-style-customisation-variables/variables.json" section="variables" names=["--ag-row-height", "--ag-header-height", "--ag-list-item-height", "--ag-widget-container-horizontal-padding", "--ag-widget-container-vertical-padding", "--ag-widget-horizontal-spacing", "--ag-widget-vertical-spacing", "--ag-cell-horizontal-padding", "--ag-column-select-indent-size", "--ag-set-filter-indent-size", "--ag-advanced-filter-builder-indent-size"] config={"hideHeader": true} /%}
+By default, row height is determined by the content height plus padding. Content height is `max(iconSize, dataFontSize)`. Padding is a multiple of `spacing`. This means that your rows can change size if you change any of the icon size, font size, or spacing.
+
+The grid provides two ways of customising row height:
+
+`rowVerticalPaddingScale` and `headerVerticalPaddingScale` are plain numbers without units. The padding is multiplied by this number, so `0.75` would mean 3/4 of the usual padding. Using these scale parameters keeps the behaviour that the row size will increase when the font size increases, which is appropriate when end users can choose a font size.
+
+`rowHeight` and `headerHeight` are CSS length values - numbers with units. They set the height of the row or header to a fixed value, regardless of the font size or icon size.
+
+`listItemHeight` sets the height of rows in lists such as the [rich select editor](./provided-cell-editors-rich-select/) and [set filter](./filter-set/).
+
+## More Compactness Parameters
+
+To find compactness parameters relating to a feature, search for the feature name in the "All Parameters" section of the [Theme Builder](/theme-builder/).
+
+## Extended Syntax For Length Parameters
+
+All compactness parameters except `rowVerticalPaddingScale` and `headerVerticalPaddingScale` are length parameters - numbers with units like `10px`. Length parameters do not have a common suffix - any parameter that does not have a special suffix like `Color` or `FontFamily` is a length value.
+
+Length parameters can accept the following values:
+
+| Syntax | Description |
+|-|-|
+| `string` | A [CSS length value](https://developer.mozilla.org/en-US/docs/Web/CSS/length), such as `'10px'` or variable expression `'var(--myAppHeaderSize)'`. |
+| `4` | A number without units is assumed to be pixels |
+| `{ ref: 'spacing' }` | Use the same value as the `spacing` parameter |
+| `{ calc: '4 * spacing - 2px' }` | A CSS [calc expression](https://developer.mozilla.org/en-US/docs/Web/CSS/calc), except that parameter names are allowed and will be converted to the appropriate CSS custom property. This expression would map to the CSS string  `"calc(4 * var(--ag-spacing) - 2px)"`. Note that `-` is a valid character in CSS identifiers, so if you use it for subtraction then spaces are required around it. |
 
 ## Using CSS rules to customise compactness
 
-The grid contains thousands of elements. Most of them respond to `--ag-grid-size` but many of them don't have their own specific variables to customise size. For all elements except rows, headers and list items (see note below), you can set their height, margin or paddings using CSS rules that target a class name, e.g.
+The grid contains thousands of elements. Most of them respond to the `spacing` parameter, by having their default padding defined as a multiple of it. But many of them don't have their own specific parameters to customise size. For all elements except rows, headers and list items (see note below), you can set their height, margin or paddings using CSS rules that target a class name, e.g.
 
 ```css
-/* set the height of text inputs */
-.ag-theme-quartz .ag-text-field-input {
-    height: 30px;
+.ag-panel-title-bar {
+    height: 80px;
 }
 ```
 
 ### Setting the height of rows, headers and list items
 
-To change the height of rows, headers and list item heights, you *must* use the provided CSS variables (`--ag-row-height`, `--ag-header-height` and `--ag-list-item-height`). The grid uses [DOM virtualisation](./dom-virtualisation/) for rendering large amounts of data, and needs to know the height of virtualised elements in order to calculate their layout. It does this by measuring the values of CSS variables such as `--ag-row-height`.
+To change the height of rows, headers and list item heights, you *must* use the provided parameters `rowHeight`, `headerHeight` and `listItemHeight`, or the equivalent CSS custom properties `--ag-row-height`, `--ag-header-height` and `--ag-list-item-height`. The grid uses [DOM virtualisation](./dom-virtualisation/) for rendering large amounts of data, and needs to know the height of virtualised elements in order to calculate their layout. It does this by measuring the values of CSS variables such as `--ag-row-height`.
 
 Using CSS to set a height on a row element itself e.g. `.ag-row { height: 50px; }` is not supported.

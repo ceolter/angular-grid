@@ -1,7 +1,11 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    themeQuartz,
+} from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
@@ -13,10 +17,21 @@ ModuleRegistry.registerModules([
     CellSelectionModule,
 ]);
 
+const myTheme = themeQuartz.withParams({
+    // color and style of border around selection
+    rangeSelectionBorderColor: 'rgb(193, 0, 97)',
+    rangeSelectionBorderStyle: 'dashed',
+    // background color of selection - you can use a semi-transparent color
+    // and it wil overlay on top of the existing cells
+    rangeSelectionBackgroundColor: 'rgb(255, 0, 128, 0.1)',
+    // color used to indicate that data has been copied form the cell range
+    rangeSelectionHighlightColor: 'rgb(60, 188, 0, 0.3)',
+});
+
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
+    theme: myTheme,
     columnDefs: [
         { field: 'athlete', minWidth: 150 },
         { field: 'age', maxWidth: 90 },
@@ -43,5 +58,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
         .then((response) => response.json())
-        .then((data: IOlympicData[]) => gridApi!.setGridOption('rowData', data));
+        .then((data: IOlympicData[]) => {
+            gridApi!.setGridOption('rowData', data);
+            gridApi.addCellRange({
+                rowStartIndex: 1,
+                rowEndIndex: 5,
+                columns: ['age', 'country', 'year', 'date'],
+            });
+        });
 });

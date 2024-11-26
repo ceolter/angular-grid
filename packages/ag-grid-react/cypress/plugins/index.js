@@ -19,6 +19,7 @@ module.exports = (on, config) => {
     on(`task`, {
         // bubble up errors...so we can fail tests on console.errors
         error(message) {
+            // eslint-disable-next-line no-console
             console.error('CONSOLE ERROR: ', message);
             return null;
         },

@@ -8,6 +8,35 @@
     padding: $spacing-size-12 var(--layout-horizontal-margins) $spacing-size-24;
 }
 
+@media screen and (min-width: 1300px) {
+    .sectionContent.withBackgroundGradient {
+        --gradient-top-offset: var(--background-gradient-top-offset, 40%);
+        --gradient-height: var(--background-gradient-height, 20%);
+        --gradient-color: var(--color-util-brand-100);
+        --border-color: var(--color-util-brand-200);
+
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: var(--gradient-top-offset);
+            left: -100vw;
+            right: -100vw;
+            height: var(--gradient-height);
+            border-top: 1px solid var(--border-color);
+            background-image: linear-gradient(var(--gradient-color), transparent);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #{$selector-darkmode} & {
+            --gradient-color: var(--color-util-gray-200);
+            --border-color: var(--color-util-gray-300);
+        }
+    }
+}
+
 .tag,
 .heading,
 .subHeading {
@@ -18,6 +47,7 @@
     font-size: var(--text-fs-lg);
     font-weight: var(--text-semibold);
     color: var(--color-util-brand-600);
+    text-transform: capitalize;
 
     #{$selector-darkmode} & {
         color: var(--color-util-brand-900);
@@ -28,6 +58,7 @@
     font-size: 40px;
     font-weight: var(--text-bold);
     letter-spacing: -1px;
+    text-transform: capitalize;
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {
         padding: 0;

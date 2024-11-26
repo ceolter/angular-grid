@@ -29,9 +29,13 @@ There are many parameters available, and several ways of finding the right one t
 2. **TypeScript auto-complete** - When using an editor with TypeScript language support, you can see all available parameters with inline documentation.
 3. **Dev tools** - When inspecting an element in the grid, the styles panel shows the CSS custom properties that are being used. A custom property `var(--ag-column-border)` corresponds to the theme parameter `columnBorder`.
 
-## Extended Syntax for CSS Values
+## Parameter Types
 
-Every parameter can accept a string, in which case it is treated as a CSS value.
+The type of a parameter is determined by its name, for example all parameters ending `Color` are colors.
+
+Every parameter can accept a string, which is passed to CSS without processing so must be valid CSS syntax for the type of parameter, e.g. `red` is a valid CSS color.
+
+Some parameter types also support an extended syntax. This syntax is only available when using the API to set parameters, when [setting parameters with CSS](./theming-css/) you must always use CSS syntax.
 
 ### Length Values
 
@@ -41,7 +45,7 @@ Parameters that refer to on-screen measurements are length values. These will ha
 |-|-|
 | `4` | A number without units is assumed to be pixels |
 | `{ ref: 'spacing' }` | Use the same value as the `spacing` parameter |
-| `{ calc: '4 * spacing - 2px' }` | A CSS calc expression, mapping parameter names to the appropriate CSS custom property. This expression would map to the CSS string  `"calc(4 * var(--ag-spacing) - 2px)"`. Note that `-` is a valid character in CSS identifiers, so if you use it for subtraction then spaces are required around it. |
+| `{ calc: '4 * spacing - 2px' }` | A CSS [calc expression](https://developer.mozilla.org/en-US/docs/Web/CSS/calc), except that parameter names are allowed and will be converted to the appropriate CSS custom property. This expression would map to the CSS string  `"calc(4 * var(--ag-spacing) - 2px)"`. Note that `-` is a valid character in CSS identifiers, so if you use it for subtraction then spaces are required around it. |
 
 ### Color Values
 

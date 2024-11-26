@@ -37,6 +37,7 @@ export function upgradeChartModel(model: ChartModel): ChartModel {
     model = migrateIfBefore(VERSION, model, (m) => m);
 
     if (DEBUG && originalVersion !== model.version) {
+        // eslint-disable-next-line no-console
         console.log('AG Grid: ChartModel migration complete', { model });
     }
 
@@ -352,20 +353,24 @@ export function heuristicVersionDetection(model: ChartModel) {
     const defaultVersion = '27.1.0';
     const matchingHints = Object.entries(hints).filter(([_, match]) => match);
 
+    // eslint-disable-next-line no-console
     if (DEBUG) console.log('AG Grid: ChartModel migration', { heuristicVersionCandidates: matchingHints });
     const [heuristicVersion = defaultVersion] = matchingHints[0];
 
+    // eslint-disable-next-line no-console
     if (DEBUG) console.log('AG Grid: ChartModel migration', { heuristicVersion });
     return heuristicVersion;
 }
 
 function migrateIfBefore(maxVersion: string, model: ChartModel, migration: (m: ChartModel) => ChartModel): ChartModel {
     if (versionNumber(maxVersion) > versionNumber(model.version!)) {
+        // eslint-disable-next-line no-console
         if (DEBUG) console.log('AG Grid: ChartModel migration', { migratingTo: maxVersion });
 
         const result = migration(model);
         result.version = maxVersion;
 
+        // eslint-disable-next-line no-console
         if (DEBUG) console.log('AG Grid: ChartModel migration', { migratedTo: maxVersion, result });
         return result;
     }

@@ -193,20 +193,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
             return;
         }
 
-        // case 1: only one column showing -- selection column
-        if (visibleColumns.length === 1) {
-            const firstColumn = visibleColumns[0];
-
-            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
-                return;
-            }
-
-            _applyColumnState(beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
-
-            return;
-        }
-
-        // case 2: multiple columns showing -- none are selection column
+        // check first: one or more columns showing -- none are selection column
         if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
             const existingState = _getColumnState(beans).find((state) => isColumnSelectionCol(state.colId));
 
@@ -219,6 +206,17 @@ export class SelectionColService extends BeanStub implements NamedBean {
                     source
                 );
             }
+        }
+
+        // lastly, check only one column showing -- selection column
+        if (visibleColumns.length === 1) {
+            const firstColumn = visibleColumns[0];
+
+            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
+                return;
+            }
+
+            _applyColumnState(beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
         }
     }
 }

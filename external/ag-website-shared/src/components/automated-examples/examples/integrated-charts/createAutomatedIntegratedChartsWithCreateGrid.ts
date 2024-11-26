@@ -145,6 +145,9 @@ const gridOptions: GridOptions = {
     chartToolPanelsDef: {
         defaultToolPanel: 'settings',
     },
+    rowSelection: {
+        mode: 'multiRow',
+    },
 };
 
 function getDarkModeChartThemes(darkMode: boolean) {
@@ -187,7 +190,7 @@ export function createAutomatedIntegratedChartsWithCreateGrid({
         gridOptions.chartThemes = getDarkModeChartThemes(darkMode);
 
         gridOptions.onGridReady = () => {
-            onGridReady && onGridReady();
+            onGridReady?.();
         };
         gridOptions.onFirstDataRendered = (e) => {
             if (suppressUpdates) {

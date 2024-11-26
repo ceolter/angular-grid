@@ -44,6 +44,16 @@ const myTheme = themeQuartz.withParams({
 
 {% gridExampleRunner title="Colour Customisation" name="color-customisation" exampleHeight=400 suppressDarkMode=true /%}
 
+## Extended Syntax for Color Values
+
+All theme parameters with the suffix `Color` are color values, and can accept the following values:
+
+| Syntax | Description |
+|-|-|
+| `string` | A [CSS color value](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value), such as `'red'`, `'rgb(255, 0, 0)'`, or variable expression `'var(--myColorVar)'`. |
+| `{ ref: 'accentColor' }` | Use the same value as the `accentColor` parameter |
+| `{ ref: 'accentColor', mix: 0.25 }` | A mix of 25%, `accentColor` 75% transparent |
+| `{ ref: 'accentColor', mix: 0.25, onto: 'backgroundColor' }` | A mix of 25%, `accentColor` 75% `backgroundColor` |
 
 ## Color Schemes
 

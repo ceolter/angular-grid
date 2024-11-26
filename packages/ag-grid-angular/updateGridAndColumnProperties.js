@@ -211,6 +211,7 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
 
     replace(optionsForGrid).then((filesChecked) => {
         const changes = filesChecked.filter((change) => change.hasChanged);
+        // eslint-disable-next-line no-console
         console.log(
             `Grid Properties: ${changes.length === 0 ? 'No Modified files' : 'Modified files: ' + changes.map((change) => change.file).join(', ')}`
         );
@@ -221,10 +222,13 @@ const updatePropertiesBuilt = () => {
     updateGridProperties(getGridPropertiesAndEventsJs);
 };
 
+// eslint-disable-next-line no-console
 console.log(`--------------------------------------------------------------------------------`);
+// eslint-disable-next-line no-console
 console.log(`Generate Angular Component Input / Outputs...`);
+// eslint-disable-next-line no-console
 console.log('Using Typescript version: ', ts.version);
 
 updatePropertiesBuilt();
-
+// eslint-disable-next-line no-console
 console.log(`--------------------------------------------------------------------------------`);

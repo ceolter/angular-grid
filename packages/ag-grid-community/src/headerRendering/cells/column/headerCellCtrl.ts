@@ -358,7 +358,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         }
     }
 
-    public attemptHeaderCompRefresh(params: IHeaderParams): boolean {
+    private attemptHeaderCompRefresh(params: IHeaderParams): boolean {
         const headerComp = this.comp.getUserCompInstance();
         if (!headerComp) {
             return false;
