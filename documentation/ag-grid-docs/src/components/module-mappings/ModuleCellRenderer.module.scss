@@ -1,6 +1,13 @@
 .container {
-    svg {
-        margin-top: 8px;
-        padding-right: 2px;
+    --icon-color: var(--color-enterprise-icon);
+    --icon-size: 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    :global(.icon) {
+        position: relative;
+        top: -2px;
     }
 }

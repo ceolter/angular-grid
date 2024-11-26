@@ -465,7 +465,6 @@ export { ISideBarService, ISideBar, SideBarDef, ToolPanelDef } from './interface
 export { IGetRowsParams, IDatasource } from './interfaces/iDatasource';
 
 // selection
-export { ISelectionContext } from './selection/rowRangeSelectionContext';
 export { BaseSelectionService } from './selection/baseSelectionService';
 
 // styling

@@ -74,6 +74,10 @@
     &:focus-visible {
         text-decoration: none;
         background-color: var(--color-brand-100);
+
+        #{$selector-darkmode} & {
+            background: color-mix(in srgb, var(--color-button-tertiary-bg-hover), var(--color-brand-100) 20%);
+        }
         transition: background-color 0.5s;
     }
 

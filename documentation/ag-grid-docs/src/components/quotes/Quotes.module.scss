@@ -58,7 +58,7 @@
     font-size: var(--text-fs-base);
     line-height: var(--text-lh-2xl);
     border: 1px solid var(--color-border-secondary);
-    margin: -1px;
+    margin: -1px 0 0 -1px;
     padding: 24px;
     background-color: var(--color-bg-primary);
 
@@ -123,4 +123,53 @@
     margin-left: auto;
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border-primary);
+}
+
+.statsOuter {
+    display: flex;
+    justify-content: center;
+    grid-template-columns: repeat(4, 1fr);
+    padding: $spacing-size-8;
+    gap: $spacing-size-8;
+    border: 1px solid var(--color-border-secondary);
+
+    margin-top: $spacing-size-20;
+    border-bottom: 1px solid var(--color-border-secondary);
+    border-top-left-radius: var(--radius-md);
+    border-top-right-radius: var(--radius-md);
+
+    svg {
+        stroke: var(--color-util-brand-500);
+    }
+    .stat {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        border-right: 1px solid var(--color-border-secondary);
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+}
+h4 {
+    color: var(--color-text-secondary);
+    display: flex;
+    gap: $spacing-size-4;
+    align-items: left;
+    flex-direction: column;
+
+    #{$selector-darkmode} & {
+        color: var(--color-util-brand-900);
+    }
+}
+
+h4 {
+    color: var(--color-util-brand-500);
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
 }

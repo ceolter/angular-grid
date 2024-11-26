@@ -87,14 +87,16 @@ export class SelectionColService extends BeanStub implements NamedBean {
         updateOrders(putSelectionColsFirstInList);
     }
 
-    private isSelectionColumnEnabled(): boolean {
-        const { gos } = this;
+    public isSelectionColumnEnabled(): boolean {
+        const { gos, beans } = this;
         const rowSelection = gos.get('rowSelection');
         if (typeof rowSelection !== 'object') {
             return false;
         }
 
-        if (rowSelection.checkboxLocation === 'autoGroupColumn') {
+        const hasAutoCols = (beans.autoColSvc?.getAutoCols()?.length ?? 0) > 0;
+
+        if (rowSelection.checkboxLocation === 'autoGroupColumn' && hasAutoCols) {
             return false;
         }
 

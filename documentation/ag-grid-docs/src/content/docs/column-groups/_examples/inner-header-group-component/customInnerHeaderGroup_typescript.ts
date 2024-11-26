@@ -10,7 +10,7 @@ export class CustomInnerHeaderGroup {
 
     init(agParams: ICustomInnerHeaderGroupParams & IHeaderGroupParams) {
         const eGui = (this.eGui = document.createElement('div'));
-        eGui.classList.add('customInnerHeader');
+        eGui.classList.add('customInnerHeaderGroup');
         const textNode = document.createElement('span');
 
         textNode.textContent = agParams.displayName;
