@@ -4,6 +4,7 @@ import { UpdateSpeedSlider } from '@ag-website-shared/components/automated-examp
 import { createAutomatedRowGrouping } from '@ag-website-shared/components/automated-examples/examples/row-grouping';
 import { ROW_GROUPING_ID } from '@ag-website-shared/components/automated-examples/lib/constants';
 import LogoMark from '@components/logo/LogoMark';
+import { useStore } from '@nanostores/react';
 import { trackHomepageExampleRowGrouping, trackOnceHomepageExampleRowGrouping } from '@utils/analytics';
 import { useIntersectionObserver } from '@utils/hooks/useIntersectionObserver';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
@@ -13,35 +14,31 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import automatedExamplesVars from './AutomatedExamplesVars.module.scss';
 import styles from './AutomatedRowGrouping.module.scss';
 import type { AutomatedExampleManager } from './lib/createAutomatedExampleManager';
+import { getAutomatedExampleSearchParams } from './lib/getAutomatedExampleSearchParams';
 import { isMobile } from './lib/isMobile';
+import { $automatedExampleManager } from './stores/automatedExampleManager';
 
 const AUTOMATED_EXAMPLE_MOBILE_SCALE = parseFloat(automatedExamplesVars['mobile-grid-scale']);
 
 interface Props {
     automatedExampleManager: AutomatedExampleManager;
-    useStaticData: boolean;
-    runOnce: boolean;
     visibilityThreshold: number;
     darkMode: boolean;
 }
 
-export function AutomatedRowGrouping({
-    automatedExampleManager,
-    useStaticData,
-    runOnce,
-    visibilityThreshold,
-    darkMode,
-}: Props) {
+export function AutomatedRowGrouping({ visibilityThreshold, darkMode }: Props) {
     const exampleId = ROW_GROUPING_ID;
     const gridClassname = 'automated-row-grouping-grid';
     const gridRef = useRef(null);
     const exampleRef = useRef(null);
     const overlayRef = useRef(null);
+    const automatedExampleManager = useStore($automatedExampleManager);
     const [scriptIsEnabled, setScriptIsEnabled] = useState(true);
     const [gridIsReady, setGridIsReady] = useState(false);
     const [gridIsHoveredOver, setGridIsHoveredOver] = useState(false);
     const [frequency, setFrequency] = useState(1);
     const debuggerManager = automatedExampleManager?.getDebuggerManager();
+    const { isCI: useStaticData, runOnce } = getAutomatedExampleSearchParams();
 
     const setAllScriptEnabledVars = (isEnabled) => {
         setScriptIsEnabled(isEnabled);

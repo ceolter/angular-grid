@@ -108,9 +108,7 @@ export const FinanceExample: React.FC<Props> = ({
                 cellRenderer: 'agSparklineCellRenderer',
                 cellRendererParams: {
                     sparklineOptions: {
-                        line: {
-                            strokeWidth: 2,
-                        },
+                        strokeWidth: 2,
                     },
                 },
             },

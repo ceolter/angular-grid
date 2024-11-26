@@ -6,7 +6,6 @@ import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
 import { LandingPageFWSelector } from '@ag-website-shared/components/landing-pages/LandingPageFWSelector';
 import InstallText from '@components/framework-landing-pages/InstallText';
-import { AutomatedExamples } from '@ag-website-shared/components/automated-examples/AutomatedExamples';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { Version } from '@ag-website-shared/components/whats-new/components/Version';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
@@ -18,6 +17,8 @@ import { LandingPageFAQ } from '@ag-website-shared/components/landing-pages/Land
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
 import { Finance } from 'src/components/demos/examples/finance';
 import { ThemeBuilderHomepage } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
+import { AutomatedRowGrouping } from '@ag-website-shared/components/automated-examples/AutomatedRowGrouping';
+import { AutomatedIntegratedCharts } from '@ag-website-shared/components/automated-examples/AutomatedIntegratedCharts';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { data: FAQData } = await getEntry('homepage', 'homepageFAQs');
@@ -101,7 +102,35 @@ const frameworksData = [
         <CustomerLogos client:load />
     </div>
 
-    <AutomatedExamples client:visible />
+    <LandingPageSection
+        tag="Performance And Speed First"
+        heading="The Fastest Data Grid In The World"
+        subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
+        ctaTitle="Build your first Grid"
+        ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
+        showBackgroundGradient
+    >
+        <section className={styles.automatedRowGroupingOuter}>
+            <div className={styles.automatedRowGrouping}>
+                <AutomatedRowGrouping client:visible visibilityThreshold={0.2} darkMode={true} />
+            </div>
+        </section>
+    </LandingPageSection>
+
+    <LandingPageSection
+        tag="Fully Integrated Charting"
+        heading="Integrated Charts, Powered by AG Charts"
+        subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
+        ctaTitle="Get started with Integrated Charts"
+        ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
+        showBackgroundGradient
+    >
+        <section className={styles.automatedIntegratedChartsOuter}>
+            <div className={styles.automatedIntegratedCharts}>
+                <AutomatedIntegratedCharts client:visible visibilityThreshold={0.8} />
+            </div>
+        </section>
+    </LandingPageSection>
 
     <LandingPageSection
         tag="Theming and customisation"

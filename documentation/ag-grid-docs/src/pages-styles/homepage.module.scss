@@ -1,9 +1,5 @@
 @use 'design-system' as *;
 
-$z-index-base: 10000; // For automated example mouse
-$z-index-debug-canvas: $z-index-base + 10;
-$z-index-debug-panel: $z-index-debug-canvas + 200;
-
 $z-index-gatsby-overlay: 10100;
 
 html,
@@ -400,110 +396,6 @@ body {
 // Invert plunker logo for darkmode
 #{$selector-darkmode} .projectPlunker img {
     filter: invert(1);
-}
-
-.automatedExampleDebugPanel {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 220px;
-    height: fit-content;
-    border-left: 1px solid var(--color-border-primary);
-    border-bottom: 1px solid var(--color-border-primary);
-    background-color: rgba(255, 255, 255, 0.85);
-    padding: $spacing-size-4;
-    z-index: $z-index-debug-panel;
-
-    :global(.disabled) {
-        h2 {
-            color: var(--color-text-tertiary);
-
-            &::after {
-                content: ' (disabled)';
-            }
-        }
-    }
-
-    h2 {
-        font-size: var(--text-fs-base);
-        margin-bottom: $spacing-size-1;
-        margin-top: $spacing-size-2;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    :global(.state) {
-        &::before {
-            content: 'State: ';
-            color: var(--color-text-tertiary);
-        }
-    }
-
-    :global(.step) {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        :global(.index) {
-            &::after {
-                content: ':';
-            }
-        }
-    }
-
-    :global(.paused-state) {
-        &::before {
-            content: 'Paused at: ';
-            color: var(--color-text-tertiary);
-        }
-    }
-
-    :global(.controls) {
-        display: flex;
-        justify-content: space-between;
-
-        button:not([class^='ag-']) {
-            padding: $spacing-size-1;
-            line-height: var(--text-lh-ultra-tight);
-        }
-    }
-
-    :global(.draw-checkbox) {
-        margin-top: $spacing-size-2;
-        cursor: pointer;
-    }
-
-    :global(.mouse-position) {
-        margin-top: $spacing-size-2;
-        cursor: pointer;
-
-        &::before {
-            content: 'Mouse: ';
-            color: var(--color-text-tertiary);
-        }
-    }
-
-    :global(.manager-state) {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        &::before {
-            content: 'Manager: ';
-            color: var(--color-text-tertiary);
-        }
-    }
-}
-
-.automatedExampleDebugCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: $z-index-debug-canvas;
 }
 
 :global(.automated-example-drag) {

@@ -2,6 +2,7 @@ import { OverlayButton } from '@ag-website-shared/components/automated-examples/
 import { ToggleAutomatedExampleButton } from '@ag-website-shared/components/automated-examples/ToggleAutomatedExampleButton';
 import { INTEGRATED_CHARTS_ID } from '@ag-website-shared/components/automated-examples/lib/constants';
 import LogoMark from '@components/logo/LogoMark';
+import { useStore } from '@nanostores/react';
 import { trackHomepageExampleIntegratedCharts, trackOnceHomepageExampleIntegratedCharts } from '@utils/analytics';
 import { useDarkmode } from '@utils/hooks/useDarkmode';
 import { useIntersectionObserver } from '@utils/hooks/useIntersectionObserver';
@@ -12,17 +13,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import automatedExamplesVars from './AutomatedExamplesVars.module.scss';
 import styles from './AutomatedIntegratedCharts.module.scss';
 import type { CreateAutomatedIntegratedChartsParams } from './examples/integrated-charts/createAutomatedIntegratedChartsWithCreateGrid';
-import type { AutomatedExampleManager } from './lib/createAutomatedExampleManager';
+import { getAutomatedExampleSearchParams } from './lib/getAutomatedExampleSearchParams';
 import { isMobile } from './lib/isMobile';
 import type { RunScriptState } from './lib/scriptRunner';
+import { $automatedExampleManager } from './stores/automatedExampleManager';
 import type { AutomatedExample } from './types.d';
 
 const AUTOMATED_EXAMPLE_MOBILE_SCALE = parseFloat(automatedExamplesVars['mobile-grid-scale']);
 
 export interface AutomatedIntegratedChartsProps {
-    automatedExampleManager: AutomatedExampleManager;
-    useStaticData?: boolean;
-    runOnce?: boolean;
     visibilityThreshold: number;
 }
 
@@ -42,15 +41,13 @@ function useClientIsReady() {
 
 export function AutomatedIntegratedChartsWithCreate({
     createAutomatedIntegratedCharts,
-    automatedExampleManager,
-    useStaticData,
-    runOnce,
     visibilityThreshold,
 }: AutomatedIntegratedChartsWithCreateProps) {
     const exampleId = INTEGRATED_CHARTS_ID;
     const gridClassname = 'automated-integrated-charts-grid';
     const gridRef = useRef(null);
     const overlayRef = useRef(null);
+    const automatedExampleManager = useStore($automatedExampleManager);
     const [scriptIsEnabled, setScriptIsEnabled] = useState(true);
     const [gridIsReady, setGridIsReady] = useState(false);
     const clientIsReady = useClientIsReady();
@@ -58,6 +55,7 @@ export function AutomatedIntegratedChartsWithCreate({
     const [gridIsHoveredOver, setGridIsHoveredOver] = useState(false);
     const [darkMode] = useDarkmode();
     const debuggerManager = automatedExampleManager?.getDebuggerManager();
+    const { isCI: useStaticData, runOnce } = getAutomatedExampleSearchParams();
 
     const setAllScriptEnabledVars = (isEnabled: boolean) => {
         setScriptIsEnabled(isEnabled);
