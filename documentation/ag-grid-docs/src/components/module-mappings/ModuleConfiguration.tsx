@@ -21,7 +21,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
     return (
         <div className={styles.configuration}>
             <div className={styles.rowModel}>
-                <span>Row Model:</span>
+                <span className={styles.label}>Row Model:</span>
                 <div>
                     {ROW_MODEL_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
                         return (
@@ -49,7 +49,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
             </div>
 
             <div className={styles.bundles}>
-                <span>Bundles:</span>
+                <span className={styles.label}>Bundles:</span>
                 <div>
                     {BUNDLE_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
                         return (
@@ -77,7 +77,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
             </div>
 
             <div className={styles.charts}>
-                <span>Charts:</span>
+                <span className={styles.label}>Charts:</span>
                 <div>
                     {CHART_OPTIONS.map(({ name, moduleName, isEnterprise }) => {
                         return (

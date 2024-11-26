@@ -10,9 +10,10 @@
 .bundles,
 .charts {
     display: flex;
+    align-items: center;
 
-    span {
-        min-width: 94px;
+    .label {
+        width: 100px;
         font-weight: var(--text-semibold);
     }
 
