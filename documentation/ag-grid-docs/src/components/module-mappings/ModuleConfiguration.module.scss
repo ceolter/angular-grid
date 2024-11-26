@@ -30,3 +30,8 @@
         gap: 6px;
     }
 }
+
+.enterpriseIcon {
+    --icon-size: var(--text-fs-lg);
+    --icon-color: var(--color-enterprise-icon);
+}

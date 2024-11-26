@@ -1,4 +1,4 @@
-import { EnterpriseIcon } from '@ag-website-shared/components/icon/EnterpriseIcon';
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { type FunctionComponent } from 'react';
 
 import styles from './ModuleConfiguration.module.scss';
@@ -36,12 +36,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
                                     }}
                                 />{' '}
                                 {name}
-                                {isEnterprise && (
-                                    <>
-                                        {' '}
-                                        <EnterpriseIcon />
-                                    </>
-                                )}
+                                {isEnterprise && <Icon name="enterprise" svgClasses={styles.enterpriseIcon} />}
                             </label>
                         );
                     })}
@@ -64,12 +59,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
                                     }}
                                 />{' '}
                                 {name}
-                                {isEnterprise && (
-                                    <>
-                                        {' '}
-                                        <EnterpriseIcon />
-                                    </>
-                                )}
+                                {isEnterprise && <Icon name="enterprise" svgClasses={styles.enterpriseIcon} />}
                             </label>
                         );
                     })}
@@ -92,12 +82,7 @@ export const ModuleConfiguration: FunctionComponent<Props> = ({ moduleConfig }) 
                                     }}
                                 />{' '}
                                 {name}
-                                {isEnterprise && (
-                                    <>
-                                        {' '}
-                                        <EnterpriseIcon />
-                                    </>
-                                )}
+                                {isEnterprise && <Icon name="enterprise" svgClasses={styles.enterpriseIcon} />}
                             </label>
                         );
                     })}
