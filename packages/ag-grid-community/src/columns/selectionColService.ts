@@ -13,7 +13,6 @@ import {
     _convertColumnEventSourceType,
     _destroyColumnTree,
     _updateColsMap,
-    isColumnGroupAutoCol,
     isColumnSelectionCol,
 } from './columnUtils';
 
@@ -95,10 +94,9 @@ export class SelectionColService extends BeanStub implements NamedBean {
             return false;
         }
 
-        if (
-            rowSelection.checkboxLocation === 'autoGroupColumn' &&
-            beans.visibleCols.allCols.some(isColumnGroupAutoCol)
-        ) {
+        const hasAutoCols = (beans.autoColSvc?.getAutoCols()?.length ?? 0) > 0;
+
+        if (rowSelection.checkboxLocation === 'autoGroupColumn' && hasAutoCols) {
             return false;
         }
 
