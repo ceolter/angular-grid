@@ -51,7 +51,7 @@ export class ClientSidePathTreeNodeManager<TData>
         const getDataPath = this.gos.get('getDataPath');
         for (const row of updates.keys()) {
             if (row.data) {
-                this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+                this.addOrUpdateRow(getDataPath, row, !!updates.get(row));
             }
         }
 
