@@ -33,10 +33,7 @@ export interface RefreshModelParams<TData = any> {
     /** if true, rows that are kept are animated to the new position */
     animate?: boolean;
 
-    /**
-     * if NOT new data, then this flag tells grid to check if rows already
-     * exist for the nodes (matching by node id) and reuses the row if it does.
-     */
+    /** if NOT new data, then this flag tells grid to check if rows already exist for the nodes (matching by node id) and reuses the row if it does. */
     keepRenderedRows?: boolean;
 
     /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
@@ -62,10 +59,7 @@ export class RefreshModelState<TData = any> {
     /** if true, rows that are kept are animated to the new position */
     public animate: boolean;
 
-    /**
-     * if NOT new data, then this flag tells grid to check if rows already
-     * exist for the nodes (matching by node id) and reuses the row if it does.
-     */
+    /** if NOT new data, then this flag tells grid to check if rows already exist for the nodes (matching by node id) and reuses the row if it does. */
     public keepRenderedRows: boolean;
 
     /** true if all we did is changed row height, data still the same, no need to clear the undo/redo stacks */
@@ -102,21 +96,17 @@ export class RefreshModelState<TData = any> {
      * If this is true, we consider this a new reload of data from scratch, or a first load of data.
      * In this case, removals will not contain the previous cleared rows.
      * Is true if user called setRowData() (or a new page in pagination). the grid scrolls back to the top when this is true.
-     * During a delta update instead changedPath.active will be true.
+     * During a delta update instead changedPath.active will be true. changedPath.active will be false if newData is true.
      */
     public newData: boolean = false;
 
     /**
-     * The set of removed nodes.
-     * Mutually exclusive, if a node is here, it cannot be in the updates map.
+     * The set of removed nodes.  Mutually exclusive, if a node is here, it cannot be in the updates map.
      * This can contain deleted filler nodes, or nodes that were removed from the data or via transactions.
      */
     public readonly removals = new Set<RowNode<TData>>();
 
-    /**
-     * Map of row nodes that have been updated.
-     * The value is true if the row node is a new node. is false if it was just updated.
-     */
+    /** Map of row nodes that have been updated. The value is true if the row node is a new node. is false if it was just updated. */
     public readonly updates = new Map<RowNode<TData>, boolean>();
 
     public constructor(
@@ -149,7 +139,6 @@ export class RefreshModelState<TData = any> {
         this.keepUndoRedoStack = keepUndoRedoStack;
         this.rowsOrderChanged = rowsOrderChanged;
         this.allowChangedPath = allowChangedPath;
-
         changedPath.active = false; // Initially inactive, will be set to active by setDeltaUpdate(), if allowed to
     }
 
@@ -175,11 +164,7 @@ export class RefreshModelState<TData = any> {
         this.setStep(step);
     }
 
-    /**
-     * Steps have an order. This method updates the step if the new step is before the current step.
-     * Precedence must be respected, for example, group comes before 'filter', so if the new step is 'filter',
-     * we don't update the step if the current step is 'group'.
-     */
+    /** Steps have an order and precedence needs to be respected. This updates the step if the new step is before the current step. */
     public setStep(step: ClientSideRowModelStage): void {
         if (orderedSteps[step] < orderedSteps[this.step]) {
             this.step = step;
@@ -199,9 +184,7 @@ export class RefreshModelState<TData = any> {
             for (let i = 0; i < changedPropsLen; i++) {
                 if (refreshProps?.has(changedProps[i])) {
                     this.setStep(step); // Updates to the minimum step
-
-                    // A property needed by a step changed, so, disable changed path for the stages execution
-                    this.disableChangedPath();
+                    this.disableChangedPath(); // A property needed by a step changed, so, disable changed path for stages
                 }
             }
         }
@@ -229,9 +212,7 @@ export class RefreshModelState<TData = any> {
         if (this.newData || this.fullReload || !this.started) {
             return false; // Cannot do delta update if new data or full reload
         }
-        if (this.allowChangedPath) {
-            this.changedPath.active = true;
-        }
+        this.changedPath.active = this.allowChangedPath;
         this.keepRenderedRows = true;
         this.keepUndoRedoStack = false;
         this.animate = !this.gos.get('suppressAnimationFrame');
