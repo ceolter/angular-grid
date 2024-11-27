@@ -35,7 +35,7 @@ import styles from './FinanceExample.module.css';
 import { TickerCellRenderer } from './cell-renderers/TickerCellRenderer';
 import { getData } from './data';
 
-interface Props {
+export interface Props {
     gridTheme?: string;
     isDarkMode?: boolean;
     gridHeight?: number | null;
