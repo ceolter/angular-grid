@@ -40,7 +40,10 @@ export interface Props {
     isDarkMode?: boolean;
     gridHeight?: number | null;
     isSmallerGrid?: boolean;
+    updateInterval?: number;
 }
+
+const DEFAULT_UPDATE_INTERVAL = 60;
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -74,6 +77,7 @@ export const FinanceExample: React.FC<Props> = ({
     isDarkMode = false,
     gridHeight = null,
     isSmallerGrid,
+    updateInterval = DEFAULT_UPDATE_INTERVAL,
 }) => {
     const [rowData, setRowData] = useState(getData());
     const gridRef = useRef<AgGridReact>(null);
@@ -81,21 +85,28 @@ export const FinanceExample: React.FC<Props> = ({
     useEffect(() => {
         const intervalId = setInterval(() => {
             setRowData((rowData) =>
-                rowData.map((item) =>
-                    Math.random() < 0.1
-                        ? {
-                              ...item,
-                              price:
-                                  item.price +
-                                  item.price * ((Math.random() * 4 + 1) / 100) * (Math.random() > 0.5 ? 1 : -1),
-                          }
-                        : item
-                )
+                rowData.map((item) => {
+                    const isRandomChance = Math.random() < 0.1;
+
+                    if (!isRandomChance) {
+                        return item;
+                    }
+                    const change = ((Math.random() * 4 + 1) / 100) * (Math.random() > 0.5 ? 1 : -1);
+                    const price = item.price + item.price * change;
+
+                    const last24 = item.last24.slice(1, item.last24.length).concat(Number(change.toFixed(2)));
+
+                    return {
+                        ...item,
+                        price,
+                        last24,
+                    };
+                })
             );
-        }, 1000);
+        }, updateInterval);
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [updateInterval]);
 
     const colDefs = useMemo<ColDef[]>(() => {
         const cDefs: ColDef[] = [
