@@ -39,6 +39,7 @@ interface Props {
     gridTheme?: string;
     isDarkMode?: boolean;
     gridHeight?: number | null;
+    isSmallerGrid?: boolean;
 }
 
 ModuleRegistry.registerModules([
@@ -72,6 +73,7 @@ export const FinanceExample: React.FC<Props> = ({
     gridTheme = 'ag-theme-quartz',
     isDarkMode = false,
     gridHeight = null,
+    isSmallerGrid,
 }) => {
     const [rowData, setRowData] = useState(getData());
     const gridRef = useRef<AgGridReact>(null);
@@ -95,8 +97,8 @@ export const FinanceExample: React.FC<Props> = ({
         return () => clearInterval(intervalId);
     }, []);
 
-    const colDefs = useMemo<ColDef[]>(
-        () => [
+    const colDefs = useMemo<ColDef[]>(() => {
+        const cDefs: ColDef[] = [
             {
                 field: 'ticker',
                 cellRenderer: TickerCellRenderer,
@@ -136,30 +138,30 @@ export const FinanceExample: React.FC<Props> = ({
                 valueFormatter: numberFormatter,
                 aggFunc: 'sum',
             },
-            {
-                field: 'quantity',
-                cellDataType: 'number',
-                type: 'rightAligned',
-                valueFormatter: numberFormatter,
-                maxWidth: 75,
-            },
-            {
-                headerName: 'Price',
-                field: 'purchasePrice',
-                cellDataType: 'number',
-                type: 'rightAligned',
-                valueFormatter: numberFormatter,
-                maxWidth: 75,
-            },
-            {
-                field: 'purchaseDate',
-                cellDataType: 'dateString',
-                type: 'rightAligned',
-                hide: true,
-            },
-        ],
-        []
-    );
+        ];
+
+        if (!isSmallerGrid) {
+            cDefs.push(
+                {
+                    field: 'quantity',
+                    cellDataType: 'number',
+                    type: 'rightAligned',
+                    valueFormatter: numberFormatter,
+                    maxWidth: 75,
+                },
+                {
+                    headerName: 'Price',
+                    field: 'purchasePrice',
+                    cellDataType: 'number',
+                    type: 'rightAligned',
+                    valueFormatter: numberFormatter,
+                    maxWidth: 75,
+                }
+            );
+        }
+
+        return cDefs;
+    }, [isSmallerGrid]);
 
     const defaultColDef: ColDef = useMemo(
         () => ({
