@@ -88,20 +88,8 @@ const frameworksData = [
                 </div>
             </section>
         </section>
-        <section class={styles.heroSectionDemoContainer}>
-            <div class={styles.loadingLogoContainer}>
-                <LogoMark isSpinning />
-            </div>
-            <div class={styles.heroSectionGrid}>
-                <Finance client:only="react" gridHeight={450} isSmallerGrid />
-            </div>
-            <div class={styles.heroLinks}>
-                <a href={urlWithBaseUrl('./example-finance')}>See Finance Demo</a>
-                <a class="button-secondary" href="https://github.com/ag-grid/ag-grid-demos/tree/main/finance">
-                    <Icon name="github" svgClasses={styles.githubIcon} />
-                    <span>See on Github</span>
-                </a>
-            </div>
+        <section class={styles.heroSectiondemoContainer}>
+            <Finance client:load gridHeight={450} isSmallerGrid />
         </section>
     </div>
 
