@@ -83,8 +83,16 @@
 .ctaButton {
     --icon-size: #{$spacing-size-5};
 
+    display: flex;
+    align-items: center;
+    gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
+
+    svg:first-child {
+        height: 24px;
+        width: 24px;
+    }
 
     :global(.icon) {
         transform: translateX($spacing-size-2);
