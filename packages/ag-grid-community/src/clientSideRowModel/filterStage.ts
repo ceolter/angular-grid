@@ -28,7 +28,8 @@ export class FilterStage extends BeanStub implements IRowNodeStage, NamedBean {
     }
 
     public execute(state: RefreshModelState): void {
-        this.filter(state.changedPath);
+        const { changedPath } = state;
+        this.filter(changedPath!);
     }
 
     private filter(changedPath: ChangedPath): void {
