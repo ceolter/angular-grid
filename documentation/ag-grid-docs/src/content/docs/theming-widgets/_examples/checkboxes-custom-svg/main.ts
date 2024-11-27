@@ -28,17 +28,12 @@ ModuleRegistry.registerModules([
     PivotModule,
 ]);
 
-const myTheme = themeQuartz.withParams({
-    inputBorder: { color: 'orange', style: 'dotted', width: 3 },
-    inputBackgroundColor: 'rgb(255, 209, 123)', // light orange
-    inputPlaceholderTextColor: 'rgb(155, 101, 1)', // darker orange
-    inputIconColor: 'purple', // light orange
-});
+const myTheme = themeQuartz.withoutPart('checkboxStyle');
 
 const columnDefs: ColDef[] = [
-    { field: 'athlete', minWidth: 170 },
-    { field: 'age' },
-    { field: 'country' },
+    { field: 'athlete', hide: true },
+    { field: 'age', hide: true },
+    { field: 'country', hide: true },
     { field: 'year' },
     { field: 'date' },
     { field: 'sport' },

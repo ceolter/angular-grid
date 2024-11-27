@@ -3,3 +3,4 @@
 
 export { ThemeImpl, asThemeImpl } from './Theme';
 export * from './theme-types';
+export { coreCSS } from './core/core.css-GENERATED';

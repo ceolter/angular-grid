@@ -4,6 +4,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     createGrid,
+    inputStyleUnderlined,
     themeQuartz,
 } from 'ag-grid-community';
 import {
@@ -28,12 +29,7 @@ ModuleRegistry.registerModules([
     PivotModule,
 ]);
 
-const myTheme = themeQuartz.withParams({
-    inputBorder: { color: 'orange', style: 'dotted', width: 3 },
-    inputBackgroundColor: 'rgb(255, 209, 123)', // light orange
-    inputPlaceholderTextColor: 'rgb(155, 101, 1)', // darker orange
-    inputIconColor: 'purple', // light orange
-});
+const myTheme = themeQuartz.withPart(inputStyleUnderlined);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },

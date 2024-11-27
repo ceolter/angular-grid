@@ -1,6 +1,7 @@
 import { createPart } from '../../Part';
 import type { WithParamTypes } from '../../theme-types';
 import { inputStyleBaseCSS } from './input-style-base.css-GENERATED';
+import { inputStyleBorderedCSS } from './input-style-bordered.css-GENERATED';
 import { inputStyleUnderlinedCSS } from './input-style-underlined.css-GENERATED';
 
 export type InputStyleParams = {
@@ -83,6 +84,16 @@ export type InputStyleParams = {
      * Color of text within text inputs
      */
     inputTextColor: 'infer';
+
+    /**
+     * Color of placeholder text in empty inputs describing the purpose of the input e.g. "Search..."
+     */
+    inputPlaceholderTextColor: 'infer';
+
+    /**
+     * Color of search icon within search text inputs
+     */
+    inputIconColor: 'infer';
 };
 
 const baseParams: WithParamTypes<InputStyleParams> = {
@@ -91,6 +102,10 @@ const baseParams: WithParamTypes<InputStyleParams> = {
     inputBorderRadius: 0,
     inputTextColor: {
         ref: 'textColor',
+    },
+    inputPlaceholderTextColor: {
+        ref: 'inputTextColor',
+        mix: 0.5,
     },
     inputPaddingStart: 0,
     inputHeight: {
@@ -122,6 +137,9 @@ const baseParams: WithParamTypes<InputStyleParams> = {
         ref: 'inputBorder',
     },
     inputInvalidTextColor: {
+        ref: 'inputTextColor',
+    },
+    inputIconColor: {
         ref: 'inputTextColor',
     },
 };
@@ -166,7 +184,7 @@ export const inputStyleBordered = /*#__PURE__*/ createPart({
             color: { ref: 'invalidColor' },
         },
     },
-    css: inputStyleBaseCSS,
+    css: () => inputStyleBaseCSS + inputStyleBorderedCSS,
 });
 
 export const inputStyleUnderlined = /*#__PURE__*/ createPart({

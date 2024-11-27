@@ -1,4 +1,5 @@
-import type { Theme, _theming, themeQuartz } from 'ag-grid-community';
+import { type _theming } from 'ag-grid-community';
+import type { Theme, themeQuartz } from 'ag-grid-community';
 
 type InferThemeParams<T> = T extends Theme<infer P> ? P : never;
 
