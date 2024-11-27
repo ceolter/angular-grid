@@ -1,5 +1,8 @@
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
+import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
+import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import classnames from 'classnames';
 import type { FunctionComponent, ReactNode } from 'react';
 
@@ -57,11 +60,32 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                     <h4 className={styles.subHeading}>{subHeading}</h4>
                 )}
 
-                {ctaUrl && (
-                    <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                        {framework && <ReactIcon />} {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
-                    </a>
-                )}
+                <div className={styles.frameworkGroup}>
+                    {framework && (
+                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                            {framework && <ReactIcon />} {ctaTitle ? ctaTitle : 'Learn more'}{' '}
+                            <Icon name="chevronRight" />
+                        </a>
+                    )}
+
+                    {framework && (
+                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                            {framework && <AngularIcon />}
+                        </a>
+                    )}
+
+                    {framework && (
+                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                            {framework && <VueIcon />}
+                        </a>
+                    )}
+
+                    {framework && (
+                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                            {framework && <JavascriptIcon />}
+                        </a>
+                    )}
+                </div>
             </header>
 
             {children}

@@ -103,3 +103,9 @@
         transform: translateX($spacing-size-3);
     }
 }
+
+.frameworkGroup {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-size-4;
+}
