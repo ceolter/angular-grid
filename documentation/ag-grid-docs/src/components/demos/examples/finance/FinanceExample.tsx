@@ -41,6 +41,7 @@ export interface Props {
     gridHeight?: number | null;
     isSmallerGrid?: boolean;
     updateInterval?: number;
+    enableRowGroup?: boolean;
 }
 
 const DEFAULT_UPDATE_INTERVAL = 60;
@@ -78,6 +79,7 @@ export const FinanceExample: React.FC<Props> = ({
     gridHeight = null,
     isSmallerGrid,
     updateInterval = DEFAULT_UPDATE_INTERVAL,
+    enableRowGroup,
 }) => {
     const [rowData, setRowData] = useState(getData());
     const gridRef = useRef<AgGridReact>(null);
@@ -178,10 +180,10 @@ export const FinanceExample: React.FC<Props> = ({
         () => ({
             flex: 1,
             filter: true,
-            enableRowGroup: true,
+            enableRowGroup,
             enableValue: true,
         }),
-        []
+        [enableRowGroup]
     );
 
     const getRowId = useCallback<GetRowIdFunc>(({ data: { ticker } }: GetRowIdParams) => ticker, []);
@@ -215,7 +217,7 @@ export const FinanceExample: React.FC<Props> = ({
                 defaultColDef={defaultColDef}
                 cellSelection={true}
                 enableCharts
-                rowGroupPanelShow={'always'}
+                rowGroupPanelShow={enableRowGroup ? 'always' : 'never'}
                 suppressAggFuncInHeader
                 groupDefaultExpanded={-1}
                 statusBar={statusBar}
