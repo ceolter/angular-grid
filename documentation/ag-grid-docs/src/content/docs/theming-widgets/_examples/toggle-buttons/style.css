@@ -1,0 +1,9 @@
+.ag-toggle-button-input-wrapper::before {
+    font-size: 20px;
+    background: none;
+    margin-top: -2px;
+    content: '🥺';
+}
+.ag-toggle-button-input-wrapper.ag-checked::before {
+    content: '😍';
+}

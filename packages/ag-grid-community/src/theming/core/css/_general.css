@@ -535,6 +535,6 @@ always be 0 and then making a row sticky causes the grid to scroll. */
         content: '';
         display: block;
         /* rtl:ignore */
-        border-left: var(--ag-measurement-border);
+        border-left: var(--ag-internal-measurement-border);
     }
 }

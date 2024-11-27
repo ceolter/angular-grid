@@ -53,13 +53,16 @@ The following parts are available:
     * `tabStyleAlpine` - tabs styled as per the Alpine theme
     * `tabStyleRolodex` - tabs designed to imitate paper cards, as used by the Balham theme
 
-## Removing a Part from a Built-in Theme
+## Removing a Part
 
-Adding a part to a theme will remove any part of the same feature. So to remove a part, create an empty part with the same feature name:
+To remove a part from a theme, call `theme.withoutPart(featureName)`, which returns a new theme without the specified part:
 
 ```js
-const noCheckboxStyle = createPart({ feature: 'checkboxStyle' });
-const myCustomTheme = themeQuartz.withPart(noCheckboxStyle);
+const myCustomTheme = themeQuartz.withoutPart('checkboxStyle');
 ```
 
+After removing the built-in part, this example uses CSS in a separate stylesheet to style the checkboxes:
+
 {% gridExampleRunner title="Configuring Theme Parts" name="removing-parts" /%}
+
+The above example uses an empty part to disable the default checkbox styles and adds its own checkbox styles in the application stylesheet. If you want to disctibute the checkbox style as a library, you can add the new styles to the part itself, see [Distributing Shared Themes & Parts](./theming-distribution/#creating-your-own-parts).

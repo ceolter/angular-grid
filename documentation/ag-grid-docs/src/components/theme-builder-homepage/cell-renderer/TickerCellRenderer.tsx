@@ -8,11 +8,12 @@ export const TickerCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
         data && (
             <div>
                 <img
+                    align="center"
                     src={urlWithBaseUrl(`/example/finance/logos/${data.ticker}.png`)}
                     style={{
                         width: '20px',
                         height: '20px',
-                        marginRight: '5px',
+                        marginRight: '8px',
                         borderRadius: '32px',
                     }}
                 />

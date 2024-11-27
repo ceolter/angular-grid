@@ -1,0 +1,14 @@
+import type { ExampleConfig, ParsedBindings } from '../types';
+export declare const GRID_WIDE_COMPONENTS: string[];
+export declare const GRID_COMPONENTS: string[];
+export declare const PARAMS_PROPERTIES: string[];
+export declare const OVERRIDABLE_AG_COMPONENTS: string[];
+export declare function isExternalVueFile(componentFileNames: any, component: any): any;
+export declare function getTemplate(bindings: ParsedBindings, exampleConfig: ExampleConfig, attributes: string[]): string;
+export declare function getAllMethods(bindings: ParsedBindings): [string[], string[], string[], string[]];
+export declare function isComponent(property: any): boolean;
+export declare function isParamsProperty(property: any): boolean;
+export declare function addToVueComponents(componentFileNames: any, vueComponents: any, property: any, componentName: any): void;
+export declare function convertColumnDefs(rawColumnDefs: any, userComponentNames: any, vueComponents: any, componentFileNames: any): string[];
+export declare function convertDefaultColDef(defaultColDef: any, vueComponents: any, componentFileNames: any): string;
+export declare const getColumnDefs: (bindings: ParsedBindings, vueComponents: any[], componentFileNames: any) => string | any[];

@@ -230,8 +230,29 @@ export class ClientSideChildrenTreeNodeManager<TData>
             sibling.allLeafChildren = allLeafChildren;
         }
 
+<<<<<<< HEAD
         if (orderChanged) {
             state.rowsOrderChanged = true;
+=======
+        this.treeCommit(changedPath);
+
+        const sibling = rootNode.sibling;
+        if (sibling) {
+            sibling.allLeafChildren = allLeafChildren;
+        }
+
+        if (rowsChanged || orderChanged) {
+            params.step = 'group';
+            params.rowDataUpdated = true;
+            params.rowNodesOrderChanged = orderChanged;
+        }
+    }
+
+    public override refreshModel(params: RefreshModelParams<TData>): void {
+        const { rootNode, treeRoot } = this;
+        if (!treeRoot) {
+            return; // Not active, destroyed
+>>>>>>> latest
         }
 
         return treeChanged || state.hasNodeChanges();

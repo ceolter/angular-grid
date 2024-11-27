@@ -63,6 +63,8 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         rootNode.childrenAfterSort = [];
         rootNode.childrenAfterAggFilter = [];
         rootNode.childrenAfterFilter = [];
+
+        this.updateRootSiblingArrays(rootNode);
     }
 
     public refreshModel(state: RefreshModelState<TData>): void {
@@ -96,8 +98,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
         this.dispatchRowDataUpdateStartedEvent(rowData);
 
-        const sibling = rootNode.sibling;
-
+        rootNode.childrenAfterFilter = null;
         rootNode.childrenAfterGroup = null;
         rootNode.childrenAfterFilter = null;
         rootNode.childrenAfterAggFilter = null;
@@ -111,6 +112,11 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
         this.loadNewRowData(state, rowData);
 
+        this.updateRootSiblingArrays(rootNode);
+    }
+
+    private updateRootSiblingArrays(rootNode: AbstractClientSideNodeManager.RootNode<TData>): void {
+        const sibling = rootNode.sibling;
         if (sibling) {
             sibling.childrenAfterGroup = rootNode.childrenAfterGroup;
             sibling.childrenAfterFilter = rootNode.childrenAfterFilter;
@@ -329,7 +335,6 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         }
 
         const rootNode = state.rootNode;
-
         let allLeafChildren = (rootNode.allLeafChildren ??= []);
         const allLeafChildrenLen = allLeafChildren.length;
 

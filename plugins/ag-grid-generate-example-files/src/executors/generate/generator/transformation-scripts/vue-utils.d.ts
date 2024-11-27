@@ -1,0 +1,11 @@
+import type { EventHandler, Property } from '../types';
+export declare const toInput: (property: Property) => string;
+export declare const toConst: (property: Property) => string;
+export declare const toOutput: (event: EventHandler) => string;
+export declare const toMember: (property: Property) => string;
+export declare const toRef: (property: Property) => string;
+export declare const toComponent: (property: Property) => string;
+export declare function toAssignment(property: Property): string;
+export declare function getImport(filename: string, tokenReplace: any, replaceValue: any): string;
+export declare function indentTemplate(template: string, spaceWidth: number, start?: number): string;
+export declare function convertTemplate(template: string): string;
