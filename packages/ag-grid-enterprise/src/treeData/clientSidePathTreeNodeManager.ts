@@ -68,7 +68,11 @@ export class ClientSidePathTreeNodeManager<TData>
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {
-        const treeRoot = this.treeRoot!;
+        const treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            return; // Destroyed or not active
+        }
+
         if (!this.treeData) {
             // We assume that the data is flat and we use id as the key for the tree nodes.
             // This happens when treeData is false and getDataPath is undefined/null.

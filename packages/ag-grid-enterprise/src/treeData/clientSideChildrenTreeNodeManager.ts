@@ -200,7 +200,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 if (node) {
                     const data = row.data;
                     if (data && !processedData.has(data)) {
-                        state.removeNode(row);
                         this.treeRemove(node, row);
                     }
                 }

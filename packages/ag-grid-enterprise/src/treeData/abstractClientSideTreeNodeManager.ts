@@ -101,8 +101,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             const unlinkChild = (node: TreeNode): void => {
                 const row = node.row;
                 if (row && !row.data) {
-                    this.rowNodeDeleted(row); // Delete filler node
-                    state.removeNode(row);
+                    this.rowNodeDeleted(state, row); // Delete filler node
                 }
                 for (const child of node.enumChildren()) {
                     unlinkChild(child);
@@ -179,23 +178,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
      * @returns The previous row, if any, that was overwritten.
      */
     protected treeRemove(node: TreeNode, oldRow: RowNode): void {
-        const { parent, level } = node;
-
-        if (level < 0) {
-            return; // Cannot remove the root node
-        }
-
-        let invalidate = false;
-
-        if (node.clearRow(oldRow)) {
-            invalidate = true;
-            if (parent) {
-                parent.childrenChanged = true;
-            }
+        const parent = node.parent;
+        if (parent && node.clearRow(oldRow)) {
+            parent.childrenChanged = true;
             this.addRowToDestroy(oldRow);
-        }
-
-        if (invalidate) {
             node.invalidate();
         }
     }
@@ -366,7 +352,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             }
 
             if (isTreeRowUpdated(row)) {
-                markTreeRowPathChanged(parent.row!);
+                markTreeRowPathChanged(parent.row);
 
                 if (isTreeRowKeyChanged(row)) {
                     // hack - if we didn't do this, then renaming a tree item (ie changing rowNode.key) wouldn't get
@@ -385,7 +371,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 markTreeRowPathChanged(row);
             }
             parent.childrenChanged = true;
-            markTreeRowPathChanged(parent.row!);
+            markTreeRowPathChanged(parent.row);
         }
 
         if (isTreeRowPathChanged(row)) {
@@ -489,18 +475,13 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const { parent, oldRow, row, level } = node;
         if (parent !== null && oldRow !== null) {
             parent.childrenChanged = true;
-            const parentRow = parent.row;
-            if (parentRow !== null) {
-                markTreeRowPathChanged(parentRow);
-            }
+            markTreeRowPathChanged(parent.row);
         }
-        if (row !== null) {
-            if (level >= 0) {
-                let row = node.row;
-                while (row !== null && node.clearRow(row)) {
-                    this.addRowToDestroy(row);
-                    row = node.row;
-                }
+        if (row !== null && level >= 0) {
+            let pointer: TreeRow<TData> | null = row;
+            while (pointer !== null && node.clearRow(pointer)) {
+                this.addRowToDestroy(pointer);
+                pointer = node.row;
             }
         }
         for (const child of node.enumChildren()) {
@@ -523,43 +504,34 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const { rowsPendingDestruction } = this;
         if (rowsPendingDestruction !== null) {
             for (const row of rowsPendingDestruction) {
-                this.rowNodeDeleted(row);
+                this.rowNodeDeleted(state, row);
                 (row.treeNode as TreeNode | null)?.unlink();
-                if (state !== null && (isTreeRowCommitted(row) || row.isSelected())) {
-                    state.removeNode(row);
-                }
             }
             this.rowsPendingDestruction = null;
         }
     }
 
     private afterColumnsChanged(): void {
-        // Check if group data need to be recomputed due to group columns change
+        // Used to check if group data need to be recomputed due to group columns change
+        const newGroupDisplayColIds =
+            this.beans.showRowGroupCols
+                ?.getShowRowGroupCols()
+                ?.map((c) => c.getId())
+                .join('-') ?? '';
 
-        if (this.treeData) {
-            const newGroupDisplayColIds =
-                this.beans.showRowGroupCols
-                    ?.getShowRowGroupCols()
-                    ?.map((c) => c.getId())
-                    .join('-') ?? '';
-
-            // if the group display cols have changed, then we need to update rowNode.groupData
-            // (regardless of tree data or row grouping)
-            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
-                this.oldGroupDisplayColIds = newGroupDisplayColIds;
-                const rowNodes = this.rootNode?.allLeafChildren;
-                if (rowNodes) {
-                    for (let i = 0, len = rowNodes.length ?? 0; i < len; ++i) {
-                        const rowNode = rowNodes[i];
-                        const treeNode = rowNode.treeNode;
-                        if (treeNode) {
-                            this.setGroupData(rowNode, treeNode.key);
-                        }
+        // if the group display cols have changed, then we need to update rowNode.groupData (regardless of tree data)
+        if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
+            this.oldGroupDisplayColIds = newGroupDisplayColIds;
+            const rowNodes = this.rootNode?.allLeafChildren;
+            if (rowNodes && this.treeData) {
+                for (let i = 0, len = rowNodes.length; i < len; ++i) {
+                    const rowNode = rowNodes[i];
+                    const treeNode = rowNode.treeNode;
+                    if (treeNode) {
+                        this.setGroupData(rowNode, treeNode.key);
                     }
                 }
             }
-        } else {
-            this.oldGroupDisplayColIds = '';
         }
     }
 
