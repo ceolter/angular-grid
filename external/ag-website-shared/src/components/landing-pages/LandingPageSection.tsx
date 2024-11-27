@@ -17,6 +17,7 @@ interface Props {
     sectionClass?: string;
     showBackgroundGradient?: boolean;
     children: ReactNode;
+    framework: boolean;
 }
 
 export const LandingPageSection: FunctionComponent<Props> = ({
@@ -30,6 +31,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     sectionClass,
     showBackgroundGradient,
     children,
+    framework,
 }) => {
     return (
         <div
@@ -57,7 +59,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
 
                 {ctaUrl && (
                     <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                        <ReactIcon /> {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                        {framework && <ReactIcon />} {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
                     </a>
                 )}
             </header>

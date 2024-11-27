@@ -125,6 +125,7 @@ const frameworksData = [
         ctaTitle="Build your first Grid"
         ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
         showBackgroundGradient
+        framework={true}
     >
         <section className={styles.automatedRowGroupingOuter}>
             <div className={styles.automatedRowGrouping}>
@@ -140,6 +141,7 @@ const frameworksData = [
         ctaTitle="Get started with Integrated Charts"
         ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
         showBackgroundGradient
+        framework={true}
     >
         <section className={styles.automatedIntegratedChartsOuter}>
             <div className={styles.automatedIntegratedCharts}>
@@ -154,6 +156,7 @@ const frameworksData = [
         subHeading="Customise your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our advanced features."
         ctaTitle="Use the Theme Builder"
         ctaUrl={urlWithBaseUrl('/theme-builder/')}
+        framework={false}
     >
         <ThemeBuilderHomepage gridHeight={261} client:visible />
     </LandingPageSection>
@@ -164,6 +167,7 @@ const frameworksData = [
         subHeading="Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
         ctaTitle="See More Projects Powered by AG Grid"
         ctaUrl={urlWithBaseUrl('/community/showcase/')}
+        framework={false}
     >
         <Showcase client:load />
     </LandingPageSection>
