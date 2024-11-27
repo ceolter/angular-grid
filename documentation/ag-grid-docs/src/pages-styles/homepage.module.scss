@@ -80,9 +80,9 @@ body {
     }
 }
 
-.heroSectiondemoContainer {
+.heroSectionDemoContainer {
     position: relative;
-    height: 320px;
+    height: 450px;
     margin: 0 auto;
     max-width: 1200px;
     padding: 24px;
@@ -112,6 +112,17 @@ body {
     }
 }
 
+.heroLinks {
+    display: flex;
+    position: absolute;
+    bottom: -72px;
+    right: $spacing-size-6;
+    gap: $spacing-size-2;
+    align-items: center;
+    margin: $spacing-size-2 0 0;
+    justify-content: flex-end;
+}
+
 .homepageFrameworks {
     padding-top: $spacing-size-4;
     padding-bottom: $spacing-size-12;
@@ -127,7 +138,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: $spacing-size-2;
-    margin-top: 280px;
+    margin-top: 315px;
 
     @media screen and (max-width: 500px) {
         margin-top: 360px;
