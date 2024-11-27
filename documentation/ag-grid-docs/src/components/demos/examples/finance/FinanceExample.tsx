@@ -45,6 +45,7 @@ export interface Props {
 }
 
 const DEFAULT_UPDATE_INTERVAL = 60;
+const PERCENTAGE_CHANGE = 20;
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -93,10 +94,11 @@ export const FinanceExample: React.FC<Props> = ({
                     if (!isRandomChance) {
                         return item;
                     }
-                    const change = ((Math.random() * 4 + 1) / 100) * (Math.random() > 0.5 ? 1 : -1);
-                    const price = item.price + item.price * change;
+                    const rnd = (Math.random() * PERCENTAGE_CHANGE) / 100;
+                    const change = Math.random() > 0.5 ? 1 - rnd : 1 + rnd;
+                    const price = item.price * change;
 
-                    const last24 = item.last24.slice(1, item.last24.length).concat(Number(change.toFixed(2)));
+                    const last24 = item.last24.slice(1, item.last24.length).concat(Number(price.toFixed(2)));
 
                     return {
                         ...item,
