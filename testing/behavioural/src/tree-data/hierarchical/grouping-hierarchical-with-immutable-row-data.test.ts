@@ -326,4 +326,138 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
         gridRows = new GridRows(api, 'clear', gridRowsOptions);
         await gridRows.check('empty');
     });
+
+    test('expanded state is preserved correctly', async () => {
+        const gridOptions: GridOptions = {
+            columnDefs: [
+                { field: 'name' },
+                { field: 'country', rowGroup: true, hide: true },
+                { field: 'year', rowGroup: true, hide: true },
+            ],
+            rowData: cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [{ id: '2', country: 'Ireland', year: 2001, name: 'Alan Turing' }],
+                },
+                {
+                    id: '1',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'Ada Lovelace',
+                    children: [{ id: '3', country: 'Italy', year: 2000, name: 'Donald Knuth' }],
+                },
+                { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' },
+            ]),
+            treeDataChildrenField: 'children',
+            groupDefaultExpanded: 0,
+            getRowId: ({ data }) => data.id,
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        api.forEachNode((node) => {
+            if (node.id !== 'row-group-country-Ireland') {
+                api.setRowNodeExpanded(node, true, false, true);
+            }
+        });
+
+        const gridRowsOptions: GridRowsOptions = {
+            columns: ['country', 'year', 'name'],
+            printHiddenRows: true,
+            checkDom: true,
+        };
+
+        let gridRows = new GridRows(api, 'first', gridRowsOptions);
+
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler collapsed id:row-group-country-Ireland
+            │ ├─┬ filler hidden id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF hidden id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ └── LEAF hidden id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ └─┬ filler hidden id:row-group-country-Ireland-year-2001
+            │ · └── LEAF hidden id:2 name:"Alan Turing" country:"Ireland" year:2001
+            └─┬ filler id:row-group-country-Italy
+            · ├─┬ filler id:row-group-country-Italy-year-2000
+            · │ └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · └─┬ filler id:row-group-country-Italy-year-2001
+            · · └── LEAF id:4 name:"Marvin Minsky" country:"Italy" year:2001
+        `);
+
+        api.setGridOption(
+            'rowData',
+            cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [{ id: '2', country: 'Ireland', year: 2001, name: 'Alan Turing' }],
+                },
+                {
+                    id: '1',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'Ada Lovelace',
+                    children: [{ id: '3', country: 'Italy', year: 2000, name: 'Donald Knuth' }],
+                },
+                { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky the second' },
+            ])
+        );
+
+        gridRows = new GridRows(api, 'first', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler collapsed id:row-group-country-Ireland
+            │ ├─┬ filler hidden id:row-group-country-Ireland-year-2000
+            │ │ ├── LEAF hidden id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ │ └── LEAF hidden id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            │ └─┬ filler hidden id:row-group-country-Ireland-year-2001
+            │ · └── LEAF hidden id:2 name:"Alan Turing" country:"Ireland" year:2001
+            └─┬ filler id:row-group-country-Italy
+            · ├─┬ filler id:row-group-country-Italy-year-2000
+            · │ └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · └─┬ filler id:row-group-country-Italy-year-2001
+            · · └── LEAF id:4 name:"Marvin Minsky the second" country:"Italy" year:2001
+        `);
+
+        api.setGridOption(
+            'rowData',
+            cachedJSONObjects.array([
+                {
+                    id: '0',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'John Von Neumann',
+                    children: [{ id: '2', country: 'Italy', year: 2001, name: 'Alan Turing' }],
+                },
+                {
+                    id: '1',
+                    country: 'Ireland',
+                    year: 2000,
+                    name: 'Ada Lovelace',
+                    children: [{ id: '3', country: 'Italy', year: 2000, name: 'Donald Knuth' }],
+                },
+                { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky the second' },
+            ])
+        );
+
+        gridRows = new GridRows(api, 'first', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ filler collapsed id:row-group-country-Ireland
+            │ └─┬ filler hidden id:row-group-country-Ireland-year-2000
+            │ · ├── LEAF hidden id:0 name:"John Von Neumann" country:"Ireland" year:2000
+            │ · └── LEAF hidden id:1 name:"Ada Lovelace" country:"Ireland" year:2000
+            └─┬ filler id:row-group-country-Italy
+            · ├─┬ filler id:row-group-country-Italy-year-2000
+            · │ └── LEAF id:3 name:"Donald Knuth" country:"Italy" year:2000
+            · └─┬ filler id:row-group-country-Italy-year-2001
+            · · ├── LEAF id:4 name:"Marvin Minsky the second" country:"Italy" year:2001
+            · · └── LEAF id:2 name:"Alan Turing" country:"Italy" year:2001
+        `);
+    });
 });
