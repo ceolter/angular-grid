@@ -98,12 +98,12 @@ export const FinanceExample: React.FC<Props> = ({
                     const change = Math.random() > 0.5 ? 1 - rnd : 1 + rnd;
                     const price = item.price * change;
 
-                    const last24 = item.last24.slice(1, item.last24.length).concat(Number(price.toFixed(2)));
+                    const timeline = item.timeline.slice(1, item.timeline.length).concat(Number(price.toFixed(2)));
 
                     return {
                         ...item,
                         price,
-                        last24,
+                        timeline,
                     };
                 })
             );
@@ -120,8 +120,8 @@ export const FinanceExample: React.FC<Props> = ({
                 minWidth: 380,
             },
             {
-                headerName: 'Last 24hrs',
-                field: 'last24',
+                headerName: 'Timeline',
+                field: 'timeline',
                 cellRenderer: 'agSparklineCellRenderer',
                 cellRendererParams: {
                     sparklineOptions: {
