@@ -19,6 +19,7 @@ import { Finance } from 'src/components/demos/examples/finance';
 import { ThemeBuilderHomepage } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
 import { AutomatedRowGrouping } from '@ag-website-shared/components/automated-examples/AutomatedRowGrouping';
 import { AutomatedIntegratedCharts } from '@ag-website-shared/components/automated-examples/AutomatedIntegratedCharts';
+import LogoMark from '@components/logo/LogoMark';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
 const { data: FAQData } = await getEntry('homepage', 'homepageFAQs');
@@ -88,6 +89,9 @@ const frameworksData = [
             </section>
         </section>
         <section class={styles.heroSectiondemoContainer}>
+            <div class={styles.loadingLogoContainer}>
+                <LogoMark isSpinning />
+            </div>
             <Finance client:only="react" gridHeight={450} isSmallerGrid />
         </section>
     </div>
