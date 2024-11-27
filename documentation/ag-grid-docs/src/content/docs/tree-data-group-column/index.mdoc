@@ -12,7 +12,7 @@ to be overridden.
 
 {% gridExampleRunner title="Group Column Configuration" name="group-column" /%}
 
-The example above sets different header text and a minimum width to each Group Column cell the following configuration:
+The example above sets different header text and a minimum width to each Group Column cell using the following configuration:
 
 ```{% frameworkTransform=true %}
 const gridOptions = {
@@ -88,7 +88,7 @@ const gridOptions = {
 
 ### Dynamic Component Selection
 
-Where it may be more appropriate to have two different renderers in the same column, you can instead use the `cellRendererSelector` property in the `autoGroupColumnDef` grid option.
+When it's necessary to use different renderers in the same column, you can configure this with the `cellRendererSelector` property in the `autoGroupColumnDef` grid option.
 
 {% apiDocumentation source="column-properties/properties.json" section="styling" names=["cellRendererSelector"] /%}
 

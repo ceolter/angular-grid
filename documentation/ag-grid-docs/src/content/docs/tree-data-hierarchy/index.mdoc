@@ -6,7 +6,8 @@ Configure the grid to display structured data by providing data paths.
 
 ## Providing Hierarchy
 
-A hierarchy must be presented to the grid as an array of strings, the `getDataPath` callback is used to convert the underlying data to a string array for the grid.
+Each rows position in the hierarchy must be provided to the grid as an array of strings, representing the path to the row.
+The `getDataPath` callback is used to provide the grid with this path for each row.
 
 The below structure demonstrates a simple hierarchy, wherein the grid would expect the `getDataPath` callback to return the `path` field:
 ```
@@ -29,8 +30,8 @@ Refer to [Displayed Values](./tree-data-group-column/#displayed-values) to learn
 When providing tree data, the grid will create `Filler Groups` for any omitted levels in the hierarchy.
 This means a partial hierarchy can be provided and the grid will use the provided row where possible, or create a `Filler Group` where not.
 
-The example below demonstrates two group rows which were omitted from the hierarchy, it highlights these by displaying 'Filler' in the 'Group Type' column.
-All of the other rows were provided, enabling the grid to use the provided data.
+The example below demonstrates a case where two group rows were omitted from the provided hierarchy. The grid
+highlights these omitted group rows by displaying 'Filler Group' in the 'Group Type' column.
 
 {% gridExampleRunner title="Filler Groups" name="filler-nodes" exampleHeight=305 /%}
 

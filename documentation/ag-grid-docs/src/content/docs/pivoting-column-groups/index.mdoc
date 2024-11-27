@@ -29,11 +29,13 @@ const gridOptions = {
 
 ## Ordering Groups
 
-The pivot result groups are initially displayed in alphabetical order, however, you can change this by providing a `pivotComparator` function to the pivoted columns definition.
+The pivot result groups are initially displayed in alphabetical order. You can change this default order by providing a `pivotComparator`
+function to the pivoted column's definition.
 
 {% apiDocumentation source="column-properties/properties.json" section="pivoting" names=["pivotComparator"] /%}
 
-In the example below, note that a `pivotComparator` has been supplied to the `sport` column, and the groups are instead sorted in reversed alphabetical order.
+In the example below, note that a `pivotComparator` has been supplied to the `sport` column, and the pivot result groups are instead
+sorted in reversed alphabetical order.
 
 {% gridExampleRunner title="Ordering Pivot Groups" name="order-pivot-groups" /%}
 
@@ -117,7 +119,8 @@ const gridOptions = {
 
 ## Hide Group with Single Value Column
 
-When pivoting with only one aggregated column, it can simplify the grid to omit the groups with only one child.
+When pivoting with only one aggregated column, you can simplify the grid column header layout by omitting pivot column groups
+with only one child column.
 Enabling the grid option `removePivotHeaderRowWhenSingleValueColumn=true`, when set to `true` will instead skip the group and
 use the pivot keys to label the pivot result column instead.
 

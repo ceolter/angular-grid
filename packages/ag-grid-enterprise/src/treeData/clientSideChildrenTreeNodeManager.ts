@@ -1,5 +1,5 @@
 import type { AbstractClientSideNodeManager, NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
-import { _error, _getRowIdCallback } from 'ag-grid-community';
+import { _getRowIdCallback, _warn } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import { makeFieldPathGetter } from './fieldAccess';
@@ -73,7 +73,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         const processChild = (node: TreeNode, data: TData) => {
             let row = processedData.get(data);
             if (row !== undefined) {
-                _error(2, { nodeId: row.id }); // Duplicate node
+                _warn(2, { nodeId: row.id }); // Duplicate node
                 return;
             }
 
@@ -84,7 +84,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
             node = node.upsertKey(row.id!);
             this.treeSetRow(node, row, true);
-
             const children = childrenGetter?.(data);
             if (children) {
                 for (let i = 0, len = children.length; i < len; ++i) {
@@ -92,7 +91,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
                 }
             }
         };
-
         for (let i = 0, len = rowData.length; i < len; ++i) {
             processChild(treeRoot, rowData[i]);
         }
@@ -149,7 +147,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         const processChild = (parent: TreeNode, data: TData): number => {
             let row = processedData.get(data);
             if (row !== undefined) {
-                _error(2, { nodeId: row.id }); // Duplicate node
+                _warn(2, { nodeId: row.id }); // Duplicate node
                 return -1;
             }
 

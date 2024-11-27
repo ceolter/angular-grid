@@ -4,7 +4,7 @@ enterprise: true
 ---
 Pivot totals can be inserted into the grid to display the total aggregations of rows.
 
-## Group Totals
+## Column Group Totals
 
 When pivoting by multiple columns, the grid automatically inserts a column for each active aggregation representing that group's total.
 These columns are by default only displayed when the column group is closed.
@@ -15,8 +15,8 @@ The example below demonstrates that when collapsed, group totals are displayed f
 
 ## Row Totals
 
-It is possible to include [Group Totals](./pivoting-totals/#group-totals) for the entire grid showing the total aggregation for each value column. This can be configured
-by setting the grid option `pivotRowTotals` to `'before'` or `'after'` (determining the inserted total columns position in the grid).
+It is possible to include the grand total value (equivalent to if pivoting was disabled) for each aggregation in each row by setting the grid option `pivotRowTotals` to `'before'` or `'after'`
+(determining the inserted total columns position in the grid).
 
 {% gridExampleRunner title="Pivot Row Totals" name="row-totals" /%}
 

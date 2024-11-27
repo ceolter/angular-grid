@@ -5,7 +5,7 @@ enterprise: true
 Filtering can be applied to Tree Data to reduce the range of displayed data.
 
 ## Filtering
-By default, when a parent row passes a [Filter](./filtering-overview/), the children will also be displayed.
+By default, when a group row passes a [Filter](./filtering-overview/), the children will also be displayed.
 
 The example below applies a filter to the group column for 'ProjectAlpha', note that two 'ProjectAlpha' groups are displayed
 alongside all of their children.
@@ -13,7 +13,7 @@ alongside all of their children.
 {% gridExampleRunner title="Filtering" name="filtering-simple" /%}
 
 ## Exclude Children when Filtering
-To omit children when a parent row passes a filter, set `excludeChildrenWhenTreeDataFiltering` to `true` in the grid options.
+To omit children when a group row passes a filter, set `excludeChildrenWhenTreeDataFiltering` to `true` in the grid options.
 
 The example below applies a default filter to the group column for 'ProjectAlpha', note that only one 'ProjectAlpha' group passes
 the filter instead of two - this is because the `Desktop -> ProjectAlpha` group is a [Filler Group](./tree-data-hierarchy/#filler-groups).
@@ -45,14 +45,14 @@ const gridOptions = {
 ## Filter Components
 ### Tree Filter
 
-The [Tree Filter](./filter-set-tree-list) is a version of the [Set Filter](./filter-set/) that is designed to work with hierarchical data, by displaying
+The [Tree Filter](./filter-set-tree-list) is a version of the [Set Filter](./filter-set/) that is designed to work with hierarchical data by displaying
 the set filter in a tree structure that matches the data.
 
-The example below demonstrates the Tree Filter available on the Group column:
+The example below demonstrates the Tree Filter on the Group column:
 
 {% gridExampleRunner title="Tree List" name="tree-list-filtering" /%}
 
-This demonstrates the following configuration to enable the Tree List Filter, note that a `keyCreator` must be
+This demonstrates the following configuration to enable the Tree List Filter. Note that a `keyCreator` must be
 used to convert each path into a unique string:
 
 ```{% frameworkTransform=true %}
@@ -72,9 +72,9 @@ For further information, refer to the [Tree Filter](./filter-set-tree-list/) doc
 
 ### Set Filter
 
-The [Set Filter](./filter-set/) can be used with Tree Data, and will list all unique values across each level of the group hierarchy.
+The [Set Filter](./filter-set/) can be used with Tree Data to list all unique values across each level of the group hierarchy.
 
-The example below demonstrates the Set Filter available on the Size column.
+The example below demonstrates the Set Filter on the Size column.
 
 {% gridExampleRunner title="Set List" name="set-list-filtering" /%}
 

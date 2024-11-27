@@ -26,7 +26,7 @@ const gridOptions: GridOptions = {
         flex: 1,
     },
     autoGroupColumnDef: {
-        headerName: 'Organisation Chart',
+        headerName: 'Name',
         cellRendererParams: {
             suppressCount: true,
         },
