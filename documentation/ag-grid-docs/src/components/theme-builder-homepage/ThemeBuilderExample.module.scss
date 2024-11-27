@@ -227,3 +227,35 @@
         font-weight: var(--text-semibold);
     }
 }
+
+.frameworkSwitcher {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: $spacing-size-3;
+    margin: $spacing-size-2;
+
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+
+    svg {
+        path {
+            fill: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    svg:hover {
+        cursor: pointer;
+        path {
+            fill: rgba(255, 255, 255, 1);
+        }
+    }
+
+    .active {
+        path {
+            fill: white;
+        }
+    }
+}

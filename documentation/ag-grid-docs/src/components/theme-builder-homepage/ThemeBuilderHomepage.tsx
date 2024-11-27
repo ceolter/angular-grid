@@ -1,4 +1,8 @@
 import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
+import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
+import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
+import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
+import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import { ShadowDom } from '@components/ShadowDom';
 import { useDarkmode } from '@utils/hooks/useDarkmode';
 import React, { useMemo, useState } from 'react';
@@ -190,6 +194,13 @@ import { ${themeSelection} } from '${importPath}';
                     </div>
 
                     <Snippet framework="react" language={'jsx'} content={codeBlock} transform={false} lineNumbers />
+
+                    <div className={styles.frameworkSwitcher}>
+                        <ReactIcon className={styles.active} />
+                        <AngularIcon />
+                        <VueIcon />
+                        <JavascriptIcon />
+                    </div>
                 </div>
             </div>
         </div>
