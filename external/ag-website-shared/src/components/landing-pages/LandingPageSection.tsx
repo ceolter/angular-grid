@@ -4,9 +4,29 @@ import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import classnames from 'classnames';
+import { useRef, useState } from 'react';
 import type { FunctionComponent, ReactNode } from 'react';
 
 import styles from './LandingPageSection.module.scss';
+
+const FRAMEWORK_CONFIGS = {
+    react: {
+        Icon: ReactIcon,
+        name: 'React',
+    },
+    angular: {
+        Icon: AngularIcon,
+        name: 'Angular',
+    },
+    vue: {
+        Icon: VueIcon,
+        name: 'Vue',
+    },
+    javascript: {
+        Icon: JavascriptIcon,
+        name: 'JavaScript',
+    },
+};
 
 interface Props {
     tag: string;
@@ -20,7 +40,7 @@ interface Props {
     sectionClass?: string;
     showBackgroundGradient?: boolean;
     children: ReactNode;
-    framework: boolean;
+    framework?: boolean;
 }
 
 export const LandingPageSection: FunctionComponent<Props> = ({
@@ -34,8 +54,42 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     sectionClass,
     showBackgroundGradient,
     children,
-    framework,
+    framework = false,
 }) => {
+    const [isHovering, setIsHovering] = useState(false);
+    const [isHiding, setIsHiding] = useState(false);
+    const [currentFramework, setCurrentFramework] = useState('react');
+    const frameworkContainerRef = useRef<HTMLDivElement>(null);
+    const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleFrameworkChange = (framework: string) => {
+        setCurrentFramework(framework);
+        setIsHovering(false);
+        setIsHiding(true);
+    };
+
+    const handleMouseEnter = () => {
+        if (overlayTimerRef.current) {
+            clearTimeout(overlayTimerRef.current);
+        }
+        setIsHiding(false);
+        setIsHovering(true);
+    };
+
+    const handleMouseLeave = () => {
+        overlayTimerRef.current = setTimeout(() => {
+            if (frameworkContainerRef.current && !frameworkContainerRef.current.matches(':hover')) {
+                setIsHiding(true);
+                setTimeout(() => {
+                    setIsHovering(false);
+                    setIsHiding(false);
+                }, 150);
+            }
+        }, 100);
+    };
+
+    const CurrentIcon = FRAMEWORK_CONFIGS[currentFramework].Icon;
+
     return (
         <div
             className={classnames(styles.sectionContent, sectionClass, {
@@ -62,28 +116,56 @@ export const LandingPageSection: FunctionComponent<Props> = ({
 
                 <div className={styles.frameworkGroup}>
                     {framework && (
-                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                            {framework && <ReactIcon />} {ctaTitle ? ctaTitle : 'Learn more'}{' '}
-                            <Icon name="chevronRight" />
-                        </a>
-                    )}
-
-                    {framework && (
-                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                            {framework && <AngularIcon />}
-                        </a>
-                    )}
-
-                    {framework && (
-                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                            {framework && <VueIcon />}
-                        </a>
-                    )}
-
-                    {framework && (
-                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                            {framework && <JavascriptIcon />}
-                        </a>
+                        <div
+                            ref={frameworkContainerRef}
+                            className={classnames([styles.ctaButton, 'button-tertiary'])}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <div className={styles.frameworkSelector}>
+                                <CurrentIcon />{' '}
+                                <span className={styles.framework}>
+                                    {FRAMEWORK_CONFIGS[currentFramework].name}
+                                    <Icon name="chevronDown" />
+                                </span>
+                            </div>{' '}
+                            <a href={ctaUrl} className={styles.learnMoreLink}>
+                                {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                            </a>
+                            {isHovering && (
+                                <div
+                                    className={`
+                                        ${styles.frameworkOverlay} 
+                                        ${isHiding ? styles.hiding : styles.visible}
+                                    `}
+                                    onMouseEnter={() => {
+                                        if (overlayTimerRef.current) {
+                                            clearTimeout(overlayTimerRef.current);
+                                        }
+                                        setIsHiding(false);
+                                    }}
+                                    onMouseLeave={handleMouseLeave}
+                                >
+                                    {Object.keys(FRAMEWORK_CONFIGS).map((framework) => {
+                                        const FrameworkIcon = FRAMEWORK_CONFIGS[framework].Icon;
+                                        const isCurrentFramework = framework === currentFramework;
+                                        return (
+                                            <div
+                                                key={framework}
+                                                className={`
+                                                    ${styles.frameworkOption} 
+                                                    ${isCurrentFramework ? styles.currentFramework : ''}
+                                                `}
+                                                onClick={() => !isCurrentFramework && handleFrameworkChange(framework)}
+                                            >
+                                                <FrameworkIcon />
+                                                <span>{FRAMEWORK_CONFIGS[framework].name}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
             </header>
