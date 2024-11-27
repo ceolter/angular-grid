@@ -81,6 +81,7 @@ body {
 }
 
 .heroSectiondemoContainer {
+    position: relative;
     height: 320px;
     margin: 0 auto;
     max-width: 1200px;
@@ -97,7 +98,7 @@ body {
     .loadingLogoContainer {
         width: 100%;
         height: 100%;
-        position: relative;
+        position: absolute;
 
         svg[class*='logo-mark'] {
             position: absolute;
