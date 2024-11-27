@@ -69,8 +69,7 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
 
     public refreshModel(state: RefreshModelState<TData>): void {
         state.rootNode.updateHasChildren();
-
-        if (state.rowDataUpdated || state.hasNodeChanges()) {
+        if (state.rowDataUpdated || state.removals.size > 0 || state.updates.size > 0) {
             this.deselectNodesAfterUpdate(state);
         }
     }
@@ -297,16 +296,13 @@ export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStu
         getRowIdFunc: GetRowIdFunc<TData> | undefined
     ): RowNode<TData>[] {
         const result: RowNode<TData>[] = [];
-        const updateLen = update?.length;
-        if (updateLen) {
-            for (let i = 0; i < updateLen; i++) {
-                const item = update[i];
-                const rowNode = this.lookupRowNode(getRowIdFunc, item);
-                if (rowNode) {
-                    rowNode.updateData(item);
-                    state.updateNode(rowNode);
-                    result.push(rowNode);
-                }
+        for (let i = 0, updateLen = update?.length ?? 0; i < updateLen; i++) {
+            const item = update![i];
+            const rowNode = this.lookupRowNode(getRowIdFunc, item);
+            if (rowNode) {
+                result.push(rowNode);
+                rowNode.updateData(item);
+                state.updateNode(rowNode);
             }
         }
         return result;
