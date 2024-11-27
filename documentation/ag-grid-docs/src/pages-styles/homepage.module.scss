@@ -428,10 +428,9 @@ body {
     justify-content: center;
     display: flex;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-md);
     height: 48px;
-    padding: $spacing-size-3;
+    padding: 0px 8px 0px 2px;
 }
 
 .heroSectioncta1 {
