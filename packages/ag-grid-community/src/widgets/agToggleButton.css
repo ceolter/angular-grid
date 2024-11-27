@@ -10,9 +10,6 @@
     min-width: var(--ag-toggle-button-width);
     max-width: var(--ag-toggle-button-width);
     height: var(--ag-toggle-button-height);
-    background-color: var(--ag-toggle-button-off-background-color);
-    transition: background-color 100ms;
-    border-radius: calc(var(--ag-toggle-button-height) * 0.5);
 
     :where(.ag-toggle-button-input) {
         cursor: pointer;
@@ -25,25 +22,32 @@
         height: var(--ag-toggle-button-height);
     }
 
+    background-color: var(--ag-toggle-button-off-background-color);
+    border-radius: calc(var(--ag-toggle-button-height) * 0.5);
+    border: solid var(--ag-toggle-button-border-width) var(--ag-toggle-button-off-border-color);
+
     &::before {
         content: '';
         display: block;
         position: absolute;
-        top: var(--ag-toggle-button-switch-inset);
-        left: var(--ag-toggle-button-switch-inset);
-        width: calc(var(--ag-toggle-button-height) - var(--ag-toggle-button-switch-inset) * 2);
-        height: calc(var(--ag-toggle-button-height) - var(--ag-toggle-button-switch-inset) * 2);
+        top: calc(0px - var(--ag-toggle-button-border-width));
+        left: calc(0px - var(--ag-toggle-button-border-width));
+        width: var(--ag-toggle-button-height);
+        height: var(--ag-toggle-button-height);
         border-radius: 100%;
         transition: left 100ms;
+        border: var(--ag-toggle-button-border-width) solid var(--ag-toggle-button-switch-border-color);
         background-color: var(--ag-toggle-button-switch-background-color);
         pointer-events: none;
     }
 
     &.ag-checked {
         background-color: var(--ag-toggle-button-on-background-color);
+        border-color: var(--ag-toggle-button-on-border-color);
 
         &::before {
-            left: calc(100% - var(--ag-toggle-button-height) + var(--ag-toggle-button-switch-inset));
+            left: calc(100% - var(--ag-toggle-button-height) + var(--ag-toggle-button-border-width));
+            border-color: var(--ag-toggle-button-on-border-color);
         }
     }
 

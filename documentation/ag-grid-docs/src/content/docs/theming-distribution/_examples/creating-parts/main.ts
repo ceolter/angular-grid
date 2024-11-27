@@ -29,14 +29,12 @@ const myCheckboxStyle = createPart({
     css: `
         .ag-checkbox-input-wrapper {
             border-radius: 4px;
-            /* Here we're referencing the checkboxGlowColor parameter in CSS, we need
-               to add the --ag- prefix and use kebab-case */
-            box-shadow: 0 0 5px 4px var(--ag-checkbox-glow-color);
+            box-shadow: 0 0 5px 4px red;
             width: 16px;
             height: 16px;
         
             &.ag-checked {
-                box-shadow: 0 0 5px 4px var(--ag-checkbox-checked-glow-color);
+                box-shadow: 0 0 5px 4px red;
                 &::before {
                     content: '✔';
                     position: absolute;

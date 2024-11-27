@@ -1,11 +1,5 @@
-import { logErrorMessageOnce, paramToVariableName } from '@components/theme-builder/model/utils';
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
 
-import { _theming } from 'ag-grid-community';
-import type { Theme } from 'ag-grid-community';
-
-import { _getAllRegisteredModules } from '../../../../../../../packages/ag-grid-community/src/modules/moduleRegistry';
 import { useRenderedTheme } from '../../model/rendered-theme';
 import { EditorPanel } from '../editors/EditorPanel';
 import { PresetSelector } from '../presets/PresetSelector';
@@ -15,8 +9,6 @@ import { GridPreview } from './GridPreview';
 export const RootContainer = () => {
     // makes variables available for use by editors
     useRenderedTheme();
-
-    useWarnOfUnknownCssVariables();
 
     return (
         <Container>
@@ -107,43 +99,3 @@ const Main = styled('div')`
     position: relative;
     gap: 20px;
 `;
-
-function useWarnOfUnknownCssVariables() {
-    const theme = useRenderedTheme();
-
-    useEffect(() => {
-        void warnOfUnknownCssVariables(theme);
-    }, [theme]);
-}
-
-async function warnOfUnknownCssVariables(themeArg: Theme) {
-    const theme = _theming.asThemeImpl(themeArg);
-    const allowedVariables = new Set(Object.keys(theme._getModeParams().$default).map(paramToVariableName));
-    allowedVariables.add('--ag-line-height');
-    allowedVariables.add('--ag-indentation-level');
-
-    // This uses vite's glob import feature to import all generated CSS files in the source tree
-    const cssFiles = (
-        await Promise.all(
-            Object.values(
-                import.meta.glob('../../../../../../../packages/ag-grid-community/src/**/*.css-GENERATED.ts')
-            ).map((moduleFunc) =>
-                moduleFunc().then((module) =>
-                    Object.entries(module as any)
-                        .filter(([key]) => key.endsWith('CSS'))
-                        .map(([source, css]) => ({ source, css }))
-                )
-            )
-        )
-    ).flat();
-
-    for (const { source, css } of cssFiles) {
-        if (typeof css === 'string') {
-            for (const [, variable] of css.matchAll(/var\((--ag-[\w-]+)[^)]*\)/g)) {
-                if (!allowedVariables.has(variable) && !/^--ag-(internal|inherited)-/.test(variable)) {
-                    logErrorMessageOnce(`${source} CSS contains var(${variable}) which does not match a theme param`);
-                }
-            }
-        }
-    }
-}

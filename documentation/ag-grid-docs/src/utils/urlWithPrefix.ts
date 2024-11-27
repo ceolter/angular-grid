@@ -28,9 +28,13 @@ export const urlWithPrefix = ({
     } else if (url.startsWith('/')) {
         path = pathJoin('/', siteBaseUrl, url);
     } else if (!url.startsWith('#') && !isExternal) {
-        throw new Error(
-            `Invalid url: ${url} - use './' for framework urls, '/' for root urls, '#' for anchor links, and http/mailto for external urls`
-        );
+        const errorMessage = `Invalid url: ${url} - use './' for framework urls, '/' for root urls, '#' for anchor links, and http/mailto for external urls`;
+        if (getIsDev()) {
+            // eslint-disable-next-line no-console
+            console.warn(errorMessage);
+        } else {
+            throw new Error(errorMessage);
+        }
     }
 
     if (

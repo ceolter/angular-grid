@@ -1,3 +1,13 @@
-.ag-text-field-input-wrapper {
-    box-shadow: 0 0 10px orange;
+.ag-theme-quartz,
+.ag-theme-quartz-dark {
+    --ag-borders-input: dotted 2px;
+    --ag-input-border-color: orange;
+}
+.ag-theme-quartz .ag-text-field-input,
+.ag-theme-quartz-dark .ag-text-field-input {
+    background-color: rgb(255, 209, 123); /* light orange */
+}
+.ag-theme-quartz .ag-text-field-input::placeholder,
+.ag-theme-quartz-dark .ag-text-field-input::placeholder {
+    color: rgb(155, 101, 1); /* darker orange */
 }

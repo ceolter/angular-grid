@@ -13,7 +13,7 @@
     align-items: center;
 }
 
-.ag-input-field-input:where(:not([type='checkbox'], [type='radio'])) {
+.ag-input-field-input {
     flex: 1 1 auto;
     width: 100%;
     min-width: 0;

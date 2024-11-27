@@ -1,8 +1,7 @@
-/* Add lumps to the border around the checkbox */
-.ag-checkbox-input-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 4px;
-    border: 2px dotted darkred;
+.ag-theme-quartz,
+.ag-theme-quartz-dark {
+    --ag-checkbox-background-color: yellow;
+    --ag-checkbox-checked-color: red;
+    --ag-checkbox-unchecked-color: darkred;
+    --ag-checkbox-indeterminate-color: grey;
 }

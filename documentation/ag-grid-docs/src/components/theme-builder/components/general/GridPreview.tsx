@@ -15,7 +15,6 @@ import {
     ContextMenuModule,
     FiltersToolPanelModule,
     IntegratedChartsModule,
-    PivotModule,
     RichSelectModule,
     RowGroupingModule,
     SetFilterModule,
@@ -46,7 +45,6 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     RichSelectModule,
     StatusBarModule,
-    PivotModule,
 ]);
 
 const GridPreview = () => {

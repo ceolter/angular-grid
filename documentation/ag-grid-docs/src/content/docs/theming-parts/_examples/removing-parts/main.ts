@@ -4,6 +4,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     createGrid,
+    createPart,
     themeQuartz,
 } from 'ag-grid-community';
 
@@ -11,7 +12,9 @@ import './style.css';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 
-const myCustomTheme = themeQuartz.withoutPart('checkboxStyle');
+const noCheckboxStyle = createPart({ feature: 'checkboxStyle' });
+
+const myCustomTheme = themeQuartz.withPart(noCheckboxStyle);
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 

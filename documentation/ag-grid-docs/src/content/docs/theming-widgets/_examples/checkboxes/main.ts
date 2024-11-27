@@ -1,11 +1,5 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
@@ -28,18 +22,6 @@ ModuleRegistry.registerModules([
     SetFilterModule,
 ]);
 
-const myTheme = themeQuartz.withParams({
-    checkboxUncheckedBackgroundColor: 'yellow',
-    checkboxUncheckedBorderColor: 'darkred',
-    checkboxCheckedBackgroundColor: 'red',
-    checkboxCheckedBorderColor: 'darkred',
-    checkboxCheckedShapeColor: 'yellow',
-    checkboxCheckedShapeImage: {
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
-    },
-    checkboxIndeterminateBorderColor: 'darkred',
-});
-
 const columnDefs: ColDef[] = [
     { field: 'athlete', hide: true },
     { field: 'age', hide: true },
@@ -56,7 +38,7 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: myTheme,
+    theme: 'legacy',
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {

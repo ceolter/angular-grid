@@ -488,9 +488,9 @@ type CoreParamsDefinitions = {
     textColor: 'infer';
 
     /**
-     * Width of the whole toggle button component
+     * Width of the toggle button outer border
      */
-    toggleButtonWidth: 'infer';
+    toggleButtonBorderWidth: 'infer';
 
     /**
      * Height of the whole toggle button component
@@ -503,9 +503,19 @@ type CoreParamsDefinitions = {
     toggleButtonOffBackgroundColor: 'infer';
 
     /**
+     * Color of the toggle button's outer border in its 'off' state
+     */
+    toggleButtonOffBorderColor: 'infer';
+
+    /**
      * Color of the toggle button background in its 'on' state
      */
     toggleButtonOnBackgroundColor: 'infer';
+
+    /**
+     * Color of the toggle button outer border in its 'on' state
+     */
+    toggleButtonOnBorderColor: 'infer';
 
     /**
      * Background color of the toggle button switch (the bit that slides from left to right)
@@ -513,9 +523,14 @@ type CoreParamsDefinitions = {
     toggleButtonSwitchBackgroundColor: 'infer';
 
     /**
-     * The amount that the toggle switch is inset from the edge of the button
+     * Border color of the toggle button switch (the bit that slides from left to right)
      */
-    toggleButtonSwitchInset: 'infer';
+    toggleButtonSwitchBorderColor: 'infer';
+
+    /**
+     * Width of the whole toggle button component
+     */
+    toggleButtonWidth: 'infer';
 
     /**
      * The dividing line between sections of menus e.g. column menu and right-click context menu
@@ -773,18 +788,29 @@ export const coreDefaults: Readonly<CoreParams> = {
     iconSize: 16,
     toggleButtonWidth: 28,
     toggleButtonHeight: 18,
+    toggleButtonBorderWidth: 2,
+    toggleButtonOnBorderColor: {
+        ref: 'accentColor',
+    },
     toggleButtonOnBackgroundColor: {
         ref: 'accentColor',
+    },
+    toggleButtonOffBorderColor: {
+        ref: 'foregroundColor',
+        mix: 0.3,
+        onto: 'backgroundColor',
     },
     toggleButtonOffBackgroundColor: {
         ref: 'foregroundColor',
         mix: 0.3,
         onto: 'backgroundColor',
     },
+    toggleButtonSwitchBorderColor: {
+        ref: 'toggleButtonOffBorderColor',
+    },
     toggleButtonSwitchBackgroundColor: {
         ref: 'backgroundColor',
     },
-    toggleButtonSwitchInset: 2,
     menuBorder: {
         color: {
             ref: 'foregroundColor',

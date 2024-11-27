@@ -18,13 +18,6 @@ export type Theme<TParams = unknown> = {
     withPart<TPartParams>(part: Part<TPartParams> | (() => Part<TPartParams>)): Theme<TParams & TPartParams>;
 
     /**
-     * Return a new theme removes any existing part with a feature.
-     *
-     * @param feature the name of the part to remove, e.g. 'checkboxStyle'
-     */
-    withoutPart(feature: string): Theme<TParams>;
-
-    /**
      * Return a new theme with different default values for the specified
      * params.
      *
@@ -61,10 +54,6 @@ export class ThemeImpl {
             return this;
         }
         return new ThemeImpl([...this.parts, part]);
-    }
-
-    withoutPart(feature: string): ThemeImpl {
-        return this.withPart(createPart({ feature }));
     }
 
     withParams(params: WithParamTypes<unknown>, mode = defaultModeName): ThemeImpl {

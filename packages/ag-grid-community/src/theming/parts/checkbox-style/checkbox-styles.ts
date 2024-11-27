@@ -1,7 +1,7 @@
 import { createPart } from '../../Part';
 import { checkboxStyleDefaultCSS } from './checkbox-style-default.css-GENERATED';
 
-type CheckboxStyleDefaultParams = {
+type CheckboxStyleParams = {
     /**
      * Border radius for checkboxes
      */
@@ -68,7 +68,7 @@ type CheckboxStyleDefaultParams = {
     radioCheckedShapeImage: never;
 };
 
-export const checkboxStyleDefault = createPart<CheckboxStyleDefaultParams>({
+export const checkboxStyleDefault = createPart<CheckboxStyleParams>({
     feature: 'checkboxStyle',
     params: {
         checkboxBorderWidth: 1,

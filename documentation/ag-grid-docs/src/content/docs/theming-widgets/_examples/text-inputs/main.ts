@@ -1,11 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-quartz.css';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -26,13 +22,6 @@ ModuleRegistry.registerModules([
     SetFilterModule,
 ]);
 
-const myTheme = themeQuartz.withParams({
-    inputBorder: { color: 'orange', style: 'dotted', width: 3 },
-    inputBackgroundColor: 'rgb(255, 209, 123)', // light orange
-    inputPlaceholderTextColor: 'rgb(155, 101, 1)', // darker orange
-    inputIconColor: 'purple', // light orange
-});
-
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },
     { field: 'age' },
@@ -49,7 +38,7 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: myTheme,
+    theme: 'legacy',
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {

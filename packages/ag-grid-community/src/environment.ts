@@ -193,7 +193,7 @@ export class Environment extends BeanStub implements NamedBean {
         if (border) {
             sizeEl.className = 'ag-measurement-element-border';
             sizeEl.style.setProperty(
-                '--ag-internal-measurement-border',
+                '--ag-measurement-border',
                 `var(${variable.cssName}, solid ${NO_VALUE_SENTINEL}px`
             );
         } else {

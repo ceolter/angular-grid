@@ -115,9 +115,12 @@ const docs: Record<AllThemeParams, string> = {
     listItemHeight: 'Height of items in scrolling lists e.g. dropdown select inputs and column menu set filters.',
     toggleButtonWidth: 'Width of the whole toggle button component',
     toggleButtonHeight: 'Height of the whole toggle button component',
-    toggleButtonSwitchInset: 'The amount that the toggle switch is inset from the edge of the button',
+    toggleButtonBorderWidth: 'Width of the toggle button outer border',
+    toggleButtonOnBorderColor: "Color of the toggle button outer border in its 'on' state",
     toggleButtonOnBackgroundColor: "Color of the toggle button background in its 'on' state",
+    toggleButtonOffBorderColor: "Color of the toggle button's outer border in its 'off' state",
     toggleButtonOffBackgroundColor: "Color of the toggle button background in its 'off' state",
+    toggleButtonSwitchBorderColor: 'Border color of the toggle button switch (the bit that slides from left to right)',
     toggleButtonSwitchBackgroundColor:
         'Background color of the toggle button switch (the bit that slides from left to right)',
     checkboxBorderWidth: 'Border width for checkboxes',
@@ -225,9 +228,6 @@ const docs: Record<AllThemeParams, string> = {
     inputInvalidBorder:
         'Border around text inputs in an invalid state. By default the border is drawn all around the input, when using Material Design inputs the border is drawn underneath',
     inputInvalidTextColor: 'Color of text within text inputs in an invalid state',
-    inputIconColor: 'Color of search icon within search text inputs',
-    inputPlaceholderTextColor:
-        'Color of placeholder text in empty inputs describing the purpose of the input e.g. "Search..."',
     rowLoadingSkeletonEffectColor:
         'Color of the skeleton loading effect used when loading row data with the Server-side Row Model',
 };
