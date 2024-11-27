@@ -1,4 +1,5 @@
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import classnames from 'classnames';
 import type { FunctionComponent, ReactNode } from 'react';
 
@@ -56,7 +57,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
 
                 {ctaUrl && (
                     <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                        {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                        <ReactIcon /> {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
                     </a>
                 )}
             </header>
