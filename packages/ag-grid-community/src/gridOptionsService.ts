@@ -9,6 +9,7 @@ import { ALWAYS_SYNC_GLOBAL_EVENTS } from './events';
 import type { GridOptionOrDefault } from './gridOptionsDefault';
 import { GRID_OPTION_DEFAULTS } from './gridOptionsDefault';
 import { _getCallbackForEvent } from './gridOptionsUtils';
+import type { AsObject, ObjectKeys } from './gridOptionsUtils';
 import type { AgGridCommon, WithoutGridCommon } from './interfaces/iCommon';
 import type { ModuleName, ValidationModuleName } from './interfaces/iModule';
 import { LocalEventService } from './localEventService';
@@ -59,9 +60,6 @@ export interface PropertyChangedEvent extends AgEvent {
     changeSet: PropertyChangeSet | undefined;
     source: PropertyChangedSource;
 }
-
-type Objectify<T> = Extract<NonNullable<T>, object>;
-type ObjectKeys<T> = Objectify<T> extends never ? never : keyof Objectify<T>;
 
 /**
  * For boolean properties the changed value will have been coerced to a boolean, so we do not want the type to include the undefined value.
@@ -246,22 +244,22 @@ export class GridOptionsService extends BeanStub implements NamedBean {
 
     addDeepPropertyEventListener<P1 extends ObjectKeys<GridOptions>>(
         prop1: P1,
-        listener: DeepPropertyValueChangedListener<Objectify<GridOptions>[P1]>
+        listener: DeepPropertyValueChangedListener<AsObject<GridOptions>[P1]>
     ): void;
-    addDeepPropertyEventListener<P1 extends ObjectKeys<GridOptions>, P2 extends ObjectKeys<Objectify<GridOptions>[P1]>>(
+    addDeepPropertyEventListener<P1 extends ObjectKeys<GridOptions>, P2 extends ObjectKeys<AsObject<GridOptions>[P1]>>(
         prop1: P1,
         prop2: P2,
-        listener: DeepPropertyValueChangedListener<Objectify<Objectify<GridOptions>[P1]>[P2]>
+        listener: DeepPropertyValueChangedListener<AsObject<AsObject<GridOptions>[P1]>[P2]>
     ): void;
     addDeepPropertyEventListener<
         P1 extends ObjectKeys<GridOptions>,
-        P2 extends ObjectKeys<Objectify<GridOptions>[P1]>,
-        P3 extends ObjectKeys<Objectify<Objectify<GridOptions>[P1]>[P2]>,
+        P2 extends ObjectKeys<AsObject<GridOptions>[P1]>,
+        P3 extends ObjectKeys<AsObject<AsObject<GridOptions>[P1]>[P2]>,
     >(
         prop1: P1,
         prop2: P2,
         prop3: P3,
-        listener: DeepPropertyValueChangedListener<Objectify<Objectify<Objectify<GridOptions>[P1]>[P2]>[P3]>
+        listener: DeepPropertyValueChangedListener<AsObject<AsObject<AsObject<GridOptions>[P1]>[P2]>[P3]>
     ): void;
     addDeepPropertyEventListener(...args: any[]): any {
         const props = args.slice(0, -1) as string[];

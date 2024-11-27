@@ -1,5 +1,13 @@
 import { ApiFunctionService } from './api/apiFunctionService';
-import { destroy, getGridId, getGridOption, isDestroyed, setGridOption, updateGridOptions } from './api/coreApi';
+import {
+    destroy,
+    getGridId,
+    getGridOption,
+    isDestroyed,
+    setDeepGridOption,
+    setGridOption,
+    updateGridOptions,
+} from './api/coreApi';
 import type { _CoreGridApi } from './api/gridApi';
 import { ColumnMoveModule } from './columnMove/columnMoveModule';
 import { ColumnResizeModule } from './columnResize/columnResizeModule';
@@ -95,6 +103,7 @@ export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
         isDestroyed,
         getGridOption,
         setGridOption,
+        setDeepGridOption,
         updateGridOptions,
     },
     dependsOn: [

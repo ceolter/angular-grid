@@ -694,3 +694,6 @@ export function _processOnChange(changes: any, api: GridApi): void {
 
     api.dispatchEvent(event);
 }
+
+export type AsObject<T> = Extract<NonNullable<T>, object>;
+export type ObjectKeys<T> = AsObject<T> extends never ? never : keyof AsObject<T>;
