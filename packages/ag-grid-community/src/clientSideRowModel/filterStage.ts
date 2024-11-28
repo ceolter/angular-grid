@@ -5,8 +5,9 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import type { FilterManager } from '../filter/filterManager';
 import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
-import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
+import type { IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { ChangedPath } from '../utils/changedPath';
+import type { RefreshModelState } from './refreshModelState';
 
 export function updateRowNodeAfterFilter(rowNode: RowNode): void {
     if (rowNode.sibling) {
@@ -26,8 +27,8 @@ export class FilterStage extends BeanStub implements IRowNodeStage, NamedBean {
         this.filterManager = beans.filterManager;
     }
 
-    public execute(params: StageExecuteParams): void {
-        const { changedPath } = params;
+    public execute(state: RefreshModelState): void {
+        const { changedPath } = state;
         this.filter(changedPath!);
     }
 

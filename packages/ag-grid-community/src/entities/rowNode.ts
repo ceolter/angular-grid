@@ -30,6 +30,7 @@ export interface ITreeNode {
     readonly sourceIdx: number;
 
     invalidate(): void;
+    invalidateOrder(): void;
 }
 
 export const ROW_ID_PREFIX_ROW_GROUP = 'row-group-';

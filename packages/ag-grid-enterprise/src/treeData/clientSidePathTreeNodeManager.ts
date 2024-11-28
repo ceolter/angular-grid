@@ -1,12 +1,5 @@
 import { _warn } from 'ag-grid-community';
-import type {
-    ChangedPath,
-    GetDataPath,
-    IChangedRowNodes,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { GetDataPath, NamedBean, RefreshModelState, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { TreeNode } from './treeNode';
@@ -17,65 +10,54 @@ export class ClientSidePathTreeNodeManager<TData>
 {
     beanName = 'csrmPathTreeNodeSvc' as const;
 
-    protected override loadNewRowData(rowData: TData[]): void {
-        const rootNode = this.rootNode!;
-        const treeRoot = this.treeRoot!;
+    public override treeData: boolean = false;
 
-        this.treeClear(treeRoot);
-        treeRoot.setRow(rootNode);
+    public override beginRefreshModel(): void {
+        const gos = this.gos;
+        this.treeData = gos.get('treeData') && !!gos.get('getDataPath');
+    }
 
-        super.loadNewRowData(rowData);
-
-        const allLeafChildren = rootNode.allLeafChildren!;
+    protected override loadNewRowData(state: RefreshModelState<TData>, rowData: TData[]): void {
+        this.treeReset();
+        super.loadNewRowData(state, rowData);
         const getDataPath = this.gos.get('getDataPath');
+        const allLeafChildren = state.rootNode.allLeafChildren!;
         for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
             this.addOrUpdateRow(getDataPath, allLeafChildren[i], true);
         }
-
-        this.treeCommit();
     }
 
-    public override get treeData(): boolean {
-        const gos = this.gos;
-        return gos.get('treeData') && !!gos.get('getDataPath');
-    }
-
-    public override refreshModel(params: RefreshModelParams<TData>): void {
-        const changedRowNodes = params.changedRowNodes;
-        if (changedRowNodes) {
-            this.executeTransactions(changedRowNodes, params.changedPath, params.rowNodesOrderChanged);
+    public override refreshModel(state: RefreshModelState<TData>): void {
+        if (state.hasNodeChanges()) {
+            this.executeUpdates(state);
         }
-
-        super.refreshModel(params);
+        super.refreshModel(state);
     }
 
-    private executeTransactions(
-        changedRowNodes: IChangedRowNodes,
-        changedPath: ChangedPath | undefined,
-        rowNodesOrderMaybeChanged: boolean | undefined
-    ): void {
+    private executeUpdates(state: RefreshModelState<TData>): void {
         const treeRoot = this.treeRoot;
         if (!treeRoot) {
             return; // Destroyed or not active
         }
 
-        treeRoot.setRow(this.rootNode);
-
-        for (const row of changedRowNodes.removals) {
+        for (const row of state.removals) {
             const node = row.treeNode as TreeNode | null;
             if (node) {
                 this.treeRemove(node, row);
             }
         }
 
-        const updates = changedRowNodes.updates;
+        const updates = state.updates;
         const getDataPath = this.gos.get('getDataPath');
         for (const row of updates.keys()) {
-            this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+            if (row.data) {
+                this.addOrUpdateRow(getDataPath, row, !!updates.get(row));
+            }
         }
 
         const rows = treeRoot.row?.allLeafChildren;
-        if (rowNodesOrderMaybeChanged && rows) {
+
+        if (rows && (state.rowsOrderChanged || state.rowsInserted)) {
             for (let rowIdx = 0, rowsLen = rows.length; rowIdx < rowsLen; ++rowIdx) {
                 const node = rows[rowIdx].treeNode as TreeNode | null;
                 if (node && node.sourceIdx !== rowIdx) {
@@ -83,12 +65,14 @@ export class ClientSidePathTreeNodeManager<TData>
                 }
             }
         }
-
-        this.treeCommit(changedPath); // One single commit for all the transactions
     }
 
     private addOrUpdateRow(getDataPath: GetDataPath | undefined, row: RowNode, created: boolean): void {
-        const treeRoot = this.treeRoot!;
+        const treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            return; // Destroyed or not active
+        }
+
         if (!this.treeData) {
             // We assume that the data is flat and we use id as the key for the tree nodes.
             // This happens when treeData is false and getDataPath is undefined/null.

@@ -10,8 +10,8 @@ import type {
     IPivotResultColsService,
     IRowNodeStage,
     NamedBean,
+    RefreshModelState,
     RowNode,
-    StageExecuteParams,
     ValueService,
 } from 'ag-grid-community';
 import { BeanStub, _missing } from 'ag-grid-community';
@@ -67,12 +67,11 @@ export class PivotStage extends BeanStub implements NamedBean, IRowNodeStage {
 
     private maxUniqueValues: number = -1;
 
-    public execute(params: StageExecuteParams): void {
-        const changedPath = params.changedPath;
+    public execute({ changedPath }: RefreshModelState): void {
         if (this.colModel.isPivotActive()) {
-            this.executePivotOn(changedPath!);
+            this.executePivotOn(changedPath);
         } else {
-            this.executePivotOff(changedPath!);
+            this.executePivotOff(changedPath);
         }
     }
 

@@ -830,7 +830,7 @@ describe('ag-grid rows-ordering', () => {
             },
             onModelUpdated: (event) => {
                 expect(event.type).toBe('modelUpdated');
-
+                expect(event.newData).toBe(modelUpdatedCalls === 0);
                 if (modelUpdatedCalls === 1) {
                     api.setGridOption('rowData', rowData3);
                 }
@@ -842,7 +842,7 @@ describe('ag-grid rows-ordering', () => {
 
         // Await the async events are executed
         await asyncSetTimeout(0);
-        await asyncSetTimeout(2);
+        await asyncSetTimeout(1);
 
         await new GridRows(api, 'data', defaultGridRowsOptions).check(`
             ROOT id:ROOT_NODE_ID
@@ -851,5 +851,8 @@ describe('ag-grid rows-ordering', () => {
             ├── LEAF id:5 x:5
             └── LEAF id:7 x:77
         `);
+
+        expect(rowDataUpdatedCalls).toBe(2);
+        expect(modelUpdatedCalls).toBe(2);
     });
 });

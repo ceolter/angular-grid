@@ -1,19 +1,22 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { BeanCollection } from '../context/context';
 import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
-import type { ClientSideRowModelStage, IChangedRowNodes } from '../interfaces/iClientSideRowModel';
+import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
+import type { IRowNodeStage } from '../interfaces/iRowNodeStage';
 import type { SortOption } from '../interfaces/iSortOption';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
-import type { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
+import type { RefreshModelState } from './refreshModelState';
 
-function updateChildIndexes(rowNode: RowNode): void {
+export function updateRowNodeAfterSort(rowNode: RowNode): void {
+    if (rowNode.sibling) {
+        rowNode.sibling.childrenAfterSort = rowNode.childrenAfterSort;
+    }
+
     if (_missing(rowNode.childrenAfterSort)) {
         return;
     }
@@ -35,33 +38,18 @@ function updateChildIndexes(rowNode: RowNode): void {
     }
 }
 
-export function updateRowNodeAfterSort(rowNode: RowNode): void {
-    if (rowNode.sibling) {
-        rowNode.sibling.childrenAfterSort = rowNode.childrenAfterSort;
-    }
-
-    updateChildIndexes(rowNode);
-}
-
 export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
     beanName = 'sortStage' as const;
 
     public refreshProps: Set<keyof GridOptions<any>> = new Set(['postSortRows', 'groupDisplayType', 'accentedSort']);
     public step: ClientSideRowModelStage = 'sort';
 
-    public execute(params: StageExecuteParams): void {
+    public execute(state: RefreshModelState): void {
         const beans = this.beans;
-        const sortOptions: SortOption[] = beans.sortSvc!.getSortOptions();
+        const { gos, sortSvc, colModel, rowGroupColsSvc, groupHideOpenParentsSvc, rowNodeSorter } = beans;
+        const sortOptions: SortOption[] = sortSvc!.getSortOptions();
 
         const sortActive = _exists(sortOptions) && sortOptions.length > 0;
-        const deltaSort =
-            sortActive &&
-            !!params.changedRowNodes &&
-            // in time we can remove this check, so that delta sort is always
-            // on if transactions are present. it's off for now so that we can
-            // selectively turn it on and test it with some select users before
-            // rolling out to everyone.
-            this.gos.get('deltaSort');
 
         const sortContainsGroupColumns = sortOptions.some(({ column }) => {
             const isSortingCoupled = _isColumnsSortingCoupledToGroup(beans.gos);
@@ -70,27 +58,16 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
             return !!column.getColDef().showRowGroup;
         });
-        this.sort(
-            beans,
-            sortOptions,
-            sortActive,
-            deltaSort,
-            params.changedRowNodes,
-            params.changedPath,
-            sortContainsGroupColumns
-        );
-    }
 
-    private sort(
-        beans: BeanCollection,
-        sortOptions: SortOption[],
-        sortActive: boolean,
-        useDeltaSort: boolean,
-        changedRowNodes: IChangedRowNodes | undefined,
-        changedPath: ChangedPath | undefined,
-        sortContainsGroupColumns: boolean
-    ): void {
-        const { gos, colModel, rowGroupColsSvc, groupHideOpenParentsSvc, rowNodeSorter } = beans;
+        const deltaSort =
+            sortActive &&
+            state.changedPath.active &&
+            // in time we can remove this check, so that delta sort is always
+            // on delta update (transactions or immutable data). it's off for now so that we can
+            // selectively turn it on and test it with some select users before
+            // rolling out to everyone.
+            this.gos.get('deltaSort');
+
         const groupMaintainOrder = gos.get('groupMaintainOrder');
         const groupColumnsPresent = colModel.getCols().some((c) => c.isRowGroupActive());
 
@@ -129,8 +106,8 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             } else if (!sortActive || skipSortingPivotLeafs) {
                 // if there's no sort to make, skip this step
                 newChildrenAfterSort = rowNode.childrenAfterAggFilter!.slice(0);
-            } else if (useDeltaSort && changedRowNodes) {
-                newChildrenAfterSort = doDeltaSort(rowNodeSorter!, rowNode, changedRowNodes, changedPath, sortOptions);
+            } else if (deltaSort) {
+                newChildrenAfterSort = doDeltaSort(rowNodeSorter!, rowNode, state, sortOptions);
             } else {
                 newChildrenAfterSort = rowNodeSorter!.doFullSort(rowNode.childrenAfterAggFilter!, sortOptions);
             }
@@ -144,15 +121,14 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
             }
         };
 
-        changedPath?.forEachChangedNodeDepthFirst(callback);
+        state.changedPath.forEachChangedNodeDepthFirst(callback);
     }
 }
 
 function doDeltaSort(
     rowNodeSorter: RowNodeSorter,
     rowNode: RowNode,
-    changedRowNodes: IChangedRowNodes,
-    changedPath: ChangedPath | undefined,
+    state: RefreshModelState,
     sortOptions: SortOption[]
 ): RowNode[] {
     const unsortedRows = rowNode.childrenAfterAggFilter!;
@@ -164,10 +140,11 @@ function doDeltaSort(
     const untouchedRows = new Set<string>();
     const touchedRows: SortedRowNode[] = [];
 
-    const updates = changedRowNodes.updates;
+    const updates = state.updates;
+    const changedPath = state.changedPath;
     for (let i = 0, len = unsortedRows.length; i < len; ++i) {
         const row = unsortedRows[i];
-        if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
+        if (updates.has(row) || !changedPath.canSkip(row)) {
             touchedRows.push({
                 currentPos: touchedRows.length,
                 rowNode: row,

@@ -4,8 +4,8 @@ import type {
     GridOptions,
     IRowNodeStage,
     NamedBean,
+    RefreshModelState,
     RowNode,
-    StageExecuteParams,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { BeanStub, _getGrandTotalRow, _getGroupTotalRowCallback, _isGroupMultiAutoColumn } from 'ag-grid-community';
@@ -32,8 +32,8 @@ export class FlattenStage extends BeanStub implements IRowNodeStage<RowNode[]>, 
     ]);
     public step: ClientSideRowModelStage = 'map';
 
-    public execute(params: StageExecuteParams): RowNode[] {
-        const rootNode = params.rowNode;
+    public execute(state: RefreshModelState): RowNode[] {
+        const rootNode = state.rootNode;
 
         // even if not doing grouping, we do the mapping, as the client might
         // of passed in data that already has a grouping in it somewhere
