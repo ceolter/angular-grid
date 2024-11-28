@@ -37,4 +37,6 @@ export interface IClientSideNodeManager<TData = any> {
     ): ClientSideNodeManagerUpdateRowDataResult<TData>;
 
     refreshModel?(params: RefreshModelParams<TData>): void;
+
+    afterColumnsChanged?(): void;
 }

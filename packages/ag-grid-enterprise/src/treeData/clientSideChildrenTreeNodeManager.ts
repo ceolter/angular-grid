@@ -240,7 +240,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         }
     }
 
-    public override refreshModel(params: RefreshModelParams<TData>): void {
+    public refreshModel(params: RefreshModelParams<TData>): void {
         const { rootNode, treeRoot } = this;
         if (!treeRoot) {
             return; // Not active, destroyed
@@ -258,7 +258,5 @@ export class ClientSideChildrenTreeNodeManager<TData>
             }
             this.treeCommit();
         }
-
-        super.refreshModel(params);
     }
 }
