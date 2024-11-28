@@ -43,7 +43,7 @@ export function getData() {
             ticker: 'BTC-USD',
             name: 'Bitcoin',
             instrument: 'Crypto',
-            quantity: 2,
+            quantity: 200,
             purchaseDate: '2023-06-15',
             purchasePrice: 30000,
             price: 29000,
