@@ -209,7 +209,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
         ];
 
-        this.addManagedPropertyListeners(allProps, (params: PropertyChangedEvent): void => {
+        this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
                 this.onPropChange(properties);
