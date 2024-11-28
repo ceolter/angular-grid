@@ -6,6 +6,7 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowHighlightPosition } from '../entities/rowNode';
 import { ROW_ID_PREFIX_ROW_GROUP, RowNode } from '../entities/rowNode';
 import type { CssVariablesChanged, FilterChangedEvent } from '../events';
+import { PropertyChangedEvent } from '../gridOptionsService';
 import { _getGroupSelectsDescendants, _getRowHeightForNode, _isAnimateRows, _isDomLayout } from '../gridOptionsUtils';
 import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
@@ -203,18 +204,24 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         //                       - non memoised correctly.
 
         const allProps: (keyof GridOptions)[] = [
-            'rowData',
             'treeData',
             'treeDataChildrenField',
             ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
         ];
 
-        this.addManagedPropertyListeners(allProps, (params) => {
+        this.addManagedPropertyListeners(allProps, (params: PropertyChangedEvent): void => {
             const properties = params.changeSet?.properties;
             if (properties) {
                 this.onPropChange(properties);
             }
         });
+
+        // TODO: HACK: rowData should be in the list of allProps instead of being registered separately.
+        // but due to AG-13498, the columnModel will execute AFTER the previous listeners if properties
+        // the column model listen to together with the previous listener are changed together.
+        // So this is a temporary solution to make sure rowData is processed after the columnModel is ready.
+        // Unfortunately this can result in double refresh when multiple properties are changed together, as it was before version 33.
+        this.addManagedPropertyListener('rowData', () => this.onPropChange(['rowData']));
 
         this.addManagedPropertyListener('rowHeight', () => this.resetRowHeights());
     }
