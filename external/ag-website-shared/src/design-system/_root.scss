@@ -1,6 +1,7 @@
 @use './core' as *;
 
-:root {
+:root,
+[data-is-homepage] .site-header {
     // Layout
     --layout-gap: 32px;
     --layout-max-width: 1800px;
