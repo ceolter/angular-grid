@@ -288,6 +288,8 @@ describe('ag-grid hierarchical tree data', () => {
             rowData: rowData0,
         });
 
+        console.log('\nUPDATE rowData and treeData together\n');
+
         api.updateGridOptions({
             rowData: rowData1,
             treeData: true,
