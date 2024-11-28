@@ -12,9 +12,119 @@
         z-index: 6; // needed in order to prevent grid z-indexes overlapping on small height
     }
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         background: var(--color-bg-primary);
         border-bottom: 1px solid var(--color-border-primary);
+    }
+
+    // Reset homepage colors to light mode
+    [data-is-homepage] & {
+        // Background colors
+        --color-bg-primary: var(--color-white);
+        --color-bg-secondary: var(--color-gray-50);
+        --color-bg-tertiary: var(--color-gray-100);
+        --color-bg-brand-solid: var(--color-brand-500);
+        --color-bg-disabled_subtle: var(--color-gray-50);
+        --color-bg-toolbar: var(--color-gray-100);
+        --color-bg-code: var(--color-gray-100);
+        --color-bg-site-header: var(--color-brand-500);
+        --color-bg-mobile-nav: var(--color-bg-site-header); //TODO, review & replace color
+        --color-code-background: color-mix(in srgb, var(--color-bg-secondary), var(--color-bg-primary) 70%);
+
+        // Foreground colors
+        --color-fg-primary: var(--color-gray-900);
+        --color-fg-secondary: var(--color-gray-700);
+        --color-fg-tertiary: var(--color-gray-600);
+        --color-fg-quinary: var(--color-gray-400);
+        --color-fg-disabled: var(--color-gray-400);
+        --color-fg-placeholder: var(--color-gray-500);
+        --color-fg-white: var(--color-white);
+        --color-fg-code: #f91274;
+
+        // Text colors
+        --color-text-primary: var(--color-gray-600);
+        --color-text-secondary: var(--color-gray-700);
+        --color-text-tertiary: var(--color-gray-600);
+
+        // Border colors
+        --color-border-primary: var(--color-gray-300);
+        --color-border-secondary: var(--color-gray-200);
+        --color-border-tertiary: var(--color-gray-100);
+        --color-border-disabled_subtle: var(--color-gray-200);
+
+        // Link colors
+        --color-link: var(--color-brand-500); // TODO, review & replace color
+        --color-link-hover: var(--color-brand-700); // TODO, review & replace color
+
+        // Button colors
+        --color-button-primary-bg: var(--color-brand-500);
+        --color-button-primary-bg-hover: var(--color-brand-700);
+        --color-button-primary-bg-active: var(--color-brand-800);
+        --color-button-primary-shadow-focus: var(--color-brand-200);
+        --color-button-primary-fg: var(--color-fg-white);
+        --color-button-primary-border: var(--color-brand-500);
+
+        --color-button-secondary-bg: var(--color-bg-primary);
+        --color-button-secondary-bg-hover: var(--color-bg-secondary);
+        --color-button-secondary-bg-active: var(--color-gray-300);
+        --color-button-secondary-shadow-focus: var(--color-gray-200);
+        --color-button-secondary-fg: var(--color-fg-secondary);
+        --color-button-secondary-border: var(--color-border-primary);
+
+        --color-button-tertiary-bg: var(--color-bg-primary);
+        --color-button-tertiary-bg-hover: var(--color-brand-50);
+        --color-button-tertiary-bg-active: var(--color-brand-100);
+        --color-button-tertiary-shadow-focus: var(--color-brand-100);
+        --color-button-tertiary-fg: var(--color-brand-500);
+        --color-button-tertiary-border: var(--color-brand-300);
+
+        --color-button-disabled-bg: var(--color-gray-100);
+        --color-button-disabled-fg: var(--color-gray-400);
+        --color-button-disabled-border: var(--color-gray-200);
+
+        // Input colors
+        --color-input-border: var(--color-border-primary);
+        --color-input-border-hover: var(--color-brand-300);
+        --color-input-bg-checked: var(--color-bg-brand-solid);
+        --color-input-shadow-focus: var(--color-brand-200);
+        --color-input-disabled-bg: var(--color-bg-disabled_subtle);
+        --color-input-disabled-fg: var(--color-fg-disabled);
+        --color-input-error: red; // TODO, review & replace color
+
+        // Enterprise color
+        --color-enterprise-icon: #dc3545; // TODO, review & replace color
+
+        // Warning colors
+        --color-util-warning-50: var(--color-warning-50);
+        --color-util-warning-100: var(--color-warning-100);
+        --color-util-warning-200: var(--color-warning-200);
+        --color-util-warning-300: var(--color-warning-300);
+        --color-util-warning-400: var(--color-warning-400);
+        --color-util-warning-500: var(--color-warning-500);
+        --color-util-warning-600: var(--color-warning-600);
+        --color-util-warning-700: var(--color-warning-700);
+
+        // Brand
+        --color-text-brand-primary: var(--color-brand-500);
+
+        --color-util-brand-50: var(--color-brand-50);
+        --color-util-brand-100: var(--color-brand-100);
+        --color-util-brand-200: var(--color-brand-200);
+        --color-util-brand-300: var(--color-brand-300);
+        --color-util-brand-400: var(--color-brand-400);
+        --color-util-brand-500: var(--color-brand-500);
+        --color-util-brand-600: var(--color-brand-600);
+        --color-util-brand-700: var(--color-brand-700);
+
+        // Gray
+        --color-util-gray-50: var(--color-gray-50);
+        --color-util-gray-100: var(--color-gray-100);
+        --color-util-gray-200: var(--color-gray-200);
+        --color-util-gray-300: var(--color-gray-300);
+        --color-util-gray-400: var(--color-gray-400);
+        --color-util-gray-500: var(--color-gray-500);
+        --color-util-gray-600: var(--color-gray-600);
+        --color-util-gray-700: var(--color-gray-700);
     }
 }
 
@@ -329,8 +439,7 @@ button.navLink {
         }
     }
 
-    #{$selector-darkmode} & {
-        font-weight: 500;
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         opacity: 0.8;
     }
 }

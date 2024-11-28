@@ -39,6 +39,8 @@ const socialImage = urlWithBaseUrl(metadata.socialImage);
 
 const lightModeCSSUrl = `url("${urlWithBaseUrl('/images/sun.svg')}")`;
 const darkModeCSSUrl = `url("${urlWithBaseUrl('/images/moon.svg')}")`;
+
+const isHomepage = Astro.url.pathname.replaceAll('/', '') === SITE_BASE_URL.replaceAll('/', '');
 ---
 
 <!doctype html>
@@ -113,7 +115,7 @@ const darkModeCSSUrl = `url("${urlWithBaseUrl('/images/moon.svg')}")`;
             }
         </style>
     </head>
-    <body>
+    <body data-is-homepage={isHomepage}>
         <script is:inline>
             const htmlEl = document.querySelector('html');
             const localDarkmode = localStorage['documentation:darkmode'];

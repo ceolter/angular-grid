@@ -35,7 +35,7 @@
     border: none;
     border-radius: var(--radius-3xl);
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         background-color: var(--color-bg-primary);
         border-radius: var(--radius-3xl);
         border: none;
@@ -110,9 +110,10 @@
         opacity 0.15s ease,
         transform 0.15s ease;
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         background: color-mix(in srgb, var(--color-bg-primary), var(--color-fg-white) 5%);
     }
+
     @media screen and (min-width: $breakpoint-hero-small) {
         top: 100%;
         left: 0;
@@ -129,7 +130,7 @@
 .productTitle {
     font-weight: var(--text-semibold);
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         color: var(--color-fg-primary);
     }
 }
@@ -164,7 +165,7 @@
     padding: 12px;
     border-radius: var(--radius-md);
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         background: color-mix(in srgb, var(--color-fg-white), var(--color-bg-primary) 85%);
         box-shadow: var(--shadow-lg);
     }
@@ -175,13 +176,13 @@
     cursor: pointer;
     transition: 0.3s all ease-in-out;
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         background: color-mix(in srgb, var(--color-fg-white), var(--color-bg-primary) 85%);
     }
 }
 
 .iconLight {
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         display: none;
     }
 }
@@ -189,7 +190,7 @@
 .iconDark {
     display: none;
 
-    #{$selector-darkmode} & {
+    #{$selector-darkmode}:not(:has([data-is-homepage])) & {
         display: block;
     }
 }
