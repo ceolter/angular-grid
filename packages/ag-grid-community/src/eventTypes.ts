@@ -150,6 +150,7 @@ export const _INTERNAL_EVENTS = [
     'stickyTopOffsetChanged',
     'overlayExclusiveChanged',
     'beforeRefreshModel',
+    'showRowGroupColumnsChanged',
 ] as const;
 
 export const _ALL_EVENTS = [..._PUBLIC_EVENTS, ..._INTERNAL_EVENTS] as const;

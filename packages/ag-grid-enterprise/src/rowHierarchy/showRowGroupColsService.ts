@@ -8,6 +8,7 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
     private showRowGroupColsMap: { [originalColumnId: string]: AgColumn };
 
     public refresh(): void {
+        const oldShowRowGroupCols = new Set(this.showRowGroupCols);
         this.showRowGroupCols = [];
         this.showRowGroupColsMap = {};
 
@@ -34,6 +35,15 @@ export class ShowRowGroupColsService extends BeanStub implements NamedBean, ISho
                 });
             }
         });
+
+        if (oldShowRowGroupCols.size === this.showRowGroupCols.length) {
+            return;
+        }
+        const isUnchanged = this.showRowGroupCols.every((col) => oldShowRowGroupCols.has(col));
+        if (isUnchanged) {
+            return;
+        }
+        this.eventSvc.dispatchEvent({ type: 'showRowGroupColumnsChanged' });
     }
 
     public getShowRowGroupCols(): AgColumn[] {

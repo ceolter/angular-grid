@@ -23,6 +23,7 @@ import { ChangedPath } from '../utils/changedPath';
 import { _debounce } from '../utils/function';
 import { _warn } from '../validation/logging';
 import type { ValueCache } from '../valueService/valueCache';
+import type { ValueService } from '../valueService/valueService';
 import { ChangedRowNodes } from './changedRowNodes';
 import { updateRowNodeAfterFilter } from './filterStage';
 import { updateRowNodeAfterSort } from './sortStage';
@@ -56,6 +57,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private colModel: ColumnModel;
     private valueCache?: ValueCache;
+    private valueSvc: ValueService;
 
     // standard stages
     private filterStage?: IRowNodeStage;
@@ -71,6 +73,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.valueCache = beans.valueCache;
+        this.valueSvc = beans.valueSvc;
 
         this.filterStage = beans.filterStage;
         this.sortStage = beans.sortStage;
@@ -129,6 +132,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedEventListeners({
             newColumnsLoaded: refreshEverythingAfterColsChangedFunc,
             columnRowGroupChanged: refreshEverythingFunc,
+            showRowGroupColumnsChanged: this.refreshGroupData.bind(this),
             columnValueChanged: this.onValueChanged.bind(this),
             columnPivotChanged: this.refreshModel.bind(this, { step: 'pivot' }),
             filterChanged: this.onFilterChanged.bind(this),
@@ -671,6 +675,43 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     public getType(): RowModelType {
         return 'clientSide';
+    }
+
+    private refreshGroupData(): void {
+        const rowNodes = this.rootNode?.childrenAfterGroup;
+        if (rowNodes) {
+            const groupDisplayCols = this.beans.showRowGroupCols?.getShowRowGroupCols();
+            this.forEachNode((node) => {
+                if (!node.group) {
+                    return;
+                }
+
+                node.groupData = {};
+                if (groupDisplayCols) {
+                    const treeData = this.gos.get('treeData');
+                    if (treeData) {
+                        for (const col of groupDisplayCols) {
+                            // newGroup.rowGroupColumn=null when working off GroupInfo, and we always display the group in the group column
+                            // if rowGroupColumn is present, then it's grid row grouping and we only include if configuration says so
+                            node.groupData[col.getColId()] = node.key;
+                        }
+                    } else {
+                        for (const col of groupDisplayCols) {
+                            const groupColumn = node.rowGroupColumn;
+                            const isRowGroupDisplayed =
+                                groupColumn !== null && col.isRowGroupDisplayed(groupColumn.getId());
+                            if (isRowGroupDisplayed) {
+                                // if maintain group value type, get the value from any leaf node.
+                                node.groupData![col.getColId()] = this.valueSvc.getValue(
+                                    groupColumn,
+                                    node.allLeafChildren?.[0]
+                                );
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     private onValueChanged(): void {
