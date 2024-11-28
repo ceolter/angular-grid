@@ -722,7 +722,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return; // Destroyed
         }
 
-        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', params });
+        console.log('refresh model', { ...params, changedPath: params.changedPath?.active });
 
         // this goes through the pipeline of stages. what's in my head is similar
         // to the diagram on this page:
@@ -742,9 +742,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         this.nodeManager.refreshModel?.(params);
 
-        if (params.afterColumnsChanged) {
-            this.nodeManager.afterColumnsChanged?.();
-        }
+        this.eventSvc.dispatchEvent({ type: 'beforeRefreshModel', params });
 
         if (!this.started) {
             return; // Destroyed or not yet started
@@ -752,6 +750,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         if (params.rowDataUpdated) {
             this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
+        }
+
+        if (params.afterColumnsChanged) {
+            this.nodeManager.afterColumnsChanged?.();
         }
 
         if (
