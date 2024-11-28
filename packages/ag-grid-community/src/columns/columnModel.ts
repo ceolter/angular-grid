@@ -67,7 +67,10 @@ export class ColumnModel extends BeanStub implements NamedBean {
 
         this.addManagedPropertyListeners(
             ['groupDisplayType', 'treeData', 'treeDataDisplayType', 'groupHideOpenParents'],
-            (event) => this.refreshAll(_convertColumnEventSourceType(event.source))
+            (event) => {
+                console.log('COLUMN MODEL REFRESH ALL');
+                this.refreshAll(_convertColumnEventSourceType(event.source));
+            }
         );
         this.addManagedPropertyListeners(
             ['defaultColDef', 'defaultColGroupDef', 'columnTypes', 'suppressFieldDotNotation'],

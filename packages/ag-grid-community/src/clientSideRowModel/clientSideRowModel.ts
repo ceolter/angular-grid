@@ -722,6 +722,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return; // Destroyed
         }
 
+        console.log('refresh model', { ...params, changedPath: params.changedPath?.active });
+
         // this goes through the pipeline of stages. what's in my head is similar
         // to the diagram on this page:
         // http://commons.apache.org/sandbox/commons-pipeline/pipeline_basics.html
@@ -748,6 +750,10 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         if (params.rowDataUpdated) {
             this.eventSvc.dispatchEvent({ type: 'rowDataUpdated' });
+        }
+
+        if (params.afterColumnsChanged) {
+            this.nodeManager.afterColumnsChanged?.();
         }
 
         if (

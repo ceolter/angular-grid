@@ -2,7 +2,6 @@ import type {
     ChangedPath,
     InitialGroupOrderComparatorParams,
     IsGroupOpenByDefaultParams,
-    RefreshModelParams,
     WithoutGridCommon,
 } from 'ag-grid-community';
 import { AbstractClientSideNodeManager, RowNode, _ROW_ID_PREFIX_ROW_GROUP, _warn } from 'ag-grid-community';
@@ -529,11 +528,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
-    public refreshModel(params: RefreshModelParams<TData>): void {
-        if (!params.afterColumnsChanged) {
-            return; // nothing to do
-        }
-
+    public afterColumnsChanged() {
         // Check if group data need to be recomputed due to group columns change
 
         if (this.treeData) {

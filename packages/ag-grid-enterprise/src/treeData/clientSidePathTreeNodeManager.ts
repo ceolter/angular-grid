@@ -40,13 +40,11 @@ export class ClientSidePathTreeNodeManager<TData>
         return gos.get('treeData') && !!gos.get('getDataPath');
     }
 
-    public override refreshModel(params: RefreshModelParams<TData>): void {
+    public refreshModel(params: RefreshModelParams<TData>): void {
         const changedRowNodes = params.changedRowNodes;
         if (changedRowNodes) {
             this.executeTransactions(changedRowNodes, params.changedPath, params.rowNodesOrderChanged);
         }
-
-        super.refreshModel(params);
     }
 
     private executeTransactions(
