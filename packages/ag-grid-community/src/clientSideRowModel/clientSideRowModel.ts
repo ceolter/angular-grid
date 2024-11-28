@@ -68,6 +68,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private pivotStage?: IRowNodeStage;
     private filterAggStage?: IRowNodeStage;
 
+    /**
+     * TODO: we are exporting here all the properties we listen to to start a refresh.
+     * This is a temporary fix for AG-13089 to ensure that the column model register to those events
+     * in such a way the order of execution of column model refresh and csrm refresh is always consistent.
+     * Remove this once AG-13089 is fixed
+     */
+    public allRefreshProps: (keyof GridOptions)[];
+
     public wireBeans(beans: BeanCollection): void {
         this.colModel = beans.colModel;
         this.valueCache = beans.valueCache;
@@ -80,6 +88,23 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.aggStage = beans.aggStage;
         this.pivotStage = beans.pivotStage;
         this.filterAggStage = beans.filterAggStage;
+
+        this.orderedStages = [
+            this.groupStage,
+            this.filterStage,
+            this.pivotStage,
+            this.aggStage,
+            this.sortStage,
+            this.filterAggStage,
+            this.flattenStage,
+        ].filter((stage) => !!stage) as IRowNodeStage[];
+
+        this.allRefreshProps = [
+            'rowData',
+            'treeData',
+            'treeDataChildrenField',
+            ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
+        ];
     }
 
     private onRowHeightChanged_debounced = _debounce(this, this.onRowHeightChanged.bind(this), 100);
@@ -108,15 +133,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private orderedStages: IRowNodeStage[];
 
     public postConstruct(): void {
-        this.orderedStages = [
-            this.groupStage,
-            this.filterStage,
-            this.pivotStage,
-            this.aggStage,
-            this.sortStage,
-            this.filterAggStage,
-            this.flattenStage,
-        ].filter((stage) => !!stage) as IRowNodeStage[];
         const refreshEverythingFunc = this.refreshModel.bind(this, { step: 'group' });
         const refreshEverythingAfterColsChangedFunc = this.refreshModel.bind(this, {
             step: 'group', // after cols change, row grouping (the first stage) could of changed
@@ -202,14 +218,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         //                       - the application would change these functions, far more likely the functions were
         //                       - non memoised correctly.
 
-        const allProps: (keyof GridOptions)[] = [
-            'rowData',
-            'treeData',
-            'treeDataChildrenField',
-            ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
-        ];
-
-        this.addManagedPropertyListeners(allProps, (params) => {
+        this.addManagedPropertyListeners(this.allRefreshProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
                 this.onPropChange(properties);
