@@ -196,6 +196,54 @@ describe('ag-grid tree data', () => {
 
         expect(rowsSnapshot).toMatchObject(expectedSnapshot);
     });
+
+    test.only('ag-grid hierarchical override tree data is insensitive to updateGridOptions object order', async () => {
+        // see https://ag-grid.atlassian.net/browse/AG-13089 - Order of grouped property listener changed is not deterministic
+        const rowData0 = [
+            { orgHierarchy: ['A', 'B'], x: 'B' },
+            { orgHierarchy: ['C', 'D', 'E'], x: 'E' },
+            { orgHierarchy: ['A'], x: 'A' },
+            { orgHierarchy: ['C', 'D'], x: 'D' },
+        ];
+
+        const rowData1 = [
+            { orgHierarchy: ['A', 'B'], x: 'b' },
+            { orgHierarchy: ['C', 'D', 'E'], x: 'e' },
+            { orgHierarchy: ['A'], x: 'a' },
+            { orgHierarchy: ['C', 'D'], x: 'd' },
+        ];
+
+        const api = gridsManager.createGrid('myGrid', {
+            columnDefs: [{ field: 'x' }],
+            treeData: false,
+            getDataPath: (data) => data.orgHierarchy,
+            animateRows: false,
+            groupDefaultExpanded: -1,
+            rowData: rowData0,
+        });
+
+        console.log('\nUPDATE rowData and treeData together\n');
+
+        api.updateGridOptions({
+            rowData: rowData1,
+            treeData: true,
+        });
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: true,
+        };
+
+        const gridRows = new GridRows(api, 'update 1', gridRowsOptions);
+        await gridRows.check(`
+            ROOT id:ROOT_NODE_ID
+            ├─┬ A GROUP id:2 ag-Grid-AutoColumn:"A" x:"a"
+            │ └── B LEAF id:0 ag-Grid-AutoColumn:"B" x:"b"
+            └─┬ C filler id:row-group-0-C ag-Grid-AutoColumn:"C"
+            · └─┬ D GROUP id:3 ag-Grid-AutoColumn:"D" x:"d"
+            · · └── E LEAF id:1 ag-Grid-AutoColumn:"E" x:"e"
+        `);
+    });
 });
 
 function hierarchyWithInvertedOrderRowSnapshot(): RowSnapshot[] {
