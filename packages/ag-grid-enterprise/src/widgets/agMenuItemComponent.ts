@@ -4,9 +4,9 @@ import {
     KeyCode,
     _loadTemplate,
     _setAriaDisabled,
-    _setAriaExpanded,
     _setAriaLevel,
     _setAriaRole,
+    _toggleAriaAttribute,
 } from 'ag-grid-community';
 import type {
     AgColumn,
@@ -125,6 +125,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 if (configureDefaults) {
                     this.configureDefaults(configureDefaults === true ? undefined : configureDefaults);
                 }
+                comp.setupAriaAttributes?.(this.setAriaAttribute.bind(this));
             }) ?? AgPromise.resolve()
         );
     }
@@ -252,14 +253,14 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         });
 
         this.subMenuIsOpen = true;
-        this.setAriaExpanded(true);
+        this.setAriaAttribute('expanded', true);
 
         this.hideSubMenu = () => {
             if (addPopupRes) {
                 addPopupRes.hideFunc();
             }
             this.subMenuIsOpen = false;
-            this.setAriaExpanded(false);
+            this.setAriaAttribute('expanded', false);
             destroySubMenu();
             this.menuItemComp.setExpanded?.(false);
             this.eSubMenuGui = undefined;
@@ -268,9 +269,9 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.menuItemComp.setExpanded?.(true);
     }
 
-    private setAriaExpanded(expanded: boolean): void {
+    private setAriaAttribute(attribute: string, value?: number | boolean | string | null): void {
         if (!this.suppressAria) {
-            _setAriaExpanded(this.eGui!, expanded);
+            _toggleAriaAttribute(this.eGui!, attribute, value);
         }
     }
 
@@ -280,7 +281,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
         this.hideSubMenu();
         this.hideSubMenu = null;
-        this.setAriaExpanded(false);
+        this.setAriaAttribute('expanded', false);
     }
 
     public isSubMenuOpen(): boolean {

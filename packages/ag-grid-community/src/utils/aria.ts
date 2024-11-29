@@ -4,7 +4,7 @@ import type { LocaleTextFunc } from '../misc/locale/localeUtils';
 export type ColumnSortState = 'ascending' | 'descending' | 'other' | 'none';
 
 // ARIA HELPER FUNCTIONS
-function _toggleAriaAttribute(element: Element, attribute: string, value?: number | boolean | string | null) {
+export function _toggleAriaAttribute(element: Element, attribute: string, value?: number | boolean | string | null) {
     if (value == null || (typeof value === 'string' && value == '')) {
         _removeAriaAttribute(element, attribute);
     } else {

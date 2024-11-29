@@ -37,6 +37,16 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
         return true;
     }
 
+    public setupAriaAttributes(
+        setAriaAttribute: (attribute: string, value?: string | number | boolean | null) => void
+    ): void {
+        const { checked } = this.params;
+
+        if (checked) {
+            setAriaAttribute('checked', checked);
+        }
+    }
+
     private addIcon(): void {
         if (this.params.isCompact) {
             return;

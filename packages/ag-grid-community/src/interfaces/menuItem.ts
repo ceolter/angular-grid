@@ -131,6 +131,12 @@ export interface BaseMenuItem {
      * or `IMenuConfigParams` to choose what default behaviour to use.
      */
     configureDefaults?(): boolean | IMenuConfigParams;
+
+    /**
+     * If present, this method will be called after the Menu Item is initialised so
+     * aria attributes can be added using the `setAriaAttribute` callback function.
+     */
+    setupAriaAttributes?(setAriaAttribute: (attribute: string, value?: string | number | boolean | null) => void): void;
 }
 
 export interface IMenuItem extends BaseMenuItem {
