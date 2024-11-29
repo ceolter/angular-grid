@@ -58,7 +58,8 @@ export class FlattenStage extends BeanStub implements IRowNodeStage<RowNode[]>, 
             details.grandTotalRow;
 
         if (includeGrandTotalRow) {
-            _createRowNodeFooter(rootNode, this.beans);
+            // Grand total rows are unselectable
+            _createRowNodeFooter(rootNode, this.beans, false);
             const addToTop = details.grandTotalRow === 'top';
             this.addRowNodeToRowsToDisplay(details, rootNode.sibling, result, 0, addToTop);
         }

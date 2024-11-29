@@ -13,7 +13,7 @@ const IGNORED_SIBLING_PROPERTIES = new Set<
     keyof RowNode | '__localEventService' | '__autoHeights' | '__checkAutoHeightsDebounced'
 >(['__localEventService', '__objectId', 'sticky', '__autoHeights', '__checkAutoHeightsDebounced']);
 
-export function _createRowNodeFooter(rowNode: RowNode, beans: BeanCollection): void {
+export function _createRowNodeFooter(rowNode: RowNode, beans: BeanCollection, selectable?: boolean): void {
     // only create footer node once, otherwise we have daemons and
     // the animate screws up with the daemons hanging around
     if (rowNode.sibling) {
@@ -44,6 +44,10 @@ export function _createRowNodeFooter(rowNode: RowNode, beans: BeanCollection): v
     // sibling - but that's fine, as we can ignore this if the header is contracted.
     footerNode.sibling = rowNode;
     rowNode.sibling = footerNode;
+
+    if (selectable !== undefined) {
+        footerNode.selectable = selectable;
+    }
 }
 
 export function _destroyRowNodeFooter(rowNode: RowNode): void {

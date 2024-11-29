@@ -29,7 +29,8 @@ export class FooterService extends BeanStub implements NamedBean, IFooterService
         const isRootNode = parentNode === rootNode;
         if (isRootNode) {
             if (grandTotal === position) {
-                _createRowNodeFooter(parentNode, this.beans);
+                // Grand total rows are unselectable
+                _createRowNodeFooter(parentNode, this.beans, false);
                 callback(parentNode.sibling, index++);
             }
             return;
