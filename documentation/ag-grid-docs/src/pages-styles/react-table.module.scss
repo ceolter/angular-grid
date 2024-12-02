@@ -252,7 +252,7 @@
     justify-content: center;
 
     #{$selector-darkmode} & {
-        background-color: var(--color-bg-secondary);
+        background-color: var(--color-button-tertiary-bg-hover);
     }
 
     @media screen and (max-width: $breakpoint-landing-page-medium) {

@@ -218,7 +218,7 @@
     border: 1px solid var(--color-border-primary);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
-    z-index: 10;
+    z-index: 999999;
     margin-top: 8px;
     display: flex;
     flex-direction: column;

@@ -447,6 +447,9 @@ body {
     background-color: rgba(0, 0, 0, 0.1);
     transition: all 0.3s;
 
+    #{$selector-darkmode} & {
+        background-color: var(--color-button-tertiary-bg-hover);
+    }
     &:hover {
         background-color: rgba(0, 0, 0, 0.15);
         transition: all 0.3s;
