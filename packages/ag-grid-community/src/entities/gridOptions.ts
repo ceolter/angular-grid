@@ -1222,24 +1222,11 @@ export interface GridOptions<TData = any> {
 
     /**
      * Set to `true` to enable the Grid to work with Tree Data.
-     * You must also provide 'treeDataChildrenField' or implement the `getDataPath(data)` callback.
+     * You must also implement the `getDataPath(data)` callback.
      * @default false
      */
     treeData?: boolean;
 
-    /**
-     * The path to the field that contains the array of children in the input row data.
-     * For example if your data is like this: `[{account: {children: [childNode1, childNode2]}}]`
-     * then this property should be: `account.children`.
-     *
-     * If left empty or undefined (default), the grid will not look for tree children.
-     *
-     * When this is specified, all the children nodes will be processed when the row data is loaded or updated.
-     * If `treeData` is false (default) the children will be shown in a flattened list.
-     * If `treeData` is true, the children will be shown in a tree structure.
-     *
-     * @default undefined
-     */
     treeDataChildrenField?: string;
 
     /**

@@ -388,7 +388,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
                     case 'clientSide': {
-                        const csrmWarning = `treeData requires 'treeDataChildrenField' or 'getDataPath' in the ${rowModel} row model.`;
+                        const csrmWarning = `treeData requires 'getDataPath' in the ${rowModel} row model.`;
                         return options.treeDataChildrenField || options.getDataPath ? null : csrmWarning;
                     }
                     case 'serverSide': {
