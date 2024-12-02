@@ -298,5 +298,8 @@
 .framework {
     svg {
         opacity: 0.5;
+        #{$selector-darkmode} & {
+            opacity: 1;
+        }
     }
 }
