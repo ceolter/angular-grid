@@ -4,7 +4,7 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule, isColumnSelectionCol } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-import { TestGridsManager } from '../test-utils';
+import { GridRows, TestGridsManager } from '../test-utils';
 import { GROUP_ROW_DATA } from './data';
 import {
     assertSelectedRowElementsById,
@@ -707,6 +707,41 @@ describe('Row Selection Grid Options', () => {
 
                 toggleCheckboxByIndex(5);
                 assertSelectedRowsByIndex([5], api);
+            });
+
+            test('Multiple sorting works with selection column', async () => {
+                const api = createGrid({
+                    columnDefs,
+                    rowData,
+                    rowSelection: {
+                        mode: 'multiRow',
+                    },
+                    selectionColumnDef: {
+                        sortable: true,
+                        pinned: 'left',
+                    },
+                });
+
+                selectRowsByIndex([3, 4, 5], false, api);
+
+                api.applyColumnState({
+                    state: [
+                        { colId: 'ag-Grid-SelectionColumn', sort: 'asc', sortIndex: 0 },
+                        { colId: 'sport', sort: 'asc', sortIndex: 1 },
+                    ],
+                    defaultState: { sort: null },
+                });
+
+                await new GridRows(api).check(`
+                ROOT id:ROOT_NODE_ID
+                ├── LEAF id:0
+                ├── LEAF id:6
+                ├── LEAF id:1
+                ├── LEAF id:2
+                ├── LEAF selected id:3
+                ├── LEAF selected id:4
+                └── LEAF selected id:5
+                `);
             });
 
             describe('Range selection behaviour', () => {
