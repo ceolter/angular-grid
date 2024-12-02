@@ -125,7 +125,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
             comparator(valueA, valueB, nodeA, nodeB) {
                 const aSelected = nodeA.isSelected();
                 const bSelected = nodeB.isSelected();
-                return aSelected && bSelected ? 0 : aSelected ? 1 : -1;
+                return aSelected === bSelected ? 0 : aSelected ? 1 : -1;
             },
             editable: false,
             suppressFillHandle: true,
