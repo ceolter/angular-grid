@@ -122,10 +122,10 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
                         >
-                            <a href={ctaUrl} className={styles.learnMoreLink}>
+                            <div className={styles.learnMoreLink}>
                                 {ctaTitle ? (
                                     <>
-                                        {ctaTitle.split('${framework}')[0]} {/* Text before ${framework} */}
+                                        <a href={ctaUrl}>{ctaTitle.split('${framework}')[0]}</a>
                                         <div className={styles.inlineSelectorContainer}>
                                             <div className={styles.frameworkSelectorInline}>
                                                 <CurrentIcon />
@@ -170,12 +170,12 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                                                 </div>
                                             )}
                                         </div>
-                                        {ctaTitle.split('${framework}')[1]} {/* Text after ${framework} */}
+                                        <a href={ctaUrl}> {ctaTitle.split('${framework}')[1]} </a>
                                     </>
                                 ) : (
                                     'Learn more'
                                 )}
-                            </a>
+                            </div>
                         </div>
                     )}
                 </div>
