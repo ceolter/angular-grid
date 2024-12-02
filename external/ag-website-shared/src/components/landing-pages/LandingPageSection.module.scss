@@ -269,3 +269,26 @@
 .currentFramework {
     background-color: var(--color-util-brand-100);
 }
+
+.frameworkSelectorInline {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 0.2rem;
+    font-size: inherit;
+
+    .framework {
+        margin-left: 0.3rem;
+    }
+}
+
+.inlineSelectorContainer {
+    position: relative;
+    display: inline-flex;
+    padding: 0 $spacing-size-2;
+}
+
+.framework {
+    svg {
+        opacity: 0.5;
+    }
+}
