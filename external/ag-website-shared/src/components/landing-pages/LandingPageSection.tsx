@@ -4,6 +4,7 @@ import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import { gridUrlWithPrefix } from '@ag-website-shared/utils/gridUrlWithPrefix';
+import { setInternalFramework } from '@stores/frameworkStore';
 import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
@@ -20,11 +21,11 @@ const FRAMEWORK_CONFIGS = {
         Icon: AngularIcon,
         name: 'Angular',
     },
-    vue: {
+    vue3: {
         Icon: VueIcon,
         name: 'Vue',
     },
-    javascript: {
+    vanilla: {
         Icon: JavascriptIcon,
         name: 'JavaScript',
     },
@@ -58,15 +59,29 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     children,
     isFramework = false,
 }) => {
+    const framework = useFrameworkFromStore(); // Get the framework from the store
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
-    const [currentFramework, setCurrentFramework] = useState('react');
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
     const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
-    const framework = useFrameworkFromStore();
 
-    const handleFrameworkChange = (isFramework: string) => {
-        setCurrentFramework(isFramework);
+    const mapFrameworkToInternalFramework = (framework: string) => {
+        switch (framework) {
+            case 'javascript':
+                return 'vanilla';
+            case 'vue':
+                return 'vue3';
+            default:
+                return framework;
+        }
+    };
+
+    const internalFrameworkKey = mapFrameworkToInternalFramework(framework);
+    const CurrentIcon = FRAMEWORK_CONFIGS[internalFrameworkKey]?.Icon;
+
+    const handleFrameworkChange = (newFramework: string) => {
+        const internalFrameworkKey = mapFrameworkToInternalFramework(newFramework);
+        setInternalFramework(internalFrameworkKey); // Update the store with the correct internal framework
         setIsHovering(false);
         setIsHiding(true);
     };
@@ -90,8 +105,6 @@ export const LandingPageSection: FunctionComponent<Props> = ({
             }
         }, 100);
     };
-
-    const CurrentIcon = FRAMEWORK_CONFIGS[framework].Icon;
 
     return (
         <div
@@ -153,22 +166,20 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                                                     }}
                                                     onMouseLeave={handleMouseLeave}
                                                 >
-                                                    {Object.keys(FRAMEWORK_CONFIGS).map((framework) => {
-                                                        const FrameworkIcon = FRAMEWORK_CONFIGS[framework].Icon;
-                                                        const isCurrentFramework = framework === currentFramework;
+                                                    {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
+                                                        const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
+                                                        const isCurrentFramework =
+                                                            frameworkKey === internalFrameworkKey;
                                                         return (
                                                             <div
-                                                                key={framework}
+                                                                key={frameworkKey}
                                                                 className={classnames(styles.frameworkOption, {
                                                                     [styles.currentFramework]: isCurrentFramework,
                                                                 })}
-                                                                onClick={() =>
-                                                                    !isCurrentFramework &&
-                                                                    handleFrameworkChange(framework)
-                                                                }
+                                                                onClick={() => handleFrameworkChange(frameworkKey)}
                                                             >
                                                                 <FrameworkIcon />
-                                                                <span>{FRAMEWORK_CONFIGS[framework].name}</span>
+                                                                <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
                                                             </div>
                                                         );
                                                     })}
