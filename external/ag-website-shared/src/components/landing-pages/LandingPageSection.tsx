@@ -122,49 +122,60 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
                         >
-                            <div className={styles.frameworkSelector}>
-                                <CurrentIcon />{' '}
-                                <span className={styles.framework}>
-                                    {FRAMEWORK_CONFIGS[currentFramework].name}
-                                    <Icon name="chevronDown" />
-                                </span>
-                            </div>{' '}
                             <a href={ctaUrl} className={styles.learnMoreLink}>
-                                {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
-                            </a>
-                            {isHovering && (
-                                <div
-                                    className={`
-                                        ${styles.frameworkOverlay} 
-                                        ${isHiding ? styles.hiding : styles.visible}
-                                    `}
-                                    onMouseEnter={() => {
-                                        if (overlayTimerRef.current) {
-                                            clearTimeout(overlayTimerRef.current);
-                                        }
-                                        setIsHiding(false);
-                                    }}
-                                    onMouseLeave={handleMouseLeave}
-                                >
-                                    {Object.keys(FRAMEWORK_CONFIGS).map((framework) => {
-                                        const FrameworkIcon = FRAMEWORK_CONFIGS[framework].Icon;
-                                        const isCurrentFramework = framework === currentFramework;
-                                        return (
-                                            <div
-                                                key={framework}
-                                                className={`
-                                                    ${styles.frameworkOption} 
-                                                    ${isCurrentFramework ? styles.currentFramework : ''}
-                                                `}
-                                                onClick={() => !isCurrentFramework && handleFrameworkChange(framework)}
-                                            >
-                                                <FrameworkIcon />
-                                                <span>{FRAMEWORK_CONFIGS[framework].name}</span>
+                                {ctaTitle ? (
+                                    <>
+                                        {ctaTitle.split('${framework}')[0]} {/* Text before ${framework} */}
+                                        <div className={styles.inlineSelectorContainer}>
+                                            <div className={styles.frameworkSelectorInline}>
+                                                <CurrentIcon />
+                                                <span className={styles.framework}>
+                                                    {FRAMEWORK_CONFIGS[currentFramework].name}
+                                                    <Icon className={styles.chevronDown} name="chevronDown" />
+                                                </span>
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
+                                            {isHovering && (
+                                                <div
+                                                    className={classnames(styles.frameworkOverlay, {
+                                                        [styles.hiding]: isHiding,
+                                                        [styles.visible]: !isHiding,
+                                                    })}
+                                                    onMouseEnter={() => {
+                                                        if (overlayTimerRef.current) {
+                                                            clearTimeout(overlayTimerRef.current);
+                                                        }
+                                                        setIsHiding(false);
+                                                    }}
+                                                    onMouseLeave={handleMouseLeave}
+                                                >
+                                                    {Object.keys(FRAMEWORK_CONFIGS).map((framework) => {
+                                                        const FrameworkIcon = FRAMEWORK_CONFIGS[framework].Icon;
+                                                        const isCurrentFramework = framework === currentFramework;
+                                                        return (
+                                                            <div
+                                                                key={framework}
+                                                                className={classnames(styles.frameworkOption, {
+                                                                    [styles.currentFramework]: isCurrentFramework,
+                                                                })}
+                                                                onClick={() =>
+                                                                    !isCurrentFramework &&
+                                                                    handleFrameworkChange(framework)
+                                                                }
+                                                            >
+                                                                <FrameworkIcon />
+                                                                <span>{FRAMEWORK_CONFIGS[framework].name}</span>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                        {ctaTitle.split('${framework}')[1]} {/* Text after ${framework} */}
+                                    </>
+                                ) : (
+                                    'Learn more'
+                                )}
+                            </a>
                         </div>
                     )}
                 </div>
