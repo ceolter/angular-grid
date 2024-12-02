@@ -1227,8 +1227,6 @@ export interface GridOptions<TData = any> {
      */
     treeData?: boolean;
 
-    treeDataChildrenField?: string;
-
     /**
      * Set to `true` to suppress sort indicators and actions from the row group panel.
      * @default false

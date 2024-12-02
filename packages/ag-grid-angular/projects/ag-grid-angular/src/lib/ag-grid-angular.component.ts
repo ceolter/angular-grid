@@ -1166,7 +1166,6 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      * @default false
      */
     @Input({ transform: booleanAttribute }) public treeData: boolean | undefined = undefined;
-    @Input() public treeDataChildrenField: string | undefined = undefined;
     /** Set to `true` to suppress sort indicators and actions from the row group panel.
      * @default false
      */

@@ -26,7 +26,7 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
                 { field: 'country', rowGroup: true, hide: true },
                 { field: 'year', rowGroup: true, hide: true },
             ],
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             groupDefaultExpanded: -1,
             getRowId: ({ data }) => data.id,
         };
@@ -353,7 +353,7 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
                 },
                 { id: '4', country: 'Italy', year: 2001, name: 'Marvin Minsky' },
             ]),
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             groupDefaultExpanded: 0,
             getRowId: ({ data }) => data.id,
         };

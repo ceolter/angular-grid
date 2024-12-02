@@ -36,7 +36,7 @@ describe('ag-grid hierarchical tree expanded state', () => {
                 valueGetter: (params) => params.data?.name ?? 'unknown',
             },
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             rowData: originalRowData,
             getRowId: ({ data }) => data.id,

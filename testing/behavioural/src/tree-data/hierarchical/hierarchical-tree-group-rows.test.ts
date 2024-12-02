@@ -27,7 +27,7 @@ describe('ag-grid grouping hierarchical tree data with groupRows', () => {
         const api = gridsManager.createGrid('myGrid', {
             columnDefs: [{ field: 'x' }],
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             autoGroupColumnDef: { headerName: 'tree' },
             animateRows: false,
             groupDefaultExpanded: -1,

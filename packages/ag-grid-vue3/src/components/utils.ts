@@ -1000,7 +1000,6 @@ export interface Props<TData, TColDef> {
      * @default false
      */
     treeData?: boolean | undefined;
-    treeDataChildrenField?: string | undefined;
     /** Set to `true` to suppress sort indicators and actions from the row group panel.
      * @default false
      */
@@ -1761,7 +1760,6 @@ export function getProps() {
         groupRowRenderer: undefined,
         groupRowRendererParams: undefined,
         treeData: undefined,
-        treeDataChildrenField: undefined,
         rowGroupPanelSuppressSort: undefined,
         suppressGroupRowsSticky: undefined,
         pinnedTopRowData: undefined,
