@@ -20,7 +20,7 @@ const FRAMEWORK_CONFIGS = {
     },
     vue: {
         Icon: VueIcon,
-        command: 'npm install ag-grid-vue',
+        command: 'npm install ag-grid-vue-3',
         name: 'Vue',
     },
 };
