@@ -35,8 +35,10 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
     }
 
     public doFullSort(rowNodes: RowNode[], sortOptions: SortOption[]): RowNode[] {
-        const mapper = (rowNode: RowNode, pos: number) => ({ currentPos: pos, rowNode: rowNode });
-        const sortedRowNodes: SortedRowNode[] = rowNodes.map(mapper);
+        const sortedRowNodes = rowNodes.map((rowNode, currentPos) => ({
+            currentPos,
+            rowNode,
+        }));
 
         sortedRowNodes.sort(this.compareRowNodes.bind(this, sortOptions));
 
@@ -52,8 +54,8 @@ export class RowNodeSorter extends BeanStub implements NamedBean {
             const sortOption = sortOptions[i];
             const isDescending = sortOption.sort === 'desc';
 
-            const valueA: any = this.getValue(nodeA, sortOption.column as AgColumn);
-            const valueB: any = this.getValue(nodeB, sortOption.column as AgColumn);
+            const valueA = this.getValue(nodeA, sortOption.column as AgColumn);
+            const valueB = this.getValue(nodeB, sortOption.column as AgColumn);
 
             let comparatorResult: number;
             const providedComparator = this.getComparator(sortOption, nodeA);
