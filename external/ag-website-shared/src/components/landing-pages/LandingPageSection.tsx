@@ -197,6 +197,11 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                         </div>
                     )}
                 </div>
+                {ctaUrl && !isFramework && (
+                    <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                        {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                    </a>
+                )}
             </header>
 
             {children}
