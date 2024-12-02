@@ -252,6 +252,9 @@
 
     &:hover {
         background-color: var(--color-util-brand-50);
+        #{$selector-darkmode} & {
+            background-color: var(--color-button-tertiary-bg-hover);
+        }
         cursor: pointer;
     }
 
@@ -268,6 +271,10 @@
 
 .currentFramework {
     background-color: var(--color-util-brand-100);
+
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-button-tertiary-bg-hover), var(--color-bg-primary) 40%);
+    }
 }
 
 .frameworkSelectorInline {
