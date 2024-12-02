@@ -186,7 +186,9 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                                                 </div>
                                             )}
                                         </div>
-                                        <a href={ctaUrl}> {ctaTitle.split('${framework}')[1]} </a>
+                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                                            {ctaTitle.split('${framework}')[1]}{' '}
+                                        </a>
                                     </>
                                 ) : (
                                     'Learn more'
