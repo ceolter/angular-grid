@@ -3,6 +3,8 @@ import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react
 import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
+import { gridUrlWithPrefix } from '@ag-website-shared/utils/gridUrlWithPrefix';
+import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import type { FunctionComponent, ReactNode } from 'react';
@@ -40,7 +42,7 @@ interface Props {
     sectionClass?: string;
     showBackgroundGradient?: boolean;
     children: ReactNode;
-    framework?: boolean;
+    isFramework?: boolean;
 }
 
 export const LandingPageSection: FunctionComponent<Props> = ({
@@ -54,16 +56,17 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     sectionClass,
     showBackgroundGradient,
     children,
-    framework = false,
+    isFramework = false,
 }) => {
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const [currentFramework, setCurrentFramework] = useState('react');
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
     const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const framework = useFrameworkFromStore();
 
-    const handleFrameworkChange = (framework: string) => {
-        setCurrentFramework(framework);
+    const handleFrameworkChange = (isFramework: string) => {
+        setCurrentFramework(isFramework);
         setIsHovering(false);
         setIsHiding(true);
     };
@@ -88,7 +91,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
         }, 100);
     };
 
-    const CurrentIcon = FRAMEWORK_CONFIGS[currentFramework].Icon;
+    const CurrentIcon = FRAMEWORK_CONFIGS[framework].Icon;
 
     return (
         <div
@@ -115,7 +118,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                 )}
 
                 <div className={styles.frameworkGroup}>
-                    {framework && (
+                    {isFramework && (
                         <div
                             ref={frameworkContainerRef}
                             className={classnames([styles.ctaButton, 'button-tertiary'])}
@@ -125,12 +128,14 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                             <div className={styles.learnMoreLink}>
                                 {ctaTitle ? (
                                     <>
-                                        <a href={ctaUrl}>{ctaTitle.split('${framework}')[0]}</a>
+                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                                            {ctaTitle.split('${framework}')[0]}
+                                        </a>
                                         <div className={styles.inlineSelectorContainer}>
                                             <div className={styles.frameworkSelectorInline}>
                                                 <CurrentIcon />
                                                 <span className={styles.framework}>
-                                                    {FRAMEWORK_CONFIGS[currentFramework].name}
+                                                    {framework}
                                                     <Icon className={styles.chevronDown} name="chevronDown" />
                                                 </span>
                                             </div>

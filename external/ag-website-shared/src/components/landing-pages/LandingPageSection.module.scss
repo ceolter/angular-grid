@@ -273,11 +273,11 @@
 .frameworkSelectorInline {
     display: inline-flex;
     align-items: center;
-    margin: 0 0.2rem;
     font-size: inherit;
 
     .framework {
         margin-left: 0.3rem;
+        text-transform: capitalize;
     }
 }
 
