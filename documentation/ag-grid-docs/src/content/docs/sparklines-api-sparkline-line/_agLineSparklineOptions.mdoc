@@ -1,0 +1,37 @@
+```ts
+type AgLineSparklineOptions = {
+    type: "line";
+
+    /** Axis configuration, defaults to "category" */
+    axis?: "category" | "number" | "time";
+
+    /** Chart min and max values, otherwise inferred from data */
+    min?: number;
+    max?: number;
+    
+    /** For object data, the key to use for the x and y values */
+    xKey?: string;
+    yKey?: string;
+
+    /** Display names for x and y tooltip values, not displayed if undefined */
+    xName?: string;
+    yName?: string;
+    normalizedTo?: number;
+    connectMissingData?: boolean;
+
+    /** Tooltip configuration */
+    tooltip?: AgSeriesTooltip;
+
+    /** Marker configuration */
+    marker?: AgSeriesMarkerOptions;
+
+    /** Overall chart theming */
+    stroke?: string;
+    strokeWidth?: number;
+    strokeOpacity?: number;
+    lineDash?: number[];
+    lineDashOffset?: number;
+    padding?: { top?: number, right?: number, bottom?: number, left?: number };
+    theme?: AgChartTheme | AgChartThemeName;
+}
+```

@@ -1,0 +1,27 @@
+```ts
+export interface AgAreaSeriesMarkerItemStylerParams<TDatum> {
+    /** The x value of the datum. */
+    xValue: any;
+    /** The y value of the datum. */
+    yValue: any;
+    /** Whether the item's x value is the first in the data domain. */
+    first: boolean;
+    /** Whether the item's x value is the last in the data domain. */
+    last: boolean;
+    /** Whether the item's y value is the lowest in the data. */
+    min: boolean;
+    /** Whether the item's y value is the highest in the data. */
+    max: boolean;
+
+    /** The key to use to retrieve x-values from the data. */
+    xKey: string;
+    /** The key to use to retrieve y-values from the data. */
+    yKey: string;
+    /** The data point associated with the label. */
+    datum: TDatum;
+    /** The unique identifier of the series. */
+    seriesId: string;
+    /** Indicates whether the element is highlighted. */
+    highlighted: boolean;
+}
+```

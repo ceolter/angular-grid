@@ -258,6 +258,32 @@
                             "title": "Points of Interest",
                             "path": "sparklines-points-of-interest",
                             "isEnterprise": true
+                        },
+                        {
+                            "type": "item",
+                            "title": "Sparklines API",
+                            "path": "sparklines-api-sparkline-options",
+                            "isEnterprise": true,
+                            "children": [
+                                {
+                                    "type": "item",
+                                    "title": "Area",
+                                    "path": "sparklines-api-sparkline-area",
+                                    "isEnterprise": true
+                                },
+                                {
+                                    "type": "item",
+                                    "title": "Bar / Column",
+                                    "path": "sparklines-api-sparkline-bar",
+                                    "isEnterprise": true
+                                },
+                                {
+                                    "type": "item",
+                                    "title": "Line",
+                                    "path": "sparklines-api-sparkline-line",
+                                    "isEnterprise": true
+                                }
+                            ]
                         }
                     ]
                 },
