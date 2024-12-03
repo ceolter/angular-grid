@@ -26,6 +26,9 @@ type ThemeSelection = 'themeQuartz' | 'themeCustom';
 const themeCustom = themeQuartz
     .withParams(
         {
+            borderRadius: 0,
+            wrapperBorderRadius: 0,
+            fontFamily: ['Arial', 'sans-serif'],
             backgroundColor: '#e6bc9a',
             foregroundColor: '#340c52',
             borderColor: '#f59342',
@@ -36,6 +39,9 @@ const themeCustom = themeQuartz
     )
     .withParams(
         {
+            borderRadius: 0,
+            wrapperBorderRadius: 0,
+            fontFamily: ['Arial', 'sans-serif'],
             backgroundColor: '#38200c',
             foregroundColor: '#FFF',
             borderColor: '#f59342',
