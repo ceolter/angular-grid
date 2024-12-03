@@ -8,6 +8,7 @@ import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
 import { getErrorLink } from '../logging';
 import { resolveModuleNames } from '../resolvableModuleNames';
+import { USER_COMP_MODULES } from '../rules/userCompValidations';
 
 export const moduleImportMsg = (moduleNames: ModuleName[]) => {
     const imports = moduleNames
@@ -555,6 +556,26 @@ export const AG_GRID_ERRORS = {
     258: () => missingChartsWithModule('SparklinesModule'),
     259: ({ part }: { part: any }) =>
         `the argument to theme.withPart must be a Theming API part object, received: ${part}` as const,
+    260: ({
+        propName,
+        compName,
+        gridScoped,
+        gridId,
+        rowModelType,
+    }: {
+        propName: string;
+        compName: string;
+        gridScoped: boolean;
+        gridId: string;
+        rowModelType: RowModelType;
+    }) =>
+        missingModule({
+            reasonOrId: `AG Grid '${propName}' component: ${compName}`,
+            moduleName: USER_COMP_MODULES[compName as UserComponentName],
+            gridId,
+            gridScoped,
+            rowModelType,
+        }),
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

@@ -158,7 +158,18 @@ export class UserComponentFactory extends BeanStub implements NamedBean {
                         _error(50, { compName });
                     }
                 } else {
-                    _error(216, { name });
+                    if (defaultName) {
+                        // validation will have already warned about this
+                        if (!validation) {
+                            _error(260, {
+                                ...this.gos.getModuleErrorParams(),
+                                propName: name,
+                                compName: defaultName,
+                            });
+                        }
+                    } else {
+                        _error(216, { name });
+                    }
                 }
             } else if (defaultName && !validation) {
                 // Grid should be providing this component.
