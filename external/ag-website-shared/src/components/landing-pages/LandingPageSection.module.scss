@@ -81,22 +81,22 @@
 }
 
 .ctaButton {
-    --icon-size: #{$spacing-size-5};
-
     display: flex;
     align-items: center;
     gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
-
-    svg:first-child {
-        height: 24px;
-        width: 24px;
-    }
+    padding: 0.5em 0.5em 0.5em 1em;
 
     :global(.icon) {
-        transform: translateX($spacing-size-2);
+        --icon-size: #{$spacing-size-4};
+
+        transform: translate(-2px, 1px);
         transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translate(5px, 1px);
     }
 }
 
@@ -286,6 +286,11 @@
         margin-left: 0.3rem;
         text-transform: capitalize;
         font-weight: 600;
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
     }
 }
 
