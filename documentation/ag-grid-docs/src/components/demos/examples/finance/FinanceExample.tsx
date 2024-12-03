@@ -33,7 +33,7 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 
 import styles from './FinanceExample.module.css';
-import { TickerCellRenderer } from './cell-renderers/TickerCellRenderer';
+import { getTickerCellRenderer } from './cell-renderers/getTickerCellRenderer';
 import { getData } from './data';
 
 export interface Props {
@@ -45,17 +45,52 @@ export interface Props {
     enableRowGroup?: boolean;
 }
 
+type Breakpoint = 'small' | 'medium' | 'medLarge' | 'large' | 'xlarge';
 type ColWidth = number | 'auto';
 
 const DEFAULT_UPDATE_INTERVAL = 60;
 const PERCENTAGE_CHANGE = 20;
-const COLUMN_HEADER_NAME_PRIORITIES = ['ticker', 'timeline', 'totalValue', 'instrument', 'p&l', 'price', 'quantity'];
-const BREAKPOINT_MEDIUM = 750;
-const BREAKPOINT_SMALL = 400;
-const TICKER_SIZES: Record<string, ColWidth> = {
-    small: 'auto',
-    medium: 180,
-    large: 380,
+const BREAKPOINT_CONFIG: Record<
+    Breakpoint,
+    {
+        breakpoint?: number;
+        columns: string[];
+        tickerColumnWidth: ColWidth;
+        timelineColumnWidth: ColWidth;
+        hideTickerName?: boolean;
+    }
+> = {
+    small: {
+        breakpoint: 500,
+        columns: ['ticker', 'timeline'],
+        tickerColumnWidth: 'auto',
+        timelineColumnWidth: 'auto',
+        hideTickerName: true,
+    },
+    medium: {
+        breakpoint: 850,
+        columns: ['ticker', 'timeline', 'totalValue'],
+        tickerColumnWidth: 180,
+        timelineColumnWidth: 140,
+        hideTickerName: true,
+    },
+    medLarge: {
+        breakpoint: 900,
+        tickerColumnWidth: 340,
+        timelineColumnWidth: 140,
+        columns: ['ticker', 'timeline', 'totalValue', 'p&l'],
+    },
+    large: {
+        breakpoint: 1100,
+        tickerColumnWidth: 340,
+        timelineColumnWidth: 140,
+        columns: ['ticker', 'timeline', 'totalValue', 'p&l'],
+    },
+    xlarge: {
+        tickerColumnWidth: 340,
+        timelineColumnWidth: 140,
+        columns: ['ticker', 'timeline', 'totalValue', 'p&l', 'instrument', 'price', 'quantity'],
+    },
 };
 
 ModuleRegistry.registerModules([
@@ -95,7 +130,7 @@ export const FinanceExample: React.FC<Props> = ({
 }) => {
     const [rowData, setRowData] = useState(getData());
     const gridRef = useRef<AgGridReact>(null);
-    const [tickerColWidth, setTickerColWidth] = useState(TICKER_SIZES.large);
+    const [breakpoint, setBreakpoint] = useState<Breakpoint>('xlarge');
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -129,24 +164,25 @@ export const FinanceExample: React.FC<Props> = ({
     }, [updateInterval]);
 
     const colDefs = useMemo<ColDef[]>(() => {
+        const breakpointConfig = BREAKPOINT_CONFIG[breakpoint];
         const tickerWidthDefs =
-            tickerColWidth === 'auto'
+            breakpointConfig.tickerColumnWidth === 'auto'
                 ? { flex: 1 }
                 : {
-                      initialWidth: tickerColWidth,
-                      minWidth: tickerColWidth,
+                      initialWidth: breakpointConfig.tickerColumnWidth as number,
+                      minWidth: breakpointConfig.tickerColumnWidth as number,
                   };
         const timelineWidthDefs =
-            tickerColWidth === 'auto'
+            breakpointConfig.timelineColumnWidth === 'auto'
                 ? { flex: 1 }
                 : {
-                      initialWidth: 140,
-                      minWidth: 140,
+                      initialWidth: breakpointConfig.timelineColumnWidth as number,
+                      minWidth: breakpointConfig.timelineColumnWidth as number,
                   };
-        const cDefs: ColDef[] = [
+        const allColDefs: ColDef[] = [
             {
                 field: 'ticker',
-                cellRenderer: TickerCellRenderer,
+                cellRenderer: getTickerCellRenderer(Boolean(breakpointConfig.hideTickerName)),
                 ...tickerWidthDefs,
             },
             {
@@ -167,8 +203,8 @@ export const FinanceExample: React.FC<Props> = ({
                 field: 'instrument',
                 cellDataType: 'text',
                 type: 'rightAligned',
-                minWidth: 160,
-                initialWidth: 160,
+                minWidth: 100,
+                initialWidth: 100,
             },
             {
                 colId: 'p&l',
@@ -197,7 +233,7 @@ export const FinanceExample: React.FC<Props> = ({
         ];
 
         if (!isSmallerGrid) {
-            cDefs.push(
+            allColDefs.push(
                 {
                     field: 'quantity',
                     cellDataType: 'number',
@@ -216,8 +252,12 @@ export const FinanceExample: React.FC<Props> = ({
             );
         }
 
+        const cDefs = allColDefs.filter((cDef) => {
+            return breakpointConfig.columns.includes(cDef.field!) || breakpointConfig.columns.includes(cDef.colId!);
+        });
+
         return cDefs;
-    }, [isSmallerGrid, tickerColWidth]);
+    }, [isSmallerGrid, breakpoint]);
 
     const defaultColDef: ColDef = useMemo(
         () => ({
@@ -231,57 +271,17 @@ export const FinanceExample: React.FC<Props> = ({
 
     const getRowId = useCallback<GetRowIdFunc>(({ data: { ticker } }: GetRowIdParams) => ticker, []);
     const onGridSizeChanged = useCallback((params: GridSizeChangedEvent) => {
-        let tickerColWidth: ColWidth;
-        if (params.clientWidth < BREAKPOINT_SMALL) {
-            tickerColWidth = TICKER_SIZES.small;
-        } else if (params.clientWidth < BREAKPOINT_MEDIUM) {
-            tickerColWidth = TICKER_SIZES.medium;
+        if (params.clientWidth < BREAKPOINT_CONFIG.small.breakpoint!) {
+            setBreakpoint('small');
+        } else if (params.clientWidth < BREAKPOINT_CONFIG.medium.breakpoint!) {
+            setBreakpoint('medium');
+        } else if (params.clientWidth < BREAKPOINT_CONFIG.medLarge.breakpoint!) {
+            setBreakpoint('medLarge');
+        } else if (params.clientWidth < BREAKPOINT_CONFIG.large.breakpoint!) {
+            setBreakpoint('large');
         } else {
-            tickerColWidth = TICKER_SIZES.large;
+            setBreakpoint('xlarge');
         }
-
-        setTickerColWidth(tickerColWidth);
-        const isAutoSized = tickerColWidth === 'auto';
-
-        // Show minimum of 2 columns
-        const showMinCols = () => {
-            params.api.setColumnsVisible(COLUMN_HEADER_NAME_PRIORITIES.slice(0, 2), true);
-            params.api.setColumnsVisible(COLUMN_HEADER_NAME_PRIORITIES.slice(2), false);
-        };
-
-        if (isAutoSized) {
-            showMinCols();
-            return;
-        }
-
-        const columnsToShow: string[] = [];
-        const columnsToHide: string[] = [];
-        let totalWidth: number = 0;
-        let hasFilledColumns = false;
-        COLUMN_HEADER_NAME_PRIORITIES.forEach((colId) => {
-            const col = params.api.getColumn(colId);
-            if (!col) {
-                return;
-            }
-            const minWidth = col?.getMinWidth() || 0;
-            const newTotalWidth = totalWidth + minWidth;
-
-            if (!hasFilledColumns && newTotalWidth <= params.clientWidth) {
-                columnsToShow.push(colId);
-                totalWidth = newTotalWidth;
-            } else {
-                hasFilledColumns = true;
-                columnsToHide.push(colId);
-            }
-        });
-        if (columnsToShow.length < 2) {
-            showMinCols();
-            return;
-        }
-
-        // show/hide columns based on current grid width
-        params.api.setColumnsVisible(columnsToShow, true);
-        params.api.setColumnsVisible(columnsToHide, false);
     }, []);
 
     const statusBar = useMemo(
