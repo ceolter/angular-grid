@@ -129,6 +129,10 @@
     margin-bottom: $spacing-size-3;
 }
 
+.showcaseName {
+    color: var(--color-fg-placeholder);
+}
+
 .showcaseDescription {
     font-size: var(--text-fs-sm);
     color: var(--color-text-secondary);
@@ -139,4 +143,15 @@
 .showcaseLinksWrapper {
     display: flex;
     gap: $spacing-size-6;
+
+    a {
+        font-weight: var(--text-regular);
+    }
+}
+
+.githubLink svg {
+    --icon-size: 22px;
+
+    margin-right: 3px;
+    margin-top: -3px;
 }
