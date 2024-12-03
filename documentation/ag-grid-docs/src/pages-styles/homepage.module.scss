@@ -122,6 +122,13 @@ body {
     align-items: center;
     margin: $spacing-size-2 0 0;
     justify-content: flex-end;
+
+    a svg {
+        --icon-size: #{$spacing-size-6};
+
+        margin-left: -$spacing-size-1;
+        margin-right: $spacing-size-1;
+    }
 }
 
 .homepageFrameworks {
