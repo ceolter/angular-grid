@@ -92,7 +92,9 @@ const frameworksData = [
             <div class={styles.loadingLogoContainer}>
                 <LogoMark isSpinning />
             </div>
-            <Finance client:only="react" gridHeight={450} isSmallerGrid />
+            <div class={styles.heroSectionGrid}>
+                <Finance client:only="react" gridHeight={450} isSmallerGrid />
+            </div>
 
             <div class={styles.heroLinks}>
                 <a href={urlWithBaseUrl('./example-finance')}>See Finance Demo</a>
