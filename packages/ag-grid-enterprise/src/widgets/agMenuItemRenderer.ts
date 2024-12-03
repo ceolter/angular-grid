@@ -4,8 +4,8 @@ import {
     _createIconNoSpan,
     _isNodeOrElement,
     _loadTemplate,
-    _setAriaChecked,
     _setAriaExpanded,
+    _setAriaSelected,
     _warn,
 } from 'ag-grid-community';
 
@@ -45,7 +45,7 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
         const eGui = this.getGui();
 
         if (checked) {
-            _setAriaChecked(eGui, checked);
+            _setAriaSelected(eGui, checked);
         }
 
         if (subMenu) {
