@@ -948,7 +948,6 @@ export {
     _setAriaSetSize,
     _setAriaHidden,
     _getAriaPosInSet,
-    _toggleAriaAttribute,
 } from './utils/aria';
 export { _EmptyArray, _removeFromArray, _last, _areEqual } from './utils/array';
 export { _isIOSUserAgent } from './utils/browser';
