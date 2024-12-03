@@ -252,21 +252,14 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         });
 
         this.subMenuIsOpen = true;
-
-        if (!this.suppressAria) {
-            this.setAriaExpanded(true);
-        }
+        this.setAriaExpanded(true);
 
         this.hideSubMenu = () => {
             if (addPopupRes) {
                 addPopupRes.hideFunc();
             }
             this.subMenuIsOpen = false;
-
-            if (!this.suppressAria) {
-                this.setAriaExpanded(false);
-            }
-
+            this.setAriaExpanded(false);
             destroySubMenu();
             this.menuItemComp.setExpanded?.(false);
             this.eSubMenuGui = undefined;
@@ -288,10 +281,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
 
         this.hideSubMenu();
         this.hideSubMenu = null;
-
-        if (!this.suppressAria) {
-            this.setAriaExpanded(false);
-        }
+        this.setAriaExpanded(false);
     }
 
     public isSubMenuOpen(): boolean {
