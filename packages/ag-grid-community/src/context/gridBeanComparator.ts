@@ -11,6 +11,8 @@ import type { GenericBean } from './genericBean';
  * We have not included beans from modules as they will be registered after the core beans in the order they are provided.
  */
 const orderedCoreBeans: BeanName[] = [
+    // Validate license first
+    'licenseManager',
     // core beans only
     'environment',
     'eventSvc',
@@ -86,6 +88,7 @@ const orderedCoreBeans: BeanName[] = [
     'colViewport',
     'pivotResultCols',
     'showRowGroupCols',
+    'validation', // Have validations run last
 ];
 
 const beanNamePosition: { [key in BeanName]?: number } = Object.fromEntries(

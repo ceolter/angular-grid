@@ -33,9 +33,7 @@ export class ValidationService extends BeanStub implements NamedBean {
 
     public postConstruct(): void {
         // Delay validation logging so that these logs are likely shown after the LicenseManager logs about an invalid license
-        setTimeout(() => {
-            this.processGridOptions(this.gridOptions);
-        }, 100);
+        this.processGridOptions(this.gridOptions);
     }
 
     public warnOnInitialPropertyUpdate(source: PropertyChangedSource, key: string): void {
