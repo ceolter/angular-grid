@@ -109,6 +109,13 @@ export interface BaseMenuItemParams<TData = any, TContext = any> extends MenuIte
      * @param shouldDisplayTooltip A function returning a boolean that allows the tooltip to be displayed conditionally. This option does not work when `enableBrowserTooltips={true}`.
      */
     updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) => void;
+
+    /**
+     * Updates the aria attribute provided for the Menu Item.
+     * @param attribute The aria attribute to be updated.
+     * @param value The value to be set for the aria attribute, if `null` or `undefined` the aria attribute will be removed.
+     */
+    setAriaAttribute: (attribute: string, value?: string | number | boolean | null) => void;
 }
 
 export interface IMenuItemParams<TData = any, TContext = any> extends BaseMenuItemParams<TData, TContext> {
@@ -131,12 +138,6 @@ export interface BaseMenuItem {
      * or `IMenuConfigParams` to choose what default behaviour to use.
      */
     configureDefaults?(): boolean | IMenuConfigParams;
-
-    /**
-     * If present, this method will be called after the Menu Item is initialised so
-     * aria attributes can be added using the `setAriaAttribute` callback function.
-     */
-    setupAriaAttributes?(setAriaAttribute: (attribute: string, value?: string | number | boolean | null) => void): void;
 }
 
 export interface IMenuItem extends BaseMenuItem {

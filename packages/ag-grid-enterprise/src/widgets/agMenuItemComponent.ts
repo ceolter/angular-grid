@@ -93,9 +93,9 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
     private parentComponent?: Component<any>;
     private tooltip?: string;
     private tooltipFeature?: TooltipFeature;
-    private suppressRootStyles: boolean = true;
-    private suppressAria: boolean = true;
-    private suppressFocus: boolean = true;
+    private suppressRootStyles: boolean = false;
+    private suppressAria: boolean = false;
+    private suppressFocus: boolean = false;
     private cssClassPrefix: string;
     private eSubMenuGui?: HTMLElement;
 
@@ -117,6 +117,8 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) =>
                 this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
+            setAriaAttribute: (attribute: string, value: string | number | boolean | null) =>
+                _toggleAriaAttribute(this.eGui!, attribute, value),
         });
         return (
             compDetails?.newAgStackInstance().then((comp: IMenuItemComp) => {
@@ -124,8 +126,13 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 const configureDefaults = comp.configureDefaults?.();
                 if (configureDefaults) {
                     this.configureDefaults(configureDefaults === true ? undefined : configureDefaults);
+                } else {
+                    // if the component doesn't use default settings
+                    // then they need to implement the code for aria/focus/rootStyles themselves.
+                    this.suppressAria = true;
+                    this.suppressFocus = true;
+                    this.suppressRootStyles = true;
                 }
-                comp.setupAriaAttributes?.(this.setAriaAttribute.bind(this));
             }) ?? AgPromise.resolve()
         );
     }
@@ -253,14 +260,21 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         });
 
         this.subMenuIsOpen = true;
-        this.setAriaAttribute('expanded', true);
+
+        if (!this.suppressAria) {
+            _toggleAriaAttribute(this.eGui!, 'expanded', true);
+        }
 
         this.hideSubMenu = () => {
             if (addPopupRes) {
                 addPopupRes.hideFunc();
             }
             this.subMenuIsOpen = false;
-            this.setAriaAttribute('expanded', false);
+
+            if (!this.suppressAria) {
+                _toggleAriaAttribute(this.eGui!, 'expanded', false);
+            }
+
             destroySubMenu();
             this.menuItemComp.setExpanded?.(false);
             this.eSubMenuGui = undefined;
@@ -269,19 +283,17 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.menuItemComp.setExpanded?.(true);
     }
 
-    private setAriaAttribute(attribute: string, value?: number | boolean | string | null): void {
-        if (!this.suppressAria) {
-            _toggleAriaAttribute(this.eGui!, attribute, value);
-        }
-    }
-
     public closeSubMenu(): void {
         if (!this.hideSubMenu) {
             return;
         }
+
         this.hideSubMenu();
         this.hideSubMenu = null;
-        this.setAriaAttribute('expanded', false);
+
+        if (!this.suppressAria) {
+            _toggleAriaAttribute(this.eGui!, 'expanded', false);
+        }
     }
 
     public isSubMenuOpen(): boolean {
@@ -440,17 +452,19 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
 
         let eGui = this.menuItemComp.getGui();
+        const { suppressRootStyles, suppressTooltip, suppressAria, suppressTabIndex, suppressFocus } = params || {};
+
         // in some frameworks, `getGui` might be a framework element
         const rootElement = (this.menuItemComp as any).getRootElement?.() as HTMLElement | undefined;
         if (rootElement) {
-            if (!params?.suppressRootStyles) {
+            if (!suppressRootStyles) {
                 eGui.classList.add('ag-menu-option-custom');
             }
             eGui = rootElement;
         }
         this.eGui = eGui;
 
-        this.suppressRootStyles = !!params?.suppressRootStyles;
+        this.suppressRootStyles = !!suppressRootStyles;
         if (!this.suppressRootStyles) {
             eGui.classList.add(this.cssClassPrefix);
             this.params.cssClasses?.forEach((it) => eGui.classList.add(it));
@@ -458,10 +472,13 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 eGui.classList.add(`${this.cssClassPrefix}-disabled`);
             }
         }
-        if (!params?.suppressTooltip) {
+
+        if (!suppressTooltip) {
             this.refreshTooltip(this.params.tooltip);
         }
-        this.suppressAria = !!params?.suppressAria;
+
+        this.suppressAria = !!suppressAria;
+
         if (!this.suppressAria) {
             _setAriaRole(eGui, 'treeitem');
             _setAriaLevel(eGui, this.level + 1);
@@ -469,13 +486,16 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 _setAriaDisabled(eGui, true);
             }
         }
-        if (!params?.suppressTabIndex) {
+
+        if (!suppressTabIndex) {
             eGui.setAttribute('tabindex', '-1');
         }
+
         if (!this.params.disabled) {
             this.addListeners(eGui, params);
         }
-        this.suppressFocus = !!params?.suppressFocus;
+
+        this.suppressFocus = !!suppressFocus;
     }
 
     private refreshTooltip(tooltip?: string, shouldDisplayTooltip?: () => boolean): void {

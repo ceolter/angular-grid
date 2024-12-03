@@ -27,6 +27,7 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
         this.params = params;
         this.cssClassPrefix = this.params.cssClassPrefix ?? 'ag-menu-option';
 
+        this.addAriaAttributes();
         this.addIcon();
         this.addName();
         this.addShortcut();
@@ -37,10 +38,8 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
         return true;
     }
 
-    public setupAriaAttributes(
-        setAriaAttribute: (attribute: string, value?: string | number | boolean | null) => void
-    ): void {
-        const { checked } = this.params;
+    private addAriaAttributes(): void {
+        const { checked, setAriaAttribute } = this.params;
 
         if (checked) {
             setAriaAttribute('checked', checked);
