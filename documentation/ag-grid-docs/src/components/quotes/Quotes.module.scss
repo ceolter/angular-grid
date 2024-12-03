@@ -128,7 +128,6 @@
 .statsOuter {
     display: flex;
     justify-content: center;
-    grid-template-columns: repeat(4, 1fr);
     padding: $spacing-size-8;
     gap: $spacing-size-8;
     border: 1px solid var(--color-border-secondary);
@@ -137,6 +136,10 @@
     border-bottom: 1px solid var(--color-border-secondary);
     border-top-left-radius: var(--radius-md);
     border-top-right-radius: var(--radius-md);
+
+    @media screen and (max-width: $breakpoint-pricing-medium) {
+        flex-direction: column;
+    }
 
     svg {
         stroke: var(--color-util-brand-500);
