@@ -82,9 +82,10 @@ body {
 
 .heroSectionDemoContainer {
     position: relative;
-    margin: 0 auto;
-    max-width: 1200px;
-    padding: 24px;
+    margin: $spacing-size-6 auto;
+    max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
+    padding-right: var(--layout-horizontal-margins);
+    padding-left: var(--layout-horizontal-margins);
 
     @media screen and (max-width: 500px) {
         padding-top: 0;
