@@ -104,22 +104,24 @@ body {
     @media screen and (max-width: 500px) {
         padding: $spacing-size-4;
     }
+}
 
-    .loadingLogoContainer {
-        width: 100%;
-        height: 100%;
+.loadingLogoContainer {
+    height: 100%;
+    right: var(--layout-horizontal-margins);
+    left: var(--layout-horizontal-margins);
+    position: absolute;
+    background-color: var(--color-bg-primary);
+    border-radius: 8px;
+
+    svg[class*='logo-mark'] {
         position: absolute;
-        z-index: -10;
-
-        svg[class*='logo-mark'] {
-            position: absolute;
-            display: block;
-            width: 64px * 2;
-            height: 48px * 2;
-            top: 50%;
-            left: 50%;
-            transform: translate(-60px, -48px);
-        }
+        display: block;
+        width: 64px * 2;
+        height: 48px * 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-60px, -48px);
     }
 }
 
@@ -128,6 +130,7 @@ body {
 }
 
 .heroLinks {
+    position: relative;
     display: flex;
     gap: $spacing-size-2;
     align-items: center;
