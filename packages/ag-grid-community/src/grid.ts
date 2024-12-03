@@ -24,7 +24,7 @@ import {
 } from './modules/moduleRegistry';
 import { _missing } from './utils/generic';
 import { _mergeDeep } from './utils/object';
-import { _error, _logPreCreationError } from './validation/logging';
+import { _error, _logPreInitErr } from './validation/logging';
 import { VanillaFrameworkOverrides } from './vanillaFrameworkOverrides';
 
 export interface GridParams {
@@ -279,12 +279,12 @@ export class GridCoreCreator {
 
         if (!rowModuleModelName) {
             // can't use validation service here as hasn't been created yet
-            _logPreCreationError(201, { rowModelType }, `Unknown rowModelType ${rowModelType}.`);
+            _logPreInitErr(201, { rowModelType }, `Unknown rowModelType ${rowModelType}.`);
             return;
         }
 
         if (!_isModuleRegistered(rowModuleModelName, gridId, rowModelType)) {
-            _logPreCreationError(
+            _logPreInitErr(
                 200,
                 {
                     reasonOrId: `rowModelType = '${rowModelType}'`,

@@ -973,7 +973,7 @@ export {
 } from './utils/dom';
 export { _stopPropagationForAgGrid, _isStopPropagationForAgGrid, _isElementInEventPath } from './utils/event';
 export { _warnOnce, _debounce, _doOnce, _waitUntil } from './utils/function';
-export { _warn, _error, _errMsg } from './validation/logging';
+export { _warn, _error, _errMsg, _preInitErrMsg } from './validation/logging';
 export { _createIcon, _createIconNoSpan, IconName } from './utils/icon';
 export { _fuzzySuggestions } from './utils/fuzzyMatch';
 export { _exists, _missing, _jsonEquals, _toStringOrNull, _makeNull, _defaultComparator } from './utils/generic';
