@@ -137,6 +137,16 @@ const frameworksData = [
     </LandingPageSection>
 
     <LandingPageSection
+        tag="Theming and customisation"
+        heading="Personalise the grids appearance"
+        subHeading="Customise your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our advanced features."
+        ctaTitle="Use the Theme Builder"
+        ctaUrl={urlWithBaseUrl('/theme-builder/')}
+    >
+        <ThemeBuilderHomepage gridHeight={261} client:visible />
+    </LandingPageSection>
+
+    <LandingPageSection
         tag="Fully Integrated Charting"
         heading="Integrated Charts, Powered by AG Charts"
         subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
@@ -151,16 +161,6 @@ const frameworksData = [
                 <AutomatedIntegratedCharts client:visible visibilityThreshold={0.8} />
             </div>
         </section>
-    </LandingPageSection>
-
-    <LandingPageSection
-        tag="Theming and customisation"
-        heading="Personalise the grids appearance"
-        subHeading="Customise your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our advanced features."
-        ctaTitle="Use the Theme Builder"
-        ctaUrl={urlWithBaseUrl('/theme-builder/')}
-    >
-        <ThemeBuilderHomepage gridHeight={261} client:visible />
     </LandingPageSection>
 
     <LandingPageSection
