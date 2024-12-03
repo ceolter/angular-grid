@@ -25,6 +25,7 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
+                    direction: 'vertical',
                     xKey: 'xVal',
                     yKey: 'yVal',
                     axis: {
