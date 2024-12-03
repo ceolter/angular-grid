@@ -4,6 +4,7 @@
     width: 600px;
     box-shadow: var(--shadow-md);
     border-radius: var(--radius-md);
+    pointer-events: none;
 }
 
 .gridColumns {
@@ -21,6 +22,7 @@
     display: flex;
     flex-direction: row;
     gap: $spacing-size-2;
+
     svg {
         transform: scale(0.8);
         opacity: 0.6;
