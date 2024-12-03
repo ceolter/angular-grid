@@ -4,9 +4,9 @@ import {
     KeyCode,
     _loadTemplate,
     _setAriaDisabled,
+    _setAriaExpanded,
     _setAriaLevel,
     _setAriaRole,
-    _toggleAriaAttribute,
 } from 'ag-grid-community';
 import type {
     AgColumn,
@@ -93,9 +93,9 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
     private parentComponent?: Component<any>;
     private tooltip?: string;
     private tooltipFeature?: TooltipFeature;
-    private suppressRootStyles: boolean = false;
-    private suppressAria: boolean = false;
-    private suppressFocus: boolean = false;
+    private suppressRootStyles: boolean = true;
+    private suppressAria: boolean = true;
+    private suppressFocus: boolean = true;
     private cssClassPrefix: string;
     private eSubMenuGui?: HTMLElement;
 
@@ -117,8 +117,6 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) =>
                 this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
-            setAriaAttribute: (attribute: string, value: string | number | boolean | null) =>
-                _toggleAriaAttribute(this.eGui!, attribute, value),
         });
         return (
             compDetails?.newAgStackInstance().then((comp: IMenuItemComp) => {
@@ -126,12 +124,6 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 const configureDefaults = comp.configureDefaults?.();
                 if (configureDefaults) {
                     this.configureDefaults(configureDefaults === true ? undefined : configureDefaults);
-                } else {
-                    // if the component doesn't use default settings
-                    // then they need to implement the code for aria/focus/rootStyles themselves.
-                    this.suppressAria = true;
-                    this.suppressFocus = true;
-                    this.suppressRootStyles = true;
                 }
             }) ?? AgPromise.resolve()
         );
@@ -262,7 +254,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.subMenuIsOpen = true;
 
         if (!this.suppressAria) {
-            _toggleAriaAttribute(this.eGui!, 'expanded', true);
+            this.setAriaExpanded(true);
         }
 
         this.hideSubMenu = () => {
@@ -272,7 +264,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             this.subMenuIsOpen = false;
 
             if (!this.suppressAria) {
-                _toggleAriaAttribute(this.eGui!, 'expanded', false);
+                this.setAriaExpanded(false);
             }
 
             destroySubMenu();
@@ -281,6 +273,12 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         };
 
         this.menuItemComp.setExpanded?.(true);
+    }
+
+    private setAriaExpanded(expanded: boolean): void {
+        if (!this.suppressAria) {
+            _setAriaExpanded(this.eGui!, expanded);
+        }
     }
 
     public closeSubMenu(): void {
@@ -292,7 +290,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.hideSubMenu = null;
 
         if (!this.suppressAria) {
-            _toggleAriaAttribute(this.eGui!, 'expanded', false);
+            this.setAriaExpanded(false);
         }
     }
 
@@ -462,6 +460,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             }
             eGui = rootElement;
         }
+
         this.eGui = eGui;
 
         this.suppressRootStyles = !!suppressRootStyles;
