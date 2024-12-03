@@ -388,9 +388,14 @@ type CoreParamsDefinitions = {
     pinnedRowBorder: 'infer';
 
     /**
-     * Default shadow for elements that float above the grid e.g. dialogs and menus
+     * Default shadow for elements that float above the grid and are intended to appear separated from it e.g. dialogs and menus
      */
     popupShadow: 'infer';
+
+    /**
+     * Default shadow for elements that float above the grid and are intended to appear elevated byt still attached e.g. dropdowns and cell editors
+     */
+    cardShadow: 'infer';
 
     /**
      * Background color of selected cell ranges. Choosing a semi-transparent color ensure that multiple overlapping ranges look correct.
@@ -828,16 +833,9 @@ export const coreDefaults: Readonly<CoreParams> = {
         calc: 'max(iconSize, dataFontSize) + spacing * 4 * headerVerticalPaddingScale',
     },
     headerVerticalPaddingScale: 1,
-    popupShadow: {
-        radius: 16,
-        color: '#00000026',
-    },
-    dropdownShadow: {
-        radius: 4,
-        spread: 1,
-        offsetY: 1,
-        color: '#babfc766',
-    },
+    popupShadow: '0 0 16px #00000026',
+    cardShadow: '0 1px 4px 1px #00000018',
+    dropdownShadow: { ref: 'cardShadow' },
     dragAndDropImageBackgroundColor: {
         ref: 'backgroundColor',
     },
@@ -928,12 +926,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     cellEditingBorder: {
         color: { ref: 'accentColor' },
     },
-    cellEditingShadow: {
-        radius: 4,
-        spread: 1,
-        offsetY: 1,
-        color: '#babfc766',
-    },
+    cellEditingShadow: { ref: 'cardShadow' },
     dialogBorder: {
         color: {
             ref: 'foregroundColor',

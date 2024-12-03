@@ -4,8 +4,12 @@
     flex-direction: column;
 }
 
-.panel-body > input:not(:first-of-type) {
-    margin-left: 10px;
+.example-toolbar label {
+    margin: 0 15px 0 0;
+}
+
+.example-toolbar input[type='radio'] {
+    margin: 0 0.25rem 0 0;
 }
 
 .grid-wrapper {

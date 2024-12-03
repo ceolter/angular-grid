@@ -148,6 +148,7 @@ const GridBodyComp = () => {
             setStickyBottomHeight,
             setStickyBottomBottom,
             setStickyBottomWidth,
+            setGridRootRole: (role: 'grid' | 'treegrid') => eRef.setAttribute('role', role),
         };
 
         const ctrl = context.createBean(new GridBodyCtrl());
@@ -237,7 +238,7 @@ const GridBodyComp = () => {
     );
 
     return (
-        <div ref={setRef} className={rootClasses} role="treegrid">
+        <div ref={setRef} className={rootClasses}>
             <GridHeaderComp />
             {createSection({
                 section: eTop,

@@ -14,7 +14,7 @@ The grid is styled using CSS. A running grid instance contains thousands of DOM 
 
 None of this is changing - the grid is still styled with CSS and CSS custom properties, and you can still extend it with your own CSS rules. What the Theming API changes is the following:
 
-1. Instead of importing CSS files yourself, the grid is now responsible for inserting the correct CSS into the document head in the correct order. This eliminates a class of bugs around incorrectly loading CSS files. The Theming API is integrated with the grid's module system so you only load CSS for features you're using, leading to a significant reduction in your app's size.
+1. Instead of importing CSS files yourself, the grid is now responsible for inserting the correct CSS into the document head, at the correct position and in the correct order. This eliminates a class of bugs around incorrectly loading CSS files. The Theming API is integrated with the grid's module system so you only load CSS for features you're using, leading to a significant reduction in your app's size.
 2. There is a TypeScript API for setting CSS custom properties (`theme.withParams(...)`). This provides autocompletion and inline documentation making it easier to find the property you're looking for. You can still set custom properties in CSS if you prefer.
 3. It is now possible to mix and match elements of different themes. Previously, if you wanted the text inputs from Material and the buttons from Quartz, you would have to write your own styles. Now you can compose your own themes using parts from different built in themes (`theme.withPart(...)`).
 4. It is a significant rewrite of the CSS we provide to style the grid, containing many improvements and resolving long-standing issues. It contains all the learnings from 10 years of maintaining the old CSS themes. Some examples of changes we've made:
@@ -113,7 +113,8 @@ In v32 Themes, custom properties had to be set in CSS. When migrating custom pro
 
 While developing the Theming API we took the opportunity to rename many of our parameters to use a consistent naming scheme and semantics.
 
- * `--ag-secondary-border-color` -> there is no longer a concept of "secondary" borders use `borderColor` or CSS rules to target specific borders
+Note: the replacement parameter is given as name for use in the TypeScript theming API, e.g. `chromeBackgroundColor`. To use this in CSS, convert it to kebab-case and add the `--ag-` prefix, e.g. `--ag-chrome-background-color`.
+
  * `--ag-secondary-foreground-color` -> `chromeBackgroundColor`
  * `--ag-selected-tab-underline-color` -> `tabSelectedUnderlineColor`
  * `--ag-selected-tab-underline-transition-speed` -> `tabSelectedUnderlineTransitionDuration`
@@ -125,9 +126,7 @@ While developing the Theming API we took the opportunity to rename many of our p
  * `--ag-borders-input` -> `inputBorder`
  * `--ag-borders-input-invalid` -> `inputInvalidBorder`
  * `--ag-card-radius` -> `borderRadius`
- * `--ag-card-shadow` -> Use one of the more specific shadow parameters introduced in the Theming API
  * `--ag-cell-horizontal-border` -> `columnBorder`
- * `--ag-checkbox-*` -> there has been a significant overhaul of checkbox parameters giving greater control over the appearance of checkboxes. See the Theming API docs.
  * `--ag-chip-background-color` -> `columnDropCellBackgroundColor`
  * `--ag-chip-border-color` -> `columnDropCellBorder`
  * `--ag-control-panel-background-color` -> `chromeBackgroundColor`
@@ -146,10 +145,18 @@ While developing the Theming API we took the opportunity to rename many of our p
  * `--ag-quartz-icon-active-color` -> this was used to apply an outline to focussed icons, now all focussed elements throughout the grid use `focusShadow`
  * `--ag-quartz-icon-hover-color` -> `iconButtonHoverColor`
 
+#### Components with significantly different theming parameters
+
+ * The [Sidebar](./side-bar/). Sidebar styling has been overhauled. Custom CSS rules you have written are likely still valid, but custom property names have changed. See [Customising Tool Panels](./theming-tool-panels/). In particular, in v32 themes the sidebar tabs shared the same custom properties as horizontal tabs. Now they have their own set of parameters beginning "sideBar" or "sideButton".
+ * `--ag-checkbox-*` -> there has been a significant overhaul of checkbox parameters giving greater control over the appearance of checkboxes. See the Theming API docs.
+ *  `--ag-toggle-button-border-width`, `--ag-toggle-button-off-border-color`, `--ag-toggle-button-on-border-color`, and `--ag-toggle-button-switch-border-color` have been removed. In most use cases they can be replaced with the new `toggleButtonSwitchInset` parameter. Other use cases can use CSS. See [Styling Toggle Buttons](./theming-widgets/#styling-toggle-buttons an example)
+
+
 #### Properties removed with no replacement, use CSS rules to achieve the same effect
 
 These properties were either outdated, confusing to use, or provided no benefit over using CSS rules.
 
+ * `--ag-secondary-border-color` -> there is no longer a concept of "secondary" borders use `borderColor` or CSS rules to target specific borders
  * `--ag-borders-side-button`
  * `--ag-tab-min-width`
  * `--ag-menu-min-width`

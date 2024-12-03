@@ -306,7 +306,7 @@ export const AG_GRID_ERRORS = {
         `Numeric value ${value} passed to ${param} param will be interpreted as ${value} seconds. If this is intentional use "${value}s" to silence this warning.` as const,
     105: ({ e }: { e: any }) => [`chart rendering failed`, e] as const,
     106: () =>
-        'Theming API and CSS File Themes are both used in the same page. A Theming API theme has been provided to the `theme` grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page.' as const,
+        'Theming API and Legacy Themes are both used in the same page. A Theming API theme has been provided to the `theme` grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page. See the migration guide: https://www.ag-grid.com/javascript-data-grid/theming-migration/' as const,
     107: ({ key, value }: { key: string; value: unknown }) =>
         `Invalid value for theme param ${key} - ${value}` as const,
     108: ({ e }: { e: any }) => ['chart update failed', e] as const,

@@ -1,6 +1,6 @@
 import { atom, useAtomValue } from 'jotai';
 
-import { type Theme, _theming, themeQuartz } from 'ag-grid-community';
+import { type Theme, _asThemeImpl, themeQuartz } from 'ag-grid-community';
 
 import { allParamModels } from './ParamModel';
 import type { PartModel } from './PartModel';
@@ -41,7 +41,7 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
     // globally install the theme CSS, because form widgets use reinterpretCSSValue
     // which requires that the CSS variable values are available
     const stylesheet = new CSSStyleSheet();
-    stylesheet.replaceSync(_theming.asThemeImpl(theme)._getPerGridCss('apply-current-theme-params'));
+    stylesheet.replaceSync(_asThemeImpl(theme)._getPerGridCss('apply-current-theme-params'));
     document.adoptedStyleSheets = [stylesheet];
 
     return {
@@ -51,6 +51,6 @@ const renderedThemeInfoAtom = atom((get): RenderedThemeInfo => {
     };
 });
 
-export const useRenderedTheme = () => _theming.asThemeImpl(useAtomValue(renderedThemeInfoAtom).theme);
+export const useRenderedTheme = () => _asThemeImpl(useAtomValue(renderedThemeInfoAtom).theme);
 
 export const useRenderedThemeInfo = () => useAtomValue(renderedThemeInfoAtom);

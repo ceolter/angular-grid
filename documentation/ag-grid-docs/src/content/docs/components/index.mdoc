@@ -29,11 +29,15 @@ You can create your own Custom Components to customise the behaviour of the grid
 The full list of component types you can provide in the grid are as follows:
 
 * [Cell Component](./component-cell-renderer/): To customise the contents of a cell.
-* [Header Component](./column-headers/): To customise the header of a column and column groups.
+* [Header Component](./column-headers/#custom-component): To customise the header of a column.
+* [Inner Header Component](./column-headers/#inner-header-component): To customise the inner header of a column.
+* [Header Group Component](./column-groups/#custom-group-component): To customise the header of a column group.
+* [Inner HeaderGroup Component](./column-groups/#inner-header-group-component): To customise the inner header component of a column group.
 * [Edit Component](./cell-editors/): To customise the editing of a cell.
 * [Filter Component](./component-filter/): For custom column filter that appears inside the column menu.
 * [Floating Filter](./component-floating-filter/): For custom column floating filter that appears inside the column menu.
 * [Date Component](./filter-date/#custom-selection-component): To customise the date selection component in the date filter.
+* [Menu Item Component](./component-menu-item/): To customise the items within grid menus.
 * [Loading Component](./component-loading-cell-renderer/): To customise the loading cell row when using Server Side row model.
 * [Overlay Component](./overlays/): To customise loading and no rows overlay components.
 * [Status Bar Component](./status-bar/): For custom status bar components.
@@ -244,7 +248,9 @@ The below table gives a summary of the components, where they are configured and
 | Filter                         | Column Definition         | filter{% br /%}filterParams              |
 | Floating Filter                | Column Definition         | floatingFilter{% br /%}floatingFilterParams       |
 | Header Component               | Column Definition         | headerComponent{% br /%}headerComponentParams               |
+| Inner Header Component         | Column Definition         | innerHeaderComponent{% br /%}innerHeaderComponentParams               |
 | Header Group Component         | Column Definition         | headerGroupComponent{% br /%}headerGroupComponentParams         |
+| Inner Header Group Component   | Column Definition         | innerHeaderGroupComponent{% br /%}innerHeaderGroupComponentParams               |
 | Tooltip Component              | Column Definition         | tooltipComponent{% br /%}tooltipComponentParams              |
 | Group Row Cell Component       | Grid Option               | groupRowRenderer{% br /%}groupRowRendererParams         |
 | Group Row Inner Cell Component | Grid Option               | innerRenderer{% br /%}innerRendererParams            |

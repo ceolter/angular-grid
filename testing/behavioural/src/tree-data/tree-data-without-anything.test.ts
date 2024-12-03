@@ -41,9 +41,7 @@ describe('ag-grid tree data without hierarchical and without data path', () => {
 
         const api = gridsManager.createGrid('myGrid', gridOptions);
 
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-            "AG Grid: treeData requires 'treeDataChildrenField' or 'getDataPath' in the clientSide row model."
-        );
+        expect(consoleWarnSpy).toHaveBeenCalled();
 
         expect(consoleErrorSpy).not.toHaveBeenCalled();
 

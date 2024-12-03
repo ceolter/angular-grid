@@ -1,9 +1,8 @@
 import { Select } from '@ag-website-shared/components/select/Select';
-
-import type { _theming } from 'ag-grid-community';
+import { type ColorSchemeValue } from '@components/theme-builder/api';
 
 import type { ValueEditorProps } from './ValueEditorProps';
 
-export const ColorSchemeValueEditor = ({ value, onChange }: ValueEditorProps<_theming.ColorSchemeValue>) => {
+export const ColorSchemeValueEditor = ({ value, onChange }: ValueEditorProps<ColorSchemeValue>) => {
     return <Select options={['inherit', 'light', 'dark']} value={value} onChange={onChange} />;
 };

@@ -996,23 +996,10 @@ export interface Props<TData, TColDef> {
      */
     groupRowRendererParams?: any;
     /** Set to `true` to enable the Grid to work with Tree Data.
-     * You must also provide 'treeDataChildrenField' or implement the `getDataPath(data)` callback.
+     * You must also implement the `getDataPath(data)` callback.
      * @default false
      */
     treeData?: boolean | undefined;
-    /** The path to the field that contains the array of children in the input row data.
-     * For example if your data is like this: `[{account: {children: [childNode1, childNode2]}}]`
-     * then this property should be: `account.children`.
-     *
-     * If left empty or undefined (default), the grid will not look for tree children.
-     *
-     * When this is specified, all the children nodes will be processed when the row data is loaded or updated.
-     * If `treeData` is false (default) the children will be shown in a flattened list.
-     * If `treeData` is true, the children will be shown in a tree structure.
-     *
-     * @default undefined
-     */
-    treeDataChildrenField?: string | undefined;
     /** Set to `true` to suppress sort indicators and actions from the row group panel.
      * @default false
      */
@@ -1233,6 +1220,7 @@ export interface Props<TData, TColDef> {
     suppressClearOnFillReduction?: boolean | undefined;
     /** Array defining the order in which sorting occurs (if sorting is enabled). Values can be `'asc'`, `'desc'` or `null`. For example: `sortingOrder: ['asc', 'desc']`.
      * @default [null, 'asc', 'desc']
+     * @deprecated v33 - Use `defaultColDef.sortingOrder` instead
      */
     sortingOrder?: SortDirection[] | undefined;
     /** Set to `true` to specify that the sort should take accented characters into account. If this feature is turned on the sort will be slower.
@@ -1772,7 +1760,6 @@ export function getProps() {
         groupRowRenderer: undefined,
         groupRowRendererParams: undefined,
         treeData: undefined,
-        treeDataChildrenField: undefined,
         rowGroupPanelSuppressSort: undefined,
         suppressGroupRowsSticky: undefined,
         pinnedTopRowData: undefined,

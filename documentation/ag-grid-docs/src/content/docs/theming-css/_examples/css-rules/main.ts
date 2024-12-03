@@ -1,14 +1,8 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
-import {
-    ClipboardModule,
     ColumnMenuModule,
+    ColumnsToolPanelModule,
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
@@ -17,41 +11,37 @@ import {
 ModuleRegistry.registerModules([
     AllCommunityModule,
     ClientSideRowModelModule,
-    ClipboardModule,
+    ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
 ]);
 
-// Set a blue background and red shadows for all menus
-const myTheme = themeQuartz.withParams({
-    menuBackgroundColor: 'cornflowerblue',
-    menuShadow: { radius: 10, spread: 5, color: 'red' },
-});
-
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },
-    { field: 'age', filter: 'agNumberColumnFilter' },
+    { field: 'age' },
     { field: 'country' },
-    { field: 'year', filter: 'agNumberColumnFilter' },
-    { field: 'date', filter: 'agDateColumnFilter' },
+    { field: 'year' },
+    { field: 'date' },
     { field: 'sport' },
-    { field: 'gold', filter: 'agNumberColumnFilter' },
-    { field: 'silver', filter: 'agNumberColumnFilter' },
-    { field: 'bronze', filter: 'agNumberColumnFilter' },
-    { field: 'total', filter: 'agNumberColumnFilter' },
+    { field: 'gold' },
+    { field: 'silver' },
+    { field: 'bronze' },
+    { field: 'total' },
 ];
 
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: myTheme,
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {
+        editable: true,
         filter: true,
     },
+    sideBar: 'columns',
+    animateRows: false,
 };
 
 // setup the grid after the page has finished loading

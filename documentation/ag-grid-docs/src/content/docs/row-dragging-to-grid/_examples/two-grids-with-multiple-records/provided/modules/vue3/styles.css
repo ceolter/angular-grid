@@ -4,12 +4,12 @@
     flex-direction: column;
 }
 
-.panel-body input {
-    margin-right: 2px !important;
+.example-toolbar label {
+    margin: 0 15px 0 0;
 }
 
-.panel-body label {
-    margin-right: 10px;
+.example-toolbar input[type='radio'] {
+    margin: 0 0.25rem 0 0;
 }
 
 .grid-wrapper {

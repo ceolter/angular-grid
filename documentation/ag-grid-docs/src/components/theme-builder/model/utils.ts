@@ -1,12 +1,13 @@
-import { type _theming } from 'ag-grid-community';
-import type { Theme, themeQuartz } from 'ag-grid-community';
+import { type ParamType } from '@components/theme-builder/api';
+
+import type { Theme, _asThemeImpl, themeQuartz } from 'ag-grid-community';
 
 type InferThemeParams<T> = T extends Theme<infer P> ? P : never;
 
 export type ThemeParams = InferThemeParams<typeof themeQuartz>;
 export type ThemeParam = keyof ThemeParams;
 
-export type ThemeImpl = ReturnType<typeof _theming.asThemeImpl>;
+export type ThemeImpl = ReturnType<typeof _asThemeImpl>;
 
 export const mapObjectValues = <T, U>(input: Record<string, T>, mapper: (value: T) => U): Record<string, U> =>
     Object.fromEntries(Object.entries(input).map(([key, value]) => [key, mapper(value)]));
@@ -59,10 +60,9 @@ export const stripFloatingPointErrors = (value: number) => value.toFixed(10).rep
 export const paramToVariableName = (param: string) => `--ag-${kebabCase(param)}`;
 const kebabCase = (str: string) => str.replace(/[A-Z]/g, (m) => `-${m}`).toLowerCase();
 
-export const cssValueIsValid = (value: string, type: _theming.ParamType): boolean =>
-    reinterpretCSSValue(value, type) != null;
+export const cssValueIsValid = (value: string, type: ParamType): boolean => reinterpretCSSValue(value, type) != null;
 
-export const reinterpretCSSValue = (value: string, type: _theming.ParamType): string | null => {
+export const reinterpretCSSValue = (value: string, type: ParamType): string | null => {
     value = value.trim();
     if (value === '') return '';
     const reinterpretationElement = getReinterpretationElement();
@@ -102,4 +102,4 @@ const cssPropertyForParamType = {
     fontFamily: 'fontFamily',
     fontWeight: 'fontWeight',
     duration: 'transitionDuration',
-} satisfies Record<_theming.ParamType, keyof CSSStyleDeclaration>;
+} satisfies Record<ParamType, keyof CSSStyleDeclaration>;

@@ -37,7 +37,7 @@
                 "path": "./column-moving/#suppress-move-when-dragging"
             }
         ],
-        "notesPath": "./upgrading-to-ag-grid-32-2"
+        "notesPath": "./upgrading-to-ag-grid-32-2-1"
     },
     {
         "version": "32.1.0",

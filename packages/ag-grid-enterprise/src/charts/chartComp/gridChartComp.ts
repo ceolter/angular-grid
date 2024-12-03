@@ -543,7 +543,6 @@ export class GridChartComp extends Component {
         }
 
         this.chartController.setChartRange(true);
-        this.focusSvc.clearFocusedCell();
     }
 
     private getThemeName(): string {

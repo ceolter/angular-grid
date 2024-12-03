@@ -157,7 +157,7 @@ export class HeaderComp extends Component implements IHeaderComp {
             this.workOutTemplate() != this.currentTemplate ||
             this.workOutShowMenu() != this.currentShowMenu ||
             params.enableSorting != this.currentSort ||
-            this.shouldSuppressMenuHide() != this.currentSuppressMenuHide ||
+            (this.currentSuppressMenuHide != null && this.shouldSuppressMenuHide() != this.currentSuppressMenuHide) ||
             oldParams.enableFilterButton != params.enableFilterButton ||
             oldParams.enableFilterIcon != params.enableFilterIcon
         ) {

@@ -72,8 +72,8 @@ export class FiltersToolPanel extends Component implements IFiltersToolPanel, IT
         // this is necessary to prevent a memory leak while refreshing the tool panel
         this.listenerDestroyFuncs.push(
             ...this.addManagedListeners(filtersToolPanelHeaderPanel, {
-                expandAll: filtersToolPanelListPanel.expandFilterGroups.bind(filtersToolPanelListPanel, true),
-                collapseAll: filtersToolPanelListPanel.expandFilterGroups.bind(filtersToolPanelListPanel, false),
+                expandAll: () => filtersToolPanelListPanel.expandFilterGroups(true),
+                collapseAll: () => filtersToolPanelListPanel.expandFilterGroups(false),
                 searchChanged: (event) => filtersToolPanelListPanel.performFilterSearch(event.searchText),
             }),
             ...this.addManagedListeners(filtersToolPanelListPanel, {

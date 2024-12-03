@@ -39,7 +39,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
     public override activate(rootNode: RowNode<TData>): void {
         const oldChildrenGetter = this.childrenGetter;
-        const childrenField = this.gos.get('treeDataChildrenField');
+        const childrenField = this.gos.get('treeDataChildrenField' as any);
         if (!oldChildrenGetter || oldChildrenGetter.path !== childrenField) {
             this.childrenGetter = makeFieldPathGetter(childrenField);
         }

@@ -19,7 +19,7 @@ const myTheme = themeQuartz.withParams({
 
 {% gridExampleRunner title="Theming API Parameters Example" name="with-params" /%}
 
-Under the hood, theme parameters are implemented using CSS custom properties (variables), and `withParams()` sets _default_ values for these, so you can override them in your application stylesheets (see [Customising the grid with CSS](./theming-css/)). However using the API provides validation, typescript autocompletion, and an [extended syntax for defining CSS values](#extended-syntax-for-css-values).
+Under the hood, theme parameters are implemented using CSS custom properties (variables), and `withParams()` sets _default_ values for these, so you can override them in your application stylesheets (see [Customising the grid with CSS](./theming-css/)). However using the API provides validation, typescript autocompletion, and an extended syntax for defining CSS values (see below).
 
 ## Finding Theme Parameters
 
@@ -31,9 +31,9 @@ There are many parameters available, and several ways of finding the right one t
 
 ## Parameter Types
 
-The type of a parameter is determined by its name, for example all parameters ending `Color` are colors.
+The type of a parameter is determined by the suffix of it name, for example `Color`, `Border` or `Shadow`.
 
-Every parameter can accept a string, which is passed to CSS without processing so must be valid CSS syntax for the type of parameter, e.g. `red` is a valid CSS color.
+Every type can accept a string, which is passed to CSS without processing so must be valid CSS syntax for the type of parameter, e.g. `red` is a valid CSS color.
 
 Some parameter types also support an extended syntax. This syntax is only available when using the API to set parameters, when [setting parameters with CSS](./theming-css/) you must always use CSS syntax.
 

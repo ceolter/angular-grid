@@ -24,7 +24,7 @@ const gridOptions: GridOptions<IOlympicData> = {
         flex: 1,
         minWidth: 100,
     },
-    rowSelection: { mode: 'multiRow' },
+    rowSelection: { mode: 'multiRow', headerCheckbox: false },
     onRowSelected,
     onSelectionChanged,
 };

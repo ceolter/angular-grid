@@ -90,9 +90,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
 
     private createDefaultContent(params: any) {
         const yValue = params.datum.yValue ?? params.datum[params.yKey];
-        return {
-            content: `${yValue}`,
-        };
+        return `${yValue}`;
     }
 
     private wrapItemStyler(container: { itemStyler?: any }) {
@@ -117,7 +115,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
                     return userResult;
                 }
                 return {
-                    ...this.createDefaultContent(tooltipParams),
+                    content: this.createDefaultContent(tooltipParams),
                     ...userResult,
                 };
             }),

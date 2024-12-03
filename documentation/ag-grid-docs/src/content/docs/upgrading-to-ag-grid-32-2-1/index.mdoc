@@ -1,0 +1,119 @@
+---
+title: "Upgrading to AG Grid 32.2.1"
+description: "See whats new in AG Grid, view a full list of changes and migrate your $framework Data Grid to v32.2.1 with our Codemods."
+---
+
+## What's New
+
+See the [release post](https://blog.ag-grid.com/whats-new-in-ag-grid-32-2/) for details of what's new in 
+version 32.2.
+
+## Codemods
+
+Follow these steps to upgrade your project's AG Grid version to `32.2.0`:
+
+1. Locate your project's `package.json` and note the version of AG Grid that you are currently using.
+
+1. Update any AG Grid dependencies listed in the `package.json` to version `32.2.0`.
+
+1. Open a terminal and navigate to your project's root folder.
+
+1. Run the `migrate` command of version `32.2` of the AG Grid codemod runner, where `$FROM_VERSION` refers to your project's existing AG Grid version:
+
+    ```
+    npx @ag-grid-devtools/cli@32.2 migrate --from=$FROM_VERSION
+    ```
+
+    This will update your project's source files to prepare for the new release.
+
+    By default the Codemod runner will locate all source files within the current directory. For projects with more specific requirements, pass a list of input files to the `migrate` command, or specify the `--help` argument to see more fine-grained usage instructions.
+
+{% note %}
+The Codemod runner will check the state of your project to ensure that you don't lose any work. If you would rather see a diff of the changes instead of applying them, pass the `--dry-run` argument.
+{% /note %}
+
+The codemod only transforms source files that make use of deprecated features, so if you aren't currently making use of any of those APIs your source code will be unaffected by the codemod.
+
+See the [Codemods](./codemods/) documentation for more details.
+
+## Deprecations
+{% metaTag tags=["columnEverythingChanged", "rangeDeleteStart", "rangeDeleteEnd", "rangeSelectionChanged", "getInfiniteRowCount", "clearRangeSelection", "suppressBrowserResizeObserver", "rangeSelection", "isFullWidthCell"] /%}
+
+### ColDef
+
+- `checkboxSelection` is deprecated, `rowSelection.checkboxes` is default now, set to `false` in `gridOptions` to disable.
+
+- `showDisabledCheckboxes` is deprecated, use `rowSelection.hideDisabledCheckboxes = true` in `gridOptions` instead.
+
+- `headerCheckboxSelection` is deprecated, `rowSelection.headerCheckbox = true` is default now, set to `false` in `gridOptions` to disable.
+
+- `headerCheckboxSelectionFilteredOnly` is deprecated, use `rowSelection.selectAll = "filtered"` in `gridOptions` instead.
+
+- `headerCheckboxSelectionCurrentPageOnly` is deprecated, use `rowSelection.selectAll = "currentPage"` in `gridOptions` instead.
+
+
+### Events 
+
+- `columnEverythingChanged` - deprecated, use `displayedColumnsChanged` which is fired at the same time, or one of the more specific [Column Events](./column-state/#column-events).
+
+- `rangeDeleteStart` - deprecated, use `cellSelectionDeleteStart` instead.
+
+- `rangeDeleteEnd` - deprecated, use `cellSelectionDeleteEnd` instead.
+
+- `rangeSelectionChanged` - deprecated, use `cellSelectionChanged` instead.
+
+### Grid API 
+
+- `getInfiniteRowCount` - deprecated, use `getDisplayedRowCount` instead.
+
+- `clearRangeSelection` - deprecated, use `clearCellSelection` method instead.
+
+### Grid Options
+
+- `rowSelection="single"` is now deprecated, use `rowSelection.mode = "singleRow"` instead.
+
+- `rowSelection="multiple"` is now deprecated, use `rowSelection.mode = "multiRow"` instead.
+
+- `suppressCopyRowsToClipboard` is deprecated. Copying of selected rows is suppressed by default, use `rowSelection.copySelectedRows` to enable it.
+
+- `suppressCopySingleCellRanges` is deprecated, use `rowSelection.copySelectedRows` instead.
+
+- `groupSelectsChildren` is deprecated, use `rowSelection.groupSelects = "descendants"` instead.
+
+- `groupSelectsFiltered` is deprecated, use `rowSelection.groupSelects = "filteredDescendants"` instead.
+
+- `rowMultiSelectWithClick` is deprecated, use `rowSelection.enableMultiSelectWithClick` instead.
+
+- `suppressBrowserResizeObserver` - deprecated without replacement.
+
+- `suppressRowDeselection` is deprecated. Row Deselection is suppressed by default, use `rowSelection.enableClickSelection` instead.
+
+- `suppressRowClickSelection` is deprecated, use `rowSelection.enableClickSelection` instead.
+
+- `suppressMultiRangeSelection` is deprecated, use `cellSelection.suppressMultiRanges` instead.
+
+- `enableRangeSelection` is deprecated, use `cellSelection` instead.
+
+- `enableRangeHandle` is deprecated, use `cellSelection.handle` instead.
+
+- `enableFillHandle` is deprecated, use `cellSelection.handle` instead.
+
+- `fillHandleDirection` is deprecated, use `cellSelection.handle.direction` instead.
+
+- `suppressClearOnFillReduction` is deprecated, use `cellSelection.handle.suppressClearOnFillReduction` instead.
+
+- `isRowSelectable` is deprecated, use `rowSelection.isRowSelectable` instead.
+
+- `fillOperation` is deprecated, use `cellSelection.handle.setFillValue` instead.
+
+### Grid State Object Fields
+
+`rangeSelection` - deprecated, when setting this manually use `cellSelection` field instead.
+
+### Row Nodes 
+
+`isFullWidthCell` - deprecated, check `node.detail` then use provided callback `isFullWidthRow` instead.
+
+## Breaking Changes
+
+This release includes no breaking changes.

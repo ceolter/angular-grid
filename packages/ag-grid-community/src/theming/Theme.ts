@@ -33,7 +33,7 @@ export type Theme<TParams = unknown> = {
     withParams(defaults: Partial<TParams>, mode?: string): Theme<TParams>;
 };
 
-export const asThemeImpl = <TParams>(theme: Theme<TParams>): ThemeImpl => {
+export const _asThemeImpl = <TParams>(theme: Theme<TParams>): ThemeImpl => {
     if (!(theme instanceof ThemeImpl)) {
         throw new Error('theme is not an object created by createTheme');
     }

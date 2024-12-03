@@ -440,7 +440,7 @@ export class CartesianAxisPanel extends Component {
 
     private addLabelPadding(labelPanelComp: FontPanel, chartAxisThemeOverrides: ChartMenuParamsFactory) {
         const labelPaddingSlider = this.createBean(
-            new AgSlider(chartAxisThemeOverrides.getDefaultSliderParams('label.padding', 'padding', 30))
+            new AgSlider(chartAxisThemeOverrides.getDefaultSliderParams('label.spacing', 'padding', 30))
         );
 
         labelPanelComp.addItem(labelPaddingSlider);

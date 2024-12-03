@@ -5,21 +5,34 @@ title: "Custom Icons"
 This section details how to provide your own icons for the grid and style grid icons for your application requirements
 
 {% warning %}
-## TODO: content due in AG-13129
+## TODO: content due in AG-10824 / AG-10823
 This page is a copy of the v32 theme docs, and needs updating for the Theming API.
 {% /warning %}
 
-## Swapping the Provided Icon Fonts
+## Swapping the Provided Icon Set
 
-Each provided theme comes with its own icon font. It is simple to use one provided theme with another theme's icons. Set `--ag-icon-font-family` to one of: `agGridQuartz`, `agGridAlpine`, `agGridBalham` or `agGridMaterial`. You can compare the available icon fonts in the [Provided Icons list](#provided-icons).
+The grid provides several icon sets as [theme parts](./theming-parts/). You can change the icon set on a theme using `theme.withPart(iconSet)`.
 
-If you are using the Sass API, it will embed the required font data for you. Apps using CSS should load the font's CSS file from whatever location they are loading `ag-grid.css` and other CSS files. For example to use the Material icons in the Quartz theme:
+Available icon sets are:
 
-1. Load `agGridMaterialFont.css`
-1. (optional) switch `ag-theme-quartz.css` for `ag-theme-quartz-no-font.css` to save a few kB if you no longer require the Quartz icons
-1. Set the CSS variable `--ag-icon-font-family: agGridMaterial`
+* `iconSetQuartz` - our default icon set
+    * `iconSetQuartz({strokeWidth: number})` you can call iconSetQuartz as a function to provide a custom stroke width in pixels (the default is 1.5)
+    * `iconSetQuartzLight` and `iconSetQuartzBold` preset lighter and bolder versions of the Quartz icons with 1px and 2px stroke widths respectively.
+* `iconSetAlpine` - the icon set used by the Alpine theme
+* `iconSetMaterial` - the Material Design icon set (these are designed to be displayed at look best at 18, 24, 36 or 48px)
 
-This example uses the Quartz theme with icons from the Material theme:
+This example shows the Quartz theme with the Material icon set
+
+```js
+import { iconSetMaterial, themeQuartz } from 'ag-grid-community';
+
+const myTheme = themeQuartz
+    .withPart(iconSetMaterial)
+    // Material icons are designed to look best at 18, 24, 36 or 48px
+    .withParams({
+        iconSize: 18,
+    });
+```
 
 {% gridExampleRunner title="Swapping the Icon Font" name="icons-swapping-font" /%}
 

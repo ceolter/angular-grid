@@ -337,10 +337,6 @@
     "typeName": "'top' | 'bottom'",
     "typesToInclude": []
   },
-  "treeDataChildrenField": {
-    "typeName": "string",
-    "typesToInclude": []
-  },
   "rowHeight": {
     "typeName": "number",
     "typesToInclude": []

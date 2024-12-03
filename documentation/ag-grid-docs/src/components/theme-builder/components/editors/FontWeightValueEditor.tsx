@@ -1,10 +1,9 @@
 import { Select } from '@ag-website-shared/components/select/Select';
-
-import type { _theming } from 'ag-grid-community';
+import { type FontWeightValue } from '@components/theme-builder/api';
 
 import type { ValueEditorProps } from './ValueEditorProps';
 
-export const FontWeightValueEditor = ({ value, onChange }: ValueEditorProps<_theming.FontWeightValue>) => {
+export const FontWeightValueEditor = ({ value, onChange }: ValueEditorProps<FontWeightValue>) => {
     const selectedOption = fontWeightOptions.find((o) => o.value === value) || fontWeightOptions[0];
 
     return (

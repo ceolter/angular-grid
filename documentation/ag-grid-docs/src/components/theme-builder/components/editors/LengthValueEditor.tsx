@@ -1,6 +1,5 @@
+import { type LengthValue, paramValueToCss } from '@components/theme-builder/api';
 import { reinterpretCSSValue, stripFloatingPointErrors } from '@components/theme-builder/model/utils';
-
-import { _theming } from 'ag-grid-community';
 
 import { FormattedInput } from './FormattedInput';
 import { type ValueEditorProps } from './ValueEditorProps';
@@ -11,8 +10,8 @@ export const LengthValueEditor = ({
     onChange,
     icon,
     swipeAdjustmentDivisor = 100,
-}: ValueEditorProps<_theming.LengthValue>) => {
-    const cssValue = _theming.paramValueToCss(param.property, value) || '';
+}: ValueEditorProps<LengthValue>) => {
+    const cssValue = paramValueToCss(param.property, value) || '';
     const units = getUnit(cssValue);
     return (
         <FormattedInput

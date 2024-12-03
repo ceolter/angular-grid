@@ -262,12 +262,14 @@ export class PaginationService extends BeanStub implements NamedBean {
             return;
         }
 
-        const { pageSize, currentPage } = this;
+        const pageSize = this.pageSize;
 
         const masterLastRowIndex = masterRowCount - 1;
         this.totalPages = Math.floor(masterLastRowIndex / pageSize) + 1;
 
         this.adjustCurrentPageIfInvalid();
+
+        const currentPage = this.currentPage;
 
         const masterPageStartIndex = pageSize * currentPage;
         let masterPageEndIndex = pageSize * (currentPage + 1) - 1;

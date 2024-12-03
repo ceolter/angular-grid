@@ -63,7 +63,7 @@ describe('ag-grid hierarchical tree selection', () => {
             columnDefs: [{ field: 'k' }, { field: 'name', filter: 'agTextColumnFilter' }],
             autoGroupColumnDef: { headerName: 'Hierarchy' },
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             rowSelection: { mode: 'multiRow' },
             groupDefaultExpanded: -1,

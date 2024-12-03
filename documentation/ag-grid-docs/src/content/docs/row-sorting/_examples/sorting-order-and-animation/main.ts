@@ -23,10 +23,10 @@ let gridApi: GridApi<IOlympicData>;
 const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         width: 170,
+        sortingOrder: ['desc', 'asc', null],
     },
     columnDefs: columnDefs,
     rowData: null,
-    sortingOrder: ['desc', 'asc', null],
 };
 
 // setup the grid after the page has finished loading

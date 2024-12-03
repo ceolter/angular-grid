@@ -6,7 +6,6 @@ export type { MultiFilter } from './multiFilter/multiFilter';
 
 export type { SetFilter } from './setFilter/setFilter';
 
-export { EnterpriseCoreModule } from './agGridEnterpriseModule';
 export { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
 export { ColumnsToolPanelModule } from './columnToolPanel/columnsToolPanelModule';
 export { MenuModule, ColumnMenuModule, ContextMenuModule } from './menu/menuModule';

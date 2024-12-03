@@ -1,7 +1,6 @@
 import { type ReactNode, memo, useEffect, useRef } from 'react';
 
-import type { Theme } from 'ag-grid-community';
-import { _theming } from 'ag-grid-community';
+import { type Theme, _asThemeImpl } from 'ag-grid-community';
 
 /**
  * A version of React.memo with types fixed so that it doesn't break generic components
@@ -69,4 +68,4 @@ export const useClickAwayListener = (onHide: () => void, ignoreElements: Array<E
     }, [onHide]);
 };
 
-export const getThemeDefaultParams = (theme: Theme) => _theming.asThemeImpl(theme)._getModeParams().$default ?? {};
+export const getThemeDefaultParams = (theme: Theme) => _asThemeImpl(theme)._getModeParams().$default ?? {};

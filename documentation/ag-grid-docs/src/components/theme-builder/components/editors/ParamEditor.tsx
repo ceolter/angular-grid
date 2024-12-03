@@ -1,8 +1,7 @@
+import { type ParamType } from '@components/theme-builder/api';
 import { useSetAdvancedParamEnabled } from '@components/theme-builder/model/advanced-params';
 import type { ThemeParam } from '@components/theme-builder/model/utils';
 import type { FC, ReactNode } from 'react';
-
-import type { _theming } from 'ag-grid-community';
 
 import { ParamModel, useParamAtom } from '../../model/ParamModel';
 import { useRenderedTheme } from '../../model/rendered-theme';
@@ -77,7 +76,7 @@ export const ParamEditor = withErrorBoundary((props: ParamEditorProps) => {
     );
 });
 
-const valueEditors: Record<_theming.ParamType, FC<ValueEditorProps<any>>> = {
+const valueEditors: Record<ParamType, FC<ValueEditorProps<any>>> = {
     color: ColorValueEditor,
     colorScheme: ColorSchemeValueEditor,
     length: LengthValueEditor,

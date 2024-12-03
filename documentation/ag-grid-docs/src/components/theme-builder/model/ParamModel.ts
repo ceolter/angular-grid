@@ -1,6 +1,7 @@
+import { type ParamType, getParamDocs, getParamType } from '@components/theme-builder/api';
 import { useAtom, useAtomValue } from 'jotai';
 
-import { _theming, themeQuartz } from 'ag-grid-community';
+import { themeQuartz } from 'ag-grid-community';
 
 import { getThemeDefaultParams } from '../components/component-utils';
 import type { PersistentAtom } from './JSONStorage';
@@ -41,14 +42,14 @@ const nonAdvancedParams = new Set([
 export class ParamModel<T> {
     readonly label: string;
     readonly docs: string;
-    readonly type: _theming.ParamType;
+    readonly type: ParamType;
     readonly valueAtom: PersistentAtom<T | undefined>;
 
     private constructor(readonly property: ThemeParam) {
         this.label = titleCase(property);
         this.valueAtom = atomWithJSONStorage<T | undefined>(`param.${property}`, undefined);
-        this.docs = _theming.getParamDocs(property) || '';
-        this.type = _theming.getParamType(property);
+        this.docs = getParamDocs(property) || '';
+        this.type = getParamType(property);
     }
 
     hasValue = (store: Store) => store.get(this.valueAtom) != null;

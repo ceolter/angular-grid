@@ -83,6 +83,7 @@ const GRID_OPTION_DEPRECATIONS = (): Deprecations<GridOptions> => ({
     },
 
     unSortIcon: { version: '32.3', message: 'Use `defaultColDef.unSortIcon` instead.' },
+    sortingOrder: { version: '32.3', message: 'Use `defaultColDef.sortingOrder` instead.' },
 });
 
 function toConstrainedNum(
@@ -387,8 +388,8 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
                     case 'clientSide': {
-                        const csrmWarning = `treeData requires 'treeDataChildrenField' or 'getDataPath' in the ${rowModel} row model.`;
-                        return options.treeDataChildrenField || options.getDataPath ? null : csrmWarning;
+                        const csrmWarning = `treeData requires 'getDataPath' in the ${rowModel} row model.`;
+                        return (options as any).treeDataChildrenField || options.getDataPath ? null : csrmWarning;
                     }
                     case 'serverSide': {
                         const ssrmWarning = `treeData requires 'isServerSideGroup' and 'getServerSideGroupKey' in the ${rowModel} row model.`;
@@ -398,7 +399,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 return null;
             },
         },
-        treeDataChildrenField: {
+        ['treeDataChildrenField' as any]: {
             module: 'SharedTreeData',
         },
         undoRedoCellEditing: { module: 'UndoRedoEdit' },
@@ -433,7 +434,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
 export const GRID_OPTIONS_VALIDATORS: () => OptionsValidator<GridOptions> = () => ({
     objectName: 'gridOptions',
     allProperties: [..._ALL_GRID_OPTIONS, ..._ALL_EVENTS.map((event) => _getCallbackForEvent(event))],
-    propertyExceptions: ['api'],
+    propertyExceptions: ['api', 'treeDataChildrenField'],
     docsUrl: 'grid-options/',
     deprecations: GRID_OPTION_DEPRECATIONS(),
     validations: GRID_OPTION_VALIDATIONS(),

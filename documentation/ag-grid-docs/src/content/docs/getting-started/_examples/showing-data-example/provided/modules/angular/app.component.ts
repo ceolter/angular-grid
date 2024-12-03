@@ -49,5 +49,3 @@ export class AppComponent {
         { field: 'button', cellRenderer: CustomButtonComponent, flex: 1 },
     ];
 }
-
-const gridDiv = document.querySelector<HTMLElement>('#myGrid')!;

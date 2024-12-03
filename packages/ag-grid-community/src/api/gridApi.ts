@@ -788,7 +788,7 @@ export interface _PinnedRowGridApi {
 
 export interface _RenderGridApi<TData> {
     /**
-     * Sets an ARIA property in the grid panel (element with `role=\"treegrid\"`), and removes an ARIA property when the value is null.
+     * Sets an ARIA property in the grid panel (element with `role=\"grid\"` or `role=\"treegrid\"), and removes an ARIA property when the value is null.
      *
      * Example: `api.setGridAriaProperty('label', 'my grid')` will set `aria-label=\"my grid\"`.
      *

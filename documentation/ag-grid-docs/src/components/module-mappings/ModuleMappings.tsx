@@ -4,7 +4,14 @@ import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
-import type { ColDef, GetRowIdParams, IRowNode, RowSelectedEvent, RowSelectionOptions } from 'ag-grid-community';
+import type {
+    ColDef,
+    GetRowIdParams,
+    GridOptions,
+    IRowNode,
+    RowSelectedEvent,
+    RowSelectionOptions,
+} from 'ag-grid-community';
 import { ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -144,12 +151,12 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
             <div style={{ height: '410px' }}>
                 <AgGridReact
                     ref={gridRef}
+                    gridOptions={{ treeDataChildrenField: 'children' } as GridOptions}
                     defaultColDef={defaultColDef}
                     columnDefs={columnDefs}
                     autoGroupColumnDef={autoGroupColumnDef}
                     rowData={modules.groups}
                     treeData
-                    treeDataChildrenField={'children'}
                     getRowId={getRowId}
                     rowSelection={rowSelection}
                     onRowSelected={onRowSelected}

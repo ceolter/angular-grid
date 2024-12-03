@@ -146,7 +146,10 @@ const docs: Record<AllThemeParams, string> = {
         'Vertical borders between columns that are pinned to the left or right and the rest of the grid',
     pinnedRowBorder:
         'Horizontal borders between the grid and rows that are pinned to the top or bottom and the rest of the grid',
-    popupShadow: 'Default shadow for elements that float above the grid e.g. dialogs and menus',
+    popupShadow:
+        'Default shadow for elements that float above the grid and are intended to appear separated from it e.g. dialogs and menus',
+    cardShadow:
+        'Default shadow for elements that float above the grid and are intended to appear elevated byt still attached e.g. dropdowns and cell editors',
     radioCheckedShapeImage: 'An image defining the shape of the mark on checked radio buttons',
     rangeSelectionBackgroundColor:
         'Background color of selected cell ranges. Choosing a semi-transparent color ensure that multiple overlapping ranges look correct.',

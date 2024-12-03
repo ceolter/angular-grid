@@ -15,7 +15,7 @@ The table below gives the ranges of compatible versions of AG Grid with Vue vers
 
 | Vue | AG Grid    |
 | ----| ---------- |
-| 3   | 18 - 32+   |
+| 3   | 18 - 33    |
 | 2   | 18 - 31    |
 
 {% /if %}
@@ -66,34 +66,6 @@ Processing legacy "View Engine" libraries:
 Encourage the library authors to publish an Ivy distribution.
 ```
 
-## Notes on Angular Components 10-11
-
-If you are using Angular v10-11 and have Ivy **disabled** via `enableIvy: false` then you must declare your custom components with the AgGridModule via the `withComponents` method. This enables AG Grid to be able to use your Angular components by adding them as `entryComponents` for you. You need to provide them in the **top level** `NgModule`:
-
-```js
-@NgModule({
-    imports: [
-        BrowserModule,
-        AgGridModule.withComponents(
-            [
-                SquareComponent,      // Components to be used within the Grid
-                CubeComponent,
-                // ...other components
-            ]
-        ),
-    ]
-})
-```
-
-## Notes on Angular 10
-
-Due to a breaking change in Angular 10 you may experience the following error when building:
-`Generic type 'ModuleWithProviders<T>' requires 1 type argument(s)`
-
-If you wish to use Angular 10 with AG Grid versions 18-23 then you need to set `"skipLibCheck": true`
-in `tsconfig.app.json` Please note however that this is a workaround and Angular 10 is only
-officially supported with AG Grid 24+.
-
 {% /if %}
 
 {% if isFramework("react") %}
@@ -104,11 +76,16 @@ The table below gives the ranges of compatible versions of AG Grid with React ve
 | React Version  | AG Grid Versions |
 |----------------| ---------------- |
 | 15.x           | 18 - 21.2        |
-| 16.8 - 17.x    | 22 - 30+         |
-| 18+            | 27.2 - 30+       |
-| 19+            | 32.2+  (*)       |
+| 16.8 - 17.x    | 22 - 33          |
+| 18+            | 27.2 - 33        |
+| 19+            | 32.2 - 33        |
 
 
 {% note %}(*) Note that for versions 32.2.0 - 32.3.1, React 19 is supported, but not listed as a peer dependency.{% /note %} 
 
 {% /if %}
+
+
+## Documentation Archive
+
+To view AG Grid documentation for older versions, please refer to the [Documentation archive](/documentation-archive).

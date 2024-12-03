@@ -1685,12 +1685,6 @@
                 "url": "./row-sorting/"
             }
         },
-        "sortingOrder": {
-            "more": {
-                "name": "Example Sorting Order",
-                "url": "./row-sorting/#example-sorting-order"
-            }
-        },
         "accentedSort": {
             "more": {
                 "name": "Accented Sort",

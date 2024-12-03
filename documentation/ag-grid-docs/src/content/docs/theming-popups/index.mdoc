@@ -4,50 +4,65 @@ title: "Theming: Customising Menus & Popups"
 
 Style UI elements that float above the main UI, including menus.
 
-{% warning %}
-## TODO: content due in AG-13129
-This page is a copy of the v32 theme docs, and needs updating for the Theming API.
-{% /warning %}
-
 ## Rounding corners
 
-* `--ag-border-radius` sets the radius of most rectangular elements within the grid, including the grid itself.
-* `--ag-wrapper-border-radius` sets the radius of the grid wrapper, if you want it to be different from `--ag-border-radius`.
-* `--ag-card-radius` sets the radius of floating elements (cards and popups) and defaults to the value of `--ag-border-radius`.
-* `ag-root-wrapper` is the class name applied to the grid's outer element. Apply a border radius using a CSS selector: `.ag-root-wrapper { border-radius: 2px }`.
+* `borderRadius` sets the radius of most rectangular elements within the grid, including the grid itself.
+* `wrapperBorderRadius` sets the radius of the grid wrapper, if you want it to be different from `borderRadius`.
+* Radius on other elements can be set using css selectors, e.g. `.ag-menu { border-radius: 2px }` will set the radius of popup menus like the right-click context menu.
 
 ## Drop shadows
 
-Elements that float above the user interface are called cards or popups. Internally there is an implementation difference between the two, but they are the same from the user's point of view, so it is appropriate to style them in the same way. To set a drop shadow on all floating elements, set the `--ag-card-shadow` and `--ag-popup-shadow` variables to a [CSS box shadow value](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow):
+The grid exposes several theme parameters for controlling shadows. Two master parameters control many shadows at once:
 
-```css
-.ag-theme-quartz {
-    --ag-card-shadow: 0 3px 4px black;
-    --ag-popup-shadow: 0 3px 4px black;
-}
+* `popupShadow` - a large shadow used on elements that are supposed to appear floating above the grid and separate from it, e.g. drag/drop images and dialogs
+* `cardShadow` - a small shadow for for elements that are supposed to appear above the grid but connected to it, like dropdowns and cell editors
+
+And you can override shadows for individual elements using more specific parameters:
+
+* `menuShadow` - Shadow for menus e.g. column menu and right-click context menu
+* `dialogShadow` - Shadow for popup dialogs such as integrated charts and the advanced filter builder
+* `cellEditingShadow` - Shadow for cells being edited
+* `dragAndDropImageShadow` - Shadow for the drag and drop image component element when dragging columns
+* and more - search "shadow" in the "All Parameters" section of the [Theme Builder](/theme-builder/) or use typescript autocompletion in your IDE.
+
+Shadows can use the [extended syntax for shadow values](./theming-parameters/#shadow-values):
+
+```js
+const myTheme = themeQuartz.withParams({
+    menuShadow: { radius: 10, spread: 5, color: 'red' },
+});
 ```
 
 ## Styling menus
 
-Menus such as the column menu and context menu are cards and so respond to the instructions above for rounded corners and shadows. Additionally:
+In order of preference, these techniques can be used to style menus:
 
-* Use CSS rules targeting `.ag-menu` to style the body of all menus - column menus, filter menus and right-click context menus
-* To style a specific kind of menu, use the CSS `:has()` selector to select menus containing a specific component, e.g. `.ag-menu:has(.ag-filter)`. Use the browser developer tools to find the component class.
+* Use the  `menuBorder`, `menuSeparatorColor`, `menuShadow` and `menuTextColor` parameters.
+* Use CSS rules targeting `.ag-menu` to provide default styles that apply to all menus - column menus, filter menus and right-click context menus.
+* Some menus have specific classes, e.g. `.ag-column-menu` and `.ag-filter-menu` that can be used to override their styles. Check the browser developer tools to find the menu class.
+* Sometimes you want to be more specific, for example to style the set filter menu but not other filter menus. For this you can use the CSS `:has()` selector to select menus containing a specific component, e.g. `.ag-menu:has(.ag-set-filter)`. Use the browser developer tools to find the component class.
 
 ## Example
 
-This example combines all of the above techniques to style the column menus. Click on the menu icon in a column header, or right click on the grid to show a floating menu:
+This example combines all of the above techniques to style the context, column and set filter menus. Click on the column menu and filter menu icons in the column header, or right click on the grid to show a context menu:
+
+```js
+// Set a blue background and red shadows for all menus
+const myTheme = themeQuartz.withParams({
+    menuBackgroundColor: 'cornflowerblue',
+    menuShadow: { radius: 10, spread: 5, color: 'red' },
+});
+```
 
 ```css
-.ag-theme-quartz {
-    --ag-card-radius: 10px;
-    --ag-card-shadow: 0 10px 40px rgb(83, 0, 106);
-    --ag-popup-shadow: var(--ag-card-shadow);
+/* add a green shadow on set filter menus like "Athlete"
+   but not other filter menus like "Age" */
+.ag-menu:has(.ag-set-filter) {
+    box-shadow: 0 0 10px 5px green;
 }
-
-.ag-theme-quartz .ag-menu {
-    min-width: 350px;
-    background-color: #55AA77;
+/* and a blue shadow on column menus */
+.ag-menu.ag-column-menu {
+    box-shadow: 0 0 10px 5px blue;
 }
 ```
 

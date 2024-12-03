@@ -1082,11 +1082,10 @@ export * from './events';
 
 // theming
 export { type Part, createPart } from './theming/Part';
-export { type Theme, createTheme } from './theming/Theme';
+export { type Theme, createTheme, _asThemeImpl } from './theming/Theme';
 export * from './theming/parts/checkbox-style/checkbox-styles';
 export * from './theming/parts/color-scheme/color-schemes';
 export * from './theming/parts/icon-set/icon-sets';
 export * from './theming/parts/input-style/input-styles';
 export * from './theming/parts/tab-style/tab-styles';
 export * from './theming/parts/theme/themes';
-export * as _theming from './theming/private-theming-api';

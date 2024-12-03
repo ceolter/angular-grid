@@ -1,11 +1,10 @@
 import { Checkmark, ChevronDown } from '@carbon/icons-react';
+import { paramValueToCss } from '@components/theme-builder/api';
 import { ParamModel, useParamAtom } from '@components/theme-builder/model/ParamModel';
 import { useRenderedTheme } from '@components/theme-builder/model/rendered-theme';
 import type { ThemeParam } from '@components/theme-builder/model/utils';
 import styled from '@emotion/styled';
 import * as RadixDropdown from '@radix-ui/react-dropdown-menu';
-
-import { _theming } from 'ag-grid-community';
 
 import { withErrorBoundary } from '../general/ErrorBoundary';
 import { FormField } from './FormField';
@@ -68,7 +67,7 @@ const BorderItem = (props: BorderProps) => {
         }
     }
 
-    const rendered = _theming.paramValueToCss(props.param, editorValue);
+    const rendered = paramValueToCss(props.param, editorValue);
     const checked = !!rendered && rendered !== 'none' && !rendered.includes('transparent');
 
     return (

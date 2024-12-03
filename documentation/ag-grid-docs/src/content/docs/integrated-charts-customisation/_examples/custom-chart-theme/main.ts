@@ -87,7 +87,7 @@ const myCustomThemeLight = deepMerge(commonThemeProperties, {
                             fontStyle: 'italic',
                             fontWeight: 'bold',
                             fontSize: 12,
-                            padding: 5,
+                            spacing: 5,
                         },
                     },
                 },
@@ -101,7 +101,7 @@ const myCustomThemeLight = deepMerge(commonThemeProperties, {
                             fontStyle: 'italic',
                             fontWeight: 'bold',
                             fontSize: 14,
-                            padding: 8,
+                            spacing: 8,
                         },
                     },
                 },
@@ -133,28 +133,28 @@ const myCustomThemeDark = deepMerge(commonThemeProperties, {
                 number: {
                     bottom: {
                         line: {
-                            color: '#757575',
+                            stroke: '#757575',
                         },
                         label: {
                             color: '#B0BEC5',
                             fontStyle: 'italic',
                             fontWeight: 'bold',
                             fontSize: 12,
-                            padding: 5,
+                            spacing: 5,
                         },
                     },
                 },
                 category: {
                     left: {
                         line: {
-                            color: '#757575',
+                            stroke: '#757575',
                         },
                         label: {
                             color: '#B0BEC5',
                             fontStyle: 'italic',
                             fontWeight: 'bold',
                             fontSize: 14,
-                            padding: 8,
+                            spacing: 8,
                         },
                     },
                 },

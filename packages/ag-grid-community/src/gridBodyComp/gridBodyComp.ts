@@ -1,7 +1,7 @@
 import { _isCellSelectionEnabled, _isMultiRowSelection } from '../gridOptionsUtils';
 import { GridHeaderSelector } from '../headerRendering/gridHeaderComp';
 import { LayoutCssClasses } from '../styling/layoutFeature';
-import { _setAriaColCount, _setAriaMultiSelectable, _setAriaRowCount } from '../utils/aria';
+import { _setAriaColCount, _setAriaMultiSelectable, _setAriaRole, _setAriaRowCount } from '../utils/aria';
 import { _observeResize } from '../utils/dom';
 import type { ComponentSelector } from '../widgets/component';
 import { Component, RefPlaceholder } from '../widgets/component';
@@ -27,7 +27,7 @@ function getGridBodyTemplate(includeOverlay?: boolean): {
     template: string;
 } {
     const paramsMap: Record<string, { name: string }> = {};
-    const template = /* html */ `<div class="ag-root ag-unselectable" role="treegrid">
+    const template = /* html */ `<div class="ag-root ag-unselectable" data-ref="eGridRoot">
         <ag-header-root></ag-header-root>
         <div class="ag-floating-top" data-ref="eTop" role="presentation">
             ${makeRowContainers(paramsMap, ['topLeft', 'topCenter', 'topRight', 'topFullWidth'])}
@@ -54,6 +54,7 @@ function getGridBodyTemplate(includeOverlay?: boolean): {
 }
 
 export class GridBodyComp extends Component {
+    private readonly eGridRoot: HTMLElement = RefPlaceholder;
     private readonly eBodyViewport: HTMLElement = RefPlaceholder;
     private readonly eStickyTop: HTMLElement = RefPlaceholder;
     private readonly eStickyBottom: HTMLElement = RefPlaceholder;
@@ -133,6 +134,7 @@ export class GridBodyComp extends Component {
                 );
             },
             setBodyViewportWidth: (width) => (this.eBodyViewport.style.width = width),
+            setGridRootRole: (role: 'grid' | 'treegrid') => _setAriaRole(this.eGridRoot, role),
         };
 
         this.ctrl = this.createManagedBean(new GridBodyCtrl());

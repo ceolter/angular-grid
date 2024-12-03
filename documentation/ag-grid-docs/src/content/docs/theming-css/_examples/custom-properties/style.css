@@ -1,0 +1,8 @@
+body {
+    /* override value of backgroundColor, foregroundColor and spacing parameters */
+    --ag-background-color: darkred;
+    --ag-foreground-color: lightpink;
+    --ag-spacing: 4px;
+    /* use dark scrollbars */
+    --ag-browser-color-scheme: dark;
+}

@@ -26,6 +26,7 @@ export const colorSchemeLightCold = /*#__PURE__*/ createPart({
 });
 
 const darkParams = {
+    ...defaultLightColorSchemeParams,
     backgroundColor: 'hsl(217, 0%, 17%)',
     foregroundColor: '#FFF',
     chromeBackgroundColor: {
@@ -34,6 +35,12 @@ const darkParams = {
         onto: 'backgroundColor',
     },
     browserColorScheme: 'dark',
+    popupShadow: '0 0px 20px #0008',
+    cardShadow: '0 1px 4px 1px #0008',
+    advancedFilterBuilderJoinPillColor: '#7a3a37',
+    advancedFilterBuilderColumnPillColor: '#355f2d',
+    advancedFilterBuilderOptionPillColor: '#5a3168',
+    advancedFilterBuilderValuePillColor: '#374c86',
 } as const;
 
 export const colorSchemeDark = /*#__PURE__*/ createPart({
@@ -56,14 +63,13 @@ export const colorSchemeDarkWarm = /*#__PURE__*/ createPart({
 });
 
 const darkBlueParams = {
+    ...darkParams,
     backgroundColor: '#1f2836',
-    foregroundColor: '#FFF',
     chromeBackgroundColor: {
         ref: 'foregroundColor',
         mix: 0.07,
         onto: 'backgroundColor',
     },
-    browserColorScheme: 'dark',
 } as const;
 
 export const colorSchemeDarkBlue = /*#__PURE__*/ createPart({

@@ -40,12 +40,8 @@ export class RowGroupColsSvc extends BaseColsService implements NamedBean, ICols
         removeCol: (column: AgColumn) => _removeFromArray(this.columns, column),
     };
 
-    public isRowGroupEmpty(): boolean {
-        return this.columns.length === 0;
-    }
-
     public moveColumn(fromIndex: number, toIndex: number, source: ColumnEventType): void {
-        if (this.isRowGroupEmpty()) {
+        if (this.columns.length === 0) {
             return;
         }
 

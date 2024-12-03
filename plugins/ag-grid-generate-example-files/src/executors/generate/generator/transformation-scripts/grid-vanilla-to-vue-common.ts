@@ -123,11 +123,3 @@ export function isComponent(property) {
 export function isParamsProperty(property) {
     return PARAMS_PROPERTIES.indexOf(property) !== -1;
 }
-
-export function addToVueComponents(componentFileNames, vueComponents, property, componentName) {
-    if (isComponent(property) && isExternalVueFile(componentFileNames, componentName)) {
-        if (!vueComponents.includes(componentName)) {
-            vueComponents.push(componentName);
-        }
-    }
-}

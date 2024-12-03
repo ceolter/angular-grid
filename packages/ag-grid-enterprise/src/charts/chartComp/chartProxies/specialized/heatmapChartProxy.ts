@@ -100,22 +100,8 @@ function renderHeatmapTooltip(params: AgHeatmapSeriesTooltipRendererParams<any>)
         { label: yName, value: datum[yKey] },
         { label: datum[xKey], value: colorKey && datum[colorKey] },
     ];
-    const html = table
-        .map(({ label, value }) => `<b>${sanitizeHtml(String(label))}:</b> ${sanitizeHtml(String(value))}`)
-        .join('<br>');
     return {
         title: '',
-        content: html,
+        data: table.map(({ label, value }) => ({ label: String(label), value: String(value) })),
     };
-}
-
-function sanitizeHtml(input: string): string {
-    const ESCAPED_CHARS = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-    };
-    const characterClass = `[${Object.keys(ESCAPED_CHARS).join('')}]`;
-    const pattern = new RegExp(characterClass, 'g');
-    return input.replace(pattern, (char: keyof typeof ESCAPED_CHARS) => ESCAPED_CHARS[char]);
 }

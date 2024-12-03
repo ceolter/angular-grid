@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useStore } from 'jotai';
 import { type RefObject, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
 
-import { _theming, colorSchemeLight, themeQuartz } from 'ag-grid-community';
+import { _asThemeImpl, colorSchemeLight, themeQuartz } from 'ag-grid-community';
 
 import { ResetChangesModal } from '../general/ResetChangesModal';
 import { PresetRender } from './PresetRender';
@@ -39,7 +39,7 @@ const SelectButton = ({ preset, scrollerRef, presetClass }: SelectButtonProps) =
         const wrapper = wrapperRef.current;
         const style = styleRef.current;
         if (wrapper && style) {
-            let theme = _theming.asThemeImpl(themeQuartz.withPart(colorSchemeLight));
+            let theme = _asThemeImpl(themeQuartz.withPart(colorSchemeLight));
             if (preset.params) {
                 theme = theme.withParams(preset.params);
             }

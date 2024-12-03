@@ -4,9 +4,33 @@ title: "Theming: Customising the grid with CSS"
 
 Customising the grid with CSS
 
-A running grid instance contains thousands of DOM elements, and each of them has class names like `ag-header` and `ag-row` that can be used in CSS rules that change the style of that element.
+## Custom CSS Rules
 
-The [Theming API](./theming/) works by generating CSS that is inserted into your document. These styles are just a starting point, and you can use your own CSS to create advanced customisations.
+A running grid instance contains thousands of DOM elements, and each of them has class names like `ag-header` and `ag-row`. You can target these class names with your own CSS rules, allowing limitless customisation.
+
+If your designer has specified, for example, animated rainbow text on the header, that's achievable:
+
+```css
+.ag-header-cell-text {
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
+    font-weight: 600;
+    font-size: 20px;
+    animation: animatedTextGradient 2.5s linear infinite;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+}
+
+@keyframes animatedTextGradient {
+    to {
+        background-position: -200% center;
+    }
+}
+```
+
+{% gridExampleRunner title="Custom Properties" name="css-rules"  exampleHeight=450 /%}
+
+The best way to find the right class name to use in a CSS rule is using the browser's developer tools. You will notice that components often have multiple class names, some more general than others. For example, the [row grouping panel](./tool-panel-columns/#example) is a component onto which you can drag columns to group them. The internal name for this is the "column drop" component, and there are two kinds - a horizontal one at the top of the header and a vertical one in the columns tool panel. You can use the class name `ag-column-drop` to target either kind, or `ag-column-drop-vertical` / `ag-column-drop-horizontal` to target one only.
 
 ## Overriding Theme Parameters with Custom Properties
 
@@ -17,19 +41,21 @@ The names of the CSS custom properties are prefixed with `--ag-` to avoid confli
 ```css
 body {
     /* override value of backgroundColor, foregroundColor and spacing parameters */
-    --ag-background-color: #880000;
-    --ag-foreground-color: #00000088;
+    --ag-background-color: darkred;
+    --ag-foreground-color: lightpink;
     --ag-spacing: 4px;
+    /* use dark scrollbars */
+    --ag-browser-color-scheme: dark;
 }
 ```
 
-TODO example here (due in AG-13129)
+{% gridExampleRunner title="Custom Properties" name="custom-properties"  exampleHeight=450 /%}
 
-Values for CSS custom properties are inherited by child elements. The above example sets the variable on the `body` element, so will affect every grid on the page. You can use different selectors to target individual grids or groups of grids.
+Values for CSS custom properties are inherited by child elements. The above example sets the custom property on the `body` element, so will affect every grid on the page. You can use different selectors to target individual grids or groups of grids.
 
 ### Using Your App's Existing Custom Properties
 
-If your app already defines a colour scheme using CSS variables and you want to use those existing variable names within the grid, you can connect the grid variables to your own variables using `var()` expressions:
+If your app already defines a colour scheme using CSS custom properties and you want to use those values within the grid, you can use `var()` expressions as parameter values:
 
 ```css
 body {
@@ -38,29 +64,15 @@ body {
 }
 ```
 
-## Custom CSS Rules
-
-Some design effects can't be achieved through CSS variables alone. For example, there is no variable to set the `font-style` on header cells. If you want your column headers to be italic, use regular CSS.
-
-```css
-.ag-header-cell-label {
-    font-style: italic;
-}
-```
-
-TODO example here (due in AG-13129)
-
-The best way to find the right class name to use in a CSS rule is using the browser's developer tools. You will notice that components often have multiple class names, some more general than others. For example, the [row grouping panel](./tool-panel-columns/#example) is a component onto which you can drag columns to group them. The internal name for this is the "column drop" component, and there are two kinds - a horizontal one at the top of the header and a vertical one in the columns tool panel. You can use the class name `ag-column-drop` to target either kind, or `ag-column-drop-vertical` / `ag-column-drop-horizontal` to target one only.
-
 ### Understanding CSS rule maintenance and breaking changes
 
-With each release of the grid we add features and improve existing ones, and as a result the DOM structure changes with every release - even minor releases. Of course we test and update the CSS rules in our themes to make sure they still work, and this includes ensuring that customisations made via CSS variables does not break between releases. But if you have written your own CSS rules, you will need to test and update them.
+With each release of the grid we add features and improve existing ones, and as a result the DOM structure changes with every release - even minor releases. Of course we test and update the CSS rules in our themes to make sure they still work, and this includes ensuring that customisations made via CSS custom property does not break between releases. But if you have written your own CSS rules, you will need to test and update them.
 
 The simpler your CSS rules are, the less likely they are to break between releases. Prefer selectors that target a single class name where possible.
 
 ### Avoiding Breaking the Grid with CSS Rules
 
-Browsers use the same mechanism - CSS - for controlling how elements work (e.g. scrolling and whether they respond to mouse events), where elements appear, and how elements look. Our "structural stylesheet" (ag-grid.scss) sets CSS rules that control how the grid works, and the code depends on those rules not being overridden. There is nothing that we can do to prevent themes overriding critical rules, so as a theme author you need to be careful not to break the grid. Here's a guide:
+Browsers use the same mechanism - CSS - for controlling how elements work (e.g. scrolling and whether they respond to mouse events), where elements appear, and how elements look. Some of the styles applied by our CSS are essential to how the grid works, and the grid depends on those rules not being overridden. There is nothing that we can do to prevent themes overriding critical rules, so as a theme author you need to be careful not to break the grid. Here's a guide:
 
 * Visual styles including margins, paddings, sizes, colours, fonts, borders etc are all fine to change in a theme.
 

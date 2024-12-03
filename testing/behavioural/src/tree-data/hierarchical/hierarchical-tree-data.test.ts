@@ -43,7 +43,7 @@ describe('ag-grid hierarchical tree data', () => {
             treeData: true,
             animateRows: false,
             groupDefaultExpanded: -1,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
         };
 
         const api = gridsManager.createGrid('myGrid', gridOptions);
@@ -112,7 +112,7 @@ describe('ag-grid hierarchical tree data', () => {
         const gridOptions: GridOptions = {
             columnDefs: [{ field: 'x' }],
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             groupDefaultExpanded: -1,
             rowData,
@@ -181,7 +181,7 @@ describe('ag-grid hierarchical tree data', () => {
         const api = gridsManager.createGrid('myGrid', {
             columnDefs: [{ field: 'x' }],
             treeData: false,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             groupDefaultExpanded: -1,
             rowData: rowData0,
@@ -282,7 +282,7 @@ describe('ag-grid hierarchical tree data', () => {
         const api = gridsManager.createGrid('myGrid', {
             columnDefs: [{ field: 'x' }],
             treeData: false,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             groupDefaultExpanded: -1,
             rowData: rowData0,
@@ -363,7 +363,7 @@ describe('ag-grid hierarchical tree data', () => {
         const gridOptions: GridOptions = {
             columnDefs: [{ field: 'x' }],
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             groupDefaultExpanded: -1,
             rowData,
@@ -445,7 +445,7 @@ describe('ag-grid hierarchical tree data', () => {
         const gridOptions: GridOptions = {
             columnDefs: [],
             treeData: true,
-            treeDataChildrenField: 'children',
+            ['treeDataChildrenField' as any]: 'children',
             animateRows: false,
             groupDefaultExpanded: -1,
             rowData,

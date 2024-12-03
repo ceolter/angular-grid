@@ -77,6 +77,12 @@ export type ColorValue =
            * Provide a second color reference to mix with instead of `transparent`. This has no effect if `mix` is unspecified.
            */
           onto?: string;
+          /**
+           * Provide a CSS color value to mix with instead of `transparent`.
+           * This has no effect if `mix` is unspecified. This is an alternative
+           * to `onto`, if both are provided then `onto` will be take precedence.
+           */
+          ontoColor?: string;
       };
 
 const colorValueToCss = (value: ColorValue): string | false => {
@@ -86,7 +92,7 @@ const colorValueToCss = (value: ColorValue): string | false => {
         if (value.mix == null) {
             return colorExpr;
         }
-        const backgroundExpr = value.onto ? 'var(--ag-background-color)' : 'transparent';
+        const backgroundExpr = value.onto ? paramToVariableExpression(value.onto) : 'transparent';
         return `color-mix(in srgb, ${backgroundExpr}, ${colorExpr} ${clamp(value.mix * 100, 0, 100)}%)`;
     }
     return false;

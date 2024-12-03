@@ -1,9 +1,8 @@
+import { type ColorValue, paramValueToCss } from '@components/theme-builder/api';
 import styled from '@emotion/styled';
 import { FloatingPortal, autoPlacement, autoUpdate, offset, useFloating } from '@floating-ui/react';
 import { useEffect, useRef, useState } from 'react';
 import { HexAlphaColorPicker, HexColorPicker } from 'react-colorful';
-
-import { _theming } from 'ag-grid-community';
 
 import { useClickAwayListener } from '../component-utils';
 import { Card } from '../general/Card';
@@ -11,10 +10,10 @@ import { Input } from './Input';
 import { RGBAColor } from './RGBAColor';
 import { type ValueEditorProps } from './ValueEditorProps';
 
-export const ColorValueEditor = ({ param, value, onChange }: ValueEditorProps<_theming.ColorValue>) => (
+export const ColorValueEditor = ({ param, value, onChange }: ValueEditorProps<ColorValue>) => (
     <ColorEditor
         preventTransparency={param.property === 'backgroundColor'}
-        value={_theming.paramValueToCss(param.property, value) || ''}
+        value={paramValueToCss(param.property, value) || ''}
         onChange={onChange}
     />
 );

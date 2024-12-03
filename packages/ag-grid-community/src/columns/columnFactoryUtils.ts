@@ -210,18 +210,21 @@ export function _updateColumnState(
         source
     );
 
+    const colFlex = column.getFlex();
+
     // width - we only set width if column is not flexing
-    const noFlexThisCol = column.getFlex() != null;
-    if (noFlexThisCol) {
-        // both null and undefined means we skip, as it's not possible to 'clear' width (a column must have a width)
-        if (colDef.width != null) {
-            column.setActualWidth(colDef.width, source);
-        } else {
-            // otherwise set the width again, in case min or max width has changed,
-            // and width needs to be adjusted.
-            const widthBeforeUpdate = column.getActualWidth();
-            column.setActualWidth(widthBeforeUpdate, source);
-        }
+    if (colFlex != null && colFlex > 0) {
+        return;
+    }
+
+    // both null and undefined means we skip, as it's not possible to 'clear' width (a column must have a width)
+    if (colDef.width != null) {
+        column.setActualWidth(colDef.width, source);
+    } else {
+        // otherwise set the width again, in case min or max width has changed,
+        // and width needs to be adjusted.
+        const widthBeforeUpdate = column.getActualWidth();
+        column.setActualWidth(widthBeforeUpdate, source);
     }
 }
 
