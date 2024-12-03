@@ -90,12 +90,12 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
     );
 
     const rowData = [
-        {
-            ticker: 'US10Y',
-            performance: 93521,
-            current: 98149,
-            feb: 78675,
-        },
+        { ticker: 'US10Y', performance: 93521, current: 98149, feb: 78675 },
+        { ticker: 'TSLA', performance: 97121, current: 97121, feb: 21462 },
+        { ticker: 'AMZN', performance: 96528, current: 96528, feb: 79786 },
+        { ticker: 'UBER', performance: 94390, current: 94390, feb: 33186 },
+        { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
+        { ticker: 'US10Y', performance: 93521, current: 98149, feb: 78675 },
         { ticker: 'TSLA', performance: 97121, current: 97121, feb: 21462 },
         { ticker: 'AMZN', performance: 96528, current: 96528, feb: 79786 },
         { ticker: 'UBER', performance: 94390, current: 94390, feb: 33186 },
