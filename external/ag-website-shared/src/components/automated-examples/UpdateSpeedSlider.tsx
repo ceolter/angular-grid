@@ -15,7 +15,7 @@ interface Props {
 export const UpdateSpeedSlider: FunctionComponent<Props> = ({ min, max, step, value, disabled, setValue }) => {
     const updateSpeed = value <= 0 ? '0' : `${value}x`;
     return (
-        <div className={classnames('text-xl', styles.slider)}>
+        <div className={classnames('text-lg', styles.slider)}>
             <label htmlFor="update-speed-slider">
                 <span className="text-secondary">Update speed:</span> <span>{updateSpeed}</span>
             </label>

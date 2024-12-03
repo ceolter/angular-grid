@@ -181,7 +181,7 @@ export function AutomatedIntegratedChartsWithCreate({
             </div>
 
             <footer className={styles.sectionFooter}>
-                <div className={classNames(styles.exploreButtonOuter, 'text-xl')}>
+                <div className={classNames(styles.exploreButtonOuter, 'text-lg')}>
                     <span className="text-secondary">Live example:</span>
                     <ToggleAutomatedExampleButton
                         onClick={() => {
