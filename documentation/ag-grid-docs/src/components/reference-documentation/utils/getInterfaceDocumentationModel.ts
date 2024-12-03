@@ -59,6 +59,11 @@ export function getProperties({
     const props: any = {};
     let interfaceOverrides: Overrides = {} as Overrides;
     let interfaceOverridesMeta = {};
+
+    if (!interfaceData?.type) {
+        throw new Error(`Could not find interface '${interfaceName}' for interfaceDocumentation component!`);
+    }
+
     if (Object.keys(overrides).length) {
         const { meta: interfaceMetaOverrides, ...interfaceOverridesData } = overrides[interfaceName];
 
