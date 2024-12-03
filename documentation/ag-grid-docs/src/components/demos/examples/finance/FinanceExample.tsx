@@ -7,6 +7,7 @@ import {
     type ColDef,
     type GetRowIdFunc,
     type GetRowIdParams,
+    type GridSizeChangedEvent,
     ModuleRegistry,
     type ValueFormatterFunc,
     type ValueGetterParams,
@@ -44,8 +45,18 @@ export interface Props {
     enableRowGroup?: boolean;
 }
 
+type ColWidth = number | 'auto';
+
 const DEFAULT_UPDATE_INTERVAL = 60;
 const PERCENTAGE_CHANGE = 20;
+const COLUMN_HEADER_NAME_PRIORITIES = ['ticker', 'timeline', 'totalValue', 'instrument', 'p&l', 'price', 'quantity'];
+const BREAKPOINT_MEDIUM = 750;
+const BREAKPOINT_SMALL = 400;
+const TICKER_SIZES: Record<string, ColWidth> = {
+    small: 'auto',
+    medium: 180,
+    large: 380,
+};
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
@@ -84,6 +95,7 @@ export const FinanceExample: React.FC<Props> = ({
 }) => {
     const [rowData, setRowData] = useState(getData());
     const gridRef = useRef<AgGridReact>(null);
+    const [tickerColWidth, setTickerColWidth] = useState(TICKER_SIZES.large);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -117,11 +129,25 @@ export const FinanceExample: React.FC<Props> = ({
     }, [updateInterval]);
 
     const colDefs = useMemo<ColDef[]>(() => {
+        const tickerWidthDefs =
+            tickerColWidth === 'auto'
+                ? { flex: 1 }
+                : {
+                      initialWidth: tickerColWidth,
+                      minWidth: tickerColWidth,
+                  };
+        const timelineWidthDefs =
+            tickerColWidth === 'auto'
+                ? { flex: 1 }
+                : {
+                      initialWidth: 140,
+                      minWidth: 140,
+                  };
         const cDefs: ColDef[] = [
             {
                 field: 'ticker',
                 cellRenderer: TickerCellRenderer,
-                minWidth: 380,
+                ...tickerWidthDefs,
             },
             {
                 headerName: 'Timeline',
@@ -135,14 +161,17 @@ export const FinanceExample: React.FC<Props> = ({
                         },
                     },
                 },
+                ...timelineWidthDefs,
             },
             {
                 field: 'instrument',
                 cellDataType: 'text',
                 type: 'rightAligned',
-                maxWidth: 180,
+                minWidth: 160,
+                initialWidth: 160,
             },
             {
+                colId: 'p&l',
                 headerName: 'P&L',
                 cellDataType: 'number',
                 type: 'rightAligned',
@@ -150,8 +179,11 @@ export const FinanceExample: React.FC<Props> = ({
                 valueGetter: ({ data }: ValueGetterParams) => data && data.quantity * (data.price / data.purchasePrice),
                 valueFormatter: numberFormatter,
                 aggFunc: 'sum',
+                minWidth: 140,
+                initialWidth: 140,
             },
             {
+                colId: 'totalValue',
                 headerName: 'Total Value',
                 type: 'rightAligned',
                 cellDataType: 'number',
@@ -159,6 +191,8 @@ export const FinanceExample: React.FC<Props> = ({
                 cellRenderer: 'agAnimateShowChangeCellRenderer',
                 valueFormatter: numberFormatter,
                 aggFunc: 'sum',
+                minWidth: 160,
+                initialWidth: 160,
             },
         ];
 
@@ -183,7 +217,7 @@ export const FinanceExample: React.FC<Props> = ({
         }
 
         return cDefs;
-    }, [isSmallerGrid]);
+    }, [isSmallerGrid, tickerColWidth]);
 
     const defaultColDef: ColDef = useMemo(
         () => ({
@@ -196,6 +230,59 @@ export const FinanceExample: React.FC<Props> = ({
     );
 
     const getRowId = useCallback<GetRowIdFunc>(({ data: { ticker } }: GetRowIdParams) => ticker, []);
+    const onGridSizeChanged = useCallback((params: GridSizeChangedEvent) => {
+        let tickerColWidth: ColWidth;
+        if (params.clientWidth < BREAKPOINT_SMALL) {
+            tickerColWidth = TICKER_SIZES.small;
+        } else if (params.clientWidth < BREAKPOINT_MEDIUM) {
+            tickerColWidth = TICKER_SIZES.medium;
+        } else {
+            tickerColWidth = TICKER_SIZES.large;
+        }
+
+        setTickerColWidth(tickerColWidth);
+        const isAutoSized = tickerColWidth === 'auto';
+
+        // Show minimum of 2 columns
+        const showMinCols = () => {
+            params.api.setColumnsVisible(COLUMN_HEADER_NAME_PRIORITIES.slice(0, 2), true);
+            params.api.setColumnsVisible(COLUMN_HEADER_NAME_PRIORITIES.slice(2), false);
+        };
+
+        if (isAutoSized) {
+            showMinCols();
+            return;
+        }
+
+        const columnsToShow: string[] = [];
+        const columnsToHide: string[] = [];
+        let totalWidth: number = 0;
+        let hasFilledColumns = false;
+        COLUMN_HEADER_NAME_PRIORITIES.forEach((colId) => {
+            const col = params.api.getColumn(colId);
+            if (!col) {
+                return;
+            }
+            const minWidth = col?.getMinWidth() || 0;
+            const newTotalWidth = totalWidth + minWidth;
+
+            if (!hasFilledColumns && newTotalWidth <= params.clientWidth) {
+                columnsToShow.push(colId);
+                totalWidth = newTotalWidth;
+            } else {
+                hasFilledColumns = true;
+                columnsToHide.push(colId);
+            }
+        });
+        if (columnsToShow.length < 2) {
+            showMinCols();
+            return;
+        }
+
+        // show/hide columns based on current grid width
+        params.api.setColumnsVisible(columnsToShow, true);
+        params.api.setColumnsVisible(columnsToHide, false);
+    }, []);
 
     const statusBar = useMemo(
         () => ({
@@ -231,6 +318,7 @@ export const FinanceExample: React.FC<Props> = ({
                 groupDefaultExpanded={-1}
                 statusBar={statusBar}
                 popupParent={typeof document === 'object' ? document.body : undefined}
+                onGridSizeChanged={onGridSizeChanged}
             />
         </div>
     );
