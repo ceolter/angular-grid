@@ -8,8 +8,8 @@
   "exports": {
     ".": {
       "import": "./dist/package/main.esm.mjs",
-      "require": "./dist/package/main.cjs.js",
       "types": "./dist/types/src/main.d.ts",
+      "require": "./dist/package/main.cjs.js",
       "default": "./dist/package/main.cjs.js"
     },
     "./styles/ag-grid-no-native-widgets.css": "./styles/ag-grid-no-native-widgets.css",
