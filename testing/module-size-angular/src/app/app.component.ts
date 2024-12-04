@@ -1,123 +1,18 @@
 import { Component } from '@angular/core';
 
-import { AgGridAngular } from 'ag-grid-angular';
-import type { ColDef, RowSelectionOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
-import { RichSelectModule } from 'ag-grid-enterprise';
+import { GridWrapperComponent } from './grid-wrapper/grid-wrapper.component';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule]);
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [AgGridAngular],
+    imports: [GridWrapperComponent],
     styleUrls: ['./app.component.css'],
-    // template: '',
-    template: /*html*/ `<ag-grid-angular
-        style="width: 100%; height: 100%;"
-        [rowData]="rowData"
-        [columnDefs]="columnDefs"
-    /> `,
-    // template: /*html*/ `<ag-grid-angular
-    //     style="width: 100%; height: 100%;"
-    //     [rowData]="rowData"
-    //     [columnDefs]="columnDefs"
-    //     [defaultColDef]="defaultColDef"
-    //     [rowSelection]="rowSelection"
-    //     [pagination]="true"
-    //     [paginationPageSize]="paginationPageSize"
-    //     [paginationPageSizeSelector]="paginationPageSizeSelector"
-    //     loadThemeGoogleFonts
-    // /> `,
+    // links to the grid-wrapper component
+    template: `
+        <h1>Grid Wrapper</h1>
+        @defer {
+            <grid-wrapper></grid-wrapper>
+        }
+    `,
 })
-export class AppComponent {
-    // v = ValidationModule;
-
-    test() {
-        // const api = createGrid(null as any, null as any, null as any);
-        // console.log(api);
-    }
-
-    public rowData: any[] | null = [
-        { make: 'Tesla', model: 'Model Y', price: 64950, electric: true, month: 'June' },
-        { make: 'Ford', model: 'F-Series', price: 33850, electric: false, month: 'October' },
-        { make: 'Toyota', model: 'Corolla', price: 29600, electric: false, month: 'August' },
-        { make: 'Mercedes', model: 'EQA', price: 48890, electric: true, month: 'February' },
-        { make: 'Fiat', model: '500', price: 15774, electric: false, month: 'January' },
-        { make: 'Nissan', model: 'Juke', price: 20675, electric: false, month: 'March' },
-        { make: 'Vauxhall', model: 'Corsa', price: 18460, electric: false, month: 'July' },
-        { make: 'Volvo', model: 'EX30', price: 33795, electric: true, month: 'September' },
-        { make: 'Mercedes', model: 'Maybach', price: 175720, electric: false, month: 'December' },
-        { make: 'Vauxhall', model: 'Astra', price: 25795, electric: false, month: 'April' },
-        { make: 'Fiat', model: 'Panda', price: 13724, electric: false, month: 'November' },
-        { make: 'Jaguar', model: 'I-PACE', price: 69425, electric: true, month: 'May' },
-        { make: 'Tesla', model: 'Model Y', price: 64950, electric: true, month: 'June' },
-        { make: 'Ford', model: 'F-Series', price: 33850, electric: false, month: 'October' },
-        { make: 'Toyota', model: 'Corolla', price: 29600, electric: false, month: 'August' },
-        { make: 'Mercedes', model: 'EQA', price: 48890, electric: true, month: 'February' },
-        { make: 'Fiat', model: '500', price: 15774, electric: false, month: 'January' },
-        { make: 'Nissan', model: 'Juke', price: 20675, electric: false, month: 'March' },
-        { make: 'Vauxhall', model: 'Corsa', price: 18460, electric: false, month: 'July' },
-        { make: 'Volvo', model: 'EX30', price: 33795, electric: true, month: 'September' },
-        { make: 'Mercedes', model: 'Maybach', price: 175720, electric: false, month: 'December' },
-        { make: 'Vauxhall', model: 'Astra', price: 25795, electric: false, month: 'April' },
-        { make: 'Fiat', model: 'Panda', price: 13724, electric: false, month: 'November' },
-        { make: 'Jaguar', model: 'I-PACE', price: 69425, electric: true, month: 'May' },
-        { make: 'Tesla', model: 'Model Y', price: 64950, electric: true, month: 'June' },
-        { make: 'Ford', model: 'F-Series', price: 33850, electric: false, month: 'October' },
-        { make: 'Toyota', model: 'Corolla', price: 29600, electric: false, month: 'August' },
-        { make: 'Mercedes', model: 'EQA', price: 48890, electric: true, month: 'February' },
-        { make: 'Fiat', model: '500', price: 15774, electric: false, month: 'January' },
-        { make: 'Nissan', model: 'Juke', price: 20675, electric: false, month: 'March' },
-        { make: 'Vauxhall', model: 'Corsa', price: 18460, electric: false, month: 'July' },
-        { make: 'Volvo', model: 'EX30', price: 33795, electric: true, month: 'September' },
-        { make: 'Mercedes', model: 'Maybach', price: 175720, electric: false, month: 'December' },
-        { make: 'Vauxhall', model: 'Astra', price: 25795, electric: false, month: 'April' },
-        { make: 'Fiat', model: 'Panda', price: 13724, electric: false, month: 'November' },
-        { make: 'Jaguar', model: 'I-PACE', price: 69425, electric: true, month: 'May' },
-    ];
-    public columnDefs: ColDef[] = [
-        {
-            field: 'make',
-            editable: true,
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ['Tesla', 'Ford', 'Toyota', 'Mercedes', 'Fiat', 'Nissan', 'Vauxhall', 'Volvo', 'Jaguar'],
-            },
-        },
-        { field: 'model' },
-        { field: 'price', filter: 'agNumberColumnFilter' },
-        { field: 'electric' },
-        {
-            field: 'month',
-            comparator: (valueA, valueB) => {
-                const months = [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
-                    'August',
-                    'September',
-                    'October',
-                    'November',
-                    'December',
-                ];
-                const idxA = months.indexOf(valueA);
-                const idxB = months.indexOf(valueB);
-                return idxA - idxB;
-            },
-        },
-    ];
-    public defaultColDef: ColDef = {
-        filter: 'agTextColumnFilter',
-        floatingFilter: true,
-    };
-    public rowSelection: RowSelectionOptions | 'single' | 'multiple' = {
-        mode: 'multiRow',
-        headerCheckbox: false,
-    };
-    public paginationPageSize = 10;
-    public paginationPageSizeSelector: number[] | boolean = [10, 25, 50];
-}
+export class AppComponent {}
