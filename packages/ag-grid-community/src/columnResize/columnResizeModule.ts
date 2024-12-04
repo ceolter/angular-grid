@@ -1,8 +1,8 @@
 import type { _ColumnResizeApi } from '../api/gridApi';
 import { HorizontalResizeModule } from '../dragAndDrop/dragModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
 import { AutoWidthModule } from '../rendering/autoWidthModule';
+import { VERSION } from '../version';
 import { setColumnWidths } from './columnResizeApi';
 import { ColumnResizeService } from './columnResizeService';
 
@@ -10,7 +10,8 @@ import { ColumnResizeService } from './columnResizeService';
  * @feature Columns -> Column Sizing
  */
 export const ColumnResizeModule: _ModuleWithApi<_ColumnResizeApi> = {
-    ...baseCommunityModule('ColumnResize'),
+    moduleName: 'ColumnResize',
+    version: VERSION,
     beans: [ColumnResizeService],
     apiFunctions: {
         setColumnWidths,

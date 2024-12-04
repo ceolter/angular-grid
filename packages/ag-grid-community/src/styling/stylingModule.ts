@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { CellStyleService } from './cellStyleService';
 import { RowStyleService } from './rowStyleService';
 
@@ -8,7 +8,8 @@ import { RowStyleService } from './rowStyleService';
  * @colDef cellStyle, cellClass, cellClassRules
  */
 export const CellStyleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CellStyle'),
+    moduleName: 'CellStyle',
+    version: VERSION,
     beans: [CellStyleService],
 };
 
@@ -17,6 +18,7 @@ export const CellStyleModule: _ModuleWithoutApi = {
  * @gridOption rowStyle, getRowStyle, rowClass, getRowClass, rowClassRules
  */
 export const RowStyleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowStyle'),
+    moduleName: 'RowStyle',
+    version: VERSION,
     beans: [RowStyleService],
 };

@@ -1,6 +1,6 @@
 import type { _EventGridApi } from '../../api/gridApi';
 import type { _ModuleWithApi } from '../../interfaces/iModule';
-import { baseCommunityModule } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { ApiEventService } from './apiEventService';
 import { addEventListener, addGlobalListener, removeEventListener, removeGlobalListener } from './eventApi';
 
@@ -8,7 +8,8 @@ import { addEventListener, addGlobalListener, removeEventListener, removeGlobalL
  * @feature API -> Grid Events
  */
 export const EventApiModule: _ModuleWithApi<_EventGridApi<any>> = {
-    ...baseCommunityModule('EventApi'),
+    moduleName: 'EventApi',
+    version: VERSION,
     apiFunctions: {
         addEventListener,
         addGlobalListener,

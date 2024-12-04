@@ -1,7 +1,7 @@
 import type { _DragGridApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { DndSourceComp } from '../rendering/dndSourceComp';
+import { VERSION } from '../version';
 import { DragAndDropImageComponent } from './dragAndDropImageComponent';
 import { DragAndDropService } from './dragAndDropService';
 import { addRowDropZone, getRowDropZoneParams, removeRowDropZone } from './dragApi';
@@ -13,7 +13,8 @@ import { RowDragService } from './rowDragService';
  * @internal
  */
 export const DragModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('Drag'),
+    moduleName: 'Drag',
+    version: VERSION,
     beans: [DragService],
 };
 
@@ -22,7 +23,8 @@ export const DragModule: _ModuleWithoutApi = {
  * @colDef dndSource, dndSourceOnRowDrag
  */
 export const DragAndDropModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DragAndDrop'),
+    moduleName: 'DragAndDrop',
+    version: VERSION,
     dynamicBeans: {
         dndSourceComp: DndSourceComp as any,
     },
@@ -36,7 +38,8 @@ export const DragAndDropModule: _ModuleWithoutApi = {
  * @internal
  */
 export const SharedDragAndDropModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SharedDragAndDrop'),
+    moduleName: 'SharedDragAndDrop',
+    version: VERSION,
     beans: [DragAndDropService],
     dependsOn: [DragModule],
     userComponents: {
@@ -72,7 +75,8 @@ export const SharedDragAndDropModule: _ModuleWithoutApi = {
  * @colDef rowDrag
  */
 export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
-    ...baseCommunityModule('RowDrag'),
+    moduleName: 'RowDrag',
+    version: VERSION,
     beans: [RowDragService],
     apiFunctions: {
         addRowDropZone,
@@ -86,7 +90,8 @@ export const RowDragModule: _ModuleWithApi<_DragGridApi> = {
  * @internal
  */
 export const HorizontalResizeModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('HorizontalResize'),
+    moduleName: 'HorizontalResize',
+    version: VERSION,
     beans: [HorizontalResizeService],
     dependsOn: [DragModule],
 };

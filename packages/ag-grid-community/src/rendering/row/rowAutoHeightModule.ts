@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { RowAutoHeightService } from './rowAutoHeightService';
 
 /**
@@ -7,6 +7,7 @@ import { RowAutoHeightService } from './rowAutoHeightService';
  * @colDef autoHeight
  */
 export const RowAutoHeightModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowAutoHeight'),
+    moduleName: 'RowAutoHeight',
+    version: VERSION,
     beans: [RowAutoHeightService],
 };

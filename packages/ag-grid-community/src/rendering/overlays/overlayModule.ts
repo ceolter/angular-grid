@@ -1,6 +1,6 @@
 import type { _OverlayGridApi } from '../../api/gridApi';
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { LoadingOverlayComponent } from './loadingOverlayComponent';
 import { NoRowsOverlayComponent } from './noRowsOverlayComponent';
 import { hideOverlay, showLoadingOverlay, showNoRowsOverlay } from './overlayApi';
@@ -11,7 +11,8 @@ import { OverlayService } from './overlayService';
  * @gridOption loading, overlayLoadingTemplate, loadingOverlayComponent, overlayNoRowsTemplate, noRowsOverlayComponent
  */
 export const OverlayModule: _ModuleWithApi<_OverlayGridApi> = {
-    ...baseCommunityModule('Overlay'),
+    moduleName: 'Overlay',
+    version: VERSION,
     userComponents: {
         agLoadingOverlay: LoadingOverlayComponent,
         agNoRowsOverlay: NoRowsOverlayComponent,

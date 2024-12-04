@@ -1,11 +1,12 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { AutoWidthCalculator } from './autoWidthCalculator';
 
 /**
  * @internal
  */
 export const AutoWidthModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AutoWidth'),
+    moduleName: 'AutoWidth',
+    version: VERSION,
     beans: [AutoWidthCalculator],
 };

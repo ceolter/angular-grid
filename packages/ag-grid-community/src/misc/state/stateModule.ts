@@ -1,6 +1,6 @@
 import type { _StateGridApi } from '../../api/gridApi';
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { getState } from './stateApi';
 import { StateService } from './stateService';
 
@@ -9,7 +9,8 @@ import { StateService } from './stateService';
  * @gridOption initialState
  */
 export const GridStateModule: _ModuleWithApi<_StateGridApi> = {
-    ...baseCommunityModule('GridState'),
+    moduleName: 'GridState',
+    version: VERSION,
     beans: [StateService],
     apiFunctions: {
         getState,

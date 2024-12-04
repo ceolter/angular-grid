@@ -1,5 +1,5 @@
 import type { _ModuleWithApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import type { _RowGridApi, _ScrollGridApi } from './gridApi';
 import {
     addRenderedRowListener,
@@ -25,7 +25,8 @@ import {
  * @feature Rows
  */
 export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
-    ...baseCommunityModule('RowApi'),
+    moduleName: 'RowApi',
+    version: VERSION,
     apiFunctions: {
         redrawRows,
         setRowNodeExpanded,
@@ -44,7 +45,8 @@ export const RowApiModule: _ModuleWithApi<_RowGridApi<any>> = {
  * @feature Scrolling
  */
 export const ScrollApiModule: _ModuleWithApi<_ScrollGridApi<any>> = {
-    ...baseCommunityModule('ScrollApi'),
+    moduleName: 'ScrollApi',
+    version: VERSION,
     apiFunctions: {
         getVerticalPixelRange,
         getHorizontalPixelRange,

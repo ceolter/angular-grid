@@ -2,9 +2,9 @@ import type { _ColumnFilterGridApi, _FilterGridApi, _QuickFilterGridApi } from '
 import { FilterStage } from '../clientSideRowModel/filterStage';
 import { HeaderFilterCellCtrl } from '../headerRendering/cells/floatingFilter/headerFilterCellCtrl';
 import type { _ModuleWithApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
 import { SharedMenuModule } from '../misc/menu/sharedMenuModule';
+import { VERSION } from '../version';
 import { PopupModule } from '../widgets/popupModule';
 import { columnFiltersCSS } from './column-filters.css-GENERATED';
 import {
@@ -37,7 +37,8 @@ import { QuickFilterService } from './quickFilterService';
  * @internal
  */
 export const ClientSideRowModelFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ClientSideRowModelFilter'),
+    moduleName: 'ClientSideRowModelFilter',
+    version: VERSION,
     rowModels: ['clientSide'],
     beans: [FilterStage],
 };
@@ -46,7 +47,8 @@ export const ClientSideRowModelFilterModule: _ModuleWithoutApi = {
  * @internal
  */
 export const FilterCoreModule: _ModuleWithApi<_FilterGridApi> = {
-    ...baseCommunityModule('FilterCore'),
+    moduleName: 'FilterCore',
+    version: VERSION,
     beans: [FilterManager],
     apiFunctions: {
         isAnyFilterPresent,
@@ -60,7 +62,8 @@ export const FilterCoreModule: _ModuleWithApi<_FilterGridApi> = {
  * @internal
  */
 export const FilterValueModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('FilterValue'),
+    moduleName: 'FilterValue',
+    version: VERSION,
     beans: [FilterValueService],
 };
 
@@ -68,7 +71,8 @@ export const FilterValueModule: _ModuleWithoutApi = {
  * @internal
  */
 export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
-    ...baseCommunityModule('ColumnFilter'),
+    moduleName: 'ColumnFilter',
+    version: VERSION,
     beans: [ColumnFilterService, FilterMenuFactory],
     dynamicBeans: { headerFilterCellCtrl: HeaderFilterCellCtrl as any },
     icons: {
@@ -94,7 +98,8 @@ export const ColumnFilterModule: _ModuleWithApi<_ColumnFilterGridApi> = {
  * @feature Filtering -> Custom Column Filters
  */
 export const CustomFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CustomFilter'),
+    moduleName: 'CustomFilter',
+    version: VERSION,
     userComponents: { agReadOnlyFloatingFilter: ReadOnlyFloatingFilter },
     dependsOn: [ColumnFilterModule],
 };
@@ -103,7 +108,8 @@ export const CustomFilterModule: _ModuleWithoutApi = {
  * @feature Filtering -> Text Filter
  */
 export const TextFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('TextFilter'),
+    moduleName: 'TextFilter',
+    version: VERSION,
     dependsOn: [ColumnFilterModule],
     userComponents: {
         agTextColumnFilter: TextFilter,
@@ -115,7 +121,8 @@ export const TextFilterModule: _ModuleWithoutApi = {
  * @feature Filtering -> Number Filter
  */
 export const NumberFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('NumberFilter'),
+    moduleName: 'NumberFilter',
+    version: VERSION,
     dependsOn: [ColumnFilterModule],
     userComponents: {
         agNumberColumnFilter: NumberFilter,
@@ -127,7 +134,8 @@ export const NumberFilterModule: _ModuleWithoutApi = {
  * @feature Filtering -> Date Filter
  */
 export const DateFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DateFilter'),
+    moduleName: 'DateFilter',
+    version: VERSION,
     dependsOn: [ColumnFilterModule],
     userComponents: {
         agDateColumnFilter: DateFilter,
@@ -141,7 +149,8 @@ export const DateFilterModule: _ModuleWithoutApi = {
  * @gridOption quickFilterText
  */
 export const QuickFilterModule: _ModuleWithApi<_QuickFilterGridApi> = {
-    ...baseCommunityModule('QuickFilter'),
+    moduleName: 'QuickFilter',
+    version: VERSION,
     rowModels: ['clientSide'],
     beans: [QuickFilterService],
     apiFunctions: {
@@ -157,6 +166,7 @@ export const QuickFilterModule: _ModuleWithApi<_QuickFilterGridApi> = {
  * @gridOption doesExternalFilterPass
  */
 export const ExternalFilterModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ExternalFilter'),
+    moduleName: 'ExternalFilter',
+    version: VERSION,
     dependsOn: [FilterCoreModule],
 };

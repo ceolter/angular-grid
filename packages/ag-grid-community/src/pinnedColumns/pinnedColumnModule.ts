@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { pinnedColumnModuleCSS } from './pinnedColumnModule.css-GENERATED';
 import { PinnedColumnService } from './pinnedColumnService';
 
@@ -8,7 +8,8 @@ import { PinnedColumnService } from './pinnedColumnService';
  * @colDef pinned
  */
 export const PinnedColumnModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('PinnedColumn'),
+    moduleName: 'PinnedColumn',
+    version: VERSION,
     beans: [PinnedColumnService],
     css: [pinnedColumnModuleCSS],
 };

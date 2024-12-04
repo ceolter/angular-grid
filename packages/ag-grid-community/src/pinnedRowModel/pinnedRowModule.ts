@@ -1,6 +1,6 @@
 import type { _PinnedRowGridApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { getPinnedBottomRow, getPinnedBottomRowCount, getPinnedTopRow, getPinnedTopRowCount } from './pinnedRowApi';
 import { PinnedRowModel } from './pinnedRowModel';
 
@@ -9,7 +9,8 @@ import { PinnedRowModel } from './pinnedRowModel';
  * @gridOption pinnedTopRowData, pinnedBottomRowData
  */
 export const PinnedRowModule: _ModuleWithApi<_PinnedRowGridApi> = {
-    ...baseCommunityModule('PinnedRow'),
+    moduleName: 'PinnedRow',
+    version: VERSION,
     beans: [PinnedRowModel],
     apiFunctions: {
         getPinnedTopRowCount,

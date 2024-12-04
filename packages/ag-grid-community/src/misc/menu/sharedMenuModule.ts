@@ -1,6 +1,6 @@
 import type { _CommunityMenuGridApi } from '../../api/gridApi';
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { hidePopupMenu, showColumnMenu } from './menuApi';
 import { MenuService } from './menuService';
 
@@ -8,7 +8,8 @@ import { MenuService } from './menuService';
  * @internal
  */
 export const SharedMenuModule: _ModuleWithApi<_CommunityMenuGridApi> = {
-    ...baseCommunityModule('SharedMenu'),
+    moduleName: 'SharedMenu',
+    version: VERSION,
     beans: [MenuService],
     apiFunctions: {
         showColumnMenu,

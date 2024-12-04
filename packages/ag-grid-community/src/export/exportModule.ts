@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { GridSerializer } from './gridSerializer';
 
 // Shared CSV and Excel logic
@@ -7,6 +7,7 @@ import { GridSerializer } from './gridSerializer';
  * @internal
  */
 export const SharedExportModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SharedExport'),
+    moduleName: 'SharedExport',
+    version: VERSION,
     beans: [GridSerializer],
 };

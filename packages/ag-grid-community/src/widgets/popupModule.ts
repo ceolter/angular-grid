@@ -1,11 +1,12 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { PopupService } from './popupService';
 
 /**
  * @internal
  */
 export const PopupModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('Popup'),
+    moduleName: 'Popup',
+    version: VERSION,
     beans: [PopupService],
 };

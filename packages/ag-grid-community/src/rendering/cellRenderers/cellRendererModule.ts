@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { CheckboxCellRenderer } from './checkboxCellRenderer';
 
 /**
@@ -7,7 +7,8 @@ import { CheckboxCellRenderer } from './checkboxCellRenderer';
  * @colDef cellDataType
  */
 export const CheckboxCellRendererModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CheckboxCellRenderer'),
+    moduleName: 'CheckboxCellRenderer',
+    version: VERSION,
     userComponents: {
         agCheckboxCellRenderer: CheckboxCellRenderer,
     },

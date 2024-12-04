@@ -1,8 +1,8 @@
 import type { _ClientSideRowModelGridApi } from '../api/gridApi';
 import { CsrmSsrmSharedApiModule } from '../api/sharedApiModule';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { SortModule } from '../sort/sortModule';
+import { VERSION } from '../version';
 import { ClientSideNodeManager } from './clientSideNodeManager';
 import { ClientSideRowModel } from './clientSideRowModel';
 import {
@@ -24,7 +24,8 @@ import { SortStage } from './sortStage';
  * @feature Client-Side Row Model
  */
 export const ClientSideRowModelModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ClientSideRowModel'),
+    moduleName: 'ClientSideRowModel',
+    version: VERSION,
     rowModels: ['clientSide'],
     beans: [ClientSideNodeManager, ClientSideRowModel, SortStage],
     dependsOn: [SortModule],
@@ -34,7 +35,8 @@ export const ClientSideRowModelModule: _ModuleWithoutApi = {
  * @feature Client-Side Row Model
  */
 export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGridApi<any>> = {
-    ...baseCommunityModule('ClientSideRowModelApi'),
+    moduleName: 'ClientSideRowModelApi',
+    version: VERSION,
     rowModels: ['clientSide'],
     apiFunctions: {
         onGroupExpandedOrCollapsed,
