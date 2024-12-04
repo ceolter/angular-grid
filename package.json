@@ -93,7 +93,9 @@
       "plugins/ag-grid-generate-code-reference-files",
       "plugins/ag-grid-generate-example-files",
       "plugins/ag-grid-task-autogen",
-      "testing/behavioural"
+      "testing/behavioural",
+      "testing/module-size",
+      "testing/module-size-angular"
     ],
     "nohoist": [
       "**/@vue/**",
