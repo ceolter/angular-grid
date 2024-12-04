@@ -9,29 +9,28 @@ import { sparklineCSS } from './sparkline.css-GENERATED';
 import { SparklineCellRenderer } from './sparklineCellRenderer';
 
 type SparklineChartsModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
-
-const baseSparklinesModule: _ModuleWithoutApi = {
-    moduleName: 'Sparklines',
+const moduleName = 'Sparklines';
+/**
+ * @feature Sparklines
+ */
+export const SparklinesModule: SparklineChartsModuleType = {
+    moduleName,
     version: VERSION,
     dependsOn: [EnterpriseCoreModule],
-    css: [sparklineCSS],
     validate: () => {
         return {
             isValid: false,
             message: _errMsg(258),
         };
     },
-};
-
-/**
- * @feature Sparklines
- */
-export const SparklinesModule: SparklineChartsModuleType = {
     with: (params) => {
         params.setup();
 
         return {
-            ...baseSparklinesModule,
+            moduleName,
+            version: VERSION,
+            dependsOn: [EnterpriseCoreModule],
+            css: [sparklineCSS],
             userComponents: {
                 agSparklineCellRenderer: {
                     classImp: SparklineCellRenderer,
@@ -44,5 +43,4 @@ export const SparklinesModule: SparklineChartsModuleType = {
             },
         };
     },
-    ...baseSparklinesModule,
 };

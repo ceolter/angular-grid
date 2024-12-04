@@ -1,6 +1,6 @@
 import type { IntegratedModule } from 'ag-charts-types';
 
-import type { _ModuleWithoutApi } from 'ag-grid-community';
+import type { ModuleName, _ModuleWithoutApi } from 'ag-grid-community';
 import { AllCommunityModule } from 'ag-grid-community';
 
 import { AdvancedFilterModule } from './advancedFilter/advancedFilterModule';
@@ -27,47 +27,43 @@ import { ViewportRowModelModule } from './viewportRowModel/viewportRowModelModul
 
 type AllEnterpriseModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
-const baseAllEnterpriseModule: _ModuleWithoutApi = {
-    moduleName: 'AllEnterprise',
-    version: VERSION,
-    dependsOn: [
-        AllCommunityModule,
-        ClipboardModule,
-        ColumnsToolPanelModule,
-        ExcelExportModule,
-        FiltersToolPanelModule,
-        MasterDetailModule,
-        ColumnMenuModule,
-        ContextMenuModule,
-        CellSelectionModule,
-        RichSelectModule,
-        RowGroupingModule,
-        RowGroupingPanelModule,
-        GroupFilterModule,
-        ServerSideRowModelModule,
-        ServerSideRowModelApiModule,
-        SetFilterModule,
-        MultiFilterModule,
-        AdvancedFilterModule,
-        SideBarModule,
-        StatusBarModule,
-        ViewportRowModelModule,
-        PivotModule,
-        TreeDataModule,
-    ],
-};
+const dependsOn = [
+    AllCommunityModule,
+    ClipboardModule,
+    ColumnsToolPanelModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    MasterDetailModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    CellSelectionModule,
+    RichSelectModule,
+    RowGroupingModule,
+    RowGroupingPanelModule,
+    GroupFilterModule,
+    ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
+    SetFilterModule,
+    MultiFilterModule,
+    AdvancedFilterModule,
+    SideBarModule,
+    StatusBarModule,
+    ViewportRowModelModule,
+    PivotModule,
+    TreeDataModule,
+];
+const moduleName: ModuleName = 'AllEnterprise';
 
 /**
  * @feature All Enterprise and Community features
  */
 export const AllEnterpriseModule: AllEnterpriseModuleType = {
     with: (params) => ({
-        ...baseAllEnterpriseModule,
-        dependsOn: [
-            ...baseAllEnterpriseModule.dependsOn!,
-            IntegratedChartsModule.with(params),
-            SparklinesModule.with(params),
-        ],
+        moduleName,
+        version: VERSION,
+        dependsOn: [...dependsOn, IntegratedChartsModule.with(params), SparklinesModule.with(params)],
     }),
-    ...baseAllEnterpriseModule,
+    moduleName,
+    version: VERSION,
+    dependsOn: dependsOn,
 };
