@@ -6,7 +6,6 @@ import { _PopupModule, _SharedDragAndDropModule, _errMsg } from 'ag-grid-communi
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import type { ILicenseManager } from '../license/shared/licenseManager';
 import { LicenseManager } from '../license/shared/licenseManager';
-import { baseEnterpriseModule } from '../moduleUtils';
 import { CellSelectionModule } from '../rangeSelection/rangeSelectionModule';
 import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
@@ -39,7 +38,8 @@ type IntegratedChartsModuleType = {
 } & _ModuleWithApi<_GridChartsGridApi>;
 
 const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
-    ...baseEnterpriseModule('IntegratedCharts'),
+    moduleName: 'IntegratedCharts',
+    version: VERSION,
     validate: () => {
         return {
             isValid: false,
@@ -90,7 +90,8 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
  */
 export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     ...baseIntegratedChartsModule,
-    ...baseEnterpriseModule('GridCharts'),
+    moduleName: 'GridCharts',
+    version: VERSION,
     validate: () => {
         return {
             isValid: false,

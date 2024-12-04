@@ -2,7 +2,7 @@ import type { _AdvancedFilterGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { _FilterCoreModule, _FilterValueModule, _PopupModule, _SharedDragAndDropModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { advancedFilterCSS } from './advanced-filter.css-GENERATED';
 import {
     getAdvancedFilterModel,
@@ -18,7 +18,8 @@ import { AdvancedFilterService } from './advancedFilterService';
  * @gridOption enableAdvanced Filter
  */
 export const AdvancedFilterModule: _ModuleWithApi<_AdvancedFilterGridApi> = {
-    ...baseEnterpriseModule('AdvancedFilter'),
+    moduleName: 'AdvancedFilter',
+    version: VERSION,
     beans: [AdvancedFilterService, AdvancedFilterExpressionService],
     icons: {
         // Builder button in Advanced Filter

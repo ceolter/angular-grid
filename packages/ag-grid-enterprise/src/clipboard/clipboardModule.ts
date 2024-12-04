@@ -2,7 +2,7 @@ import type { _ClipboardGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { CsvExportModule, HighlightChangesModule, _KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import {
     copySelectedRangeDown,
     copySelectedRangeToClipboard,
@@ -17,7 +17,8 @@ import { ClipboardService } from './clipboardService';
  * @feature Import & Export -> Clipboard
  */
 export const ClipboardModule: _ModuleWithApi<_ClipboardGridApi> = {
-    ...baseEnterpriseModule('Clipboard'),
+    moduleName: 'Clipboard',
+    version: VERSION,
     beans: [ClipboardService],
     apiFunctions: {
         copyToClipboard,

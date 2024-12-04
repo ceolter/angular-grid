@@ -2,7 +2,7 @@ import type { _ModuleWithApi, _SideBarGridApi } from 'ag-grid-community';
 import { _HorizontalResizeModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import {
     closeToolPanel,
     getOpenedToolPanel,
@@ -22,7 +22,8 @@ import { SideBarService } from './sideBarService';
  * @gridOption sideBar
  */
 export const SideBarModule: _ModuleWithApi<_SideBarGridApi<any>> = {
-    ...baseEnterpriseModule('SideBar'),
+    moduleName: 'SideBar',
+    version: VERSION,
     beans: [SideBarService],
     apiFunctions: {
         isSideBarVisible,

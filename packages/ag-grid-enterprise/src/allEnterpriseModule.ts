@@ -11,7 +11,6 @@ import { ExcelExportModule } from './excelExport/excelExportModule';
 import { FiltersToolPanelModule } from './filterToolPanel/filtersToolPanelModule';
 import { MasterDetailModule } from './masterDetail/masterDetailModule';
 import { ColumnMenuModule, ContextMenuModule } from './menu/menuModule';
-import { baseEnterpriseModule } from './moduleUtils';
 import { MultiFilterModule } from './multiFilter/multiFilterModule';
 import { PivotModule } from './pivot/pivotModule';
 import { CellSelectionModule } from './rangeSelection/rangeSelectionModule';
@@ -23,12 +22,14 @@ import { SideBarModule } from './sideBar/sideBarModule';
 import { SparklinesModule } from './sparkline/sparklinesModule';
 import { StatusBarModule } from './statusBar/statusBarModule';
 import { TreeDataModule } from './treeData/treeDataModule';
+import { VERSION } from './version';
 import { ViewportRowModelModule } from './viewportRowModel/viewportRowModelModule';
 
 type AllEnterpriseModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
 const baseAllEnterpriseModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('AllEnterprise'),
+    moduleName: 'AllEnterprise',
+    version: VERSION,
     dependsOn: [
         AllCommunityModule,
         ClipboardModule,

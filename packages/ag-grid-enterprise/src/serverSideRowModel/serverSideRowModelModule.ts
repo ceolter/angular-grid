@@ -8,9 +8,9 @@ import {
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { LoadingCellRendererModule, SkeletonCellRendererModule } from '../cellRenderers/enterpriseCellRendererModule';
-import { baseEnterpriseModule } from '../moduleUtils';
 import { SharedPivotModule } from '../pivot/pivotModule';
 import { SharedTreeDataModule } from '../treeData/treeDataModule';
+import { VERSION } from '../version';
 import { BlockUtils } from './blocks/blockUtils';
 import { ExpandListener } from './listeners/expandListener';
 import { FilterListener } from './listeners/filterListener';
@@ -41,7 +41,8 @@ import { TransactionManager } from './transactionManager';
  * @feature Server-Side Row Model
  */
 export const ServerSideRowModelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ServerSideRowModel'),
+    moduleName: 'ServerSideRowModel',
+    version: VERSION,
     rowModels: ['serverSide'],
     beans: [
         ServerSideRowModel,
@@ -74,7 +75,8 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
  * @feature Server-Side Row Model
  */
 export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGridApi<any>> = {
-    ...baseEnterpriseModule('ServerSideRowModelApi'),
+    moduleName: 'ServerSideRowModelApi',
+    version: VERSION,
     rowModels: ['serverSide'],
     apiFunctions: {
         getServerSideSelectionState,

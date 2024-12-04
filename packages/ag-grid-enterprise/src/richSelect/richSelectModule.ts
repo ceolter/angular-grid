@@ -2,14 +2,15 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 import { _EditCoreModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { RichSelectCellEditor } from './richSelectCellEditor';
 
 /**
  * @feature Editing -> Rich Select Editor
  */
 export const RichSelectModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RichSelect'),
+    moduleName: 'RichSelect',
+    version: VERSION,
     beans: [],
     userComponents: { agRichSelect: RichSelectCellEditor, agRichSelectCellEditor: RichSelectCellEditor },
     icons: {

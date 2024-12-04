@@ -1,9 +1,9 @@
 import type { _ModuleWithApi, _ModuleWithoutApi, _PivotGridApi } from 'ag-grid-community';
 import { _ColumnGroupModule } from 'ag-grid-community';
 
-import { baseEnterpriseModule } from '../moduleUtils';
 import { RowGroupingModule, SharedRowGroupingModule } from '../rowGrouping/rowGroupingModule';
 import { ClientSideRowModelHierarchyModule } from '../rowHierarchy/rowHierarchyModule';
+import { VERSION } from '../version';
 import {
     addPivotColumns,
     addValueColumns,
@@ -27,7 +27,8 @@ import { PivotStage } from './pivotStage';
  * @internal
  */
 export const SharedPivotModule: _ModuleWithApi<_PivotGridApi<any>> = {
-    ...baseEnterpriseModule('SharedPivot'),
+    moduleName: 'SharedPivot',
+    version: VERSION,
     beans: [PivotResultColsService, PivotColDefService, PivotColsSvc],
     apiFunctions: {
         isPivotMode,
@@ -52,7 +53,8 @@ export const SharedPivotModule: _ModuleWithApi<_PivotGridApi<any>> = {
  * @gridOption pivotMode
  */
 export const PivotModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('Pivot'),
+    moduleName: 'Pivot',
+    version: VERSION,
     rowModels: ['clientSide'],
     beans: [PivotStage],
     dependsOn: [SharedPivotModule, RowGroupingModule, ClientSideRowModelHierarchyModule],

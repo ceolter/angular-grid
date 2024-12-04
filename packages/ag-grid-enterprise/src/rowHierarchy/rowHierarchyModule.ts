@@ -2,9 +2,9 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { ValueColsSvc } from '../aggregation/valueColsSvc';
-import { baseEnterpriseModule } from '../moduleUtils';
 import { PivotColsSvc } from '../pivot/pivotColsSvc';
 import { RowGroupColsSvc } from '../rowGrouping/rowGroupColsSvc';
+import { VERSION } from '../version';
 import { AutoColService } from './autoColService';
 import { ClientSideExpansionService } from './clientSideExpansionService';
 import { FlattenStage } from './flattenStage';
@@ -17,7 +17,8 @@ import { StickyRowService } from './stickyRowService';
  * @internal
  */
 export const GroupCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupCellRenderer'),
+    moduleName: 'GroupCellRenderer',
+    version: VERSION,
     userComponents: {
         agGroupRowRenderer: GroupCellRenderer,
         agGroupCellRenderer: GroupCellRenderer,
@@ -37,7 +38,8 @@ export const GroupCellRendererModule: _ModuleWithoutApi = {
  * @internal
  */
 export const GroupColumnModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupColumn'),
+    moduleName: 'GroupColumn',
+    version: VERSION,
     beans: [AutoColService, ShowRowGroupColsService, RowGroupColsSvc, PivotColsSvc, ValueColsSvc],
     dependsOn: [EnterpriseCoreModule, GroupCellRendererModule],
 };
@@ -46,7 +48,8 @@ export const GroupColumnModule: _ModuleWithoutApi = {
  * @internal
  */
 export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ClientSideRowModelHierarchy'),
+    moduleName: 'ClientSideRowModelHierarchy',
+    version: VERSION,
     rowModels: ['clientSide'],
     beans: [FlattenStage, ClientSideExpansionService],
     dependsOn: [EnterpriseCoreModule],
@@ -56,6 +59,7 @@ export const ClientSideRowModelHierarchyModule: _ModuleWithoutApi = {
  * @internal
  */
 export const StickyRowModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('StickyRow'),
+    moduleName: 'StickyRow',
+    version: VERSION,
     beans: [StickyRowService],
 };

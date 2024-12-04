@@ -4,14 +4,15 @@ import { _errMsg } from 'ag-grid-community';
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { sparklineCSS } from './sparkline.css-GENERATED';
 import { SparklineCellRenderer } from './sparklineCellRenderer';
 
 type SparklineChartsModuleType = { with: (params: IntegratedModule) => _ModuleWithoutApi } & _ModuleWithoutApi;
 
 const baseSparklinesModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('Sparklines'),
+    moduleName: 'Sparklines',
+    version: VERSION,
     dependsOn: [EnterpriseCoreModule],
     css: [sparklineCSS],
     validate: () => {

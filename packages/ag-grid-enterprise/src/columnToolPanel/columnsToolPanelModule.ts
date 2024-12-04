@@ -2,8 +2,8 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 import { _ColumnMoveModule, _PopupModule, _SharedDragAndDropModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
 import { SideBarModule } from '../sideBar/sideBarModule';
+import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { ColumnToolPanel } from './columnToolPanel';
 import { ColumnToolPanelFactory } from './columnToolPanelFactory';
@@ -12,7 +12,8 @@ import { ColumnToolPanelFactory } from './columnToolPanelFactory';
  * @feature Accessories -> Columns Tool Panel
  */
 export const ColumnsToolPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('ColumnsToolPanel'),
+    moduleName: 'ColumnsToolPanel',
+    version: VERSION,
     beans: [ColumnToolPanelFactory],
     userComponents: { agColumnsToolPanel: ColumnToolPanel },
     icons: {

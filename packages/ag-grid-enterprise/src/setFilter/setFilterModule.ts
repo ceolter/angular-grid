@@ -2,7 +2,7 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 import { _ColumnFilterModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { SetFilter } from './setFilter';
 import { SetFloatingFilterComp } from './setFloatingFilter';
 
@@ -10,7 +10,8 @@ import { SetFloatingFilterComp } from './setFloatingFilter';
  * @feature Filtering -> Set Filter
  */
 export const SetFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SetFilter'),
+    moduleName: 'SetFilter',
+    version: VERSION,
     userComponents: { agSetColumnFilter: SetFilter, agSetColumnFloatingFilter: SetFloatingFilterComp },
     icons: {
         // set filter tree list group contracted (click to expand)

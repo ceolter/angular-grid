@@ -2,7 +2,7 @@ import type { _ExcelExportGridApi, _ModuleWithApi } from 'ag-grid-community';
 import { _SharedExportModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { ExcelCreator } from './excelCreator';
 import {
     exportDataAsExcel,
@@ -16,7 +16,8 @@ import {
  * @feature Import & Export -> Excel
  */
 export const ExcelExportModule: _ModuleWithApi<_ExcelExportGridApi> = {
-    ...baseEnterpriseModule('ExcelExport'),
+    moduleName: 'ExcelExport',
+    version: VERSION,
     beans: [ExcelCreator],
     apiFunctions: {
         getDataAsExcel,

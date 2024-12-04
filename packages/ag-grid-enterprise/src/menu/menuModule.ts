@@ -2,7 +2,7 @@ import type { _ColumnChooserGridApi, _ContextMenuGridApi, _ModuleWithApi, _Modul
 import { _ColumnMoveModule, _PopupModule, _SharedDragAndDropModule, _SharedMenuModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { MenuItemModule } from '../widgets/menuItemModule';
 import { ChartMenuItemMapper } from './chartMenuItemMapper';
 import { ColumnChooserFactory } from './columnChooserFactory';
@@ -17,7 +17,8 @@ import { MenuUtils } from './menuUtils';
  * @internal
  */
 export const MenuCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MenuCore'),
+    moduleName: 'MenuCore',
+    version: VERSION,
     beans: [MenuItemMapper, ChartMenuItemMapper, MenuUtils],
     icons: {
         // context menu chart item
@@ -60,7 +61,8 @@ export const MenuCoreModule: _ModuleWithoutApi = {
  * @feature Accessories -> Column Menu
  */
 export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
-    ...baseEnterpriseModule('ColumnMenu'),
+    moduleName: 'ColumnMenu',
+    version: VERSION,
     beans: [EnterpriseMenuFactory, ColumnMenuFactory, ColumnChooserFactory],
     icons: {
         // menu tab icon in legacy tabbed enterprise column menu
@@ -86,7 +88,8 @@ export const ColumnMenuModule: _ModuleWithApi<_ColumnChooserGridApi> = {
  * @feature Accessories -> Context Menu
  */
 export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
-    ...baseEnterpriseModule('ContextMenu'),
+    moduleName: 'ContextMenu',
+    version: VERSION,
     beans: [ContextMenuService],
     apiFunctions: {
         showContextMenu,
@@ -98,6 +101,7 @@ export const ContextMenuModule: _ModuleWithApi<_ContextMenuGridApi> = {
  * @feature Accessories -> Column Menu / Context Menu
  */
 export const MenuModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('Menu'),
+    moduleName: 'Menu',
+    version: VERSION,
     dependsOn: [ColumnMenuModule, ContextMenuModule],
 };
