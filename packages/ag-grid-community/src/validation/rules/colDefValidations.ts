@@ -318,11 +318,11 @@ const colDefPropertyMap: Record<ColKey, undefined> = {
     loadingCellRendererSelector: undefined,
     context: undefined,
 };
-const ALL_PROPERTIES: ColKey[] = Object.keys(colDefPropertyMap) as ColKey[];
+const ALL_PROPERTIES: () => ColKey[] = () => Object.keys(colDefPropertyMap) as ColKey[];
 
 export const COL_DEF_VALIDATORS: () => OptionsValidator<ColDef | ColGroupDef> = () => ({
     objectName: 'colDef',
-    allProperties: ALL_PROPERTIES,
+    allProperties: ALL_PROPERTIES(),
     docsUrl: 'column-properties/',
     deprecations: COLUMN_DEFINITION_DEPRECATIONS(),
     validations: COLUMN_DEFINITION_VALIDATIONS(),
