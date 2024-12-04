@@ -4,5 +4,6 @@
     "lib": {
         "entryFile": "src/public-api.ts"
     },
-    "assets": ["./LICENSE.txt"]
+    "assets": ["./LICENSE.txt"],
+    "allowedNonPeerDependencies": ["ag-grid-community"]
 }
