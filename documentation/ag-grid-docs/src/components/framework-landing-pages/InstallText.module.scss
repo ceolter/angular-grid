@@ -125,7 +125,12 @@
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: var(--color-util-brand-50);
+        background-color: var(--color-button-tertiary-bg-hover);
+
+        #{$selector-darkmode} & {
+            background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-bg-primary) 80%);
+        }
+
         cursor: pointer;
     }
     span {

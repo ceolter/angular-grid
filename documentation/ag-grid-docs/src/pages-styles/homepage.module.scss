@@ -134,7 +134,7 @@ body {
     display: flex;
     gap: $spacing-size-2;
     align-items: center;
-    margin: $spacing-size-2 0 0;
+    margin: $spacing-size-4 0 0;
     justify-content: flex-end;
 
     a svg {
@@ -473,12 +473,19 @@ body {
     justify-content: center;
     align-items: center;
     gap: 8px;
+    transition: opacity 0.3s;
+    background-color: var(--color-white);
+    color: var(--color-brand-500);
+
+    svg path {
+        fill: var(--color-brand-500);
+    }
 
     #{$selector-darkmode} & {
-        background-color: var(--color-white);
-        color: var(--color-bg-primary);
-        svg path {
-            fill: var(--color-bg-primary);
+        &:hover {
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            color: var(--color-brand-500);
         }
     }
 }
