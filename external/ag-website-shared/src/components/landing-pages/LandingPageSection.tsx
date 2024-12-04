@@ -100,65 +100,74 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
     };
 
     return (
-        <div
-            ref={frameworkContainerRef}
+        <a
+            href={gridUrlWithPrefix({ framework, url: ctaUrl })}
             className={classnames([styles.CTAWithFrameworks, 'button-tertiary'])}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
         >
-            <div className={styles.learnMoreLink}>
-                <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                    {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}
-                </a>
+            <span>{ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}</span>
 
-                <div className={styles.inlineSelectorContainer}>
-                    <div className={styles.frameworkSelectorInline}>
-                        <CurrentIcon />
-                        <span className={styles.framework}>
-                            {framework}
-                            <Icon className={styles.chevronDown} name="chevronDown" />
-                        </span>
-                    </div>
+            <div
+                ref={frameworkContainerRef}
+                className={styles.inlineSelectorContainer}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div
+                    className={styles.frameworkSelectorInline}
+                    onClick={(event) => {
+                        event.preventDefault();
+                    }}
+                >
+                    <CurrentIcon className={styles.frameworkIcon} />
 
-                    {isHovering && (
-                        <div
-                            className={classnames(styles.frameworkOverlay, {
-                                [styles.hiding]: isHiding,
-                                [styles.visible]: !isHiding,
-                            })}
-                            onMouseEnter={() => {
-                                if (overlayTimerRef.current) {
-                                    clearTimeout(overlayTimerRef.current);
-                                }
-                                setIsHiding(false);
-                            }}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
-                                const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
-                                const isCurrentFramework = frameworkKey === internalFrameworkKey;
-                                return (
-                                    <div
-                                        key={frameworkKey}
-                                        className={classnames(styles.frameworkOption, {
-                                            [styles.currentFramework]: isCurrentFramework,
-                                        })}
-                                        onClick={() => handleFrameworkChange(frameworkKey)}
-                                    >
-                                        <FrameworkIcon />
-                                        <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+                    <span className={styles.frameworkName}>{framework}</span>
+
+                    <Icon name="chevronDown" svgClasses={styles.frameworkChevronDown} />
                 </div>
 
-                <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                    {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}{' '}
-                </a>
+                {isHovering && (
+                    <div
+                        className={classnames(styles.frameworkOverlay, {
+                            [styles.hiding]: isHiding,
+                            [styles.visible]: !isHiding,
+                        })}
+                        onMouseEnter={() => {
+                            if (overlayTimerRef.current) {
+                                clearTimeout(overlayTimerRef.current);
+                            }
+                            setIsHiding(false);
+                        }}
+                        onMouseLeave={handleMouseLeave}
+                    >
+                        {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
+                            const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
+                            const isCurrentFramework = frameworkKey === internalFrameworkKey;
+                            return (
+                                <div
+                                    key={frameworkKey}
+                                    className={classnames(styles.frameworkOption, {
+                                        [styles.currentFramework]: isCurrentFramework,
+                                    })}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        handleFrameworkChange(frameworkKey);
+                                    }}
+                                >
+                                    <FrameworkIcon />
+                                    <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
-        </div>
+
+            <span>
+                {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}
+
+                <Icon name="chevronRight" svgClasses={styles.frameworkChevronRight} />
+            </span>
+        </a>
     );
 };
 

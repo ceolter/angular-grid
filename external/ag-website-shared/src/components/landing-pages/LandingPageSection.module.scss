@@ -83,13 +83,13 @@
 .ctaButton,
 .CTAWithFrameworks {
     display: inline-flex;
-    align-items: center;
     gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
 }
 
 .ctaButton {
+    align-items: center;
     padding: 0.5em 0.5em 0.5em 1em;
 
     :global(.icon) {
@@ -106,6 +106,12 @@
 
 .CTAWithFrameworks {
     position: relative;
+    padding: 0 1em;
+
+    > * {
+        padding-top: 0.5em;
+        padding-bottom: 0.5em;
+    }
 }
 
 .frameworkSelector {
@@ -119,13 +125,6 @@
     svg {
         opacity: 1;
     }
-}
-
-.learnMoreLink {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-size-1;
-    text-decoration: none;
 }
 
 .frameworkOverlay {
@@ -218,33 +217,50 @@
     }
 }
 
-.frameworkSelectorInline {
-    display: inline-flex;
-    align-items: center;
-    font-size: inherit;
-
-    .framework {
-        margin-left: 0.3rem;
-        text-transform: capitalize;
-        font-weight: 600;
-    }
-
-    svg {
-        width: 24px;
-        height: 24px;
-    }
-}
-
 .inlineSelectorContainer {
     position: relative;
     display: inline-flex;
-    padding: 0 $spacing-size-2;
+    padding-right: $spacing-size-1;
+    padding-left: $spacing-size-2;
+    margin-right: $spacing-size-1;
+    margin-left: $spacing-size-1;
+    border-right: 1px solid var(--color-button-tertiary-border);
+    border-left: 1px solid var(--color-button-tertiary-border);
 }
 
-.framework svg {
+.frameworkSelectorInline {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-size-1;
+}
+
+.frameworkIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.frameworkName {
+    text-transform: capitalize;
+    font-weight: 600;
+}
+
+.frameworkChevronDown {
+    --icon-size: #{$spacing-size-4};
+
     opacity: 0.5;
 
     #{$selector-darkmode} & {
         opacity: 1;
+    }
+}
+
+.frameworkChevronRight {
+    --icon-size: #{$spacing-size-4};
+
+    transform: translate(6px, 0);
+    transition: transform $transition-default-timing;
+
+    .CTAWithFrameworks:hover & {
+        transform: translate(12px, 0);
     }
 }
