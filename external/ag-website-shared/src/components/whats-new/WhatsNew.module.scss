@@ -173,6 +173,9 @@ a.buttonSecondary {
     justify-content: space-between;
     align-items: flex-start;
     gap: $spacing-size-2;
+    b {
+        color: var(--color-fg-primary);
+    }
 }
 
 .flex a {
