@@ -12,6 +12,8 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import styles from './LandingPageSection.module.scss';
 
+const CTA_TITLE_FRAMEWORK_STRING = '${framework}';
+
 const FRAMEWORK_CONFIGS = {
     react: {
         Icon: ReactIcon,
@@ -46,19 +48,7 @@ interface Props {
     isFramework?: boolean;
 }
 
-export const LandingPageSection: FunctionComponent<Props> = ({
-    tag,
-    heading,
-    headingHtml,
-    subHeading,
-    subHeadingHtml,
-    ctaTitle,
-    ctaUrl,
-    sectionClass,
-    showBackgroundGradient,
-    children,
-    isFramework = false,
-}) => {
+const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
     const framework = useFrameworkFromStore(); // Get the framework from the store
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
@@ -81,6 +71,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
 
     const handleFrameworkChange = (newFramework: string) => {
         const internalFrameworkKey = mapFrameworkToInternalFramework(newFramework);
+
         setInternalFramework(internalFrameworkKey); // Update the store with the correct internal framework
         setIsHovering(false);
         setIsHiding(true);
@@ -90,6 +81,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
         if (overlayTimerRef.current) {
             clearTimeout(overlayTimerRef.current);
         }
+
         setIsHiding(false);
         setIsHovering(true);
     };
@@ -98,6 +90,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
         overlayTimerRef.current = setTimeout(() => {
             if (frameworkContainerRef.current && !frameworkContainerRef.current.matches(':hover')) {
                 setIsHiding(true);
+
                 setTimeout(() => {
                     setIsHovering(false);
                     setIsHiding(false);
@@ -105,6 +98,85 @@ export const LandingPageSection: FunctionComponent<Props> = ({
             }
         }, 100);
     };
+
+    return (
+        <div className={styles.frameworkGroup}>
+            <div
+                ref={frameworkContainerRef}
+                className={classnames([styles.ctaButton, 'button-tertiary'])}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+            >
+                <div className={styles.learnMoreLink}>
+                    <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                        {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}
+                    </a>
+
+                    <div className={styles.inlineSelectorContainer}>
+                        <div className={styles.frameworkSelectorInline}>
+                            <CurrentIcon />
+                            <span className={styles.framework}>
+                                {framework}
+                                <Icon className={styles.chevronDown} name="chevronDown" />
+                            </span>
+                        </div>
+
+                        {isHovering && (
+                            <div
+                                className={classnames(styles.frameworkOverlay, {
+                                    [styles.hiding]: isHiding,
+                                    [styles.visible]: !isHiding,
+                                })}
+                                onMouseEnter={() => {
+                                    if (overlayTimerRef.current) {
+                                        clearTimeout(overlayTimerRef.current);
+                                    }
+                                    setIsHiding(false);
+                                }}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
+                                    const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
+                                    const isCurrentFramework = frameworkKey === internalFrameworkKey;
+                                    return (
+                                        <div
+                                            key={frameworkKey}
+                                            className={classnames(styles.frameworkOption, {
+                                                [styles.currentFramework]: isCurrentFramework,
+                                            })}
+                                            onClick={() => handleFrameworkChange(frameworkKey)}
+                                        >
+                                            <FrameworkIcon />
+                                            <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+
+                    <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                        {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}{' '}
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const LandingPageSection: FunctionComponent<Props> = ({
+    tag,
+    heading,
+    headingHtml,
+    subHeading,
+    subHeadingHtml,
+    ctaTitle = 'Learn more',
+    ctaUrl,
+    sectionClass,
+    showBackgroundGradient,
+    children,
+}) => {
+    const isFramework = ctaTitle.includes(CTA_TITLE_FRAMEWORK_STRING);
 
     return (
         <div
@@ -130,77 +202,11 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                     <h4 className={styles.subHeading}>{subHeading}</h4>
                 )}
 
-                <div className={styles.frameworkGroup}>
-                    {isFramework && (
-                        <div
-                            ref={frameworkContainerRef}
-                            className={classnames([styles.ctaButton, 'button-tertiary'])}
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        >
-                            <div className={styles.learnMoreLink}>
-                                {ctaTitle ? (
-                                    <>
-                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                                            {ctaTitle.split('${framework}')[0]}
-                                        </a>
-                                        <div className={styles.inlineSelectorContainer}>
-                                            <div className={styles.frameworkSelectorInline}>
-                                                <CurrentIcon />
-                                                <span className={styles.framework}>
-                                                    {framework}
-                                                    <Icon className={styles.chevronDown} name="chevronDown" />
-                                                </span>
-                                            </div>
-                                            {isHovering && (
-                                                <div
-                                                    className={classnames(styles.frameworkOverlay, {
-                                                        [styles.hiding]: isHiding,
-                                                        [styles.visible]: !isHiding,
-                                                    })}
-                                                    onMouseEnter={() => {
-                                                        if (overlayTimerRef.current) {
-                                                            clearTimeout(overlayTimerRef.current);
-                                                        }
-                                                        setIsHiding(false);
-                                                    }}
-                                                    onMouseLeave={handleMouseLeave}
-                                                >
-                                                    {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
-                                                        const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
-                                                        const isCurrentFramework =
-                                                            frameworkKey === internalFrameworkKey;
-                                                        return (
-                                                            <div
-                                                                key={frameworkKey}
-                                                                className={classnames(styles.frameworkOption, {
-                                                                    [styles.currentFramework]: isCurrentFramework,
-                                                                })}
-                                                                onClick={() => handleFrameworkChange(frameworkKey)}
-                                                            >
-                                                                <FrameworkIcon />
-                                                                <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                                            {ctaTitle.split('${framework}')[1]}{' '}
-                                        </a>
-                                    </>
-                                ) : (
-                                    'Learn more'
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
+                {ctaUrl && isFramework && <CTAWithFrameworks ctaTitle={ctaTitle} ctaUrl={ctaUrl} />}
 
                 {ctaUrl && !isFramework && (
                     <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                        {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                        {ctaTitle} <Icon name="chevronRight" />
                     </a>
                 )}
             </header>
