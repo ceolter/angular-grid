@@ -80,30 +80,32 @@
     gap: $spacing-size-2;
 }
 
-.ctaButton {
-    display: flex;
+.ctaButton,
+.CTAWithFrameworks {
+    display: inline-flex;
     align-items: center;
     gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
+}
+
+.ctaButton {
     padding: 0.5em 0.5em 0.5em 1em;
 
     :global(.icon) {
         --icon-size: #{$spacing-size-4};
 
-        transform: translate(-2px, 1px);
+        transform: translate(-3px, 1px);
         transition: transform $transition-default-timing;
     }
 
     &:hover :global(.icon) {
-        transform: translate(5px, 1px);
+        transform: translate(4px, 1px);
     }
 }
 
-.frameworkGroup {
-    display: flex;
-    flex-direction: row;
-    gap: $spacing-size-4;
+.CTAWithFrameworks {
+    position: relative;
 }
 
 .frameworkSelector {
@@ -119,94 +121,11 @@
     }
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(-0.5rem) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes fadeOutDown {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-0.5rem) scale(0.95);
-    }
-}
-
-.sectionContent {
-    // Existing styles
-}
-
-.frameworkGroup {
-    position: relative;
-}
-
-.ctaButton {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-size-2;
-    position: relative;
-}
-
-.frameworkSelector {
-    display: flex;
-    align-items: center;
-    gap: $spacing-size-2;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(-0.5rem) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes fadeOutDown {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-0.5rem) scale(0.95);
-    }
-}
-
-.frameworkGroup {
-    position: relative;
-}
-
-.ctaButton {
-    display: inline-flex;
-    align-items: center;
-    gap: $spacing-size-2;
-    position: relative;
-    cursor: pointer;
-}
-
 .learnMoreLink {
     display: inline-flex;
     align-items: center;
     gap: $spacing-size-1;
     text-decoration: none;
-}
-
-.frameworkSelector {
-    display: flex;
-    align-items: center;
-    gap: $spacing-size-2;
 }
 
 .frameworkOverlay {
@@ -240,6 +159,28 @@
 .frameworkOverlay.hiding {
     animation: fadeOutDown 0.15s ease-in-out forwards;
     pointer-events: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-0.5rem) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-0.5rem) scale(0.95);
+    }
 }
 
 .frameworkOption {
@@ -300,11 +241,10 @@
     padding: 0 $spacing-size-2;
 }
 
-.framework {
-    svg {
-        opacity: 0.5;
-        #{$selector-darkmode} & {
-            opacity: 1;
-        }
+.framework svg {
+    opacity: 0.5;
+
+    #{$selector-darkmode} & {
+        opacity: 1;
     }
 }

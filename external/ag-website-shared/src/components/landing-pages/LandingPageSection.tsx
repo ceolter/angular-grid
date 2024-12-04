@@ -100,65 +100,63 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
     };
 
     return (
-        <div className={styles.frameworkGroup}>
-            <div
-                ref={frameworkContainerRef}
-                className={classnames([styles.ctaButton, 'button-tertiary'])}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-            >
-                <div className={styles.learnMoreLink}>
-                    <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                        {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}
-                    </a>
+        <div
+            ref={frameworkContainerRef}
+            className={classnames([styles.CTAWithFrameworks, 'button-tertiary'])}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={styles.learnMoreLink}>
+                <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                    {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}
+                </a>
 
-                    <div className={styles.inlineSelectorContainer}>
-                        <div className={styles.frameworkSelectorInline}>
-                            <CurrentIcon />
-                            <span className={styles.framework}>
-                                {framework}
-                                <Icon className={styles.chevronDown} name="chevronDown" />
-                            </span>
-                        </div>
-
-                        {isHovering && (
-                            <div
-                                className={classnames(styles.frameworkOverlay, {
-                                    [styles.hiding]: isHiding,
-                                    [styles.visible]: !isHiding,
-                                })}
-                                onMouseEnter={() => {
-                                    if (overlayTimerRef.current) {
-                                        clearTimeout(overlayTimerRef.current);
-                                    }
-                                    setIsHiding(false);
-                                }}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
-                                    const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
-                                    const isCurrentFramework = frameworkKey === internalFrameworkKey;
-                                    return (
-                                        <div
-                                            key={frameworkKey}
-                                            className={classnames(styles.frameworkOption, {
-                                                [styles.currentFramework]: isCurrentFramework,
-                                            })}
-                                            onClick={() => handleFrameworkChange(frameworkKey)}
-                                        >
-                                            <FrameworkIcon />
-                                            <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                <div className={styles.inlineSelectorContainer}>
+                    <div className={styles.frameworkSelectorInline}>
+                        <CurrentIcon />
+                        <span className={styles.framework}>
+                            {framework}
+                            <Icon className={styles.chevronDown} name="chevronDown" />
+                        </span>
                     </div>
 
-                    <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
-                        {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}{' '}
-                    </a>
+                    {isHovering && (
+                        <div
+                            className={classnames(styles.frameworkOverlay, {
+                                [styles.hiding]: isHiding,
+                                [styles.visible]: !isHiding,
+                            })}
+                            onMouseEnter={() => {
+                                if (overlayTimerRef.current) {
+                                    clearTimeout(overlayTimerRef.current);
+                                }
+                                setIsHiding(false);
+                            }}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
+                                const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
+                                const isCurrentFramework = frameworkKey === internalFrameworkKey;
+                                return (
+                                    <div
+                                        key={frameworkKey}
+                                        className={classnames(styles.frameworkOption, {
+                                            [styles.currentFramework]: isCurrentFramework,
+                                        })}
+                                        onClick={() => handleFrameworkChange(frameworkKey)}
+                                    >
+                                        <FrameworkIcon />
+                                        <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
+
+                <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                    {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}{' '}
+                </a>
             </div>
         </div>
     );
