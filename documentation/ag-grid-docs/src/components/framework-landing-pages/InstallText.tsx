@@ -1,4 +1,6 @@
+import type { Framework } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import { useRef, useState } from 'react';
 
 import styles from './InstallText.module.scss';
@@ -7,7 +9,7 @@ import JavaScriptIcon from './javascript.svg?react';
 import ReactIcon from './react.svg?react';
 import VueIcon from './vue.svg?react';
 
-const FRAMEWORK_CONFIGS = {
+const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; command: string; name: string }> = {
     react: {
         Icon: ReactIcon,
         command: 'npm install ag-grid-react',
@@ -23,11 +25,16 @@ const FRAMEWORK_CONFIGS = {
         command: 'npm install ag-grid-vue-3',
         name: 'Vue',
     },
+    javascript: {
+        Icon: JavaScriptIcon,
+        command: 'npm install ag-grid-community',
+        name: 'JavaScript',
+    },
 };
 
 const InstallText = () => {
+    const { framework, handleFrameworkChange } = useFrameworkSelector();
     const [isCopied, setIsCopied] = useState(false);
-    const [currentFramework, setCurrentFramework] = useState('react');
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const installTextRef = useRef(null);
@@ -43,8 +50,8 @@ const InstallText = () => {
         });
     };
 
-    const handleFrameworkChange = (framework) => {
-        setCurrentFramework(framework);
+    const handleFrameworkSelection = (newFramework: Framework) => {
+        handleFrameworkChange(newFramework);
         setIsHovering(false);
         setIsHiding(true);
     };
@@ -75,8 +82,8 @@ const InstallText = () => {
         }, 100);
     };
 
-    const CurrentIcon = FRAMEWORK_CONFIGS[currentFramework].Icon;
-    const installCommand = FRAMEWORK_CONFIGS[currentFramework].command;
+    const CurrentIcon = FRAMEWORK_CONFIGS[framework].Icon;
+    const installCommand = FRAMEWORK_CONFIGS[framework].command;
 
     return (
         <div
@@ -113,20 +120,21 @@ const InstallText = () => {
                     }}
                     onMouseLeave={handleMouseLeave}
                 >
-                    {Object.keys(FRAMEWORK_CONFIGS).map((framework) => {
-                        const FrameworkIcon = FRAMEWORK_CONFIGS[framework].Icon;
-                        const isCurrentFramework = framework === currentFramework;
+                    {Object.keys(FRAMEWORK_CONFIGS).map((fw: Framework) => {
+                        const FrameworkIcon = FRAMEWORK_CONFIGS[fw].Icon;
+                        const name = FRAMEWORK_CONFIGS[fw].name;
+                        const isCurrentFramework = framework === fw;
                         return (
                             <div
-                                key={framework}
+                                key={fw}
                                 className={`
                                     ${styles.frameworkOption} 
                                     ${isCurrentFramework ? styles.currentFramework : ''}
                                 `}
-                                onClick={() => !isCurrentFramework && handleFrameworkChange(framework)}
+                                onClick={() => !isCurrentFramework && handleFrameworkSelection(fw)}
                             >
                                 <FrameworkIcon />
-                                <span>{FRAMEWORK_CONFIGS[framework].name}</span>
+                                <span>{name}</span>
                             </div>
                         );
                     })}
