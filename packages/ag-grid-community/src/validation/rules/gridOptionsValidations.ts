@@ -6,7 +6,6 @@ import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { _mergeDeep } from '../../utils/object';
 import { toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
-import { COL_DEF_VALIDATORS } from './colDefValidations';
 
 /**
  * Deprecations have been kept separately for ease of removing them in the future.
@@ -115,7 +114,6 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
     const definedValidations: Validations<GridOptions> = {
         alignedGrids: { module: 'AlignedGrids' },
         allowContextMenuWithControlKey: { module: 'ContextMenu' },
-        autoGroupColumnDef: () => COL_DEF_VALIDATORS,
         autoSizePadding: {
             validate({ autoSizePadding }) {
                 return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
@@ -139,14 +137,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
-        columnDefs: () => COL_DEF_VALIDATORS,
         columnHoverHighlight: { module: 'ColumnHover' },
         datasource: {
             supportedRowModels: ['infinite'],
             module: 'InfiniteRowModel',
         },
-        defaultColDef: () => COL_DEF_VALIDATORS,
-        defaultColGroupDef: () => COL_DEF_VALIDATORS,
         doesExternalFilterPass: { module: 'ExternalFilter' },
         domLayout: {
             validate: (options) => {
@@ -331,7 +326,6 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
             module: 'RowStyle',
         },
-        selectionColumnDef: () => COL_DEF_VALIDATORS,
         serverSideDatasource: {
             supportedRowModels: ['serverSide'],
             module: 'ServerSideRowModel',

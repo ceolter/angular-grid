@@ -327,8 +327,8 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         existingGroups: AgProvidedColumnGroup[],
         source: ColumnEventType
     ): AgProvidedColumnGroup {
-        const colGroupDefMerged = this.createMergedColGroupDef(colGroupDef);
-        const groupId = columnKeyCreator.getUniqueKey(colGroupDefMerged.groupId || null, null);
+        const groupId = columnKeyCreator.getUniqueKey(colGroupDef.groupId || null, null);
+        const colGroupDefMerged = this.createMergedColGroupDef(colGroupDef, groupId);
         const providedGroup = new AgProvidedColumnGroup(colGroupDefMerged, groupId, false, level);
         this.createBean(providedGroup);
         const existingGroupAndIndex = this.findExistingGroup(colGroupDef, existingGroups);
@@ -390,7 +390,7 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
                 // this for loop will NOT run any loops if no padded column groups are needed
                 for (let j = columnDept - 1; j >= currentDept; j--) {
                     const newColId = columnKeyCreator.getUniqueKey(null, null);
-                    const colGroupDefMerged = this.createMergedColGroupDef(null);
+                    const colGroupDefMerged = this.createMergedColGroupDef(null, newColId);
 
                     const paddedGroup = new AgProvidedColumnGroup(colGroupDefMerged, newColId, true, currentDept);
                     this.createBean(paddedGroup);
@@ -486,10 +486,12 @@ export class ColumnGroupService extends BeanStub implements NamedBean {
         return tree;
     }
 
-    private createMergedColGroupDef(colGroupDef: ColGroupDef | null): ColGroupDef {
+    private createMergedColGroupDef(colGroupDef: ColGroupDef | null, groupId: string): ColGroupDef {
         const colGroupDefMerged: ColGroupDef = {} as ColGroupDef;
-        Object.assign(colGroupDefMerged, this.gos.get('defaultColGroupDef'));
+        const { gos, validation } = this.beans;
+        Object.assign(colGroupDefMerged, gos.get('defaultColGroupDef'));
         Object.assign(colGroupDefMerged, colGroupDef);
+        validation?.validateColDef(colGroupDefMerged, groupId);
 
         return colGroupDefMerged;
     }

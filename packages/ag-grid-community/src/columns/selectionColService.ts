@@ -111,7 +111,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
             return [];
         }
 
-        const gos = this.gos;
+        const { gos, validation } = this.beans;
         const selectionColumnDef = gos.get('selectionColumnDef');
         const enableRTL = gos.get('enableRtl');
         const colDef: ColDef = {
@@ -134,7 +134,9 @@ export class SelectionColService extends BeanStub implements NamedBean {
             // non-overridable properties
             colId: CONTROLS_COLUMN_ID_PREFIX,
         };
-        const col = new AgColumn(colDef, null, colDef.colId!, false);
+        const colId = colDef.colId!;
+        validation?.validateColDef(colDef, colId);
+        const col = new AgColumn(colDef, null, colId, false);
         this.createBean(col);
         return [col];
     }

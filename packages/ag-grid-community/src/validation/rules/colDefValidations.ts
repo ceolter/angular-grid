@@ -33,15 +33,17 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
     },
     cellClass: { module: 'CellStyle' },
     cellClassRules: { module: 'CellStyle' },
-    cellEditor: ({ cellEditor }) => {
-        if (typeof cellEditor !== 'string') {
+    cellEditor: ({ cellEditor, editable }) => {
+        if (!editable) {
             return null;
         }
-        const module = USER_COMP_MODULES[cellEditor as UserComponentName];
-        if (module) {
-            return { module };
+        if (typeof cellEditor === 'string') {
+            const module = USER_COMP_MODULES[cellEditor as UserComponentName];
+            if (module) {
+                return { module };
+            }
         }
-        return null;
+        return { module: 'CustomEditor' };
     },
     cellRenderer: ({ cellRenderer }) => {
         if (typeof cellRenderer !== 'string') {
@@ -74,8 +76,13 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
     contextMenuItems: { module: 'ContextMenu' },
     dndSource: { module: 'DragAndDrop' },
     dndSourceOnRowDrag: { module: 'DragAndDrop' },
-    editable: {
-        module: 'EditCore',
+    editable: ({ editable, cellEditor }) => {
+        if (editable && !cellEditor) {
+            return {
+                module: 'TextEditor',
+            };
+        }
+        return null;
     },
     enableCellChangeFlash: { module: 'HighlightChanges' },
     enablePivot: { module: 'SharedPivot' },
