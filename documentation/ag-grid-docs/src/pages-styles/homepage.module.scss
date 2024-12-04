@@ -650,6 +650,11 @@ body {
     gap: var(--versions-gap);
     margin-top: $spacing-size-8;
     margin-bottom: $spacing-size-8;
+
+    @media screen and (max-width: $breakpoint-landing-page-medium) {
+        flex-direction: column;
+        gap: $spacing-size-3;
+    }
 }
 
 .customerSubheading {
