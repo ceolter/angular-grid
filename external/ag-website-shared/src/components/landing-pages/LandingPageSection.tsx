@@ -1,18 +1,18 @@
+import type { Framework } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
 import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import { gridUrlWithPrefix } from '@ag-website-shared/utils/gridUrlWithPrefix';
-import { setInternalFramework } from '@stores/frameworkStore';
-import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
+import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import type { FunctionComponent, ReactNode } from 'react';
 
 import styles from './LandingPageSection.module.scss';
 
-const FRAMEWORK_CONFIGS = {
+const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; name: string }> = {
     react: {
         Icon: ReactIcon,
         name: 'React',
@@ -21,11 +21,11 @@ const FRAMEWORK_CONFIGS = {
         Icon: AngularIcon,
         name: 'Angular',
     },
-    vue3: {
+    vue: {
         Icon: VueIcon,
         name: 'Vue',
     },
-    vanilla: {
+    javascript: {
         Icon: JavascriptIcon,
         name: 'JavaScript',
     },
@@ -59,29 +59,16 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     children,
     isFramework = false,
 }) => {
-    const framework = useFrameworkFromStore(); // Get the framework from the store
+    const { framework, internalFramework, handleFrameworkChange } = useFrameworkSelector();
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
     const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const mapFrameworkToInternalFramework = (framework: string) => {
-        switch (framework) {
-            case 'javascript':
-                return 'vanilla';
-            case 'vue':
-                return 'vue3';
-            default:
-                return framework;
-        }
-    };
+    const CurrentIcon = FRAMEWORK_CONFIGS[internalFramework]?.Icon;
 
-    const internalFrameworkKey = mapFrameworkToInternalFramework(framework);
-    const CurrentIcon = FRAMEWORK_CONFIGS[internalFrameworkKey]?.Icon;
-
-    const handleFrameworkChange = (newFramework: string) => {
-        const internalFrameworkKey = mapFrameworkToInternalFramework(newFramework);
-        setInternalFramework(internalFrameworkKey); // Update the store with the correct internal framework
+    const handleFrameworkSelection = (newFramework: string) => {
+        handleFrameworkChange(newFramework);
         setIsHovering(false);
         setIsHiding(true);
     };
@@ -141,12 +128,12 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                             <div className={styles.learnMoreLink}>
                                 {ctaTitle ? (
                                     <>
-                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl! })}>
                                             {ctaTitle.split('${framework}')[0]}
                                         </a>
                                         <div className={styles.inlineSelectorContainer}>
                                             <div className={styles.frameworkSelectorInline}>
-                                                <CurrentIcon />
+                                                {CurrentIcon && <CurrentIcon />}
                                                 <span className={styles.framework}>
                                                     {framework}
                                                     <Icon className={styles.chevronDown} name="chevronDown" />
@@ -168,15 +155,14 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                                                 >
                                                     {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
                                                         const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
-                                                        const isCurrentFramework =
-                                                            frameworkKey === internalFrameworkKey;
+                                                        const isCurrentFramework = frameworkKey === internalFramework;
                                                         return (
                                                             <div
                                                                 key={frameworkKey}
                                                                 className={classnames(styles.frameworkOption, {
                                                                     [styles.currentFramework]: isCurrentFramework,
                                                                 })}
-                                                                onClick={() => handleFrameworkChange(frameworkKey)}
+                                                                onClick={() => handleFrameworkSelection(frameworkKey)}
                                                             >
                                                                 <FrameworkIcon />
                                                                 <span>{FRAMEWORK_CONFIGS[frameworkKey].name}</span>
@@ -186,7 +172,7 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                                                 </div>
                                             )}
                                         </div>
-                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl })}>
+                                        <a href={gridUrlWithPrefix({ framework, url: ctaUrl! })}>
                                             {ctaTitle.split('${framework}')[1]}{' '}
                                         </a>
                                     </>
