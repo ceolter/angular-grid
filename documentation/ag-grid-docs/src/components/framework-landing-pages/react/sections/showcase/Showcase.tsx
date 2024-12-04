@@ -83,7 +83,7 @@ const ShowcaseItem: React.FC = ({
             </div>
             <h3 className={styles.showcaseTitle}>
                 {title}
-                <span className={styles.showcaseName}>: {projectName}</span>
+                <span className={styles.showcaseName}>- {projectName}</span>
             </h3>
             <p className={styles.showcaseDescription}>{description}</p>
             <div className={styles.showcaseLinksWrapper}>
