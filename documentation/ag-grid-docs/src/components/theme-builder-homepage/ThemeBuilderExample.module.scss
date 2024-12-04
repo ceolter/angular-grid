@@ -2,18 +2,20 @@
 
 .grid {
     width: 600px;
-    @media screen and (max-width: $breakpoint-pricing-large) {
-        width: 100%;
-    }
     box-shadow: var(--shadow-md);
     border-radius: var(--radius-md);
     pointer-events: none;
+
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        width: 100%;
+    }
 }
 
 .gridColumns {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
     @media screen and (max-width: $breakpoint-pricing-large) {
         flex-direction: column;
     }
@@ -44,6 +46,7 @@
 .themeOptions {
     padding-bottom: $spacing-size-5;
     border-bottom: 1px solid var(--color-border-secondary);
+
     @media screen and (max-width: $breakpoint-pricing-large) {
         border-bottom: none;
     }
