@@ -1,15 +1,17 @@
-import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
-
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    createGrid,
+    iconOverrides,
+    themeQuartz,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule,
     RowGroupingModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
@@ -19,7 +21,6 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
@@ -27,9 +28,9 @@ ModuleRegistry.registerModules([
 ]);
 
 const columnDefs: ColDef[] = [
+    { field: 'country', sort: 'asc', rowGroup: true, hide: true },
     { field: 'athlete', minWidth: 170 },
     { field: 'age' },
-    { field: 'country' },
     { field: 'year' },
     { field: 'date' },
     { field: 'sport' },
@@ -42,16 +43,16 @@ const columnDefs: ColDef[] = [
 let gridApi: GridApi<IOlympicData>;
 
 const gridOptions: GridOptions<IOlympicData> = {
-    theme: 'legacy',
     rowData: null,
     columnDefs: columnDefs,
     defaultColDef: {
         editable: true,
         filter: true,
     },
+    autoGroupColumnDef: {
+        headerName: 'Country',
+    },
     sideBar: true,
-    enableCharts: true,
-    cellSelection: true,
 };
 
 // setup the grid after the page has finished loading

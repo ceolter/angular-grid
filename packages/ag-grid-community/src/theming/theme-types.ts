@@ -85,7 +85,7 @@ export type ColorValue =
           ontoColor?: string;
       };
 
-const colorValueToCss = (value: ColorValue): string | false => {
+export const colorValueToCss = (value: ColorValue): string | false => {
     if (typeof value === 'string') return value;
     if (value && 'ref' in value) {
         const colorExpr: string = paramToVariableExpression(value.ref);
@@ -106,7 +106,7 @@ const colorValueToCss = (value: ColorValue): string | false => {
  */
 export type ColorSchemeValue = 'light' | 'dark' | 'inherit' | 'normal' | AnyString;
 
-const colorSchemeValueToCss = literalToCSS;
+export const colorSchemeValueToCss = literalToCSS;
 
 /**
  * A CSS dimension value with length units, e.g. "1px" or "2em". Alternatively:
@@ -130,7 +130,7 @@ export type LengthValue =
           ref: string;
       };
 
-const lengthValueToCss = (value: LengthValue): string | false => {
+export const lengthValueToCss = (value: LengthValue): string | false => {
     if (typeof value === 'string') return value;
     if (typeof value === 'number') return `${value}px`;
     if (value && 'calc' in value) {
@@ -149,7 +149,7 @@ const lengthValueToCss = (value: LengthValue): string | false => {
  */
 export type ScaleValue = number;
 
-const scaleValueToCss = literalToCSS;
+export const scaleValueToCss = literalToCSS;
 
 /**
  * A CSS border value e.g. "solid 1px red". Alternatively an object containing optional properties:
@@ -177,7 +177,7 @@ export type BorderValue =
       }
     | { ref: string };
 
-const borderValueToCss = (value: BorderValue, param: string) => {
+export const borderValueToCss = (value: BorderValue, param: string) => {
     if (typeof value === 'string') return value;
     if (value === true) return 'solid 1px var(--ag-border-color)';
     if (value === false) return param === 'columnBorder' ? 'solid 1px transparent' : 'none';
@@ -246,7 +246,7 @@ export type ShadowValue =
       }
     | { ref: string };
 
-const shadowValueToCss = (value: ShadowValue): string | false => {
+export const shadowValueToCss = (value: ShadowValue): string | false => {
     if (typeof value === 'string') return value;
     if (value === false) return 'none';
     if (value && 'ref' in value) return paramToVariableExpression(value.ref);
@@ -266,7 +266,7 @@ const shadowValueToCss = (value: ShadowValue): string | false => {
  */
 export type BorderStyleValue = 'none' | 'solid' | 'dotted' | 'dashed';
 
-const borderStyleValueToCss = literalToCSS;
+export const borderStyleValueToCss = literalToCSS;
 
 /**
  * A CSS font-family value consisting of a font name or comma-separated list of fonts in order of preference e.g. `"Roboto, -apple-system, 'Segoe UI', sans-serif"`. Alternatively:
@@ -283,8 +283,8 @@ export type FontFamilyValue =
     | Array<string | { googleFont: string }>
     | { ref: string };
 
-const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
-    if (typeof value === 'string') return value;
+export const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
+    if (typeof value === 'string') return quoteUnsafeChars(value);
     if (value && 'googleFont' in value) return fontFamilyValueToCss(value.googleFont);
     if (value && 'ref' in value) return paramToVariableExpression(value.ref);
     if (Array.isArray(value)) {
@@ -293,14 +293,17 @@ const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
                 if (typeof font === 'object' && 'googleFont' in font) {
                     font = font.googleFont;
                 }
-                // don't quote safe identifier names, so that people can specify fonts
-                // like sans-serif which are keywords not strings
-                return /^[\w-]+$/.test(font) ? font : JSON.stringify(font);
+                return quoteUnsafeChars(font);
             })
             .join(', ');
     }
     return false;
 };
+
+const quoteUnsafeChars = (font: string) =>
+    // don't quote safe identifier names, so that people can specify fonts
+    // like sans-serif which are keywords not strings
+    /^[\w-]+$/.test(font) ? font : JSON.stringify(font);
 
 /**
  * A CSS font-weight value e.g. `500` or `"bold"`
@@ -309,7 +312,7 @@ const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
  */
 export type FontWeightValue = 'normal' | 'bold' | AnyString | number;
 
-const fontWeightValueToCss = literalToCSS;
+export const fontWeightValueToCss = literalToCSS;
 
 /**
  * A CSS image value e.g. `"url(...image-url...)"`. Alternatively:
@@ -336,7 +339,7 @@ export type ImageValue =
       }
     | { ref: string };
 
-const imageValueToCss = (value: ImageValue): string | false => {
+export const imageValueToCss = (value: ImageValue): string | false => {
     if (typeof value === 'string') return value;
     if (value && 'url' in value) return `url(${JSON.stringify(value.url)})`;
     if (value && 'svg' in value) return imageValueToCss({ url: `data:image/svg+xml,${encodeURIComponent(value.svg)}` });
@@ -354,7 +357,7 @@ const imageValueToCss = (value: ImageValue): string | false => {
  */
 export type DurationValue = number | string | { ref: string };
 
-const durationValueToCss = (value: DurationValue, param: string): string | false => {
+export const durationValueToCss = (value: DurationValue, param: string): string | false => {
     if (typeof value === 'string') return value;
     if (typeof value === 'number') {
         if (value >= 10) {
