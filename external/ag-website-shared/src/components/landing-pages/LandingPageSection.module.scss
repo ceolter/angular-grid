@@ -80,38 +80,34 @@
     gap: $spacing-size-2;
 }
 
-.ctaButton,
-.CTAWithFrameworks {
+.ctaButton {
     display: inline-flex;
+    align-items: center;
     gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
-}
-
-.ctaButton {
-    align-items: center;
     padding: 0.5em 0.5em 0.5em 1em;
 
     :global(.icon) {
         --icon-size: #{$spacing-size-4};
 
-        transform: translate(-3px, 1px);
+        transform: translateX(-3px);
         transition: transform $transition-default-timing;
     }
 
     &:hover :global(.icon) {
-        transform: translate(4px, 1px);
+        transform: translateX(4px);
+    }
+
+    .CTAWithFrameworks & {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 }
 
 .CTAWithFrameworks {
-    position: relative;
-    padding: 0 1em;
-
-    > * {
-        padding-top: 0.5em;
-        padding-bottom: 0.5em;
-    }
+    display: flex;
+    align-items: flex-end;
 }
 
 .frameworkSelector {
@@ -219,13 +215,11 @@
 
 .inlineSelectorContainer {
     position: relative;
-    display: inline-flex;
-    padding-right: $spacing-size-1;
-    padding-left: $spacing-size-2;
-    margin-right: $spacing-size-1;
-    margin-left: $spacing-size-1;
-    border-right: 1px solid var(--color-button-tertiary-border);
-    border-left: 1px solid var(--color-button-tertiary-border);
+    display: flex;
+    margin-left: -1px;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .frameworkSelectorInline {
@@ -235,8 +229,8 @@
 }
 
 .frameworkIcon {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
 }
 
 .frameworkName {
@@ -251,16 +245,5 @@
 
     #{$selector-darkmode} & {
         opacity: 1;
-    }
-}
-
-.frameworkChevronRight {
-    --icon-size: #{$spacing-size-4};
-
-    transform: translate(6px, 0);
-    transition: transform $transition-default-timing;
-
-    .CTAWithFrameworks:hover & {
-        transform: translate(12px, 0);
     }
 }

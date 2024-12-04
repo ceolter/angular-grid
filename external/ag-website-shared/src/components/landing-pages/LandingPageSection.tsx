@@ -100,15 +100,18 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
     };
 
     return (
-        <a
-            href={gridUrlWithPrefix({ framework, url: ctaUrl })}
-            className={classnames([styles.CTAWithFrameworks, 'button-tertiary'])}
-        >
-            <span>{ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[0]}</span>
+        <div className={styles.CTAWithFrameworks}>
+            <a
+                href={gridUrlWithPrefix({ framework, url: ctaUrl })}
+                className={classnames([styles.ctaButton, 'button-tertiary'])}
+            >
+                {ctaTitle}
+                <Icon name="chevronRight" />
+            </a>
 
             <div
                 ref={frameworkContainerRef}
-                className={styles.inlineSelectorContainer}
+                className={classnames([styles.inlineSelectorContainer, 'button-tertiary'])}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
@@ -161,13 +164,7 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
                     </div>
                 )}
             </div>
-
-            <span>
-                {ctaTitle.split(CTA_TITLE_FRAMEWORK_STRING)[1]}
-
-                <Icon name="chevronRight" svgClasses={styles.frameworkChevronRight} />
-            </span>
-        </a>
+        </div>
     );
 };
 
@@ -179,12 +176,11 @@ export const LandingPageSection: FunctionComponent<Props> = ({
     subHeadingHtml,
     ctaTitle = 'Learn more',
     ctaUrl,
+    isFramework = false,
     sectionClass,
     showBackgroundGradient,
     children,
 }) => {
-    const isFramework = ctaTitle.includes(CTA_TITLE_FRAMEWORK_STRING);
-
     return (
         <div
             className={classnames(styles.sectionContent, sectionClass, {
