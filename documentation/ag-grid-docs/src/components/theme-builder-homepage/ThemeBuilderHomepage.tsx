@@ -1,10 +1,4 @@
-import type { Framework } from '@ag-grid-types';
 import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
-import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
-import JavaScriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
-import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
-import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
-import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import { ShadowDom } from '@components/ShadowDom';
 import { useDarkmode } from '@utils/hooks/useDarkmode';
 import React, { useMemo, useState } from 'react';
@@ -86,89 +80,27 @@ const THEME_SELECTIONS = [
     },
 ];
 
-function getImportHeader({ themeSelection, spacing }: ThemeParams) {
-    const customThemeCode =
+function getCodeSnippet({ themeSelection, spacing }: ThemeParams) {
+    const params =
         themeSelection === 'themeCustom'
-            ? `\n\nconst themeCustom = themeQuartz.withParams({
-    backgroundColor: '#38200c',
-    foregroundColor: '#FFF',
-    borderColor: '#f59342',
-    chromeBackgroundColor: '#633713',
-    spacing: ${spacing}
-});`
-            : '';
-    const quartzWithParamsCode =
-        themeSelection === 'themeQuartz' && spacing !== 8
-            ? `\n\n${themeSelection}.withParams({
-    spacing: ${spacing}
-});`
-            : '';
+            ? {
+                  backgroundColor: '#38200c',
+                  foregroundColor: '#FFF',
+                  borderColor: '#f59342',
+                  chromeBackgroundColor: '#633713',
+                  spacing,
+              }
+            : {
+                  spacing,
+              };
+
+    const customThemeCode = `\n\nconst myTheme = themeQuartz.withParams(${JSON.stringify(params, null, 4)});`;
 
     return `// Using the Theming API
-import { themeQuartz } from 'ag-grid-community';${customThemeCode}${quartzWithParamsCode}`;
+import { themeQuartz } from 'ag-grid-community';${customThemeCode}`;
 }
 
-const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; code: (params: ThemeParams) => string }> = {
-    react: {
-        Icon: ReactIcon,
-        code: ({ themeSelection, spacing }) => {
-            return `${getImportHeader({ themeSelection, spacing })}
-
-<AgGridReact
-    theme={${themeSelection}}
-    // ...
-/>`;
-        },
-    },
-    angular: {
-        Icon: AngularIcon,
-        code: ({ themeSelection, spacing }) => {
-            return `${getImportHeader({ themeSelection, spacing })}
-
-// in template
-<ag-grid-angular
-    [theme]="theme"
-    // ...
-/>
-
-// in component class
-public theme = ${themeSelection};`;
-        },
-    },
-    vue: {
-        Icon: VueIcon,
-        code: ({ themeSelection, spacing }) => {
-            return `${getImportHeader({ themeSelection, spacing })}
-
-// in template
-<ag-grid-vue
-    :theme="theme"
-    // ...
-></ag-grid-vue>
-
-// in component setup hook
-setup() {
-    return {
-        theme: ${themeSelection},
-    };
-}`;
-        },
-    },
-    javascript: {
-        Icon: JavaScriptIcon,
-        code: ({ themeSelection, spacing }) => {
-            return `${getImportHeader({ themeSelection, spacing })}
-
-const gridOptions = {
-    theme: ${themeSelection},
-    // ...
-}`;
-        },
-    },
-};
-
 export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => {
-    const { framework, handleFrameworkChange } = useFrameworkSelector();
     const [baseTheme, setBaseTheme] = useState<Theme>(themeQuartz);
     const [spacing, setSpacing] = useState(8);
     const theme = useMemo(() => baseTheme.withParams({ spacing }), [baseTheme, spacing]);
@@ -211,8 +143,8 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
     ];
 
     const codeBlock = useMemo(() => {
-        return FRAMEWORK_CONFIGS[framework].code({ themeSelection, spacing });
-    }, [framework, themeSelection, spacing]);
+        return getCodeSnippet({ themeSelection, spacing });
+    }, [themeSelection, spacing]);
 
     return (
         <div className={styles.gridColumns}>
@@ -294,25 +226,7 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
                         <div className={styles.dot}></div>
                     </div>
 
-                    <Snippet framework="react" language={'jsx'} content={codeBlock} transform={false} lineNumbers />
-
-                    <div className={styles.frameworkSwitcher}>
-                        {Object.keys(FRAMEWORK_CONFIGS).map((fw) => {
-                            const FrameworkIcon = FRAMEWORK_CONFIGS[fw as Framework].Icon;
-                            const isCurrentFramework = framework === fw;
-                            return (
-                                <div
-                                    key={fw}
-                                    className={`
-                                    ${isCurrentFramework ? styles.active : ''}
-                                `}
-                                    onClick={() => !isCurrentFramework && handleFrameworkChange(fw)}
-                                >
-                                    <FrameworkIcon />
-                                </div>
-                            );
-                        })}
-                    </div>
+                    <Snippet framework="javascript" language="js" content={codeBlock} transform={false} lineNumbers />
                 </div>
             </div>
         </div>

@@ -124,6 +124,7 @@
     left: -100px;
     bottom: 50px;
     box-shadow: var(--shadow-md);
+    min-height: 317px;
 
     @media screen and (max-width: $breakpoint-pricing-large) {
         display: none;
