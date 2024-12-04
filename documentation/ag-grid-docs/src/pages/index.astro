@@ -5,13 +5,14 @@ import styles from '@pages-styles/homepage.module.scss';
 import { Quotes } from '@components/quotes/Quotes';
 import { quotesData } from '@components/quotes/quotesData';
 import { LandingPageFWSelector } from '@ag-website-shared/components/landing-pages/LandingPageFWSelector';
-import InstallText from '@components/framework-landing-pages/InstallText';
+import InstallText from '@components/framework-landing-pages/NewInstallText';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { Version } from '@ag-website-shared/components/whats-new/components/Version';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
 import { parseVersion } from '@ag-website-shared/utils/parseVersion';
 import whatsNewData from '@ag-website-shared/content/whats-new/data.json';
+import { LandingPageTitle } from '@ag-website-shared/components/landing-pages/LandingPageTitle';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 import { LandingPageFAQ } from '@ag-website-shared/components/landing-pages/LandingPageFAQ';
 import { CustomerLogos } from '@components/customer-logos/CustomerLogos';
@@ -60,55 +61,43 @@ const frameworksData = [
 />
 
 <Layout
-    title="AG Grid: High-Performance React Grid, Angular Grid, JavaScript Grid"
-    description={'AG Grid is a feature-rich datagrid for major JavaScript frameworks, offering filtering, grouping, pivoting, and more. Free Community version or 2-month Enterprise trial available.'}
+    title="AG Grid: High-Performance JavaScript Data Grid"
+    description={'Free, open-source, feature-rich, high-performance JavaScript Data Grid for React, Angular and Vue. Support for every data grid feature, including sorting, filtering, pivoting, charting, and more...'}
     showSearchBar={false}
     showDocsNav={false}
 >
     <div class={styles.homepageHero}>
-        <section class:list={[styles.heroInner, 'layout-max-width-small']}>
+        <section class:list={[styles.heroInner]}>
             <section class={styles.heroHeadings}>
-                <h1 class="text-xl">The&nbsp;Best&nbsp;JavaScript Grid&nbsp;in&nbsp;the&nbsp;World</h1>
+                <noscript>
+                    <h1>The Best JavaScript Grid in the World</h1>
+                </noscript>
+                <LandingPageTitle client:load />
                 <h2 class="text-base normal-weight-text">
-                    Fully customisable and framework agnostic Data Grid that <br /> can handle millions of cells out of the
-                    box, for free.
+                    Fully customisable and framework agnostic JavaScript Data Grid that can handle millions of cells out
+                    of the box. Free and <a href="https://github.com/ag-grid/ag-grid">open source</a>.
                 </h2>
                 <div class={styles.heroSectionbuttonContainer}>
-                    <a
-                        class:list={[
-                            'button-secondary',
-                            styles.heroSectioncta1,
-                            'plausible-event-name=react-table-get-started',
-                        ]}
-                        href={urlWithBaseUrl('./example')}>See demos <Icon name="chevronRight" /></a
-                    >
                     <div class={styles.heroSectioncta2}>
                         <InstallText client:load />
                     </div>
                 </div>
             </section>
+            <section class={styles.heroSectionDemoContainer}>
+                <div class={styles.loadingLogoContainer}>
+                    <LogoMark isSpinning />
+                </div>
+                <div class={styles.heroSectionGrid}>
+                    <Finance client:only="react" gridHeight={450} isSmallerGrid />
+                </div>
+                <div class={styles.heroLinks}>
+                    <a class="button-secondary" href="https://github.com/ag-grid/ag-grid-demos/tree/main/finance">
+                        <Icon name="github" svgClasses={styles.githubIcon} />
+                        <span> Demo Source Code</span>
+                    </a>
+                </div>
+            </section>
         </section>
-        <section class={styles.heroSectionDemoContainer}>
-            <div class={styles.loadingLogoContainer}>
-                <LogoMark isSpinning />
-            </div>
-            <div class={styles.heroSectionGrid}>
-                <Finance client:only="react" gridHeight={450} isSmallerGrid />
-            </div>
-            <div class={styles.heroLinks}>
-                <a href={urlWithBaseUrl('./example-finance')}>See Finance Demo</a>
-                <a class="button-secondary" href="https://github.com/ag-grid/ag-grid-demos/tree/main/finance">
-                    <Icon name="github" svgClasses={styles.githubIcon} />
-                    <span>See on Github</span>
-                </a>
-            </div>
-        </section>
-    </div>
-
-    <div class={styles.homepageFrameworks}>
-        <div class:list={[styles.frameworksInner, 'layout-max-width-small']}>
-            <LandingPageFWSelector client:load data={frameworksData} isFullWidth />
-        </div>
     </div>
 
     <div class={styles.homepageCustomers}>
@@ -119,10 +108,22 @@ const frameworksData = [
     </div>
 
     <LandingPageSection
-        tag="Performance And Speed First"
+        tag="Framework Agnostic"
+        heading="Build With Your Favourite Framework"
+        subHeading="Leverage our built in support for React, Angular, Vue and Vanilla JavaScript, or use our community built wrappers to use AG Grid with Python, SolidJS, Svelte, and more."
+    >
+        <section className={styles.automatedRowGroupingOuter}>
+            <div>
+                <LandingPageFWSelector client:load data={frameworksData} isFullWidth />
+            </div>
+        </section>
+    </LandingPageSection>
+
+    <LandingPageSection
+        tag="Unbeatable Speed, Performance & Reliability"
         heading="The Fastest Data Grid In The World"
         subHeading="Handle millions of rows, and thousands of updates per second out of the box, without compromising on performance"
-        ctaTitle="Build your first Grid"
+        ctaTitle="Get Started For Free"
         ctaUrl={urlWithBaseUrl('/react-data-grid/getting-started/')}
         showBackgroundGradient
     >
@@ -136,9 +137,9 @@ const frameworksData = [
     <LandingPageSection
         tag="Fully Integrated Charting"
         heading="Integrated Charts, Powered by AG Charts"
-        subHeading="Let your users visualise their data in charts directly from your Data Grid. Multiple chart types, themes, customisations and more, all in one place."
-        ctaTitle="Get started with Integrated Charts"
-        ctaUrl={urlWithBaseUrl('/react-data-grid/integrated-charts/')}
+        subHeading="Let your users visualise their data in charts directly from your Data Grid, powered by AG Charts: our standalone JavaScript Charting Library"
+        ctaTitle="Learn More About AG Charts"
+        ctaUrl={'https://www.ag-grid.com/charts/'}
         showBackgroundGradient
     >
         <section className={styles.automatedIntegratedChartsOuter}>
@@ -149,9 +150,9 @@ const frameworksData = [
     </LandingPageSection>
 
     <LandingPageSection
-        tag="Theming and customisation"
-        heading="Personalise the grids appearance"
-        subHeading="Customise your Data Grid with our Theming API and Custom Components or upgrade to enterprise to use our advanced features."
+        tag="Unlimited Theming and Customisation"
+        heading="Customise Themes and Components"
+        subHeading="Customise your Data Grid styles with our Theming API and extend functionality with your own custom components"
         ctaTitle="Use the Theme Builder"
         ctaUrl={urlWithBaseUrl('/theme-builder/')}
     >
@@ -161,16 +162,16 @@ const frameworksData = [
     <LandingPageSection
         tag="See the use cases"
         heading="Used in Every Industry, for All Types of Data"
-        subHeading="Trusted by 90% of Fortune 500 industries from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
-        ctaTitle="See More Projects Powered by AG Grid"
+        subHeading="Trusted by almost every industry, from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
+        ctaTitle="Browse the AG Grid Showcase"
         ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >
         <Showcase client:load />
     </LandingPageSection>
 
     <LandingPageSection
-        tag="Latest JavaScript Charting Releases from AG Grid"
-        headingHtml="Regular Releases, <br /> Updates, and Enhancements"
+        tag="Regular Updates and Enhancements"
+        headingHtml="New Releases every 6 weeks"
         subHeading="With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of the newest features and improvements to AG Grid Data Grids."
         ctaTitle="See Whats New"
         ctaUrl={urlWithBaseUrl(
@@ -205,7 +206,7 @@ const frameworksData = [
     </LandingPageSection>
 
     <LandingPageSection
-        tag="Data Grid FAQs"
+        tag="JavaScript Data Grid FAQs"
         heading="Frequently Asked Questions"
         subHeading="How many rows can AG Grid handle? How fast is AG Grid? Is AG Grid free? Answers to these common questions and more."
         sectionClass={styles.faqSection}
@@ -213,13 +214,3 @@ const frameworksData = [
         <LandingPageFAQ client:load FAQData={FAQData} framework={'react'} />
     </LandingPageSection>
 </Layout>
-
-<script>
-    import { initScrollClassListener } from '@ag-website-shared/utils/initScrollClassListener';
-
-    initScrollClassListener({
-        targetSelector: '.site-header',
-        scrolledClass: 'header-scrolled',
-        scrollPosition: 566,
-    });
-</script>

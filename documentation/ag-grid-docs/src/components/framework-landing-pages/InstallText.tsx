@@ -16,12 +16,14 @@ const InstallText = () => {
 
     return (
         <>
-            <span ref={installTextRef} className={styles.installText}>
-                $ npm install ag-grid-react
-            </span>
-            <span className={`plausible-event-name=react-table-copy-cta`} onClick={copyToClipboard}>
-                <Icon svgClasses={styles.copyToClipboardIcon} name={isCopied ? 'tick' : 'copy'} />
-            </span>
+            <div>
+                <span ref={installTextRef} className={styles.installText}>
+                    $ npm install ag-grid-react
+                </span>
+                <span className={`plausible-event-name=react-table-copy-cta`} onClick={copyToClipboard}>
+                    <Icon svgClasses={styles.copyToClipboardIcon} name={isCopied ? 'tick' : 'copy'} />
+                </span>
+            </div>
         </>
     );
 };

@@ -36,30 +36,32 @@ export const LandingPageSection: FunctionComponent<Props> = ({
                 [styles.withBackgroundGradient]: showBackgroundGradient,
             })}
         >
-            <header className={styles.headingContainer}>
-                <h2 className={styles.tag}>{tag}</h2>
+            {tag && (
+                <header className={styles.headingContainer}>
+                    <h2 className={styles.tag}>{tag}</h2>
 
-                {headingHtml ? (
-                    <h3
-                        className={styles.heading}
-                        dangerouslySetInnerHTML={{ __html: decodeURIComponent(headingHtml) }}
-                    />
-                ) : (
-                    <h3 className={styles.heading}>{heading}</h3>
-                )}
+                    {headingHtml ? (
+                        <h3
+                            className={styles.heading}
+                            dangerouslySetInnerHTML={{ __html: decodeURIComponent(headingHtml) }}
+                        />
+                    ) : (
+                        <h3 className={styles.heading}>{heading}</h3>
+                    )}
 
-                {subHeadingHtml ? (
-                    <h4 className={styles.subHeading} dangerouslySetInnerHTML={{ __html: subHeadingHtml }}></h4>
-                ) : (
-                    <h4 className={styles.subHeading}>{subHeading}</h4>
-                )}
+                    {subHeadingHtml ? (
+                        <h4 className={styles.subHeading} dangerouslySetInnerHTML={{ __html: subHeadingHtml }}></h4>
+                    ) : (
+                        <h4 className={styles.subHeading}>{subHeading}</h4>
+                    )}
 
-                {ctaUrl && (
-                    <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
-                        {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
-                    </a>
-                )}
-            </header>
+                    {ctaUrl && (
+                        <a href={ctaUrl} className={classnames([styles.ctaButton, 'button-tertiary'])}>
+                            {ctaTitle ? ctaTitle : 'Learn more'} <Icon name="chevronRight" />
+                        </a>
+                    )}
+                </header>
+            )}
 
             {children}
         </div>

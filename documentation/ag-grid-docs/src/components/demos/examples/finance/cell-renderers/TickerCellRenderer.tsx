@@ -3,7 +3,7 @@ import { type FunctionComponent } from 'react';
 
 import type { CustomCellRendererProps } from 'ag-grid-react';
 
-export const TickerCellRenderer: FunctionComponent<CustomCellRendererProps> = ({ data }) => {
+export const TickerCellRenderer: FunctionComponent<CustomCellRendererProps> = ({ data, isSmallerGrid }) => {
     return (
         data && (
             <div>
@@ -17,7 +17,7 @@ export const TickerCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
                     }}
                 />
                 <b className="custom-ticker">{data.ticker}</b>
-                <span className="ticker-name"> {data.name}</span>
+                {isSmallerGrid && <span className="ticker-name"> {data.name}</span>}
             </div>
         )
     );

@@ -40,6 +40,10 @@
     }
 }
 
+.separator {
+    align-self: center;
+}
+
 .option {
     --color-link: var(--color-fg-primary);
     --color-link-hover: var(--color-fg-primary);

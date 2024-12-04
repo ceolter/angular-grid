@@ -121,7 +121,7 @@ export const FinanceExample: React.FC<Props> = ({
             {
                 field: 'ticker',
                 cellRenderer: TickerCellRenderer,
-                minWidth: 380,
+                minWidth: isSmallerGrid ? 75 : 380,
             },
             {
                 headerName: 'Timeline',

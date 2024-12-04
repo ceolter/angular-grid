@@ -1,0 +1,161 @@
+@use 'design-system' as *;
+
+.container {
+    width: 400px; /* Fixed width for the entire component */
+    margin: 0 auto; /* Optional: Center the component */
+    border-left: rgba(255, 255, 255, 0.2) 1px solid;
+    border-right: rgba(255, 255, 255, 0.2) 1px solid;
+    border-bottom: rgba(255, 255, 255, 0.2) 1px solid;
+    border-radius: 8px;
+    border-radius: 8px;
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    border-radius: 12px;
+    justify-content: space-between;
+}
+
+.tab {
+    align-items: center;
+    padding: 8px 4px;
+    flex-grow: 1;
+    background: var(--color-util-brand-100);
+    border-top: rgba(255, 255, 255, 0.2) 1px solid;
+    border-bottom: rgba(255, 255, 255, 0.2) 1px solid;
+    justify-content: space-around;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+
+    #{$selector-darkmode} & {
+        background: #141d2c;
+    }
+}
+
+.tab:nth-child(1) {
+    border-right: rgba(255, 255, 255, 0.2) 1px solid;
+}
+
+.tab:nth-child(2),
+.tab:nth-child(3) {
+    border-left: rgba(255, 255, 255, 0.2) 1px solid;
+    border-right: rgba(255, 255, 255, 0.2) 1px solid;
+}
+
+.tab:nth-child(4) {
+    border-left: rgba(255, 255, 255, 0.2) 1px solid;
+}
+
+.tab:hover {
+    background: var(--color-util-brand-200);
+    cursor: pointer;
+
+    #{$selector-darkmode} & {
+        background: #17202f;
+    }
+}
+
+.tabName {
+}
+
+.tabIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.activeTab {
+    padding: 8px 4px;
+    background: var(--color-util-brand-200);
+    flex-grow: 1;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: none;
+
+    #{$selector-darkmode} & {
+        background: #17202f;
+    }
+}
+
+.installContainer {
+    padding: $spacing-size-2;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background: var(--color-util-brand-200);
+    display: flex;
+    justify-content: space-between;
+
+    #{$selector-darkmode} & {
+        background: #17202f;
+    }
+}
+
+.getStartedCta {
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.installText {
+    font-size: var(--text-fs-base);
+    color: var(--color-text-primary);
+    font-family: var(--text-monospace-font-family);
+    font-weight: 500;
+    align-self: center;
+}
+
+.copyToClipboardIcon {
+    --icon-color: var(--color-text-primary);
+    opacity: 0.8;
+
+    width: var(--icon-size);
+    height: var(--icon-size);
+    padding: 6px;
+    cursor: pointer;
+
+    &:hover {
+        --icon-color: var(--color-white);
+        opacity: 1;
+    }
+}
+
+.primaryCtaButton {
+    --icon-size: #{$spacing-size-5};
+
+    width: fit-content;
+    margin-top: $spacing-size-3;
+    background: #0e4491;
+    border: none;
+    color: white;
+
+    :global(.icon) {
+        transform: translateX($spacing-size-2);
+        transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translateX($spacing-size-3);
+    }
+}
+
+.primaryCtaIcon {
+    fill: white;
+}
+
+.secondaryCtaButton {
+    --icon-size: #{$spacing-size-5};
+
+    width: fit-content;
+    margin-top: $spacing-size-3;
+    background-color: transparent;
+
+    :global(.icon) {
+        transform: translateX($spacing-size-2);
+        transition: transform $transition-default-timing;
+    }
+
+    &:hover :global(.icon) {
+        transform: translateX($spacing-size-3);
+    }
+}

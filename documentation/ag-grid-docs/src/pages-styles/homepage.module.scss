@@ -10,30 +10,30 @@ body {
 }
 
 .homepageHero {
-    padding-top: $spacing-size-10;
-    background-color: var(--color-bg-site-header);
-    height: 566px;
+    padding-top: $spacing-size-6;
 
     @media screen and (min-width: $breakpoint-hero-small) {
-        padding-top: $spacing-size-16;
+        padding-top: $spacing-size-10;
     }
 
     @media screen and (min-width: $breakpoint-hero-large) {
-        padding-top: $spacing-size-24;
+        padding-top: $spacing-size-12;
     }
 }
 
 .heroHeadings {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    text-align: center;
     justify-content: center;
 
     h1,
     h2 {
         line-height: var(--text-lh-tight);
-        color: var(--color-white);
+        color: var(--color-text-primary);
+
+        #{$selector-darkmode} & {
+            color: var(--color-white);
+        }
     }
 
     h1 {
@@ -53,8 +53,6 @@ body {
 
     h2 {
         max-width: 18em;
-        margin-right: auto;
-        margin-left: auto;
         margin-bottom: 1.4em;
         font-weight: var(--text-normal);
         line-height: 150%;
@@ -74,6 +72,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0 $spacing-size-16;
+    padding: 0px 100px;
 
     @media screen and (min-width: $breakpoint-hero-large) {
         flex-direction: row;
@@ -83,7 +82,7 @@ body {
 .heroSectionDemoContainer {
     position: relative;
     margin: 0 auto;
-    max-width: 1200px;
+    width: 100%;
     padding: 24px;
 
     @media screen and (max-width: 500px) {
@@ -421,7 +420,6 @@ body {
 
 .heroSectionbuttonContainer {
     display: flex;
-    justify-content: center;
     gap: $spacing-size-4;
     margin-bottom: $spacing-size-16;
     margin-top: $spacing-size-4;
@@ -438,13 +436,6 @@ body {
 }
 
 .heroSectioncta2 {
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: var(--radius-md);
-    height: 48px;
-    padding: $spacing-size-3;
 }
 
 .heroSectioncta1 {

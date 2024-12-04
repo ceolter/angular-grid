@@ -27,7 +27,14 @@ export function LandingPageFWSelector({ data }) {
                         </span>
                     </a>
                 );
-            })}
+            })}{' '}
+            <span className={styles.separator}>|</span>
+            <a href={urlWithBaseUrl('/community/tools-extensions')} className={styles.option}>
+                <img src={urlWithBaseUrl(`/${fwLogos}solidjs.svg`)} />
+                <span>
+                    Community Built Wrappers <Icon name="chevronRight" />
+                </span>
+            </a>
         </div>
     );
 }

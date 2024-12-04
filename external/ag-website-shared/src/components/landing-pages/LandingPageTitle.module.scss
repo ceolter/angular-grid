@@ -1,0 +1,58 @@
+.typewriter {
+    white-space: nowrap;
+    overflow: hidden;
+    color: #0e4491;
+    animation: blink 0.7s step-end infinite;
+    text-align: left;
+}
+
+.cursor {
+    width: 4px;
+    height: 44px;
+    display: inline-block;
+    background: white;
+    margin-left: 4px;
+    top: 4px;
+    position: relative;
+    animation: cursor-blink 1.4s steps(1, start) infinite;
+}
+
+@keyframes blink {
+    from {
+        border-right-color: #0e4491;
+    }
+    to {
+        border-right-color: transparent;
+    }
+}
+
+@keyframes cursor-blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.javascript {
+    color: #f7df1e; // Yellow
+}
+
+.react {
+    color: #61dafb; // Light Blue
+}
+
+.angular {
+    background: linear-gradient(90deg, #e40035, #f60a48 24%, #f20755 35%, #dc087d 49%, #9717e7 74%, #6c00f5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.vue {
+    color: #42b883; // Green
+}
