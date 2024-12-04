@@ -4,12 +4,17 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "paths": { /* Means only a single version of Angular is used */
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ]
+    }
   },
   "files": [
     "src/main.ts"
   ],
   "include": [
     "src/**/*.d.ts"
-  ]
+  ],
 }
