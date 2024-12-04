@@ -1,11 +1,11 @@
+import type { Framework } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
 import JavascriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
 import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
 import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import { gridUrlWithPrefix } from '@ag-website-shared/utils/gridUrlWithPrefix';
-import { setInternalFramework } from '@stores/frameworkStore';
-import { useFrameworkFromStore } from '@utils/hooks/useFrameworkFromStore';
+import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import classnames from 'classnames';
 import { useRef, useState } from 'react';
 import type { FunctionComponent, ReactNode } from 'react';
@@ -14,7 +14,7 @@ import styles from './LandingPageSection.module.scss';
 
 const CTA_TITLE_FRAMEWORK_STRING = '${framework}';
 
-const FRAMEWORK_CONFIGS = {
+const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; name: string }> = {
     react: {
         Icon: ReactIcon,
         name: 'React',
@@ -23,11 +23,11 @@ const FRAMEWORK_CONFIGS = {
         Icon: AngularIcon,
         name: 'Angular',
     },
-    vue3: {
+    vue: {
         Icon: VueIcon,
         name: 'Vue',
     },
-    vanilla: {
+    javascript: {
         Icon: JavascriptIcon,
         name: 'JavaScript',
     },
@@ -48,31 +48,17 @@ interface Props {
     isFramework?: boolean;
 }
 
-const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
-    const framework = useFrameworkFromStore(); // Get the framework from the store
+const CTAWithFrameworks: FunctionComponent<{ ctaTitle: string; ctaUrl: string }> = ({ ctaTitle, ctaUrl }) => {
+    const { framework, internalFramework, handleFrameworkChange } = useFrameworkSelector();
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
     const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const mapFrameworkToInternalFramework = (framework: string) => {
-        switch (framework) {
-            case 'javascript':
-                return 'vanilla';
-            case 'vue':
-                return 'vue3';
-            default:
-                return framework;
-        }
-    };
+    const CurrentIcon = FRAMEWORK_CONFIGS[internalFramework]?.Icon;
 
-    const internalFrameworkKey = mapFrameworkToInternalFramework(framework);
-    const CurrentIcon = FRAMEWORK_CONFIGS[internalFrameworkKey]?.Icon;
-
-    const handleFrameworkChange = (newFramework: string) => {
-        const internalFrameworkKey = mapFrameworkToInternalFramework(newFramework);
-
-        setInternalFramework(internalFrameworkKey); // Update the store with the correct internal framework
+    const handleFrameworkSelection = (newFramework: string) => {
+        handleFrameworkChange(newFramework);
         setIsHovering(false);
         setIsHiding(true);
     };
@@ -121,7 +107,7 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
                         event.preventDefault();
                     }}
                 >
-                    <CurrentIcon className={styles.frameworkIcon} />
+                    {CurrentIcon && <CurrentIcon className={styles.frameworkIcon} />}
 
                     <span className={styles.frameworkName}>{framework}</span>
 
@@ -144,7 +130,7 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
                     >
                         {Object.keys(FRAMEWORK_CONFIGS).map((frameworkKey) => {
                             const FrameworkIcon = FRAMEWORK_CONFIGS[frameworkKey].Icon;
-                            const isCurrentFramework = frameworkKey === internalFrameworkKey;
+                            const isCurrentFramework = frameworkKey === internalFramework;
                             return (
                                 <div
                                     key={frameworkKey}
@@ -153,7 +139,7 @@ const CTAWithFrameworks: FunctionComponent<Props> = ({ ctaTitle, ctaUrl }) => {
                                     })}
                                     onClick={(event) => {
                                         event.preventDefault();
-                                        handleFrameworkChange(frameworkKey);
+                                        handleFrameworkSelection(frameworkKey);
                                     }}
                                 >
                                     <FrameworkIcon />
