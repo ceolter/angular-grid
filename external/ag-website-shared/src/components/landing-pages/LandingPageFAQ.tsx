@@ -1,6 +1,7 @@
 import type { Framework } from '@ag-grid-types';
 import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import { transformMarkdoc } from '@utils/markdoc/transformMarkdoc';
 import classnames from 'classnames';
 import { useState } from 'react';
@@ -18,7 +19,8 @@ interface Props {
     framework: Framework;
 }
 
-const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, framework, isOpen, onClick }) => {
+const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, isOpen, onClick }) => {
+    const { framework } = useFrameworkSelector();
     const { MarkdocContent } = transformMarkdoc({ framework, markdocContent: itemData.answer });
 
     return (
@@ -37,7 +39,7 @@ const FAQItem: FunctionComponent<FAQItemData> = ({ itemData, framework, isOpen, 
     );
 };
 
-export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData, framework }) => {
+export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData }) => {
     const [activeItemIndex, setActiveItemIndex] = useState(-1);
 
     const clickHandler = (activeIndex) => {
@@ -51,7 +53,6 @@ export const LandingPageFAQ: FunctionComponent<Props> = ({ FAQData, framework })
             return (
                 <FAQItem
                     itemData={item}
-                    framework={framework}
                     key={i}
                     isOpen={activeItemIndex === i}
                     onClick={() => {
