@@ -18,16 +18,23 @@
         position: relative;
 
         &::before {
+            --horizontal-offset: calc((100vw - var(--layout-max-width-small)) / -2 + var(--layout-horizontal-margins));
+
             content: '';
             position: absolute;
             top: var(--gradient-top-offset);
-            left: -100vw;
-            right: -100vw;
+            left: var(--horizontal-offset);
+            right: var(--horizontal-offset);
             height: var(--gradient-height);
             border-top: 1px solid var(--border-color);
             background-image: linear-gradient(var(--gradient-color), transparent);
             z-index: -1;
             pointer-events: none;
+
+            // Safari-only hack required to fix overscroll
+            @supports (-webkit-hyphens: none) {
+                right: calc(var(--horizontal-offset) + 10px);
+            }
         }
 
         #{$selector-darkmode} & {
@@ -81,17 +88,169 @@
 }
 
 .ctaButton {
-    --icon-size: #{$spacing-size-5};
-
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-size-2;
     width: fit-content;
     margin-top: $spacing-size-3;
+    padding: 0.5em 0.5em 0.5em 1em;
 
     :global(.icon) {
-        transform: translateX($spacing-size-2);
+        --icon-size: #{$spacing-size-4};
+
+        transform: translateX(-3px);
         transition: transform $transition-default-timing;
     }
 
     &:hover :global(.icon) {
-        transform: translateX($spacing-size-3);
+        transform: translateX(4px);
+    }
+
+    .CTAWithFrameworks & {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.CTAWithFrameworks {
+    display: flex;
+    align-items: flex-end;
+}
+
+.frameworkSelector {
+    display: flex;
+    align-items: center;
+    gap: $spacing-size-2;
+    padding-right: $spacing-size-4;
+    border-right: 1px solid var(--color-util-brand-200);
+    opacity: 0.7;
+
+    svg {
+        opacity: 1;
+    }
+}
+
+.frameworkOverlay {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 150px;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    z-index: 999999;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.95);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    pointer-events: none;
+}
+
+.frameworkOverlay.visible {
+    animation: fadeInUp 0.15s ease-in-out forwards;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.frameworkOverlay.hiding {
+    animation: fadeOutDown 0.15s ease-in-out forwards;
+    pointer-events: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-0.5rem) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-0.5rem) scale(0.95);
+    }
+}
+
+.frameworkOption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: var(--color-util-brand-50);
+        #{$selector-darkmode} & {
+            background-color: var(--color-button-tertiary-bg-hover);
+        }
+        cursor: pointer;
+    }
+
+    span {
+        font-weight: 600;
+        font-size: var(--text-fs-sm);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.currentFramework {
+    background-color: var(--color-util-brand-100);
+
+    #{$selector-darkmode} & {
+        background-color: color-mix(in srgb, var(--color-button-tertiary-bg-hover), var(--color-bg-primary) 40%);
+    }
+}
+
+.inlineSelectorContainer {
+    position: relative;
+    display: flex;
+    margin-left: -1px;
+    padding: 0.5em 0.5em 0.5em 1em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.frameworkSelectorInline {
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-size-1;
+}
+
+.frameworkIcon {
+    width: 22px;
+    height: 22px;
+}
+
+.frameworkName {
+    text-transform: capitalize;
+    font-weight: 600;
+}
+
+.frameworkChevronDown {
+    --icon-size: #{$spacing-size-4};
+
+    opacity: 0.5;
+
+    #{$selector-darkmode} & {
+        opacity: 1;
     }
 }

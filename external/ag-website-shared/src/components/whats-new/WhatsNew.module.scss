@@ -35,6 +35,7 @@
     background-color: var(--color-bg-primary);
     border: 1px solid var(--color-border-secondary);
     gap: $spacing-size-4;
+    padding-bottom: 8px;
 
     @container (min-width: 640px) {
         width: calc(100% / 2 - var(--versions-gap) / 2);
@@ -120,6 +121,7 @@
     border-radius: var(--radius-4xl);
     border: 1px solid var(--color-logo-orange);
     color: var(--color-logo-orange);
+    font-weight: var(--text-semibold);
 }
 
 .line {
@@ -151,6 +153,7 @@ a.buttonSecondary {
     display: flex;
     justify-content: center;
     margin-bottom: 8px;
+    border: 1px solid var(--color-border-secondary);
 
     #{$selector-darkmode} & {
         background-color: var(--color-util-gray-300);
@@ -172,6 +175,9 @@ a.buttonSecondary {
     justify-content: space-between;
     align-items: flex-start;
     gap: $spacing-size-2;
+    b {
+        color: var(--color-fg-primary);
+    }
 }
 
 .flex a {

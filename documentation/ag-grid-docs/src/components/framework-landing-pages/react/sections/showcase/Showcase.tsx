@@ -1,3 +1,4 @@
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import React from 'react';
 
 import styles from './Showcase.module.scss';
@@ -18,6 +19,7 @@ const SHOWCASE_ITEMS = [
         titleIcon: <FinanceIcon />,
         description:
             'Analyse complex financial data, perform calculations and visualise the data in AG Grid, with standalone charts from AG Charts.',
+        projectName: 'OpenBB',
         projectLogo: <OpenBB />,
         projectHref: 'https://openbb.co/',
         sourceHref: 'https://github.com/OpenBB-finance/OpenBBTerminal',
@@ -26,16 +28,18 @@ const SHOWCASE_ITEMS = [
         title: 'ML/AI',
         titleIcon: <AIIcon />,
         description:
-            'Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to powers the tables in its dashboard',
+            'Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to power the tables in its dashboard',
+        projectName: 'MLflow',
         projectLogo: <MLFlowLogo />,
         projectHref: 'https://mlflow.org',
         sourceHref: 'https://github.com/mlflow/mlflow/tree/master',
     },
     {
-        title: 'Data Modelling',
+        title: 'Developer Platforms',
         titleIcon: <ModelIcon />,
         description:
-            'Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to help visualise mission data.',
+            'Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI builder.',
+        projectName: 'Windmill',
         projectLogo: <Windmill />,
         projectHref: 'https://www.windmill.dev/docs/apps/app_configuration_settings/aggrid_table#aggird-table-input',
         sourceHref: 'https://github.com/windmill-labs/windmill',
@@ -45,36 +49,50 @@ const SHOWCASE_ITEMS = [
         titleIcon: <DashboardIcon />,
         description:
             'An open source React library for building dashboards, with AG Grid enterprise support for building React tables with advanced features.',
+        projectName: 'React Admin',
         projectLogo: <RA />,
         projectHref: 'https://marmelab.com/react-admin/DatagridAG.html',
         sourceHref: 'https://github.com/marmelab/react-admin',
     },
     {
-        title: 'Developer Platforms',
+        title: 'Data Modelling',
         titleIcon: <TerminalIcon />,
         description:
-            'Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI builder.',
+            'Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to help visualise mission data.',
+        projectName: 'Aerie',
         projectLogo: <Aerie />,
         projectHref: 'https://nasa-ammos.github.io/aerie-docs/',
         sourceHref: 'https://github.com/NASA-AMMOS/aerie-ui',
     },
 ];
 
-const ShowcaseItem: React.FC = ({ title, titleIcon, description, projectLogo, projectHref, sourceHref }) => {
+const ShowcaseItem: React.FC = ({
+    title,
+    titleIcon,
+    description,
+    projectName,
+    projectLogo,
+    projectHref,
+    sourceHref,
+}) => {
     return (
         <div className={styles.showcaseGridItem}>
             <div className={styles.showcaseIconWrapper}>
                 <span className={styles.showcaseIcon}>{titleIcon}</span>
                 <span className={styles.showcaseLogo}>{projectLogo}</span>
             </div>
-            <h3 className={styles.showcaseTitle}>{title}</h3>
+            <h3 className={styles.showcaseTitle}>
+                {title}
+                <span className={styles.showcaseName}> — {projectName}</span>
+            </h3>
             <p className={styles.showcaseDescription}>{description}</p>
             <div className={styles.showcaseLinksWrapper}>
                 <a href={projectHref} target="_blank" rel="noopener noreferrer">
-                    Visit Site
+                    Visit {projectName}
                 </a>{' '}
-                <a href={sourceHref} target="_blank" rel="noopener noreferrer">
-                    Source code
+                <a href={sourceHref} className={styles.githubLink} target="_blank" rel="noopener noreferrer">
+                    <Icon name="github" />
+                    View source
                 </a>
             </div>
         </div>

@@ -17,29 +17,30 @@ interface Props {
     gridHeight?: number | null;
 }
 
+interface ThemeParams {
+    themeSelection: string;
+    spacing: number;
+}
+
 type ThemeSelection = 'themeQuartz' | 'themeCustom';
 
-const themeCustom = themeQuartz
-    .withParams(
-        {
-            backgroundColor: '#e6bc9a',
-            foregroundColor: '#340c52',
-            borderColor: '#f59342',
-            chromeBackgroundColor: '#e3f5c4',
-            browserColorScheme: 'light',
-        },
-        'light'
-    )
-    .withParams(
-        {
-            backgroundColor: '#38200c',
-            foregroundColor: '#FFF',
-            borderColor: '#f59342',
-            chromeBackgroundColor: '#633713',
-            browserColorScheme: 'dark',
-        },
-        'dark-blue'
-    );
+const themeCustom = themeQuartz.withParams({
+    accentColor: '#0086F4',
+    backgroundColor: '#F1EDE1',
+    borderColor: '#98968F',
+    borderRadius: 16,
+    browserColorScheme: 'light',
+    chromeBackgroundColor: {
+        ref: 'backgroundColor',
+    },
+    fontSize: 15,
+    foregroundColor: '#605E57',
+    headerBackgroundColor: '#E4DAD1',
+    headerFontSize: 15,
+    headerFontWeight: 700,
+    headerTextColor: '#3C3A35',
+    wrapperBorderRadius: 12,
+});
 
 const THEME_SELECTIONS = [
     {
@@ -55,6 +56,26 @@ const THEME_SELECTIONS = [
         themeName: 'themeCustom',
     },
 ];
+
+function getCodeSnippet({ themeSelection, spacing }: ThemeParams) {
+    const params =
+        themeSelection === 'themeCustom'
+            ? {
+                  backgroundColor: '#38200c',
+                  foregroundColor: '#FFF',
+                  borderColor: '#f59342',
+                  chromeBackgroundColor: '#633713',
+                  spacing,
+              }
+            : {
+                  spacing,
+              };
+
+    const customThemeCode = `\n\nconst myTheme = themeQuartz.withParams(${JSON.stringify(params, null, 4)});`;
+
+    return `// Using the Theming API
+import { themeQuartz } from 'ag-grid-community';${customThemeCode}`;
+}
 
 export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => {
     const [baseTheme, setBaseTheme] = useState<Theme>(themeQuartz);
@@ -86,12 +107,12 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
     );
 
     const rowData = [
-        {
-            ticker: 'US10Y',
-            performance: 93521,
-            current: 98149,
-            feb: 78675,
-        },
+        { ticker: 'US10Y', performance: 93521, current: 98149, feb: 78675 },
+        { ticker: 'TSLA', performance: 97121, current: 97121, feb: 21462 },
+        { ticker: 'AMZN', performance: 96528, current: 96528, feb: 79786 },
+        { ticker: 'UBER', performance: 94390, current: 94390, feb: 33186 },
+        { ticker: 'JP10Y', performance: 94074, current: 94074, feb: 19321 },
+        { ticker: 'US10Y', performance: 93521, current: 98149, feb: 78675 },
         { ticker: 'TSLA', performance: 97121, current: 97121, feb: 21462 },
         { ticker: 'AMZN', performance: 96528, current: 96528, feb: 79786 },
         { ticker: 'UBER', performance: 94390, current: 94390, feb: 33186 },
@@ -99,14 +120,7 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
     ];
 
     const codeBlock = useMemo(() => {
-        const importPath = themeSelection === 'themeCustom' ? '../themeCustom' : 'ag-grid-community';
-        return `// Using the Theming API
-import { ${themeSelection} } from '${importPath}';
-
-<AgGridReact
-    theme={${themeSelection}}
-    spacing={${spacing}}
-/>`;
+        return getCodeSnippet({ themeSelection, spacing });
     }, [themeSelection, spacing]);
 
     return (
@@ -182,6 +196,7 @@ import { ${themeSelection} } from '${importPath}';
                         </div>
                     </ShadowDom>
                 </div>
+
                 <div className={`${styles.codeBlockWrapper} code-block-homepage`}>
                     <div className={styles.windowControls}>
                         <div className={styles.dot}></div>
@@ -189,7 +204,7 @@ import { ${themeSelection} } from '${importPath}';
                         <div className={styles.dot}></div>
                     </div>
 
-                    <Snippet framework="react" language={'jsx'} content={codeBlock} transform={false} lineNumbers />
+                    <Snippet framework="javascript" language="js" content={codeBlock} transform={false} lineNumbers />
                 </div>
             </div>
         </div>

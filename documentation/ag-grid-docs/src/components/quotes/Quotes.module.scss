@@ -128,7 +128,6 @@
 .statsOuter {
     display: flex;
     justify-content: center;
-    grid-template-columns: repeat(4, 1fr);
     padding: $spacing-size-8;
     gap: $spacing-size-8;
     border: 1px solid var(--color-border-secondary);
@@ -137,6 +136,11 @@
     border-bottom: 1px solid var(--color-border-secondary);
     border-top-left-radius: var(--radius-md);
     border-top-right-radius: var(--radius-md);
+
+    @media screen and (max-width: $breakpoint-pricing-medium) {
+        flex-direction: column;
+        align-items: center;
+    }
 
     svg {
         stroke: var(--color-util-brand-500);
@@ -148,6 +152,20 @@
         flex-direction: column;
 
         border-right: 1px solid var(--color-border-secondary);
+
+        @media screen and (max-width: $breakpoint-pricing-medium) {
+            border-right: none;
+
+            h4 {
+                width: fit-content;
+                align-items: center;
+
+                margin: 0 auto;
+            }
+            p {
+                margin: 0 auto;
+            }
+        }
 
         &:last-child {
             border-right: none;
@@ -168,8 +186,4 @@ h4 {
 
 h4 {
     color: var(--color-util-brand-500);
-    @media screen and (max-width: $breakpoint-pricing-large) {
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-    }
 }

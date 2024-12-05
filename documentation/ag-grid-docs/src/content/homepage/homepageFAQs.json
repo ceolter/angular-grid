@@ -1,34 +1,34 @@
 [
     {
+        "question": "Can I build JavaScript Data Grids for free with AG Grid?",
+        "answer": "Yes, it's free to get started with AG Grid and you'll have access to core features like filtering, sorting, cell editing, pagination and much more."
+    },
+    {
+        "question": "How fast is AG Grid?",
+        "answer": "AG Grid has always been focused on performance and reliability with large data sets; We use virtualisation for both rows and columns to make sure your users have the smoothest experience possible, whatever the size of your data."
+    },
+    {
+        "question": "Is AG Grid compatible with AG Charts?",
+        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between your JavaScript Data Grids and [JavaScript Charts](https://www.ag-grid.com/charts/react/quick-start/)."
+    },
+    {
+        "question": "Can I customise the style of my Data Grid?",
+        "answer": "Yes, you can customise AG Grid with our [Theming API](./themes/) or use our [Theme Builder](/theme-builder/) to build themes with our intuitive UI."
+    },
+    {
+        "question": "Is AG Grid compatible with my Framework?",
+        "answer": "Yes, AG Grid comes with support for [React](/react-data-grid/getting-started/), [Angular](/angular-data-grid/getting-started/) and [Vue](/vue-data-grid/getting-started/). If you're using another framework, such as Solid, Svelte or Python, you can leverage one of our [community built integrations.](/community/tools-extensions/)"
+    },
+    {
+        "question": "Can I use my own components with AG Grid?",
+        "answer": "Yes, you can add your own components to [cells](./component-cell-renderer/) and [headers](./column-headers/#selecting-components), and replace things like [filters](./component-filter/), [overlays](./overlays/#customisation), and [tooltips](./tooltips/#custom-component) with your own functionality if you want to."
+    },
+    {
+        "question": "How is AG Grid different from Tanstacks' React Table",
+        "answer": "We like to say AG Grid 'comes with batteries included'. Tanstack Table is headless, meaning you need to build the UI from scratch, where-as AG Grid can be used out-of-the-box."
+    },
+    {
         "question": "What is the difference between AG Grid Community and Enterprise?",
-        "answer": "[AG Grid Community](./getting-started/) is the free version with basic features, while [AG Grid Enterprise](/license-pricing/) offers additional advanced features and support."
-    },
-    {
-        "question": "Can I create a React Table for free?",
-        "answer": "Yes, you can create a React Table for free using our open-source library, [AG Grid Community](./getting-started/)."
-    },
-    {
-        "question": "Will my React Tables be compatible with AG Charts?",
-        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between React Tables and [React Charts](https://www.ag-grid.com/charts/react/quick-start/)."
-    },
-    {
-        "question": "Can I customise the React Table?",
-        "answer": "Yes, you can customise AG Grid [themes](./themes/) with CSS, create your own custom themes, and use our own components in cells. Visit our [Theme Builder](/theme-builder/) to start customising themes."
-    },
-    {
-        "question": "AG Grid vs. MUI",
-        "answer": "AG Grid is a feature-rich data grid offering advanced capabilities, while MUI (Material-UI) provides a simpler table component as part of its UI library."
-    },
-    {
-        "question": "Why use AG Grid over TanStack React Table?",
-        "answer": "TanStack React Table is for building bespoke data grids from scratch, whereas AG Grid comes with a UI and broader feature set, which just requires configuration."
-    },
-    {
-        "question": "How Many Rows Can AG Grid Handle?",
-        "answer": "AG Grid can easily handle millions of rows and thousands of columns, with no performance degradation, by using row & column virtualisation."
-    },
-    {
-        "question": "What is AG Grid Enterprise?",
         "answer": "[AG Grid Community](./getting-started/) is the free version with basic features, while [AG Grid Enterprise](/license-pricing/) offers additional advanced features and support."
     },
     {

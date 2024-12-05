@@ -139,4 +139,15 @@
 .showcaseLinksWrapper {
     display: flex;
     gap: $spacing-size-6;
+
+    a {
+        font-weight: var(--text-semibold);
+    }
+}
+
+.githubLink svg {
+    --icon-size: 22px;
+
+    margin-right: 3px;
+    margin-top: -3px;
 }

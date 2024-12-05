@@ -4,12 +4,21 @@
     width: 600px;
     box-shadow: var(--shadow-md);
     border-radius: var(--radius-md);
+    pointer-events: none;
+
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        width: 100%;
+    }
 }
 
 .gridColumns {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        flex-direction: column;
+    }
 }
 
 .label {
@@ -21,6 +30,7 @@
     display: flex;
     flex-direction: row;
     gap: $spacing-size-2;
+
     svg {
         transform: scale(0.8);
         opacity: 0.6;
@@ -36,11 +46,19 @@
 .themeOptions {
     padding-bottom: $spacing-size-5;
     border-bottom: 1px solid var(--color-border-secondary);
+
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        border-bottom: none;
+    }
 }
 .buttonItems {
     display: flex;
     flex-direction: row;
     gap: $spacing-size-3;
+
+    input {
+        min-width: 20px;
+    }
 }
 .titleDescription {
     display: flex;
@@ -85,12 +103,24 @@
                 }
             }
         }
+
         #{$selector-darkmode} & {
             background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
             color: white;
         }
     }
+
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        display: none;
+    }
 }
+
+@media screen and (min-width: $breakpoint-pricing-large) {
+    .gridCodeBlock {
+        min-height: 580px;
+    }
+}
+
 .codeBlockWrapper {
     position: relative;
     background-color: #111a4a;
@@ -104,7 +134,13 @@
     bottom: 50px;
     box-shadow: var(--shadow-md);
 
+    @media screen and (max-width: $breakpoint-pricing-large) {
+        display: none;
+    }
+
     code {
+        --function-color: var(--color-brand-200);
+
         background-color: #111a4a !important;
         border: none;
         font-weight: 600 !important;
@@ -112,6 +148,7 @@
         .line-numbers-rows {
             border-right: none !important;
         }
+
         #{$selector-darkmode} & {
             background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%) !important;
         }
@@ -178,6 +215,9 @@
 
         gap: 16px;
         width: 510px;
+        @media screen and (max-width: $breakpoint-pricing-large) {
+            width: 100%;
+        }
 
         .buttonItem {
             padding: $spacing-size-5;
@@ -225,5 +265,37 @@
 
     .title {
         font-weight: var(--text-semibold);
+    }
+}
+
+.frameworkSwitcher {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: $spacing-size-3;
+    margin: $spacing-size-2;
+
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+
+    svg {
+        path {
+            fill: rgba(255, 255, 255, 0.3);
+        }
+    }
+
+    svg:hover {
+        cursor: pointer;
+        path {
+            fill: rgba(255, 255, 255, 1);
+        }
+    }
+
+    .active {
+        path {
+            fill: white;
+        }
     }
 }

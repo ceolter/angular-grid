@@ -1,8 +1,90 @@
-.installText {
-    font-size: var(--text-fs-base);
-    color: var(--color-white);
-    font-family: var(--text-monospace-font-family);
-    font-weight: 500;
+@use 'design-system' as *;
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(0.5rem) scale(0.95);
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.copyIconAnimationContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.copyToClipboardIcon {
+    --icon-size: 20px;
+
+    position: absolute;
+
+    &.copyIcon {
+        animation: scaleUp 0.2s ease-out;
+    }
+
+    &.tickIcon {
+        animation: scaleUp 0.2s ease-out;
+    }
+}
+
+.iconPlaceholder {
+    width: 20px;
+    height: 20px;
+}
+
+.installTextContainer {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-size-3;
+    padding-left: $spacing-size-3;
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+
+    .installCommand {
+        padding-top: 5px;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        .frameworkIconWrapper {
+            opacity: 0.5;
+            transition:
+                opacity 0.15s ease,
+                transform 0.15s ease;
+        }
+    }
 }
 
 .copyToClipboardIcon {
@@ -11,11 +93,93 @@
 
     width: var(--icon-size);
     height: var(--icon-size);
-    padding: 6px;
+}
+
+.installText {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-white);
+    border-radius: 4px;
+    font-family: var(--text-monospace-font-family);
+}
+
+.frameworkIconWrapper {
+    width: 20px;
+    height: 20px;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.copyButton {
     cursor: pointer;
+}
+
+.copyToClipboardIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.frameworkOverlay {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 150px;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.95);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    pointer-events: none;
+}
+
+.frameworkOverlay.visible {
+    animation: fadeInUp 0.15s ease-in-out forwards;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.frameworkOverlay.hiding {
+    animation: fadeOutDown 0.15s ease-in-out forwards;
+    pointer-events: none;
+}
+
+.frameworkOption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 
     &:hover {
-        --icon-color: var(--color-white);
-        opacity: 1;
+        background-color: var(--color-button-tertiary-bg-hover);
+
+        #{$selector-darkmode} & {
+            background-color: color-mix(in srgb, var(--color-fg-primary), var(--color-bg-primary) 80%);
+        }
+
+        cursor: pointer;
+    }
+    span {
+        font-weight: 600;
+        font-size: var(--text-fs-sm);
+    }
+
+    svg {
+        width: 20px;
+        height: 20px;
     }
 }
