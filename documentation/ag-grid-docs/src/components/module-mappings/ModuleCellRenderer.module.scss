@@ -11,3 +11,18 @@
         top: -2px;
     }
 }
+
+.link {
+    opacity: 0.5;
+    transition: opacity 0.33s ease-in-out;
+
+    :global(.ag-row):hover & {
+        opacity: 1;
+    }
+}
+
+.newTabIcon {
+    --icon-size: 14px;
+
+    margin: 2px 2px 0 6px;
+}

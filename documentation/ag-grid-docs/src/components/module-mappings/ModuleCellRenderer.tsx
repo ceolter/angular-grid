@@ -11,15 +11,18 @@ export function ModuleCellRenderer({ data }: CustomCellRendererProps) {
     const framework = getFrameworkFromPath(window.location.pathname);
 
     const moduleValue = path ? (
-        <a
-            href={urlWithPrefix({
-                framework,
-                url: `./${path}`,
-            })}
-            target={'_blank'}
-        >
-            {name}
-        </a>
+        <span>
+            <span>{name}</span>
+            <a
+                href={urlWithPrefix({
+                    framework,
+                    url: `./${path}`,
+                })}
+                className={styles.link}
+            >
+                <Icon name="newTab" svgClasses={styles.newTabIcon} />
+            </a>
+        </span>
     ) : (
         name
     );
