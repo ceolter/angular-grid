@@ -78,7 +78,7 @@ const InstallText = () => {
         }
     };
 
-    const handleMouseLeave = (e) => {
+    const handleMouseLeave = () => {
         // Set a timeout to allow moving between icon and dropdown
         overlayTimerRef.current = setTimeout(() => {
             if (containerRef.current && !containerRef.current.matches(':hover')) {
