@@ -1,13 +1,13 @@
 import type { Framework } from '@ag-grid-types';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
+import AngularIcon from '@ag-website-shared/images/inline-svgs/angular.svg?react';
+import JavaScriptIcon from '@ag-website-shared/images/inline-svgs/javascript.svg?react';
+import ReactIcon from '@ag-website-shared/images/inline-svgs/react.svg?react';
+import VueIcon from '@ag-website-shared/images/inline-svgs/vue.svg?react';
 import { useFrameworkSelector } from '@ag-website-shared/utils/useFrameworkSelector';
 import { useRef, useState } from 'react';
 
 import styles from './InstallText.module.scss';
-import AngularIcon from './angular.svg?react';
-import JavaScriptIcon from './javascript.svg?react';
-import ReactIcon from './react.svg?react';
-import VueIcon from './vue.svg?react';
 
 const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; command: string; name: string }> = {
     react: {
