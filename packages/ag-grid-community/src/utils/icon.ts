@@ -202,6 +202,14 @@ export function _createIconNoSpan(
 ): Element | undefined {
     let userProvidedIcon: ((...args: any[]) => any) | string | null = null;
 
+    if (iconName === 'smallDown') {
+        _warn(262);
+    } else if (iconName === 'smallLeft') {
+        _warn(263);
+    } else if (iconName === 'smallRight') {
+        _warn(264);
+    }
+
     // check col for icon first
     const icons: any = column && column.getColDef().icons;
 

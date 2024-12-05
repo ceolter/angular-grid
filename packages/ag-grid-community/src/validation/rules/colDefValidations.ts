@@ -1,7 +1,7 @@
 import type { UserComponentName } from '../../context/context';
 import type { AbstractColDef, ColDef, ColGroupDef, ColumnMenuTab } from '../../entities/colDef';
 import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
-import { toStringWithNullUndefined } from '../logging';
+import { _errMsg, toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
 import { USER_COMP_MODULES } from './userCompValidations';
 
@@ -128,6 +128,22 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
                 return null;
             }
             return 'headerValueGetter must be a function or a valid string expression';
+        },
+    },
+    icons: {
+        validate: ({ icons }) => {
+            if (icons) {
+                if (icons['smallDown']) {
+                    return _errMsg(262);
+                }
+                if (icons['smallLeft']) {
+                    return _errMsg(263);
+                }
+                if (icons['smallRight']) {
+                    return _errMsg(264);
+                }
+            }
+            return null;
         },
     },
     mainMenuItems: { module: 'ColumnMenu' },

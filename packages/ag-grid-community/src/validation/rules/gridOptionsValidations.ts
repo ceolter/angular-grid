@@ -4,7 +4,7 @@ import { _getCallbackForEvent } from '../../gridOptionsUtils';
 import { _ALL_GRID_OPTIONS, _BOOLEAN_GRID_OPTIONS, _NUMBER_GRID_OPTIONS } from '../../propertyKeys';
 import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { _mergeDeep } from '../../utils/object';
-import { toStringWithNullUndefined } from '../logging';
+import { _errMsg, toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
 
 /**
@@ -212,6 +212,22 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         groupSelectsChildren: {
             dependencies: {
                 rowSelection: { required: ['multiple'] },
+            },
+        },
+        icons: {
+            validate: ({ icons }) => {
+                if (icons) {
+                    if (icons['smallDown']) {
+                        return _errMsg(262);
+                    }
+                    if (icons['smallLeft']) {
+                        return _errMsg(263);
+                    }
+                    if (icons['smallRight']) {
+                        return _errMsg(264);
+                    }
+                }
+                return null;
             },
         },
         infiniteInitialRowCount: {
