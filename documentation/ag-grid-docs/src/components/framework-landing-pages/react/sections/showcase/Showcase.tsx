@@ -28,17 +28,17 @@ const SHOWCASE_ITEMS = [
         title: 'ML/AI',
         titleIcon: <AIIcon />,
         description:
-            'Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to powers the tables in its dashboard',
+            'Build models and generative AI apps on a unified, end-to-end, MLOps platform which uses AG Grid to power the tables in its dashboard',
         projectName: 'MLflow',
         projectLogo: <MLFlowLogo />,
         projectHref: 'https://mlflow.org',
         sourceHref: 'https://github.com/mlflow/mlflow/tree/master',
     },
     {
-        title: 'Data Modelling',
+        title: 'Developer Platforms',
         titleIcon: <ModelIcon />,
         description:
-            'Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to help visualise mission data.',
+            'Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI builder.',
         projectName: 'Windmill',
         projectLogo: <Windmill />,
         projectHref: 'https://www.windmill.dev/docs/apps/app_configuration_settings/aggrid_table#aggird-table-input',
@@ -55,10 +55,10 @@ const SHOWCASE_ITEMS = [
         sourceHref: 'https://github.com/marmelab/react-admin',
     },
     {
-        title: 'Developer Platforms',
+        title: 'Data Modelling',
         titleIcon: <TerminalIcon />,
         description:
-            'Open-source developer platforms and workflow engines who use AG Grid as part of their drag & drop UI builder.',
+            'Planning, scheduling, and sequencing tools for modern space missions. AG Grid is used throughout to help visualise mission data.',
         projectName: 'Aerie',
         projectLogo: <Aerie />,
         projectHref: 'https://nasa-ammos.github.io/aerie-docs/',
