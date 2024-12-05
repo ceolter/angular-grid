@@ -3,16 +3,5 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "testing/module-size-angular",
   "projectType": "app",
-  "targets": {
-    "test": {
-      "executor": "nx:run-commands",
-      "inputs": [],
-      "outputs": [],
-      "options": {
-        "cwd": "testing/module-size-angular",
-        "commands": ["npm run test"]
-      }
-    }
-  },
   "tags": ["module-size"]
 }

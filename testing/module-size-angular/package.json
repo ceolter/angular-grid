@@ -5,10 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "test": "ng build",
     "watch": "ng build --watch --configuration development",
     "analyze": "ng build && source-map-explorer dist/angular-19/*.js"
   },
   "private": true,
+  "type": "module",
   "dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/common": "^19.0.0",
