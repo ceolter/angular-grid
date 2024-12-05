@@ -1,12 +1,6 @@
 import { createApp, defineComponent } from 'vue';
 
-import type {
-    ColDef,
-    GridReadyEvent,
-    ICellRendererParams,
-    ValueFormatterParams,
-    ValueGetterParams,
-} from 'ag-grid-community';
+import type { ColDef, GridReadyEvent, ValueFormatterParams, ValueGetterParams } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 

@@ -4,108 +4,24 @@ title: "AG Grid Modules"
 
 Reduce your application bundle size by cherry picking grid features using AG Grid modules.
 
-## Modules
+## Bundles
+
+To include all community or enterprise modules, either the `AllCommunityModule` or `AllEnterpriseModule` bundle can be used. This replicates the behaviour of the package versions of AG Grid prior to version 33.
+
+## Choosing Modules
+
+To work out which modules are required, select the features of the grid that you are using below. This will then provide the relevant code.
 
 {% moduleMappings /%}
 
-## Packages vs Modules
+{% note %}The code snippet above shows registering modules globally. It is also possible to [Provide Modules To Individual Grids](#providing-modules-to-individual-grids){% /note %}
 
-Importing AG Grid with packages ensures every grid feature is implicitly available but this can bloat your application bundle size with features that aren't required. Packages default to **CommonJS ES5** format which makes integration into other build & testing tools (specifically Jest) easier.
+## Validation
 
-If you want to minimise your application bundle size, use modules to include only the functionality you need. You will need to [Register Modules](./modules/#registering-ag-grid-modules) in your application. Modules default to **ES6 ES Modules** but not all tooling supports ESM out of the box yet (specifically testing tools such as Jest). These tools can be accommodated with extra configuration (see [Testing](./testing)).
 
-## Modules
+The `ValidationModule` adds helpful console warnings/errors, including if a feature has been enabled and the relevant module is missing. It is recommended to include it in your development build. It is automatically included if using one of the bundles (`AllCommunityModule`/`AllEnterpriseModule`).
 
-The table below summarises the modules provided in AG Grid Community and AG Grid Enterprise. See [Module Examples](./modules/#module-examples) to learn how the Example Runner can be used to determine the module required for a given feature.
-
-{% matrixTable dataFileName="modules" 
-    columns={
-        "title": "",
-        "module": "Community Module",
-        "exported": "Exported"
-    }
-    filter="!enterprise && !framework" /%}
-
-{% if isFramework("angular") %}
-{% matrixTable dataFileName="modules"
-    columns={
-        "title": "",
-        "module": "Framework Module",
-        "exported": "Exported"
-    }
-    filter="angular" /%}
-{% /if %}
-
-{% if isFramework("react") %}
-{% matrixTable dataFileName="modules"
-    columns={
-        "title": "",
-        "module": "Framework Module",
-        "exported": "Exported"
-    }
-    filter="react" /%}
-{% /if %}
-
-{% if isFramework("vue") %}
-{% matrixTable dataFileName="modules"
-    columns={
-        "title": "",
-        "module": "Framework Module",
-        "exported": "Exported"
-    }
-    filter="vue" /%}
-{% /if %}
-
-{% matrixTable dataFileName="modules"
-    columns={
-        "title": "",
-        "module": "Framework Module",
-        "exported": "Exported"
-    }
-    filter="enterprise" /%}
-
-## Mixing Packages and Modules
-
-{% warning %}
-Do **not** mix `packages` and `modules`! This will result in a large bundle size!
-{% /warning %}
-
-It is important that you do not mix packages and modules in the same application as this will result in AG Grid being included twice
-and doubling your bundle size! All modules are scoped by either `@ag-grid-community/*` or `@ag-grid-enterprise/*` and should not
-be mixed with the standalone packages of `ag-grid-community` and `ag-grid-enterprise`.
-
-| Modules                     | Packages             |
-| --------------------------- | -------------------- |
-| `@ag-grid-community/xxxxx`  | `ag-grid-community`  |
-| `@ag-grid-enterprise/xxxxx` | `ag-grid-enterprise` |
-
-```js
-"dependencies": {
-    "ag-grid-community": "~{% $agGridVersion %}" // a package dependency
-    "@ag-grid-enterprise/row-grouping": "~{% $agGridVersion %}"  // a module dependency
-    //...other dependencies...
-}
-```
-
-## Installing AG Grid Modules
-
-The grid requires at least one of the following [Row Model](./row-models/) modules:
-
-* `ClientSideRowModelModule`
-* `InfiniteRowModelModule`
-* `ServerSideRowModelModule` {% enterpriseIcon /%}
-* `ViewportRowModelModule` {% enterpriseIcon /%}
-
-After that all other modules are optional depending on your requirements.
-
-### Dependant Modules
-
-As a developer you do not need to worry about module dependencies. For example, the `FilterToolPanelModule` depends on the
-`SideBarModule` but as we have set up the dependencies as part of the module definition npm will install the dependant packages
-for you.
-
-Also, when [Registering Modules](./modules/#registering-ag-grid-modules) you only need to register the feature you require
-and AG Grid will take care of registering any dependant modules. Dependant modules will be registered in the same scope ([Globally](./modules/#providing-modules-globally) / [Individual](./modules/#providing-modules-to-individual-grids)) depending on how you register the feature module.
+`ModuleRegistry.registerModules()` can be called multiple times to register additional modules, so `ModuleRegistry.registerModules([ValidationModule])` can be run when in development.
 
 ## Registering AG Grid Modules
 
@@ -113,102 +29,20 @@ When including AG Grid in your application via modules it is your responsibility
 
 ### Providing Modules Globally
 
-You can import and register modules globally, but you need to ensure that this is done before **_any_** Grids are instantiated. Any modules registered globally will be available to all Grids.
+You can import and register modules globally, but you need to ensure that this is done before **_any_** grids are instantiated. Any modules registered globally will be available to all grids.
 
-* Specify Modules Dependencies
 * Import Modules
 * Register Modules
 
-A real-world example might be that we wish to use the `Client Side Row Model` (the default row model) together with the `CSV`, `Excel` and `Master/Detail` features.
+A real-world example might be that we wish to use the `Client-Side Row Model` (the default row model) together with the `CSV`, `Excel` and `Master/Detail` features.
 
-{% if isFramework("angular") %}
-Additionally we're writing an Angular application, so we need to specify the `@ag-grid-community/angular` dependency:
-{% /if %}
-
-{% if isFramework("react") %}
-Additionally we're writing a React application, so we need to specify the `@ag-grid-community/react` dependency:
-{% /if %}
-
-{% if isFramework("vue") %}
-Additionally we're writing a Vue application, so we need to specify the `@ag-grid-community/vue3` dependency:
-{% /if %}
-
-{% if isFramework("javascript") %}
-```js
-"dependencies": {
-    "@ag-grid-community/client-side-row-model": "~{% $agGridVersion %}",
-    "@ag-grid-community/csv-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/excel-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/master-detail": "~{% $agGridVersion %}",
-    //...other dependencies...
-}
-```
-{% /if %}
-
-{% if isFramework("angular") %}
-```js
-"dependencies": {
-    "@ag-grid-community/client-side-row-model": "~{% $agGridVersion %}",
-    "@ag-grid-community/csv-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/excel-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/master-detail": "~{% $agGridVersion %}",
-    "@ag-grid-community/angular": "~{% $agGridVersion %}",
-    //...other dependencies...
-}
-```
-{% /if %}
-
-{% if isFramework("react") %}
-```js
-"dependencies": {
-    "@ag-grid-community/client-side-row-model": "~{% $agGridVersion %}",
-    "@ag-grid-community/csv-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/excel-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/master-detail": "~{% $agGridVersion %}",
-    "@ag-grid-community/react": "~{% $agGridVersion %}",
-    //...other dependencies...
-}
-```
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-"dependencies": {
-    "@ag-grid-community/client-side-row-model": "~{% $agGridVersion %}",
-    "@ag-grid-community/csv-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/excel-export": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/master-detail": "~{% $agGridVersion %}",
-    "@ag-grid-community/vue3": "~{% $agGridVersion %}",
-    //...other dependencies...
-}
-```
-{% /if %}
-
-{% if isFramework("javascript") %}
-We now need to register the Grid modules we wish to use via the `ModuleRegistry`.
-{% /if %}
-
-{% if isFramework("angular") %}
-We now need to register the Grid modules we wish to use - note that this does not include `@ag-grid-community/angular` as the Angular support is not a Grid feature, but rather a support library:
-{% /if %}
-
-{% if isFramework("react") %}
-We now need to register the Grid modules we wish to use - note that this does not include `@ag-grid-community/react` as the React support is not a Grid feature, but rather a support library:
-{% /if %}
-
-{% if isFramework("vue") %}
-We now need to register the Grid modules we wish to use - note that this does not include `@ag-grid-community/vue3` as the Vue support is not a Grid feature, but rather a support library:
-{% /if %}
+We need to register the grid modules we wish to use via the `ModuleRegistry`.
 
 ```js
-// @ag-grid-community/core will always be implicitly available
-import { ModuleRegistry } from '@ag-grid-community/core';
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { MasterDetailModule } from "@ag-grid-enterprise/master-detail";
+import { ModuleRegistry, ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { ExcelExportModule, MasterDetailModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, 
+ModuleRegistry.registerModules(
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -220,26 +54,23 @@ ModuleRegistry.registerModules([AllCommunityModule,
 
 Modules can be registered directly with individual grids. Modules registered directly with a grid will _only_ be available to that grid. When a grid is instantiated it uses both globally and individually registered modules.
 
-Individually registering modules is most useful when you have multiple Grids in your application with varying feature requirements. It may also lead to smaller bundle sizes if your application uses lazy loading / code splitting.
+Individually registering modules is most useful when you have multiple grids in your application with varying feature requirements. It may also lead to smaller bundle sizes if your application uses lazy loading / code splitting.
 
 The steps required are:
 
-* Specify Modules Dependencies
 * Import Modules
 * Pass to Grid
 
-Using the same real-world example from above the `package.json` dependencies will be the same but how we register the modules is different.
+Using the same real-world example from above (the `Client-Side Row Model` together with the `CSV`, `Excel` and `Master/Detail` features), how we register the modules is now different.
 
 {% if isFramework("javascript") %}
-We pass the modules to createGrid via the `modules` property of the `Params`.
+We pass the modules to createGrid via the `modules` property of the `params`.
 {% /if %}
 
 {% if isFramework("javascript") %}
 ```js
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { MasterDetailModule } from "@ag-grid-enterprise/master-detail"; 
+import { createGrid, ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { ExcelExportModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 createGrid(<dom element>, gridOptions, { modules: [
     ClientSideRowModelModule,
@@ -251,28 +82,30 @@ createGrid(<dom element>, gridOptions, { modules: [
 {% /if %}
 
 {% if isFramework("angular") %}
-Example
-{% /if %}
-
-{% if isFramework("angular") %}
 ```js
 import { Component } from '@angular/core';
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { MasterDetailModule } from "@ag-grid-enterprise/master-detail"; 
+import { AgGridAngular } from 'ag-grid-angular'
+import { ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { ExcelExportModule, MasterDetailModule } from 'ag-grid-enterprise';
 
-public modules: Module[] = [
-    ClientSideRowModelModule,
-    CsvExportModule,
-    ExcelExportModule,
-    MasterDetailModule
-];
+@Component({
+    selector: 'grid-example',
+    standalone: true,
+    imports: [AgGridAngular],
+    template: `<ag-grid-angular [modules]="modules" 
+        <!-- other properties -->
+    />`
+})
+export class GridExample {
+    modules: Module[] = [
+        ClientSideRowModelModule,
+        CsvExportModule,
+        ExcelExportModule,
+        MasterDetailModule
+    ];
 
-<ag-grid-angular>
-    [rowData]="rowData"
-    [columnDefs]="columnDefs"
-    [modules]="modules" />
+    // ... rest of component ...
+}
 ```
 {% /if %}
 
@@ -284,31 +117,25 @@ We pass the modules to the `modules` prop:
 ```js
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AgGridReact } from '@ag-grid-community/react';
-
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { MasterDetailModule } from "@ag-grid-enterprise/master-detail";
+import { AgGridReact } from 'ag-grid-react';
+import { ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { ExcelExportModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 const GridExample = () => {
-    // ... rest of function ...
+    // ... rest of component ...
 
     return (
         <div style={{height: 400, width: 900}}>
             <AgGridReact
-                // properties
-                columnDefs={columnDefs}
-                rowData={rowData}
-
                 // Pass Modules to this individual grid
                 modules={[
                     ClientSideRowModelModule,
                     CsvExportModule,
                     ExcelExportModule,
                     MasterDetailModule
-                ]}>
-            </AgGridReact>
+                ]}
+                // ... other properties
+            />
         </div>
     );
 };
@@ -318,16 +145,13 @@ const GridExample = () => {
 {% if isFramework("vue") %}
 ```js
 import { createApp } from 'vue';
-import { AgGridVue } from '@ag-grid-community/vue3';
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ExcelExportModule } from "@ag-grid-enterprise/excel-export";
-import { MasterDetailModule } from "@ag-grid-enterprise/master-detail";
+import { AgGridVue } from 'ag-grid-vue3';
+import { ClientSideRowModelModule, CsvExportModule } from 'ag-grid-community';
+import { ExcelExportModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 data() {
     return {
-        columnDefs: ...column defs...,
-        rowData: ....row data...,
+        // ... other properties
         modules: [
             ClientSideRowModelModule,
             CsvExportModule,
@@ -337,57 +161,22 @@ data() {
     }
 }
 <ag-grid-vue
-    :columnDefs="columnDefs"
-    :rowData="rowData"
-    :modules="modules">
-</ag-grid-vue>
+    :modules="modules"
+    // ... other properties
+/>
 ```
 {% /if %}
 
 The following example shows how you can configure individual grids using a combination of shared Global registrations as well as individual grid module registration. Note the following:
 
-* Globally registered modules:  `['ClientSideRowModelModule', 'ColumnMenuModule, ContextMenuModule']`.
-* Left Grid individually registers: `['ClipboardModule', 'SetFilterModule']`
-* Right Grid individually registers: `['ExcelExportModule']`
+* Globally registered modules:  `[ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]`.
+* Left Grid individually registers: `[SetFilterModule, ClipboardModule, CsvExportModule]`
+* Right Grid individually registers: `[TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule]`
 
-To see the difference in features open the ContextMenu and open the column filter:
+To see the difference in features open the context menu and open the column filter:
 
-* The Left grid has options for clipboard and CSV export.
-* The Right grid has options for CSV and Excel export.
-* The Left grid uses the Set Filter  while the Right grid uses the Text Filter or Number Filter depending on the cell data type.
+* The left grid has options for clipboard and CSV export.
+* The right grid has options for CSV and Excel export.
+* The left grid uses the Set Filter while the right grid uses the Text Filter or Number Filter depending on the cell data type.
 
 {% gridExampleRunner title="Grids with Individual Registration" name="individual-registration" /%}
-
-## Core Modules
-
-If you specify _any_ Community or Enterprise dependency then the corresponding `core` module will also be pulled in and be made available to you. For example, if you include `@ag-grid-community/client-side-row-model` - a Community Module - then `@ag-grid-community/core` will be available. If you include `@ag-grid-enterprise/excel-export` - an Enterprise Module - then `@ag-grid-enterprise/core` will also be available.
-
-You'll require the `@ag-grid-community/core` module for Grid related definitions  and `@ag-grid-enterprise/core` for the `LicenseManager`.
-
-If we have the following modules specified:
-
-```js
-"dependencies": {
-    "@ag-grid-community/client-side-row-model": "~{% $agGridVersion %}",
-    "@ag-grid-enterprise/excel-export": "~{% $agGridVersion %}",
-    //...other dependencies...
-}
-```
-
-We can then assume the `core` packages are available implicitly and import from them:
-
-```js
-import { GridApi } from "@ag-grid-community/core";
-import { LicenseManager } from "@ag-grid-enterprise/core";
-
-LicenseManager.setLicenseKey(...your key...);
-```
-
-## Module Examples
-
-Our Example Runner enables you to view the `modules` version of an example via the dropdown in the bottom left-hand corner.
-
-When 'Modules' is selected, the source code includes the required modules along with the module import paths. This means
-you can copy and paste code from our examples without further tweaks.
-
-{% imageCaption imagePath="resources/module-example-runner.png" alt="Module Examples" centered=true constrained=true maxWidth="90%" /%}

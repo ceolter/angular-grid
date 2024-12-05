@@ -1565,6 +1565,11 @@
                     "children": [
                         {
                             "type": "item",
+                            "title": "Upgrading to AG Grid 33",
+                            "path": "upgrading-to-ag-grid-33"
+                        },
+                        {
+                            "type": "item",
                             "title": "Upgrading to AG Grid 32.3",
                             "path": "upgrading-to-ag-grid-32-3"
                         },

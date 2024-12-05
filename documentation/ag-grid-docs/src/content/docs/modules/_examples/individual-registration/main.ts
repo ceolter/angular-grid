@@ -1,13 +1,22 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    CsvExportModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
+    createGrid,
+} from 'ag-grid-community';
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    ClipboardModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
 
 const columnDefs: ColDef[] = [{ field: 'id' }, { field: 'color' }, { field: 'value1' }];
 const defaultColDef = {
@@ -43,7 +52,10 @@ const rightGridOptions: GridOptions = {
 
 function loadGrid(side: string) {
     const grid = document.querySelector<HTMLElement>('#e' + side + 'Grid')!;
-    const modules = side === 'Left' ? [SetFilterModule, ClipboardModule] : [ExcelExportModule];
+    const modules =
+        side === 'Left'
+            ? [SetFilterModule, ClipboardModule, CsvExportModule]
+            : [TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule];
     createGrid(grid, side === 'Left' ? leftGridOptions : rightGridOptions, { modules: modules });
 }
 

@@ -16,6 +16,7 @@ export function ModuleCellRenderer({ data }: CustomCellRendererProps) {
                 framework,
                 url: `./${path}`,
             })}
+            target={'_blank'}
         >
             {name}
         </a>

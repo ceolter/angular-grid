@@ -97,18 +97,17 @@ const matrixTable = defineCollection({
 const moduleItemBase = {
     moduleName: z.string(),
     name: z.string(),
+    path: z.string().optional(),
     isEnterprise: z.boolean().optional(),
 };
 
 const moduleGroupLevel2 = z.object({
     name: z.string(),
-    path: z.string().optional(),
     children: z.array(z.object(moduleItemBase)).optional(),
 });
 
 const moduleGroupLevel1 = z.object({
     name: z.string(),
-    path: z.string().optional(),
     children: z.array(z.object(moduleItemBase).or(moduleGroupLevel2)).optional(),
 });
 

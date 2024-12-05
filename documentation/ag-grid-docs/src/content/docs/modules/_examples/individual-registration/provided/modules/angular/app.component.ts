@@ -1,18 +1,26 @@
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    CsvExportModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
+} from 'ag-grid-community';
 import type { ColDef } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    ClipboardModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 import './styles.css';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
 
 @Component({
     selector: 'my-app',
@@ -41,8 +49,8 @@ ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, Co
     `,
 })
 export class AppComponent {
-    leftModules = [SetFilterModule, ClipboardModule];
-    rightModules = [ExcelExportModule];
+    leftModules = [SetFilterModule, ClipboardModule, CsvExportModule];
+    rightModules = [TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule];
     leftRowData: any[] = [];
     rightRowData: any[] = [];
 

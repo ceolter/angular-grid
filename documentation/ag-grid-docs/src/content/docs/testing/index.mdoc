@@ -5,30 +5,6 @@ title: "Testing AG Grid"
 Here we give some hints on testing AG Grid as part of your application.
 
 {% if isFramework("javascript") %}
-## Testing with Jest
-
-If you're using [Modules](./modules) then you will have to make the following configuration changes to accommodate ES Modules - if you're using Packages then this configuration is not required.
-
-In order to test AG Grid with Jest you'll need to make the following configuration changes:
-
-In `jest.config.js` add the following lines:
-
-{% /if %}
-
-{% if isFramework("javascript") %}
-```js
-module.exports = {
-    "transform": {
-        "^.+\\.(ts|tsx|js|jsx|mjs)$": [
-            "babel-jest"  // or "ts-test" or whichever transformer you're using
-        ]
-    },
-    transformIgnorePatterns: ['/node_modules/(?!(@ag-grid-community|@ag-grid-enterprise)/)']
-}
-```
-{% /if %}
-
-{% if isFramework("javascript") %}
 ## Testing with DOM Testing Library
 
 {% /if %}
@@ -405,42 +381,6 @@ ag_grid_utils.getCellContentsAsText(0, "make", "div.myClass")
 {% /if %}
 
 {% if isFramework("angular") %}
-### Using Jest with Angular (for example with an Nx/Angular project)
-
-In order to test AG Grid with Jest you'll need to make the following configuration changes:
-
-In `jest.config.js` add the following line:
-
-`resolver: '<rootDir>myResolver.js',`
-
-Then create a file called `myResolver.js` in the root directory of your project:
-{% /if %}
-
-{% if isFramework("angular") %}
-```js
-module.exports = (request, options) => {
-    return options.defaultResolver(request, {
-        ...options,
-        packageFilter: pkg => {
-            const packageName = pkg.name;
-            if (packageName === '@ag-grid-community/angular') {
-                return {
-                    ...pkg,
-                };
-            }
-            const agDependency = packageName.startsWith("@ag-grid");
-            return {
-                ...pkg,
-                // default to use the CommonJS ES5 entry point for Jest testing with AG Grid
-                main: agDependency ? './dist/cjs/es5/main.js' : pkg.module || pkg.main,
-            };
-        },
-    });
-};
-```
-{% /if %}
-
-{% if isFramework("angular") %}
 We will walk through how you can use testing AG Grid as part of your Angular application, using default build tools provided when using the [Angular CLI](https://angular.dev/cli).
 {% /if %}
 
@@ -697,30 +637,6 @@ it('Test cell clicked run row handler', async () => {
 
 {% if isFramework("angular") %}
 All the tests above and more can be found in the following [GitHub Repo](https://github.com/ag-grid/ag-grid-angular-cli-example/tree/latest/src/tests).
-{% /if %}
-
-{% if isFramework("react") %}
-## Testing with Jest
-
-If you're using [Modules](./modules) then you will have to make the following configuration changes to accommodate ES Modules - if you're using packages then this configuration is not required.
-
-In order to test AG Grid with Jest you'll need to make the following configuration changes:
-
-In `jest.config.js` add the following lines:
-
-{% /if %}
-
-{% if isFramework("react") %}
-```js
-module.exports = {
-    "transform": {
-        "^.+\\.(ts|tsx|js|jsx|mjs)$": [
-            "babel-jest"  // or "ts-test" or whichever transformer you're using
-        ]
-    },
-    transformIgnorePatterns: ['/node_modules/(?!(@ag-grid-community|@ag-grid-enterprise)/)']
-}
-```
 {% /if %}
 
 {% if isFramework("react") %}
@@ -1091,25 +1007,6 @@ it('cell should be editable and editor component usable', () => {
 {% if isFramework("vue") %}
 We use the Grid API to initiate and end testing as we're can't readily perform double clicks in a
 unit testing environment (but could if doing e2e with something like Protractor for example).
-
-## Jest Configuration
-
-### `SyntaxError: Cannot use import statement outside a module`
-
-If you experience the error above then depending on your build configuration you may need to exclude either
-`ag-grid-vue` or `@ag-grid-community/vue` (or `ag-grid-vue3` / `@ag-grid-community/vue3` if using Vue 3) in your Jest configuration:
-
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-module.exports = {
-  ...other configuration...
-  transformIgnorePatterns: ["/node_modules/(?!ag-grid-vue)"],
-  ..or, if using modules:
-  transformIgnorePatterns: ["/node_modules/(?!@ag-grid-community/vue)"],
-}
-```
 {% /if %}
 
 ## End to End (e2e) Testing with Playwright

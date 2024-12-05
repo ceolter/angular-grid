@@ -136,11 +136,15 @@ const gridOptions = {
 
 ```js
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
 ```
 
 **3. Define Rows and Columns**
 
 ```js
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+
 const GridExample = () => {
     // Row Data: The data to be displayed.
     const [rowData, setRowData] = useState([
@@ -188,12 +192,16 @@ return (
 ```js
 import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-import { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
+import type { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
 ```
 
 **3. Define Rows and Columns**
 
 ```jsx
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -246,6 +254,10 @@ template:
 <script>
 import { ref } from 'vue';
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default {
     name: "App",

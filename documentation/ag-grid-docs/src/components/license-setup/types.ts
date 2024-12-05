@@ -1,4 +1,4 @@
-import type { LicenseManager } from '@ag-grid-enterprise/core';
+import type { LicenseManager } from 'ag-grid-enterprise';
 
 export interface LicensedProducts {
     grid: boolean;

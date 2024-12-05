@@ -149,7 +149,7 @@ Let's assume organization "my-org" has two custom grid wrapper in the package `@
 ```ts
 // @my-org/my-grid/index.ts
 
-import { createGrid, GridOptions } from '@ag-grid-community/core';
+import { createGrid, GridOptions } from 'ag-grid-community';
 export interface GridCustomOptions extends GridOptions { customOption: string; }
 export const createGridWithCustomOption = (myOptions: GridCustomOptions) => {
     const { customOption, ...options } = myOptions;
@@ -196,7 +196,7 @@ Let's assume organization "my-org" has a react grid wrapper in the package `@my-
 ```ts
 // @my-org/my-grid-react/index.tsx
 
-import { AgGridReact, AgGridReactProps } from '@ag-grid-community/react';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 export interface MyGridReactProps extends AgGridReactProps { wrapperClassName?: string; }
 export const MyGrid = ({wrapperClassName, ...gridProps}: AgGridReactProps) => 
     <div className={wrapperClassName}><AgGridReact {...gridProps} /></div>;
