@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
 import {
     ClientSideRowModelModule,
@@ -7,6 +7,7 @@ import {
     NumberFilterModule,
     TextFilterModule,
 } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -29,7 +30,7 @@ const createRowBlock = () =>
         value1: Math.floor(Math.random() * 100),
     }));
 
-const VueExample = {
+const VueExample = defineComponent({
     /* html */
     template: `<div class="example-wrapper">
 
@@ -69,19 +70,19 @@ const VueExample = {
             rightRowData: [],
             leftModules: [SetFilterModule, ClipboardModule, CsvExportModule],
             rightModules: [TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule],
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 100,
                 filter: true,
                 floatingFilter: true,
             },
-            columns: [{ field: 'id' }, { field: 'color' }, { field: 'value1' }],
+            columns: <ColDef[]>[{ field: 'id' }, { field: 'color' }, { field: 'value1' }],
         };
     },
     beforeMount() {
         this.leftRowData = createRowBlock();
         this.rightRowData = createRowBlock();
     },
-};
+});
 
 createApp(VueExample).mount('#app');

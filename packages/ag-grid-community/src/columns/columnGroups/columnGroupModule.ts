@@ -1,7 +1,7 @@
 import type { _ColumnGroupGridApi } from '../../api/gridApi';
 import { HeaderGroupCellCtrl } from '../../headerRendering/cells/columnGroup/headerGroupCellCtrl';
 import type { _ModuleWithApi } from '../../interfaces/iModule';
-import { baseCommunityModule } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import {
     getAllDisplayedColumnGroups,
     getCenterDisplayedColumnGroups,
@@ -22,7 +22,8 @@ import { ColumnGroupService } from './columnGroupService';
  * @colGroupDef
  */
 export const ColumnGroupModule: _ModuleWithApi<_ColumnGroupGridApi> = {
-    ...baseCommunityModule('ColumnGroup'),
+    moduleName: 'ColumnGroup',
+    version: VERSION,
     dynamicBeans: { headerGroupCellCtrl: HeaderGroupCellCtrl as any },
     beans: [ColumnGroupService],
     apiFunctions: {

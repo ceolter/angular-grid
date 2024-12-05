@@ -1,6 +1,6 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ChartRef, ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
@@ -12,14 +12,13 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="example-wrapper">
@@ -47,7 +46,7 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 {
                     field: 'name',
                     cellRenderer: 'agGroupCellRenderer',
@@ -60,7 +59,7 @@ const VueExample = {
                 },
             ],
             gridApi: null,
-            defaultColDef: { flex: 1 },
+            defaultColDef: <ColDef>{ flex: 1 },
             detailRowHeight: null,
             detailCellRenderer: null,
             rowData: null,
@@ -71,7 +70,7 @@ const VueExample = {
         this.detailCellRenderer = 'myDetailCellRenderer';
     },
     methods: {
-        onFirstDataRendered(params) {
+        onFirstDataRendered(params: FirstDataRenderedEvent) {
             setTimeout(function () {
                 params.api.getDisplayedRowAtIndex(1).setExpanded(true);
             }, 0);
@@ -89,7 +88,7 @@ const VueExample = {
                 console.log(detailGridInfo);
             });
         },
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
 
             const updateData = (data) => {
@@ -101,6 +100,6 @@ const VueExample = {
                 .then((data) => updateData(data));
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

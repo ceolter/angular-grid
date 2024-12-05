@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     data() {
         return {
             isGroup: null,
@@ -7,14 +9,11 @@ export default {
         };
     },
     template: `
-        <div
-            :style="{ paddingLeft: paddingLeft }"
-        >
+        <div :style="{ paddingLeft: paddingLeft }">
             <div
                 v-if="isGroup"
                 :style="{ transform: rotation, cursor: 'pointer', display: 'inline-block' }"
-                @click="onExpand"
-            >
+                @click="onExpand">
                 &rarr;
             </div>
             &nbsp;
@@ -39,4 +38,4 @@ export default {
     beforeDestroy() {
         this.params.node.removeEventListener('expandedChanged', this.onExpandedChanged);
     },
-};
+});

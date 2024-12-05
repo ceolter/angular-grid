@@ -3,12 +3,12 @@ import { _ColumnFilterModule, _PopupModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { AggregationModule, SharedAggregationModule } from '../aggregation/aggregationModule';
-import { baseEnterpriseModule } from '../moduleUtils';
 import {
     ClientSideRowModelHierarchyModule,
     GroupColumnModule,
     StickyRowModule,
 } from '../rowHierarchy/rowHierarchyModule';
+import { VERSION } from '../version';
 import { AgGridHeaderDropZonesSelector } from './columnDropZones/agGridHeaderDropZones';
 import { GroupFilter } from './groupFilter/groupFilter';
 import { GroupFloatingFilterComp } from './groupFilter/groupFloatingFilter';
@@ -26,7 +26,8 @@ import {
  * @internal
  */
 export const SharedRowGroupingModule: _ModuleWithApi<_RowGroupingGridApi> = {
-    ...baseEnterpriseModule('SharedRowGrouping'),
+    moduleName: 'SharedRowGrouping',
+    version: VERSION,
     beans: [GroupHideOpenParentsService],
     apiFunctions: {
         setRowGroupColumns,
@@ -43,7 +44,8 @@ export const SharedRowGroupingModule: _ModuleWithApi<_RowGroupingGridApi> = {
  * @colDef enableRowGroup, rowGroup, rowGroupIndex
  */
 export const RowGroupingModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGrouping'),
+    moduleName: 'RowGrouping',
+    version: VERSION,
     beans: [GroupStage],
     rowModels: ['clientSide'],
     dependsOn: [SharedRowGroupingModule, AggregationModule, ClientSideRowModelHierarchyModule],
@@ -53,7 +55,8 @@ export const RowGroupingModule: _ModuleWithoutApi = {
  * @feature Row Grouping -> Row Group Panel
  */
 export const RowGroupingPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RowGroupingPanel'),
+    moduleName: 'RowGroupingPanel',
+    version: VERSION,
     selectors: [AgGridHeaderDropZonesSelector],
     icons: {
         // identifies the pivot drop zone
@@ -72,7 +75,8 @@ export const RowGroupingPanelModule: _ModuleWithoutApi = {
  * @feature Row Grouping -> Filtering
  */
 export const GroupFilterModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('GroupFilter'),
+    moduleName: 'GroupFilter',
+    version: VERSION,
     userComponents: { agGroupColumnFilter: GroupFilter, agGroupColumnFloatingFilter: GroupFloatingFilterComp },
     dependsOn: [EnterpriseCoreModule, _ColumnFilterModule],
 };

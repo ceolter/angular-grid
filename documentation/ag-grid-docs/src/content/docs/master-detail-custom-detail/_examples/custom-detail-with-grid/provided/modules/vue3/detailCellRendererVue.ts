@@ -1,6 +1,9 @@
+import { createApp, defineComponent } from 'vue';
+
+import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-export default {
+export default defineComponent({
     template: `
       <div class="full-width-panel">
       <div class="full-width-details">
@@ -9,7 +12,6 @@ export default {
       </div>
       <ag-grid-vue style="height: 100%;"
                    class="full-width-grid"
-                   :gridOptions="gridOptions"
                    :columnDefs="colDefs"
                    :defaultColDef="defaultColDef"
                    :rowData="rowData"
@@ -22,21 +24,19 @@ export default {
     },
     data: function () {
         return {
-            gridOptions: null,
             colDefs: null,
             rowData: null,
         };
     },
     beforeMount() {
-        this.gridOptions = {};
-        this.colDefs = [
+        this.colDefs = <ColDef[]>[
             { field: 'callId' },
             { field: 'direction' },
             { field: 'number' },
             { field: 'duration', valueFormatter: "x.toLocaleString() + 's'" },
             { field: 'switchCode' },
         ];
-        this.defaultColDef = {
+        this.defaultColDef = <ColDef>{
             flex: 1,
             minWidth: 120,
         };
@@ -51,7 +51,7 @@ export default {
         this.masterGridApi.removeDetailGridInfo(this.rowId);
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             let gridInfo = {
                 id: this.rowId,
                 api: params.api,
@@ -61,4 +61,4 @@ export default {
             this.masterGridApi.addDetailGridInfo(this.rowId, gridInfo);
         },
     },
-};
+});

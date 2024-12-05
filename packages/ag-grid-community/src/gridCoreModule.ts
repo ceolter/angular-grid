@@ -21,7 +21,6 @@ import { GridDestroyService } from './gridDestroyService';
 import { GridOptionsService } from './gridOptionsService';
 import { ColumnGroupHeaderCompModule, ColumnHeaderCompModule } from './headerRendering/cells/headerModule';
 import type { _ModuleWithApi } from './interfaces/iModule';
-import { baseCommunityModule } from './interfaces/iModule';
 import { AnimationFrameModule } from './misc/animationFrameModule';
 import { TouchModule } from './misc/touchModule';
 import { KeyboardNavigationModule } from './navigation/navigationModule';
@@ -36,12 +35,14 @@ import { SortModule } from './sort/sortModule';
 import { SyncService } from './syncService';
 import { ChangeDetectionModule, ExpressionModule } from './valueService/valueModule';
 import { ValueService } from './valueService/valueService';
+import { VERSION } from './version';
 
 /**
  * @internal
  */
 export const CommunityCoreModule: _ModuleWithApi<_CoreGridApi> = {
-    ...baseCommunityModule('CommunityCore'),
+    moduleName: 'CommunityCore',
+    version: VERSION,
     beans: [
         GridDestroyService,
         ApiFunctionService,

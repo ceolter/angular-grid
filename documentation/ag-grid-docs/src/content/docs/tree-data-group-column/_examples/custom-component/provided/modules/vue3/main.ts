@@ -1,16 +1,22 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import type { ColDef, GridApi, ValueFormatterParams } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    CellDoubleClickedEvent,
+    CellKeyDownEvent,
+    GridReadyEvent,
+    ModuleRegistry,
+} from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import CustomGroupCellRenderer from './customGroupCellRendererVue';
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([AllCommunityModule, TreeDataModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
                 <ag-grid-vue
@@ -34,13 +40,13 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 { field: 'created' },
                 { field: 'modified' },
                 {
                     field: 'size',
                     aggFunc: 'sum',
-                    valueFormatter: (params) => {
+                    valueFormatter: (params: ValueFormatterParams) => {
                         const sizeInKb = params.value / 1024;
 
                         if (sizeInKb > 1024) {
@@ -52,7 +58,7 @@ const VueExample = {
                 },
             ],
             gridApi: null,
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 120,
             },
@@ -69,17 +75,17 @@ const VueExample = {
         this.groupDefaultExpanded = 1;
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
 
             params.api.setGridOption('rowData', getData());
         },
-        onCellDoubleClicked: (params) => {
+        onCellDoubleClicked: (params: CellDoubleClickedEvent) => {
             if (params.colDef.showRowGroup) {
                 params.node.setExpanded(!params.node.expanded);
             }
         },
-        onCellKeyDown: (params) => {
+        onCellKeyDown: (params: CellKeyDownEvent) => {
             if (!('colDef' in params)) {
                 return;
             }
@@ -94,6 +100,6 @@ const VueExample = {
             }
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

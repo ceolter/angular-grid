@@ -1,11 +1,12 @@
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { AriaAnnouncementService } from './ariaAnnouncementService';
 
 /**
  * @feature Interactivity -> Accessibility (ARIA)
  */
 export const AriaModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('Aria'),
+    moduleName: 'Aria',
+    version: VERSION,
     beans: [AriaAnnouncementService],
 };

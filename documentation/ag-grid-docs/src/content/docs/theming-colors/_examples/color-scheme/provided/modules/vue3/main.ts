@@ -1,7 +1,7 @@
-import { createApp, onBeforeMount } from 'vue';
+import { createApp, defineComponent, defonBeforeMount } from 'vue';
 
+import type { ColDef } from 'ag-grid-community';
 import {
-    ClientSideRowModelModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
@@ -11,9 +11,9 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <div style="display: flex; gap: 16px">
@@ -76,8 +76,8 @@ const VueExample = {
             theme3: themeQuartz.withPart(colorSchemeDarkWarm),
             theme4: themeQuartz.withPart(colorSchemeDarkBlue),
 
-            columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
-            defaultColDef: {
+            columnDefs: <ColDef[]>[{ field: 'make' }, { field: 'model' }, { field: 'price' }],
+            defaultColDef: <ColDef>{
                 editable: true,
                 flex: 1,
                 minWidth: 100,
@@ -94,6 +94,6 @@ const VueExample = {
             })(),
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

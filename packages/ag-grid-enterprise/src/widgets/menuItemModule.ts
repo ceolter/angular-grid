@@ -1,6 +1,6 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { AgMenuItemRenderer } from './agMenuItemRenderer';
 import { menuCSS } from './menu.css-GENERATED';
 
@@ -8,7 +8,8 @@ import { menuCSS } from './menu.css-GENERATED';
  * @internal
  */
 export const MenuItemModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MenuItem'),
+    moduleName: 'MenuItem',
+    version: VERSION,
     userComponents: {
         agMenuItem: AgMenuItemRenderer,
     },

@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { HeaderComp } from './column/headerComp';
 import { HeaderGroupComp } from './columnGroup/headerGroupComp';
 
@@ -8,7 +8,8 @@ import { HeaderGroupComp } from './columnGroup/headerGroupComp';
  * @colDef headerComponent
  */
 export const ColumnHeaderCompModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnHeaderComp'),
+    moduleName: 'ColumnHeaderComp',
+    version: VERSION,
     userComponents: {
         agColumnHeader: HeaderComp,
     },
@@ -25,7 +26,8 @@ export const ColumnHeaderCompModule: _ModuleWithoutApi = {
  * @colGroupDef headerGroupComponent
  */
 export const ColumnGroupHeaderCompModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnGroupHeaderComp'),
+    moduleName: 'ColumnGroupHeaderComp',
+    version: VERSION,
     userComponents: {
         agColumnGroupHeader: HeaderGroupComp,
     },

@@ -23,10 +23,10 @@ Negative and positive
 {% /imageCaption %}
 {% /flex %}
 
-These special points can be customised via the `formatter` callback function to make them stand out from the rest of the data points which are using the global styles.
+These special points can be customised via the `styler` callback function to make them stand out from the rest of the data points which are using the global styles.
 
-* The formatter is a callback function used to return formatting for individual data points based on the given parameters.
-* The formatter receives an input parameter according to the sparkline type.
+* The styler is a callback function used to return formatting for individual data points based on the given parameters.
+* The styler receives an input parameter according to the sparkline type.
 
 Below are some examples demonstrating the different formatters for the three sparkline types:
 
@@ -36,19 +36,19 @@ Below are some examples demonstrating the different formatters for the three spa
 
 ## Line and Area Sparklines Points of Interest
 
-In the line and area sparklines, each data point is represented by a marker. To customise the points of interest, the `formatter` function is added to the `marker` options:
+In the line and area sparklines, each data point is represented by a marker. To customise the points of interest, the `styler` function is added to the `marker` options:
 
 ```js
 sparklineOptions: {
     marker: {
-        formatter: markerFormatter, // add formatter to marker options
+        itemStyler: (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => ..., // add itemStyler to marker options
     },
 }
 ```
 
-The `formatter` callback function will receive an input parameter of type [`markerFormatterParams`](./).
+The `itemStyler` callback function will receive an input parameter of type [`AgSeriesMarkerStylerParams`](./sparklines-api-sparkline-options/#sparkline-item-styler).
 
-The function return type should be [`MarkerFormat`](./), allowing the following attributes to be customised:
+The function return type should be [`AgSeriesMarkerStyle`](./sparklines-api-sparkline-options/#sparkline-item-styler), allowing the following attributes to be customised:
 
 * size
 * fill
@@ -65,10 +65,10 @@ The following sections outline how the attributes mentioned above can be customi
 
 Let's say we have a line sparkline where the markers are all `'skyblue'` but we want to make the first and last markers stand out with a purple `fill` and `stroke` style.
 
-We can do this by adding the following formatter to the `marker` options.
+We can do this by adding the following styler to the `marker` options.
 
 ```js
-const markerFormatter = (params) => {
+const itemStyler = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { first, last } = params;
 
     return {
@@ -83,7 +83,7 @@ const markerFormatter = (params) => {
 * If the given data point is the first or last point i.e. if `first` or `last` is `true`, the `size` of the marker is set to `5`px. All other markers will be `3`px.
 * Similar conditional logic is applied to colorise the markers to distinguish the first and last points from the rest.
 
-See the result of adding this formatter in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
+See the result of adding this styler in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-area-marker.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -105,10 +105,10 @@ Formatted first and last points
 
 ### Min and Max
 
-Similar to first and last, to emphasise the min and max data points, the `min` and `max` booleans from the formatter params can be used to conditionally style the markers.
+Similar to first and last, to emphasise the min and max data points, the `min` and `max` booleans from the styler params can be used to conditionally style the markers.
 
 ```js
-const markerFormatter = (params) => {
+const itemStyler = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { min, max } = params;
 
     return {
@@ -122,7 +122,7 @@ const markerFormatter = (params) => {
 * If the data point is a minimum or a maximum point – if `min` or `max` is `true` – the size is set to `5`px, otherwise it is set to`3`px.
 * If the marker represents a minimum point, the `fill` and `stroke` are set to red, if the marker represents a maximum point, the `fill` and `stroke` are set to green. Otherwise the fill and stroke are set to sky blue.
 
-See the result of adding this formatter in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
+See the result of adding this styler in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-area-marker.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -144,12 +144,12 @@ Formatted min and max points
 
 ### Positive and Negative
 
-The positive and negative values can be distinguished by adding a `formatter` which returns styles based on the `yValue` of the data point.
+The positive and negative values can be distinguished by adding a `styler` which returns styles based on the `yValue` of the data point.
 
 This is demonstrated in the snippet below.
 
 ```js
-const markerFormatter = (params) => {
+const itemStyler = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { yValue } = params;
 
     return {
@@ -160,7 +160,7 @@ const markerFormatter = (params) => {
 }
 ```
 
-See the result of adding this formatter in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
+See the result of adding this styler in the sparklines on the right below, compared with the ones on the left which are using global styles in `marker` options:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-area-marker.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -184,18 +184,19 @@ Formatted positive and negative points
 
 Bar sparklines are just transposed column sparklines and have the same configuration. This section only covers column sparkline examples but the same applies for bar sparklines.
 
-In the column sparklines, each data point is represented by a rectangle/ column. The `formatter` callback function applies to the individual columns and is added to `sparklineOptions`:
+In the column sparklines, each data point is represented by a rectangle/ column. The `styler` callback function applies to the individual columns and is added to `sparklineOptions`:
 
 ```js
 sparklineOptions: {
-    type: 'column',
-    formatter: columnFormatter, // add formatter to sparklineOptions
+    type: 'bar',
+    direction: 'vertical',
+    itemStyler: columnFormatter, // add styler to sparklineOptions
 }
 ```
 
-The `formatter` will receive an input parameter with values associated with the data point it represents. The input parameter type is [`columnFormatterParams`](./).
+The `itemStyler` will receive an input parameter with values associated with the data point it represents. The input parameter type is [`columnFormatterParams`](./).
 
-The function return type should be [`ColumnFormat`](./), allowing these attributes to be customised:
+The function return type should be [`ItemStylerFormat`](./), allowing these attributes to be customised:
 
 * fill
 * stroke
@@ -211,10 +212,10 @@ The following sections outline how the attributes mentioned above can be customi
 
 Let's say we want to make the first and last columns in our column sparklines stand out by styling them differently to the rest of the columns.
 
-We can do this by adding the following formatter to the `sparklineOptions`.
+We can do this by adding the following styler to the `sparklineOptions`.
 
 ```js
-const columnFormatter = (params) => {
+const itemStyler = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { first, last } = params;
 
     return {
@@ -224,7 +225,7 @@ const columnFormatter = (params) => {
 }
 ```
 
-Here is the result of  adding this formatter compared with setting global styles in `sparklineOptions`:
+Here is the result of  adding this styler compared with setting global styles in `sparklineOptions`:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-column.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -237,10 +238,10 @@ Formatted first and last points
 
 ### Min and Max
 
-Similar to first and last, to emphasise the min and max data points, the `min` and `max` booleans from the formatter params can be used to conditionally style the markers.
+Similar to first and last, to emphasise the min and max data points, the `min` and `max` booleans from the styler params can be used to conditionally style the markers.
 
 ```js
-const columnFormatter = (params) => {
+const itemStyler = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { min, max } = params;
 
     return {
@@ -250,7 +251,7 @@ const columnFormatter = (params) => {
 }
 ```
 
-Here is the result of adding this formatter compared with setting global styles in `sparklineOptions`:
+Here is the result of adding this styler compared with setting global styles in `sparklineOptions`:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-column.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -263,12 +264,12 @@ Formatted minimum and maximum points
 
 ### Positive and Negative
 
-The positive and negative values can be distinguished by adding a formatter which returns styles based on the `yValue` of the data point.
+The positive and negative values can be distinguished by adding a styler which returns styles based on the `yValue` of the data point.
 
 This is demonstrated in the snippet below.
 
 ```js
-const columnFormatter = (params) => {
+const columnFormatter = (params: AgSeriesMarkerStylerParams): AgSeriesMarkerStyle => {
     const { yValue } = params;
 
     return {
@@ -279,7 +280,7 @@ const columnFormatter = (params) => {
 }
 ```
 
-Here is the result of adding this formatter compared with setting global styles in `sparklineOptions`:
+Here is the result of adding this styler compared with setting global styles in `sparklineOptions`:
 
 {% flex justifyContent="center" %}
 {% imageCaption imagePath="resources/global-column.png" alt="Global styles" constrained=true width="250px" enableDarkModeFilter=true %}
@@ -297,7 +298,7 @@ The example below shows formatting of special points for line, area and column s
 It should be noted that
 
 * The `highlighted` property on the `params` object is used to distinguish between highlighted and un-highlighted states.
-* The `formatter` for line and area sparklines is added to the `marker` options
+* The `itemStyler` for line and area sparklines is added to the `marker` options
 * The `size` property is returned from the area and line formatters to make certain special markers visible and the rest invisible.
 
 {% gridExampleRunner title="Sparkline Special Points" name="sparkline-special-points"  exampleHeight=585 /%}

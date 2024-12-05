@@ -193,6 +193,7 @@ export const FinanceExample: React.FC<Props> = ({
                 cellRendererParams: {
                     sparklineOptions: {
                         type: 'bar',
+                        direction: 'vertical',
                         axis: {
                             strokeWidth: 0,
                         },

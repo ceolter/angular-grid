@@ -61,7 +61,7 @@ function updatePackageJsonFiles() {
         updateFileWithNewVersions(packageJsonFile);
 
         // angular projects have "sub" projects which we need to update
-        if (packageDirectory.includes('angular')) {
+        if (packageDirectory.includes('angular') && !packageDirectory.includes('module-size-angular')) {
             updateAngularProject(CWD, packageDirectory);
         }
 

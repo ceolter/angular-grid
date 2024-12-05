@@ -1,5 +1,5 @@
 import type { _ModuleWithoutApi } from '../../interfaces/iModule';
-import { baseCommunityModule } from '../../interfaces/iModule';
+import { VERSION } from '../../version';
 import { LocaleService } from './localeService';
 
 /**
@@ -7,6 +7,7 @@ import { LocaleService } from './localeService';
  * @gridOption localeText, getLocaleText
  */
 export const LocaleModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('Locale'),
+    moduleName: 'Locale',
+    version: VERSION,
     beans: [LocaleService],
 };

@@ -5,14 +5,14 @@ enterprise: true
 
 This section shows how Column Sparklines can be customised by overriding the default column options.
 
-The following [Column Sparkline Options](./) can be used to customise Column Sparklines:
+The following [Column Sparkline Options](./sparklines-column-customisation/#columnsparklineoptions) can be used to customise Column Sparklines:
 
-* [Column Fill Options](./)
-* [Column Stroke Options](./)
-* [Column Padding Options](./)
-* [Column Label Options](./)
-* [Axis Line Options](./)
-* [Sparkline Padding Options](./)
+* [Column Fill Options](./sparklines-column-customisation/#column-fill-options)
+* [Column Stroke Options](./sparklines-column-customisation/#column-stroke-options)
+* [Column Padding Options](./sparklines-column-customisation/#column-padding-options)
+* [Column Label Options](./sparklines-column-customisation/#column-label-options)
+* [Axis Line Options](./sparklines-column-customisation/#axis-line-options)
+* [Sparkline Padding Options](./sparklines-column-customisation/#sparkline-padding-options)
 
 Also see [Additional Customisations](./sparklines-column-customisation/#additional-customisations) for more advanced
 customisations that are common across all sparklines.
@@ -21,7 +21,8 @@ The snippet below shows option overrides for the Column Sparkline:
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     fill: '#91cc75',
     stroke: '#91cc75',
     highlightStyle: {
@@ -42,7 +43,8 @@ To apply a custom color to the columns, set the `fill` property in `sparklineOpt
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     fill: '#91cc75', // sets the column fill
 }
 ```
@@ -60,7 +62,8 @@ It is possible to set the fill for the highlighted state of the column by adding
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     highlightStyle: {
         fill: 'orange', // sets the highlighted column fill
     }
@@ -92,7 +95,8 @@ To add a stroke, modify the `strokeWidth` and `stroke` properties as shown below
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     stroke: '#ec7c7d', // sets the column stroke
     strokeWidth: 2, // sets the column stroke width
     highlightStyle: {
@@ -133,7 +137,8 @@ Here's an example.
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     paddingInner: 0.5, // sets the padding between columns.
 }
 ```
@@ -155,7 +160,8 @@ Here's a snippet where the `paddingOuter` is set to `0`.
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     paddingOuter: 0, // sets the padding on the outer edge of the first and last columns.
 }
 ```
@@ -181,7 +187,8 @@ To enable column labels, set the `enabled` property in `label` options as shown:
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     label: {
         enabled: true // show column labels
     }
@@ -203,7 +210,8 @@ It is possible to change the text value displayed as the label of individual col
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     label: {
         enabled: true,
         formatter: labelFormatter
@@ -228,7 +236,8 @@ To customise the label text style, set the style attributes in `label` options a
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     label: {
         enabled: true,
         fontWeight: 'bold',
@@ -253,7 +262,8 @@ The position of the labels can be specified by setting the `placement` property 
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     label: {
         enabled: true,
         placement: 'center', // positions the labels in the center of the columns
@@ -293,7 +303,8 @@ Here is a snippet to demonstrate axis formatting.
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     axis: {
         stroke: '#7cecb3', // sets the axis line stroke
         strokeWidth: 3, // sets the axis line strokeWidth
@@ -320,7 +331,8 @@ To add extra space around the sparklines, custom `padding` options can be applie
 
 ```js
 sparklineOptions: {
-    type: 'column',
+    type: 'bar',
+    direction: 'vertical',
     // sets the padding around the sparklines
     padding: {
         top: 10,

@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     data() {
         return {
             isGroup: null,
@@ -39,4 +41,4 @@ export default {
     beforeDestroy() {
         this.params.node.removeEventListener('expandedChanged', this.onExpandedChanged);
     },
-};
+});

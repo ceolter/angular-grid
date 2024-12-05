@@ -1,6 +1,6 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { CellDoubleClickedEvent, CellKeyDownEvent, ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -8,24 +8,24 @@ import { AgGridVue } from 'ag-grid-vue3';
 import CustomGroupCellRenderer from './customGroupCellRendererVue';
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([AllCommunityModule, TreeDataModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
-                <ag-grid-vue
-                
-                style="width: 100%; height: 100%;"
-                :columnDefs="columnDefs"
-                @grid-ready="onGridReady"
-                @cell-double-clicked="onCellDoubleClicked"
-                @cell-key-down="onCellKeyDown"
-                :autoGroupColumnDef="autoGroupColumnDef"
-                :defaultColDef="defaultColDef"
-                :groupDefaultExpanded="groupDefaultExpanded"
-                :rowData="rowData"
-                :treeData="true"
-                :getDataPath="getDataPath"></ag-grid-vue>
+                <ag-grid-vue                
+                    style="width: 100%; height: 100%;"
+                    :columnDefs="columnDefs"
+                    @grid-ready="onGridReady"
+                    @cell-double-clicked="onCellDoubleClicked"
+                    @cell-key-down="onCellKeyDown"
+                    :autoGroupColumnDef="autoGroupColumnDef"
+                    :defaultColDef="defaultColDef"
+                    :groupDefaultExpanded="groupDefaultExpanded"
+                    :rowData="rowData"
+                    :treeData="true"
+                    :getDataPath="getDataPath">
+                </ag-grid-vue>
         </div>
     `,
     components: {
@@ -34,7 +34,7 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 { field: 'created' },
                 { field: 'modified' },
                 {
@@ -52,7 +52,7 @@ const VueExample = {
                 },
             ],
             gridApi: null,
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 120,
             },
@@ -63,7 +63,7 @@ const VueExample = {
         };
     },
     created() {
-        this.autoGroupColumnDef = {
+        this.autoGroupColumnDef = <ColDef>{
             cellRendererSelector: (params) => {
                 if (params.node.level === 0) {
                     return {
@@ -78,17 +78,17 @@ const VueExample = {
         this.groupDefaultExpanded = 1;
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
 
             params.api.setGridOption('rowData', getData());
         },
-        onCellDoubleClicked: (params) => {
+        onCellDoubleClicked: (params: CellDoubleClickedEvent) => {
             if (params.colDef.showRowGroup) {
                 params.node.setExpanded(!params.node.expanded);
             }
         },
-        onCellKeyDown: (params) => {
+        onCellKeyDown: (params: CellKeyDownEvent) => {
             if (!('colDef' in params)) {
                 return;
             }
@@ -103,6 +103,6 @@ const VueExample = {
             }
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

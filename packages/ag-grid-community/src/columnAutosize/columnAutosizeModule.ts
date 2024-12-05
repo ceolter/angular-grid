@@ -1,7 +1,7 @@
 import type { _ColumnAutosizeApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { AutoWidthModule } from '../rendering/autoWidthModule';
+import { VERSION } from '../version';
 import { autoSizeAllColumns, autoSizeColumns, sizeColumnsToFit } from './columnAutosizeApi';
 import { ColumnAutosizeService } from './columnAutosizeService';
 
@@ -10,7 +10,8 @@ import { ColumnAutosizeService } from './columnAutosizeService';
  * @gridOption autoSizeStrategy
  */
 export const ColumnAutoSizeModule: _ModuleWithApi<_ColumnAutosizeApi> = {
-    ...baseCommunityModule('ColumnAutoSize'),
+    moduleName: 'ColumnAutoSize',
+    version: VERSION,
     beans: [ColumnAutosizeService],
     apiFunctions: {
         sizeColumnsToFit,

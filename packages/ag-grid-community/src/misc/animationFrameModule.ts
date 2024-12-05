@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { AnimationFrameService } from './animationFrameService';
 
 /**
@@ -7,6 +7,7 @@ import { AnimationFrameService } from './animationFrameService';
  * @gridOption suppressAnimationFrame
  */
 export const AnimationFrameModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AnimationFrame'),
+    moduleName: 'AnimationFrame',
+    version: VERSION,
     beans: [AnimationFrameService],
 };

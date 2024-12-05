@@ -1,12 +1,12 @@
 import type { _MasterDetailGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
 import {
     ClientSideRowModelHierarchyModule,
     GroupCellRendererModule,
     StickyRowModule,
 } from '../rowHierarchy/rowHierarchyModule';
+import { VERSION } from '../version';
 import { DetailCellRenderer } from './detailCellRenderer';
 import { DetailCellRendererCtrl } from './detailCellRendererCtrl';
 import { addDetailGridInfo, forEachDetailGridInfo, getDetailGridInfo, removeDetailGridInfo } from './masterDetailApi';
@@ -17,7 +17,8 @@ import { MasterDetailService } from './masterDetailService';
  * @internal
  */
 export const SharedMasterDetailModule: _ModuleWithApi<_MasterDetailGridApi> = {
-    ...baseEnterpriseModule('SharedMasterDetail'),
+    moduleName: 'SharedMasterDetail',
+    version: VERSION,
     beans: [MasterDetailService],
     userComponents: { agDetailCellRenderer: DetailCellRenderer },
     dynamicBeans: { detailCellRendererCtrl: DetailCellRendererCtrl },
@@ -36,6 +37,7 @@ export const SharedMasterDetailModule: _ModuleWithApi<_MasterDetailGridApi> = {
  * @gridOption masterDetail
  */
 export const MasterDetailModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('MasterDetail'),
+    moduleName: 'MasterDetail',
+    version: VERSION,
     dependsOn: [SharedMasterDetailModule, ClientSideRowModelHierarchyModule],
 };

@@ -168,6 +168,7 @@ export class ColumnToolPanel extends Component implements IColumnToolPanel, IToo
             visible,
             colToolPanelFactory.createPivotPanel.bind(colToolPanelFactory, this, this.childDestroyFuncs)
         );
+        this.pivotDropZonePanel?.setDisplayed(visible);
         this.setLastVisible();
     }
 

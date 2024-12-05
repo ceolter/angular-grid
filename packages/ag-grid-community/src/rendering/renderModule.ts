@@ -1,6 +1,6 @@
 import type { _RenderGridApi } from '../api/gridApi';
 import type { _ModuleWithApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import {
     flashCells,
     flushAllAnimationFrames,
@@ -16,7 +16,8 @@ import {
  * @feature Rendering
  */
 export const RenderApiModule: _ModuleWithApi<_RenderGridApi<any>> = {
-    ...baseCommunityModule('RenderApi'),
+    moduleName: 'RenderApi',
+    version: VERSION,
     apiFunctions: {
         setGridAriaProperty,
         refreshCells,

@@ -2,15 +2,16 @@ import type { _ModuleWithoutApi } from 'ag-grid-community';
 import { _ColumnFilterModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
 import { SideBarModule } from '../sideBar/sideBarModule';
+import { VERSION } from '../version';
 import { FiltersToolPanel } from './filtersToolPanel';
 
 /**
  * @feature Accessories -> Filters Tool Panel
  */
 export const FiltersToolPanelModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('FiltersToolPanel'),
+    moduleName: 'FiltersToolPanel',
+    version: VERSION,
     userComponents: { agFiltersToolPanel: FiltersToolPanel },
     icons: {
         // filter tool panel tab

@@ -5,11 +5,12 @@ enterprise: true
 
 This section shows how Line Sparklines can be customised by overriding the default line options.
 
-The following [Line Sparkline Options](./) can be used to customise Line Sparklines:
+The following [Line Sparkline Options](./sparklines-line-customisation/#linesparklineoptions) can be used to customise Line Sparklines:
 
-* [Line Options](./)
-* [Marker Options](./)
-* [Sparkline Padding Options](./)
+* [Line Options](./sparklines-line-customisation/#line-options)
+* [Marker Options](./sparklines-line-customisation/#marker-options)
+* [Crosshairs Options](./sparklines-line-customisation/#crosshairs-options)
+* [Sparkline Padding Options](./sparklines-line-customisation/#sparkline-padding-options)
 
 Also see [Additional Customisations](./sparklines-line-customisation/#additional-customisations) for more advanced
 customisations that are common across all sparklines.
@@ -47,10 +48,8 @@ To apply custom `stroke` and `strokeWidth` attributes to the line, set these pro
 sparklineOptions: {
     type: 'line',
     // Customise the line path in the sparkline.
-    line: {
-        stroke: 'orange',
-        strokeWidth: 2,
-    },
+    stroke: 'orange',
+    strokeWidth: 2,
 }
 ```
 

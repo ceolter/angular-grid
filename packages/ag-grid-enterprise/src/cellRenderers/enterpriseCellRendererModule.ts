@@ -1,7 +1,7 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { LoadingCellRenderer } from './loadingCellRenderer';
 import { SkeletonCellRenderer } from './skeletonCellRenderer';
 
@@ -9,7 +9,8 @@ import { SkeletonCellRenderer } from './skeletonCellRenderer';
  * @internal
  */
 export const LoadingCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('LoadingCellRenderer'),
+    moduleName: 'LoadingCellRenderer',
+    version: VERSION,
     userComponents: {
         agLoadingCellRenderer: LoadingCellRenderer,
     },
@@ -24,7 +25,8 @@ export const LoadingCellRendererModule: _ModuleWithoutApi = {
  * @internal
  */
 export const SkeletonCellRendererModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('SkeletonCellRenderer'),
+    moduleName: 'SkeletonCellRenderer',
+    version: VERSION,
     userComponents: {
         agSkeletonCellRenderer: SkeletonCellRenderer,
     },

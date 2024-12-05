@@ -6,7 +6,6 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
     AllCommunityModule,
-    ClientSideRowModelModule,
     ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkBlue,
@@ -26,14 +25,7 @@ import {
 } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    AllCommunityModule,
-    ClientSideRowModelModule,
-
-    SideBarModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, SideBarModule, ColumnsToolPanelModule, FiltersToolPanelModule]);
 
 @Component({
     standalone: true,

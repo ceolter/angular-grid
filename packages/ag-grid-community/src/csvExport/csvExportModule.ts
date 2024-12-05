@@ -1,7 +1,7 @@
 import type { _CsvExportGridApi } from '../api/gridApi';
 import { SharedExportModule } from '../export/exportModule';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { CsvCreator } from './csvCreator';
 import { exportDataAsCsv, getDataAsCsv } from './csvExportApi';
 
@@ -9,7 +9,8 @@ import { exportDataAsCsv, getDataAsCsv } from './csvExportApi';
  * @feature Import & Export -> CSV Export
  */
 export const CsvExportModule: _ModuleWithApi<_CsvExportGridApi> = {
-    ...baseCommunityModule('CsvExport'),
+    moduleName: 'CsvExport',
+    version: VERSION,
     beans: [CsvCreator],
     apiFunctions: {
         getDataAsCsv,

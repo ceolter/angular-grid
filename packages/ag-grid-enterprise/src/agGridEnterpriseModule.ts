@@ -1,7 +1,7 @@
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { GridLicenseManager as LicenseManager } from './license/gridLicenseManager';
-import { baseEnterpriseModule } from './moduleUtils';
+import { VERSION } from './version';
 
 export { AgWatermark } from './license/watermark';
 
@@ -9,7 +9,8 @@ export { AgWatermark } from './license/watermark';
  * @internal
  */
 export const EnterpriseCoreModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('EnterpriseCore'),
+    moduleName: 'EnterpriseCore',
+    version: VERSION,
     beans: [LicenseManager],
     icons: {
         // accordion open (filter tool panel group, charts group)

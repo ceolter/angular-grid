@@ -2,7 +2,7 @@ import type { _ModuleWithApi, _StatusBarGridApi } from 'ag-grid-community';
 import { _KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { AgStatusBarSelector } from './agStatusBar';
 import { AggregationComp } from './providedPanels/aggregationComp';
 import { FilteredRowsComp } from './providedPanels/filteredRowsComp';
@@ -17,7 +17,8 @@ import { StatusBarService } from './statusBarService';
  * @gridOption statusBar
  */
 export const StatusBarModule: _ModuleWithApi<_StatusBarGridApi> = {
-    ...baseEnterpriseModule('StatusBar'),
+    moduleName: 'StatusBar',
+    version: VERSION,
     beans: [StatusBarService],
     userComponents: {
         agAggregationComponent: AggregationComp,

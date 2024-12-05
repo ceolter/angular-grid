@@ -5,7 +5,7 @@ import { toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
 import { USER_COMP_MODULES } from './userCompValidations';
 
-const COLUMN_DEFINITION_DEPRECATIONS: Deprecations<ColDef | ColGroupDef> = {
+const COLUMN_DEFINITION_DEPRECATIONS: () => Deprecations<ColDef | ColGroupDef> = () => ({
     checkboxSelection: { version: '32.2', message: 'Use `rowSelection.checkboxes` in `GridOptions` instead.' },
     headerCheckboxSelection: {
         version: '32.2',
@@ -23,9 +23,9 @@ const COLUMN_DEFINITION_DEPRECATIONS: Deprecations<ColDef | ColGroupDef> = {
         version: '32.2',
         message: 'Use `rowSelection.hideDisabledCheckboxes = true` in `GridOptions` instead.',
     },
-};
+});
 
-const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
+const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = () => ({
     aggFunc: { module: 'SharedAggregation' },
     autoHeight: {
         supportedRowModels: ['clientSide', 'serverSide'],
@@ -69,7 +69,7 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
         },
     },
     cellStyle: { module: 'CellStyle' },
-    children: () => COL_DEF_VALIDATORS,
+    children: () => COL_DEF_VALIDATORS(),
     columnChooserParams: {
         module: 'ColumnMenu',
     },
@@ -180,7 +180,7 @@ const COLUMN_DEFINITION_VALIDATIONS: Validations<ColDef | ColGroupDef> = {
             return "colDef.type should be of type 'string' | 'string[]'";
         },
     },
-};
+});
 
 type ColKey = keyof ColDef | keyof ColGroupDef;
 const colDefPropertyMap: Record<ColKey, undefined> = {
@@ -325,12 +325,12 @@ const colDefPropertyMap: Record<ColKey, undefined> = {
     loadingCellRendererSelector: undefined,
     context: undefined,
 };
-const ALL_PROPERTIES: ColKey[] = Object.keys(colDefPropertyMap) as ColKey[];
+const ALL_PROPERTIES: () => ColKey[] = () => Object.keys(colDefPropertyMap) as ColKey[];
 
-export const COL_DEF_VALIDATORS: OptionsValidator<ColDef | ColGroupDef> = {
+export const COL_DEF_VALIDATORS: () => OptionsValidator<ColDef | ColGroupDef> = () => ({
     objectName: 'colDef',
-    allProperties: ALL_PROPERTIES,
+    allProperties: ALL_PROPERTIES(),
     docsUrl: 'column-properties/',
-    deprecations: COLUMN_DEFINITION_DEPRECATIONS,
-    validations: COLUMN_DEFINITION_VALIDATIONS,
-};
+    deprecations: COLUMN_DEFINITION_DEPRECATIONS(),
+    validations: COLUMN_DEFINITION_VALIDATIONS(),
+});

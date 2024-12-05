@@ -2,7 +2,6 @@ import type { GridApi } from '../api/gridApi';
 import type { ApiFunction, ApiFunctionName } from '../api/iApiFunction';
 import type { ClassImp, ComponentMeta, DynamicBeanName, SingletonBean, UserComponentName } from '../context/context';
 import type { IconName, IconValue } from '../utils/icon';
-import { VERSION } from '../version';
 import type { ComponentSelector } from '../widgets/component';
 import type { RowModelType } from './iRowModel';
 
@@ -55,9 +54,6 @@ export type _ModuleWithApi<TGridApi extends Readonly<Partial<GridApi>>> = Module
 export type _ModuleWithoutApi = Module & {
     apiFunctions?: never;
 };
-export function baseCommunityModule(moduleName: ModuleName): Readonly<Module> {
-    return { moduleName, version: VERSION };
-}
 
 export type InternalModuleName =
     | 'Aggregation'

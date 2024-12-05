@@ -1,7 +1,7 @@
 import type { _ColumnGridApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { CheckboxCellRendererModule } from '../rendering/cellRenderers/cellRendererModule';
+import { VERSION } from '../version';
 import {
     applyColumnState,
     getAllDisplayedColumns,
@@ -33,7 +33,8 @@ import { DataTypeService } from './dataTypeService';
  * @internal
  */
 export const DataTypeModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DataType'),
+    moduleName: 'DataType',
+    version: VERSION,
     beans: [DataTypeService],
     dependsOn: [CheckboxCellRendererModule],
 };
@@ -42,7 +43,8 @@ export const DataTypeModule: _ModuleWithoutApi = {
  * @internal
  */
 export const ColumnFlexModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('ColumnFlex'),
+    moduleName: 'ColumnFlex',
+    version: VERSION,
     beans: [ColumnFlexService],
 };
 
@@ -50,7 +52,8 @@ export const ColumnFlexModule: _ModuleWithoutApi = {
  * @feature Columns
  */
 export const ColumnApiModule: _ModuleWithApi<_ColumnGridApi<any>> = {
-    ...baseCommunityModule('ColumnApi'),
+    moduleName: 'ColumnApi',
+    version: VERSION,
     beans: [ColumnDefFactory],
     apiFunctions: {
         getColumnDef,

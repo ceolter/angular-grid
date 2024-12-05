@@ -117,7 +117,7 @@ export class ValidationService extends BeanStub implements NamedBean {
 
     public validateColDef(colDef: ColDef | ColGroupDef, colId: string): void {
         if (!this.beans.dataTypeSvc?.isColPendingInference(colId)) {
-            this.processOptions(colDef, COL_DEF_VALIDATORS);
+            this.processOptions(colDef, COL_DEF_VALIDATORS());
         }
     }
 

@@ -25,6 +25,7 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
+                    direction: 'vertical',
                     fill: '#fac858',
                     padding: {
                         top: 10,
@@ -42,12 +43,10 @@ const gridOptions: GridOptions = {
                         stroke: '##cccccc',
                         strokeWidth: 2,
                     },
-                    itemStyler: (params) => {
-                        if (params.highlighted) {
-                            return {
-                                stroke: '#fac858',
-                            };
-                        }
+                    highlightStyle: {
+                        item: {
+                            stroke: '#fac858',
+                        },
                     },
                 } as AgSparklineOptions,
             },

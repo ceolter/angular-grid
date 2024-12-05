@@ -1,6 +1,6 @@
 import type { _KeyboardNavigationGridApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { CellNavigationService } from './cellNavigationService';
 import { HeaderNavigationService } from './headerNavigationService';
 import {
@@ -17,7 +17,8 @@ import { NavigationService } from './navigationService';
  * @feature Interactivity -> Keyboard Navigation
  */
 export const KeyboardNavigationModule: _ModuleWithApi<_KeyboardNavigationGridApi> = {
-    ...baseCommunityModule('KeyboardNavigation'),
+    moduleName: 'KeyboardNavigation',
+    version: VERSION,
     beans: [NavigationService, CellNavigationService, HeaderNavigationService],
     apiFunctions: {
         getFocusedCell,

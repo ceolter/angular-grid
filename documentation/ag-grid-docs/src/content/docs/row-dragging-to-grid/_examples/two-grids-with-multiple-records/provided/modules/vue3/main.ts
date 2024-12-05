@@ -1,23 +1,31 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    GetRowIdParams,
+    GridApi,
+    GridReadyEvent,
+    ICellRendererParams,
+    RowDropZoneParams,
+    RowSelectionOptions,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const SportRenderer = {
+const SportRenderer = defineComponent({
     template: `<i class="far fa-trash-alt" style="cursor: pointer" @click="applyTransaction()"></i>`,
     methods: {
         applyTransaction() {
             this.params.api.applyTransaction({ remove: [this.params.node.data] });
         },
     },
-};
+});
 
-const VueExample = {
+const VueExample = defineComponent({
     template: /* html */ `
         <div class="top-container">
             <div class="example-toolbar panel panel-default">
@@ -82,15 +90,15 @@ const VueExample = {
             leftApi: null,
             rightApi: null,
 
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 100,
                 filter: true,
             },
-            rowSelection: {
+            rowSelection: <RowSelectionOptions>{
                 mode: 'multiRow',
             },
-            leftColumns: [
+            leftColumns: <ColDef[]>[
                 {
                     rowDrag: true,
                     maxWidth: 50,
@@ -106,7 +114,7 @@ const VueExample = {
                 { field: 'athlete' },
                 { field: 'sport' },
             ],
-            rightColumns: [
+            rightColumns: <ColDef[]>[
                 {
                     rowDrag: true,
                     maxWidth: 50,
@@ -149,7 +157,7 @@ const VueExample = {
             });
     },
     methods: {
-        getRowId(params) {
+        getRowId(params: GetRowIdParams) {
             return params.data.athlete;
         },
 
@@ -164,7 +172,7 @@ const VueExample = {
             this.loadGrids();
         },
 
-        onGridReady(params, side) {
+        onGridReady(params: GridReadyEvent, side: number) {
             if (side === 0) {
                 this.leftApi = params.api;
             }
@@ -176,7 +184,7 @@ const VueExample = {
         },
 
         addGridDropZone() {
-            const dropZoneParams = this.rightApi.getRowDropZoneParams({
+            const dropZoneParams = <RowDropZoneParams>this.rightApi.getRowDropZoneParams({
                 onDragStop: (params) => {
                     var deselectCheck = this.$refs.eDeselectRadio.checked;
                     var moveCheck = this.$refs.eMoveRadio.checked;
@@ -197,6 +205,6 @@ const VueExample = {
             this.leftApi.addRowDropZone(dropZoneParams);
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

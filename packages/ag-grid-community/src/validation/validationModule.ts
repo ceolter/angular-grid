@@ -1,11 +1,12 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { ValidationService } from './validationService';
 
 /**
  * @feature Validation
  */
 export const ValidationModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('Validation'),
+    moduleName: 'Validation',
+    version: VERSION,
     beans: [ValidationService],
 };

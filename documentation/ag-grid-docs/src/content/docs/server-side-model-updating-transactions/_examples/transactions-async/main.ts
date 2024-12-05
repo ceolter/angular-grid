@@ -9,12 +9,12 @@ import type {
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
+import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { data, dataObservers, randomUpdates } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule, ServerSideRowModelApiModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

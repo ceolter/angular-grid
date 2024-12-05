@@ -80,6 +80,6 @@ const files = [
     { path: ['Downloads', 'Ebook.pdf'], size: 1048576, created: '2023-08-08', modified: '2023-08-08' },
 ];
 
-export function getData() {
+export function getData(): any[] {
     return files;
 }

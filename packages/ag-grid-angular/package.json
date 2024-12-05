@@ -13,7 +13,7 @@
     "update-angular-components": "node updateGridAndColumnProperties.js && npm run prettier-fix"
   },
   "license": "MIT",
-  "module": "./dist/ag-grid-angular/fesm2022/ag-grid-community-angular.mjs",
+  "module": "./dist/ag-grid-angular/fesm2022/ag-grid-angular.mjs",
   "typings": "./dist/ag-grid-angular/index.d.ts",
   "dependencies": {
     "ag-grid-community": "32.2.0",

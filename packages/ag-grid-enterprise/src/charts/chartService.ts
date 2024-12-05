@@ -30,7 +30,7 @@ import { VERSION as GRID_VERSION } from '../version';
 import type { AgChartsExports } from './agChartsExports';
 import type { GridChartParams } from './chartComp/gridChartComp';
 import { GridChartComp } from './chartComp/gridChartComp';
-import { ChartParamsValidator } from './chartComp/utils/chartParamsValidator';
+import { validateCreateParams } from './chartComp/utils/chartParamsValidator';
 import { getCanonicalChartType } from './chartComp/utils/seriesTypeMapper';
 import { upgradeChartModel } from './chartModelMigration';
 
@@ -253,7 +253,7 @@ export class ChartService extends BeanStub implements NamedBean, IChartService {
     }
 
     private createChart(params: CommonCreateChartParams): ChartRef | undefined {
-        const validationResult = ChartParamsValidator.validateCreateParams(params, this.agChartsExports.isEnterprise);
+        const validationResult = validateCreateParams(params, this.agChartsExports.isEnterprise);
         if (!validationResult) {
             return undefined;
         }

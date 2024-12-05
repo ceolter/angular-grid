@@ -11,13 +11,18 @@ import type {
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { RowGroupingModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { changePortfolioOnServer, createRowOnServer, data, deletePortfolioOnServer } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

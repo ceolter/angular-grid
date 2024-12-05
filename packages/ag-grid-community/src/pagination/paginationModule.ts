@@ -1,6 +1,6 @@
 import type { _PaginationGridApi } from '../api/gridApi';
 import type { _ModuleWithApi } from '../interfaces/iModule';
-import { baseCommunityModule } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { PopupModule } from '../widgets/popupModule';
 import {
     paginationGetCurrentPage,
@@ -22,7 +22,8 @@ import { PaginationService } from './paginationService';
  * @gridOption pagination
  */
 export const PaginationModule: _ModuleWithApi<_PaginationGridApi> = {
-    ...baseCommunityModule('Pagination'),
+    moduleName: 'Pagination',
+    version: VERSION,
     beans: [PaginationService, PaginationAutoPageSizeService],
     icons: {
         // "go to first" button in pagination controls

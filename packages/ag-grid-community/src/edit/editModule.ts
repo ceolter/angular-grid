@@ -1,8 +1,8 @@
 import type { _EditGridApi, _UndoRedoGridApi } from '../api/gridApi';
 import type { DefaultProvidedCellEditorParams } from '../interfaces/iCellEditor';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { UndoRedoService } from '../undoRedo/undoRedoService';
+import { VERSION } from '../version';
 import { PopupModule } from '../widgets/popupModule';
 import { cellEditingCSS } from './cell-editing.css-GENERATED';
 import { CheckboxCellEditor } from './cellEditors/checkboxCellEditor';
@@ -29,7 +29,8 @@ import { RowEditService } from './rowEditService';
  * @internal
  */
 export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
-    ...baseCommunityModule('EditCore'),
+    moduleName: 'EditCore',
+    version: VERSION,
     beans: [EditService, RowEditService],
     apiFunctions: {
         getCellEditorInstances,
@@ -45,7 +46,8 @@ export const EditCoreModule: _ModuleWithApi<_EditGridApi<any>> = {
  * @feature Editing -> Undo / Redo Edits
  */
 export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
-    ...baseCommunityModule('UndoRedoEdit'),
+    moduleName: 'UndoRedoEdit',
+    version: VERSION,
     beans: [UndoRedoService],
     apiFunctions: {
         undoCellEditing,
@@ -60,7 +62,8 @@ export const UndoRedoEditModule: _ModuleWithApi<_UndoRedoGridApi> = {
  * @feature Editing -> Text Editor
  */
 export const TextEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('TextEditor'),
+    moduleName: 'TextEditor',
+    version: VERSION,
     userComponents: { agCellEditor: TextCellEditor, agTextCellEditor: TextCellEditor },
     dependsOn: [EditCoreModule],
 };
@@ -69,7 +72,8 @@ export const TextEditorModule: _ModuleWithoutApi = {
  * @feature Editing -> Number Editor
  */
 export const NumberEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('NumberEditor'),
+    moduleName: 'NumberEditor',
+    version: VERSION,
     userComponents: {
         agNumberCellEditor: {
             classImp: NumberCellEditor,
@@ -85,7 +89,8 @@ export const NumberEditorModule: _ModuleWithoutApi = {
  * @feature Editing -> Date Editor
  */
 export const DateEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('DateEditor'),
+    moduleName: 'DateEditor',
+    version: VERSION,
     userComponents: {
         agDateCellEditor: DateCellEditor,
         agDateStringCellEditor: DateStringCellEditor,
@@ -97,7 +102,8 @@ export const DateEditorModule: _ModuleWithoutApi = {
  * @feature Editing -> Checkbox Editor
  */
 export const CheckboxEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CheckboxEditor'),
+    moduleName: 'CheckboxEditor',
+    version: VERSION,
     userComponents: {
         agCheckboxCellEditor: CheckboxCellEditor,
     },
@@ -108,7 +114,8 @@ export const CheckboxEditorModule: _ModuleWithoutApi = {
  * @feature Editing -> Select Editor
  */
 export const SelectEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('SelectEditor'),
+    moduleName: 'SelectEditor',
+    version: VERSION,
     userComponents: { agSelectCellEditor: SelectCellEditor },
     dependsOn: [EditCoreModule],
 };
@@ -117,7 +124,8 @@ export const SelectEditorModule: _ModuleWithoutApi = {
  * @feature Editing -> Large Text Editor
  */
 export const LargeTextEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('LargeTextEditor'),
+    moduleName: 'LargeTextEditor',
+    version: VERSION,
     userComponents: { agLargeTextCellEditor: LargeTextCellEditor },
     dependsOn: [EditCoreModule],
 };
@@ -126,6 +134,7 @@ export const LargeTextEditorModule: _ModuleWithoutApi = {
  * @feature Editing
  */
 export const CustomEditorModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('CustomEditor'),
+    moduleName: 'CustomEditor',
+    version: VERSION,
     dependsOn: [EditCoreModule],
 };

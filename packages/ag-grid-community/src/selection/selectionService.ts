@@ -561,7 +561,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public selectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
-        const gos = this.gos;
+        const { gos } = this;
         if (!_isRowSelection(gos)) {
             _warn(132);
             return;
@@ -577,8 +577,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
         const { source, selectAll } = params;
 
-        const nodes = this.getNodesToSelect(selectAll);
-        nodes.forEach((rowNode) => this.selectRowNode(rowNode, true, undefined, source));
+        this.getNodesToSelect(selectAll).forEach((rowNode) => this.selectRowNode(rowNode, true, undefined, source));
 
         // the above does not clean up the parent rows if they are selected
         if (_isClientSideRowModel(gos) && this.groupSelectsDescendants) {

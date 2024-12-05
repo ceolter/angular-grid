@@ -1,12 +1,19 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    GetRowIdParams,
+    GridApi,
+    GridReadyEvent,
+    RowClassRules,
+    RowDropZoneParams,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 let rowIdSequence = 100;
 
@@ -26,7 +33,7 @@ const createRowBlock = (blocks) =>
         .map(() => ['Red', 'Green', 'Blue'].map((color) => createDataItem(color)))
         .reduce((prev, curr) => prev.concat(curr), []);
 
-const VueExample = {
+const VueExample = defineComponent({
     /* html */
     template: `<div class="example-wrapper">
 
@@ -102,17 +109,22 @@ const VueExample = {
             rightRowData: [],
             leftApi: null,
             rightApi: null,
-            rowClassRules: {
+            rowClassRules: <RowClassRules>{
                 'red-row': 'data.color == "Red"',
                 'green-row': 'data.color == "Green"',
                 'blue-row': 'data.color == "Blue"',
             },
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 100,
                 filter: true,
             },
-            columns: [{ field: 'id', rowDrag: true }, { field: 'color' }, { field: 'value1' }, { field: 'value2' }],
+            columns: <ColDef[]>[
+                { field: 'id', rowDrag: true },
+                { field: 'color' },
+                { field: 'value1' },
+                { field: 'value2' },
+            ],
         };
     },
     beforeMount() {
@@ -120,11 +132,11 @@ const VueExample = {
         this.rightRowData = createRowBlock(2);
     },
     methods: {
-        getRowId(params) {
+        getRowId(params: GetRowIdParams) {
             return String(params.data.id);
         },
 
-        onGridReady(params, side) {
+        onGridReady(params: GridReadyEvent, side: number) {
             const api = params.api;
             if (side === 'Left') {
                 this.leftApi = api;
@@ -191,8 +203,8 @@ const VueExample = {
             });
         },
 
-        addBinZone(api) {
-            const dropZone = {
+        addBinZone(api: GridApi) {
+            const dropZone = <RowDropZoneParams>{
                 getContainer: () => this.$refs.eBinIcon,
                 onDragEnter: () => {
                     this.$refs.eBin.style.color = 'blue';
@@ -219,6 +231,6 @@ const VueExample = {
             api.addRowDropZone(dropZone);
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

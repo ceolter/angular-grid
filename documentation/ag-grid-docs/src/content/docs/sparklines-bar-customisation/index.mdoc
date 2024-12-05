@@ -5,14 +5,14 @@ enterprise: true
 
 This section shows how Bar Sparklines can be customised by overriding the default bar options.
 
-The following [Bar Sparkline Options](./) can be used to customise Bar Sparklines:
+The following [Bar Sparkline Options](./sparklines-bar-customisation/#barsparklineoptions) can be used to customise Bar Sparklines:
 
-* [Bar Fill Options](./)
-* [Bar Stroke Options](./)
-* [Bar Padding Options](./)
-* [Bar Label Options](./)
-* [Axis Line Options](./)
-* [Sparkline Padding Options](./)
+* [Bar Fill Options](./sparklines-bar-customisation/#bar-fill-options)
+* [Bar Stroke Options](./sparklines-bar-customisation/#bar-stroke-options)
+* [Bar Padding Options](./sparklines-bar-customisation/#bar-padding-options)
+* [Bar Label Options](./sparklines-bar-customisation/#bar-label-options)
+* [Axis Line Options](./sparklines-bar-customisation/#axis-line-options)
+* [Sparkline Padding Options](./sparklines-bar-customisation/#sparkline-padding-options)
 
 Also see [Additional Customisations](./sparklines-bar-customisation/#additional-customisations) for more advanced
 customisations that are common across all sparklines.
@@ -22,6 +22,7 @@ The snippet below shows option overrides for the Bar Sparkline:
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     // Optional customisation properties
     fill: '#5470c6',
     stroke: '#91cc75',
@@ -51,6 +52,7 @@ To apply a custom color to the bars, set the `fill` property in `sparklineOption
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     fill: '#91cc75', // sets the bar fill
 }
 ```
@@ -69,6 +71,7 @@ It is possible to set the fill for the highlighted state of the bar by adding `f
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     highlightStyle: {
         fill: 'orange', // sets the highlighted bar fill
     }
@@ -101,6 +104,7 @@ To add a stroke, modify the `strokeWidth` and `stroke` properties as shown below
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     stroke: '#ec7c7d', // sets the bar stroke
     strokeWidth: 2, // sets the bar stroke width
     highlightStyle: {
@@ -142,6 +146,7 @@ Here's an example.
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     paddingInner: 0.5, // sets the padding between bars.
 }
 ```
@@ -164,6 +169,7 @@ Here's a snippet where the `paddingOuter` is set to `0`.
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     paddingOuter: 0, // sets the padding on the outer edge of the first and last bars.
 }
 ```
@@ -190,6 +196,7 @@ To enable bar labels, set the `enabled` property in `label` options as shown:
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     label: {
         enabled: true // show bar labels
     }
@@ -210,6 +217,7 @@ It is possible to change the text value displayed as the label of individual bar
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     label: {
         enabled: true,
         formatter: labelFormatter
@@ -235,6 +243,7 @@ To customise the label text style, set the style attributes in `label` options a
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     label: {
         enabled: true,
         fontWeight: 'bold',
@@ -260,6 +269,7 @@ The position of the labels can be specified by setting the `placement` property 
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     label: {
         enabled: true,
         placement: 'center', // positions the labels in the center of the bars
@@ -300,6 +310,7 @@ Here is a snippet to demonstrate axis formatting.
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     axis: {
         stroke: '#7cecb3', // sets the axis line stroke
         strokeWidth: 3, // sets the axis line strokeWidth
@@ -327,6 +338,7 @@ To add extra space around the sparklines, custom `padding` options can be applie
 ```js
 sparklineOptions: {
     type: 'bar',
+    direction: 'horizontal',
     // sets the padding around the sparklines
     padding: {
         top: 10,

@@ -11,7 +11,7 @@ import type {
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
@@ -23,6 +23,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     TreeDataModule,
     ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
 ]);
 
 let fakeServer: {

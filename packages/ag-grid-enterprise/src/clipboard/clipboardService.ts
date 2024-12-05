@@ -198,11 +198,11 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         };
 
         this.executeOnTempElement(
-            (textArea: HTMLTextAreaElement) => {
+            (textArea) => {
                 textArea.addEventListener('paste', handlePasteEvent);
                 textArea.focus({ preventScroll: true });
             },
-            (element: HTMLTextAreaElement) => {
+            (element) => {
                 const data = element.value;
                 if (!defaultPrevented) {
                     this.processClipboardData(data);
@@ -215,7 +215,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
     }
 
     private refocusLastFocusedCell(): void {
-        const focusSvc = this.beans.focusSvc;
+        const { focusSvc } = this.beans;
         const focusedCell = focusSvc.getFocusedCell();
 
         if (focusedCell) {
@@ -251,10 +251,10 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         }
 
         if (this.gos.get('suppressLastEmptyLineOnPaste')) {
-            this.removeLastLineIfBlank(parsedData!);
+            this.removeLastLineIfBlank(parsedData);
         }
 
-        const rangeSvc = this.beans.rangeSvc;
+        const { rangeSvc } = this.beans;
 
         const pasteOperation = (
             cellsToFlash: any,
@@ -293,7 +293,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
             source,
         });
 
-        const clientSideRowModel = this.clientSideRowModel;
+        const { clientSideRowModel } = this;
         const rootNode = clientSideRowModel?.rootNode;
         const changedPath = rootNode && new ChangedPath(gos.get('aggregateOnlyChangedColumns'), rootNode);
 
@@ -959,7 +959,11 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         const allDisplayedColumns = this.beans.visibleCols.allCols;
         const cellsToFlash: CellsToFlashType = {};
         for (let i = 0; i < rowNodes.length; i++) {
-            const { rowIndex, rowPinned } = rowNodes[i];
+            const { level, rowIndex: index, rowPinned, sibling } = rowNodes[i];
+
+            // Account for the grand total row (sibling of root node)
+            const rowIndex = level === -1 ? sibling.rowIndex : index;
+
             if (rowIndex == null) {
                 continue;
             }
@@ -1035,8 +1039,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         return csvCreator!.getDataAsCsv(exportParams, true);
     }
 
-    private processRowGroupCallback(params: ProcessRowGroupForExportParams) {
-        const { node, column } = params;
+    private processRowGroupCallback({ node, column }: ProcessRowGroupForExportParams) {
         const { gos, valueSvc, rowGroupColsSvc } = this.beans;
 
         const isTreeData = gos.get('treeData');
@@ -1058,7 +1061,7 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         };
         let value = getValueFromNode();
 
-        if (params.node.footer) {
+        if (node.footer) {
             let suffix = '';
             if (value && value.length) {
                 suffix = ` ${value}`;
@@ -1078,8 +1081,8 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
                 node,
                 column,
                 type: 'clipboard',
-                formatValue: (valueToFormat: any) => valueSvc.formatValue(column, node, valueToFormat) ?? valueToFormat,
-                parseValue: (valueToParse: string) =>
+                formatValue: (valueToFormat) => valueSvc.formatValue(column, node, valueToFormat) ?? valueToFormat,
+                parseValue: (valueToParse) =>
                     valueSvc.parseValue(column, node, valueToParse, valueSvc.getValue(column, node)),
             });
         }

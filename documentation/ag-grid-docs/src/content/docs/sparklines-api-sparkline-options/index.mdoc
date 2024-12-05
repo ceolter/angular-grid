@@ -1,0 +1,52 @@
+---
+title: "Sparklines - API"
+enterprise: true
+---
+
+# API Documentation
+
+## Sparkline Options
+
+All sparkline types and interfaces are available from the `ag-charts-community` or `ag-charts-enterprise` packages.
+
+```ts
+import { AgSparklineOptions, ... } from 'ag-charts-community'; // or ag-charts-enterprise
+```
+
+Per-type options for sparklines are available
+
+* [Area Sparkline Options](./sparklines-api-sparkline-area)
+* [Bar / Column Sparkline Options](./sparklines-api-sparkline-bar)
+* [Line Sparkline Options](./sparklines-api-sparkline-line)
+
+## Sparkline Item Styler
+
+Depending on series type, item stylers are either present on the main options object, or as a property of the markers object.
+
+The signature is generally the same for all series types
+```ts
+function itemStyler(params: AgAreaSeriesMarkerItemStylerParams ): AgSeriesMarkerStyle {
+    const { yValue } = params;
+    return {
+        fill: yValue > 0 ? 'green' : 'red'
+    };
+}
+```
+
+* Bar / Column Item Styler: [Params](./sparklines-api-sparkline-bar#bar-series-item-styler-params) | [Result](./sparklines-api-sparkline-bar#bar-series-style)
+* Line Item Styler: [Params](./sparklines-api-sparkline-line#line-series-item-styler-params) | [Result](./sparklines-api-sparkline-line#line-series-style)
+* Area Item Styler: [Params](./sparklines-api-sparkline-area#area-series-item-styler-params) | [Result](./sparklines-api-sparkline-area#area-series-style)
+
+## Sparkline Tooltip Renderer
+
+The tooltip renderer is a function that can be provided to the sparkline options' tooltip object. It is called with the series datum and should return a string to be displayed in the tooltip.
+
+```ts
+const sparklineOptions: AgSparklineOptions = {
+    tooltip: {
+        renderer: (params: AgSeriesTooltipRendererParams<any>): AgTooltipRendererResult => {
+            return `Value: ${params.datum.value}`;
+        }
+    }
+};
+```

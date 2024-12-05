@@ -1,6 +1,6 @@
-import { computed, createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
@@ -12,8 +12,6 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
-
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -22,7 +20,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <p style="flex: 0 1 0%">
@@ -56,14 +54,14 @@ const VueExample = {
                 themeAlpine,
             },
 
-            columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
-            defaultColDef: {
+            columnDefs: <ColDef[]>[{ field: 'make' }, { field: 'model' }, { field: 'price' }],
+            defaultColDef: <ColDef>{
                 editable: true,
                 flex: 1,
                 minWidth: 100,
                 filter: true,
             },
-            rowData: (() => {
+            rowData: <any[]>(() => {
                 const rowData = [];
                 for (let i = 0; i < 10; i++) {
                     rowData.push({ make: 'Toyota', model: 'Celica', price: 35000 + i * 1000 });
@@ -74,6 +72,6 @@ const VueExample = {
             })(),
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

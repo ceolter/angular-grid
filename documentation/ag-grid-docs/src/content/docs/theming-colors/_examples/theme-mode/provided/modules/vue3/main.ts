@@ -1,20 +1,19 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
-
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     PivotModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <p style="flex: 0 1 0%">
@@ -63,8 +62,8 @@ const VueExample = {
             theme,
             setDarkMode,
 
-            columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
-            defaultColDef: {
+            columnDefs: <ColDef[]>[{ field: 'make' }, { field: 'model' }, { field: 'price' }],
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 100,
                 filter: true,
@@ -80,6 +79,6 @@ const VueExample = {
             })(),
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

@@ -1,6 +1,6 @@
 import type { _SortGridApi } from '../api/gridApi';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { RowNodeSorter } from './rowNodeSorter';
 import { onSortChanged } from './sortApi';
 import { SortIndicatorComp } from './sortIndicatorComp';
@@ -11,7 +11,8 @@ import { SortService } from './sortService';
  * @colDef sortable, sort, sortIndex
  */
 export const SortModule: _ModuleWithApi<_SortGridApi> = {
-    ...baseCommunityModule('Sort'),
+    moduleName: 'Sort',
+    version: VERSION,
     beans: [SortService, RowNodeSorter],
     apiFunctions: {
         onSortChanged,

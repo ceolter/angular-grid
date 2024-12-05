@@ -2,7 +2,7 @@ import type { _CellSelectionGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'a
 import { _DragModule, _KeyboardNavigationModule } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { AgFillHandle } from './agFillHandle';
 import { AgRangeHandle } from './agRangeHandle';
 import { rangeSelectionCSS } from './rangeSelection.css-GENERATED';
@@ -14,7 +14,8 @@ import { RangeService } from './rangeService';
  * @gridOption cellSelection
  */
 export const CellSelectionModule: _ModuleWithApi<_CellSelectionGridApi> = {
-    ...baseEnterpriseModule('CellSelection'),
+    moduleName: 'CellSelection',
+    version: VERSION,
     beans: [RangeService],
     dynamicBeans: { fillHandle: AgFillHandle, rangeHandle: AgRangeHandle },
     apiFunctions: {
@@ -31,6 +32,7 @@ export const CellSelectionModule: _ModuleWithApi<_CellSelectionGridApi> = {
  * @deprecated v33 Use `CellSelectionModule` instead
  */
 export const RangeSelectionModule: _ModuleWithoutApi = {
-    ...baseEnterpriseModule('RangeSelection'),
+    moduleName: 'RangeSelection',
+    version: VERSION,
     dependsOn: [CellSelectionModule],
 };

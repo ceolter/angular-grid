@@ -567,7 +567,14 @@ export function _getRowSelectionMode(gos: GridOptionsService): RowSelectionMode 
         }
     }
 
-    return selection?.mode;
+    // only permit expected values for selection mode
+    switch (selection?.mode) {
+        case 'multiRow':
+        case 'singleRow':
+            return selection.mode;
+        default:
+            return;
+    }
 }
 
 export function _isMultiRowSelection(gos: GridOptionsService): boolean {

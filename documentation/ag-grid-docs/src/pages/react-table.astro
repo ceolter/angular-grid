@@ -8,7 +8,7 @@ import FeaturesSection from '../components/framework-landing-pages/react/section
 import Showcase from '../components/framework-landing-pages/react/sections/showcase/Showcase';
 import { LandingPageSection } from '@ag-website-shared/components/landing-pages/LandingPageSection';
 
-import InstallText from '@components/framework-landing-pages/InstallText';
+import InstallText from '@components/framework-landing-pages/InstallTextReact';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Finance } from 'src/components/demos/examples/finance';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
@@ -98,7 +98,7 @@ const { data: examples } = await getEntry('react-landing-page', 'examples');
     <LandingPageSection
         tag="Who Builds React Tables with AG Grid?"
         headingHtml={'Loved By Developers<br />Trusted By The Worlds Largest Enterprises'}
-        subHeadingHtml={`Over <b>90% of the Fortune 500</b> build React Tables using AG Grid, with <a href="https://www.npmjs.com/package/ag-grid-community" target="_blank"> 1,000,000+</a> npm downloads per week and over <a href="https://github.com/ag-grid/ag-grid/tree/latest" target="_blank"> 12,000</a> Stars on Github.`}
+        subHeadingHtml={`<span>Over <b>90% of the Fortune 500</b> build React Tables using AG Grid, with <a href="https://www.npmjs.com/package/ag-grid-community" target="_blank"> 1,000,000+</a> npm downloads per week and over <a href="https://github.com/ag-grid/ag-grid/tree/latest" target="_blank"> 12,000</a> Stars on Github.</span>`}
     >
         <Customers client:load />
     </LandingPageSection>

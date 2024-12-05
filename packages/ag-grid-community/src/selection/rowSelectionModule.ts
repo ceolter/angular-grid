@@ -1,7 +1,7 @@
 import type { _RowSelectionGridApi } from '../api/gridApi';
 import { SelectionColService } from '../columns/selectionColService';
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import {
     deselectAll,
     deselectAllFiltered,
@@ -19,7 +19,8 @@ import { SelectionService } from './selectionService';
  * @internal
  */
 export const SharedRowSelectionModule: _ModuleWithApi<_RowSelectionGridApi> = {
-    ...baseCommunityModule('SharedRowSelection'),
+    moduleName: 'SharedRowSelection',
+    version: VERSION,
     beans: [SelectionColService],
     apiFunctions: {
         setNodesSelected,
@@ -38,7 +39,8 @@ export const SharedRowSelectionModule: _ModuleWithApi<_RowSelectionGridApi> = {
  * @feature Selection -> Row Selection
  */
 export const RowSelectionModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('RowSelection'),
+    moduleName: 'RowSelection',
+    version: VERSION,
     rowModels: ['clientSide', 'infinite', 'viewport'],
     beans: [SelectionService],
     dependsOn: [SharedRowSelectionModule],

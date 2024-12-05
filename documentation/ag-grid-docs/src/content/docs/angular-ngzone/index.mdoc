@@ -3,7 +3,26 @@ title: "AG Grid and NgZone"
 frameworks: ["angular"]
 ---
 
-AG Grid implements performance optimisations to avoid [Zone Pollution](https://angular.dev/best-practices/zone-pollution) as recommended by the Angular team.
+Recommended NgZoneOptions and details of AG Grid's performance optimisations to avoid [Zone Pollution](https://angular.dev/best-practices/zone-pollution).
+
+## Recommended NgZoneOptions
+
+Angular supports coalescing of change detection cycles via [NgZoneOptions](https://angular.dev/api/core/NgZoneOptions). This can be set via `provideZoneChangeDetection` when bootstrapping your application. We recommended enabling `eventCoalescing` and `runCoalescing` for optimal AG Grid performance.
+
+```ts
+bootstrapApplication(AppComponent, { 
+    providers: [ 
+        provideZoneChangeDetection({ 
+            eventCoalescing: true,
+            runCoalescing: true, 
+        }), 
+    ], 
+})
+```
+
+{% note %}
+The above application configuration is recommended for optimal AG Grid performance.
+{% /note %}
 
 ## NgZone and Change Detection
 

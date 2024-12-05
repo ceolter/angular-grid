@@ -1,7 +1,7 @@
 import type { _AggregationGridApi, _ModuleWithApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
-import { baseEnterpriseModule } from '../moduleUtils';
+import { VERSION } from '../version';
 import { AggColumnNameService } from './aggColumnNameService';
 import { AggFuncService } from './aggFuncService';
 import { addAggFuncs, clearAggFuncs, setColumnAggFunc } from './aggregationApi';
@@ -14,7 +14,8 @@ import { ValueColsSvc } from './valueColsSvc';
  * @internal
  */
 export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
-    ...baseEnterpriseModule('SharedAggregation'),
+    moduleName: 'SharedAggregation',
+    version: VERSION,
     beans: [AggFuncService, AggColumnNameService, FooterService, ValueColsSvc],
     apiFunctions: {
         addAggFuncs,
@@ -28,7 +29,8 @@ export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> =
  * @internal
  */
 export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
-    ...baseEnterpriseModule('Aggregation'),
+    moduleName: 'Aggregation',
+    version: VERSION,
     beans: [AggregationStage, FilterAggregatesStage],
     rowModels: ['clientSide'],
     dependsOn: [SharedAggregationModule],

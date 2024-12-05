@@ -1,8 +1,8 @@
-import { computed, createApp, ref } from 'vue';
+import { computed, createApp, defineComponent, ref } from 'vue';
 
+import type { ColDef } from 'ag-grid-community';
 import {
     AllCommunityModule,
-    ClientSideRowModelModule,
     ModuleRegistry,
     colorSchemeDark,
     colorSchemeDarkWarm,
@@ -31,8 +31,6 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
-
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -67,7 +65,7 @@ const iconSets = [
     { id: 'iconSetMaterial', part: iconSetMaterial },
 ];
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <p style="flex: 0 1 0%">
@@ -124,8 +122,8 @@ const VueExample = {
                 return theme;
             }),
 
-            columnDefs: [{ field: 'make' }, { field: 'model' }, { field: 'price' }],
-            defaultColDef: {
+            columnDefs: <ColDef[]>[{ field: 'make' }, { field: 'model' }, { field: 'price' }],
+            defaultColDef: <ColDef>{
                 editable: true,
                 flex: 1,
                 minWidth: 100,
@@ -142,6 +140,6 @@ const VueExample = {
             })(),
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

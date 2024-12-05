@@ -1,4 +1,4 @@
-import type { AgChartInstance, AgChartTheme, AgSparklineOptions } from 'ag-charts-types';
+import type { AgChartInstance, AgChartTheme, AgSparklineOptions, AgTooltipRendererResult } from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
@@ -41,7 +41,8 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             } else {
                 this.sparklineOptions.tooltip = {
                     ...this.sparklineOptions.tooltip,
-                    renderer: (params: any) => this.createDefaultContent(params),
+                    renderer: (params: any) =>
+                        ({ content: this.createDefaultContent(params) }) as AgTooltipRendererResult,
                 };
             }
 
@@ -85,7 +86,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     private createDefaultContent(params: any) {
-        return { content: `${params.yValue}` };
+        return `${params.yValue}`;
     }
 
     private wrapItemStyler(container: { itemStyler?: any }) {

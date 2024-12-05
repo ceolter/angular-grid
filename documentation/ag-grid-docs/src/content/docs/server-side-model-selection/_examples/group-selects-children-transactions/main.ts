@@ -7,14 +7,19 @@ import type {
 } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { RowGroupingModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { createRowOnServer } from './data';
 import { data } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    AllCommunityModule,
+    RowGroupingModule,
+    ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
+]);
 
 let gridApi: GridApi;
 

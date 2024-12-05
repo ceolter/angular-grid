@@ -27,7 +27,6 @@ import {
 } from './filter/filterModule';
 import { InfiniteRowModelModule } from './infiniteRowModel/infiniteRowModelModule';
 import type { _ModuleWithoutApi } from './interfaces/iModule';
-import { baseCommunityModule } from './interfaces/iModule';
 import { EventApiModule } from './misc/apiEvents/apiEventModule';
 import { LocaleModule } from './misc/locale/localeModule';
 import { GridStateModule } from './misc/state/stateModule';
@@ -41,12 +40,14 @@ import { CellStyleModule, RowStyleModule } from './styling/stylingModule';
 import { TooltipModule } from './tooltip/tooltipModule';
 import { ValidationModule } from './validation/validationModule';
 import { CellApiModule, ValueCacheModule } from './valueService/valueModule';
+import { VERSION } from './version';
 
 /**
  * @feature All Community Features
  */
 export const AllCommunityModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AllCommunity'),
+    moduleName: 'AllCommunity',
+    version: VERSION,
     dependsOn: [
         ClientSideRowModelModule,
         CsvExportModule,

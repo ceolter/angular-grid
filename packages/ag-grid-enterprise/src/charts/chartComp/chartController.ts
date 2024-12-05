@@ -23,7 +23,7 @@ import type { ChartProxy, FieldDefinition, UpdateParams } from './chartProxies/c
 import { isStockTheme } from './chartProxies/chartTheme';
 import type { ChartDataModel, ChartModelParams, ColState } from './model/chartDataModel';
 import { DEFAULT_CHART_CATEGORY } from './model/chartDataModel';
-import { ChartParamsValidator } from './utils/chartParamsValidator';
+import { validateUpdateParams } from './utils/chartParamsValidator';
 import type { ChartSeriesType } from './utils/seriesTypeMapper';
 import {
     getMaxNumCategories,
@@ -82,7 +82,7 @@ export class ChartController extends BeanStub<ChartControllerEvent> {
 
     public update(params: UpdateChartParams): boolean {
         if (!this.validUpdateType(params)) return false;
-        const validationResult = ChartParamsValidator.validateUpdateParams(params, this.agChartsExports.isEnterprise);
+        const validationResult = validateUpdateParams(params, this.agChartsExports.isEnterprise);
         if (!validationResult) return false;
         const validParams = validationResult === true ? params : validationResult;
         this.applyValidatedChartParams(validParams);

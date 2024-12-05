@@ -1,5 +1,5 @@
-import { baseCommunityModule } from '../interfaces/iModule';
 import type { _ModuleWithoutApi } from '../interfaces/iModule';
+import { VERSION } from '../version';
 import { AlignedGridsService } from './alignedGridsService';
 
 /**
@@ -7,6 +7,7 @@ import { AlignedGridsService } from './alignedGridsService';
  * @gridOption alignedGrids
  */
 export const AlignedGridsModule: _ModuleWithoutApi = {
-    ...baseCommunityModule('AlignedGrids'),
+    moduleName: 'AlignedGrids',
+    version: VERSION,
     beans: [AlignedGridsService],
 };
