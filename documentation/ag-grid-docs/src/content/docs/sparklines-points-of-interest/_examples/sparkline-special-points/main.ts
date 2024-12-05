@@ -33,7 +33,7 @@ const gridOptions: GridOptions = {
             cellRendererParams: {
                 sparklineOptions: {
                     type: 'bar',
-                    direction: 'vertical',
+                    direction: 'horizontal',
                     min: 0,
                     max: 100,
                     label: {
