@@ -959,7 +959,11 @@ export class ClipboardService extends BeanStub implements NamedBean, IClipboardS
         const allDisplayedColumns = this.beans.visibleCols.allCols;
         const cellsToFlash: CellsToFlashType = {};
         for (let i = 0; i < rowNodes.length; i++) {
-            const { rowIndex, rowPinned } = rowNodes[i];
+            const { level, rowIndex: index, rowPinned, sibling } = rowNodes[i];
+
+            // Account for the grand total row (sibling of root node)
+            const rowIndex = level === -1 ? sibling.rowIndex : index;
+
             if (rowIndex == null) {
                 continue;
             }
