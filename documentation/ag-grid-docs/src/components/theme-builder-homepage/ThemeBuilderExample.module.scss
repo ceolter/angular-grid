@@ -103,15 +103,24 @@
                 }
             }
         }
+
         #{$selector-darkmode} & {
             background-color: color-mix(in srgb, var(--color-brand-50), var(--color-bg-primary) 90%);
             color: white;
         }
     }
+
     @media screen and (max-width: $breakpoint-pricing-large) {
         display: none;
     }
 }
+
+@media screen and (min-width: $breakpoint-pricing-large) {
+    .gridCodeBlock {
+        min-height: 580px;
+    }
+}
+
 .codeBlockWrapper {
     position: relative;
     background-color: #111a4a;
@@ -124,13 +133,14 @@
     left: -100px;
     bottom: 50px;
     box-shadow: var(--shadow-md);
-    min-height: 317px;
 
     @media screen and (max-width: $breakpoint-pricing-large) {
         display: none;
     }
 
     code {
+        --function-color: var(--color-brand-200);
+
         background-color: #111a4a !important;
         border: none;
         font-weight: 600 !important;
@@ -138,6 +148,7 @@
         .line-numbers-rows {
             border-right: none !important;
         }
+
         #{$selector-darkmode} & {
             background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%) !important;
         }

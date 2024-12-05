@@ -219,6 +219,7 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
                         </div>
                     </ShadowDom>
                 </div>
+
                 <div className={`${styles.codeBlockWrapper} code-block-homepage`}>
                     <div className={styles.windowControls}>
                         <div className={styles.dot}></div>
