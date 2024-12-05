@@ -75,7 +75,9 @@ const frameworksData = [
                 <LandingPageTitle client:load />
                 <h2 class="text-base normal-weight-text">
                     Fully customisable and framework agnostic JavaScript Data Grid that can handle millions of cells out
-                    of the box. Free and <a href="https://github.com/ag-grid/ag-grid">open source</a>.
+                    of the box, with features you wont find anywhere else. Free and <a
+                        href="https://github.com/ag-grid/ag-grid">open source</a
+                    >.
                 </h2>
                 <div class={styles.heroSectionbuttonContainer}>
                     <div class={styles.heroSectioncta2}>
@@ -153,7 +155,7 @@ const frameworksData = [
         tag="Unlimited Theming and Customisation"
         heading="Customise Themes and Components"
         subHeading="Customise your Data Grid styles with our Theming API and extend functionality with your own custom components"
-        ctaTitle="Use the Theme Builder"
+        ctaTitle="Create A Custom Theme"
         ctaUrl={urlWithBaseUrl('/theme-builder/')}
     >
         <ThemeBuilderHomepage gridHeight={261} client:visible />
@@ -161,9 +163,9 @@ const frameworksData = [
 
     <LandingPageSection
         tag="See the use cases"
-        heading="Used in Every Industry, for All Types of Data"
-        subHeading="Trusted by almost every industry, from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
-        ctaTitle="Browse the AG Grid Showcase"
+        heading="Trusted By Developers Everywhere"
+        subHeading="Used in almost every industry, from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
+        ctaTitle="Browse Our Showcase"
         ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >
         <Showcase client:load />
@@ -171,7 +173,7 @@ const frameworksData = [
 
     <LandingPageSection
         tag="Regular Updates and Enhancements"
-        headingHtml="New Releases every 6 weeks"
+        headingHtml="Latest Updates and Enhancements"
         subHeading="With minor releases every 6 weeks, and major releases every 6 months, stay up to date with all of the newest features and improvements to AG Grid Data Grids."
         ctaTitle="See Whats New"
         ctaUrl={urlWithBaseUrl(
@@ -214,3 +216,13 @@ const frameworksData = [
         <LandingPageFAQ client:load FAQData={FAQData} framework={'react'} />
     </LandingPageSection>
 </Layout>
+
+<script>
+    import { initScrollClassListener } from '@ag-website-shared/utils/initScrollClassListener';
+
+    initScrollClassListener({
+        targetSelector: '.site-header',
+        scrolledClass: 'header-scrolled',
+        scrollPosition: 566,
+    });
+</script>

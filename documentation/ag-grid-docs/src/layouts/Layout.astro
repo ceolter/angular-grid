@@ -115,7 +115,7 @@ const isHomepage = Astro.url.pathname.replaceAll('/', '') === SITE_BASE_URL.repl
             }
         </style>
     </head>
-    <body data-is-homepage={isHomepage}>
+    <body>
         <script is:inline>
             const htmlEl = document.querySelector('html');
             const localDarkmode = localStorage['documentation:darkmode'];

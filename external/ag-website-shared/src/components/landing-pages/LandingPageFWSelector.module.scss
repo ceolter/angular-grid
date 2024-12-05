@@ -57,7 +57,7 @@
     padding: calc((var(--height) - var(--icon-size)) / 2) var(--x-padding);
     text-decoration: none;
     outline: none;
-    background: var(--color-button-tertiary-bg-hover);
+    border: 1px solid #a8c5eb;
     border-radius: var(--radius-md);
     transition: background-color 0.5s;
 
