@@ -1,34 +1,34 @@
 [
     {
-        "question": "What is the difference between AG Grid Community and Enterprise?",
-        "answer": "[AG Grid Community](./getting-started/) is the free version with basic features, while [AG Grid Enterprise](/license-pricing/) offers additional advanced features and support."
+        "question": "Can I build JavaScript Data Grids for free with AG Grid?",
+        "answer": "Yes, you can create a JavaScript Data Grid for free using our open-source library, [AG Grid Community](./getting-started/)."
     },
     {
-        "question": "Can I create a React Table for free?",
-        "answer": "Yes, you can create a React Table for free using our open-source library, [AG Grid Community](./getting-started/)."
+        "question": "How fast are AG Grid's Data grids?",
+        "answer": "AG Grid has always been focused on performance and reliability with large data sets; We use virtualisation for both rows and columns to make sure your users have the smoothest experience possible, whatever the size of your data."
     },
     {
-        "question": "Will my React Tables be compatible with AG Charts?",
-        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between React Tables and [React Charts](https://www.ag-grid.com/charts/react/quick-start/)."
+        "question": "Is AG Grid compatible with AG Charts?",
+        "answer": "Yes, AG Grid is designed to be compatible with AG Charts, allowing seamless integration between your JavaSCript Data Grids and [JavaScript Charts](https://www.ag-grid.com/charts/react/quick-start/)."
     },
     {
-        "question": "Can I customise the React Table?",
+        "question": "How can I customise the style of my Data Grid?",
         "answer": "Yes, you can customise AG Grid [themes](./themes/) with CSS, create your own custom themes, and use our own components in cells. Visit our [Theme Builder](/theme-builder/) to start customising themes."
     },
     {
-        "question": "AG Grid vs. MUI",
-        "answer": "AG Grid is a feature-rich data grid offering advanced capabilities, while MUI (Material-UI) provides a simpler table component as part of its UI library."
-    },
-    {
-        "question": "Why use AG Grid over TanStack React Table?",
+        "question": "Is AG Grid compatible with my Framework?",
         "answer": "TanStack React Table is for building bespoke data grids from scratch, whereas AG Grid comes with a UI and broader feature set, which just requires configuration."
     },
     {
-        "question": "How Many Rows Can AG Grid Handle?",
-        "answer": "AG Grid can easily handle millions of rows and thousands of columns, with no performance degradation, by using row & column virtualisation."
+        "question": "Can I use my own components with AG Grid?",
+        "answer": "Yes, you can add your own components to cells and headers, and replace things like filters with your own functionality if you want to."
     },
     {
-        "question": "What is AG Grid Enterprise?",
+        "question": "How is AG Grid different from Tanstacks' React Table",
+        "answer": "We like to say AG Grid 'comes with batteries included'. Tanstack Table is headless, meaning you need to build the UI from scratch, where-as AG Grid can be used out-of-the-box."
+    },
+    {
+        "question": "What is the difference between AG Grid Community and AG Grid Enterprise?",
         "answer": "[AG Grid Community](./getting-started/) is the free version with basic features, while [AG Grid Enterprise](/license-pricing/) offers additional advanced features and support."
     },
     {
