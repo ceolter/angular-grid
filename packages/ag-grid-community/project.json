@@ -99,11 +99,11 @@
           "tsConfig": "{projectRoot}/tsconfig.watch.json"
         },
         "staging": {
-          "sourcemap": true,
+          "sourcemap": false,
           "metafile": false
         },
         "production": {
-          "sourcemap": true,
+          "sourcemap": false,
           "metafile": false
         }
       }
