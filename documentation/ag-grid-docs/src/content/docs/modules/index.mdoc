@@ -50,6 +50,12 @@ ModuleRegistry.registerModules(
 ]);
 ```
 
+{% if isFramework("react") %}
+{% note %}
+If using server-side rendering, modules need to be registered on the client and not the server.
+{% /note %}
+{% /if %}
+
 ### Providing Modules To Individual Grids
 
 Modules can be registered directly with individual grids. Modules registered directly with a grid will _only_ be available to that grid. When a grid is instantiated it uses both globally and individually registered modules.
