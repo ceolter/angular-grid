@@ -17,9 +17,9 @@ body {
         content: '';
         position: absolute;
         top: 0;
-        right: -100vw;
+        right: 0;
         bottom: 280px;
-        left: -100vw;
+        left: 0;
         background-color: var(--color-bg-site-header);
         z-index: -1;
     }

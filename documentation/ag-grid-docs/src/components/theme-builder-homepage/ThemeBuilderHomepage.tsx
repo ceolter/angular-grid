@@ -24,46 +24,23 @@ interface ThemeParams {
 
 type ThemeSelection = 'themeQuartz' | 'themeCustom';
 
-const themeCustom = themeQuartz
-    .withParams(
-        {
-            accentColor: '#0086F4',
-            backgroundColor: '#F1EDE1',
-            borderColor: '#98968F',
-            borderRadius: 16,
-            browserColorScheme: 'light',
-            chromeBackgroundColor: {
-                ref: 'backgroundColor',
-            },
-            fontSize: 15,
-            foregroundColor: '#605E57',
-            headerBackgroundColor: '#E4DAD1',
-            headerFontSize: 15,
-            headerFontWeight: 700,
-            headerTextColor: '#3C3A35',
-            wrapperBorderRadius: 12,
-        },
-        'light'
-    )
-    .withParams(
-        {
-            accentColor: '#0086F4',
-            backgroundColor: '#F1EDE1',
-            borderColor: '#98968F',
-            wrapperBorderRadius: 12,
-            chromeBackgroundColor: {
-                ref: 'backgroundColor',
-            },
-            fontSize: 15,
-            foregroundColor: '#605E57',
-            headerBackgroundColor: '#E4DAD1',
-            headerFontSize: 15,
-            headerFontWeight: 700,
-            headerTextColor: '#3C3A35',
-            browserColorScheme: 'dark',
-        },
-        'dark-blue'
-    );
+const themeCustom = themeQuartz.withParams({
+    accentColor: '#0086F4',
+    backgroundColor: '#F1EDE1',
+    borderColor: '#98968F',
+    borderRadius: 16,
+    browserColorScheme: 'light',
+    chromeBackgroundColor: {
+        ref: 'backgroundColor',
+    },
+    fontSize: 15,
+    foregroundColor: '#605E57',
+    headerBackgroundColor: '#E4DAD1',
+    headerFontSize: 15,
+    headerFontWeight: 700,
+    headerTextColor: '#3C3A35',
+    wrapperBorderRadius: 12,
+});
 
 const THEME_SELECTIONS = [
     {
