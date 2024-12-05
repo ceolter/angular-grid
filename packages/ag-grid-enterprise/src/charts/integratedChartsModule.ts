@@ -92,13 +92,21 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message: `AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule" instead.\n ${_errMsg(257)}`,
+            message: `AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule.with(...)" instead.\n ${_errMsg(257)}`,
         };
     },
 };
 
 /**
  * @feature Integrated Charts
+ * Requires the AG Charts library to be provided to this module via the `with` method.
+ * The AG Charts module can be imported from either `ag-charts-community` or `ag-charts-enterprise`.
+ * @example
+ * import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+ * import { ModuleRegistry } from 'ag-grid-community';
+ * import { IntegratedChartsModule } from 'ag-grid-enterprise';
+ *
+ * ModuleRegistry.registerModules([ IntegratedChartsModule.with(AgChartsEnterpriseModule) ]);
  */
 export const IntegratedChartsModule: IntegratedChartsModuleType = {
     moduleName,

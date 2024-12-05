@@ -12,6 +12,14 @@ type SparklineChartsModuleType = { with: (params: IntegratedModule) => _ModuleWi
 const moduleName = 'Sparklines';
 /**
  * @feature Sparklines
+ * Requires the AG Charts library to be provided to this module via the `with` method.
+ * The AG Charts module can be imported from either `ag-charts-community` or `ag-charts-enterprise`.
+ * @example
+ * import { AgChartsCommunityModule } from 'ag-charts-community';
+ * import { ModuleRegistry } from 'ag-grid-community';
+ * import { SparklinesModule } from 'ag-grid-enterprise';
+ *
+ * ModuleRegistry.registerModules([ SparklinesModule.with(AgChartsCommunityModule) ]);
  */
 export const SparklinesModule: SparklineChartsModuleType = {
     moduleName,
