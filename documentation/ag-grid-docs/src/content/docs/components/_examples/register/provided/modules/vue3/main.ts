@@ -1,14 +1,15 @@
-import { createApp, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, ref, shallowRef } from 'vue';
 
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import MedalRenderer from './medalRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="example-wrapper">
@@ -26,7 +27,7 @@ const VueExample = {
         medalRenderer: MedalRenderer,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             {
                 headerName: 'Component By Name',
                 field: 'country',
@@ -34,12 +35,12 @@ const VueExample = {
             },
         ]);
 
-        const defaultColDef = ref({
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 100,
         });
 
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
             .then((resp) => resp.json())
@@ -51,6 +52,6 @@ const VueExample = {
             rowData,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

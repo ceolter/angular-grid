@@ -576,6 +576,7 @@ export const AG_GRID_ERRORS = {
             gridScoped,
             rowModelType,
         }),
+    261: () => 'As of v33, `column.isHovered()` is deprecated. Use `api.isColumnHovered(column)` instead.' as const,
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

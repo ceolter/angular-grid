@@ -61,21 +61,20 @@ const createExcelXMLCoreFolderStructure = (zipContainer: ZipContainer): void => 
 const createExcelXmlWorksheets = (zipContainer: ZipContainer, data: string[]): void => {
     let imageRelationCounter = 0;
     let headerFooterImageCounter = 0;
-    let tableRelationCounter = 0;
 
     for (let i = 0; i < data.length; i++) {
         const value = data[i];
         zipContainer.addFile(`xl/worksheets/sheet${i + 1}.xml`, value, false);
 
         const hasImages = XLSX_IMAGES.size > 0 && XLSX_WORKSHEET_IMAGES.has(i);
-        const hasTables = XLSX_WORKSHEET_DATA_TABLES.size > 0 && XLSX_WORKSHEET_DATA_TABLES.has(i);
+        const tableData = XLSX_WORKSHEET_DATA_TABLES.size > 0 && XLSX_WORKSHEET_DATA_TABLES.get(i);
         const hasHeaderFooterImages = XLSX_IMAGES.size && XLSX_WORKSHEET_HEADER_FOOTER_IMAGES.has(i);
 
-        if (!hasImages && !hasTables && !hasHeaderFooterImages) {
+        if (!hasImages && !tableData && !hasHeaderFooterImages) {
             continue;
         }
 
-        let tableIndex: number | undefined;
+        let tableName: string | undefined;
         let drawingIndex: number | undefined;
         let vmlDrawingIndex: number | undefined;
 
@@ -91,8 +90,8 @@ const createExcelXmlWorksheets = (zipContainer: ZipContainer, data: string[]): v
             headerFooterImageCounter++;
         }
 
-        if (hasTables) {
-            tableIndex = tableRelationCounter++;
+        if (tableData) {
+            tableName = tableData.name;
         }
 
         const worksheetRelFile = `xl/worksheets/_rels/sheet${i + 1}.xml.rels`;
@@ -100,7 +99,7 @@ const createExcelXmlWorksheets = (zipContainer: ZipContainer, data: string[]): v
         zipContainer.addFile(
             worksheetRelFile,
             createXlsxRelationships({
-                tableIndex,
+                tableName,
                 drawingIndex,
                 vmlDrawingIndex,
             })
@@ -132,13 +131,13 @@ const createExcelXmlTables = (zipContainer: ZipContainer): void => {
 
     for (let i = 0; i < worksheetKeys.length; i++) {
         const sheetIndex = worksheetKeys[i];
-        const dataTable = tablesDataByWorksheet.get(sheetIndex);
+        const table = tablesDataByWorksheet.get(sheetIndex);
 
-        if (!dataTable) {
+        if (!table) {
             continue;
         }
 
-        zipContainer.addFile(`xl/tables/${dataTable.name}.xml`, createXlsxTable(dataTable, i));
+        zipContainer.addFile(`xl/tables/${table.name}.xml`, createXlsxTable(table, i));
     }
 };
 

@@ -145,7 +145,7 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
     }, [bundleOption]);
 
     return (
-        <div className={styles.container}>
+        <>
             <ModuleConfiguration moduleConfig={moduleConfig} />
             <ModuleSearch gridRef={gridRef} />
             <div style={{ height: '410px' }}>
@@ -170,6 +170,6 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
                     <Snippet framework={framework} content={selectedDependenciesSnippet} copyToClipboard />
                 </div>
             )}
-        </div>
+        </>
     );
 };

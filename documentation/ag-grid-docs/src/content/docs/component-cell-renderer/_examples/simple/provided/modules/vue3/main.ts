@@ -1,15 +1,15 @@
-import { createApp, ref } from 'vue';
+import { createApp, defineComponent, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import MedalCellRenderer from './medalCellRendererVue';
 import TotalValueRenderer from './totalValueRendererVue';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <ag-grid-vue
@@ -28,10 +28,10 @@ const VueExample = {
         totalValueRenderer: TotalValueRenderer,
     },
     setup(props) {
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 { field: 'athlete' },
                 { field: 'year', minWidth: 60 },
                 {
@@ -54,7 +54,7 @@ const VueExample = {
                     cellRenderer: 'totalValueRenderer',
                 },
             ],
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 editable: true,
                 flex: 1,
                 minWidth: 100,
@@ -64,12 +64,12 @@ const VueExample = {
         };
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
                 .then((resp) => resp.json())
                 .then((data) => (this.rowData = data));
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

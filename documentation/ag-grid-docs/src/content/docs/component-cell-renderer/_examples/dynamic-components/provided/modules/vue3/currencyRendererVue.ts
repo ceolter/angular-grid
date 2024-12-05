@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
       <span>{{ formattedValue }}</span>
     `,
@@ -19,4 +21,4 @@ export default {
             return true;
         },
     },
-};
+});

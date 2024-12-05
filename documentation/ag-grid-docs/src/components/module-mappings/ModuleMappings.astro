@@ -2,6 +2,7 @@
 import { getEntry } from 'astro:content';
 import { ModuleMappings } from './ModuleMappings';
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
+import styles from './ModuleMappings.module.scss';
 
 const { pathname } = Astro.url;
 const framework = getFrameworkFromPath(pathname);
@@ -9,4 +10,6 @@ const framework = getFrameworkFromPath(pathname);
 const { data: modules } = await getEntry('module-mappings', 'modules');
 ---
 
-<ModuleMappings client:only="react" framework={framework} modules={modules} />
+<div class={styles.container}>
+    <ModuleMappings client:only="react" framework={framework} modules={modules} />
+</div>

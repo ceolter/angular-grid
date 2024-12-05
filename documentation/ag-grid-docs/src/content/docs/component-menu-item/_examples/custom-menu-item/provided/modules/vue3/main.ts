@@ -1,5 +1,12 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
+import type {
+    ColDef,
+    GetContextMenuItemsParams,
+    GetMainMenuItemsParams,
+    GridApi,
+    GridReadyEvent,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
@@ -18,7 +25,7 @@ ModuleRegistry.registerModules([
     ClipboardModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <ag-grid-vue
@@ -38,7 +45,7 @@ const VueExample = {
         MenuItem,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             { field: 'athlete' },
             { field: 'country' },
             { field: 'sport' },
@@ -47,17 +54,17 @@ const VueExample = {
             { field: 'silver' },
             { field: 'bronze' },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 100,
         });
         const getMainMenuItems = ref(null);
         const getContextMenuItems = ref(null);
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         onBeforeMount(() => {
-            getMainMenuItems.value = (params) => {
+            getMainMenuItems.value = (params: GetMainMenuItemsParams) => {
                 return [
                     ...params.defaultItems,
                     'separator',
@@ -78,7 +85,7 @@ const VueExample = {
                     },
                 ];
             };
-            getContextMenuItems.value = (params) => {
+            getContextMenuItems.value = (params: GetContextMenuItemsParams) => {
                 return [
                     ...(params.defaultItems || []),
                     'separator',
@@ -101,7 +108,7 @@ const VueExample = {
             };
         });
 
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) => {
@@ -123,6 +130,6 @@ const VueExample = {
             onGridReady,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

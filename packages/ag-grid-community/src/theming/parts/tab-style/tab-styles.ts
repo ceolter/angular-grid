@@ -1,5 +1,6 @@
 import { createPart } from '../../Part';
 import type { WithParamTypes } from '../../theme-types';
+import { foregroundMix } from '../../theme-utils';
 import { tabStyleBaseCSS } from './tab-style-base.css-GENERATED';
 import { tabStyleRolodexCSS } from './tab-style-rolodex.css-GENERATED';
 
@@ -160,10 +161,7 @@ export const tabStyleQuartz = /*#__PURE__*/ createPart({
         ...baseParams,
 
         tabBarBorder: true,
-        tabBarBackgroundColor: {
-            ref: 'foregroundColor',
-            mix: 0.05,
-        },
+        tabBarBackgroundColor: foregroundMix(0.05),
         tabTextColor: {
             ref: 'textColor',
             mix: 0.7,

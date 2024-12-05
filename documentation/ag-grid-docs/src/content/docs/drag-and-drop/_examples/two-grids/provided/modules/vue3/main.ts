@@ -1,14 +1,14 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './style.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: /* html */ `
         <div class="outer">
             <div style="height: 100%" class="inner-col" v-on:dragover="gridDragOver($event)" v-on:drop="gridDrop($event, 'left')">
@@ -71,19 +71,19 @@ const VueExample = {
         };
     },
     beforeMount() {
-        const baseDefaultColDef = {
+        const baseDefaultColDef = <ColDef>{
             flex: 1,
             filter: true,
         };
 
-        const baseGridOptions = {
+        const baseGridOptions = <GridOptions>{
             getRowId: (params) => {
                 return String(params.data.id);
             },
             rowDragManaged: true,
         };
 
-        const baseColumnDefs = [
+        const baseColumnDefs = <ColDef[]>[
             { field: 'id', dndSource: true },
             { field: 'color' },
             { field: 'value1' },
@@ -96,14 +96,14 @@ const VueExample = {
         this.leftRowData = this.createRowData();
         this.rightRowData = [];
 
-        this.leftGridOptions = {
+        this.leftGridOptions = <GridOptions>{
             ...baseGridOptions,
             defaultColDef: {
                 ...baseDefaultColDef,
             },
         };
 
-        this.rightGridOptions = {
+        this.rightGridOptions = <GridOptions>{
             ...baseGridOptions,
             rowData: [],
             defaultColDef: {
@@ -119,8 +119,8 @@ const VueExample = {
     },
 
     mounted() {
-        this.leftGridApi = this.$refs.leftGrid.api;
-        this.rightGridApi = this.$refs.rightGrid.api;
+        this.leftGridApi = <GridApi>this.$refs.leftGrid.api;
+        this.rightGridApi = <GridApi>this.$refs.rightGrid.api;
     },
 
     methods: {
@@ -214,6 +214,6 @@ const VueExample = {
             }
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

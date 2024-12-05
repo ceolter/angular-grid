@@ -8,9 +8,8 @@ const tableFactory: ExcelOOXMLTemplate = {
         const {
             name,
             columns,
-            rowCount,
+            rowRange,
             displayName,
-            headerRowIndex,
             showRowStripes,
             showColumnStripes,
             showFilterButtons,
@@ -18,7 +17,8 @@ const tableFactory: ExcelOOXMLTemplate = {
             highlightLastColumn,
         } = dataTable || {};
 
-        if (!dataTable || !name || !Array.isArray(columns) || !columns.length || !rowCount) {
+        const noRows = !rowRange || rowRange[0] - rowRange[1] === 0;
+        if (!dataTable || !name || !Array.isArray(columns) || !columns.length || noRows) {
             return { name: 'table' };
         }
 
@@ -32,9 +32,8 @@ const tableFactory: ExcelOOXMLTemplate = {
             },
         }));
 
-        const firstRow = headerRowIndex + 1;
-        const firstCell = `A${firstRow}`;
-        const lastCell = `${getExcelColumnName(columns.length)}${firstRow + rowCount}`;
+        const firstCell = `A${rowRange[0]}`;
+        const lastCell = `${getExcelColumnName(columns.length)}${rowRange[1]}`;
         const ref = `${firstCell}:${lastCell}`;
         const id: string = `${idx + 1}`;
         const displayNameToUse = idx ? `${displayName}_${id}` : displayName;

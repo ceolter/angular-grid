@@ -17,6 +17,7 @@ import type { IRowNode } from '../interfaces/iRowNode';
 import { LocalEventService } from '../localEventService';
 import { _exists, _missing } from '../utils/generic';
 import { _mergeDeep } from '../utils/object';
+import { _warn } from '../validation/logging';
 import type { AgColumnGroup } from './agColumnGroup';
 import type { AgProvidedColumnGroup } from './agProvidedColumnGroup';
 import type {
@@ -420,7 +421,9 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.filterActive;
     }
 
+    /** @deprecated v33 Use `api.isColumnHovered(column)` instead. */
     public isHovered(): boolean {
+        _warn(261);
         return !!this.beans.colHover?.isHovered(this);
     }
 

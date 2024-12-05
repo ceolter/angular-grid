@@ -1,7 +1,7 @@
 import type { IntegratedModule } from 'ag-charts-types';
 
 import type { Module, ModuleName, _GridChartsGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { _PopupModule, _SharedDragAndDropModule, _errMsg } from 'ag-grid-community';
+import { _PopupModule, _SharedDragAndDropModule, _preInitErrMsg } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import type { ILicenseManager } from '../license/shared/licenseManager';
@@ -92,7 +92,7 @@ export const GridChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message: `AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule.with(...)" instead.\n ${_errMsg(257)}`,
+            message: `AG Grid: As of v33, the "GridChartsModule" has been deprecated. Please use "IntegratedChartsModule.with(...)" instead.\n ${_preInitErrMsg(257)}`,
         };
     },
 };
@@ -115,7 +115,7 @@ export const IntegratedChartsModule: IntegratedChartsModuleType = {
     validate: () => {
         return {
             isValid: false,
-            message: _errMsg(257),
+            message: _preInitErrMsg(257),
         };
     },
     with: (params) => {

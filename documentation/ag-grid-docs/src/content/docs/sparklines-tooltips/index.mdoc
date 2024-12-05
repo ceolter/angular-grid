@@ -29,9 +29,9 @@ sparklineOptions: {
 The default sparkline tooltip has the following template:
 
 ```html
-    <div class="ag-sparkline-tooltip">
-        <span class="ag-sparkline-tooltip-title"></span>
-        <span class="ag-sparkline-tooltip-content"></span>
+    <div class="ag-charts-tooltip">
+        <span class="ag-charts-tooltip-title"></span>
+        <span class="ag-charts-tooltip-content"></span>
     </div>
 ```
 
@@ -105,26 +105,11 @@ The following example demonstrates the above tooltip renderer.
 
 {% gridExampleRunner title="Accessing Row Data" name="sparkline-accessing-row-data"  exampleHeight=585 /%}
 
-## Tooltip Styles
+## Using CSS Styles
 
-The [Tooltip Renderer](./sparklines-tooltips/#tooltip-renderer) function can return style attributes including `color`, `backgroundColor` and `opacity` for the tooltip as shown below:
+More styling can be applied using the CSS class selector to select the tooltip HTML elements with the following class attributes: `ag-charts-tooltip`, `ag-charts-tooltip-title`, `ag-charts-tooltip-content`, and modifying the style definitions in a stylesheet file.
 
-```js
-const tooltipRenderer = (params) => {
-    return {
-        // sets styles for tooltip
-        color: 'white',
-        backgroundColor: 'rgb(78,78,255)',
-        opacity: 0.7,
-    }
-}
-```
-
-The following example demonstrates the results of the tooltip styles configured via the tooltip renderer above.
-
-{% gridExampleRunner title="Styling Sparkline Tooltips" name="sparkline-tooltip-styles"  exampleHeight=585 /%}
-
-More styling can be applied using the CSS class selector to select the tooltip HTML elements with the following class attributes: `ag-sparkline-tooltip`, `ag-sparkline-tooltip-title`, `ag-sparkline-tooltip-content`, and modifying the style definitions in a stylesheet file.
+See [Styling Chart Tooltips](https://www.ag-grid.com/charts/javascript/tooltips/#using-css-styles) 
 
 This is shown in the example below. Note that:
 

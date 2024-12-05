@@ -1,6 +1,6 @@
 import type { IntegratedModule } from 'ag-charts-types';
 
-import { _errMsg } from 'ag-grid-community';
+import { _preInitErrMsg } from 'ag-grid-community';
 import type { _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
@@ -28,7 +28,7 @@ export const SparklinesModule: SparklineChartsModuleType = {
     validate: () => {
         return {
             isValid: false,
-            message: _errMsg(258),
+            message: _preInitErrMsg(258),
         };
     },
     with: (params) => {

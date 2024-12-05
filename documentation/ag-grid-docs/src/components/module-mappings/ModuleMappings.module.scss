@@ -4,6 +4,7 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-size-2;
+    min-height: 800px;
 
     :global(.ag-root-wrapper) {
         border-bottom-left-radius: 0;

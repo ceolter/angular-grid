@@ -30,10 +30,12 @@
         display: block;
         position: absolute;
         top: var(--ag-toggle-button-switch-inset);
+        /* rtl:ignore */
         left: var(--ag-toggle-button-switch-inset);
         width: calc(var(--ag-toggle-button-height) - var(--ag-toggle-button-switch-inset) * 2);
         height: calc(var(--ag-toggle-button-height) - var(--ag-toggle-button-switch-inset) * 2);
         border-radius: 100%;
+        /* rtl:ignore */
         transition: left 100ms;
         background-color: var(--ag-toggle-button-switch-background-color);
         pointer-events: none;
@@ -43,6 +45,7 @@
         background-color: var(--ag-toggle-button-on-background-color);
 
         &::before {
+            /* rtl:ignore */
             left: calc(100% - var(--ag-toggle-button-height) + var(--ag-toggle-button-switch-inset));
         }
     }

@@ -24,6 +24,7 @@
 
     // we do not want to color the range color when the cell is also focused
     .ag-cell-range-selected:not(.ag-cell-focus),
+    .ag-cell-range-selected.ag-cell-range-chart,
     .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-single-cell:not(.ag-cell-inline-editing) {
         background-color: var(--ag-range-selection-background-color);
 
@@ -37,6 +38,7 @@
     }
 
     .ag-cell-range-selected-1:not(.ag-cell-focus),
+    .ag-cell-range-selected-1.ag-cell-range-chart,
     .ag-root:not(.ag-context-menu-open)
         .ag-body-viewport:not(.ag-has-focus)
         .ag-cell-range-selected-1:not(.ag-cell-inline-editing) {
@@ -44,16 +46,19 @@
     }
 
     .ag-cell-range-selected-2:not(.ag-cell-focus),
+    .ag-cell-range-selected-2.ag-cell-range-chart,
     .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-2 {
         background-color: var(--ag-range-selection-background-color-2);
     }
 
     .ag-cell-range-selected-3:not(.ag-cell-focus),
+    .ag-cell-range-selected-3.ag-cell-range-chart,
     .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-3 {
         background-color: var(--ag-range-selection-background-color-3);
     }
 
     .ag-cell-range-selected-4:not(.ag-cell-focus),
+    .ag-cell-range-selected-4.ag-cell-range-chart,
     .ag-body-viewport:not(.ag-has-focus) .ag-cell-range-selected-4 {
         background-color: var(--ag-range-selection-background-color-4);
     }

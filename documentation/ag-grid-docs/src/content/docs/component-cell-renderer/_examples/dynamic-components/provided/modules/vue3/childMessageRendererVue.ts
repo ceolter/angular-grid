@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
       <span>
             <button style="height: 20px; line-height: 0.5" v-on:click="invokeParentMethod" class="btn btn-info">Invoke Parent</button>
@@ -16,4 +18,4 @@ export default {
             );
         },
     },
-};
+});

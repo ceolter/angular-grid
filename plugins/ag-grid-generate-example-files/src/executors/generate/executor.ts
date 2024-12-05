@@ -307,10 +307,10 @@ async function writeContents(
 // node --inspect-brk ./plugins/ag-grid-generate-example-files/dist/src/executors/generate/executor.js
 // console.log('should generate')
 // generateFiles({
-//     examplePath: 'documentation/ag-grid-docs/src/content/docs/cell-editors/_examples/component-editor-2',
+//     examplePath: 'documentation/ag-grid-docs/src/content/docs/cell-editing-full-row/_examples/full-row-editing',
 //     mode: 'dev',
 //     inputs: [],
 //     output: '',
-//     outputPath: 'dist/generated-examples/ag-grid-docs/docs/cell-editors/_examples/component-editor-2',
-//     writeFiles: true
+//     outputPath: 'dist/generated-examples/ag-grid-docs/docs/cell-editing-full-row/_examples/full-row-editing',
+//     writeFiles: true,
 // }).then(() => console.log('done'));

@@ -1,0 +1,240 @@
+.ag-icon-aggregation::before {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/aggregation.svg');
+    color: transparent;
+}
+
+.ag-icon-arrows {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/arrows.svg');
+    color: transparent;
+}
+
+.ag-icon-asc {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/asc.svg');
+    color: transparent;
+}
+
+.ag-icon-cancel {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/cancel.svg');
+    color: transparent;
+}
+
+.ag-icon-chart {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/chart.svg');
+    color: transparent;
+}
+
+.ag-icon-color-picker {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/color-picker.svg');
+    color: transparent;
+}
+
+.ag-icon-column {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/column.svg');
+    color: transparent;
+}
+
+.ag-icon-columns {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/columns.svg');
+    color: transparent;
+}
+
+.ag-icon-contracted {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/contracted.svg');
+    color: transparent;
+}
+
+.ag-icon-copy {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/copy.svg');
+    color: transparent;
+}
+
+.ag-icon-cut {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/cut.svg');
+    color: transparent;
+}
+
+.ag-icon-cross {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/cross.svg');
+    color: transparent;
+}
+
+.ag-icon-cut {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/cut.svg');
+    color: transparent;
+}
+
+.ag-icon-data {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/data.svg');
+    color: transparent;
+}
+
+.ag-icon-desc {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/desc.svg');
+    color: transparent;
+}
+
+.ag-icon-expanded {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/expanded.svg');
+    color: transparent;
+}
+
+.ag-icon-eye-slash {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/eye-slash.svg');
+    color: transparent;
+}
+
+.ag-icon-eye {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/eye.svg');
+    color: transparent;
+}
+
+.ag-icon-filter {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/filter.svg');
+    color: transparent;
+}
+
+.ag-icon-first {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/first.svg');
+    color: transparent;
+}
+
+.ag-icon-grip {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/grip.svg');
+    color: transparent;
+}
+
+.ag-icon-group {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/group.svg');
+    color: transparent;
+}
+
+.ag-icon-indeterminate {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/indeterminate.svg');
+    color: transparent;
+}
+
+.ag-icon-last {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/last.svg');
+    color: transparent;
+}
+
+.ag-icon-left {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/left.svg');
+    color: transparent;
+}
+
+.ag-icon-loading {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/loading.svg');
+    color: transparent;
+}
+
+.ag-icon-maximize {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/maximize.svg');
+    color: transparent;
+}
+
+.ag-icon-menu,
+.ag-icon-menu-alt {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/menu.svg');
+    color: transparent;
+}
+
+.ag-icon-minimize {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/minimize.svg');
+    color: transparent;
+}
+
+.ag-icon-minus {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/minus.svg');
+    color: transparent;
+}
+
+.ag-icon-next {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/next.svg');
+    color: transparent;
+}
+
+.ag-icon-none {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/none.svg');
+    color: transparent;
+}
+
+.ag-icon-not-allowed {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/not-allowed.svg');
+    color: transparent;
+}
+
+.ag-icon-paste {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/paste.svg');
+    color: transparent;
+}
+
+.ag-icon-pin {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/pin.svg');
+    color: transparent;
+}
+
+.ag-icon-pivot {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/pivot.svg');
+    color: transparent;
+}
+
+.ag-icon-plus {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/plus.svg');
+    color: transparent;
+}
+
+.ag-icon-previous {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/previous.svg');
+    color: transparent;
+}
+
+.ag-icon-right {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/right.svg');
+    color: transparent;
+}
+
+.ag-icon-save {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/save.svg');
+    color: transparent;
+}
+
+.ag-icon-small-down {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/small-down.svg');
+    color: transparent;
+}
+
+.ag-icon-small-left {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/small-left.svg');
+    color: transparent;
+}
+
+.ag-icon-small-right {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/small-right.svg');
+    color: transparent;
+}
+
+.ag-icon-small-up {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/small-up.svg');
+    color: transparent;
+}
+
+.ag-icon-tick {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/tick.svg');
+    color: transparent;
+}
+
+.ag-icon-tree-closed {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/tree-closed.svg');
+    color: transparent;
+}
+
+.ag-icon-tree-indeterminate {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/tree-indeterminate.svg');
+    color: transparent;
+}
+
+.ag-icon-tree-open {
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/tree-open.svg');
+    color: transparent;
+}

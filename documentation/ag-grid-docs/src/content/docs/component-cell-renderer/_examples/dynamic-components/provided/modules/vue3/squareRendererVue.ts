@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
       <span>
             {{ this.value }}
@@ -17,4 +19,4 @@ export default {
             return this.params.value * this.params.value;
         },
     },
-};
+});

@@ -1,15 +1,15 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridPreDestroyedEvent, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="test-container">
@@ -46,7 +46,7 @@ const VueExample = {
         'ag-grid-vue': AgGridVue,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             {
                 field: 'name',
                 headerName: 'Athlete',
@@ -60,8 +60,8 @@ const VueExample = {
                 headerName: 'Age',
             },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             editable: true,
         });
 
@@ -69,13 +69,13 @@ const VueExample = {
         const showGrid = ref(true);
         const showExampleButtons = ref(true);
         const showGridPreDestroyedState = ref(false);
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         onBeforeMount(() => {
             rowData.value = getData();
         });
 
-        const onGridPreDestroyed = (params) => {
+        const onGridPreDestroyed = (params: GridPreDestroyedEvent) => {
             const { api } = params;
             const allColumns = api.getColumns();
             if (!allColumns) {
@@ -128,7 +128,7 @@ const VueExample = {
             showGridPreDestroyedState.value = false;
             showExampleButtons.value = true;
         };
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
         };
 
@@ -148,6 +148,6 @@ const VueExample = {
             reloadGrid,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

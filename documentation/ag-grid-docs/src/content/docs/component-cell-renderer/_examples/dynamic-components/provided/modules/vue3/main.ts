@@ -1,6 +1,6 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
@@ -11,9 +11,9 @@ import ParamsRenderer from './paramsRendererVue';
 import SquareRenderer from './squareRendererVue';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
         <div class="example-wrapper">
@@ -42,7 +42,7 @@ const VueExample = {
     data: function () {
         return {
             gridApi: null,
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 {
                     headerName: 'Row',
                     field: 'row',
@@ -113,20 +113,20 @@ const VueExample = {
             return rowData;
         },
         refreshEvenRowsCurrencyData() {
-            this.gridApi.forEachNode((rowNode) => {
+            this.gridApi.forEachNode((rowNode: IRowNode) => {
                 if (rowNode.data.value % 2 === 0) {
                     rowNode.setDataValue('currency', rowNode.data.value + Number(Math.random().toFixed(2)));
                 }
             });
             this.gridApi.refreshCells({ columns: ['currency'] });
         },
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
         },
         methodFromParent(cell) {
             alert('Parent Component Method from ' + cell + '!');
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

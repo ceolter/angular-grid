@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
             <span class="total-value-renderer">
              <span>{{country}}</span>
@@ -20,4 +22,4 @@ export default {
             alert(`${this.total} medals won!`);
         },
     },
-};
+});

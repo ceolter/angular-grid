@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
         <div>
             <span class="ag-menu-option-part ag-menu-option-icon" role="presentation"></span>
@@ -17,4 +19,4 @@ export default {
             alert(`${this.params.name} clicked`);
         },
     },
-};
+});

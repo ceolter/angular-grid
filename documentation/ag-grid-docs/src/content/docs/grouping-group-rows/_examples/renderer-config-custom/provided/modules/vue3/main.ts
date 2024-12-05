@@ -1,15 +1,14 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import {
     AllCommunityModule,
     CellDoubleClickedEvent,
     CellKeyDownEvent,
-    ClientSideRowModelModule,
     ColDef,
     GridApi,
-    GridOptions,
+    GridReadyEvent,
+    ICellRenderer,
     ModuleRegistry,
-    createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -17,21 +16,22 @@ import { AgGridVue } from 'ag-grid-vue3';
 import CustomGroupCellRenderer from './customGroupCellRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
-                <ag-grid-vue
-      style="width: 100%; height: 100%;"
-      :columnDefs="columnDefs"
-      @grid-ready="onGridReady"
-      :groupRowRenderer="groupRowRenderer"
-      :defaultColDef="defaultColDef"
-      :groupDisplayType="groupDisplayType"
-      :rowData="rowData"
-      @cell-double-clicked="onCellDoubleClicked"
-      @cell-key-down="onCellKeyDown"></ag-grid-vue>
+            <ag-grid-vue
+              style="width: 100%; height: 100%;"
+              :columnDefs="columnDefs"
+              @grid-ready="onGridReady"
+              :groupRowRenderer="groupRowRenderer"
+              :defaultColDef="defaultColDef"
+              :groupDisplayType="groupDisplayType"
+              :rowData="rowData"
+              @cell-double-clicked="onCellDoubleClicked"
+              @cell-key-down="onCellKeyDown">
+            </ag-grid-vue>
         </div>
     `,
     components: {
@@ -39,34 +39,34 @@ const VueExample = {
         CustomGroupCellRenderer,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             { field: 'country', hide: true, rowGroup: true },
             { field: 'year', hide: true, rowGroup: true },
             { field: 'athlete' },
             { field: 'sport' },
             { field: 'total', aggFunc: 'sum' },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 120,
         });
 
-        const groupRowRenderer = ref(null);
+        const groupRowRenderer = ref<ICellRenderer>(null);
         const groupDisplayType = ref(null);
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         onBeforeMount(() => {
             groupRowRenderer.value = 'CustomGroupCellRenderer';
             groupDisplayType.value = 'groupRows';
         });
 
-        const onCellDoubleClicked = (params) => {
+        const onCellDoubleClicked = (params: CellDoubleClickedEvent) => {
             if (params.colDef.showRowGroup) {
                 params.node.setExpanded(!params.node.expanded);
             }
         };
-        const onCellKeyDown = (params) => {
+        const onCellKeyDown = (params: CellKeyDownEvent) => {
             if (!('colDef' in params)) {
                 return;
             }
@@ -80,7 +80,7 @@ const VueExample = {
                 params.node.setExpanded(!params.node.expanded);
             }
         };
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) => (rowData.value = data);
@@ -102,6 +102,6 @@ const VueExample = {
             onCellKeyDown,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

@@ -1,7 +1,13 @@
+import { defineComponent } from 'vue';
+
+import type { RefreshCellsParams } from 'ag-grid-community';
+
 export default {
-    template: `<span class="imgSpan">
-      <img v-for="images in arr" :src="src" class="medalIcon" />
-      </span>`,
+    template: `
+        <span class="imgSpan">
+            <img v-for="images in arr" :src="src" class="medalIcon" />
+        </span>
+    `,
     data: function () {
         return {
             arr: [],
@@ -12,7 +18,7 @@ export default {
         this.updateDisplay(this.params);
     },
     methods: {
-        refresh(params) {
+        refresh(params: RefreshCellsParams) {
             this.updateDisplay(params);
         },
         updateDisplay(params) {

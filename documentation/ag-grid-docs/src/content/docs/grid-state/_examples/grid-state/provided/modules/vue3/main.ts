@@ -1,6 +1,14 @@
-import { createApp, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    GridApi,
+    GridPreDestroyedEvent,
+    GridReadyEvent,
+    GridState,
+    RowSelectionOptions,
+    StateUpdatedEvent,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnsToolPanelModule, PivotModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
@@ -12,8 +20,6 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
-
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
@@ -21,7 +27,7 @@ ModuleRegistry.registerModules([
     PivotModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="example-wrapper">
@@ -53,7 +59,7 @@ const VueExample = {
         'ag-grid-vue': AgGridVue,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             { field: 'athlete', minWidth: 150 },
             { field: 'age', maxWidth: 90 },
             { field: 'country', minWidth: 150 },
@@ -65,8 +71,8 @@ const VueExample = {
             { field: 'bronze' },
             { field: 'total' },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 100,
             filter: true,
@@ -74,10 +80,10 @@ const VueExample = {
             enablePivot: true,
             enableValue: true,
         });
-        const rowSelection = ref({
+        const rowSelection = ref<RowSelectionOptions>({
             mode: 'multiRow',
         });
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
         const gridVisible = ref(true);
         const initialState = ref(undefined);
 
@@ -93,7 +99,7 @@ const VueExample = {
         const printState = () => {
             console.log('Grid state', gridApi.value.getState());
         };
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) => (rowData.value = data);
@@ -102,10 +108,10 @@ const VueExample = {
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
         };
-        const onGridPreDestroyed = (params) => {
+        const onGridPreDestroyed = (params: GridPreDestroyedEvent) => {
             console.log('Grid state on destroy (can be persisted)', params.state);
         };
-        const onStateUpdated = (params) => {
+        const onStateUpdated = (params: StateUpdatedEvent) => {
             console.log('State updated', params.state);
         };
 
@@ -124,6 +130,6 @@ const VueExample = {
             printState,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

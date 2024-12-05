@@ -1,15 +1,15 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="test-container">
@@ -35,7 +35,7 @@ const VueExample = {
         'ag-grid-vue': AgGridVue,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             {
                 field: 'name',
                 headerName: 'Athlete',
@@ -63,9 +63,9 @@ const VueExample = {
             },
         ]);
 
-        const gridApi = shallowRef();
+        const gridApi = shallowRef<GridApi | null>(null);
 
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
         const isVisible = ref(true);
 
         onBeforeMount(() => {
@@ -76,7 +76,7 @@ const VueExample = {
             isVisible.value = false;
             setTimeout(() => (isVisible.value = true), 1);
         };
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const checkbox = document.querySelector('#pinFirstColumnOnLoad');
@@ -98,6 +98,6 @@ const VueExample = {
             isVisible,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

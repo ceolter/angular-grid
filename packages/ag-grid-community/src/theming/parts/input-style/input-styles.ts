@@ -1,5 +1,6 @@
 import { createPart } from '../../Part';
 import type { WithParamTypes } from '../../theme-types';
+import { foregroundBackgroundMix, foregroundMix } from '../../theme-utils';
 import { inputStyleBaseCSS } from './input-style-base.css-GENERATED';
 import { inputStyleBorderedCSS } from './input-style-bordered.css-GENERATED';
 import { inputStyleUnderlinedCSS } from './input-style-underlined.css-GENERATED';
@@ -171,11 +172,7 @@ export const inputStyleBordered = /*#__PURE__*/ createPart({
         inputFocusShadow: {
             ref: 'focusShadow',
         },
-        inputDisabledBackgroundColor: {
-            ref: 'foregroundColor',
-            mix: 0.06,
-            onto: 'backgroundColor',
-        },
+        inputDisabledBackgroundColor: foregroundBackgroundMix(0.06),
         inputDisabledTextColor: {
             ref: 'textColor',
             mix: 0.5,
@@ -194,10 +191,7 @@ export const inputStyleUnderlined = /*#__PURE__*/ createPart({
 
         inputBorder: {
             width: 2,
-            color: {
-                ref: 'foregroundColor',
-                mix: 0.3,
-            },
+            color: foregroundMix(0.3),
         },
         inputPaddingStart: {
             ref: 'spacing',

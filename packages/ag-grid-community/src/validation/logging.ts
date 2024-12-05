@@ -144,7 +144,7 @@ export function _error<
 }
 
 /** Used for messages before the ValidationService has been created */
-export function _logPreCreationError<
+export function _logPreInitErr<
     TId extends ErrorId,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     TShowMessageAtCallLocation = ErrorMap[TId],
@@ -152,11 +152,28 @@ export function _logPreCreationError<
     getMsgOrDefault(_errorOnce, id!, args as any, defaultMessage);
 }
 
+function getErrMsg<TId extends ErrorId>(
+    defaultMessage: string | undefined,
+    args: undefined extends GetErrorParams<TId> ? [id: TId] : [id: TId, params: GetErrorParams<TId>]
+): string {
+    const id = args[0];
+    return `error #${id} ` + getErrorParts(id, args[1] as any, defaultMessage).join(' ');
+}
+
 export function _errMsg<
     TId extends ErrorId,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     TShowMessageAtCallLocation = ErrorMap[TId],
 >(...args: undefined extends GetErrorParams<TId> ? [id: TId] : [id: TId, params: GetErrorParams<TId>]): string {
-    const id = args[0];
-    return `error #${id} ` + getErrorParts(id, args[1] as any).join(' ');
+    return getErrMsg(undefined, args);
+}
+
+/** Used for messages before the ValidationService has been created */
+export function _preInitErrMsg<
+    TId extends ErrorId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    TShowMessageAtCallLocation = ErrorMap[TId],
+>(...args: undefined extends GetErrorParams<TId> ? [id: TId] : [id: TId, params: GetErrorParams<TId>]): string {
+    // as well as displaying an extra line break, this will remove the part of the message about adding the validation module
+    return getErrMsg('\n', args);
 }

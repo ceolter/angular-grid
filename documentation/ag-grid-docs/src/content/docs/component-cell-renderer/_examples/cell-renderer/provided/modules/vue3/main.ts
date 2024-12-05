@@ -1,14 +1,14 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const DeltaRenderer = {
+const DeltaRenderer = defineComponent({
     template: `<span>
         <img :src="src" />
         {{displayValue}}
@@ -23,7 +23,7 @@ const DeltaRenderer = {
         this.updateDisplay(this.params);
     },
     methods: {
-        refresh(params) {
+        refresh(params: ICellRendererParams) {
             this.updateDisplayValue(params);
         },
         updateDisplay(params) {
@@ -35,9 +35,9 @@ const DeltaRenderer = {
             }
         },
     },
-};
+});
 
-const IconRenderer = {
+const IconRenderer = defineComponent({
     template: `<span>
         <img v-for="images in arr" :src="src" />
         </span>`,
@@ -59,9 +59,9 @@ const IconRenderer = {
             this.arr = new Array(Math.floor(params.value / (params.divisor || 1)));
         },
     },
-};
+});
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
         <div class="example-wrapper">
@@ -105,7 +105,7 @@ const VueExample = {
     },
 
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
 
             const updateData = (data) => this.gridApi.setGridOption('rowData', data);
@@ -116,11 +116,11 @@ const VueExample = {
         },
         randomiseFrost() {
             // iterate over the "days of air frost" and generate random number
-            this.gridApi.forEachNode((rowNode) => {
+            this.gridApi.forEachNode((rowNode: IRowNode) => {
                 rowNode.setDataValue('Days of air frost (days)', Math.floor(Math.random() * 4) + 1);
             });
         },
-        getColumnDefs() {
+        getColumnDefs(): ColDef[] {
             return [
                 {
                     headerName: 'Month',
@@ -169,6 +169,6 @@ const VueExample = {
             ];
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

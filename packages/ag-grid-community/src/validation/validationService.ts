@@ -2,6 +2,7 @@ import type { ApiFunction, ApiFunctionName } from '../api/iApiFunction';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import type { BeanCollection, UserComponentName } from '../context/context';
+import type { ColDef, ColGroupDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import { INITIAL_GRID_OPTION_KEYS } from '../gridOptionsInitial';
 import type { PropertyChangedSource } from '../gridOptionsService';
@@ -15,6 +16,7 @@ import { validateApiFunction } from './apiFunctionValidator';
 import type { ErrorId, GetErrorParams } from './errorMessages/errorText';
 import { getError } from './errorMessages/errorText';
 import { _error, _warn, provideValidationServiceLogger } from './logging';
+import { COL_DEF_VALIDATORS } from './rules/colDefValidations';
 import { GRID_OPTIONS_VALIDATORS } from './rules/gridOptionsValidations';
 import { DEPRECATED_ICONS_V33, ICON_MODULES, ICON_VALUES } from './rules/iconValidations';
 import { MENU_ITEM_MODULES } from './rules/menuItemValidations';
@@ -111,6 +113,12 @@ export class ValidationService extends BeanStub implements NamedBean {
 
     public isProvidedUserComp(compName: string): boolean {
         return !!USER_COMP_MODULES[compName as UserComponentName];
+    }
+
+    public validateColDef(colDef: ColDef | ColGroupDef, colId: string): void {
+        if (!this.beans.dataTypeSvc?.isColPendingInference(colId)) {
+            this.processOptions(colDef, COL_DEF_VALIDATORS);
+        }
     }
 
     private processOptions<T extends object>(options: T, validator: OptionsValidator<T>): void {

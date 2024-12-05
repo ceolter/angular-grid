@@ -106,8 +106,7 @@ In v32 Themes, custom properties had to be set in CSS. When migrating custom pro
  * `--ag-active-color`, `--ag-alpine-active-color`, `--ag-balham-active-color`, `--ag-material-accent-color` -> use `accentColor`
  * `--ag-borders*` -> there has been a reworking of border parameters, see the Theming API docs for the new list of border parameters.
  * `--ag-row-border-color`, `--ag-row-border-style`, `--ag-row-border-width` -> replaced with `rowBorder`
- * `--ag-icon-font-*` -> The Theming API uses SVG icons instead of icon fonts. We intend to add icon font support in a future version of the Theming API, for now either continue to use the legacy styles, or write your own CSS rules to insert your custom icon font into our icons.
- * `--ag-icon-image-*` -> The theming API currently does not provide variables to individually replace SVG icons. For now, use CSS rules instead.
+ * `--ag-icon-font-*` and `--ag-icon-image-*` -> use [the iconOverrides part](./custom-icons/#replacing-individual-icons) or use [CSS rules](/custom-icons/#styling-icons-using-css).
 
 #### Properties with a direct replacement
 
@@ -148,7 +147,7 @@ Note: the replacement parameter is given as name for use in the TypeScript themi
 #### Components with significantly different theming parameters
 
  * The [Sidebar](./side-bar/). Sidebar styling has been overhauled. Custom CSS rules you have written are likely still valid, but custom property names have changed. See [Customising Tool Panels](./theming-tool-panels/). In particular, in v32 themes the sidebar tabs shared the same custom properties as horizontal tabs. Now they have their own set of parameters beginning "sideBar" or "sideButton".
- * `--ag-checkbox-*` -> there has been a significant overhaul of checkbox parameters giving greater control over the appearance of checkboxes. See the Theming API docs.
+ * `--ag-checkbox-*` -> there has been a significant overhaul of checkbox parameters giving greater control over the appearance of checkboxes. See the Theming API docs. In v32, checkboxes used icons. Now they use their own set of CSS custom properties.
  *  `--ag-toggle-button-border-width`, `--ag-toggle-button-off-border-color`, `--ag-toggle-button-on-border-color`, and `--ag-toggle-button-switch-border-color` have been removed. In most use cases they can be replaced with the new `toggleButtonSwitchInset` parameter. Other use cases can use CSS. See [Styling Toggle Buttons](./theming-widgets/#styling-toggle-buttons an example)
 
 

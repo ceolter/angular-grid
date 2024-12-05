@@ -15,9 +15,7 @@ export function readAsJsFile(srcFile, internalFramework: InternalFramework) {
         tsFile = tsFile.replace(/import {((.|\n)*?)} from(?!(\s['"]\.\/)).*\n/g, '');
     } else {
         tsFile = tsFile.replace(/import ((.|\n)*?)from.*\n/g, '');
-
-        // ignore "export default {" as this is used in vue(3).ts files
-        tsFile = tsFile.replace(/export (?!.*default \{) /g, '');
+        tsFile = tsFile.replace(/export /g, '');
     }
 
     const jsFile = transform(tsFile, { transforms: ['typescript'], disableESTransforms: true }).code;

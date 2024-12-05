@@ -1,6 +1,6 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -8,19 +8,20 @@ import { AgGridVue } from 'ag-grid-vue3';
 import CustomMedalCellRenderer from './customMedalCellRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
-                <ag-grid-vue
-      style="width: 100%; height: 100%;"
-      :columnDefs="columnDefs"
-      @grid-ready="onGridReady"
-      :defaultColDef="defaultColDef"
-      :autoGroupColumnDef="autoGroupColumnDef"
-      :groupDisplayType="groupDisplayType"
-      :rowData="rowData"></ag-grid-vue>
+            <ag-grid-vue
+              style="width: 100%; height: 100%;"
+              :columnDefs="columnDefs"
+              @grid-ready="onGridReady"
+              :defaultColDef="defaultColDef"
+              :autoGroupColumnDef="autoGroupColumnDef"
+              :groupDisplayType="groupDisplayType"
+              :rowData="rowData">
+            </ag-grid-vue>
         </div>
     `,
     components: {
@@ -28,19 +29,19 @@ const VueExample = {
         CustomMedalCellRenderer,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<ColDef[]>([
             { field: 'total', rowGroup: true },
             { field: 'country' },
             { field: 'year' },
             { field: 'athlete' },
             { field: 'sport' },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 100,
         });
-        const autoGroupColumnDef = ref({
+        const autoGroupColumnDef = ref<ColDef>({
             headerName: 'Gold Medals',
             minWidth: 220,
             cellRendererParams: {
@@ -55,7 +56,7 @@ const VueExample = {
             groupDisplayType.value = 'singleColumn';
         });
 
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) => (rowData.value = data);
@@ -75,6 +76,6 @@ const VueExample = {
             onGridReady,
         };
     },
-};
+});
 
 createApp(VueExample).mount('#app');

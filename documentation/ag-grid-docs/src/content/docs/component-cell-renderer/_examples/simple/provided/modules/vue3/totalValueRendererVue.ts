@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     template: `
         <span>
               <span>{{ cellValue }}</span>
@@ -16,4 +18,4 @@ export default {
             buttonClicked,
         };
     },
-};
+});

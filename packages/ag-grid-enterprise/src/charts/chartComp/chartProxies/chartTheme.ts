@@ -1,9 +1,9 @@
 import type {
-    AgChartLegendClickEvent,
     AgChartTheme,
     AgChartThemeName,
     AgChartThemeOverrides,
     AgChartThemePalette,
+    AgSeriesVisibilityChange,
 } from 'ag-charts-types';
 
 import { _warn } from 'ag-grid-community';
@@ -107,11 +107,11 @@ function createCrossFilterThemeOverrides(
 ): AgChartThemeOverrides {
     const legend = {
         listeners: {
-            legendItemClick: (e: AgChartLegendClickEvent) => {
+            seriesVisibilityChange: (e: AgSeriesVisibilityChange) => {
                 const chart = proxy.getChart();
                 chart.series.forEach((s) => {
-                    s.toggleSeriesItem(e.itemId, e.enabled);
-                    s.toggleSeriesItem(`${e.itemId}-filtered-out`, e.enabled);
+                    s.toggleSeriesItem(e.seriesId, e.visible);
+                    s.toggleSeriesItem(`${e.seriesId}-filtered-out`, e.visible);
                 });
             },
         },

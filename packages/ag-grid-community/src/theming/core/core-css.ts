@@ -1,5 +1,6 @@
 import type { ExpandTypeKeys } from '../Part';
 import type { WithParamTypes } from '../theme-types';
+import { foregroundBackgroundMix, foregroundColor, foregroundMix } from '../theme-utils';
 
 export { coreCSS } from './core.css-GENERATED';
 
@@ -679,23 +680,14 @@ export type CoreParams = ExpandTypeKeys<WithParamTypes<CoreParamsDefinitions>>;
 export const defaultLightColorSchemeParams = {
     backgroundColor: '#fff',
     foregroundColor: '#181d1f',
-    borderColor: {
-        ref: 'foregroundColor',
-        mix: 0.15,
-    },
-    chromeBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.02,
-        onto: 'backgroundColor',
-    },
+    borderColor: foregroundMix(0.15),
+    chromeBackgroundColor: foregroundBackgroundMix(0.02),
     browserColorScheme: 'light',
 } as const;
 
 export const coreDefaults: Readonly<CoreParams> = {
     ...defaultLightColorSchemeParams,
-    textColor: {
-        ref: 'foregroundColor',
-    },
+    textColor: foregroundColor,
     accentColor: '#2196f3',
     invalidColor: '#e02525',
     wrapperBorder: true,
@@ -729,7 +721,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     sideButtonTextColor: { ref: 'textColor' },
     sideButtonHoverBackgroundColor: { ref: 'sideButtonBackgroundColor' },
     sideButtonHoverTextColor: { ref: 'sideButtonTextColor' },
-    sideButtonSelectedBackgroundColor: { ref: 'sideButtonBackgroundColor' },
+    sideButtonSelectedBackgroundColor: { ref: 'backgroundColor' },
     sideButtonSelectedTextColor: { ref: 'sideButtonTextColor' },
     sideButtonSelectedBorder: true,
     sideButtonLeftPadding: { ref: 'spacing' },
@@ -843,10 +835,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     dragAndDropImageShadow: {
         ref: 'popupShadow',
     },
-    dragHandleColor: {
-        ref: 'foregroundColor',
-        mix: 0.7,
-    },
+    dragHandleColor: foregroundMix(0.7),
     focusShadow: {
         spread: 3,
         color: { ref: 'accentColor', mix: 0.5 },
@@ -877,31 +866,16 @@ export const coreDefaults: Readonly<CoreParams> = {
     toggleButtonOnBackgroundColor: {
         ref: 'accentColor',
     },
-    toggleButtonOffBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.3,
-        onto: 'backgroundColor',
-    },
+    toggleButtonOffBackgroundColor: foregroundBackgroundMix(0.3),
     toggleButtonSwitchBackgroundColor: {
         ref: 'backgroundColor',
     },
     toggleButtonSwitchInset: 2,
     menuBorder: {
-        color: {
-            ref: 'foregroundColor',
-            mix: 0.2,
-        },
+        color: foregroundMix(0.2),
     },
-    menuBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.03,
-        onto: 'backgroundColor',
-    },
-    menuTextColor: {
-        ref: 'foregroundColor',
-        mix: 0.95,
-        onto: 'backgroundColor',
-    },
+    menuBackgroundColor: foregroundBackgroundMix(0.03),
+    menuTextColor: foregroundBackgroundMix(0.95),
     menuShadow: {
         ref: 'popupShadow',
     },
@@ -912,14 +886,8 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'iconSize',
     },
     chartMenuPanelWidth: 260,
-    chartMenuLabelColor: {
-        ref: 'foregroundColor',
-        mix: 0.8,
-    },
-    iconButtonHoverColor: {
-        ref: 'foregroundColor',
-        mix: 0.1,
-    },
+    chartMenuLabelColor: foregroundMix(0.8),
+    iconButtonHoverColor: foregroundMix(0.1),
     dialogShadow: {
         ref: 'popupShadow',
     },
@@ -928,10 +896,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     },
     cellEditingShadow: { ref: 'cardShadow' },
     dialogBorder: {
-        color: {
-            ref: 'foregroundColor',
-            mix: 0.2,
-        },
+        color: foregroundMix(0.2),
     },
     panelBackgroundColor: {
         ref: 'backgroundColor',
@@ -951,10 +916,7 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'textColor',
     },
     tooltipBorder: true,
-    columnDropCellBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.07,
-    },
+    columnDropCellBackgroundColor: foregroundMix(0.07),
     columnDropCellTextColor: {
         ref: 'textColor',
     },
@@ -962,20 +924,11 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'textColor',
     },
     columnDropCellBorder: {
-        color: {
-            ref: 'foregroundColor',
-            mix: 0.13,
-        },
+        color: foregroundMix(0.13),
     },
-    selectCellBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.07,
-    },
+    selectCellBackgroundColor: foregroundMix(0.07),
     selectCellBorder: {
-        color: {
-            ref: 'foregroundColor',
-            mix: 0.13,
-        },
+        color: foregroundMix(0.13),
     },
     advancedFilterBuilderButtonBarBorder: true,
     advancedFilterBuilderIndentSize: {
@@ -988,9 +941,6 @@ export const coreDefaults: Readonly<CoreParams> = {
     filterToolPanelGroupIndent: {
         ref: 'spacing',
     },
-    iconButtonHoverBackgroundColor: {
-        ref: 'foregroundColor',
-        mix: 0.1,
-    },
+    iconButtonHoverBackgroundColor: foregroundMix(0.1),
     rowLoadingSkeletonEffectColor: 'rgba(66, 66, 66, 0.2)',
 };

@@ -1,12 +1,18 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    GridReadyEvent,
+    ICellRendererParams,
+    ValueFormatterParams,
+    ValueGetterParams,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const CustomButtonComponent = {
+const CustomButtonComponent = defineComponent({
     template: `
         <div>        
             <button v-on:click="buttonClicked">Push Me!</button>
@@ -17,9 +23,9 @@ const CustomButtonComponent = {
             alert('clicked');
         },
     },
-};
+});
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <ag-grid-vue
@@ -35,15 +41,15 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 {
                     headerName: 'Make & Model',
-                    valueGetter: (p) => p.data.make + ' ' + p.data.model,
+                    valueGetter: (p: ValueGetterParams) => p.data.make + ' ' + p.data.model,
                     flex: 2,
                 },
                 {
                     field: 'price',
-                    valueFormatter: (p) => '£' + Math.floor(p.value).toLocaleString(),
+                    valueFormatter: (p: ValueFormatterParams) => '£' + Math.floor(p.value).toLocaleString(),
                     flex: 1,
                 },
                 {
@@ -57,12 +63,11 @@ const VueExample = {
                 },
             ],
             gridApi: null,
-
             rowData: null,
         };
     },
     created() {
-        this.rowData = [
+        this.rowData = <any[]>[
             { make: 'Tesla', model: 'Model Y', price: 64950, electric: true },
             { make: 'Ford', model: 'F-Series', price: 33850, electric: false },
             { make: 'Toyota', model: 'Corolla', price: 29600, electric: false },
@@ -72,12 +77,10 @@ const VueExample = {
         ];
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.gridApi = params.api;
         },
     },
-};
-
-const gridDiv = document.querySelector('#myGrid');
+});
 
 createApp(VueExample).mount('#app');

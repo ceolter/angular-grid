@@ -10,8 +10,4 @@
     box-shadow: var(--ag-menu-shadow);
     background-color: var(--ag-menu-background-color);
     color: var(--ag-menu-text-color);
-
-    /* Add a minimum width to avoid having zero width when the content tries to
-    size itself to the menu */
-    min-width: 180px;
 }
