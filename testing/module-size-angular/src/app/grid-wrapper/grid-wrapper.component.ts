@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, RowSelectionOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule } from 'ag-grid-community';
+import { SelectEditorModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Test a selection on community and enterprise modules to guard against accidental tree shaking breaks
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, SelectEditorModule]);
 @Component({
     selector: 'grid-wrapper',
     standalone: true,

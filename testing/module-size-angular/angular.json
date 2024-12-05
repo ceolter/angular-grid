@@ -11,7 +11,7 @@
             "prefix": "app",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:browser-esbuild",
                     "options": {
                         "sourceMap": true,
                         "namedChunks": true,
@@ -29,8 +29,12 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kB",
-                                    "maximumError": "2MB"
+                                    "maximumWarning": "250kB",
+                                    "maximumError": "500kB"
+                                },
+                                {
+                                    "type": "anyScript",
+                                    "maximumError": "750kB"
                                 },
                                 {
                                     "type": "anyComponentStyle",
