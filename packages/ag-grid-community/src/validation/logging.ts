@@ -10,7 +10,7 @@ const VERSION_PARAM_NAME = '_version_';
 
 let validation: ValidationService | null = null;
 let suppressAllLogging = false;
-let baseDocLink = `${BASE_URL}/javascript-data-grid`;
+export let baseDocLink = `${BASE_URL}/javascript-data-grid`;
 /**
  * The ValidationService passes itself in if it has been included.
  * @param logger

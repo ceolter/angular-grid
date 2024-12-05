@@ -24,7 +24,7 @@ import {
 } from './modules/moduleRegistry';
 import { _missing } from './utils/generic';
 import { _mergeDeep } from './utils/object';
-import { _error, _logPreInitErr } from './validation/logging';
+import { _error, _logPreInitErr, baseDocLink } from './validation/logging';
 import { VanillaFrameworkOverrides } from './vanillaFrameworkOverrides';
 
 export interface GridParams {
@@ -293,7 +293,7 @@ export class GridCoreCreator {
                     gridId,
                     rowModelType,
                 },
-                `Missing module ${rowModuleModelName}Module for rowModelType ${rowModelType}.`
+                `Missing module ${rowModuleModelName}Module for rowModelType ${rowModelType}. \nIf upgrading from before v33, see ${baseDocLink}/upgrading-to-ag-grid-33/#changes-to-modules/`
             );
             return;
         }
