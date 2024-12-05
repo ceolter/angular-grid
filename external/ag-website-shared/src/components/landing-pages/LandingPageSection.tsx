@@ -55,7 +55,7 @@ const CTAWithFrameworks: FunctionComponent<{ ctaTitle: string; ctaUrl: string }>
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
     const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const CurrentIcon = FRAMEWORK_CONFIGS[internalFramework]?.Icon;
+    const CurrentIcon = FRAMEWORK_CONFIGS[framework]?.Icon;
 
     const handleFrameworkSelection = (newFramework: string) => {
         handleFrameworkChange(newFramework);
