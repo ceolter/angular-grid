@@ -704,7 +704,6 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         const userWantsSelected = typeof checkboxes === 'function' || checkboxes === true;
 
         const checkboxNeeded =
-            _isRowSelection(this.gos) &&
             userWantsSelected &&
             // footers cannot be selected
             !rowNode.footer &&
@@ -712,7 +711,8 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
             !rowNode.rowPinned &&
             // details cannot be selected
             !rowNode.detail &&
-            !!this.selectionSvc;
+            !!this.selectionSvc &&
+            _isRowSelection(this.gos);
 
         if (checkboxNeeded) {
             const cbSelectionComponent = this.selectionSvc!.createCheckboxSelectionComponent();
