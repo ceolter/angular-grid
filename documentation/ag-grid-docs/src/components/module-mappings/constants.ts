@@ -12,8 +12,8 @@ export const ALL_COMMUNITY_MODULE = 'AllCommunityModule';
 export const ALL_ENTERPRISE_MODULE = 'AllEnterpriseModule';
 
 export const ROW_MODEL_OPTIONS: Option[] = [
-    { name: 'Client Side', moduleName: 'ClientSideRowModelModule' },
-    { name: 'Server Side', moduleName: 'ServerSideRowModelModule', isEnterprise: true },
+    { name: 'Client-Side', moduleName: 'ClientSideRowModelModule' },
+    { name: 'Server-Side', moduleName: 'ServerSideRowModelModule', isEnterprise: true },
     { name: 'Infinite', moduleName: 'InfiniteRowModelModule' },
     { name: 'Viewport', moduleName: 'ViewportRowModelModule', isEnterprise: true },
 ];
