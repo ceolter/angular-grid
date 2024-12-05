@@ -4,7 +4,7 @@ import { AgColumn } from '../entities/agColumn';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
-import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox } from '../gridOptionsUtils';
+import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox, _isRowSelection } from '../gridOptionsUtils';
 import type { ColKey, ColumnCollections } from './columnModel';
 import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
@@ -90,7 +90,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
     public isSelectionColumnEnabled(): boolean {
         const { gos, beans } = this;
         const rowSelection = gos.get('rowSelection');
-        if (typeof rowSelection !== 'object') {
+        if (typeof rowSelection !== 'object' || !_isRowSelection(gos)) {
             return false;
         }
 

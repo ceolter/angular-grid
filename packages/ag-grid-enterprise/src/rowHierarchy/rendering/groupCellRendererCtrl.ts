@@ -29,6 +29,7 @@ import {
     _getGrandTotalRow,
     _getInnerCellRendererDetails,
     _isElementInEventPath,
+    _isRowSelection,
     _isStopPropagationForAgGrid,
     _missing,
     _removeAriaExpanded,
@@ -703,6 +704,7 @@ export class GroupCellRendererCtrl extends BeanStub implements IGroupCellRendere
         const userWantsSelected = typeof checkboxes === 'function' || checkboxes === true;
 
         const checkboxNeeded =
+            _isRowSelection(this.gos) &&
             userWantsSelected &&
             // footers cannot be selected
             !rowNode.footer &&
