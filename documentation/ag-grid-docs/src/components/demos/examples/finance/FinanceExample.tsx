@@ -33,8 +33,9 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 
 import styles from './FinanceExample.module.css';
-import { getTickerCellRenderer } from './cell-renderers/getTickerCellRenderer';
 import { getData } from './data';
+import { getTickerCellRenderer } from './renderers/getTickerCellRenderer';
+import { sparklineTooltipRenderer } from './renderers/sparklineTooltipRenderer';
 
 export interface Props {
     gridTheme?: string;
@@ -194,6 +195,9 @@ export const FinanceExample: React.FC<Props> = ({
                         type: 'bar',
                         axis: {
                             strokeWidth: 0,
+                        },
+                        tooltip: {
+                            renderer: sparklineTooltipRenderer,
                         },
                     },
                 },
