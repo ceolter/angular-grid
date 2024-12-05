@@ -44,7 +44,7 @@ function getOnGridReadyCode(bindings: ParsedBindings): string {
     const additional = preferParamsApi(
         additionalLines.length > 0 ? `\n\n        ${additionalLines.join('\n        ')}` : ''
     );
-    return `const onGridReady = (params) => {
+    return `const onGridReady = (params: GridReadyEvent) => {
         ${getIntegratedDarkModeCode(bindings.exampleName)}
         gridApi.value = params.api;
         ${additional}
@@ -161,7 +161,7 @@ function getModuleImports(
         imports.push(...componentFileNames.map((componentFileName) => getImport(componentFileName, 'Vue', '')));
     }
 
-    addRelativeImports(bindings, imports, 'ts');
+    addRelativeImports(bindings, imports, '');
 
     return imports;
 }
@@ -196,6 +196,8 @@ export function vanillaToVue3(
     componentFileNames: string[],
     allStylesheets: string[]
 ): () => string {
+    const { typeDeclares, interfaces } = bindings;
+
     const vueComponents = new Set(bindings.components.map((component) => `${component.name}:${component.value}`));
     componentFileNames
         .map((componentFileName) => getComponentName(componentFileName, 'Vue', ''))
@@ -224,10 +226,11 @@ export function vanillaToVue3(
 ${imports.join('\n')}
 ${exampleConfig.licenseKey ? "// enter your license key here to suppress console message and watermark\nLicenseManager.setLicenseKey('');\n" : ''}
 ${bindings.classes.join('\n')}
+${typeDeclares?.length > 0 ? '\n' + typeDeclares.join('\n') : ''}${interfaces?.length > 0 ? '\n' + interfaces.join('\n') : ''}
 
 ${utilFunctions.map((snippet) => `${snippet.trim()}`).join('\n\n')}
 
-const VueExample = {
+const VueExample = defineComponent({
     template: \`
         <div style="height: 100%">
             ${template}
@@ -238,7 +241,7 @@ const VueExample = {
         ${Array.from(vueComponents).join(',\n')}
     },
     setup(props) {
-        const gridApi = shallowRef${genericParams}();
+        const gridApi = shallowRef<GridApi${genericParams} | null>(null);
         ${propertyAssignments.join('\n')}
        
         ${eventHandlers
@@ -255,7 +258,7 @@ const VueExample = {
             ${functionNames ? functionNames.filter((functionName) => !propertyNames.includes(functionName)).join(',\n') : ''}
         }        
     }
-}
+})
 
 createApp(VueExample)
     .mount("#app")

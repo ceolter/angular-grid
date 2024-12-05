@@ -5,8 +5,8 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import CustomGroupCellRenderer from './customGroupCellRendererVue.js';
-import { getData } from './data.js';
+import CustomGroupCellRenderer from './customGroupCellRendererVue';
+import { getData } from './data';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, TreeDataModule]);
 

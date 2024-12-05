@@ -26,16 +26,19 @@ type CreatePartArgs<T> = {
      * any existing part with the same feature.
      */
     feature?: Feature | AnyString;
+
     /**
      * Default parameters for the part.
      */
     params?: WithParamTypes<T>;
+
     /**
      * Parameters for different theme modes, e.g. 'dark' or 'light'. Setting
      * `modeParams: {myMode: {myColor: 'red'}}` on a theme part is the equivalent
      * of `theme.withParams({myColor: 'red'}, 'myMode')`.
      */
     modeParams?: Record<string, WithParamTypes<T>>;
+
     /**
      * CSS styles associated with this part. The CSS will be injected into the
      * page when the theme is used by a grid.
@@ -44,6 +47,11 @@ type CreatePartArgs<T> = {
      * only applies to grids that are using a theme containing this part.
      */
     css?: string | (() => string);
+
+    /**
+     * URLs of CSS files to import before the part's CSS.
+     */
+    cssImports?: string[];
 };
 
 /**
@@ -62,12 +70,14 @@ export class PartImpl implements Part {
     feature?: string | undefined;
     modeParams: Record<string, Record<string, unknown>>;
     css?: string | (() => string) | undefined;
+    cssImports?: string[];
 
     _inject?: { css: string; class: string } | false;
 
-    constructor({ feature, params, modeParams = {}, css }: CreatePartArgs<unknown>) {
+    constructor({ feature, params, modeParams = {}, css, cssImports }: CreatePartArgs<unknown>) {
         this.feature = feature;
         this.css = css;
+        this.cssImports = cssImports;
         this.modeParams = {
             // NOTE: it's important that default is defined first, putting it
             // first in iteration order, because when merging params the default
@@ -90,6 +100,9 @@ export class PartImpl implements Part {
                 const className = `ag-theme-${this.feature ?? 'part'}-${++partCounter}`;
                 if (typeof css === 'function') css = css();
                 css = `:where(.${className}) {\n${css}\n}\n`;
+                for (const cssImport of this.cssImports ?? []) {
+                    css = `@import url(${JSON.stringify(cssImport)});\n${css}`;
+                }
                 inject = { css, class: className };
             } else {
                 inject = false;

@@ -2,7 +2,7 @@ import type { GridApi, GridOptions, IServerSideDatasource, IServerSideSelectionS
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
+import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
@@ -10,6 +10,7 @@ ModuleRegistry.registerModules([
     AllCommunityModule,
     RowGroupingModule,
     ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
     RowGroupingPanelModule,
 ]);
 

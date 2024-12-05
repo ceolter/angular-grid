@@ -53,7 +53,7 @@ export const getComponentName = (filename: string, tokenReplace, replaceValue) =
     return toTitleCase(componentName);
 };
 export function getImport(filename: string, tokenReplace, replaceValue) {
-    return `import ${getComponentName(filename, tokenReplace, replaceValue)} from './${filename}';`;
+    return `import ${getComponentName(filename, tokenReplace, replaceValue)} from './${filename.replace('.ts', '')}';`;
 }
 
 export function indentTemplate(template: string, spaceWidth: number, start: number = 0) {

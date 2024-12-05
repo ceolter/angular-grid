@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     standalone: true,
@@ -67,8 +66,8 @@ ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
     `,
 })
 export class AppComponent {
-    private leftGridApi!: GridApi<IOlympicData>;
-    private rightGridApi!: GridApi<IOlympicData>;
+    private leftGridApi!: GridApi;
+    private rightGridApi!: GridApi;
 
     rowIdSequence = 100;
 

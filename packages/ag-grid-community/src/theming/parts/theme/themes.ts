@@ -1,4 +1,5 @@
 import { createTheme } from '../../Theme';
+import { foregroundMix } from '../../theme-utils';
 import { checkboxStyleDefault } from '../checkbox-style/checkbox-styles';
 import { colorSchemeVariable } from '../color-scheme/color-schemes';
 import { iconSetAlpine, iconSetQuartzRegular } from '../icon-set/icon-sets';
@@ -71,10 +72,7 @@ export const themeBalham =
                 ref: 'chromeBackgroundColor',
                 mix: 0.5,
             },
-            headerTextColor: {
-                ref: 'foregroundColor',
-                mix: 0.5,
-            },
+            headerTextColor: foregroundMix(0.5),
             fontSize: 12,
             headerFontWeight: 'bold',
         });

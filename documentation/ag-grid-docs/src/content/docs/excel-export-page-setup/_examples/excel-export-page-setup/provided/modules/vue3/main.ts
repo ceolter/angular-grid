@@ -1,6 +1,6 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -8,15 +8,9 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    ExcelExportModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, ColumnMenuModule, ContextMenuModule, ExcelExportModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="container">
@@ -119,21 +113,21 @@ const VueExample = {
             },
         ]);
 
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             filter: true,
             minWidth: 100,
             flex: 1,
         });
 
         const popupParent = ref(null);
-        const rowData = ref(null);
+        const rowData = ref<any[]>(null);
 
         onBeforeMount(() => {
             popupParent.value = document.body;
         });
 
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) =>
@@ -163,21 +157,21 @@ const VueExample = {
             onFormSubmit,
         };
     },
-};
+});
 
-window.getNumber = function getNumber(id) {
+function getNumber(id) {
     var el = document.querySelector(id);
     if (!el || isNaN(el.value)) {
         return 0;
     }
     return parseFloat(el.value);
-};
+}
 
-window.getValue = function getValue(id) {
+function getValue(id) {
     return document.querySelector(id).value;
-};
+}
 
-window.getSheetConfig = function getSheetConfig() {
+function getSheetConfig() {
     return {
         pageSetup: {
             orientation: getValue('#pageOrientation'),
@@ -192,6 +186,6 @@ window.getSheetConfig = function getSheetConfig() {
             footer: getNumber('#footer'),
         },
     };
-};
+}
 
 createApp(VueExample).mount('#app');

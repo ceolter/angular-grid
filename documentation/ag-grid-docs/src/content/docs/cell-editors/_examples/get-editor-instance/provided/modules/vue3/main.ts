@@ -1,15 +1,15 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import MySimpleEditor from './mySimpleEditorVue.js';
+import MySimpleEditor from './mySimpleEditorVue.ts';
 import './style.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
       <div style="height: 100%">
           <ag-grid-vue
@@ -27,7 +27,7 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 {
                     field: 'first_name',
                     headerName: 'First Name',
@@ -80,7 +80,7 @@ const VueExample = {
         clearInterval(this.interval);
     },
     methods: {
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.interval = setInterval(() => {
                 const instances = params.api.getCellEditorInstances();
                 if (instances.length > 0) {
@@ -150,6 +150,6 @@ const VueExample = {
             return students;
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

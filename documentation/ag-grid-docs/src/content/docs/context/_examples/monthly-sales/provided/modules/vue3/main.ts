@@ -1,6 +1,13 @@
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    ColGroupDef,
+    GridApi,
+    GridReadyEvent,
+    ICellRendererParams,
+    RowSelectionOptions,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -9,15 +16,9 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    RowGroupingModule,
-    SetFilterModule,
-    FiltersToolPanelModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule, SetFilterModule, FiltersToolPanelModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <div class="test-container">
@@ -52,7 +53,7 @@ const VueExample = {
         'ag-grid-vue': AgGridVue,
     },
     setup(props) {
-        const columnDefs = ref([
+        const columnDefs = ref<(ColDef | ColGroupDef)[]>([
             { field: 'country', rowGroup: true, hide: true },
             {
                 headerName: 'Monthly Data',
@@ -115,15 +116,15 @@ const VueExample = {
                 ],
             },
         ]);
-        const gridApi = shallowRef();
-        const defaultColDef = ref({
+        const gridApi = shallowRef<GridApi | null>(null);
+        const defaultColDef = ref<ColDef>({
             flex: 1,
             minWidth: 120,
         });
         const context = ref(null);
-        const autoGroupColumnDef = ref(null);
-        const rowData = ref(null);
-        const rowSelection = ref(null);
+        const autoGroupColumnDef = ref<ColDef>(null);
+        const rowData = ref<any[]>(null);
+        const rowSelection = ref<RowSelectionOptions>(null);
 
         onBeforeMount(() => {
             context.value = {
@@ -160,7 +161,7 @@ const VueExample = {
         const onQuickFilterChanged = () => {
             gridApi.value.setGridOption('quickFilterText', document.getElementById('filter-text-box').value);
         };
-        const onGridReady = (params) => {
+        const onGridReady = (params: GridReadyEvent) => {
             gridApi.value = params.api;
 
             const updateData = (data) => {
@@ -185,7 +186,7 @@ const VueExample = {
             onQuickFilterChanged,
         };
     },
-};
+});
 
 var monthValueGetter =
     '(ctx.month < ctx.months.indexOf(colDef.field)) ? data[colDef.field + "_bud"] : data[colDef.field + "_act"]';
@@ -199,7 +200,7 @@ var monthCellClassRules = {
 var yearToDateValueGetter =
     'var total = 0; ctx.months.forEach( function(monthName, monthIndex) { if (monthIndex<=ctx.month) { total += data[monthName + "_act"]; } }); return total; ';
 
-var accountingCellRenderer = function (params) {
+var accountingCellRenderer = function (params: ICellRendererParams) {
     if (params.value == null) {
         return '';
     } else if (params.value >= 0) {

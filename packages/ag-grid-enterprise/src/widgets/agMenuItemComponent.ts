@@ -278,6 +278,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         if (!this.hideSubMenu) {
             return;
         }
+
         this.hideSubMenu();
         this.hideSubMenu = null;
         this.setAriaExpanded(false);
@@ -439,17 +440,20 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
 
         let eGui = this.menuItemComp.getGui();
+        const { suppressRootStyles, suppressTooltip, suppressAria, suppressTabIndex, suppressFocus } = params || {};
+
         // in some frameworks, `getGui` might be a framework element
         const rootElement = (this.menuItemComp as any).getRootElement?.() as HTMLElement | undefined;
         if (rootElement) {
-            if (!params?.suppressRootStyles) {
+            if (!suppressRootStyles) {
                 eGui.classList.add('ag-menu-option-custom');
             }
             eGui = rootElement;
         }
+
         this.eGui = eGui;
 
-        this.suppressRootStyles = !!params?.suppressRootStyles;
+        this.suppressRootStyles = !!suppressRootStyles;
         if (!this.suppressRootStyles) {
             eGui.classList.add(this.cssClassPrefix);
             this.params.cssClasses?.forEach((it) => eGui.classList.add(it));
@@ -457,10 +461,13 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 eGui.classList.add(`${this.cssClassPrefix}-disabled`);
             }
         }
-        if (!params?.suppressTooltip) {
+
+        if (!suppressTooltip) {
             this.refreshTooltip(this.params.tooltip);
         }
-        this.suppressAria = !!params?.suppressAria;
+
+        this.suppressAria = !!suppressAria;
+
         if (!this.suppressAria) {
             _setAriaRole(eGui, 'treeitem');
             _setAriaLevel(eGui, this.level + 1);
@@ -468,13 +475,16 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
                 _setAriaDisabled(eGui, true);
             }
         }
-        if (!params?.suppressTabIndex) {
+
+        if (!suppressTabIndex) {
             eGui.setAttribute('tabindex', '-1');
         }
+
         if (!this.params.disabled) {
             this.addListeners(eGui, params);
         }
-        this.suppressFocus = !!params?.suppressFocus;
+
+        this.suppressFocus = !!suppressFocus;
     }
 
     private refreshTooltip(tooltip?: string, shouldDisplayTooltip?: () => boolean): void {

@@ -218,9 +218,9 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                     )}
 
                     <Note>
-                        If you are using an older version of AG Grid, before v33.0.0, please see the relevant{' '}
-                        <a href={urlWithBaseUrl('/documentation-archive')}>documentation</a> for help on installing your
-                        license key
+                        If you are using an AG Grid version before 33.0.0, please see the documentation for your{' '}
+                        <a href={urlWithBaseUrl('/documentation-archive')}>version</a> for help on installing your
+                        license key.
                     </Note>
 
                     <p>Or install using npm:</p>

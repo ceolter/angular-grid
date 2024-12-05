@@ -1,7 +1,7 @@
 import type { IntegratedModule } from 'ag-charts-types';
 
 import type { _GridChartsGridApi, _ModuleWithApi } from 'ag-grid-community';
-import { _PopupModule, _SharedDragAndDropModule, _errMsg } from 'ag-grid-community';
+import { _PopupModule, _SharedDragAndDropModule, _preInitErrMsg } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import type { ILicenseManager } from '../license/shared/licenseManager';
@@ -43,7 +43,7 @@ const baseIntegratedChartsModule: _ModuleWithApi<_GridChartsGridApi> = {
     validate: () => {
         return {
             isValid: false,
-            message: _errMsg(257),
+            message: _preInitErrMsg(257),
         };
     },
     icons: {

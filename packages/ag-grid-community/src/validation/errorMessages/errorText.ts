@@ -1,4 +1,3 @@
-import { BASE_URL } from '../../baseUrl';
 import type { UserComponentName } from '../../context/context';
 import type { Column } from '../../interfaces/iColumn';
 import type { EnterpriseModuleName, ModuleName, ValidationModuleName } from '../../interfaces/iModule';
@@ -6,8 +5,9 @@ import type { RowModelType } from '../../interfaces/iRowModel';
 import type { RowNodeEventType } from '../../interfaces/iRowNode';
 import { _fuzzySuggestions } from '../../utils/fuzzyMatch';
 import { ENTERPRISE_MODULE_NAMES } from '../enterpriseModuleNames';
-import { getErrorLink } from '../logging';
+import { baseDocLink, getErrorLink } from '../logging';
 import { resolveModuleNames } from '../resolvableModuleNames';
+import { USER_COMP_MODULES } from '../rules/userCompValidations';
 
 export const moduleImportMsg = (moduleNames: ModuleName[]) => {
     const imports = moduleNames
@@ -16,7 +16,7 @@ export const moduleImportMsg = (moduleNames: ModuleName[]) => {
                 `import { ${convertToUserModuleName(moduleName)} } from '${ENTERPRISE_MODULE_NAMES[moduleName as EnterpriseModuleName] ? 'ag-grid-enterprise' : 'ag-grid-community'}';`
         )
         .join(' \n');
-    return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.map(convertToUserModuleName).join(', ')} ]); \n\nFor more info see: ${BASE_URL}/javascript-grid/modules/`;
+    return `import { ModuleRegistry } from 'ag-grid-community'; \n${imports} \n\nModuleRegistry.registerModules([ ${moduleNames.map(convertToUserModuleName).join(', ')} ]); \n\nFor more info see: ${baseDocLink}/modules/`;
 };
 
 function convertToUserModuleName(moduleName: ModuleName): `${ModuleName}Module` {
@@ -306,7 +306,7 @@ export const AG_GRID_ERRORS = {
         `Numeric value ${value} passed to ${param} param will be interpreted as ${value} seconds. If this is intentional use "${value}s" to silence this warning.` as const,
     105: ({ e }: { e: any }) => [`chart rendering failed`, e] as const,
     106: () =>
-        'Theming API and Legacy Themes are both used in the same page. A Theming API theme has been provided to the `theme` grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page. See the migration guide: https://www.ag-grid.com/javascript-data-grid/theming-migration/' as const,
+        `Theming API and Legacy Themes are both used in the same page. A Theming API theme has been provided to the 'theme' grid option, but the file (ag-grid.css) is also included and will cause styling issues. Remove ag-grid.css from the page. See the migration guide: ${baseDocLink}/theming-migration/` as const,
     107: ({ key, value }: { key: string; value: unknown }) =>
         `Invalid value for theme param ${key} - ${value}` as const,
     108: ({ e }: { e: any }) => ['chart update failed', e] as const,
@@ -483,7 +483,7 @@ export const AG_GRID_ERRORS = {
     208: () =>
         `Set Filter Value Formatter must return string values. Please ensure the Set Filter Value Formatter returns string values for complex objects.` as const,
     209: () =>
-        'Set Filter Key Creator is returning null for provided values and provided values are primitives. Please provide complex objects. See https://www.ag-grid.com/javascript-data-grid/filter-set-filter-list/#filter-value-types' as const,
+        `Set Filter Key Creator is returning null for provided values and provided values are primitives. Please provide complex objects. See ${baseDocLink}/filter-set-filter-list/#filter-value-types` as const,
     210: () =>
         'Set Filter has a Key Creator, but provided values are primitives. Did you mean to provide complex objects?' as const,
     211: () =>
@@ -555,6 +555,27 @@ export const AG_GRID_ERRORS = {
     258: () => missingChartsWithModule('SparklinesModule'),
     259: ({ part }: { part: any }) =>
         `the argument to theme.withPart must be a Theming API part object, received: ${part}` as const,
+    260: ({
+        propName,
+        compName,
+        gridScoped,
+        gridId,
+        rowModelType,
+    }: {
+        propName: string;
+        compName: string;
+        gridScoped: boolean;
+        gridId: string;
+        rowModelType: RowModelType;
+    }) =>
+        missingModule({
+            reasonOrId: `AG Grid '${propName}' component: ${compName}`,
+            moduleName: USER_COMP_MODULES[compName as UserComponentName],
+            gridId,
+            gridScoped,
+            rowModelType,
+        }),
+    261: () => 'As of v33, `column.isHovered()` is deprecated. Use `api.isColumnHovered(column)` instead.' as const,
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

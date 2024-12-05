@@ -35,22 +35,12 @@
             ...systemJsMap,
         },
         packages: {
-            // 'data.js': {
-            //     defaultExtension: 'js',
-            // },
             vue: {
                 defaultExtension: 'js',
             },
-            'vue-class-component': {
-                defaultExtension: 'js',
+            app: {
+                defaultExtension: 'ts',
             },
-            'vue-property-decorator': {
-                defaultExtension: 'js',
-            },
-            // app: {
-            //     main: './main.ts',
-            //     defaultExtension: 'ts',
-            // },
             'ag-grid-community': {
                 main: './dist/package/main.cjs.js',
                 defaultExtension: 'js',

@@ -525,7 +525,9 @@ export function addRelativeImports(bindings: ParsedBindings, imports: string[], 
     const bImports = [...(bindings.imports.filter((b) => filterOtherFiles(b)) || [])];
     if (bImports.length > 0) {
         bImports.forEach((b) => {
-            imports.push(`import { ${b.imports.join(', ')} } from '${b.module.replace(/['"]/g, '')}.${extension}';`);
+            imports.push(
+                `import { ${b.imports.join(', ')} } from '${b.module.replace(/['"]/g, '')}${extension ? `.${extension}` : ''}';`
+            );
         });
     }
 }

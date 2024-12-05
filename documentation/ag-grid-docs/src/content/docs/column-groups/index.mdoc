@@ -201,6 +201,45 @@ The example below demonstrates using the `headerTooltip` property in the grid co
 
 {% gridExampleRunner title="Header Tooltip" name="group-header-tooltip" /%}
 
+## Inner Header Group Component
+
+When using the Header Group Component, the `agColumnHeaderGroup` component will display the header group name,
+adjacent to the expand / collapse button.
+
+This text value can be overridden with a [Custom Component](./components/) by setting the `innerHeaderGroupComponent` and `innerHeaderGroupComponentParams` properties
+on the `headerGroupComponentParams` property. This is useful when you only need to implement a Component to customise the **Column Group Name** without having to reimplement
+the other header group functionality such as the expand / collapse.
+
+{% if isFramework("javascript", "angular", "react") %}
+```js
+colDef = {
+    ...
+    headerGroupComponentParams : {
+        innerHeaderComponent: MyInnerHeaderGroupComponent,
+        innerHeaderComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% if isFramework("vue") %}
+```js
+colDef = {
+    ...
+    headerGroupComponentParams : {
+        innerHeaderGroupComponent: 'MyInnerHeaderGroupComponent',
+        innerHeaderGroupComponentParams: {
+            currencySymbol: '£' // the pound symbol will be placed into params
+        }
+    }
+}
+```
+{% /if %}
+
+{% gridExampleRunner title="Custom Inner Header Group Component" name="inner-header-group-component" /%}
+
 ## Selecting Components
 
 By default the grid uses the provided Header Group Component. To use a Custom Group Component set `headerGroupComponent` on the Column Definition.
@@ -253,43 +292,3 @@ The example below demonstrates using the Dynamic Tooltips with a Custom Group Co
 * Note that only Group Headers where the text is not fully displayed will show tooltips.
 
 {% gridExampleRunner title="Dynamic Group Header Tooltip" name="dynamic-tooltips" /%}
-
-## Inner Header Group Component
-
-When using the Header Group Component, the `agColumnHeaderGroup` component will display the header group name,
-adjacent to the expand / collapse button.
-
-This text value can be overridden with a [Custom Component](./components/) by setting the `innerHeaderGroupComponent` and `innerHeaderGroupComponentParams` properties
-on the `headerGroupComponentParams` property. This is useful when you only need to implement a Component to customise the **Column Group Name** without having to reimplement
-the other header group functionality such as the expand / collapse.
-
-{% if isFramework("javascript", "angular", "react") %}
-```js
-colDef = {
-    ...
-    headerGroupComponentParams : {
-        innerHeaderComponent: MyInnerHeaderGroupComponent,
-        innerHeaderComponentParams: {
-            currencySymbol: '£' // the pound symbol will be placed into params
-        }
-    }
-}
-```
-{% /if %}
-
-{% if isFramework("vue") %}
-```js
-colDef = {
-    ...
-    headerGroupComponentParams : {
-        innerHeaderGroupComponent: 'MyInnerHeaderGroupComponent',
-        innerHeaderGroupComponentParams: {
-            currencySymbol: '£' // the pound symbol will be placed into params
-        }
-    }
-}
-```
-{% /if %}
-
-{% gridExampleRunner title="Custom Inner Header Group Component" name="inner-header-group-component" /%}
-

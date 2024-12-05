@@ -6,7 +6,6 @@ import {
     XLSX_WORKSHEET_DATA_TABLES,
     XLSX_WORKSHEET_HEADER_FOOTER_IMAGES,
     XLSX_WORKSHEET_IMAGES,
-    getXlsxTableNameFromIndex,
 } from '../../excelXlsxFactory';
 import contentTypeFactory from './contentType';
 
@@ -23,7 +22,6 @@ const contentTypesFactory: ExcelOOXMLTemplate = {
 
         const sheetsWithImages = XLSX_WORKSHEET_IMAGES.size;
         const headerFooterImages = XLSX_WORKSHEET_HEADER_FOOTER_IMAGES.size;
-        const sheetsWithTables = XLSX_WORKSHEET_DATA_TABLES.size;
         const imageTypesObject: { [key in ImageExtension]?: boolean } = {};
 
         XLSX_WORKBOOK_IMAGE_IDS.forEach((v) => {
@@ -36,11 +34,15 @@ const contentTypesFactory: ExcelOOXMLTemplate = {
             PartName: `/xl/drawings/drawing${i + 1}.xml`,
         }));
 
-        const tableDocs = new Array(sheetsWithTables).fill(undefined).map((v, i) => ({
-            name: 'Override',
-            ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml',
-            PartName: `/xl/tables/${getXlsxTableNameFromIndex(i)}.xml`,
-        }));
+        const tableDocs: { name: string; ContentType: string; PartName: string }[] = [];
+
+        XLSX_WORKSHEET_DATA_TABLES.forEach(({ name }) => {
+            tableDocs.push({
+                name: 'Override',
+                ContentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml',
+                PartName: `/xl/tables/${name}.xml`,
+            });
+        });
 
         const imageTypes = Object.keys(imageTypesObject).map((ext) => ({
             name: 'Default',

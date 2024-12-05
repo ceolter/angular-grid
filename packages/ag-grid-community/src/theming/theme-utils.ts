@@ -1,3 +1,5 @@
+import type { ColorValue } from './theme-types';
+
 export const kebabCase = (str: string) => str.replace(/[A-Z]/g, (m) => `-${m}`).toLowerCase();
 
 export const paramToVariableName = (paramName: string) => `--ag-${kebabCase(paramName)}`;
@@ -26,3 +28,11 @@ export const memoize = <R, A = void>(fn: (arg: A) => R): ((arg: A) => R) => {
         return values.get(key)!;
     };
 };
+
+export const foregroundMix = (mix: number): ColorValue => ({ ref: 'foregroundColor', mix });
+export const foregroundBackgroundMix = (mix: number): ColorValue => ({
+    ref: 'foregroundColor',
+    mix,
+    onto: 'backgroundColor',
+});
+export const foregroundColor: ColorValue = { ref: 'foregroundColor' };

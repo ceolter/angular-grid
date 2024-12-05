@@ -1,32 +1,43 @@
-import { createApp } from 'vue';
-import { onMounted, ref } from 'vue';
+import { createApp, defineComponent, onMounted, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, ValueFormatterParams } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Row Data Interface
+interface IRow {
+    mission: string;
+    company: string;
+    location: string;
+    date: string;
+    time: string;
+    rocket: string;
+    price: number;
+    successful: boolean;
+}
 
 // Define the component configuration
-const App = {
+const App = defineComponent({
     name: 'App',
     template: `
-    <ag-grid-vue
-        style="width: 100%; height: 100%"
-        :columnDefs="colDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
-        :pagination="true"
-    >
-    </ag-grid-vue>
+        <ag-grid-vue
+            style="width: 100%; height: 100%"
+            :columnDefs="colDefs"
+            :rowData="rowData"
+            :defaultColDef="defaultColDef"
+            :pagination="true"
+        >
+        </ag-grid-vue>
     `,
     components: {
         AgGridVue,
     },
     setup() {
-        const rowData = ref([]);
+        const rowData = ref<IRow[]>([]);
 
-        const colDefs = ref([
+        const colDefs = ref<ColDef[]>([
             {
                 field: 'mission',
                 filter: true,
@@ -36,7 +47,7 @@ const App = {
             { field: 'date' },
             {
                 field: 'price',
-                valueFormatter: (params) => {
+                valueFormatter: (params: ValueFormatterParams) => {
                     return '£' + params.value.toLocaleString();
                 },
             },
@@ -44,7 +55,7 @@ const App = {
             { field: 'rocket' },
         ]);
 
-        const defaultColDef = ref({
+        const defaultColDef = ref<ColDef>({
             filter: true,
         });
 
@@ -64,6 +75,6 @@ const App = {
             defaultColDef,
         };
     },
-};
+});
 
 createApp(App).mount('#app');

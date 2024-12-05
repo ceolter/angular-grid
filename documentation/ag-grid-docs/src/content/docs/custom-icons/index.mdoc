@@ -4,11 +4,6 @@ title: "Custom Icons"
 
 This section details how to provide your own icons for the grid and style grid icons for your application requirements
 
-{% warning %}
-## TODO: content due in AG-10824 / AG-10823
-This page is a copy of the v32 theme docs, and needs updating for the Theming API.
-{% /warning %}
-
 ## Swapping the Provided Icon Set
 
 The grid provides several icon sets as [theme parts](./theming-parts/). You can change the icon set on a theme using `theme.withPart(iconSet)`.
@@ -36,74 +31,97 @@ const myTheme = themeQuartz
 
 {% gridExampleRunner title="Swapping the Icon Font" name="icons-swapping-font" /%}
 
-## Using Alternative Icons
+## Replacing Individual Icons
 
-Grid icons can use an icon font or images. The grid exposes a number of CSS variables to control the icons. Each variable can optionally be suffixed with the name of a specific icon, and will affect only that icon, e.g. setting `--ag-icon-font-color-loading` sets the color of the "loading" icon.
+The `iconOverrides` part can be used to change individual icons to an image, solid color with image mask, or icon font character. It can be used multiple times in the same theme to mix different types of icon.
 
-Icon font variables:
+### Overriding Icons with Images
 
-* `--ag-icon-font-family[-icon-name]` set the icon font family.
-* `--ag-icon-font-code[-icon-name]` set the unicode character of the icon within the icon font, using a unicode escape sequence like `"\f247"`.
-* `--ag-icon-font-weight[-icon-name]` sets the font weight, used for icon fonts that require a specific weight to work.
-* `--ag-icon-font-color[-icon-name]` set the color of the icon.
-* `--ag-icon-font-display[-icon-name]` set this to `none` to hide the icon font if you want to provide an image-based icon instead.
+`iconOverrides` can replace icons with images with the following arguments:
 
-Icon image variables:
+| Parameter | Description |
+|-|-|
+| `type` | `image` |
+| `mask` | if `true`, the icon shape is taken from the image and the color from the grid `foregroundColor` parameter. This allows one icon to serve in both light and dark modes |
+| `icons` | A map of [icon name](#icon-names) to images. Values use [image parameter syntax](./theming-parameters/#image-values) to accept image urls or svg source code. |
 
-* `--ag-icon-image[-icon-name]` set this to `url(/path/to/icon.svg)`
-* `--ag-icon-image-opacity[-icon-name]` set the opacity of an icon. Defaults to 0.9 if not set.
-* `--ag-icon-image-display[-icon-name]` set this to `none` to hide the icon image if you want to provide an font-based icon instead.
+```js
+import { themeQuartz, iconOverrides } from 'ag-grid-community';
 
-Other icon variables:
+// create an icon override part
+const mySvgIcons = iconOverrides({
+    type: 'image',
+    mask: true,
+    icons: {
+      // map of icon names to images
+      'filter': { url: 'https://examle.com/my-filter-icon.svg' },
+      'group': { svg: '<svg> ... svg source ...</svg>' },
+    }
+});
 
-* `--ag-icon-size` sets the height and width of icons in pixels.
+// use it in a theme
+const myTheme = themeQuartz.withPart(mySvgIcons);
+```
 
-### Example: using an alternative icon font
+### Replacing Icons with Icon Font Characters
 
-This example demonstrates globally changing the icon font, and also selectively replacing individual icons:
+Using `iconOverrides` with image icons:
+
+| Parameter | Description |
+|-|-|
+| `type` | `font` |
+| `family` | optional, the name of the icon font family to use |
+| `cssImports` | optional, an array CSS file URLs to import, can be used to load the CSS file that defines the icon font |
+| `weight` | optional, e.g. `bold`. Some icon fonts such as fontawesome require a bold font weight. |
+| `color` | optional CSS color e.g. `red`. Can use [color parameter syntax](./theming-parameters/#color-values) to reference and mix other color parameters. |
+| `icons` | A map of [icon name](#icon-names) to text data. If you're using an icon font, the correct character for each icon will be documented by your font. But you can use any text or emoji. |
+
+```js
+import { themeQuartz, iconOverrides } from 'ag-grid-community';
+
+// create an icon override part
+const fontAwesomeIcons = iconOverrides({
+    type: 'font',
+    family: 'Font Awesome 5 Free',
+    cssImports: ['https://use.fontawesome.com/releases/v5.6.3/css/all.css'],
+    weight: 'bold', // Font Awesome requires bold font weight
+    icons: {
+        // use font codes documented by Font Awesome e.g. '\u{f062}' == arrow-up
+        asc: '\u{f062}',
+        desc: '\u{f063}',
+    },
+})
+
+// use it in a theme
+const myTheme = themeQuartz.withPart(fontAwesomeIcons);
+```
+
+### Replacing Icons Example
+
+The following example combines the various ways of overriding icons:
+
+* Sorting and grouping icons (coloured green) are replaced with characters from FontAwesome
+* Group and Aggregation icons (coloured red) are replaced with characters from the Material Design Icons font
+* The Columns icon (🏛️) is replaced with an emoji
+* The filter icon is replaced with a blue-colored SVG image
+* The column menu icon is replaced with an SVG image in mask mode. Although the image is blue, the icon uses the grid foreground color and will change color as appropriate for light or dark mode.
+
+{% gridExampleRunner title="Alternative Icon Font" name="icons-override" /%}
+
+## Styling Icons Using CSS
+
+If you prefer to style your application using pure CSS, you can still change icons.
 
 ```css
-.ag-theme-quartz {
-  /* replace all icons in the grid with icons from Font Awesome */
-  --ag-icon-font-family: "Font Awesome 5 Free";
-  --ag-icon-font-code-aggregation: "\f247";
-  --ag-icon-font-code-arrows: "\f0b2";
-  --ag-icon-font-code-asc: "\f062";
-  /* ... and so on - because --ag-icon-font-family sets the font for
-     all icons, a new code must be provided for every one. If you only
-     wanted to replace some icons, use --ag-icon-font-family-{icon-name} */
-
-  /* selectively replace the the group icon with one from Material Design Icons */
-  --ag-icon-font-family-group: "Material Design Icons";
-  --ag-icon-font-code-group: "\F0328";
-  --ag-icon-font-color-group: red;
-  --ag-icon-font-weight-group: normal;
+.ag-icon-group {
+    /* set a new image */
+    background: url('https://www.ag-grid.com/example-assets/svg-icons/group.svg');
+    /* hide the existing image-mask based icon from the provided theme */
+    color: transparent;
 }
 ```
 
-{% gridExampleRunner title="Alternative Icon Font" name="icons-alternative-font" /%}
-
-### Example: SVG icons
-
-This example demonstrates using the `--ag-icon-image-icon-name` variables to set SVG images for specific icons.
-
-```css
-.ag-theme-quartz {
-  /* hide all font icons */
-  --ag-icon-font-display: none;
-  /* provide a SVG icon */
-  --ag-icon-image-aggregation: url("https://www.ag-grid.com/example-assets/svg-icons/aggregation.svg");
-  --ag-icon-image-arrows: url("https://www.ag-grid.com/example-assets/svg-icons/arrows.svg");
-  --ag-icon-image-asc: url("https://www.ag-grid.com/example-assets/svg-icons/asc.svg");
-  /* ... and so on - because --ag-icon-font-display: none; hides all
-     icons, an image must be provided for every one. If you only wanted
-     to replace some icons, use --ag-icon-font-display-{icon-name} */
-}
-```
-
-The following example replaces the grid's icons with SVG images:
-
-{% gridExampleRunner title="SVG Icons" name="icons-images" /%}
+{% gridExampleRunner title="Swapping the Icon Font" name="icons-css" /%}
 
 ## Set the Icons Through gridOptions (JavaScript)
 
@@ -117,6 +135,10 @@ The `icons` property takes an object of name/value pairs where the name is one o
 {% gridExampleRunner title="Icon Grid Options" name="icons-grid-options"  exampleHeight=660 /%}
 
 In the following list, the name to use in the grid options is to the left, and on the right is the CSS icon name as listed in the [Provided Icons](#provided-icons) table below.
+
+## Icon Names
+
+This is a mapping of javascript name to CSS name for icons. When overriding icons using grid options, use the names on the left. When overriding icons in CSS or with `iconOverrides`, use the names on the right.
 
 ```js
 // header column group shown when expanded (click to contract)
@@ -297,6 +319,6 @@ chartsDownload: 'save',
 
 ## Provided Icons
 
-Below you can see a list with all available icons for each provided theme. The name next to each icon is the CSS name, e.g. the `pin` icon will have the CSS class `ag-icon-pin` and uses the CSS variable `--ag-icon-font-code-pin`.
+Below you can see a list with all available icons for each provided theme. The name next to each icon is the CSS name, e.g. the `pin` icon will have the CSS class `ag-icon-pin`.
 
 {% iconsPanel /%}

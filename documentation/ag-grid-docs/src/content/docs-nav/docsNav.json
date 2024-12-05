@@ -1662,18 +1662,6 @@
                         },
                         {
                             "type": "item",
-                            "title": "Best Practices",
-                            "path": "framework-data-flow",
-                            "frameworks": ["vue"]
-                        },
-                        {
-                            "type": "item",
-                            "title": "Vue2 Tutorial",
-                            "path": "vue2",
-                            "frameworks": ["vue"]
-                        },
-                        {
-                            "type": "item",
                             "title": "Aligned Grids",
                             "path": "aligned-grids"
                         }

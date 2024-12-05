@@ -1,12 +1,12 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, ColGroupDef, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <div style="flex: 0 1 auto;">
@@ -37,7 +37,7 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <(ColDef | ColGroupDef)[]>[
                 { field: 'athlete' },
                 { field: 'age' },
                 { field: 'country' },
@@ -59,7 +59,7 @@ const VueExample = {
                 },
             ],
             rowData: [],
-            topOptions: {
+            topOptions: <GridOptions>{
                 alignedGrids: () => [this.$refs.bottomGrid],
                 defaultColDef: {
                     filter: true,
@@ -69,7 +69,7 @@ const VueExample = {
                     type: 'fitGridWidth',
                 },
             },
-            bottomOptions: {
+            bottomOptions: <GridOptions>{
                 alignedGrids: () => [this.$refs.topGrid],
                 defaultColDef: {
                     filter: true,
@@ -99,10 +99,10 @@ const VueExample = {
             this.topGridApi.setColumnsVisible(['country'], value);
         },
 
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             this.topGridApi = params.api;
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

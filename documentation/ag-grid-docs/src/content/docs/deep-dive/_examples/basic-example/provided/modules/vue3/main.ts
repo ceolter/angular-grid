@@ -1,14 +1,21 @@
-import { createApp } from 'vue';
-import { ref } from 'vue';
+import { createApp, defineComponent, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Row Data Interface
+interface IRow {
+    make: string;
+    model: string;
+    price: number;
+    electric: boolean;
+}
 
 // Define the component configuration
-const App = {
+const App = defineComponent({
     name: 'App',
     template: `
     <ag-grid-vue
@@ -22,19 +29,24 @@ const App = {
         AgGridVue,
     },
     setup() {
-        const rowData = ref([
+        const rowData = ref<IRow[]>([
             { make: 'Tesla', model: 'Model Y', price: 64950, electric: true },
             { make: 'Ford', model: 'F-Series', price: 33850, electric: false },
             { make: 'Toyota', model: 'Corolla', price: 29600, electric: false },
         ]);
 
-        const colDefs = ref([{ field: 'make' }, { field: 'model' }, { field: 'price' }, { field: 'electric' }]);
+        const colDefs = ref<ColDef<IRow>[]>([
+            { field: 'make' },
+            { field: 'model' },
+            { field: 'price' },
+            { field: 'electric' },
+        ]);
 
         return {
             rowData,
             colDefs,
         };
     },
-};
+});
 
 createApp(App).mount('#app');

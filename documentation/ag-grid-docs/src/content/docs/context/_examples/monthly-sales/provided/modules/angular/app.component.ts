@@ -2,7 +2,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
-import { ClientSideRowModelModule } from 'ag-grid-community';
 // NOTE: Angular CLI does not support component CSS imports: angular-cli/issues/23273
 import type {
     ColDef,
@@ -17,13 +16,7 @@ import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-g
 
 import './styles.css';
 
-ModuleRegistry.registerModules([
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    RowGroupingModule,
-    SetFilterModule,
-    FiltersToolPanelModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule, SetFilterModule, FiltersToolPanelModule]);
 
 @Component({
     standalone: true,

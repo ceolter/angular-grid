@@ -262,7 +262,7 @@ function findExistingColumn(
 }
 
 export function _addColumnDefaultAndTypes(beans: BeanCollection, colDef: ColDef, colId: string): ColDef {
-    const { gos, dataTypeSvc } = beans;
+    const { gos, dataTypeSvc, validation } = beans;
     // start with empty merged definition
     const res: ColDef = {} as ColDef;
 
@@ -292,6 +292,7 @@ export function _addColumnDefaultAndTypes(beans: BeanCollection, colDef: ColDef,
     }
 
     dataTypeSvc?.validateColDef(res);
+    validation?.validateColDef(res, colId);
 
     return res;
 }

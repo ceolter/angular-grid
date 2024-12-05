@@ -1,4 +1,4 @@
-.ag-sparkline-tooltip {
+.ag-charts-tooltip {
     background-color: rgba(0, 113, 235, 0.7);
     color: rgb(255, 255, 255);
     border-radius: 2px;
@@ -9,14 +9,14 @@
     padding: 0 5px;
 }
 
-.ag-sparkline-tooltip-title {
+.ag-charts-tooltip-title {
     display: block;
     font-weight: bold;
     border-bottom: 1px solid rgb(204, 204, 204);
     padding: 8px;
 }
 
-.ag-sparkline-tooltip-content {
+.ag-charts-tooltip-content {
     display: block;
     padding: 8px;
 }

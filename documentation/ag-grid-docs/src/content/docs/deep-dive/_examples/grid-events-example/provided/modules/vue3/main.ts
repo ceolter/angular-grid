@@ -1,13 +1,25 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 import { onMounted, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import type { CellValueChangedEvent, ColDef } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const CompanyLogoRenderer = {
+// Row Data Interface
+interface IRow {
+    mission: string;
+    company: string;
+    location: string;
+    date: string;
+    time: string;
+    rocket: string;
+    price: number;
+    successful: boolean;
+}
+
+const CompanyLogoRenderer = defineComponent({
     template: `
     <span style="display: flex; height: 100%; width: 100%; align-items: center;">
       <img :src="'https://www.ag-grid.com/example-assets/space-company-logos/' + cellValueLowerCase + '.png'" style="display: block; width: 25px; height: auto; max-height: 50%; margin-right: 12px; filter: brightness(1.1);" />
@@ -22,10 +34,10 @@ const CompanyLogoRenderer = {
             cellValueLowerCase,
         };
     },
-};
+});
 
 // Define the component configuration
-const App = {
+const App = defineComponent({
     name: 'App',
     template: `
     <ag-grid-vue
@@ -43,14 +55,14 @@ const App = {
         companyLogoRenderer: CompanyLogoRenderer,
     },
     methods: {
-        onCellValueChanged(event) {
+        onCellValueChanged(event: CellValueChangedEvent) {
             console.log(`New Cell Value: ${event.value}`);
         },
     },
     setup() {
-        const rowData = ref([]);
+        const rowData = ref<IRow[]>([]);
 
-        const colDefs = ref([
+        const colDefs = ref<ColDef[]>([
             {
                 field: 'mission',
                 filter: true,
@@ -65,7 +77,7 @@ const App = {
             { field: 'date' },
             {
                 field: 'price',
-                valueFormatter: (params) => {
+                valueFormatter: (params: ValueFormatterParams) => {
                     return '£' + params.value.toLocaleString();
                 },
             },
@@ -73,7 +85,7 @@ const App = {
             { field: 'rocket' },
         ]);
 
-        const defaultColDef = ref({
+        const defaultColDef = ref<ColDef>({
             editable: true,
             filter: true,
         });
@@ -94,6 +106,6 @@ const App = {
             defaultColDef,
         };
     },
-};
+});
 
 createApp(App).mount('#app');

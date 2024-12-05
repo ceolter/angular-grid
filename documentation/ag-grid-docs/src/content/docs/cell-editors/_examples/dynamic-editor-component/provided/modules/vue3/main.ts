@@ -1,37 +1,40 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    CellEditingStartedEvent,
+    CellEditingStoppedEvent,
+    CellEditorSelectorResult,
+    ColDef,
+    ICellEditorParams,
+    RowEditingStartedEvent,
+    RowEditingStoppedEvent,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { RichSelectModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RichSelectModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { getData } from './data.js';
-import MoodEditor from './moodEditorVue.js';
-import NumericCellEditor from './numericCellEditorVue.js';
+import { getData } from './data.ts';
+import MoodEditor from './moodEditorVue.ts';
+import NumericCellEditor from './numericCellEditorVue.ts';
 import './styles.css';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,
-    ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
     RichSelectModule,
 ]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <ag-grid-vue
                     style="width: 100%; height: 100%;"
                     id="myGrid"
                     :columnDefs="columnDefs"
-                    @grid-ready="onGridReady"
                     :defaultColDef="defaultColDef"
-                    :rowData="rowData"
-                    
+                    :rowData="rowData"                    
                     @row-editing-started="onRowEditingStarted"
                     @row-editing-stopped="onRowEditingStopped"
                     @cell-editing-started="onCellEditingStarted"
@@ -45,14 +48,14 @@ const VueExample = {
     },
     data: function () {
         return {
-            columnDefs: [
+            columnDefs: <ColDef[]>[
                 {
                     field: 'type',
                 },
                 {
                     field: 'value',
                     editable: true,
-                    cellEditorSelector: (params) => {
+                    cellEditorSelector: (params: ICellEditorParams) => {
                         if (params.data.type === 'age') {
                             return {
                                 component: 'NumericCellEditor',
@@ -77,8 +80,7 @@ const VueExample = {
                     },
                 },
             ],
-            gridApi: null,
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 cellDataType: false,
             },
@@ -89,22 +91,19 @@ const VueExample = {
         this.rowData = getData();
     },
     methods: {
-        onRowEditingStarted(event) {
+        onRowEditingStarted(event: RowEditingStartedEvent) {
             console.log('never called - not doing row editing');
         },
-        onRowEditingStopped(event) {
+        onRowEditingStopped(event: RowEditingStoppedEvent) {
             console.log('never called - not doing row editing');
         },
-        onCellEditingStarted(event) {
+        onCellEditingStarted(event: CellEditingStartedEvent) {
             console.log('cellEditingStarted');
         },
-        onCellEditingStopped(event) {
+        onCellEditingStopped(event: CellEditingStoppedEvent) {
             console.log('cellEditingStopped');
         },
-        onGridReady(params) {
-            this.gridApi = params.api;
-        },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

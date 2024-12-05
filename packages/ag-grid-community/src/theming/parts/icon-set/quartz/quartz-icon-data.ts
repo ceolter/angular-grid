@@ -1,10 +1,10 @@
-import { iconSetQuartzCSS } from './icon-set-quartz.css-GENERATED';
+import { sharedIconStylesCSS } from '../shared-icon-styles.css-GENERATED';
 
 const iconNameToSvgFragment: Record<string, string | undefined> = {
     aggregation: '<path d="M18 7V4H6l6 8-6 8h12v-3"/>',
     arrows: '<polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="22"/>',
     asc: '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
-    cancel: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+    cancel: '<path d="m18 6-12 12"/><path d="m6 6 12 12"/>',
     chart: '<line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/>',
     'color-picker':
         '<path d="m19 11-8-8-8.6 8.6a2 2 0 0 0 0 2.8l5.2 5.2c.8.8 2 .8 2.8 0L19 11Z"/><path d="m5 2 5 5"/><path d="M2 13h15"/><path d="M22 20a2 2 0 1 1-4 0c0-1.6 1.7-2.4 2-4 .3 1.6 2 2.4 2 4Z"/>',
@@ -71,7 +71,7 @@ const iconNameToFullSvg: Record<string, string | undefined> = {
 };
 
 export const getQuartzIconsCss = (args: { strokeWidth?: number } = {}) => {
-    let result = iconSetQuartzCSS;
+    let result = sharedIconStylesCSS;
     for (const iconName of [...Object.keys(iconNameToSvgFragment), ...Object.keys(iconNameToFullSvg)]) {
         const iconSvg = quartzIconSvg(iconName, args.strokeWidth);
         result += `.ag-icon-${iconName}::before { mask-image: url('data:image/svg+xml,${encodeURIComponent(iconSvg)}'); }\n`;

@@ -1,5 +1,6 @@
 import type {
     AgColumn,
+    ExcelExportParams,
     ExcelFactoryMode,
     ExcelHeaderFooterImage,
     ExcelImage,
@@ -100,10 +101,6 @@ export function showExcelTableNonCompatibleFeaturesWarning(featureName: string) 
     _warn(163, { featureName });
 }
 
-export function getXlsxTableNameFromIndex(idx: number) {
-    return `table${idx + 1}`;
-}
-
 export function getXlsxSanitizedTableName(name: string) {
     return name
         .replace(/^[^a-zA-Z_]+/, '_')
@@ -120,13 +117,13 @@ export function addXlsxTableToSheet(sheetIndex: number, table: ExcelDataTable): 
     XLSX_WORKSHEET_DATA_TABLES.set(sheetIndex, table);
 }
 
-function processTableConfig(worksheet: ExcelWorksheet, config: ExcelGridSerializingParams) {
-    if (!config.exportAsExcelTable) {
+function processTableConfig(worksheet: ExcelWorksheet, config: ExcelGridSerializingParams & ExcelExportParams) {
+    const { exportAsExcelTable, prependContent, appendContent, colModel } = config;
+    if (!exportAsExcelTable) {
         return;
     }
 
-    const tableConfig: Partial<ExcelTableConfig> =
-        typeof config.exportAsExcelTable === 'boolean' ? {} : config.exportAsExcelTable;
+    const tableConfig: Partial<ExcelTableConfig> = typeof exportAsExcelTable === 'boolean' ? {} : exportAsExcelTable;
 
     const {
         name: nameFromConfig,
@@ -142,8 +139,9 @@ function processTableConfig(worksheet: ExcelWorksheet, config: ExcelGridSerializ
     const sheetIndex = XLSX_SHEET_NAMES.length - 1;
     const { table } = worksheet;
     const { rows, columns } = table;
-    const headerRowCount = _getHeaderRowCount(config.colModel);
-    const tableHeaderRowIndex: number = headerRowCount - 1; // Assuming that header starts at row 0
+    const headerRowCount = _getHeaderRowCount(colModel);
+    const skipTopRows = prependContent ? prependContent.length : 0;
+    const removeFromBottom = appendContent ? appendContent.length : 0;
     const tableRowCount = rows.length;
     const tableColCount = columns.length;
 
@@ -166,12 +164,11 @@ function processTableConfig(worksheet: ExcelWorksheet, config: ExcelGridSerializ
     }
 
     addXlsxTableToSheet(sheetIndex, {
-        name: getXlsxTableNameFromIndex(sheetIndex),
+        name: `table${XLSX_WORKSHEET_DATA_TABLES.size + 1}`,
         displayName: tableName,
         columns: tableColumns,
         showFilterButtons: showFilterButtons,
-        headerRowIndex: tableHeaderRowIndex,
-        rowCount: tableRowCount - headerRowCount,
+        rowRange: [headerRowCount + skipTopRows, headerRowCount + (tableRowCount - headerRowCount) - removeFromBottom],
         showRowStripes: showRowStripes ?? true,
         showColumnStripes: showColumnStripes ?? false,
         highlightFirstColumn: highlightFirstColumn ?? false,
@@ -443,13 +440,13 @@ export function createXlsxVmlDrawingRel(sheetIndex: number) {
 export function createXlsxRelationships({
     drawingIndex,
     vmlDrawingIndex,
-    tableIndex,
+    tableName,
 }: {
     drawingIndex?: number;
     vmlDrawingIndex?: number;
-    tableIndex?: number;
+    tableName?: string;
 } = {}) {
-    if (drawingIndex === undefined && vmlDrawingIndex === undefined && tableIndex === undefined) {
+    if (drawingIndex === undefined && vmlDrawingIndex === undefined && tableName === undefined) {
         return '';
     }
 
@@ -470,11 +467,11 @@ export function createXlsxRelationships({
         });
     }
 
-    if (tableIndex != null) {
+    if (tableName != null) {
         config.push({
             Id: `rId${config.length + 1}`,
             Type: 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/table',
-            Target: `../tables/${getXlsxTableNameFromIndex(tableIndex)}.xml`,
+            Target: `../tables/${tableName}.xml`,
         });
     }
 

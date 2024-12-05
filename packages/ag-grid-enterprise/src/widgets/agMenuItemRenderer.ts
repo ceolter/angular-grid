@@ -4,6 +4,7 @@ import {
     _createIconNoSpan,
     _isNodeOrElement,
     _loadTemplate,
+    _setAriaChecked,
     _setAriaExpanded,
     _warn,
 } from 'ag-grid-community';
@@ -27,6 +28,7 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
         this.params = params;
         this.cssClassPrefix = this.params.cssClassPrefix ?? 'ag-menu-option';
 
+        this.addAriaAttributes();
         this.addIcon();
         this.addName();
         this.addShortcut();
@@ -35,6 +37,20 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
 
     public configureDefaults(): boolean {
         return true;
+    }
+
+    private addAriaAttributes(): void {
+        const { checked, subMenu } = this.params;
+
+        const eGui = this.getGui();
+
+        if (checked) {
+            _setAriaChecked(eGui, checked);
+        }
+
+        if (subMenu) {
+            _setAriaExpanded(eGui, false);
+        }
     }
 
     private addIcon(): void {
@@ -94,8 +110,6 @@ export class AgMenuItemRenderer extends Component implements IMenuItemComp {
 
         if (this.params.subMenu) {
             const iconName = this.gos.get('enableRtl') ? 'subMenuOpenRtl' : 'subMenuOpen';
-            _setAriaExpanded(eGui, false);
-
             pointer.appendChild(_createIconNoSpan(iconName, this.beans)!);
         }
 

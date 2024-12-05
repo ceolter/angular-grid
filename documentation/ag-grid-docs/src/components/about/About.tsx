@@ -479,6 +479,22 @@ export const About = () => {
                         </div>
                         <div>
                             <img
+                                src={urlWithBaseUrl('/images/team/nia.jpg')}
+                                alt="Nia Brown, Customer Experience Manager"
+                            />
+                            <h3>Nia Brown</h3>
+                            <p>Customer Experience Manager</p>
+                        </div>
+                        <div>
+                            <img
+                                src={urlWithBaseUrl('/images/team/aaisha.jpg')}
+                                alt="Aaisha Mallik, Customer Experience Manager"
+                            />
+                            <h3>Aaisha Mallik</h3>
+                            <p>Customer Experience Manager</p>
+                        </div>
+                        <div>
+                            <img
                                 src={urlWithBaseUrl('/images/team/kathryn.png')}
                                 alt="Kathryn Knapman, Board Executive Assistant"
                             />

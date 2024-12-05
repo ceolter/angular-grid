@@ -1,11 +1,29 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 import { onMounted, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    CellValueChangedEvent,
+    ColDef,
+    RowSelectionOptions,
+    SelectionChangedEvent,
+    ValueFormatterParams,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Row Data Interface
+interface IRow {
+    mission: string;
+    company: string;
+    location: string;
+    date: string;
+    time: string;
+    rocket: string;
+    price: number;
+    successful: boolean;
+}
 
 const CompanyLogoRenderer = {
     template: `
@@ -43,7 +61,7 @@ const MissionResultRenderer = {
 };
 
 // Define the component configuration
-const App = {
+const App = defineComponent({
     name: 'App',
     template: `
     <ag-grid-vue
@@ -64,15 +82,15 @@ const App = {
         missionResultRenderer: MissionResultRenderer,
     },
     methods: {
-        onCellValueChanged(event) {
+        onCellValueChanged(event: CellValueChangedEvent) {
             console.log(`New Cell Value: ${event.value}`);
         },
-        onSelectionChanged(event) {
+        onSelectionChanged(event: SelectionChangedEvent) {
             console.log('Row Selection Event!');
         },
     },
     setup() {
-        const rowData = ref([]);
+        const rowData = ref<IRow[]>([]);
 
         // Fetch data when the component is mounted
         onMounted(async () => {
@@ -88,7 +106,7 @@ const App = {
             });
         };
 
-        const colDefs = ref([
+        const colDefs = ref<ColDef[]>([
             {
                 field: 'mission',
                 width: 150,
@@ -109,7 +127,7 @@ const App = {
             {
                 field: 'price',
                 width: 130,
-                valueFormatter: (params) => {
+                valueFormatter: (params: ValueFormatterParams) => {
                     return '£' + params.value.toLocaleString();
                 },
             },
@@ -121,12 +139,12 @@ const App = {
             { field: 'rocket' },
         ]);
 
-        const rowSelection = ref({
+        const rowSelection = ref<RowSelectionOptions>({
             mode: 'multiRow',
             headerCheckbox: false,
         });
 
-        const defaultColDef = ref({
+        const defaultColDef = ref<ColDef>({
             filter: true,
             editable: true,
         });
@@ -143,6 +161,6 @@ const App = {
             defaultColDef,
         };
     },
-};
+});
 
 createApp(App).mount('#app');

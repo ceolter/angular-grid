@@ -1,14 +1,14 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%; display: flex; flex-direction: column">
             <ag-grid-vue style="flex: 1 1 auto;"
@@ -62,7 +62,7 @@ const VueExample = {
             },
         ];
 
-        this.topGridOptions = {
+        this.topGridOptions = <GridOptions>{
             alignedGrids: () => [this.$refs.bottomGrid],
             defaultColDef: {
                 filter: true,
@@ -75,7 +75,7 @@ const VueExample = {
                 type: 'fitCellContents',
             },
         };
-        this.bottomGridOptions = {
+        this.bottomGridOptions = <GridOptions>{
             alignedGrids: () => [this.$refs.topGrid],
             defaultColDef: {
                 filter: true,
@@ -85,7 +85,7 @@ const VueExample = {
             alwaysShowVerticalScroll: true,
         };
 
-        this.columnDefs = [
+        this.columnDefs = <(ColDef | ColGroupDef)[]>[
             { field: 'athlete', width: 200, hide: !this.athleteVisible },
             { field: 'age', width: 150, hide: !this.ageVisible },
             { field: 'country', width: 150, hide: !this.countryVisible },
@@ -110,6 +110,6 @@ const VueExample = {
             .then((resp) => resp.json())
             .then((rowData) => (this.rowData = rowData));
     },
-};
+});
 
 createApp(VueExample).mount('#app');

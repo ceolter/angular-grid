@@ -1,14 +1,25 @@
-import { createApp } from 'vue';
-import { onMounted, ref } from 'vue';
+import { createApp, defineComponent, onMounted, ref } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Row Data Interface
+interface IRow {
+    mission: string;
+    company: string;
+    location: string;
+    date: string;
+    time: string;
+    rocket: string;
+    price: number;
+    successful: boolean;
+}
 
 // Define the component configuration
-const App = {
+const App = defineComponent({
     name: 'App',
     template: `
     <ag-grid-vue
@@ -24,9 +35,9 @@ const App = {
         AgGridVue,
     },
     setup() {
-        const rowData = ref([]);
+        const rowData = ref<IRow[]>([]);
 
-        const colDefs = ref([
+        const colDefs = ref<ColDef[]>([
             { field: 'mission', filter: true },
             { field: 'company' },
             { field: 'location' },
@@ -36,7 +47,7 @@ const App = {
             { field: 'rocket' },
         ]);
 
-        const defaultColDef = ref({
+        const defaultColDef = ref<ColDef>({
             filter: true,
         });
 
@@ -56,6 +67,6 @@ const App = {
             defaultColDef,
         };
     },
-};
+});
 
 createApp(App).mount('#app');

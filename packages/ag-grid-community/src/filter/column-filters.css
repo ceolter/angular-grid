@@ -31,6 +31,13 @@
     flex-direction: column;
 }
 
+/* Add a minimum width for the filter menu to avoid having zero width when the
+   content tries to size itself to the menu */
+:where(.ag-menu:not(.ag-tabs) .ag-filter) .ag-filter-body-wrapper,
+:where(.ag-menu:not(.ag-tabs) .ag-filter) > *:not(.ag-filter-wrapper) {
+    min-width: 180px;
+}
+
 .ag-filter-filter {
     flex: 1 1 0px;
 }

@@ -2,20 +2,10 @@ import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import { createGrid } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule } from 'ag-grid-enterprise';
 import { SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ColumnsToolPanelModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, ColumnMenuModule, SetFilterModule]);
 
 let countDownDirection = true;
 
@@ -23,9 +13,9 @@ const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 150 },
     { field: 'country', minWidth: 150 },
     { field: 'year', minWidth: 120 },
-    { field: 'gold', aggFunc: 'sum' },
-    { field: 'silver', aggFunc: 'sum' },
-    { field: 'bronze', aggFunc: 'sum' },
+    { field: 'gold' },
+    { field: 'silver' },
+    { field: 'bronze' },
 ];
 
 let gridApi: GridApi<IOlympicData>;
@@ -36,14 +26,6 @@ const gridOptions: GridOptions<IOlympicData> = {
         filter: true,
     },
     columnDefs: columnDefs,
-    suppressAggFuncInHeader: true, // so we don't see sum() in gold, silver and bronze headers
-    autoGroupColumnDef: {
-        // to get 'athlete' showing in the leaf level in this column
-        cellRenderer: 'agGroupCellRenderer',
-        headerName: 'Athlete',
-        minWidth: 200,
-        field: 'athlete',
-    },
 };
 
 // the code below executes an action every 2,000 milliseconds.

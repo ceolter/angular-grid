@@ -120,7 +120,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             this.allColumnFilters.forEach((filterWrapper, colId) => {
                 const newModel = model[colId];
 
-                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, newModel));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise, newModel));
                 modelKeys.delete(colId);
             });
 
@@ -143,11 +143,11 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                     _warn(64, { colId });
                     return;
                 }
-                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, model[colId]));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise, model[colId]));
             });
         } else {
             this.allColumnFilters.forEach((filterWrapper) => {
-                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise!, null));
+                allPromises.push(setModelOnFilterWrapper(filterWrapper.filterPromise, null));
             });
         }
 
@@ -310,11 +310,14 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     private forEachColumnFilter(
         callback: (filter: IFilterComp | null, filterWrapper: FilterWrapper) => void
     ): AgPromise<(void | null)[]> {
-        return AgPromise.all(
-            Array.from(this.allColumnFilters.values()).map((filterWrapper) =>
-                filterWrapper.filterPromise!.then((filter) => callback(filter, filterWrapper))
-            )
-        );
+        const promises: AgPromise<void>[] = [];
+        this.allColumnFilters.forEach((filterWrapper) => {
+            const filterPromise = filterWrapper.filterPromise;
+            if (filterPromise) {
+                promises.push(filterPromise.then((filter) => callback(filter, filterWrapper)));
+            }
+        });
+        return AgPromise.all(promises);
     }
 
     public doColumnFiltersPass(node: RowNode, filterToSkip?: IFilterComp, targetAggregates?: boolean): boolean {
@@ -544,9 +547,8 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
 
     private createFilterWrapper(column: AgColumn): FilterWrapper {
         const filterWrapper: FilterWrapper = {
-            column: column,
+            column,
             filterPromise: null,
-            compiledElement: null,
             compDetails: null,
         };
 
@@ -698,7 +700,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         filterWrapper: FilterWrapper,
         source: 'api' | 'columnChanged' | 'gridDestroyed' | 'advancedFilterEnabled' | 'paramsUpdated'
     ): void {
-        filterWrapper.filterPromise!.then((filter) => {
+        filterWrapper.filterPromise?.then((filter) => {
             this.destroyBean(filter);
 
             this.setColFilterActive(filterWrapper.column, false, 'filterDestroyed');
@@ -867,7 +869,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             });
         };
         return filterWrapper
-            ? convertPromise(setModelOnFilterWrapper(filterWrapper.filterPromise!, model))
+            ? convertPromise(setModelOnFilterWrapper(filterWrapper.filterPromise, model))
             : Promise.resolve();
     }
 
@@ -1036,7 +1038,10 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     }
 }
 
-function setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp>, newModel: any): AgPromise<void> {
+function setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp> | null, newModel: any): AgPromise<void> {
+    if (!filterPromise) {
+        return AgPromise.resolve();
+    }
     return new AgPromise<void>((resolve) => {
         filterPromise.then((filter) => {
             if (typeof filter!.setModel !== 'function') {
@@ -1050,7 +1055,6 @@ function setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp>, newModel
 }
 
 export interface FilterWrapper {
-    compiledElement: any;
     column: AgColumn;
     filterPromise: AgPromise<IFilterComp> | null;
     filter?: IFilterComp;

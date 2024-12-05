@@ -77,27 +77,22 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         return data.filter((item) => item != null);
     }
 
-    private createParams(params: any) {
+    private createContext() {
         return {
-            context: {
-                data: this.params?.data,
-                cellData: this.params?.value,
-            },
-            yValue: params.datum.yValue ?? params.datum[params.yKey],
-            xValue: params.datum.xValue ?? params.datum[params.xKey],
+            data: this.params?.data,
+            cellData: this.params?.value,
         };
     }
 
     private createDefaultContent(params: any) {
-        const yValue = params.datum.yValue ?? params.datum[params.yKey];
-        return `${yValue}`;
+        return { content: `${params.yValue}` };
     }
 
     private wrapItemStyler(container: { itemStyler?: any }) {
         container!.itemStyler = wrapFn(container.itemStyler, (fn, stylerParams: any): any => {
             return fn({
-                ...this.createParams(stylerParams),
                 ...stylerParams,
+                context: this.createContext(),
             });
         });
     }
@@ -107,8 +102,8 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             ...this.sparklineOptions.tooltip,
             renderer: wrapFn(this.sparklineOptions.tooltip!.renderer!, (fn, tooltipParams: any): any => {
                 const userResult = fn({
-                    ...this.createParams(tooltipParams),
                     ...tooltipParams,
+                    context: this.createContext(),
                 });
 
                 if (typeof userResult === 'string') {

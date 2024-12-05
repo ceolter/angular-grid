@@ -17,8 +17,15 @@
 }
 
 .ag-column-panel-column-select {
-    border-top: var(--ag-tool-panel-separator-border);
     border-bottom: var(--ag-tool-panel-separator-border);
+}
+
+/* Add a top border if the pivot mode panel is shown above. We do this by
+   looking for a non-hidden element before this element. This is a bit awkward,
+   but the alignment of this border with the header border is slightly off if we
+   put the border at at bottom of the pivot mode panel */
+.ag-column-panel-column-select:where(:nth-child(n + 2 of :not(.ag-hidden))) {
+    border-top: var(--ag-tool-panel-separator-border);
 }
 
 :where(.ag-column-panel) .ag-column-drop-vertical {

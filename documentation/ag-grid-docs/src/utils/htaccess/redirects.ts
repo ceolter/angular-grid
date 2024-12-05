@@ -1147,8 +1147,6 @@ export const SITE_301_REDIRECTS: Redirect[] = [
     { from: '/documentation/vue/filtering/', to: '/vue-data-grid/filtering/' },
     { from: '/documentation/vue/flashing-cells/', to: '/vue-data-grid/change-cell-renderers/' },
     { from: '/documentation/vue/floating-filters/', to: '/vue-data-grid/floating-filters/' },
-    { from: '/documentation/vue/framework-data-flow/', to: '/vue-data-grid/framework-data-flow/' },
-    { from: '/documentation/vue/framework-misc/', to: '/vue-data-grid/framework-data-flow/' },
     { from: '/documentation/vue/full-width-rows/', to: '/vue-data-grid/full-width-rows/' },
     { from: '/documentation/vue/getting-started/', to: '/vue-data-grid/getting-started/' },
     { from: '/documentation/vue/grid-api/', to: '/vue-data-grid/grid-api/' },
@@ -2464,8 +2462,6 @@ export const SITE_301_REDIRECTS: Redirect[] = [
     { from: '/vue-js-grid/', to: 'https://medium.com/ag-grid/using-ag-grid-inside-a-vuejs-application-b6c442d77da8' },
     { from: '/vue-markup/', to: '/vue-data-grid/getting-started/' },
     { from: '/vuejs-grid/', to: '/vue-data-grid/getting-started/' },
-    { from: '/vuejs-misc/', to: '/vue-data-grid/framework-data-flow/' },
-    { from: '/vuex-data-flow/', to: '/vue-data-grid/framework-data-flow/' },
     {
         from: '/why-the-world-needed-another-angularjs-grid/',
         to: 'https://medium.com/ag-grid/why-the-world-needed-another-angularjs-1-x-grid-17e522a53bc8',
@@ -2701,6 +2697,7 @@ export const SITE_301_REDIRECTS: Redirect[] = [
     { from: '/vue-data-grid/whats-new', to: '/whats-new' },
     { from: '/angular-data-grid/whats-new', to: '/whats-new' },
     { from: '/javascript-data-grid/whats-new', to: '/whats-new' },
+    { from: '/vue-data-grid/framework-data-flow', to: '/vue-data-grid/getting-started/' },
 
     ...pageForAllFrameworks('range-selection', 'cell-selection'),
     ...pageForAllFrameworks('range-selection-handle', 'cell-selection-handle'),

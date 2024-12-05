@@ -1,10 +1,10 @@
 import { createApp } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const VueExample = {
     template: `
@@ -35,7 +35,7 @@ const VueExample = {
         };
     },
     beforeMount() {
-        this.columnDefs = [
+        this.columnDefs = <ColDef[]>[
             { field: 'athlete', width: 150 },
             { field: 'age', width: 90 },
             { field: 'country', width: 150 },
@@ -48,7 +48,6 @@ const VueExample = {
             { field: 'total', width: 100 },
         ];
     },
-    mounted() {},
     methods: {
         fillLarge() {
             this.setWidthAndHeight('100%', '100%');
@@ -63,7 +62,7 @@ const VueExample = {
             this.width = width;
             this.height = height;
         },
-        onGridReady(params) {
+        onGridReady(params: GridReadyEvent) {
             const updateData = (data) => (this.rowData = data);
 
             fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
@@ -72,9 +71,5 @@ const VueExample = {
         },
     },
 };
-
-var minRowHeight = 25;
-
-var currentRowHeight = minRowHeight;
 
 createApp(VueExample).mount('#app');

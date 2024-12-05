@@ -5,6 +5,7 @@ import type {
     ColumnGroup,
     ExcelCell,
     ExcelColumn,
+    ExcelExportParams,
     ExcelImage,
     ExcelOOXMLDataType,
     ExcelRow,
@@ -45,7 +46,7 @@ export interface ExcelGridSerializingParams extends ExcelWorksheetConfigParams, 
 }
 
 export class ExcelSerializingSession extends BaseGridSerializingSession<ExcelRow[]> {
-    private readonly config: ExcelGridSerializingParams;
+    private readonly config: ExcelGridSerializingParams & ExcelExportParams;
     private readonly stylesByIds: { [key: string]: ExcelStyle };
 
     private mixedStyles: { [key: string]: ExcelMixedStyle } = {};

@@ -40,11 +40,8 @@
             vue: {
                 defaultExtension: 'js',
             },
-            'vue-class-component': {
-                defaultExtension: 'js',
-            },
-            'vue-property-decorator': {
-                defaultExtension: 'js',
+            app: {
+                defaultExtension: 'ts',
             },
             'ag-grid-community': {
                 main: './dist/package/main.cjs.js',

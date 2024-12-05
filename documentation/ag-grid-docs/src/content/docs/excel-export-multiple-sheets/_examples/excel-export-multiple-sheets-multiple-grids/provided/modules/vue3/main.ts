@@ -1,6 +1,13 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type {
+    ColDef,
+    GetRowIdParams,
+    GridApi,
+    GridReadyEvent,
+    ICellRendererParams,
+    RowSelectionOptions,
+} from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { CsvExportModule } from 'ag-grid-community';
 import { ExcelExportModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
@@ -8,18 +15,18 @@ import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, CsvExportModule, ExcelExportModule]);
+ModuleRegistry.registerModules([AllCommunityModule, CsvExportModule, ExcelExportModule]);
 
-const SportRenderer = {
+const SportRenderer = defineComponent({
     template: `<i class="far fa-trash-alt" style="cursor: pointer" @click="applyTransaction()"></i>`,
     methods: {
         applyTransaction() {
             this.params.api.applyTransaction({ remove: [this.params.node.data] });
         },
     },
-};
+});
 
-const VueExample = {
+const VueExample = defineComponent({
     template: /* html */ `
         <div class="top-container">
             <div>
@@ -76,16 +83,15 @@ const VueExample = {
             rightRowData: null,
             leftApi: null,
             rightApi: null,
-
-            rowSelection: {
+            rowSelection: <RowSelectionOptions>{
                 mode: 'multiRow',
             },
-            defaultColDef: {
+            defaultColDef: <ColDef>{
                 flex: 1,
                 minWidth: 100,
                 filter: true,
             },
-            leftColumns: [
+            leftColumns: <ColDef[]>[
                 {
                     rowDrag: true,
                     maxWidth: 50,
@@ -101,7 +107,7 @@ const VueExample = {
                 { field: 'athlete' },
                 { field: 'sport' },
             ],
-            rightColumns: [
+            rightColumns: <ColDef[]>[
                 {
                     rowDrag: true,
                     maxWidth: 50,
@@ -157,7 +163,7 @@ const VueExample = {
             this.loadGrids();
         },
 
-        onGridReady(params, side) {
+        onGridReady(params: GridReadyEvent, side: number) {
             if (side === 0) {
                 this.leftApi = params.api;
             }
@@ -198,6 +204,6 @@ const VueExample = {
             });
         },
     },
-};
+});
 
 createApp(VueExample).mount('#app');

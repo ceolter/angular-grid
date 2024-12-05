@@ -1,12 +1,12 @@
-import { createApp } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
+import type { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-const VueExample = {
+const VueExample = defineComponent({
     template: `
         <div style="height: 100%">
             <ag-grid-vue
@@ -31,7 +31,7 @@ const VueExample = {
     },
     data: function () {
         return {
-            topOptions: {
+            topOptions: <GridOptions>{
                 alignedGrids: () => [this.$refs.bottomGrid],
                 defaultColDef: {
                     filter: true,
@@ -42,7 +42,7 @@ const VueExample = {
                     type: 'fitGridWidth',
                 },
             },
-            bottomOptions: {
+            bottomOptions: <GridOptions>{
                 alignedGrids: () => [this.$refs.topGrid],
                 defaultColDef: {
                     filter: true,
@@ -51,7 +51,7 @@ const VueExample = {
                 },
             },
             topGridApi: null,
-            columnDefs: [
+            columnDefs: <(ColDef | ColGroupDef)[]>[
                 {
                     headerName: 'Group 1',
                     groupId: 'Group1',
@@ -94,6 +94,6 @@ const VueExample = {
                 this.topGridApi.moveColumnByIndex(11, 4);
             });
     },
-};
+});
 
 createApp(VueExample).mount('#app');

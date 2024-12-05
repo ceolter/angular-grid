@@ -7,7 +7,7 @@ import { MasterDetailModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import DetailCellRenderer from './detailCellRendererVue.js';
+import DetailCellRenderer from './detailCellRendererVue';
 import './styles.css';
 
 ModuleRegistry.registerModules([
