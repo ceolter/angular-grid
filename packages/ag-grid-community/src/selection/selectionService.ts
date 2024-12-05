@@ -462,11 +462,12 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             if (this.groupSelectsDescendants && node.group) {
                 return;
             }
+            const isGrandTotalRow = node.footer && node.level === -1;
 
             if (node.isSelected()) {
                 selectedCount++;
-            } else if (!node.selectable) {
-                // don't count non-selectable nodes!
+            } else if (!node.selectable || isGrandTotalRow) {
+                // don't count non-selectable nodes or grand total row
             } else {
                 notSelectedCount++;
             }
