@@ -866,7 +866,7 @@ export {
 } from './interfaces/iCallbackParams';
 export { WithoutGridCommon } from './interfaces/iCommon';
 
-export { _ALL_GRID_OPTIONS, _BOOLEAN_GRID_OPTIONS } from './propertyKeys'; // TODO: remove if not required by VUE
+export { _ALL_GRID_OPTIONS } from './propertyKeys'; // TODO: remove if not required by VUE
 export { IPivotColDefService } from './interfaces/iPivotColDefService';
 export { IViewportDatasource, IViewportDatasourceParams } from './interfaces/iViewportDatasource';
 export {

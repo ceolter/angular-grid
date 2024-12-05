@@ -89,7 +89,6 @@ const OBJECT_GRID_OPTIONS: KeysLike<object | HTMLElement>[] = [
     'noRowsOverlayComponentParams',
     'popupParent',
     'statusBar',
-    'sideBar',
     'chartThemeOverrides',
     'customChartThemes',
     'chartToolPanelsDef',
@@ -98,7 +97,6 @@ const OBJECT_GRID_OPTIONS: KeysLike<object | HTMLElement>[] = [
     'advancedFilterBuilderParams',
     'initialState',
     'autoSizeStrategy',
-    'cellSelection',
     'selectionColumnDef',
 ];
 
@@ -154,18 +152,22 @@ export const _NUMBER_GRID_OPTIONS: KeysOfType<number>[] = [
 
 // If property does not fit above, i.e union that should not be coerced.
 // used internally
-const OTHER_GRID_OPTIONS: GridOptionKey[] = [
-    'suppressStickyTotalRow',
-    'theme',
-    // needs avoid coercion to boolean so that we can warn if it's unset
-    'loadThemeGoogleFonts',
-    'rowSelection',
-    'groupHideParentOfSingleChild',
+const OTHER_GRID_OPTIONS: GridOptionKey[] = ['theme', 'rowSelection'];
+
+// Used by Angular to support the user setting these
+// as plain HTML attributes and us correctly mapping that to true
+export const _BOOLEAN_MIXED_GRID_OPTIONS: KeysOfType<boolean>[] = [
+    'cellSelection',
+    'sideBar',
     'suppressGroupChangesColumnVisibility',
+    'groupAggFiltering', // we do need this in function too for React example generation
+    'suppressStickyTotalRow',
+    'groupHideParentOfSingleChild',
 ];
 
-// Used in vue3 props at runtime of component creation
+// Used in validations to check type of boolean inputs
 export const _BOOLEAN_GRID_OPTIONS: KeysOfType<boolean>[] = [
+    'loadThemeGoogleFonts',
     'suppressMakeColumnVisibleAfterUnGroup',
     'suppressRowClickSelection',
     'suppressCellFocus',
@@ -363,7 +365,6 @@ export const _FUNCTION_GRID_OPTIONS: (CallbackKeys | FunctionKeys)[] = [
     'initialGroupOrderComparator',
     'loadingCellRendererSelector',
     'getRowId',
-    'groupAggFiltering',
     'chartMenuItems',
     'groupTotalRow',
     'alwaysPassFilter',
@@ -380,5 +381,6 @@ export const _ALL_GRID_OPTIONS: GridOptionKey[] = [
     ..._NUMBER_GRID_OPTIONS,
     ..._FUNCTION_GRID_OPTIONS,
     ..._BOOLEAN_GRID_OPTIONS,
+    ..._BOOLEAN_MIXED_GRID_OPTIONS,
     ...OTHER_GRID_OPTIONS,
 ];
