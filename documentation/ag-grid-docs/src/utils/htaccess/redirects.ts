@@ -13,9 +13,9 @@ export const IGNORE_PAGES = ['/ecommerce/', '/ag-grid-jobs-board'];
 
 const pageForAllFrameworks = (from: string, to: string): Redirect[] => [
     { from: `/javascript-data-grid/${from}`, to: `/javascript-data-grid/${to}` },
-    { from: `/angular-data-grid/${from}`, to: `/javascript-data-grid/${to}` },
-    { from: `/react-data-grid/${from}`, to: `/javascript-data-grid/${to}` },
-    { from: `/vue-data-grid/${from}`, to: `/javascript-data-grid/${to}` },
+    { from: `/angular-data-grid/${from}`, to: `/angular-data-grid/${to}` },
+    { from: `/react-data-grid/${from}`, to: `/react-data-grid/${to}` },
+    { from: `/vue-data-grid/${from}`, to: `/vue-data-grid/${to}` },
 ];
 
 export const SITE_301_REDIRECTS: Redirect[] = [
