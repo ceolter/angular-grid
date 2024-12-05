@@ -10,6 +10,7 @@ import {
     assertSelectedRowElementsById,
     assertSelectedRowsByIndex,
     clickRowByIndex,
+    getHeaderCheckboxByIndex,
     getRowByIndex,
     selectRowsByIndex,
     toggleCheckboxById,
@@ -29,6 +30,24 @@ describe('Row Selection Grid Options', () => {
         { sport: 'swimming' },
         { sport: 'rowing' },
     ];
+
+    const groupGridOptions: Partial<GridOptions> = {
+        columnDefs: [
+            { field: 'country', rowGroup: true, hide: true },
+            { field: 'sport', rowGroup: true, hide: true },
+            { field: 'age' },
+            { field: 'year' },
+            { field: 'date' },
+        ],
+        autoGroupColumnDef: {
+            headerName: 'Athlete',
+            field: 'athlete',
+            cellRenderer: 'agGroupCellRenderer',
+        },
+        rowData: GROUP_ROW_DATA,
+        groupDefaultExpanded: -1,
+    };
+
     let consoleErrorSpy: MockInstance;
     let consoleWarnSpy: MockInstance;
 
@@ -1147,26 +1166,25 @@ describe('Row Selection Grid Options', () => {
                 toggleHeaderCheckboxByIndex(0);
                 assertSelectedRowsByIndex([1, 2, 3, 4, 5, 6], api);
             });
+
+            test('grand total row does not affect selected state when selectAll = "currentPage"', async () => {
+                await createGridAndWait({
+                    ...groupGridOptions,
+                    grandTotalRow: 'bottom',
+                    rowSelection: { mode: 'multiRow', selectAll: 'currentPage' },
+                });
+
+                const checkbox = getHeaderCheckboxByIndex(0);
+
+                toggleHeaderCheckboxByIndex(0);
+                expect((checkbox as any).checked).toBe(true);
+
+                toggleHeaderCheckboxByIndex(0);
+                expect((checkbox as any).checked).toBe(false);
+            });
         });
 
         describe('Group selection', () => {
-            const groupGridOptions: Partial<GridOptions> = {
-                columnDefs: [
-                    { field: 'country', rowGroup: true, hide: true },
-                    { field: 'sport', rowGroup: true, hide: true },
-                    { field: 'age' },
-                    { field: 'year' },
-                    { field: 'date' },
-                ],
-                autoGroupColumnDef: {
-                    headerName: 'Athlete',
-                    field: 'athlete',
-                    cellRenderer: 'agGroupCellRenderer',
-                },
-                rowData: GROUP_ROW_DATA,
-                groupDefaultExpanded: -1,
-            };
-
             test('Checkbox location can be altered with `checkboxLocation` setting', async () => {
                 const api = await createGridAndWait({
                     ...groupGridOptions,
