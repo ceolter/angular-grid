@@ -313,7 +313,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 if (rowSelection && typeof rowSelection !== 'object') {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
-                if (rowSelection?.mode !== 'multiRow' && rowSelection?.mode !== 'singleRow') {
+                if (rowSelection && rowSelection.mode !== 'multiRow' && rowSelection.mode !== 'singleRow') {
                     return `Selection mode "${(rowSelection as any).mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
                 }
                 return null;
