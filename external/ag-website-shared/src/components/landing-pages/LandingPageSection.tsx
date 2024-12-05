@@ -12,8 +12,6 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import styles from './LandingPageSection.module.scss';
 
-const CTA_TITLE_FRAMEWORK_STRING = '${framework}';
-
 const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; name: string }> = {
     react: {
         Icon: ReactIcon,
