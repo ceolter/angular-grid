@@ -34,7 +34,7 @@ const FRAMEWORK_CONFIGS: Record<Framework, { Icon: any; command: string; name: s
 
 const InstallText = () => {
     const { framework, handleFrameworkChange } = useFrameworkSelector();
-    const [isCopied, setIsCopied] = useState(false);
+    const [iconState, setIconState] = useState<'copy' | 'animating' | 'tick'>('copy');
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const installTextRef = useRef(null);
@@ -45,8 +45,18 @@ const InstallText = () => {
     const copyToClipboard = () => {
         const text = installTextRef?.current?.innerText?.replace('$', '').trim();
         navigator.clipboard.writeText(text).then(() => {
-            setIsCopied(true);
-            setTimeout(() => setIsCopied(false), 2000);
+            // Start the animation sequence
+            setIconState('animating');
+
+            // After a slight pause, show the tick
+            setTimeout(() => {
+                setIconState('tick');
+
+                // After 2 seconds, return to copy icon
+                setTimeout(() => {
+                    setIconState('copy');
+                }, 2000);
+            }, 200); // slight pause before tick appears
         });
     };
 
@@ -100,12 +110,17 @@ const InstallText = () => {
             </span>
             <span
                 ref={copyButtonRef}
-                className={`plausible-event-name=react-table-copy-cta ${styles.copyButton}`}
+                className={`plausible-event-name=react-table-copy-cta ${styles.copyButton} ${styles.copyIconAnimationContainer}`}
                 onClick={copyToClipboard}
             >
-                <Icon svgClasses={styles.copyToClipboardIcon} name={isCopied ? 'tick' : 'copy'} />
+                {iconState === 'copy' && (
+                    <Icon key="copy-icon" svgClasses={`${styles.copyToClipboardIcon} ${styles.copyIcon}`} name="copy" />
+                )}
+                {iconState === 'animating' && <div className={styles.iconPlaceholder}></div>}
+                {iconState === 'tick' && (
+                    <Icon key="tick-icon" svgClasses={`${styles.copyToClipboardIcon} ${styles.tickIcon}`} name="tick" />
+                )}
             </span>
-
             {isHovering && (
                 <div
                     className={`
