@@ -196,7 +196,12 @@ import type {
 } from 'ag-grid-community';
 // @END_IMPORTS@
 import type { GridApi, GridOptions, GridParams, Module } from 'ag-grid-community';
-import { _combineAttributesAndGridOptions, _processOnChange, createGrid } from 'ag-grid-community';
+import {
+    _BOOLEAN_MIXED_GRID_OPTIONS,
+    _combineAttributesAndGridOptions,
+    _processOnChange,
+    createGrid,
+} from 'ag-grid-community';
 
 import { AngularFrameworkComponentWrapper } from './angularFrameworkComponentWrapper';
 import { AngularFrameworkOverrides } from './angularFrameworkOverrides';
@@ -260,7 +265,17 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
                 )
                 .map(([key]) => key);
 
-            const mergedGridOps = _combineAttributesAndGridOptions(this.gridOptions, this, gridOptionKeys);
+            const coercedGridOptions = {} as GridOptions<TData>;
+            gridOptionKeys.forEach((key) => {
+                const valueToUse = getValueOrCoercedValue(key, this[key as keyof AgGridAngular]);
+                coercedGridOptions[key as keyof GridOptions] = valueToUse;
+            });
+
+            const mergedGridOps = _combineAttributesAndGridOptions(
+                this.gridOptions,
+                coercedGridOptions,
+                gridOptionKeys
+            );
 
             const gridParams: GridParams = {
                 globalListener: this.globalListener.bind(this),
@@ -2094,4 +2109,19 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
     @Output() public sortChanged: EventEmitter<SortChangedEvent<TData>> = new EventEmitter<SortChangedEvent<TData>>();
 
     // @END@
+}
+
+const booleanMixedGridOptions = new Set<string>(_BOOLEAN_MIXED_GRID_OPTIONS);
+/**
+ * Used to support the user setting combined boolean and string / object properties
+ * as plain HTML attributes and us correctly mapping that to true.
+ * For example cellSection can be boolean or an object
+ */
+function getValueOrCoercedValue(key: string, valueToUse: any): any {
+    if (booleanMixedGridOptions.has(key)) {
+        // Handle plain HTML boolean attributes and convert them to boolean values
+        // Also handle the false string case to match Angular boolean attributes
+        return valueToUse === '' ? true : valueToUse === 'false' ? false : valueToUse;
+    }
+    return valueToUse;
 }
