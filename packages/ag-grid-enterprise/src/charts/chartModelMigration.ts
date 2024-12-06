@@ -316,6 +316,7 @@ function migrateV33(model: ChartModel) {
     model = jsonDelete('chartOptions.*.axes.angle-category.label.format', model);
     model = jsonDelete('chartOptions.*.axes.radius-category.label.format', model);
     model = jsonRename('chartOptions.*.axes.*.label.padding', 'spacing', model);
+    model = jsonRename('chartOptions.*.navigator.miniChart.label.padding', 'spacing', model);
     model = jsonDelete('chartOptions.*.axes.*.crossLines.label.className', model);
     model = jsonMutateProperty('chartOptions.*.axes.*.crossLines.label.position', true, model, (parent, targetProp) => {
         if (typeof parent[targetProp] === 'string') {

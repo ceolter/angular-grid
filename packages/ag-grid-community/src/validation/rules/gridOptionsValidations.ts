@@ -174,9 +174,10 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 rowDragEntireRow: { required: [false, undefined] },
             },
         },
-        getMainMenuItems: { module: 'ColumnMenu' },
         getContextMenuItems: { module: 'ContextMenu' },
         getLocaleText: { module: 'Locale' },
+        getMainMenuItems: { module: 'ColumnMenu' },
+        getRowClass: { module: 'RowStyle' },
         getRowStyle: { module: 'RowStyle' },
         grandTotalRow: { module: 'SharedRowGrouping' },
         groupDefaultExpanded: {

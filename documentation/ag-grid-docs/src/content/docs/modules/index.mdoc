@@ -186,3 +186,9 @@ To see the difference in features open the context menu and open the column filt
 * The left grid uses the Set Filter while the right grid uses the Text Filter or Number Filter depending on the cell data type.
 
 {% gridExampleRunner title="Grids with Individual Registration" name="individual-registration" /%}
+
+{% if isFramework("angular") %}
+## Angular CLI Builders
+
+The Angular CLI supports multiple builders as outlined in ([Building Angular apps](https://angular.dev/tools/cli/build)). It is recommended to compare the bundle size produced by each of the builders as the results can vary depending on the application. 
+{% /if %}
