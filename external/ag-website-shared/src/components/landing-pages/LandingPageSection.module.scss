@@ -98,12 +98,12 @@
     :global(.icon) {
         --icon-size: #{$spacing-size-4};
 
-        transform: translateX(-3px);
+        transform: translate(-3px, 1px);
         transition: transform $transition-default-timing;
     }
 
     &:hover :global(.icon) {
-        transform: translateX(4px);
+        transform: translate(4px, 1px);
     }
 
     .CTAWithFrameworks & {
