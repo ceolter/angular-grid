@@ -108,6 +108,8 @@
     height: $spacing-size-10;
     opacity: 0.5;
     transition: opacity $transition-default-timing;
+    display: inline-flex;
+    align-items: center;
 
     .showcaseGridItem:hover & {
         opacity: 1;
