@@ -237,6 +237,12 @@
                         },
                         {
                             "type": "item",
+                            "title": "Install Sparklines",
+                            "path": "sparklines-installation",
+                            "isEnterprise": true
+                        },
+                        {
+                            "type": "item",
                             "title": "Sparkline Data",
                             "path": "sparklines-data",
                             "isEnterprise": true

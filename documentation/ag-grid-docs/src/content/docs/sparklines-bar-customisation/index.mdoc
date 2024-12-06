@@ -23,25 +23,25 @@ The snippet below shows option overrides for the Bar Sparkline:
 sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
-    // Optional customisation properties
     fill: '#5470c6',
     stroke: '#91cc75',
     highlightStyle: {
         fill: '#fac858'
     },
-    valueAxisDomain: [0, 1]
+    min: 0,
+    max: 1
 },
 ```
 
-In the snippet above, the `valueAxisDomain` property is optional.
+In the snippet above, the `min` and `max` properties are optional.
 
-`valueAxisDomain` is used to specify the interval within which the data values lie. These boundaries are used to create a scale which will be used to map data values from `0px` to the size of the sparkline.
+`min` and `max` properties are used to specify the interval within which the data values lie. These boundaries are used to create a scale which will be used to map data values from `0px` to the size of the sparkline.
 
-If the `valueAxisDomain` property is ommitted, the domain will be set to the minmum and maximum values in the provided data, hence it could be different for different sparklines in the grid depending on the provided data.
+If the `min` and `max` properties are ommitted, the domain will be set to the minmum and maximum values in the provided data, hence it could be different for different sparklines in the grid depending on the provided data.
 
 The following example demonstrates the results of the Bar Sparkline options above:
 
-* Note that `valueAxisDomain` has been set to `[0, 1]`, indicating that the supplied data across all sparklines will contain values from `0` to `1`. This allows easy comparisons across the different sparklines in the grid column as all sparklines will have the same domain.
+* Note that `min` and `max` properties have been set to `0` and  `1` respectively, indicating that the supplied data across all sparklines will contain values from `0` to `1`. This allows easy comparisons across the different sparklines in the grid column as all sparklines will have the same domain.
 
 {% gridExampleRunner title="Bar Sparkline Customisation" name="bar-sparkline-customisation"  exampleHeight=585 /%}
 
@@ -147,7 +147,13 @@ Here's an example.
 sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
-    paddingInner: 0.5, // sets the padding between bars.
+    theme: {
+        overrides: {
+            common: {
+                paddingInner: 0.5, // sets the padding between bars.
+            }
+        }
+    }
 }
 ```
 
@@ -367,7 +373,7 @@ A progress bar can be used to visualise and compare values across multiple spark
 The following example shows how to build progress bars using bar sparklines. Note that:
 
 * In order to display a progress bar in a sparkline, the data array should only contain a single value, more values in the data array will produce additional bars in the same sparkline.
-* `valueAxisDomain` has been set to `[0, 100]`, indicating that the supplied data across all sparklines will contain values from `0` to `100`.
+* `min` and `max` properties have been set to `0` and `100`, indicating that the supplied data across all sparklines will contain values from `0` to `100`.
 * This allows easy comparisons of percentages across the different sparklines in the grid column as all sparklines will have the same domain.
 * The `formatter` callback function is used to dynamically set the fill color of each progress bar to different color values based on the data `yValue` .
 * Percentage Y values are displayed on the inside end of each bar by configuring `label` options.
