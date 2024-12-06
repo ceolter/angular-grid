@@ -462,11 +462,10 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             if (this.groupSelectsDescendants && node.group) {
                 return;
             }
-            const isGrandTotalRow = node.footer && node.level === -1;
 
             if (node.isSelected()) {
                 selectedCount++;
-            } else if (!node.selectable || isGrandTotalRow) {
+            } else if (!node.selectable) {
                 // don't count non-selectable nodes or grand total row
             } else {
                 notSelectedCount++;
@@ -578,7 +577,9 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
 
         const { source, selectAll } = params;
 
-        this.getNodesToSelect(selectAll).forEach((rowNode) => this.selectRowNode(rowNode, true, undefined, source));
+        this.getNodesToSelect(selectAll).forEach((rowNode) => {
+            this.selectRowNode(rowNode.footer ? rowNode.sibling : rowNode, true, undefined, source);
+        });
 
         // the above does not clean up the parent rows if they are selected
         if (_isClientSideRowModel(gos) && this.groupSelectsDescendants) {
