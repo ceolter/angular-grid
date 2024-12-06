@@ -1,47 +1,36 @@
 @use 'design-system' as *;
 
-.animatedWordsContainer {
-    margin-left: 0.25em;
+.topLine {
+    margin-left: 0.66em;
 }
 
-.typewriter {
-    white-space: nowrap;
-    overflow: hidden;
-    color: #0e4491;
-    animation: blink 0.7s step-end infinite;
-    text-align: left;
-}
+.animatedWordsOuter {
+    --word-height: 1.3em;
+    --word-index: 0;
 
-.cursor {
-    width: 2px;
-    height: 1em;
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.5);
-    margin-left: 4px;
-    top: 0.15em;
     position: relative;
-    animation: cursor-blink 1.4s steps(1, start) infinite;
+    display: inline-block;
+    min-width: 7.5ch;
+    height: var(--word-height);
+    margin-left: 0.33ch;
+    text-align: left;
+    transform: translateY(0.3333em);
+    overflow: hidden;
 }
 
-@keyframes blink {
-    from {
-        border-right-color: #0e4491;
-    }
-    to {
-        border-right-color: transparent;
-    }
+.animatedWordsInner {
+    position: absolute;
+    display: inline-flex;
+    bottom: 0;
+    left: 0;
+    flex-direction: column;
+    transform: translateY(calc(var(--word-height) * var(--word-index)));
+    transition: transform 0.33s ease-in-out;
 }
 
-@keyframes cursor-blink {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+.animatedWord {
+    height: var(--word-height);
+    min-width: 7.5ch;
 }
 
 .javascript {

@@ -1,62 +1,54 @@
+import classnames from 'classnames';
 import type { FunctionComponent } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 
 import styles from './LandingPageAnimatedHeader.module.scss';
 
 export const LandingPageAnimatedHeader: FunctionComponent = () => {
-    const animatedWords = ['JavaScript', 'React', 'Angular', 'Vue'];
-    const [currentWordIndex, setCurrentWordIndex] = useState(0);
-    const [displayedText, setDisplayedText] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
-
-    // Calculate the longest word's length for fixed container width
-    const maxWordLength = useMemo(() => Math.max(...animatedWords.map((word) => word.length)), [animatedWords]);
+    const [wordIndex, setWordIndex] = useState(0);
+    const [noTransitions, setNoTransitions] = useState(false);
 
     useEffect(() => {
-        const typeSpeed = !isDeleting ? 125 : 75; // Speed of typing and deleting
-        const pauseTime = 750; // Pause at the end of typing
+        const advanceWord = () => {
+            if (wordIndex > 3) {
+                setNoTransitions(true);
+                setWordIndex(0);
+            } else {
+                setNoTransitions(false);
+                setWordIndex(wordIndex + 1);
+            }
+        };
 
-        if (isPaused) {
-            const pauseTimeout = setTimeout(() => setIsPaused(false), pauseTime); // Pause duration
-            return () => clearTimeout(pauseTimeout);
-        }
+        //Implementing the setInterval method
+        const interval = setInterval(() => {
+            advanceWord();
 
-        const currentWord = animatedWords[currentWordIndex];
+            if (wordIndex === 0) advanceWord();
+        }, 666);
 
-        if (!isDeleting && displayedText === currentWord) {
-            setTimeout(() => setIsDeleting(true), pauseTime);
-        } else if (isDeleting && displayedText === '') {
-            setIsPaused(true); // Pause before typing the next word
-            setIsDeleting(false);
-            setCurrentWordIndex((prevIndex) => (prevIndex + 1) % animatedWords.length);
-        } else {
-            const nextText = isDeleting
-                ? currentWord.slice(0, displayedText.length - 1)
-                : currentWord.slice(0, displayedText.length + 1);
-
-            const timeout = setTimeout(() => {
-                setDisplayedText(nextText);
-            }, typeSpeed);
-
-            return () => clearTimeout(timeout);
-        }
-    }, [displayedText, isDeleting, isPaused, currentWordIndex]);
-
-    const currentWord = animatedWords[currentWordIndex];
-    const wordClass = styles[currentWord.toLowerCase()] || styles.default;
+        //Clearing the interval
+        return () => clearInterval(interval);
+    }, [wordIndex]);
 
     return (
         <h1 className="text-xl">
-            <span>
+            <span className={styles.topLine}>
                 The Best
-                <span className={styles.animatedWordsContainer}>
-                    <span className={`${styles.typewriter} ${wordClass}`}>{displayedText}</span>
-                    <span className={styles.cursor}></span>
+                <span
+                    className={classnames(styles.animatedWordsOuter, { ['no-transitions']: noTransitions })}
+                    style={{ ['--word-index']: wordIndex }}
+                >
+                    <span className={styles.animatedWordsInner}>
+                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
+                        <span className={classnames(styles.animatedWord, styles.vue)}>Vue</span>
+                        <span className={classnames(styles.animatedWord, styles.angular)}>Angular</span>
+                        <span className={classnames(styles.animatedWord, styles.react)}>React</span>
+                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
+                    </span>
                 </span>
-                <br />
-                Grid in the World
             </span>
+            <br />
+            Grid in the World
         </h1>
     );
 };
