@@ -1,9 +1,7 @@
 @use 'design-system' as *;
 
 .animatedWordsContainer {
-    // width: 310px;
-    // display: inline-block;
-    // text-align: start;
+    margin-left: 0.25em;
 }
 
 .typewriter {
@@ -15,12 +13,12 @@
 }
 
 .cursor {
-    width: 4px;
-    height: 44px;
+    width: 2px;
+    height: 1em;
     display: inline-block;
-    background: white;
+    background: rgba(255, 255, 255, 0.5);
     margin-left: 4px;
-    top: 4px;
+    top: 0.15em;
     position: relative;
     animation: cursor-blink 1.4s steps(1, start) infinite;
 }

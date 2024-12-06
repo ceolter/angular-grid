@@ -14,13 +14,13 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
     const maxWordLength = useMemo(() => Math.max(...animatedWords.map((word) => word.length)), [animatedWords]);
 
     useEffect(() => {
+        const typeSpeed = !isDeleting ? 125 : 75; // Speed of typing and deleting
+        const pauseTime = 750; // Pause at the end of typing
+
         if (isPaused) {
-            const pauseTimeout = setTimeout(() => setIsPaused(false), 1000); // Pause duration
+            const pauseTimeout = setTimeout(() => setIsPaused(false), pauseTime); // Pause duration
             return () => clearTimeout(pauseTimeout);
         }
-
-        const typeSpeed = isDeleting ? 100 : 150; // Speed of typing and deleting
-        const pauseTime = 1000; // Pause at the end of typing
 
         const currentWord = animatedWords[currentWordIndex];
 
@@ -49,7 +49,7 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
     return (
         <h1 className="text-xl">
             <span>
-                The Best <br />
+                The Best
                 <span className={styles.animatedWordsContainer}>
                     <span className={`${styles.typewriter} ${wordClass}`}>{displayedText}</span>
                     <span className={styles.cursor}></span>
