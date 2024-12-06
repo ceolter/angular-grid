@@ -43,6 +43,7 @@
     flex-direction: column;
     margin-top: $spacing-size-12;
 }
+
 .themeOptions {
     padding-bottom: $spacing-size-5;
     border-bottom: 1px solid var(--color-border-secondary);
@@ -50,20 +51,6 @@
     @media screen and (max-width: $breakpoint-pricing-large) {
         border-bottom: none;
     }
-}
-.buttonItems {
-    display: flex;
-    flex-direction: row;
-    gap: $spacing-size-3;
-
-    input {
-        min-width: 20px;
-    }
-}
-.titleDescription {
-    display: flex;
-    gap: $spacing-size-2;
-    flex-direction: column;
 }
 
 .spacingOptions {
@@ -254,18 +241,31 @@
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
     }
-    .description {
-        font-weight: var(--text-regular);
-        color: var(--color-text-tertiary);
-        opacity: 0.8;
-        #{$selector-darkmode} & {
-            opacity: 0.9;
-        }
-    }
+}
 
-    .title {
+.inputLabel {
+    display: flex;
+    align-items: center;
+    gap: 0 $spacing-size-2;
+
+    span {
         font-weight: var(--text-semibold);
     }
+}
+
+.description {
+    font-weight: var(--text-regular);
+    color: var(--color-text-tertiary);
+    opacity: 0.8;
+    padding-left: 2.8ch;
+
+    #{$selector-darkmode} & {
+        opacity: 0.9;
+    }
+}
+
+.title {
+    font-weight: var(--text-semibold);
 }
 
 .frameworkSwitcher {

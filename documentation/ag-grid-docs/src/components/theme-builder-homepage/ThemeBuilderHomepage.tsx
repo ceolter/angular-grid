@@ -138,7 +138,7 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
                                     setBaseTheme(themeOption.value);
                                 }}
                             >
-                                <div className={styles.buttonItems}>
+                                <label className={styles.inputLabel}>
                                     <input
                                         type="radio"
                                         name="charts"
@@ -148,11 +148,11 @@ export const ThemeBuilderHomepage: React.FC<Props> = ({ gridHeight = null }) => 
                                             setBaseTheme(themeOption.value);
                                         }}
                                     />
-                                    <div className={styles.titleDescription}>
-                                        <div className={styles.title}>{themeOption.label}</div>
-                                        <div className={styles.description}> {themeOption.description}</div>
-                                    </div>
-                                </div>
+
+                                    <span>{themeOption.label}</span>
+                                </label>
+
+                                <div className={styles.description}> {themeOption.description}</div>
                             </div>
                         ))}
                     </div>
