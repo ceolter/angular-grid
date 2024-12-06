@@ -1,5 +1,17 @@
 [
     {
+        "version": "33.0.0",
+        "date": "December 11th 2024",
+        "landingPageHighlight": "Quality Improvements",
+        "highlights": [
+            {
+                "text": "Quality Improvements"
+            }
+        ],
+        "notesPath": "./upgrading-to-ag-grid-32-3",
+        "hideBlogPostLink": true
+    },
+    {
         "version": "32.3.0",
         "date": "October 22nd 2024",
         "landingPageHighlight": "Quality Improvements",
