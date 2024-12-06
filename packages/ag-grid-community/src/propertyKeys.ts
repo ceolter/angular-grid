@@ -156,16 +156,17 @@ const OTHER_GRID_OPTIONS: GridOptionKey[] = ['theme', 'rowSelection'];
 
 // Used by Angular to support the user setting these
 // as plain HTML attributes and us correctly mapping that to true
+// These are all of type boolean | something else
 export const _BOOLEAN_MIXED_GRID_OPTIONS: KeysOfType<boolean>[] = [
     'cellSelection',
     'sideBar',
     'suppressGroupChangesColumnVisibility',
-    'groupAggFiltering', // we do need this in function too for React example generation
+    'groupAggFiltering',
     'suppressStickyTotalRow',
     'groupHideParentOfSingleChild',
 ];
 
-// Used in validations to check type of boolean inputs
+// Used in validations to check type of pure boolean inputs
 export const _BOOLEAN_GRID_OPTIONS: KeysOfType<boolean>[] = [
     'loadThemeGoogleFonts',
     'suppressMakeColumnVisibleAfterUnGroup',
