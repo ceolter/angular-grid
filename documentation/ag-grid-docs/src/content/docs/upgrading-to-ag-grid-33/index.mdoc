@@ -11,6 +11,62 @@ See the [release post](https://blog.ag-grid.com/whats-new-in-ag-grid-33/) for de
 
 ## Changes to Modules
 
+Version 33 introduces a major change to how modules work to allow for smaller bundle sizes. Previously AG Grid supported two versions - modules and packages. These have now been merged together to allow for both a simpler configuration and greater optimisation of bundle size.
+
+{% if isFramework("javascript") %}
+If you are using the UMD bundle, then you do not need to make any changes as all modules are automatically registered. Otherwise, see the steps below.
+{% /if %}
+
+### Migrating from Packages
+
+If you were previously using packages (e.g. `ag-grid-community`), you now need to register the feature modules that you are using in the grid.
+
+The simplest way to do this is to use one of the bundles to register all the features:
+- `AllCommunityModule` for AG Grid Community.
+- `AllEnterpriseModule` for AG Grid Enterprise. (*)
+
+This can then be passed to the module registry, e.g. `ModuleRegistry.registerModules([AllCommunityModule])`.
+
+(*) If you are using the enterprise features Integrated Charts or Sparklines, then you need to provide the relevant module from AG Charts to `AllEnterpriseModule`. Use the [Module Selector](./modules/#selecting-modules) tool to help generate the correct registration code.
+
+If you want to optimise your bundle size, you can register only the modules that you are using.
+
+See the [Modules](./modules/) page for help on selecting modules, as well as more information on how to register modules (including registering different modules for different grid instances).
+
+### Migrating from Modules
+
+All NPM packages for the modules version of AG Grid (e.g. `@ag-grid-community/core`) have been replaced as below:
+
+{% if isNotJavascriptFramework() %}
+- {% if isFramework("react") %}`@ag-grid-community/react` is replaced with `ag-grid-react`{% /if %}{% if isFramework("angular") %}`@ag-grid-community/angular` is replaced with `ag-grid-angular`{% /if %}{% if isFramework("vue") %}`@ag-grid-community/vue3` is replaced with `ag-grid-vue3`{% /if %}.
+- All other `@ag-grid-community/*` packages are replaced with `ag-grid-community`. (*)
+- All `@ag-grid-enterprise/*` packages are replaced with `ag-grid-enterprise`.
+{% /if %}
+
+{% if isFramework("javascript") %}
+- All `@ag-grid-community/*` packages are replaced with `ag-grid-community`. (*)
+- All `@ag-grid-enterprise/*` packages are replaced with `ag-grid-enterprise`.
+{% /if %}
+
+(*) Note that `@ag-grid-community/locale` remains unchanged.
+
+Additionally, many features have been removed from the core module into their own modules, and some modules have been split into smaller modules.
+
+You can use the [Module Selector](./modules/#selecting-modules) tool to work out which modules you require.
+
+To help identify missing modules, we recommend including the `ValidationModule` in your development build. This will provide details on which module is missing for a particular feature.
+
+The core community module has been split into many modules. See the Module Selector for the full list of new modules.
+
+The following changes have been made to existing modules:
+- `GridChartsModule` - This has been replaced with `IntegratedChartsModule`. This additionally needs to be passed the relevant module from AG Charts, e.g. `IntegratedChartsModule.with(AgChartsEnterpriseModule)`. Use the [Module Selector](./modules/#selecting-modules) tool to help generate the correct registration code.
+- `SparklinesModule` - This needs to be passed the relevant module from AG Charts, e.g. `SparklinesModule.with(AgChartsCommunityModule)`. Use the [Module Selector](./modules/#selecting-modules) tool to help generate the correct registration code.
+- `ColumnsToolPanelModule` - This no longer imports the `RowGroupingModule` by default.
+- `ExcelExportModule` - This no longer imports the `CsvExportModule` by default.
+- `MenuModule` - This has been split into `ColumnMenuModule` for the Column Menu, and `ContextMenuModule` for the Context Menu.
+- `RangeSelectionModule` - This has been replaced with `CellSelectionModule`.
+- `RowGroupingModule` - This has been split into several modules. `RowGroupingModule` now only contains Row Grouping. Tree Data uses `TreeDataModule`, Pivoting uses `PivotModule`, the Row Grouping Panel / Pivot Panel uses `RowGroupingPanelModule`, and the Group Filter uses `GroupFilterModule`.
+
 ## Breaking Changes
 {% metaTag tags=[] /%}
 

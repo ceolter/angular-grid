@@ -105,11 +105,13 @@ const moduleItemBase = {
 const moduleGroupLevel2 = z.object({
     name: z.string(),
     children: z.array(z.object(moduleItemBase)).optional(),
+    isEnterprise: z.boolean().optional(),
 });
 
 const moduleGroupLevel1 = z.object({
     name: z.string(),
     children: z.array(z.object(moduleItemBase).or(moduleGroupLevel2)).optional(),
+    isEnterprise: z.boolean().optional(),
 });
 
 const moduleMappings = defineCollection({

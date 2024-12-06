@@ -213,6 +213,7 @@
         },
         {
             "name": "Row Grouping",
+            "isEnterprise": true,
             "children": [
                 {
                     "moduleName": "RowGroupingModule",

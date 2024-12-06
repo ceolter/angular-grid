@@ -8,16 +8,17 @@ Reduce your application bundle size by cherry picking grid features using AG Gri
 
 To include all community or enterprise modules, either the `AllCommunityModule` or `AllEnterpriseModule` bundle can be used. This replicates the behaviour of the package versions of AG Grid prior to version 33.
 
-## Choosing Modules
+If you are using the enterprise features Integrated Charts or Sparklines, then you need to provide the relevant module from AG Charts to `AllEnterpriseModule`, e.g. `AllEnterpriseModule.with(AgChartsEnterpriseModule)`. Use the [Module Selector](#selecting-modules) tool below to help generate the correct registration code.
 
-To work out which modules are required, select the features of the grid that you are using below. This will then provide the relevant code.
+## Selecting Modules
+
+To work out which modules are required, select the features of the grid that you are using below. This will then provide the relevant registration code.
 
 {% moduleMappings /%}
 
 {% note %}The code snippet above shows registering modules globally. It is also possible to [Provide Modules To Individual Grids](#providing-modules-to-individual-grids){% /note %}
 
 ## Validation
-
 
 The `ValidationModule` adds helpful console warnings/errors, including if a feature has been enabled and the relevant module is missing. It is recommended to include it in your development build. It is automatically included if using one of the bundles (`AllCommunityModule`/`AllEnterpriseModule`).
 
