@@ -182,12 +182,14 @@
 
         cursor: pointer;
     }
+
     span {
         font-weight: 600;
         font-size: var(--text-fs-sm);
     }
 
     svg {
+        color: var(--color-link);
         width: 20px;
         height: 20px;
     }
