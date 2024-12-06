@@ -95,18 +95,6 @@ In the above example the Alpine theme is modified but not renamed. If you have r
 // ^^^ put any custom CSS rules below the grid-styles mixin, wrapped in the theme class
 ```
 
-### Grid Modules
-
-If you are using grid [Modules](./modules/) you will need to add the `@ag-grid-community/styles` module to your dependencies and alter the import paths as follows.
-
-```scss
-// Legacy API
-@import "~@ag-grid-community/core/dist/styles/ag-grid.scss";
-
-// New API
-@use "~@ag-grid-community/styles" as ag;
-```
-
 ### Breaking changes
 
 We have tried to make the new Sass Styling API as backwards-compatible as possible, but there are a few breaking changes:

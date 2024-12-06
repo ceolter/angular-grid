@@ -3,12 +3,7 @@ title: "Install Integrated Charts"
 enterprise: true
 ---
 
-This section shows how to install Integrated Charts using Modules or Packages.
-
-## Integrated Charts Module
-
-To reduce bundle sizes in applications that do not require charts, AG Grid provides a dedicated charts [AG Grid Module](./modules/),
-free from third-party library dependencies. This approach is recommended for most applications.
+This section shows how to install Integrated Charts.
 
 The Integrated Enterprise Charts module, which includes AG Charts Enterprise, can be imported as follows:
 
@@ -28,25 +23,6 @@ ModuleRegistry.registerModules([
 AG Charts Community (`AgChartsCommunityModule`) is available from the `ag-charts-community` package.
 {% /note %}
 
-## Integrated Charts Package
-
-Applications that are not using ES6 Modules and are instead using the UMD bundled version of AG Grid Enterprise and AG Charts Enterprise
-can be setup as follows:
-
-```bash
-npm install --save ag-grid-enterprise ag-charts-enterprise
-```
-
-Then in your code you can import the charts module as shown below:
-
-```ts
-// import the AG Grid Enterprise package - this includes all enterprise features and performs all 
-// required registration
-import  "ag-grid-enterprise";
-import  "ag-charts-enterprise";
-
-// rest of your code 
-```
 
 ## Next Up
 

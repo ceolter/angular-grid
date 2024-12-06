@@ -14,8 +14,6 @@ Follow the instructions in this document to upgrade.
 
 There are many ways to import CSS, but however you are doing this in your app you need to delete the `/dist` part from the path. For example if you're using the jsdelivr CDN:
 
-### Packages
-
 ```html
 <!-- old path -->
 <link
@@ -28,24 +26,6 @@ There are many ways to import CSS, but however you are doing this in your app yo
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/ag-grid-community@{% $agGridVersion %}/styles/ag-grid.css" />
-```
-
-### Modules
-
-If you are using [Grid Modules](./modules/) then you will need to use the new `@ag-grid-community/styles` module.
-
-```html
-<!-- old path -->
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@ag-grid-community/core@{% $agGridVersion %}/dist/styles/ag-grid.css" />
-```
-
-```html
-<!-- new path -->
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@ag-grid-community/styles@{% $agGridVersion %}/ag-grid.css" />
 ```
 
 {% if isFramework("javascript") %}
