@@ -48,7 +48,7 @@ const SHOWCASE_ITEMS = [
         title: 'Dashboards',
         titleIcon: <DashboardIcon />,
         description:
-            'An open source React library for building dashboards, with AG Grid enterprise support for building React tables with advanced features.',
+            'An open source React library for building dashboards, with AG Grid Enterprise support for building React tables with advanced features.',
         projectName: 'React Admin',
         projectLogo: <RA />,
         projectHref: 'https://marmelab.com/react-admin/DatagridAG.html',
