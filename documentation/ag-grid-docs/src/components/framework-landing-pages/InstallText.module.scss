@@ -71,10 +71,6 @@
         opacity 0.15s ease,
         transform 0.15s ease;
 
-    .installCommand {
-        padding-top: 5px;
-    }
-
     &:hover {
         cursor: pointer;
 
@@ -104,9 +100,22 @@
     font-family: var(--text-monospace-font-family);
 }
 
+.installCommand {
+    padding-bottom: 1px;
+
+    &::selection {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+.noSelection {
+    user-select: none;
+}
+
 .frameworkIconWrapper {
     width: 20px;
     height: 20px;
+    transform: translateY(-2px);
 
     svg {
         width: 100%;

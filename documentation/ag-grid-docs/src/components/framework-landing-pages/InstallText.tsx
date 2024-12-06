@@ -106,8 +106,12 @@ const InstallText = () => {
                 <div className={styles.frameworkIconWrapper}>
                     <CurrentIcon />
                 </div>{' '}
-                <span className={styles.installCommand}>$ {installCommand}</span>
+                <span className={styles.installCommand}>
+                    <span className={styles.noSelection}>$ </span>
+                    {installCommand}
+                </span>
             </span>
+
             <span
                 ref={copyButtonRef}
                 className={`plausible-event-name=react-table-copy-cta ${styles.copyButton} ${styles.copyIconAnimationContainer}`}
@@ -121,6 +125,7 @@ const InstallText = () => {
                     <Icon key="tick-icon" svgClasses={`${styles.copyToClipboardIcon} ${styles.tickIcon}`} name="tick" />
                 )}
             </span>
+
             {isHovering && (
                 <div
                     className={`
