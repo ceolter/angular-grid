@@ -426,7 +426,8 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
     }
 
     public deselectAllRowNodes(params: { source: SelectionEventSourceType; selectAll?: SelectAllMode }) {
-        const callback = (rowNode: RowNode) => this.selectRowNode(rowNode, false, undefined, source);
+        const callback = (rowNode: RowNode) =>
+            this.selectRowNode(rowNode.footer ? rowNode.sibling : rowNode, false, undefined, source);
         const rowModelClientSide = _isClientSideRowModel(this.gos);
 
         const { source, selectAll } = params;
