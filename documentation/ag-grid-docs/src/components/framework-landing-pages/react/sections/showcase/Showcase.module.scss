@@ -20,7 +20,7 @@
     padding: $spacing-size-8;
     background-color: var(--color-bg-primary);
     border: 1px solid var(--color-border-secondary);
-    transition: background-color 0.5s ease-in-out;
+    transition: background-color $transition-default-timing;
 
     // ::after used for hover border to avoid stacked border issues
     &::after {
@@ -33,7 +33,7 @@
         border: 1px solid transparent;
         z-index: 1;
         pointer-events: none;
-        transition: border-color 0.5s ease-in-out;
+        transition: border-color $transition-default-timing;
     }
 
     &:hover {
@@ -107,7 +107,7 @@
 
     height: $spacing-size-10;
     opacity: 0.5;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity $transition-default-timing;
 
     .showcaseGridItem:hover & {
         opacity: 1;
@@ -135,7 +135,7 @@
     font-size: var(--text-fs-sm);
     color: var(--color-text-secondary);
     opacity: 0.8;
-    transition: opacity 0.5s ease-in-out;
+    transition: opacity $transition-default-timing;
 }
 
 .showcaseLinksWrapper {
