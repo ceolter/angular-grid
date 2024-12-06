@@ -16,6 +16,7 @@ export const TickerCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
                         marginRight: '8px',
                         borderRadius: '32px',
                     }}
+                    alt={`${data.name} logo`}
                 />
                 <span className="custom-ticker">{data.ticker}</span>
                 <span className="ticker-name"> {data.name}</span>

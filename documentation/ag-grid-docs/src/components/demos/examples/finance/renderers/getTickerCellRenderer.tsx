@@ -17,6 +17,7 @@ export const getTickerCellRenderer: (hideTickerName: boolean) => FunctionCompone
                             marginRight: '5px',
                             borderRadius: '32px',
                         }}
+                        alt={`${data.name} logo`}
                     />
                     <b className="custom-ticker">{data.ticker}</b>
                     {!hideTickerName && <span className="ticker-name"> {data.name}</span>}
