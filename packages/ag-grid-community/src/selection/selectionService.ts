@@ -467,7 +467,7 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
             if (node.isSelected()) {
                 selectedCount++;
             } else if (!node.selectable) {
-                // don't count non-selectable nodes or grand total row
+                // don't count non-selectable nodes!
             } else {
                 notSelectedCount++;
             }
