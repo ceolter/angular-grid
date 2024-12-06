@@ -19,6 +19,7 @@ export function ModuleCellRenderer({ data }: CustomCellRendererProps) {
                     url: `./${path}`,
                 })}
                 className={styles.link}
+                target={'_blank'}
             >
                 <Icon name="newTab" svgClasses={styles.newTabIcon} />
             </a>

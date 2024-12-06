@@ -134,7 +134,8 @@
                 {
                     "moduleName": "RowSelectionModule",
                     "name": "Row Selection",
-                    "path": "row-selection/"
+                    "path": "row-selection/",
+                    "ssrmBundled": true
                 },
                 {
                     "moduleName": "CellSelectionModule",
@@ -217,7 +218,8 @@
                     "moduleName": "RowGroupingModule",
                     "name": "Row Grouping",
                     "path": "grouping/",
-                    "isEnterprise": true
+                    "isEnterprise": true,
+                    "ssrmBundled": true
                 },
                 {
                     "moduleName": "RowGroupingPanelModule",
@@ -237,19 +239,22 @@
             "moduleName": "PivotModule",
             "name": "Pivoting",
             "path": "pivoting/",
-            "isEnterprise": true
+            "isEnterprise": true,
+            "ssrmBundled": true
         },
         {
             "moduleName": "TreeDataModule",
             "name": "Tree Data",
             "path": "tree-data/",
-            "isEnterprise": true
+            "isEnterprise": true,
+            "ssrmBundled": true
         },
         {
             "moduleName": "MasterDetailModule",
             "name": "Master Detail",
             "path": "master-detail/",
-            "isEnterprise": true
+            "isEnterprise": true,
+            "ssrmBundled": true
         },
         {
             "name": "Accessories",

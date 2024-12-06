@@ -99,6 +99,7 @@ const moduleItemBase = {
     name: z.string(),
     path: z.string().optional(),
     isEnterprise: z.boolean().optional(),
+    ssrmBundled: z.boolean().optional(),
 };
 
 const moduleGroupLevel2 = z.object({

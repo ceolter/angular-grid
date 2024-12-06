@@ -1,7 +1,7 @@
 import type { Framework } from '@ag-grid-types';
 import type { ModuleMappings as ModuleMappingsType } from '@ag-grid-types';
 import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
-import { type FunctionComponent, useCallback, useMemo, useRef, useState } from 'react';
+import { type FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, RowSelectionModule } from 'ag-grid-community';
 import type {
@@ -11,6 +11,7 @@ import type {
     IRowNode,
     RowSelectedEvent,
     RowSelectionOptions,
+    ValueGetterParams,
 } from 'ag-grid-community';
 import { ClipboardModule, ContextMenuModule, TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
@@ -39,7 +40,22 @@ ModuleRegistry.registerModules([
 export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules }) => {
     const gridRef = useRef<AgGridReact>(null);
     const moduleConfig = useModuleConfig(gridRef);
-    const { selectedDependenciesSnippet, setSelectedModules, bundleOption } = moduleConfig;
+    const { selectedDependenciesSnippet, setSelectedModules, bundleOption, rowModelOption } = moduleConfig;
+
+    const rowData = useMemo(() => {
+        const groups = modules.groups;
+        // update data to hide/unhide modules that are included as part of SSRM
+        if (rowModelOption === 'ServerSideRowModelModule') {
+            const modifyData = (row: any) => ({
+                ...row,
+                children: row.children?.map(modifyData),
+                hide: row.ssrmBundled,
+            });
+            const modifiedGroups = groups.map(modifyData);
+            return modifiedGroups;
+        }
+        return groups;
+    }, [rowModelOption, modules.groups]);
 
     const [defaultColDef] = useState<ColDef>({
         flex: 1,
@@ -50,6 +66,7 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
     const [columnDefs] = useState([
         {
             field: 'moduleName',
+            valueGetter: ({ data }: ValueGetterParams) => (data.hide ? null : data.moduleName),
             cellRenderer: ModuleNameCellRenderer,
         },
     ]);
@@ -63,6 +80,40 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
         (params: GetRowIdParams) => (params.data.children ? `${params.data.name} group` : params.data.moduleName),
         []
     );
+
+    const updateSelected = useCallback(() => {
+        const api = gridRef.current?.api;
+        if (!api) {
+            return;
+        }
+        const selectedCommunity: string[] = [];
+        const selectedEnterprise: string[] = [];
+        api.forEachLeafNode((leaf) => {
+            const { moduleName, isEnterprise, hide } = leaf.data;
+            if (!hide && moduleName && leaf.isSelected()) {
+                if (isEnterprise) {
+                    selectedEnterprise.push(moduleName);
+                } else {
+                    selectedCommunity.push(moduleName);
+                }
+            }
+        });
+
+        setSelectedModules((curSelectedModules) => {
+            let community = selectedCommunity;
+
+            if (bundleOption === 'AllCommunityModule') {
+                const communitySet = new Set(curSelectedModules.community);
+                communitySet.add('AllCommunityModule');
+                community = Array.from(communitySet);
+            }
+
+            return {
+                community,
+                enterprise: selectedEnterprise,
+            };
+        });
+    }, [bundleOption, setSelectedModules]);
 
     const onRowSelected = useCallback(
         (event: RowSelectedEvent) => {
@@ -91,35 +142,9 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
                 });
             }
 
-            const selectedCommunity: string[] = [];
-            const selectedEnterprise: string[] = [];
-            api.forEachLeafNode((leaf) => {
-                const { moduleName: leafModuleName, isEnterprise: leafIsEnterprise } = leaf.data;
-                if (leafModuleName && leaf.isSelected()) {
-                    if (leafIsEnterprise) {
-                        selectedEnterprise.push(leafModuleName);
-                    } else {
-                        selectedCommunity.push(leafModuleName);
-                    }
-                }
-            });
-
-            setSelectedModules((curSelectedModules) => {
-                let community = selectedCommunity;
-
-                if (bundleOption === 'AllCommunityModule') {
-                    const communitySet = new Set(curSelectedModules.community);
-                    communitySet.add('AllCommunityModule');
-                    community = Array.from(communitySet);
-                }
-
-                return {
-                    community,
-                    enterprise: selectedEnterprise,
-                };
-            });
+            updateSelected();
         },
-        [bundleOption, setSelectedModules]
+        [bundleOption, updateSelected]
     );
 
     const rowSelection = useMemo<RowSelectionOptions>(() => {
@@ -144,6 +169,11 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
         };
     }, [bundleOption]);
 
+    useEffect(() => {
+        updateSelected();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rowModelOption]);
+
     return (
         <>
             <ModuleConfiguration moduleConfig={moduleConfig} />
@@ -155,7 +185,7 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
                     defaultColDef={defaultColDef}
                     columnDefs={columnDefs}
                     autoGroupColumnDef={autoGroupColumnDef}
-                    rowData={modules.groups}
+                    rowData={rowData}
                     treeData
                     getRowId={getRowId}
                     rowSelection={rowSelection}
