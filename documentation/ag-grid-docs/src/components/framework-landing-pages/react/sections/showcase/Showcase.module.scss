@@ -14,6 +14,8 @@
 
 .showcaseGridItem {
     position: relative;
+    display: flex;
+    flex-direction: column;
     margin: -1px 0 0 -1px;
     padding: $spacing-size-8;
     background-color: var(--color-bg-primary);
@@ -138,7 +140,9 @@
 
 .showcaseLinksWrapper {
     display: flex;
-    gap: $spacing-size-6;
+    flex-wrap: wrap;
+    gap: $spacing-size-2 $spacing-size-6;
+    margin-top: auto;
 
     a {
         font-weight: var(--text-semibold);
