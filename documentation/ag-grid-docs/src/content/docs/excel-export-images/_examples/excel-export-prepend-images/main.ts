@@ -1,10 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { CsvExportModule } from 'ag-grid-community';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    CsvExportModule,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
+import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 import { logos } from './imageUtils';
 

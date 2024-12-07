@@ -1,10 +1,10 @@
-import { AgChartsCommunityModule } from 'ag-charts-community';
 import type {
     AgBarSeriesItemStylerParams,
     AgBarSeriesStyle,
     AgChartLabelFormatterParams,
     AgSparklineOptions,
 } from 'ag-charts-community';
+import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';

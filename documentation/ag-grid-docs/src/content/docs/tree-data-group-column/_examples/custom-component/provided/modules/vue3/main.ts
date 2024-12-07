@@ -1,6 +1,5 @@
-import { createApp, defineComponent } from 'vue';
-
 import type { ColDef, GridApi, ValueFormatterParams } from 'ag-grid-community';
+
 import {
     AllCommunityModule,
     CellDoubleClickedEvent,
@@ -10,6 +9,7 @@ import {
 } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+import { createApp, defineComponent } from 'vue';
 
 import CustomGroupCellRenderer from './customGroupCellRendererVue';
 import { getData } from './data';

@@ -1,12 +1,13 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, IMultiFilterParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { MultiFilterModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClipboardModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    FiltersToolPanelModule,
+    MultiFilterModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 import { YearFilter } from './YearFilter_typescript';
 import { YearFloatingFilter } from './YearFloatingFilter_typescript';

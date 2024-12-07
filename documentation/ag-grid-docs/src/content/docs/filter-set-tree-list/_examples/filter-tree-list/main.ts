@@ -1,11 +1,19 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, ISetFilterParams, KeyCreatorParams } from 'ag-grid-community';
-import { ValueFormatterParams, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule, RowGroupingModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    ValueFormatterParams,
+    createGrid,
+} from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    FiltersToolPanelModule,
+    RowGroupingModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

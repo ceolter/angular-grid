@@ -1,10 +1,8 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
 import type { FirstDataRenderedEvent, GridApi, GridOptions, RowDataUpdatedEvent } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import type { TAthlete } from './data';
 
 import { fetchDataAsync } from './data';
-import type { TAthlete } from './data';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 

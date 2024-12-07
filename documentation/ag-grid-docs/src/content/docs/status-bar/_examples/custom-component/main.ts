@@ -1,9 +1,6 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions, IAggregationStatusPanelParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { CellSelectionModule } from 'ag-grid-enterprise';
-import { StatusBarModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 
 import { ClickableStatusBarComponent } from './clickableStatusBarComponent_typescript';
 import { CountStatusBarComponent } from './countStatusBarComponent_typescript';

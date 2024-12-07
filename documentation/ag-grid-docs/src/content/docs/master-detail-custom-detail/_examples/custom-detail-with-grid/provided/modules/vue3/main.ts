@@ -1,11 +1,14 @@
-import { createApp, defineComponent } from 'vue';
-
 import type { ChartRef, ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MasterDetailModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    MasterDetailModule,
+} from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent } from 'vue';
 
 import DetailCellRenderer from './detailCellRendererVue';
 import './styles.css';

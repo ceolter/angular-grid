@@ -1,5 +1,5 @@
-import { AgChartsCommunityModule } from 'ag-charts-community';
 import type { AgSparklineOptions } from 'ag-charts-community';
+import { AgChartsCommunityModule } from 'ag-charts-community';
 
 import type { GridApi, GridOptions, ValueGetterParams } from 'ag-grid-community';
 import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';

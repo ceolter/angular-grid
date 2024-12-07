@@ -1,14 +1,15 @@
+import type { ColDef, GridOptions, Part } from 'ag-grid-community';
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
+    ModuleRegistry,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    createGrid,
+    themeQuartz,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import type { ColDef, GridOptions, Part } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { themeQuartz } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 

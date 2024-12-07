@@ -6,9 +6,7 @@ import type {
     IGetRowsParams,
     IRowNode,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { InfiniteRowModelModule } from 'ag-grid-community';
+import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule]);
 

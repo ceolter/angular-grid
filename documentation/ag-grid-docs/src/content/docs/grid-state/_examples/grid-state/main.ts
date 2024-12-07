@@ -1,11 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { GridApi, GridOptions, GridPreDestroyedEvent, StateUpdatedEvent } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule, PivotModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { CellSelectionModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    CellSelectionModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    PivotModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

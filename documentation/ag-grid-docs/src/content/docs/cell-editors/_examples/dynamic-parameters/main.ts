@@ -1,10 +1,6 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellValueChangedEvent, GridApi, GridOptions, ICellEditorParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { RichSelectModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RichSelectModule } from 'ag-grid-enterprise';
 
 import type { IRow } from './data';
 import { getData } from './data';

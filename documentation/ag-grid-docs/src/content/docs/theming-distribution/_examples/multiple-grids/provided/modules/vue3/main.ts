@@ -1,8 +1,8 @@
-import { createApp, defineComponent } from 'vue';
-
 import type { ColDef } from 'ag-grid-community';
+
 import { AllCommunityModule, ModuleRegistry, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
+import { createApp, defineComponent } from 'vue';
 
 import './styles.css';
 

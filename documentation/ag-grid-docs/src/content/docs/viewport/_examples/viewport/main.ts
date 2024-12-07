@@ -6,8 +6,7 @@ import type {
     ICellRendererParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ViewportRowModelModule } from 'ag-grid-enterprise';
 
 import { createMockServer } from './mock-server';

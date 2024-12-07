@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
+import type { ColDef } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ModuleRegistry,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    themeQuartz,
 } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { themeQuartz } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

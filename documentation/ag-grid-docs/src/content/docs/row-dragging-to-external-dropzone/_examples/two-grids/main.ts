@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     ColDef,
     GetRowIdParams,
@@ -7,7 +6,7 @@ import type {
     GridReadyEvent,
     RowDropZoneParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 

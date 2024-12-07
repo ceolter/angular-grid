@@ -7,11 +7,15 @@ import type {
     IServerSideGetRowsParams,
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule, TreeDataModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ServerSideRowModelApiModule,
+    ServerSideRowModelModule,
+    TreeDataModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

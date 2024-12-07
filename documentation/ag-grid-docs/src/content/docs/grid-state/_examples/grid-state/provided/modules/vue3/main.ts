@@ -1,5 +1,3 @@
-import { createApp, defineComponent, ref, shallowRef } from 'vue';
-
 import type {
     ColDef,
     GridApi,
@@ -10,11 +8,16 @@ import type {
     StateUpdatedEvent,
 } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule, PivotModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { CellSelectionModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    CellSelectionModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    PivotModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent, ref, shallowRef } from 'vue';
 
 import './styles.css';
 

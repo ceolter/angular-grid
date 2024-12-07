@@ -1,10 +1,10 @@
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import type { ChartRef, ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import './styles.css';
 

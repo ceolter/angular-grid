@@ -1,7 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellClassRules, ColDef, ColSpanParams, GridApi, GridOptions, RowHeightParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 import { getData } from './data';
 

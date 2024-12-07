@@ -1,7 +1,11 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ILargeTextEditorParams, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ILargeTextEditorParams,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 

@@ -1,7 +1,6 @@
 // NOTE: Angular CLI does not support component CSS imports: angular-cli/issues/23273
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type {

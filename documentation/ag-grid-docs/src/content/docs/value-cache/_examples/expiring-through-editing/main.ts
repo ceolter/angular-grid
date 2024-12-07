@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     ColDef,
     GetRowIdParams,
@@ -7,8 +6,7 @@ import type {
     ValueFormatterParams,
     ValueGetterParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';

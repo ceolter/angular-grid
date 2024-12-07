@@ -1,7 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';

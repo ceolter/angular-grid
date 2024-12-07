@@ -1,14 +1,16 @@
-import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import type { ColDef } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SideBarModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    SideBarModule,
+} from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

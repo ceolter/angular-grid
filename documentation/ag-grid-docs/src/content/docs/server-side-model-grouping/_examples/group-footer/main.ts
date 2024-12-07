@@ -6,10 +6,14 @@ import type {
     IServerSideGetRowsParams,
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
-import { GetServerSideGroupLevelParamsParams, ServerSideGroupLevelParams, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
+import {
+    AllCommunityModule,
+    GetServerSideGroupLevelParamsParams,
+    ModuleRegistry,
+    ServerSideGroupLevelParams,
+    createGrid,
+} from 'ag-grid-community';
+import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 

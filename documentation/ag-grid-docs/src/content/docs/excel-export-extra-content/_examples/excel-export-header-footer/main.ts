@@ -1,9 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ExcelExportParams, ExcelHeaderFooterContent, GridApi, GridOptions } from 'ag-grid-community';
-import { ExcelHeaderFooterConfig, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ExcelHeaderFooterConfig,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
+import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

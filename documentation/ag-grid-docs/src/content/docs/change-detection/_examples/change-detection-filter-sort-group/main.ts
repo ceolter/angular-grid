@@ -1,9 +1,6 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellValueChangedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule, SetFilterModule]);
 

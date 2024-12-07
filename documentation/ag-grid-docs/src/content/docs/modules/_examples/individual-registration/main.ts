@@ -1,3 +1,4 @@
+import type { ColDef, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     CsvExportModule,
@@ -6,7 +7,6 @@ import {
     TextFilterModule,
     createGrid,
 } from 'ag-grid-community';
-import type { ColDef, GridOptions } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,

@@ -1,6 +1,14 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { CellDoubleClickedEvent, CellKeyDownEvent, ColDef, GridApi, GridOptions, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    CellDoubleClickedEvent,
+    CellKeyDownEvent,
+    ClientSideRowModelModule,
+    ColDef,
+    GridApi,
+    GridOptions,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { CustomGroupCellRenderer } from './customGroupCellRenderer_typescript';

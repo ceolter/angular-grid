@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     GridApi,
     GridOptions,
@@ -6,11 +5,8 @@ import type {
     ProcessGroupHeaderForExportParams,
     ProcessHeaderForExportParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { CellSelectionModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

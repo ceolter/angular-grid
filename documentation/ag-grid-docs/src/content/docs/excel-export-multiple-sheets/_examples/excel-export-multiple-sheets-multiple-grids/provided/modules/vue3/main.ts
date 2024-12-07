@@ -1,5 +1,3 @@
-import { createApp, defineComponent } from 'vue';
-
 import type {
     ColDef,
     GetRowIdParams,
@@ -8,10 +6,11 @@ import type {
     ICellRendererParams,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { CsvExportModule } from 'ag-grid-community';
+import { AllCommunityModule, CsvExportModule, ModuleRegistry } from 'ag-grid-community';
 import { ExcelExportModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent } from 'vue';
 
 import './styles.css';
 

@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     ExcelExportParams,
     GridApi,
@@ -6,13 +5,20 @@ import type {
     ProcessCellForExportParams,
     ProcessRowGroupForExportParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { CsvExportModule } from 'ag-grid-community';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    CsvExportModule,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    RowGroupingModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

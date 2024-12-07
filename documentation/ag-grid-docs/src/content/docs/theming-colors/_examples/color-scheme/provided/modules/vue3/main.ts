@@ -1,15 +1,18 @@
-import { createApp, defineComponent, defonBeforeMount } from 'vue';
-
 import type { ColDef } from 'ag-grid-community';
 import {
+    AllCommunityModule,
+    ModuleRegistry,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
     colorSchemeLightWarm,
+    themeAlpine,
+    themeBalham,
+    themeQuartz,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent, defonBeforeMount } from 'vue';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

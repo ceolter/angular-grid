@@ -1,8 +1,8 @@
-import { createApp } from 'vue';
-
 import type { ColDef, GridReadyEvent } from 'ag-grid-community';
+
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
+import { createApp } from 'vue';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

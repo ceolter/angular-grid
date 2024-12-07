@@ -10,13 +10,15 @@ import type {
     ValueFormatterParams,
     ValueGetterParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { TreeDataModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ServerSideRowModelModule,
+    SetFilterModule,
+    TreeDataModule,
+} from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 

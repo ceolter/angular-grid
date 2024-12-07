@@ -1,6 +1,5 @@
 import type { ColDef, GridApi, GridOptions, IViewportDatasource, IViewportDatasourceParams } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ViewportRowModelModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([AllCommunityModule, ViewportRowModelModule]);

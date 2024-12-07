@@ -8,12 +8,13 @@ import type {
     IGetRowsParams,
     SortModelItem,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { InfiniteRowModelModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 
 import { countries } from './countries';
 

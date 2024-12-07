@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     CsvCell,
     CsvExportParams,
@@ -10,13 +9,15 @@ import type {
     IDetailCellRendererParams,
     ProcessRowGroupForExportParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { ClipboardModule } from 'ag-grid-enterprise';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { ExcelExportModule } from 'ag-grid-enterprise';
-import { MasterDetailModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClipboardModule,
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    MasterDetailModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     AllCommunityModule,

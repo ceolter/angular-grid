@@ -5,10 +5,8 @@ import type {
     IServerSideDatasource,
     StoreRefreshedEvent,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { RowGroupingModule, ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 

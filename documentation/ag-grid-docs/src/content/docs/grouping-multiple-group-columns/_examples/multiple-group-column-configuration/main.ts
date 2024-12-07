@@ -1,6 +1,12 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { GridApi, GridOptions, HeaderValueGetterParams, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    GridApi,
+    GridOptions,
+    HeaderValueGetterParams,
+    ModuleRegistry,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);

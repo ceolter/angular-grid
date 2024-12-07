@@ -1,5 +1,3 @@
-import { defineComponent } from 'vue';
-
 import type { RefreshCellsParams } from 'ag-grid-community';
 
 export default {

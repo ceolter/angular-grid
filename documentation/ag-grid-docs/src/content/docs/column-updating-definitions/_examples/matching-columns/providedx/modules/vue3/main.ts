@@ -1,8 +1,7 @@
-import { createApp } from 'vue';
-
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp } from 'vue';
 
 import './styles.css';
 

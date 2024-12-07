@@ -1,5 +1,3 @@
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import {
     AllCommunityModule,
     CellDoubleClickedEvent,
@@ -10,8 +8,10 @@ import {
     ICellRenderer,
     ModuleRegistry,
 } from 'ag-grid-community';
+
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import CustomGroupCellRenderer from './customGroupCellRenderer';
 import './styles.css';

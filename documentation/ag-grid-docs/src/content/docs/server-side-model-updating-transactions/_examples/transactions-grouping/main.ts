@@ -9,10 +9,8 @@ import type {
     ServerSideTransaction,
     ServerSideTransactionResult,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { RowGroupingModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
-import { ServerSideRowModelModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { RowGroupingModule, ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { changePortfolioOnServer, createRowOnServer, data, deletePortfolioOnServer } from './data';
 import { FakeServer } from './fakeServer';

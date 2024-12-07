@@ -1,9 +1,8 @@
-import { createApp, defineComponent } from 'vue';
-import { onMounted, ref } from 'vue';
-
 import type { CellValueChangedEvent, ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry, ValueFormatterParams } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent, onMounted, ref } from 'vue';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

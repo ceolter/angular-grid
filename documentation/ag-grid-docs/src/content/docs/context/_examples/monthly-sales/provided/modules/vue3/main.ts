@@ -1,5 +1,3 @@
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import type {
     ColDef,
     ColGroupDef,
@@ -9,10 +7,10 @@ import type {
     RowSelectionOptions,
 } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
+
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import './styles.css';
 

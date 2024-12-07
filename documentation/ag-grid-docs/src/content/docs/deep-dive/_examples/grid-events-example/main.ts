@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     CellValueChangedEvent,
     ColDef,
@@ -8,8 +7,13 @@ import type {
     ICellRendererParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { SelectionChangedEvent, createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    SelectionChangedEvent,
+    createGrid,
+} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
 

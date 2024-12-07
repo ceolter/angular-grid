@@ -1,6 +1,5 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { DndSourceOnRowDragParams, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 
 import { getData } from './data';
 

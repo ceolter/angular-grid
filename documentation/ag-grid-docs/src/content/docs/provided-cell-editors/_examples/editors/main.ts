@@ -1,4 +1,3 @@
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     ColDef,
     GridApi,
@@ -8,8 +7,7 @@ import type {
     ISelectCellEditorParams,
     ITextCellEditorParams,
 } from 'ag-grid-community';
-import { createGrid } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
 import { colors } from './colors';

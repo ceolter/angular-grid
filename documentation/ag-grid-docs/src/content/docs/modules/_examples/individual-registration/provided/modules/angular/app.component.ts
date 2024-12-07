@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
+import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     CsvExportModule,
@@ -8,7 +9,6 @@ import {
     NumberFilterModule,
     TextFilterModule,
 } from 'ag-grid-community';
-import type { ColDef } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
