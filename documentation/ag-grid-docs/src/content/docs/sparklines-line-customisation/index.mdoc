@@ -26,10 +26,20 @@ sparklineOptions: {
         top: 5,
         bottom: 5,
     },
+    marker: {
+        itemStyler: (params) => {
+            if(params.highlighted) {
+                return {
+                    size: 7;
+                }
+            }
+        }
+    },
     highlightStyle: {
-        size: 7,
-        fill: 'rgb(124, 255, 178)',
-        strokeWidth: 0
+        item: {
+            fill: 'rgb(124, 255, 178)',
+            strokeWidth: 0
+        }
     },
 }
 ```
@@ -74,17 +84,20 @@ These formats can be modified to your liking by setting the `marker` and `highli
 sparklineOptions: {
     type: 'line',
     marker: {
+        enabled: true,
         size: 3,
         shape: 'diamond',
         fill: 'green',
         stroke: 'green',
-        strokeWidth: 2
-    },
-    highlightStyle: {
-        size: 10,
-        fill: 'cyan',
-        stroke: 'cyan',
-    },
+        strokeWidth: 2,
+        itemStyler: (params) => {
+            if(params.highlighted) {
+                return {
+                    size: 10;
+                }
+            }
+        }
+    }
 }
 ```
 
@@ -104,6 +117,9 @@ Custom marker
 Custom highlighted marker
 {% /imageCaption %}
 {% /flex %}
+
+See AG Charts [Series Markers](https://www.ag-grid.com/charts/javascript/markers/) for more information on marker options.
+See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for more information on item stylers.
 
 ## Sparkline Padding Options
 

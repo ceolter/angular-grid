@@ -205,6 +205,12 @@
                     "children": [
                         {
                             "type": "item",
+                            "title": "Install Sparklines",
+                            "path": "sparklines-installation",
+                            "isEnterprise": true
+                        },
+                        {
+                            "type": "item",
                             "title": "Overview",
                             "path": "sparklines-overview",
                             "isEnterprise": true,
@@ -234,12 +240,6 @@
                                     "isEnterprise": true
                                 }
                             ]
-                        },
-                        {
-                            "type": "item",
-                            "title": "Install Sparklines",
-                            "path": "sparklines-installation",
-                            "isEnterprise": true
                         },
                         {
                             "type": "item",

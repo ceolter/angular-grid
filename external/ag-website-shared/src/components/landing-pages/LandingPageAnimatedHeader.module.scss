@@ -1,0 +1,53 @@
+@use 'design-system' as *;
+
+.topLine {
+    margin-left: 0.66em;
+}
+
+.animatedWordsOuter {
+    --word-height: 1.3em;
+    --word-index: 0;
+
+    position: relative;
+    display: inline-block;
+    min-width: 7.5ch;
+    height: var(--word-height);
+    margin-left: 0.33ch;
+    text-align: left;
+    transform: translateY(0.3333em);
+    overflow: hidden;
+}
+
+.animatedWordsInner {
+    position: absolute;
+    display: inline-flex;
+    bottom: 0;
+    left: 0;
+    flex-direction: column;
+    transform: translateY(calc(var(--word-height) * var(--word-index)));
+    transition: transform 0.33s ease-in-out;
+}
+
+.animatedWord {
+    height: var(--word-height);
+    min-width: 7.5ch;
+}
+
+.javascript {
+    color: #f7df1e; // Yellow
+}
+
+.react {
+    color: #61dafb; // Light Blue
+}
+
+.angular {
+    background: linear-gradient(90deg, #e40035, #f60a48 24%, #f20755 35%, #dc087d 49%, #9717e7 74%, #6c00f5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.vue {
+    color: #42b883; // Green
+}

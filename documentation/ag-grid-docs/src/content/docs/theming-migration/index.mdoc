@@ -88,7 +88,7 @@ In legacy themes, custom properties had to be set in CSS. When migrating custom 
 
  * `--ag-grid-size` -> `spacing` spacing works a little bit differently from the old "grid size". It controls the padding around elements, whereas grid size controlled their size. So setting spacing to `0` will result in a grid with no padding, whereas setting grid size to `0` would have resulted in zero-height rows.
  * `--ag-active-color`, `--ag-alpine-active-color`, `--ag-balham-active-color`, `--ag-material-accent-color` -> use `accentColor`
- * `--ag-borders*` -> there has been a reworking of border parameters, see the Theming API docs for the new list of border parameters.
+ * `--ag-borders*` -> there has been a reworking of border parameters, see [Customising Borders](./theming-borders/) for the new list of border parameters.
  * `--ag-row-border-color`, `--ag-row-border-style`, `--ag-row-border-width` -> replaced with `rowBorder`
  * `--ag-icon-font-*` and `--ag-icon-image-*` -> use [the iconOverrides part](./custom-icons/#replacing-individual-icons) or use [CSS rules](/custom-icons/#styling-icons-using-css).
 
@@ -199,7 +199,7 @@ If your application is split between multiple pages, it can be migrated one page
 
 If a single HTML document contains multiple grids, we recommend migrating all the grids at the same time if possible - this is the most straightforward way of avoiding conflicts between the v32 styles and the Theming API.
 
-In order to migrate one grid on a page that contains multiple grids, you can use shadow DOM to isolate grids using v32 styles from grids using the Theming API. Be aware however that this an advanced technique and requires you to understand how shadow DOM works, and how it interacts with your framework and your application structure. Shadow DOM has other effects than simply isolating styles, and using it it may require code changes in your application.
+In order to migrate one grid on a page that contains multiple grids, you can use shadow DOM to isolate grids using v32 styles from grids using the Theming API. Be aware however that this is an advanced technique and requires you to understand how shadow DOM works, and how it interacts with your framework and your application structure. Shadow DOM has other effects than simply isolating styles, and using it it may require code changes in your application.
 
 {% if isFramework("react") %}
 

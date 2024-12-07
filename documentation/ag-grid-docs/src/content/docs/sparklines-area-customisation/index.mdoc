@@ -25,7 +25,9 @@ sparklineOptions: {
     fill: 'rgba(216, 204, 235, 0.3)',
     stroke: 'rgb(119,77,185)',
     highlightStyle: {
-        fill: 'rgb(143,185,77)',
+        item: {
+            fill: 'rgb(143,185,77)',
+        }
     },
     axis: {
         stroke: 'rgb(204, 204, 235)',
@@ -73,17 +75,25 @@ These formats can be modified to your liking by setting the `marker` and `highli
 sparklineOptions: {
     type: 'area',
     marker: {
+        enabled: true,
         size: 3,
-        // Optional - marker shape is 'circle' by default.
-        shape: 'circle',
+        shape: 'circle', // Optional - marker shape is 'circle' by default.
         fill: 'green',
         stroke: 'green',
         strokeWidth: 2
+        itemStyler: (params) => {
+            if(params.highlighted) {
+                return {
+                    size: 10;
+                }
+            }
+        }
     },
     highlightStyle: {
-        size: 10,
-        fill: 'cyan',
-        stroke: 'cyan',
+        item: {
+            fill: 'cyan',
+            stroke: 'cyan',
+        }
     },
 }
 ```
@@ -104,6 +114,9 @@ Custom marker
 Custom highlighted marker
 {% /imageCaption %}
 {% /flex %}
+
+See AG Charts [Series Markers](https://www.ag-grid.com/charts/javascript/markers/) for more information on marker options.
+See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for more information on item stylers.
 
 ## Area Fill Options
 

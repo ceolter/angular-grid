@@ -3,8 +3,6 @@ title: "Sparklines - API"
 enterprise: true
 ---
 
-# API Documentation
-
 ## Sparkline Options
 
 All sparkline types and interfaces are available from the `ag-charts-community` or `ag-charts-enterprise` packages.
@@ -37,6 +35,10 @@ function itemStyler(params: AgAreaSeriesMarkerItemStylerParams ): AgSeriesMarker
 * Line Item Styler: [Params](./sparklines-api-sparkline-line#item-styler-params) | [Result](./sparklines-api-sparkline-line#series-style)
 * Area Item Styler: [Params](./sparklines-api-sparkline-area#item-styler-params) | [Result](./sparklines-api-sparkline-area#series-style)
 
+See AG Charts
+* [Series Markers](https://www.ag-grid.com/charts/javascript/markers/) for more information on marker options.
+* [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for more information on item stylers.
+
 ## Sparkline Tooltip Renderer
 
 The tooltip renderer is a function that can be provided to the sparkline options' tooltip object. It is called with the series datum and should return a string to be displayed in the tooltip.
@@ -50,3 +52,5 @@ const sparklineOptions: AgSparklineOptions = {
     }
 };
 ```
+
+See AG Charts [Tooltips](https://www.ag-grid.com/charts/javascript/tooltips/) for more information on tooltip options.

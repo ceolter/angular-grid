@@ -19,6 +19,7 @@ import { Finance } from 'src/components/demos/examples/finance';
 import { ThemeBuilderHomepage } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
 import { AutomatedRowGrouping } from '@ag-website-shared/components/automated-examples/AutomatedRowGrouping';
 import { AutomatedIntegratedCharts } from '@ag-website-shared/components/automated-examples/AutomatedIntegratedCharts';
+import { LandingPageAnimatedHeader } from '@ag-website-shared/components/landing-pages/LandingPageAnimatedHeader';
 import LogoMark from '@components/logo/LogoMark';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
@@ -68,10 +69,14 @@ const frameworksData = [
     <div class={styles.homepageHero}>
         <section class:list={[styles.heroInner, 'layout-max-width-small']}>
             <section class={styles.heroHeadings}>
-                <h1 class="text-xl">The Best JavaScript Grid in the World</h1>
+                <noscript>
+                    <h1>The Best JavaScript Grid in the World</h1>
+                </noscript>
+                <LandingPageAnimatedHeader client:load />
+
                 <h2 class="text-base normal-weight-text">
                     Add high-performance, feature rich, and fully customisable Data Grids to your application in minutes
-                    with our free and open source library.
+                    with our free, open source library.
                 </h2>
                 <div class={styles.heroSectionbuttonContainer}>
                     <a
@@ -169,7 +174,7 @@ const frameworksData = [
         client:load
         tag="Unlimited Use-cases"
         heading="Trusted By Developers Everywhere"
-        subHeading="AG Grid can be found in almost every industry, from Finance and AI, to DevTools and Aeronautics. Most of these uses are private, but we've hand-picked a few open-source examples:"
+        subHeading="AG Grid can be found in almost every industry, from Finance and AI, to Databases and Aerospace:"
         ctaTitle="Browse Our Showcase"
         ctaUrl={urlWithBaseUrl('/community/showcase/')}
     >

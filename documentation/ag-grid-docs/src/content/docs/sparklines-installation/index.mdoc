@@ -5,23 +5,19 @@ enterprise: true
 
 This section shows how to install Sparklines.
 
+Sparklines are an enterprise grid feature provided by AG Charts.
+You can use either AG Charts Community or AG Charts Enterprise, depending on your setup.
+
 The Sparklines module can be imported as follows:
 
-```ts
-// Import minimal modules required for charts
-import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
-import { SparklinesModule } from "ag-grid-enterprise";
-import { AgChartsCommunityModule } from 'ag-charts-community';
-
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    SparklinesModule.with(AgChartsCommunityModule)
-]);
-```
-
-{% note %}
-AG Charts Enterprise (`AgChartsEnterpriseModule`) is available from the `ag-charts-enterprise` package.
-{% /note %}
+{% tabs %}
+    {% tabItem id="SparklinesInstallationChartsCommunity" label="Using AG Charts Community" %}
+        {% partial file="./_sparklines_charts_community.mdoc" /%}
+    {% /tabItem %}
+    {% tabItem id="SparklinesInstallationChartsEnterprise" label="Using AG Charts Enterprise" %}
+        {% partial file="./_sparklines_charts_enterprise.mdoc" /%}
+    {% /tabItem %}
+{% /tabs %}
 
 ## Next Up
 

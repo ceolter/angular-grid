@@ -1,0 +1,10 @@
+```ts
+// Import minimal modules required for sparklines
+import { ModuleRegistry } from "ag-grid-community";
+import { SparklinesModule } from "ag-grid-enterprise";
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
+ModuleRegistry.registerModules([
+    SparklinesModule.with(AgChartsEnterpriseModule)
+]);
+```
