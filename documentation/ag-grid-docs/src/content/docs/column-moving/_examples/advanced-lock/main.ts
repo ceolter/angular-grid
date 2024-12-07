@@ -3,7 +3,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 
 import { ControlsCellRenderer } from './controlsCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

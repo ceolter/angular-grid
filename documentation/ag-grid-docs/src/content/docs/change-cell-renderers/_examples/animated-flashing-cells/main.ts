@@ -10,7 +10,7 @@ import {
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     HighlightChangesModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

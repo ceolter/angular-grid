@@ -1,10 +1,10 @@
 import React, { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 // Create new GridExample component
 const GridExample = () => {

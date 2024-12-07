@@ -23,7 +23,7 @@ ModuleRegistry.registerModules([
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IAccount>;

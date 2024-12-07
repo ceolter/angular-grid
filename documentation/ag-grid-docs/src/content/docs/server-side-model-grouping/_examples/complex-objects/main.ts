@@ -4,7 +4,7 @@ import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise'
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     // here we are using a valueGetter to get the country name from the complex object

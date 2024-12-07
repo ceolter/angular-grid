@@ -1,7 +1,9 @@
+import { createApp, defineComponent, defonBeforeMount } from 'vue';
+
 import type { ColDef } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ModuleRegistry,
+    ValidationModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
@@ -12,9 +14,7 @@ import {
 } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, defineComponent, defonBeforeMount } from 'vue';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

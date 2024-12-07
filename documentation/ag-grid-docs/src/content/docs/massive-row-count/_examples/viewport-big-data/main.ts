@@ -2,7 +2,7 @@ import type { ColDef, GridApi, GridOptions, IViewportDatasource, IViewportDataso
 import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ViewportRowModelModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ViewportRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ViewportRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

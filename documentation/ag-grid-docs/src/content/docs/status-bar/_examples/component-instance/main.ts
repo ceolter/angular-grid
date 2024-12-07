@@ -8,7 +8,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 export interface IClickableStatusBar {

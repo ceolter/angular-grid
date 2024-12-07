@@ -1,3 +1,5 @@
+import { createApp, defineComponent, ref, shallowRef } from 'vue';
+
 import type {
     ColDef,
     GridApi,
@@ -7,7 +9,7 @@ import type {
     RowSelectionOptions,
     StateUpdatedEvent,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ColumnsToolPanelModule,
@@ -17,17 +19,15 @@ import {
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, defineComponent, ref, shallowRef } from 'vue';
-
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
     CellSelectionModule,
     PivotModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = defineComponent({

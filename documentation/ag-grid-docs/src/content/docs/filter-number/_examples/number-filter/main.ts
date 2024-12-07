@@ -9,11 +9,7 @@ import {
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    NumberFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
 
 const numberValueFormatter = function (params: ValueFormatterParams) {
     return params.value.toFixed(2);

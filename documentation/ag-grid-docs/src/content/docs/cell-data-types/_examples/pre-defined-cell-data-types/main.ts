@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     RowGroupingPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 interface IOlympicDataTypes extends IOlympicData {

@@ -15,7 +15,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const themes: Record<string, GridTheme> = {

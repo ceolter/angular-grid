@@ -1,13 +1,13 @@
-import type { ColDef, GridApi, GridPreDestroyedEvent, GridReadyEvent } from 'ag-grid-community';
-
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { AgGridVue } from 'ag-grid-vue3';
 import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
+
+import type { ColDef, GridApi, GridPreDestroyedEvent, GridReadyEvent } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AgGridVue } from 'ag-grid-vue3';
 
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

@@ -9,11 +9,7 @@ import {
 
 import { CustomDateComponent } from './customDateComponent_typescript';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    DateFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, DateFilterModule, ValidationModule /* Development Only */]);
 
 const filterParams = {
     comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {

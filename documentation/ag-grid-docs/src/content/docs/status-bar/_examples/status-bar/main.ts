@@ -6,7 +6,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

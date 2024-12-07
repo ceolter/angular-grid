@@ -1,8 +1,8 @@
-import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
-
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { AgGridVue } from 'ag-grid-vue3';
 import { createApp, defineComponent } from 'vue';
+
+import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AgGridVue } from 'ag-grid-vue3';
 
 import ChildMessageRenderer from './childMessageRendererVue';
 import CubeRenderer from './cubeRendererVue';
@@ -11,7 +11,7 @@ import ParamsRenderer from './paramsRendererVue';
 import SquareRenderer from './squareRendererVue';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

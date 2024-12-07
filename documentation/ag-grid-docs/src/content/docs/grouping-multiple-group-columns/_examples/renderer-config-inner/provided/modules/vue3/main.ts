@@ -1,14 +1,14 @@
-import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import CustomMedalCellRenderer from './customMedalCellRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule]);
+ModuleRegistry.registerModules([RowGroupingModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([
     PivotModule,
     SetFilterModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

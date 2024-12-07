@@ -17,6 +17,7 @@ import { getData } from './data';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
@@ -24,7 +25,7 @@ ModuleRegistry.registerModules([
     MultiFilterModule,
     SetFilterModule,
     RowGroupingModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

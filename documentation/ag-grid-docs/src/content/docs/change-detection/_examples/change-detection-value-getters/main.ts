@@ -7,11 +7,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    NumberFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi;
 

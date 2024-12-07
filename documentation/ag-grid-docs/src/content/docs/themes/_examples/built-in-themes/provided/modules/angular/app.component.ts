@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     themeAlpine,
     themeBalham,
     themeQuartz,
@@ -15,12 +15,12 @@ import {
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-
     SideBarModule,
+
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 @Component({

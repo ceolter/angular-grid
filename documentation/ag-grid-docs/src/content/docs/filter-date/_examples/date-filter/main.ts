@@ -7,11 +7,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    DateFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, DateFilterModule, ValidationModule /* Development Only */]);
 
 const filterParams: IDateFilterParams = {
     comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {

@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     RowGroupingModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColGroupDef[] = [

@@ -10,7 +10,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { getData } from './data';
 import { FullWidthCellRenderer } from './fullWidthCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi;
 

@@ -17,7 +17,7 @@ ModuleRegistry.registerModules([
     PivotModule,
     FiltersToolPanelModule,
     RowGroupingPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

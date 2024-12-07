@@ -9,11 +9,7 @@ import {
 
 import { SliderFloatingFilter } from './sliderFloatingFilter_typescript';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    NumberFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
 
 const filterParams: INumberFilterParams = {
     filterOptions: ['greaterThan'],

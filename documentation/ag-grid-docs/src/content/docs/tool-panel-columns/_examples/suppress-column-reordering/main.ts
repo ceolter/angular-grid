@@ -15,7 +15,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     PivotModule,
     TextFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

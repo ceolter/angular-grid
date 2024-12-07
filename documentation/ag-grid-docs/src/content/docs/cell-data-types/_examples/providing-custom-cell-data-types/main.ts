@@ -8,7 +8,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     CellSelectionModule,
     SetFilterModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 interface IOlympicDataTypes extends IOlympicData {

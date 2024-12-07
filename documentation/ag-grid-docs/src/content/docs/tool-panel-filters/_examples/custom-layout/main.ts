@@ -15,7 +15,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     TextFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

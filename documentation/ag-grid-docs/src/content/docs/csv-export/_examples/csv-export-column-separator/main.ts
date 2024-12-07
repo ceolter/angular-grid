@@ -13,7 +13,7 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions, IRowDragItem } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const athleteRowDragTextCallback = function (params: IRowDragItem, dragItemCount: number) {
     // keep double equals here because data can be a string or number

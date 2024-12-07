@@ -5,11 +5,7 @@ import { RichSelectModule } from 'ag-grid-enterprise';
 import { colors } from './colors';
 import { ColourCellRenderer } from './colourCellRenderer_typescript';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    RichSelectModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

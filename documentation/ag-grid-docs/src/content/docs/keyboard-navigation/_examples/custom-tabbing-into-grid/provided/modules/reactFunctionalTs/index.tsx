@@ -12,7 +12,7 @@ import type {
     GridReadyEvent,
     HeaderFocusedParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';

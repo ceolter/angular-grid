@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const dateFilterParams: IMultiFilterParams = {

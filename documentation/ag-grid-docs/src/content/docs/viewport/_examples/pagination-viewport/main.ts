@@ -16,7 +16,7 @@ import { createViewportDatasource } from './viewport-datasource';
 ModuleRegistry.registerModules([
     ViewportRowModelModule,
     HighlightChangesModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class RowIndexRenderer implements ICellRendererComp {

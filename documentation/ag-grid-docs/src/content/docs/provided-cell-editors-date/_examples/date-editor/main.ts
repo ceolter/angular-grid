@@ -7,11 +7,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    DateEditorModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, DateEditorModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

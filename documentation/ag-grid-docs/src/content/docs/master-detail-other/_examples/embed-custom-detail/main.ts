@@ -4,11 +4,7 @@ import { MasterDetailModule } from 'ag-grid-enterprise';
 
 import { DetailCellRenderer } from './detailCellRenderer_typescript';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    MasterDetailModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, MasterDetailModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IAccount>;
 

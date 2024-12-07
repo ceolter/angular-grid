@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     TreeDataModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 let fakeServer: {

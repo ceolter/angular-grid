@@ -1,16 +1,16 @@
 import type { ColDef } from 'ag-grid-community';
 
-import { AllCommunityModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 import { createApp, defineComponent } from 'vue';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     PivotModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const VueExample = defineComponent({

@@ -1,5 +1,4 @@
 import {
-    AllCommunityModule,
     CellDoubleClickedEvent,
     CellKeyDownEvent,
     ColDef,
@@ -7,6 +6,7 @@ import {
     GridReadyEvent,
     ICellRenderer,
     ModuleRegistry,
+    ValidationModule,
 } from 'ag-grid-community';
 
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -16,7 +16,7 @@ import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue'
 import CustomGroupCellRenderer from './customGroupCellRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule]);
+ModuleRegistry.registerModules([RowGroupingModule, ValidationModule/* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

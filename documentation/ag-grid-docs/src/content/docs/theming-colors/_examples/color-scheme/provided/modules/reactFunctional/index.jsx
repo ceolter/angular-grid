@@ -8,7 +8,7 @@ import {
     colorSchemeLightCold,
     colorSchemeLightWarm,
 } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { themeQuartz } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 

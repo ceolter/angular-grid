@@ -7,7 +7,7 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const monthValueGetter =

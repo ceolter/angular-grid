@@ -4,7 +4,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { getData } from './data';
 import { ShowCellRenderer } from './showCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 function rowSpan(params: RowSpanParams) {
     if (params.data.show) {

@@ -6,6 +6,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
 } from 'ag-grid-community';
 import {
     ClipboardModule,
@@ -20,7 +21,12 @@ import { createApp, defineComponent } from 'vue';
 import './styles.css';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    ValidationModule/* Development Only */
+]);
 
 let rowIdSequence = 100;
 const createRowBlock = () =>

@@ -20,9 +20,10 @@ import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     RowGroupingModule,
     HighlightChangesModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 declare let __basePath: string;

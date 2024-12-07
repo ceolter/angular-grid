@@ -9,11 +9,7 @@ import {
 
 import { NumberFloatingFilterComponent } from './numberFloatingFilterComponent_typescript';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    NumberFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', filter: false },

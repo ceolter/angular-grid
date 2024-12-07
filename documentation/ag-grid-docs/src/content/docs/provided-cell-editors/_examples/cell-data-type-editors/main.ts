@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     DateEditorModule,
     CheckboxEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

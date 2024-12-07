@@ -1,10 +1,10 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions, RowDataUpdatedEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
-import type { TAthlete } from './data';
 
+import type { TAthlete } from './data';
 import { fetchDataAsync } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const updateRowCount = (id: string) => {
     const element = document.querySelector(`#${id} > .value`);

@@ -27,7 +27,7 @@ ModuleRegistry.registerModules([
     SelectEditorModule,
     TextEditorModule,
     LargeTextEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

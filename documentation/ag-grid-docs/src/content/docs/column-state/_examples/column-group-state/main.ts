@@ -4,7 +4,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 declare let window: any;
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColGroupDef[] = [
     {

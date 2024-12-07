@@ -3,7 +3,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const getMedalString = function ({ gold, silver, bronze }: { gold: number; silver: number; bronze: number }) {
     const goldStr = gold > 0 ? `Gold: ${gold} ` : '';

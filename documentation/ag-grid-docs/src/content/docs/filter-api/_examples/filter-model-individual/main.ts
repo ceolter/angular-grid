@@ -31,7 +31,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const filterParams: IDateFilterParams = {

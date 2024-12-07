@@ -13,7 +13,11 @@ import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-e
 import { data, dataObservers, randomUpdates } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, ServerSideRowModelApiModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    ServerSideRowModelModule,
+    ServerSideRowModelApiModule,
+    ValidationModule /* Development Only */,
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

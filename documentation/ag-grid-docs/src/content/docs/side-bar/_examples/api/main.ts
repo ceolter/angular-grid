@@ -12,12 +12,7 @@ import {
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
-import {
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    PivotModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
@@ -26,7 +21,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     PivotModule,
     TextFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

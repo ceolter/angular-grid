@@ -9,11 +9,7 @@ import {
 
 import { colors } from './colors';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    TextEditorModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TextEditorModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

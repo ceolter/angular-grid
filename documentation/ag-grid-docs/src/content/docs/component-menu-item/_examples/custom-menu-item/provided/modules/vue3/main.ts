@@ -1,3 +1,5 @@
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
+
 import type {
     ColDef,
     GetContextMenuItemsParams,
@@ -5,7 +7,7 @@ import type {
     GridApi,
     GridReadyEvent,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -15,17 +17,15 @@ import {
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import MenuItem from './menuItemVue';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = defineComponent({

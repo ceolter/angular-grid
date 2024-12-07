@@ -16,13 +16,14 @@ import {
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -5,6 +5,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -16,7 +17,12 @@ import {
 } from 'ag-grid-enterprise';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [{ field: 'id' }, { field: 'color' }, { field: 'value1' }];
 const defaultColDef = {

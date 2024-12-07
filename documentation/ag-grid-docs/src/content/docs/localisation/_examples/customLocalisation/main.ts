@@ -51,7 +51,8 @@ ModuleRegistry.registerModules([
     RowGroupingPanelModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
+    ValidationModule /* Development Only */,
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {

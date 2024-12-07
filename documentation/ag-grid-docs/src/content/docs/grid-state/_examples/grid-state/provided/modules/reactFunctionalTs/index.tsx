@@ -10,7 +10,7 @@ import type {
     RowSelectionOptions,
     StateUpdatedEvent,
 } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule, PivotModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { CellSelectionModule } from 'ag-grid-enterprise';

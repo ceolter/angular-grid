@@ -1,5 +1,5 @@
 import type { ColDef } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -13,13 +13,13 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const VueExample = defineComponent({

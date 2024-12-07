@@ -9,7 +9,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

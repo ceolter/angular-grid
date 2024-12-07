@@ -13,7 +13,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { CustomGroupCellRenderer } from './customGroupCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

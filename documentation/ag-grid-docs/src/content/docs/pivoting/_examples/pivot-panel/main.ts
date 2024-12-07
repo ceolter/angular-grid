@@ -8,7 +8,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnsToolPanelModule,
     RowGroupingPanelModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

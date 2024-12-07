@@ -5,7 +5,7 @@ import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise'
 import { getData } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

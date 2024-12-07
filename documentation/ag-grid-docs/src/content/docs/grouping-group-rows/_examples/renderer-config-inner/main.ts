@@ -4,7 +4,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { CustomMedalCellRenderer } from './customMedalCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

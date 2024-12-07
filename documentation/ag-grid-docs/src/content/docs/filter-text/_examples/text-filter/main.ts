@@ -7,11 +7,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    TextFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TextFilterModule, ValidationModule /* Development Only */]);
 
 function contains(target: string, lookingFor: string) {
     return target && target.indexOf(lookingFor) >= 0;

@@ -1,13 +1,18 @@
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
+
 import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ColumnMenuModule, ContextMenuModule, ExcelExportModule]);
+ModuleRegistry.registerModules([
+    ColumnMenuModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    ValidationModule /* Development Only */,
+]);
 
 const VueExample = defineComponent({
     template: `

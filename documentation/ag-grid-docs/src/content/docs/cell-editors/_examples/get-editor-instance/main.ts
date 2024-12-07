@@ -4,7 +4,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { getData } from './data';
 import { MySimpleEditor } from './mySimpleEditor_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'first_name', headerName: 'First Name', width: 120, editable: true },

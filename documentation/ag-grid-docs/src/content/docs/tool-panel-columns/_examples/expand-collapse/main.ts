@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     PivotModule,
     TextFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColGroupDef[] = [

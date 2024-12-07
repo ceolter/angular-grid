@@ -15,7 +15,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     PivotModule,
     RowGroupingPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

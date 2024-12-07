@@ -9,7 +9,7 @@ import {
     createTheme,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const myCheckboxStyle = createPart({
     // By setting the feature, adding this part to a theme will remove the

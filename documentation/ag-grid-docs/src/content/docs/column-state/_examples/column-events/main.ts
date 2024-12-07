@@ -11,16 +11,10 @@ import type {
     GridOptions,
     SortChangedEvent,
 } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    Column,
-    ModuleRegistry,
-    ValidationModule,
-    createGrid,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, Column, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, PivotModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, PivotModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },

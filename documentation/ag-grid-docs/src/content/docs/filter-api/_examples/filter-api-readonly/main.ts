@@ -36,7 +36,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const defaultFilterParams: IProvidedFilterParams = { readOnly: true };

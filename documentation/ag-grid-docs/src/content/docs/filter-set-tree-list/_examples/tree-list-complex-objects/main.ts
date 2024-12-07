@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     TreeDataModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const pathLookup: { [key: string]: string } = getData().reduce((pathMap, row) => {

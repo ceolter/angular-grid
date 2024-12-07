@@ -7,7 +7,7 @@ ModuleRegistry.registerModules([
     CellSelectionModule,
     RowGroupingModule,
     StatusBarModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 function getInitialData() {

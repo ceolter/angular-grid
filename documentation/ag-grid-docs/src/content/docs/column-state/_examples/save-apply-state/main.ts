@@ -9,7 +9,7 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     PivotModule,
     RowGroupingPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

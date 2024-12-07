@@ -4,7 +4,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { MedalCellRenderer } from './medalCellRenderer_typescript';
 import { UpdateCellRenderer } from './updateCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

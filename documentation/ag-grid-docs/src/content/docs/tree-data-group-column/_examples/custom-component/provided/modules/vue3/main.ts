@@ -1,11 +1,11 @@
 import type { ColDef, GridApi, ValueFormatterParams } from 'ag-grid-community';
 
 import {
-    AllCommunityModule,
     CellDoubleClickedEvent,
     CellKeyDownEvent,
     GridReadyEvent,
     ModuleRegistry,
+    ValidationModule,
 } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -14,7 +14,7 @@ import { createApp, defineComponent } from 'vue';
 import CustomGroupCellRenderer from './customGroupCellRendererVue';
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, TreeDataModule]);
+ModuleRegistry.registerModules([TreeDataModule, ValidationModule/* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

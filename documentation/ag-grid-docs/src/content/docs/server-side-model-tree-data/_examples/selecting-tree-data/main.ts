@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     TreeDataModule,
     ServerSideRowModelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 interface FakeServer {

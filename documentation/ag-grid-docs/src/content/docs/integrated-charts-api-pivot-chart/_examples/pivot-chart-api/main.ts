@@ -6,10 +6,11 @@ import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, PivotModul
 
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     PivotModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

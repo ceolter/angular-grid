@@ -2,7 +2,12 @@ import type { CellEditRequestEvent, GetRowIdParams, GridApi, GridOptions } from 
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ClipboardModule, CellSelectionModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    ClipboardModule,
+    CellSelectionModule,
+    ValidationModule /* Development Only */,
+]);
 
 let gridApi: GridApi<IOlympicDataWithId>;
 

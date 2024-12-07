@@ -1,4 +1,6 @@
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
+
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -8,18 +10,16 @@ import {
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
-
 import MenuItem from './menuItemVue';
 import './style.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = {

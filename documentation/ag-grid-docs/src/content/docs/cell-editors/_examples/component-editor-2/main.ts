@@ -18,7 +18,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     RichSelectModule,
     NumberEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

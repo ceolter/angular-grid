@@ -15,7 +15,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { createDataItem, getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
 
 let aggCallCount = 0;
 let compareCallCount = 0;

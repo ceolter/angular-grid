@@ -4,7 +4,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { getData } from './data';
 import { PartialMatchFilter } from './partialMatchFilter_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'row' },

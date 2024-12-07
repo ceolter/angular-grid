@@ -13,7 +13,7 @@ import type {
 } from 'ag-grid-community';
 import { InfiniteRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule /* Development Only */]);
 
 const valueFormatter = function (params: ValueFormatterParams) {
     if (typeof params.value === 'number') {

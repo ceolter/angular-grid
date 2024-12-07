@@ -2,11 +2,7 @@ import type { FirstDataRenderedEvent, GridApi, GridOptions, IDetailCellRendererP
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { MasterDetailModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    MasterDetailModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, MasterDetailModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IAccount>;
 

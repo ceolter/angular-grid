@@ -10,7 +10,7 @@ import {
 
 import { CellRenderer } from './cellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

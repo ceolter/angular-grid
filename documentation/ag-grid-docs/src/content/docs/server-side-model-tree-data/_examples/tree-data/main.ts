@@ -23,7 +23,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     TreeDataModule,
     ServerSideRowModelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -9,7 +9,12 @@ import {
 } from 'ag-grid-community';
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, SetFilterModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    SetFilterModule,
+    ValidationModule /* Development Only */,
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

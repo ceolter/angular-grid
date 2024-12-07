@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     ServerSideRowModelModule,
     SetFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const colDefCountry: ColDef = { field: 'country', rowGroup: true };

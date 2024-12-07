@@ -4,7 +4,7 @@ import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid 
 import { getData } from './data';
 import { DragSourceRenderer } from './dragSourceRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const rowClassRules = {
     'red-row': 'data.color == "Red"',

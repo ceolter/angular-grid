@@ -1,13 +1,13 @@
-import type { ColDef } from 'ag-grid-community';
-
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { AgGridVue } from 'ag-grid-vue3';
 import { createApp, defineComponent, ref, shallowRef } from 'vue';
+
+import type { ColDef } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AgGridVue } from 'ag-grid-vue3';
 
 import MedalRenderer from './medalRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

@@ -7,7 +7,11 @@ import { SparklinesModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    SparklinesModule.with(AgChartsCommunityModule),
+    ValidationModule /* Development Only */,
+]);
 
 const palette = {
     blue: 'rgb(20,94,140)',

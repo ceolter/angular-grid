@@ -1,13 +1,7 @@
 import type { GridOptions, ValueFormatterParams } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    GridApi,
-    ModuleRegistry,
-    ValidationModule,
-    createGrid,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, GridApi, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 interface SalesRecord {
     productName: string;

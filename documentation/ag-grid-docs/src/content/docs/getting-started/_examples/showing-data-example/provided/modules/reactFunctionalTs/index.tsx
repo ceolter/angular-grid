@@ -2,10 +2,10 @@ import React, { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, ColGroupDef, ValueGetterParams } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const CustomButtonComponent = () => {
     return <button onClick={() => window.alert('clicked')}>Push Me!</button>;

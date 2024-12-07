@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, ModelUpdatedEvent } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 @Component({
     standalone: true,

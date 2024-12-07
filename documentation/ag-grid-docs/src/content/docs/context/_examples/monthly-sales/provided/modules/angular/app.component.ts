@@ -11,12 +11,17 @@ import type {
     ICellRendererParams,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, RowGroupingModule, SetFilterModule, FiltersToolPanelModule]);
+ModuleRegistry.registerModules([
+    RowGroupingModule,
+    SetFilterModule,
+    FiltersToolPanelModule,
+    ValidationModule /* Development Only */,
+]);
 
 @Component({
     standalone: true,

@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 // Set a blue background and red shadows for all menus

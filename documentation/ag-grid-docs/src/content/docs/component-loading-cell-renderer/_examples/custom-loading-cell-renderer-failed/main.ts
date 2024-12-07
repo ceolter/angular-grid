@@ -4,7 +4,7 @@ import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { CustomLoadingCellRenderer } from './customLoadingCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'id' },

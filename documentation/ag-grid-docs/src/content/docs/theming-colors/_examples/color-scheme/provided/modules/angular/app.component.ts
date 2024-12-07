@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ModuleRegistry,
+    ValidationModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
@@ -12,7 +12,7 @@ import {
     themeQuartz,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 @Component({
     standalone: true,

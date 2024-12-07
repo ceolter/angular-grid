@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     SelectEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

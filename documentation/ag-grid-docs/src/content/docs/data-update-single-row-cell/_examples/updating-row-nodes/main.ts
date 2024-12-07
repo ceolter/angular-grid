@@ -7,11 +7,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    NumberFilterModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
 
 const rowData = [
     { id: 'aa', make: 'Toyota', model: 'Celica', price: 35000 },

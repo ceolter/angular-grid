@@ -9,7 +9,7 @@ import {
     iconSetMaterial,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const myCustomTheme = createTheme()
     // add just the parts you want

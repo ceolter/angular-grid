@@ -6,18 +6,18 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

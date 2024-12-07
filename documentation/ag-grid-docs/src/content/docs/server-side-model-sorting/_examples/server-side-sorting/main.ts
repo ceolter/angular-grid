@@ -4,7 +4,7 @@ import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 const gridOptions: GridOptions<IOlympicData> = {

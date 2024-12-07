@@ -10,7 +10,7 @@ import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise'
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([ServerSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 const gridOptions: GridOptions<IOlympicData> = {

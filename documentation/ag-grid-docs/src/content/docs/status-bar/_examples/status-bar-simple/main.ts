@@ -13,7 +13,7 @@ ModuleRegistry.registerModules([
     CellSelectionModule,
     StatusBarModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

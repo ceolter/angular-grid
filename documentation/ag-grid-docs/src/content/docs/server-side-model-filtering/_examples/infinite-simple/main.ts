@@ -1,11 +1,5 @@
 import type { GridApi, GridOptions, IServerSideDatasource } from 'ag-grid-community';
-import {
-    ModuleRegistry,
-    NumberFilterModule,
-    TextFilterModule,
-    ValidationModule,
-    createGrid,
-} from 'ag-grid-community';
+import { ModuleRegistry, NumberFilterModule, TextFilterModule, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
@@ -16,7 +10,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

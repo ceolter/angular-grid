@@ -1,7 +1,7 @@
 import type { GridApi, GridOptions, RowClassParams, RowStyle } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 let colorIndex = 0;
 const colors = ['#99999944', '#CC333344', '#33CC3344', '#2244CC44'];

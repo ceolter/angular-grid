@@ -2,11 +2,7 @@ import type { ColDef, GridApi, GridOptions, IRichCellEditorParams } from 'ag-gri
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    RichSelectModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule, ValidationModule /* Development Only */]);
 
 const languages = ['English', 'Spanish', 'French', 'Portuguese', '(other)'];
 

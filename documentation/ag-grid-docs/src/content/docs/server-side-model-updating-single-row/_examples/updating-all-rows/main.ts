@@ -4,7 +4,7 @@ import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise'
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([RowGroupingModule, ServerSideRowModelModule, ValidationModule /* Development Only */]);
 
 let versionCounter: number = 0;
 const columnDefs: ColDef[] = [{ field: 'athlete' }, { field: 'date' }, { field: 'country' }, { field: 'version' }];

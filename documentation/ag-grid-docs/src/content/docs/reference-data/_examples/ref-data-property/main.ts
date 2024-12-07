@@ -31,7 +31,7 @@ ModuleRegistry.registerModules([
     RichSelectModule,
     SetFilterModule,
     SelectEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const carMappings = {

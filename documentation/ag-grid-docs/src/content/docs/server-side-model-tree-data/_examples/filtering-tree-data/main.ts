@@ -30,7 +30,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     SetFilterModule,
     TextFilterModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

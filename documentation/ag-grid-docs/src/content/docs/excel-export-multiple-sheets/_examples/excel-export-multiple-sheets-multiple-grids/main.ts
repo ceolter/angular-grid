@@ -7,15 +7,15 @@ import type {
     ICellRendererComp,
     ICellRendererParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
+    ValidationModule/* Development Only */,
 ]);
 
 class SportRenderer implements ICellRendererComp {

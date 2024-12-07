@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RichSelectModule,
     LargeTextEditorModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const cellCellEditorParams = (params: ICellEditorParams<IRow>) => {
