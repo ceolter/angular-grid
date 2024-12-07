@@ -2,7 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { RichSelectModule } from 'ag-grid-enterprise';
@@ -14,12 +14,12 @@ import NumericCellEditor from './numericCellEditor.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
     RichSelectModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const cellEditorSelector = (params) => {

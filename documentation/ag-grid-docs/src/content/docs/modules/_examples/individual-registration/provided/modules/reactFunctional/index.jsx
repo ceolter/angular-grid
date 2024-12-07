@@ -7,6 +7,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
 } from 'ag-grid-community';
 import {
     ClipboardModule,
@@ -20,7 +21,12 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 // Register shared Modules globally
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnMenuModule, ContextMenuModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    ValidationModule/* Development Only */
+]);
 
 const leftModules = [SetFilterModule, ClipboardModule, CsvExportModule];
 const rightModules = [TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule];

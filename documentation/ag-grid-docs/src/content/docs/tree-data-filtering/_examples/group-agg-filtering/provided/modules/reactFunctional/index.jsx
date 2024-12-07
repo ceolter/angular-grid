@@ -2,14 +2,14 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TreeDataModule, ValidationModule/* Development Only */]);
 
 const GridExample = () => {
     const gridRef = useRef(null);

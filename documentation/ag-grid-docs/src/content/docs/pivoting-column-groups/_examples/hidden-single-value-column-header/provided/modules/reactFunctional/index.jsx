@@ -2,7 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -12,14 +12,14 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-
     ColumnsToolPanelModule,
+
     FiltersToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     PivotModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const GridExample = () => {

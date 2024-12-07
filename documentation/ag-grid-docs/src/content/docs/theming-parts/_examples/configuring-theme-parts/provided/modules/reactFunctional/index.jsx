@@ -2,9 +2,9 @@ import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
@@ -25,12 +25,12 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'a
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-
     SideBarModule,
+
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const baseThemes = [

@@ -1,18 +1,18 @@
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, themeQuartz } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, themeQuartz } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-
     SideBarModule,
+
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     PivotModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const theme = themeQuartz

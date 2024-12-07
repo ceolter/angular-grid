@@ -2,13 +2,13 @@ import React, { StrictMode, useCallback, useEffect, useRef, useState } from 'rea
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import { fetchDataAsync } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const updateRowCount = (id) => {
     const element = document.querySelector(`#${id} > .value`);
