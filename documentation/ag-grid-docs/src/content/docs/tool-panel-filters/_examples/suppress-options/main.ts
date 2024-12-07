@@ -1,5 +1,5 @@
 import type { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ContextMenuModule,
@@ -8,12 +8,12 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    TextFilterModule,
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

@@ -1,5 +1,5 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberEditorModule, createGrid } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
@@ -8,7 +8,7 @@ import { MoodEditor } from './moodEditor_typescript';
 import { MoodRenderer } from './moodRenderer_typescript';
 import { SimpleTextEditor } from './simpleTextEditor_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RichSelectModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule, NumberEditorModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'first_name', headerName: 'Provided Text' },

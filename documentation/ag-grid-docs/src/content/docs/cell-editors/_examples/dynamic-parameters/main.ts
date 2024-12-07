@@ -1,5 +1,5 @@
 import type { CellValueChangedEvent, GridApi, GridOptions, ICellEditorParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, LargeTextEditorModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RichSelectModule } from 'ag-grid-enterprise';
 
 import type { IRow } from './data';
@@ -7,12 +7,12 @@ import { getData } from './data';
 import { GenderCellRenderer } from './genderCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RichSelectModule,
+    LargeTextEditorModule,
 ]);
 
 const cellCellEditorParams = (params: ICellEditorParams<IRow>) => {

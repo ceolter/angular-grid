@@ -9,14 +9,14 @@ import type {
     GridOptions,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, HighlightChangesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     RowGroupingModule,
+    HighlightChangesModule,
 ]);
 
 declare let __basePath: string;

@@ -1,5 +1,11 @@
 import type { GridApi, GridOptions, IDateFilterParams, IMultiFilterParams, ISetFilterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    DateFilterModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -9,13 +15,14 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnMenuModule,
     ContextMenuModule,
     MultiFilterModule,
     SetFilterModule,
+    NumberFilterModule,
+    DateFilterModule,
 ]);
 
 const dateFilterParams: IMultiFilterParams = {

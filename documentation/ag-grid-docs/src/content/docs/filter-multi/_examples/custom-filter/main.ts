@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, IMultiFilterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -13,7 +13,6 @@ import { YearFilter } from './YearFilter_typescript';
 import { YearFloatingFilter } from './YearFloatingFilter_typescript';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     FiltersToolPanelModule,
@@ -21,6 +20,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     MultiFilterModule,
     SetFilterModule,
+    NumberFilterModule,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

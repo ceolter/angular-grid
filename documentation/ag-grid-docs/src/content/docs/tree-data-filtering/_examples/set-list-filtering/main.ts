@@ -1,14 +1,5 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    GetRowIdParams,
-    ISetFilterParams,
-    KeyCreatorParams,
-    ModuleRegistry,
-    ValueFormatterParams,
-    createGrid,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValueFormatterParams, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -21,7 +12,6 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -42,7 +32,7 @@ const gridOptions: GridOptions = {
             aggFunc: 'sum',
             filter: 'agSetColumnFilter',
             filterParams: {
-                valueFormatter: (params) => {
+                valueFormatter: (params: ValueFormatterParams) => {
                     const sizeInKb = params.value / 1024;
 
                     if (sizeInKb > 1024) {

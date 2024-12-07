@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, IServerSideDatasource, IServerSideGroupSelectionState } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, NumberFilterModule, TextFilterModule, createGrid } from 'ag-grid-community';
 import {
     RowGroupingModule,
     RowGroupingPanelModule,
@@ -10,11 +10,12 @@ import {
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     RowGroupingModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
     RowGroupingPanelModule,
+    TextFilterModule,
+    NumberFilterModule
 ]);
 
 let gridApi: GridApi<IOlympicDataWithId>;

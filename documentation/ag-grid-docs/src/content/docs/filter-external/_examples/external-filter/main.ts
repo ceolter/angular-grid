@@ -1,19 +1,21 @@
 import type { ColDef, GridApi, GridOptions, IDateFilterParams, IRowNode } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+    ClientSideRowModelModule,
+    DateFilterModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    createGrid,
+} from 'ag-grid-community';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    NumberFilterModule,
+    DateFilterModule,
 ]);
 
 const dateFilterParams: IDateFilterParams = {

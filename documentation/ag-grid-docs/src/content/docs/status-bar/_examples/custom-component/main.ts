@@ -1,11 +1,11 @@
 import type { ColDef, GridApi, GridOptions, IAggregationStatusPanelParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
 import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 
 import { ClickableStatusBarComponent } from './clickableStatusBarComponent_typescript';
 import { CountStatusBarComponent } from './countStatusBarComponent_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, CellSelectionModule, StatusBarModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, CellSelectionModule, StatusBarModule]);
 
 const columnDefs: ColDef[] = [
     {

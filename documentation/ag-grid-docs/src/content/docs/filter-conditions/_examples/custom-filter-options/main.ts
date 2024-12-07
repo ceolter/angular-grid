@@ -8,11 +8,17 @@ import type {
     INumberFilterParams,
     ITextFilterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    DateFilterModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    createGrid,
+} from 'ag-grid-community';
 
 declare let window: any;
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, DateFilterModule]);
 
 const filterParams: INumberFilterParams = {
     filterOptions: [

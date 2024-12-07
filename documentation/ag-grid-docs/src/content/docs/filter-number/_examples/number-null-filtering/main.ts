@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions, INumberFilterParams, ValueGetterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule]);
 
 const originalColumnDefs: ColDef[] = [
     { field: 'athlete' },

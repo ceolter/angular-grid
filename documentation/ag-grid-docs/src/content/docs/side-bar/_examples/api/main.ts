@@ -5,7 +5,7 @@ import type {
     ToolPanelSizeChangedEvent,
     ToolPanelVisibleChangedEvent,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
 import {
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -14,12 +14,12 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
     PivotModule,
+    TextFilterModule,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

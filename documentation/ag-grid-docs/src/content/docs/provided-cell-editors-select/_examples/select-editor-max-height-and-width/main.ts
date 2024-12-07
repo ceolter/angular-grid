@@ -1,9 +1,9 @@
 import type { ColDef, GridApi, GridOptions, ISelectCellEditorParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, SelectEditorModule, createGrid } from 'ag-grid-community';
 
 import { colors } from './colors';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, SelectEditorModule]);
 
 const columnDefs: ColDef[] = [
     {

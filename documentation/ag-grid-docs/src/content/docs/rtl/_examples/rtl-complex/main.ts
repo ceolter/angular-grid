@@ -15,10 +15,11 @@ import type {
     ValueSetterParams,
 } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberFilterModule,
+    SelectEditorModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -44,14 +45,12 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     MultiFilterModule,
@@ -62,6 +61,8 @@ ModuleRegistry.registerModules([
     SideBarModule,
     StatusBarModule,
     RowGroupingPanelModule,
+    NumberFilterModule,
+    SelectEditorModule,
 ]);
 
 const colNames = [
@@ -717,9 +718,12 @@ function currencyRenderer(params: ICellRendererParams) {
         if (params.node.group && params.column!.getAggFunc() === 'count') {
             return params.value;
         } else {
-            return ('&pound;' + Math.floor(params.value)
-                .toString()
-                .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
+            return (
+                '&pound;' +
+                Math.floor(params.value)
+                    .toString()
+                    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+            );
         }
     }
 }

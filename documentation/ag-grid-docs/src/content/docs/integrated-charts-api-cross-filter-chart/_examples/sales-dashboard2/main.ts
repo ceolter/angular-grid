@@ -7,7 +7,7 @@ import type {
     GridReadyEvent,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -22,7 +22,6 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -32,6 +31,7 @@ ModuleRegistry.registerModules([
     MultiFilterModule,
     SetFilterModule,
     RowGroupingModule,
+    NumberFilterModule,
 ]);
 
 let gridApi: GridApi;

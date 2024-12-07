@@ -3,10 +3,11 @@ import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererParams } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -27,7 +28,6 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -44,6 +44,8 @@ ModuleRegistry.registerModules([
     SideBarModule,
     StatusBarModule,
     RowGroupingPanelModule,
+    TextFilterModule,
+    NumberFilterModule,
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {

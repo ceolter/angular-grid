@@ -9,7 +9,7 @@ import type {
     SetFilterValuesFuncParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ContextMenuModule,
@@ -21,12 +21,12 @@ import {
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnMenuModule,
     ContextMenuModule,
     ServerSideRowModelModule,
     SetFilterModule,
     MultiFilterModule,
+    TextFilterModule,
 ]);
 
 const columnDefs: ColDef[] = [

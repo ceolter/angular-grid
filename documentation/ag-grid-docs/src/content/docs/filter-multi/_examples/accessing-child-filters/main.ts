@@ -6,7 +6,7 @@ import type {
     ISetFilter,
     ITextFilterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -16,13 +16,13 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnMenuModule,
     ContextMenuModule,
     MultiFilterModule,
     SetFilterModule,
+    TextFilterModule,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

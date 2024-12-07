@@ -1,25 +1,14 @@
 import type { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    IFiltersToolPanel,
-    ModuleRegistry,
-    createGrid,
-} from 'ag-grid-community';
-import {
-    ColumnMenuModule,
-    ContextMenuModule,
-    FiltersToolPanelModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import { ColumnMenuModule, ContextMenuModule, FiltersToolPanelModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    TextFilterModule,
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions, ITextFilterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TextFilterModule]);
 
 function contains(target: string, lookingFor: string) {
     return target && target.indexOf(lookingFor) >= 0;

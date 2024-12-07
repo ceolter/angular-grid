@@ -1,10 +1,16 @@
 import type { GridApi, GridOptions, IServerSideDatasource } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, NumberFilterModule, TextFilterModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, ColumnMenuModule, ContextMenuModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([
+    ColumnMenuModule,
+    ContextMenuModule,
+    ServerSideRowModelModule,
+    TextFilterModule,
+    NumberFilterModule
+]);
 
 let gridApi: GridApi<IOlympicData>;
 const gridOptions: GridOptions<IOlympicData> = {

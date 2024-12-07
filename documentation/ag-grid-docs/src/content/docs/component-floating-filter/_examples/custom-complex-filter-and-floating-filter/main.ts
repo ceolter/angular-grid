@@ -6,13 +6,25 @@ import type {
     INumberFilterParams,
     ITextFilterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    DateFilterModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { CustomNumberFilter } from './custom-number-filter_typescript';
 import type { CustomFloatingParams } from './number-floating-filter_typescript';
 import { NumberFloatingFilter } from './number-floating-filter_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    TextFilterModule,
+    NumberFilterModule,
+    DateFilterModule
+]);
 
 const columnDefs: ColDef[] = [
     {

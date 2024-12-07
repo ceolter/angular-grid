@@ -1,11 +1,5 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    IFiltersToolPanel,
-    ModuleRegistry,
-    createGrid,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, IFiltersToolPanel, ModuleRegistry, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -15,7 +9,6 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,

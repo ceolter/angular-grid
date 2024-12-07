@@ -1,8 +1,20 @@
 import type { GetRowIdParams, GridApi, GridOptions, IRowNode, ValueParserParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    HighlightChangesModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule, SetFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    SetFilterModule,
+    HighlightChangesModule,
+    NumberFilterModule
+]);
 
 let rowIdCounter = 0;
 let callCount = 0;
