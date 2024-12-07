@@ -1,5 +1,11 @@
 import type { CellValueChangedEvent, GridApi, GridOptions, ICellEditorParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, LargeTextEditorModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    LargeTextEditorModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RichSelectModule } from 'ag-grid-enterprise';
 
 import type { IRow } from './data';
@@ -13,6 +19,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RichSelectModule,
     LargeTextEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 const cellCellEditorParams = (params: ICellEditorParams<IRow>) => {

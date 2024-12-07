@@ -4,6 +4,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
@@ -13,7 +14,8 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     HighlightChangesModule,
-    NumberFilterModule
+    NumberFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 let rowIdCounter = 0;

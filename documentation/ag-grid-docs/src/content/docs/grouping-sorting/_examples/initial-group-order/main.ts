@@ -1,10 +1,10 @@
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     GridApi,
     GridOptions,
     InitialGroupOrderComparatorParams,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -16,13 +16,13 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi;

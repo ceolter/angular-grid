@@ -6,9 +6,9 @@ import type {
     IGetRowsParams,
     IRowNode,
 } from 'ag-grid-community';
-import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule]);
+ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

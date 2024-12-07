@@ -6,16 +6,16 @@ import type {
     IsServerSideGroupOpenByDefaultParams,
     StoreRefreshedEvent,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     RowGroupingModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi;

@@ -8,7 +8,7 @@ import type {
     RowEditingStartedEvent,
     RowEditingStoppedEvent,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RichSelectModule } from 'ag-grid-enterprise';
 
 import type { IRow } from './data';
@@ -21,7 +21,8 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    RichSelectModule
+    RichSelectModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi<IRow>;

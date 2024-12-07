@@ -12,6 +12,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
@@ -23,7 +24,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     TextFilterModule,
     NumberFilterModule,
-    DateFilterModule
+    DateFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

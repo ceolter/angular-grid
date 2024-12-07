@@ -6,10 +6,10 @@ import type {
     ProcessRowGroupForExportParams,
 } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -21,7 +21,6 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -29,6 +28,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const getParams: () => ExcelExportParams = () => ({

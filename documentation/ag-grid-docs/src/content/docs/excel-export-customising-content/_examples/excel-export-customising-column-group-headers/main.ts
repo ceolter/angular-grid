@@ -6,12 +6,12 @@ import type {
     ProcessHeaderForExportParams,
 } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
     ProcessCellForExportParams,
     ProcessRowGroupForExportParams,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -23,7 +23,6 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -31,6 +30,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

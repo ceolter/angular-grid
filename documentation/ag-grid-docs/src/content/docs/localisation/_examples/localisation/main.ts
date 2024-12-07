@@ -8,6 +8,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -34,7 +35,6 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ExcelExportModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     MultiFilterModule,
@@ -46,6 +46,7 @@ ModuleRegistry.registerModules([
     RowGroupingPanelModule,
     TextFilterModule,
     NumberFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {

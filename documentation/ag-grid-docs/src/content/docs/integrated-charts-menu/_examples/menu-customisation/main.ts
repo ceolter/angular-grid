@@ -8,17 +8,16 @@ import type {
     GridReadyEvent,
     MenuItemDef,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

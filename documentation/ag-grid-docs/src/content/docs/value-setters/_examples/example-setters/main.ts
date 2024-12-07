@@ -6,11 +6,11 @@ import type {
     ValueGetterParams,
     ValueSetterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [
     {

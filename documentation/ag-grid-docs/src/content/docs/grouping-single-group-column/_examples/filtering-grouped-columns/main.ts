@@ -1,8 +1,14 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { GroupFilterModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, SetFilterModule, GroupFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    SetFilterModule,
+    GroupFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

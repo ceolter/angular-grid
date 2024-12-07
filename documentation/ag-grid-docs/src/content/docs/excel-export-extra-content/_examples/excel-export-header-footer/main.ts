@@ -1,19 +1,19 @@
 import type { ExcelExportParams, ExcelHeaderFooterContent, GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ExcelHeaderFooterConfig,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

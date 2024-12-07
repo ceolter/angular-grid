@@ -1,8 +1,8 @@
 import type { ColDef, GridApi, GridOptions, ValueFormatterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [
     // this row just shows the row index, doesn't use any data from the row

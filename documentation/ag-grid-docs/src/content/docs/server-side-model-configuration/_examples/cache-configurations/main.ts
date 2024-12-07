@@ -1,8 +1,8 @@
 import type { GridApi, GridOptions, IServerSideDatasource, IServerSideGetRowsRequest } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi<IOlympicDataWithId>;
 

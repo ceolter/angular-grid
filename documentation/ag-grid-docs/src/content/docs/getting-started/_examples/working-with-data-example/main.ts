@@ -4,10 +4,16 @@ import {
     NumberFilterModule,
     SelectEditorModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([TextFilterModule, NumberFilterModule, SelectEditorModule]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
+    SelectEditorModule,
+    ValidationModule/* Development Only */
+]);
 
 let gridApi: GridApi;
 

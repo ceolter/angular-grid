@@ -1,5 +1,11 @@
 import type { GridApi, GridOptions, ISetFilterParams, KeyCreatorParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValueFormatterParams, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    ValidationModule,
+    ValueFormatterParams,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -17,6 +23,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     TreeDataModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

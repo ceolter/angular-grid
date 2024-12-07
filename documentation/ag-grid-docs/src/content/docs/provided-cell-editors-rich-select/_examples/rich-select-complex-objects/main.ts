@@ -7,12 +7,16 @@ import type {
     ValueFormatterParams,
     ValueParserParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 
 import { colors } from './colors';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    RichSelectModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {

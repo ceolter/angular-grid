@@ -13,6 +13,7 @@ import {
     ModuleRegistry,
     SelectEditorModule,
     TextEditorModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
@@ -26,6 +27,7 @@ ModuleRegistry.registerModules([
     SelectEditorModule,
     TextEditorModule,
     LargeTextEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

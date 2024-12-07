@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, GridPreDestroyedEvent, StateUpdatedEvent } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ColumnsToolPanelModule,
@@ -9,13 +9,13 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     CellSelectionModule,
     SetFilterModule,
     PivotModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

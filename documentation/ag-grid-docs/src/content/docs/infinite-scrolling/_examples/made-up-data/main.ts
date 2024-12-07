@@ -1,7 +1,7 @@
 import type { ColDef, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams } from 'ag-grid-community';
-import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule]);
+ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule/* Development Only */]);
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
 

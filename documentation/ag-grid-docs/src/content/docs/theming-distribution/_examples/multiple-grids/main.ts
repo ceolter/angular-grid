@@ -1,8 +1,8 @@
 import type { ColDef, GridOptions, GridTheme } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
     themeAlpine,
     themeBalham,
@@ -11,7 +11,7 @@ import {
 
 import './style.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 

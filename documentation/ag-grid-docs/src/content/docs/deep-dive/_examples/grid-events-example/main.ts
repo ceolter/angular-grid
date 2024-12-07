@@ -8,14 +8,14 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     SelectionChangedEvent,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 // Grid API: Access to Grid API methods
 let gridApi: GridApi;

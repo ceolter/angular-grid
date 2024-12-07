@@ -1,10 +1,10 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { PersonFilter } from './personFilter_typescript';
 import { YearFilter } from './yearFilter_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 150, filter: PersonFilter },

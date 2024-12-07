@@ -12,18 +12,17 @@ import type {
     GridReadyEvent,
     ValueParserParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

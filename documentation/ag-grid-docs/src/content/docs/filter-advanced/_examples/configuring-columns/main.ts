@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, HeaderValueGetterParams, ValueGetterParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     AdvancedFilterModule,
     ColumnMenuModule,
@@ -8,12 +8,12 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     AdvancedFilterModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

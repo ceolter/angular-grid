@@ -6,7 +6,7 @@ import type {
     IServerSideDatasource,
     IServerSideGetRowsRequest,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -18,12 +18,12 @@ import {
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
     ServerSideRowModelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

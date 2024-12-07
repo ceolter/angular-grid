@@ -1,9 +1,19 @@
 import type { ColDef, GridApi, GridOptions, INumberFilterParams, ValueFormatterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    NumberFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const numberValueFormatter = function (params: ValueFormatterParams) {
     return params.value.toFixed(2);

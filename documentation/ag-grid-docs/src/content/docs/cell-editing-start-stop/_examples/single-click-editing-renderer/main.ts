@@ -1,16 +1,16 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ICellRendererComp,
     ICellRendererParams,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 import { CellRenderer } from './cellRenderer_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

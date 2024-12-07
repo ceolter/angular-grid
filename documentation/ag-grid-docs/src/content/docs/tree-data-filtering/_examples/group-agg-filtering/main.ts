@@ -1,10 +1,21 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, TreeDataModule, NumberFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    TreeDataModule,
+    NumberFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 let gridApi: GridApi;
 

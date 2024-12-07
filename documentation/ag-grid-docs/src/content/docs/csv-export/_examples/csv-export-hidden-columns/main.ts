@@ -1,9 +1,9 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -11,11 +11,11 @@ import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi;

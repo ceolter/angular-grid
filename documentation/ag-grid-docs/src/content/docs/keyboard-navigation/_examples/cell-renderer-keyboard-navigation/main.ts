@@ -1,9 +1,9 @@
 import type { GridApi, GridOptions, SuppressKeyboardEventParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { CustomElements } from './customElements_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const GRID_CELL_CLASSNAME = 'ag-cell';
 

@@ -1,13 +1,13 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     RowGroupingModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

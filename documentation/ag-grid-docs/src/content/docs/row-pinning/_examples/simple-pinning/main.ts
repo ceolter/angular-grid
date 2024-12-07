@@ -1,16 +1,16 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowClassParams,
     RowStyle,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 import { CustomPinnedRowRenderer } from './customPinnedRowRenderer_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [{ field: 'athlete' }, { field: 'country' }, { field: 'sport' }];
 

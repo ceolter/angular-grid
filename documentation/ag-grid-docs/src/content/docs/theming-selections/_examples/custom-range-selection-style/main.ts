@@ -1,20 +1,20 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const myTheme = themeQuartz.withParams({

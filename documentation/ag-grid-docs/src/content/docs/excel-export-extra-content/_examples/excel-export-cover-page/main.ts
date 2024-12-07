@@ -1,21 +1,21 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

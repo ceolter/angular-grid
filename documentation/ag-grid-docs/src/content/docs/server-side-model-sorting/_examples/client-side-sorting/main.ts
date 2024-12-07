@@ -5,12 +5,12 @@ import type {
     IServerSideGetRowsParams,
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 const gridOptions: GridOptions<IOlympicData> = {

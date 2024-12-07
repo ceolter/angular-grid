@@ -5,10 +5,17 @@ import {
     DateEditorModule,
     ModuleRegistry,
     NumberEditorModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, NumberEditorModule, DateEditorModule, CheckboxEditorModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    NumberEditorModule,
+    DateEditorModule,
+    CheckboxEditorModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {

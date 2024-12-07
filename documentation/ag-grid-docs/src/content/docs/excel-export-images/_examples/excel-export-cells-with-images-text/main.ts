@@ -1,9 +1,9 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ICellRendererParams,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
@@ -13,11 +13,11 @@ import { createBase64FlagsFromResponse } from './imageUtils';
 import type { FlagContext } from './interfaces';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const countryCodes: any = {};

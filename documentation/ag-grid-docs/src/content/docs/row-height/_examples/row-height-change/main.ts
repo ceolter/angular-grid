@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, RowHeightParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -10,12 +10,12 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let swimmingHeight: number;

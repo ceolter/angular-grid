@@ -1,5 +1,5 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { IServerSideDatasource, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IServerSideDatasource, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -24,6 +24,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     SetFilterModule,
     RowGroupingPanelModule,
+    ValidationModule/* Development Only */
 ]);
 
 const countries = getCountries();

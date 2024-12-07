@@ -6,13 +6,17 @@ import type {
     ICellRendererParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { HighlightChangesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { HighlightChangesModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ViewportRowModelModule } from 'ag-grid-enterprise';
 
 import { createMockServer } from './mock-server';
 import { createViewportDatasource } from './viewport-datasource';
 
-ModuleRegistry.registerModules([ViewportRowModelModule, HighlightChangesModule]);
+ModuleRegistry.registerModules([
+    ViewportRowModelModule,
+    HighlightChangesModule,
+    ValidationModule/* Development Only */
+]);
 
 class RowIndexRenderer implements ICellRendererComp {
     eGui!: HTMLDivElement;

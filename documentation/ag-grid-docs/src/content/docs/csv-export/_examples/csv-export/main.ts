@@ -1,13 +1,13 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, CsvExportModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, CsvExportModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi;
 

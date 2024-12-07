@@ -1,10 +1,10 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ICellRendererParams,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
@@ -12,12 +12,12 @@ import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-
 import { MultilineCellRenderer } from './multilineCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

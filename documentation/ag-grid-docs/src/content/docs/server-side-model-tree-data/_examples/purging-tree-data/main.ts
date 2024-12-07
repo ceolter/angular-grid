@@ -7,7 +7,7 @@ import type {
     IServerSideGetRowsRequest,
     IsServerSideGroupOpenByDefaultParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, IsServerSideGroup, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { IsServerSideGroup, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -18,13 +18,13 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     TreeDataModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

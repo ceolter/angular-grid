@@ -1,5 +1,5 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { CompanyLogoRenderer } from './companyLogoRenderer_typescript';
 import { CompanyRenderer } from './companyRenderer_typescript';
@@ -7,7 +7,7 @@ import { CustomButtonComponent } from './customButtonComponent_typescript';
 import { MissionResultRenderer } from './missionResultRenderer_typescript';
 import { PriceRenderer } from './priceRenderer_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 // Grid API: Access to Grid API methods
 let gridApi: GridApi;

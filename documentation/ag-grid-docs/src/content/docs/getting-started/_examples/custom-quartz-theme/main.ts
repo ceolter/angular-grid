@@ -1,7 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid, themeQuartz } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ValidationModule/* Development Only */]);
 
 const myTheme = themeQuartz.withParams({
     /* Low spacing = very compact */

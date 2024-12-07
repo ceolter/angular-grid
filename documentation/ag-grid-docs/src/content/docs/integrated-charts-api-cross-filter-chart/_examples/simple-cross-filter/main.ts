@@ -1,7 +1,7 @@
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -19,12 +19,12 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     MultiFilterModule,
     SetFilterModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let gridApi: GridApi;

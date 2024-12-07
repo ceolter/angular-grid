@@ -11,10 +11,16 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, DateFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    NumberFilterModule,
+    DateFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const filterParams: IDateFilterParams = {
     maxNumConditions: 1,

@@ -1,14 +1,14 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { CellSelectionModule, ColumnMenuModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
     SetFilterModule,
+    ValidationModule/* Development Only */,
 ]);
 
 interface IOlympicDataTypes extends IOlympicData {

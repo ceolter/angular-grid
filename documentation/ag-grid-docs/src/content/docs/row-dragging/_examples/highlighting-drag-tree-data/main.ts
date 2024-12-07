@@ -11,12 +11,12 @@ import type {
     RowDragMoveEvent,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { TreeDataModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, TreeDataModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TreeDataModule, ValidationModule/* Development Only */]);
 
 class FileCellRenderer {
     private eGui!: any;

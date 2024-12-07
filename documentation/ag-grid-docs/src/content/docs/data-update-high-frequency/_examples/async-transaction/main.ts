@@ -1,5 +1,11 @@
 import type { ColDef, GetRowIdParams, GridApi, GridOptions, ValueFormatterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, HighlightChangesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    HighlightChangesModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 
 import { getData, globalRowData } from './data';
@@ -9,6 +15,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     RowGroupingPanelModule,
     HighlightChangesModule,
+    ValidationModule/* Development Only */
 ]);
 
 const UPDATE_COUNT = 500;

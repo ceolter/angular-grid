@@ -1,8 +1,19 @@
 import type { ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, PivotModule, NumberFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    PivotModule,
+    NumberFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColGroupDef[] = [
     {

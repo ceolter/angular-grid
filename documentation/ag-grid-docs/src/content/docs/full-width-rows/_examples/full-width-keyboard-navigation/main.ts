@@ -1,10 +1,10 @@
 import type { GridApi, GridOptions, IsFullWidthRowParams, SuppressKeyboardEventParams } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { getData } from './data';
 import { FullWidthCellRenderer } from './fullWidthCellRenderer_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const GRID_CELL_CLASSNAME = 'ag-full-width-row';
 

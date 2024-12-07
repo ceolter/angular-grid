@@ -1,7 +1,17 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, HighlightChangesModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    HighlightChangesModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, HighlightChangesModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    HighlightChangesModule,
+    ValidationModule/* Development Only */
+]);
 
 let gridApi: GridApi;
 

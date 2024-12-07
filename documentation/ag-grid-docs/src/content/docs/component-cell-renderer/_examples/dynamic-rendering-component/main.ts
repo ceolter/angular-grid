@@ -7,12 +7,12 @@ import type {
     RowEditingStartedEvent,
     RowEditingStoppedEvent,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
 import { GenderRenderer } from './genderRenderer_typescript';
 import { MoodRenderer } from './moodRenderer_typescript';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 interface IRow {
     value: number | string;

@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions, IDetailCellRendererParams, IServerSideDatasource } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -17,6 +17,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     ServerSideRowModelModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

@@ -5,7 +5,7 @@ import type {
     GridApi,
     GridOptions,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -17,13 +17,13 @@ import {
 import { MenuItem } from './menuItem_typescript';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

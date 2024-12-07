@@ -4,10 +4,16 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, TextFilterModule, NumberFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    TextFilterModule,
+    NumberFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [
     {

@@ -1,7 +1,17 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { CheckboxEditorModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    CheckboxEditorModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, CheckboxEditorModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    CheckboxEditorModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {

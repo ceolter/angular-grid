@@ -1,15 +1,15 @@
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     GridApi,
     GridOptions,
     ModuleRegistry,
     RowGroupingDisplayType,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
 
 let gridApi: GridApi<IOlympicData>;
 

@@ -1,7 +1,7 @@
 import type { GridApi, GridOptions, ValueGetterParams } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ValidationModule/* Development Only */]);
 
 let gridApi: GridApi;
 

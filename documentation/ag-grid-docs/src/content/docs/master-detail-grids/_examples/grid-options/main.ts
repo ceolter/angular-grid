@@ -1,5 +1,5 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions, IDetailCellRendererParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ColumnMenuModule,
@@ -15,6 +15,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi<IAccount>;

@@ -11,9 +11,9 @@ import type {
     RowStyle,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, InfiniteRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule, InfiniteRowModelModule]);
+ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule/* Development Only */]);
 
 const valueFormatter = function (params: ValueFormatterParams) {
     if (typeof params.value === 'number') {

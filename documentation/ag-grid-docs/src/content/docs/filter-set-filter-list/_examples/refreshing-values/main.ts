@@ -6,7 +6,7 @@ import type {
     ISetFilterParams,
     SetFilterValuesFuncParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -24,6 +24,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const list1 = ['Elephant', 'Lion', 'Monkey'];

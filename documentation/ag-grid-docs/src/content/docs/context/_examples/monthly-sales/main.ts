@@ -1,8 +1,14 @@
 import type { ColDef, ColGroupDef, GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, FiltersToolPanelModule, RowGroupingModule, SetFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    FiltersToolPanelModule,
+    RowGroupingModule,
+    SetFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const monthValueGetter =
     '(ctx.month < ctx.months.indexOf(colDef.field)) ? data[colDef.field + "_bud"] : data[colDef.field + "_act"]';

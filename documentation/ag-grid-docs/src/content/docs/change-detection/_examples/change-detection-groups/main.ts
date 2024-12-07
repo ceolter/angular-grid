@@ -4,6 +4,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -12,7 +13,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     RowGroupingModule,
     HighlightChangesModule,
-    NumberFilterModule
+    NumberFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

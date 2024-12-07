@@ -8,7 +8,13 @@ import type {
     IGetRowsParams,
     SortModelItem,
 } from 'ag-grid-community';
-import { InfiniteRowModelModule, ModuleRegistry, NumberFilterModule, createGrid } from 'ag-grid-community';
+import {
+    InfiniteRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -25,6 +31,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     NumberFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const filterParams = { values: getCountries() };

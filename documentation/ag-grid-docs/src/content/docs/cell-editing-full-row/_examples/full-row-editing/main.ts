@@ -1,5 +1,11 @@
 import type { CellValueChangedEvent, GridApi, GridOptions, RowValueChangedEvent } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, SelectEditorModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    SelectEditorModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 import { NumericCellEditor } from './numericCellEditor_typescript';
@@ -10,6 +16,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     SelectEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

@@ -10,12 +10,12 @@ import type {
     IFilterType,
     IsGroupOpenByDefaultParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { createDataItem, getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
 
 let aggCallCount = 0;
 let compareCallCount = 0;

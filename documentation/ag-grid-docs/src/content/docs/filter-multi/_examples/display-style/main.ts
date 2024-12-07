@@ -1,5 +1,11 @@
 import type { GridApi, GridOptions, IMultiFilterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -18,6 +24,7 @@ ModuleRegistry.registerModules([
     MultiFilterModule,
     SetFilterModule,
     TextFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

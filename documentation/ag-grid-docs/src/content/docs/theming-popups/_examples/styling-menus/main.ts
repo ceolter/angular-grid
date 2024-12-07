@@ -4,6 +4,7 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    ValidationModule,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
@@ -23,7 +24,8 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     NumberFilterModule,
-    DateFilterModule
+    DateFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 // Set a blue background and red shadows for all menus

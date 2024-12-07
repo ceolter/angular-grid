@@ -1,5 +1,11 @@
 import type { CellValueChangedEvent, ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SetFilterModule } from 'ag-grid-enterprise';
 
 import { CustomStatsToolPanel } from './customStatsToolPanel_typescript';
@@ -10,6 +16,7 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     SetFilterModule,
     TextFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

@@ -2,16 +2,15 @@ import type { AgChartLegendClickEvent, AgNodeClickEvent } from 'ag-charts-commun
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

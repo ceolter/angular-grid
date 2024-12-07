@@ -6,12 +6,12 @@ import type {
     ValueFormatterParams,
     ValueGetterParams,
 } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule/* Development Only */]);
 
 let callCount = 1;
 

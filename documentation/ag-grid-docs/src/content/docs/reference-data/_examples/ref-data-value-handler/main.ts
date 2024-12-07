@@ -11,6 +11,7 @@ import {
     ModuleRegistry,
     SelectEditorModule,
     TextEditorModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -32,7 +33,8 @@ ModuleRegistry.registerModules([
     RichSelectModule,
     SetFilterModule,
     SelectEditorModule,
-    TextEditorModule
+    TextEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 const carMappings = {

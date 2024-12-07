@@ -7,13 +7,13 @@ import type {
     IServerSideGetRowsParams,
     ServerSideTransaction,
 } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { data, dataObservers, randomUpdates } from './data';
 import { FakeServer } from './fakeServer';
 
-ModuleRegistry.registerModules([AllCommunityModule, ServerSideRowModelModule, ServerSideRowModelApiModule]);
+ModuleRegistry.registerModules([ServerSideRowModelModule, ServerSideRowModelApiModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'tradeId' },

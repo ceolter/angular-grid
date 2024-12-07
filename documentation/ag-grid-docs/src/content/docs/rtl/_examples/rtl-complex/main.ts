@@ -20,6 +20,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     SelectEditorModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import {
@@ -63,6 +64,7 @@ ModuleRegistry.registerModules([
     RowGroupingPanelModule,
     NumberFilterModule,
     SelectEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 const colNames = [
@@ -718,12 +720,9 @@ function currencyRenderer(params: ICellRendererParams) {
         if (params.node.group && params.column!.getAggFunc() === 'count') {
             return params.value;
         } else {
-            return (
-                '&pound;' +
-                Math.floor(params.value)
-                    .toString()
-                    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-            );
+            return ('&pound;' + Math.floor(params.value)
+                .toString()
+                .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
         }
     }
 }

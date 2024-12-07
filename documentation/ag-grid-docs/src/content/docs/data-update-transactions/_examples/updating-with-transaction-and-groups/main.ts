@@ -1,18 +1,19 @@
 import type { GridApi, GridOptions, RowClassParams, ValueFormatterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { createNewRowData, getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ValidationModule/* Development Only */
+]);
 
 function poundFormatter(params: ValueFormatterParams) {
-    return (
-        '£' +
-        Math.floor(params.value)
-            .toString()
-            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    );
+    return ('£' + Math.floor(params.value)
+        .toString()
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,'));
 }
 
 let gridApi: GridApi;

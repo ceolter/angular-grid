@@ -12,6 +12,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -21,7 +22,8 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     HighlightChangesModule,
     TextFilterModule,
-    NumberFilterModule
+    NumberFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const MIN_BOOK_COUNT = 10;

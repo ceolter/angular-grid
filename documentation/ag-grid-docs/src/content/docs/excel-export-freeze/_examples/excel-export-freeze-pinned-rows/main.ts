@@ -5,6 +5,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
@@ -16,7 +17,8 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     TextFilterModule,
-    NumberFilterModule
+    NumberFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

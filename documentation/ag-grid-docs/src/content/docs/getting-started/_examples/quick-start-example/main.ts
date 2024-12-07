@@ -1,7 +1,7 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([ValidationModule/* Development Only */]);
 
 // Row Data Interface
 interface IRow {

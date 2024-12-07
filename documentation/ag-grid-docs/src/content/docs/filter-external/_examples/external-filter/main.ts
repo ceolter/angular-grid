@@ -4,6 +4,7 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
@@ -16,6 +17,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     NumberFilterModule,
     DateFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const dateFilterParams: IDateFilterParams = {

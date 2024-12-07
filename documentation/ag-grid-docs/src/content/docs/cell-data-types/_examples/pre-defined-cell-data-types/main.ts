@@ -1,5 +1,5 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -12,7 +12,6 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,
@@ -22,6 +21,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     RowGroupingPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 interface IOlympicDataTypes extends IOlympicData {

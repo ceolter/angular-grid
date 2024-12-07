@@ -5,7 +5,13 @@ import type {
     ValueFormatterParams,
     ValueSetterParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, SelectEditorModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    SelectEditorModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -25,6 +31,7 @@ ModuleRegistry.registerModules([
     RichSelectModule,
     SetFilterModule,
     SelectEditorModule,
+    ValidationModule/* Development Only */
 ]);
 
 const carMappings = {

@@ -1,8 +1,8 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
@@ -11,11 +11,11 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'a
 import './style.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -1,8 +1,14 @@
 import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { CellSelectionModule, RowGroupingModule, StatusBarModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, CellSelectionModule, RowGroupingModule, StatusBarModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    CellSelectionModule,
+    RowGroupingModule,
+    StatusBarModule,
+    ValidationModule/* Development Only */
+]);
 
 function getInitialData() {
     const data = [];

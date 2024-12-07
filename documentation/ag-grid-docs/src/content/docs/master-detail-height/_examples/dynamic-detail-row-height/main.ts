@@ -5,7 +5,7 @@ import type {
     IDetailCellRendererParams,
     RowHeightParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
@@ -14,6 +14,7 @@ ModuleRegistry.registerModules([
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ValidationModule/* Development Only */
 ]);
 
 let gridApi: GridApi;

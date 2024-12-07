@@ -10,7 +10,7 @@ import type {
     ValueFormatterParams,
     ValueGetterParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, TextFilterModule, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -30,6 +30,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     SetFilterModule,
     TextFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

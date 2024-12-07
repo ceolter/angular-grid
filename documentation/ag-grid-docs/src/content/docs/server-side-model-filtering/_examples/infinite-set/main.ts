@@ -9,7 +9,7 @@ import type {
     SetFilterValuesFuncParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import { ModuleRegistry, TextFilterModule, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ContextMenuModule,
@@ -27,6 +27,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     MultiFilterModule,
     TextFilterModule,
+    ValidationModule/* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

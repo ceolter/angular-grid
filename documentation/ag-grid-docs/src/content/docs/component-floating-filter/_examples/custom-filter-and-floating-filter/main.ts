@@ -1,10 +1,20 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, TextFilterModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { NumberFilterComponent } from './numberFilterComponent_typescript';
 import { NumberFloatingFilterComponent } from './numberFloatingFilterComponent_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, TextFilterModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    TextFilterModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', filter: 'agTextColumnFilter' },

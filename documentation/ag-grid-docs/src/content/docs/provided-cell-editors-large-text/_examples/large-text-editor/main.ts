@@ -1,7 +1,17 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, LargeTextEditorModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    LargeTextEditorModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, LargeTextEditorModule]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    LargeTextEditorModule,
+    ValidationModule/* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {

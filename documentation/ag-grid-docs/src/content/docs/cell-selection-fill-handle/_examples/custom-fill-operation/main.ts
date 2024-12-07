@@ -1,8 +1,8 @@
 import type { FillEndEvent, FillStartEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry, createGrid } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { CellSelectionModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, CellSelectionModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, CellSelectionModule, ValidationModule/* Development Only */]);
 
 const daysList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 

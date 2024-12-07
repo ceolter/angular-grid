@@ -12,15 +12,15 @@ import type {
     SortChangedEvent,
 } from 'ag-grid-community';
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     Column,
     ModuleRegistry,
+    ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { PivotModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule, PivotModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, PivotModule, ValidationModule/* Development Only */]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },
