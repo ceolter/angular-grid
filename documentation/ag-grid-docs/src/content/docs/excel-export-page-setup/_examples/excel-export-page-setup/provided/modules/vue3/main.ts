@@ -8,6 +8,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,

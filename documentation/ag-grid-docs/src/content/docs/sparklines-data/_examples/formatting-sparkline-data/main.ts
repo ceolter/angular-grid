@@ -35,7 +35,7 @@ const gridOptions: GridOptions = {
                 return formattedData;
             },
         },
-        { field: 'volume', type: 'numericColumn', maxWidth: 140 },
+        { field: 'volume', maxWidth: 140 },
     ],
     defaultColDef: {
         flex: 1,

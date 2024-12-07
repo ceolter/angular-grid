@@ -1,6 +1,6 @@
 import { createApp, defineComponent } from 'vue';
 
-import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
+import type { ColDef, GridReadyEvent, ICellRendererParams, IRowNode } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 

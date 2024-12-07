@@ -3,7 +3,6 @@ import { createApp, defineComponent } from 'vue';
 import type {
     CellEditingStartedEvent,
     CellEditingStoppedEvent,
-    CellEditorSelectorResult,
     ColDef,
     ICellEditorParams,
     RowEditingStartedEvent,
@@ -19,6 +18,7 @@ import NumericCellEditor from './numericCellEditorVue.ts';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,

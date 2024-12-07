@@ -1,7 +1,8 @@
-import { createApp, defineComponent, defonBeforeMount } from 'vue';
+import { createApp, defineComponent } from 'vue';
 
 import type { ColDef } from 'ag-grid-community';
 import {
+    ClientSideRowModelModule,
     ModuleRegistry,
     ValidationModule,
     colorSchemeDarkBlue,

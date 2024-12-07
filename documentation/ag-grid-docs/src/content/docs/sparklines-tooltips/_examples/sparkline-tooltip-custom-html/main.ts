@@ -36,7 +36,7 @@ const gridOptions: GridOptions = {
         },
         {
             field: 'volume',
-            type: 'numericColumn',
+
             minWidth: 160,
             maxWidth: 160,
         },
