@@ -26,7 +26,9 @@ sparklineOptions: {
     fill: '#91cc75',
     stroke: '#91cc75',
     highlightStyle: {
-        fill: 'orange'
+        item: {
+            fill: 'orange'
+        }
     },
     paddingInner: 0.3,
     paddingOuter: 0.1,
@@ -65,7 +67,9 @@ sparklineOptions: {
     type: 'bar',
     direction: 'vertical',
     highlightStyle: {
-        fill: 'orange', // sets the highlighted column fill
+        item: {
+            fill: 'orange', // sets the highlighted column fill
+        }
     }
 }
 ```
@@ -100,8 +104,10 @@ sparklineOptions: {
     stroke: '#ec7c7d', // sets the column stroke
     strokeWidth: 2, // sets the column stroke width
     highlightStyle: {
-        stroke: '#b5ec7c', // sets the highlighted column stroke
-        strokeWidth: 2, // sets the highlighted column stroke width
+        item: {
+            stroke: '#b5ec7c', // sets the highlighted column stroke
+            strokeWidth: 2, // sets the highlighted column stroke width
+        }
     }
 }
 ```
@@ -126,6 +132,9 @@ Custom highlighted stroke
 {% note %}
 If `strokeWidth` is set to a value greater than `1`, it is recommended to set the axis line `strokeWidth` to the same value in order to preserve the alignment of the columns with the axis line.
 {% /note %}
+
+See AG Charts [Series Markers](https://www.ag-grid.com/charts/javascript/markers/) for more information on marker options.
+See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for more information on item stylers.
 
 ## Column Padding Options
 

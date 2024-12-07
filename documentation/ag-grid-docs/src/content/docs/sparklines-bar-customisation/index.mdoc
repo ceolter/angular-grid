@@ -26,7 +26,9 @@ sparklineOptions: {
     fill: '#5470c6',
     stroke: '#91cc75',
     highlightStyle: {
-        fill: '#fac858'
+        item: {
+            fill: '#fac858'
+        }
     },
     min: 0,
     max: 1
@@ -77,7 +79,9 @@ sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
     highlightStyle: {
-        fill: 'orange', // sets the highlighted bar fill
+        item: {
+            fill: 'orange', // sets the highlighted bar fill
+        }
     }
 }
 ```
@@ -112,8 +116,10 @@ sparklineOptions: {
     stroke: '#ec7c7d', // sets the bar stroke
     strokeWidth: 2, // sets the bar stroke width
     highlightStyle: {
-        stroke: '#b5ec7c', // sets the highlighted bar stroke
-        strokeWidth: 2, // sets the highlighted bar stroke width
+        item: {
+            stroke: '#b5ec7c', // sets the highlighted bar stroke
+            strokeWidth: 2, // sets the highlighted bar stroke width
+        }
     }
 }
 ```
@@ -140,6 +146,9 @@ If `strokeWidth` is set to a value greater than `1`, it is recommended to set th
 of the bars with the axis line.
 {% /note %}
 
+See AG Charts [Series Markers](https://www.ag-grid.com/charts/javascript/markers/) for more information on marker options.
+See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for more information on item stylers.
+
 ## Bar Padding Options
 
 The spacing between bars is adjustable via the `paddingInner` property. This property takes values between 0 and 1.
@@ -152,12 +161,8 @@ Here's an example.
 sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
-    theme: {
-        overrides: {
-            common: {
-                paddingInner: 0.5, // sets the padding between bars.
-            }
-        }
+    axis: {
+        paddingInner: 0.5, // sets the padding between bars.
     }
 }
 ```
@@ -181,7 +186,9 @@ Here's a snippet where the `paddingOuter` is set to `0`.
 sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
-    paddingOuter: 0, // sets the padding on the outer edge of the first and last bars.
+    axis: {
+       paddingOuter: 0, // sets the padding on the outer edge of the first and last bars.
+    }
 }
 ```
 
