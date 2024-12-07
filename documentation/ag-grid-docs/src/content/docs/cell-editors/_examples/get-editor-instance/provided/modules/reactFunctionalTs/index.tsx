@@ -3,14 +3,14 @@ import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridReadyEvent, ICellEditor } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact, getInstance } from 'ag-grid-react';
 
 import type { MySimpleInterface } from './mySimpleEditor';
 import MySimpleEditor from './mySimpleEditor';
 import './style.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const createRowData = () => {
     const cloneObject = (obj: any) => JSON.parse(JSON.stringify(obj));

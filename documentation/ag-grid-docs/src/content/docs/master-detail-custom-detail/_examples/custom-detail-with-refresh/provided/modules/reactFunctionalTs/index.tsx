@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, FirstDataRenderedEvent, GridReadyEvent } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { MasterDetailModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -14,12 +14,12 @@ import type { IAccount } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 let allRowData: any[];

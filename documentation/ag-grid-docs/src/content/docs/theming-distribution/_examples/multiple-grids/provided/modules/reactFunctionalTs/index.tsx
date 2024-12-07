@@ -2,9 +2,9 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
-    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    ValidationModule,
     themeAlpine,
     themeBalham,
     themeQuartz,
@@ -13,7 +13,7 @@ import { AgGridReact } from 'ag-grid-react';
 
 import './style.css';
 
-ModuleRegistry.registerModules([AllCommunityModule, ClientSideRowModelModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
 
 const GridExample = () => {
     return (

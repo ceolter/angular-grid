@@ -3,19 +3,18 @@ import React, { StrictMode, useCallback, useEffect, useMemo, useRef, useState } 
 import { createRoot } from 'react-dom/client';
 
 import type { ChartRef, ColDef, GridReadyEvent } from 'ag-grid-community';
-import { AllCommunityModule, ClientSideRowModelModule, ModuleRegistry } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     ClientSideRowModelModule,
-    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ColumnMenuModule,
     ContextMenuModule,
     RowGroupingModule,
+    ValidationModule/* Development Only */
 ]);
 
 const GridExample = () => {

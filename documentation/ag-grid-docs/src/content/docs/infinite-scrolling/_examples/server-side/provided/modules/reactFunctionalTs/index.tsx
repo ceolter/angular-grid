@@ -2,7 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, GetRowIdParams, GridReadyEvent, IDatasource, RowSelectionOptions } from 'ag-grid-community';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { InfiniteRowModelModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -13,12 +13,12 @@ import { AgGridReact } from 'ag-grid-react';
 import { getCountries } from './countries.tsx';
 
 ModuleRegistry.registerModules([
-    AllCommunityModule,
     InfiniteRowModelModule,
     SetFilterModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
+    ValidationModule/* Development Only */,
 ]);
 
 const filterParams = { values: getCountries() };
