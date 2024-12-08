@@ -7,6 +7,7 @@ import {
     CsvExportModule,
     ModuleRegistry,
     NumberFilterModule,
+    PaginationModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -34,6 +35,7 @@ import { zzzLocale } from './locale';
 const AG_GRID_LOCALE_ZZZ: Record<string, string> = zzzLocale(AG_GRID_LOCALE_DE);
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -52,7 +54,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {

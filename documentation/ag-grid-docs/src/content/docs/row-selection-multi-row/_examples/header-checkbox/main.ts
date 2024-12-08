@@ -2,6 +2,7 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    PaginationModule,
     QuickFilterModule,
     RowSelectionModule,
     ValidationModule,
@@ -9,10 +10,11 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     RowSelectionModule,
     QuickFilterModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

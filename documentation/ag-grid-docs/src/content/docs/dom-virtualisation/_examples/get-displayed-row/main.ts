@@ -2,12 +2,14 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    PaginationModule,
     RowApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     RowApiModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

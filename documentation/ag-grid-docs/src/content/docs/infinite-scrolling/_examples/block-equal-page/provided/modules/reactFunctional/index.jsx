@@ -1,7 +1,7 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { InfiniteRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, PaginationModule, ValidationModule } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -9,12 +9,13 @@ import { countries } from './countries.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     InfiniteRowModelModule,
     SetFilterModule,
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const filterParams = { values: countries() };

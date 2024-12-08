@@ -2,6 +2,7 @@ import type { FirstDataRenderedEvent, GridApi, GridOptions, IDetailCellRendererP
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    PaginationModule,
     RowApiModule,
     ValidationModule,
     createGrid,
@@ -15,6 +16,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

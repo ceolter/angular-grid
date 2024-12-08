@@ -13,6 +13,7 @@ import {
     CsvExportModule,
     ModuleRegistry,
     NumberFilterModule,
+    PaginationModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -35,6 +36,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    PaginationModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -53,7 +55,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {
