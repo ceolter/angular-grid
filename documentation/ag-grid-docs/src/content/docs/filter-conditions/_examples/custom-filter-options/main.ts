@@ -13,6 +13,7 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -20,10 +21,11 @@ import {
 declare let window: any;
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     ClientSideRowModelModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const filterParams: INumberFilterParams = {

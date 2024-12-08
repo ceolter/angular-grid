@@ -14,12 +14,14 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     CellStyleModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),

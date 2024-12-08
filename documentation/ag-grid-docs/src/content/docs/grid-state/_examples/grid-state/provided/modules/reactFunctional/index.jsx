@@ -5,6 +5,7 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    NumberFilterModule,
     PaginationModule,
     RowSelectionModule,
     ValidationModule,
@@ -21,6 +22,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     GridStateModule,
     PaginationModule,

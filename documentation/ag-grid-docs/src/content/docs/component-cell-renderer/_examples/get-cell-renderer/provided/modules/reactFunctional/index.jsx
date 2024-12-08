@@ -1,13 +1,22 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    RowApiModule,
+    TextFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import MedalCellRenderer from './medalCellRenderer.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

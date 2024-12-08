@@ -2,13 +2,17 @@ import type { ColDef, GridApi, GridOptions, IRowDragItem } from 'ag-grid-communi
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowDragModule,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,

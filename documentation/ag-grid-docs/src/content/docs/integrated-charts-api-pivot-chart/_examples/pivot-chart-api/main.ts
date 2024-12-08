@@ -4,13 +4,17 @@ import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-commu
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowApiModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, PivotModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),

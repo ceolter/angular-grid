@@ -6,16 +6,18 @@ import {
     NumberEditorModule,
     RowApiModule,
     TextEditorModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     TextEditorModule,
     NumberEditorModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 export interface ImageCellRendererParams extends ICellRendererParams {

@@ -13,6 +13,7 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    NumberFilterModule,
     PaginationModule,
     RowSelectionModule,
     ValidationModule,
@@ -30,6 +31,7 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     GridStateModule,
     PaginationModule,

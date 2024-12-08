@@ -2,7 +2,9 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowDragModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -10,6 +12,8 @@ import {
 import { CustomDragAndDropImage } from './customDragAndDropImage_typescript';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowDragModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

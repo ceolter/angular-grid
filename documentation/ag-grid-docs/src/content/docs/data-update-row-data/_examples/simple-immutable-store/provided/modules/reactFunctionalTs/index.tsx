@@ -6,12 +6,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { CellSelectionModule, RowGroupingModule, StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     RowGroupingModule,

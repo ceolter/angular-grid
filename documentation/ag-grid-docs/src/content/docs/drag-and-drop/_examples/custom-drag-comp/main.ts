@@ -4,6 +4,7 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowStyleModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -12,6 +13,7 @@ import { getData } from './data';
 import { DragSourceRenderer } from './dragSourceRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,

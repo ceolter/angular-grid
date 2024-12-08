@@ -4,16 +4,18 @@ import {
     GridOptions,
     KeyCreatorParams,
     ModuleRegistry,
+    NumberFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

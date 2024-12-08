@@ -1,9 +1,19 @@
 import type { ColDef, GridApi, GridOptions, SuppressHeaderKeyboardEventParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { CustomHeader } from './customHeader_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const GRID_CELL_CLASSNAME = 'ag-header-cell';
 

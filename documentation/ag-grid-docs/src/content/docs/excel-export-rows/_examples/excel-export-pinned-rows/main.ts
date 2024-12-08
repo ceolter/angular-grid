@@ -3,13 +3,17 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberFilterModule,
     PinnedRowModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     PinnedRowModule,
     ClientSideRowModelModule,
     CsvExportModule,

@@ -2,6 +2,7 @@ import type { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -15,6 +16,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
@@ -22,7 +24,7 @@ ModuleRegistry.registerModules([
     PivotModule,
     SetFilterModule,
     TextFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

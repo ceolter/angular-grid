@@ -3,11 +3,18 @@ import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    TextFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

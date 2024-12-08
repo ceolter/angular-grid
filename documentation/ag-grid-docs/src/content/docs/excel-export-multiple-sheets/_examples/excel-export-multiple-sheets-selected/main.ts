@@ -2,14 +2,18 @@ import type { ColDef, GridApi, GridOptions, IRowNode } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowApiModule,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowSelectionModule,
     RowApiModule,
     ClientSideRowModelModule,

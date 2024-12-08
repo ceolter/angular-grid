@@ -5,6 +5,7 @@ import type { ColDef, GetRowIdParams, GridReadyEvent, IDatasource, RowSelectionO
 import {
     InfiniteRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -15,6 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { getCountries } from './countries.tsx';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     InfiniteRowModelModule,
     SetFilterModule,

@@ -1,6 +1,12 @@
 import { createApp, onBeforeMount, ref, shallowRef } from 'vue';
 
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -14,12 +20,14 @@ import MenuItem from './menuItemVue';
 import './style.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const VueExample = {

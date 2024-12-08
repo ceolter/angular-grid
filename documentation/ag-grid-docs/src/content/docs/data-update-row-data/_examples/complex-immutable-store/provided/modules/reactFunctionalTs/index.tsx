@@ -13,6 +13,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -21,6 +22,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowSelectionModule,
     CellStyleModule,
     ClientSideRowModelModule,

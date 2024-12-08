@@ -3,12 +3,16 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { AdvancedFilterModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     GridStateModule,
     AdvancedFilterModule,
     ClientSideRowModelModule,

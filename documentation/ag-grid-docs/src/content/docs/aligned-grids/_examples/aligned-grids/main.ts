@@ -4,11 +4,15 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,

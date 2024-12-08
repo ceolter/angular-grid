@@ -6,6 +6,7 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -13,6 +14,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,

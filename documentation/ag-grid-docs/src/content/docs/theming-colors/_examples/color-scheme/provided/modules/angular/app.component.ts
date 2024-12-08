@@ -4,6 +4,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
@@ -12,7 +13,11 @@ import {
     themeQuartz,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 @Component({
     standalone: true,

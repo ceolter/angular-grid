@@ -3,13 +3,19 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 import { SliderFloatingFilter } from './sliderFloatingFilter_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    NumberFilterModule,
+    ValidationModule /* Development Only */
+]);
 
 const filterParams: INumberFilterParams = {
     filterOptions: ['greaterThan'],

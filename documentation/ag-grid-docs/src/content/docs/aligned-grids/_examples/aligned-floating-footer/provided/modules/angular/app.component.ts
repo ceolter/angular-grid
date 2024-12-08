@@ -7,13 +7,17 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowStyleModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     ColumnAutoSizeModule,
     RowStyleModule,
     ClientSideRowModelModule,

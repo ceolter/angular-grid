@@ -15,12 +15,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

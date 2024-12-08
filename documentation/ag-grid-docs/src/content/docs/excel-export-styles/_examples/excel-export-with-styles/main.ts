@@ -3,12 +3,14 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ExcelExportModule,

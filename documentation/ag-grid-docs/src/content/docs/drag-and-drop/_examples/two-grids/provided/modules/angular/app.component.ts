@@ -7,12 +7,14 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowStyleModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,

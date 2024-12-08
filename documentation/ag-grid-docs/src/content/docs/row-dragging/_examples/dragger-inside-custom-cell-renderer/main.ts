@@ -3,7 +3,9 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowDragModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -11,6 +13,8 @@ import {
 import { CustomCellRenderer } from './customCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowDragModule,
     CellStyleModule,
     ClientSideRowModelModule,

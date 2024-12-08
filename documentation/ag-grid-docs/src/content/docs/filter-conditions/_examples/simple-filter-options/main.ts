@@ -11,15 +11,17 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     ClientSideRowModelModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const filterParams: IDateFilterParams = {

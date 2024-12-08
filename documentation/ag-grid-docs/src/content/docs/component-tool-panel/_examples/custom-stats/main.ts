@@ -2,6 +2,7 @@ import type { CellValueChangedEvent, ColDef, GridApi, GridOptions } from 'ag-gri
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -11,12 +12,13 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SetFilterModule } from 
 import { CustomStatsToolPanel } from './customStatsToolPanel_typescript';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
     TextFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

@@ -1,5 +1,12 @@
 import type { ColDef, GetMainMenuItemsParams, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     CellSelectionModule,
     ClipboardModule,
@@ -11,13 +18,15 @@ import {
 import { MenuItem } from './menuItem_typescript';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

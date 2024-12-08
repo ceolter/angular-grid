@@ -11,6 +11,7 @@ import {
     IsGroupOpenByDefaultParams,
     ModuleRegistry,
     RowApiModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -19,6 +20,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,

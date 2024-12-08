@@ -2,14 +2,18 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowApiModule,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
     RowSelectionModule,
     RowApiModule,
     ClientSideRowModelModule,

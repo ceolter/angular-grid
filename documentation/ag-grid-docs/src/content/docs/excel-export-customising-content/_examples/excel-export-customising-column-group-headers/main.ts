@@ -9,6 +9,7 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberFilterModule,
     ProcessCellForExportParams,
     ProcessRowGroupForExportParams,
     ValidationModule,
@@ -23,6 +24,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -30,7 +32,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

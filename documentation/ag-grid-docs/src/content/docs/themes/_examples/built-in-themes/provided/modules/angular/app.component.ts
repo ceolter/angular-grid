@@ -7,6 +7,7 @@ import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     themeAlpine,
     themeBalham,
@@ -15,12 +16,12 @@ import {
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     ClientSideRowModelModule,
     SideBarModule,
-
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule/* Development Only */
 ]);
 
 @Component({

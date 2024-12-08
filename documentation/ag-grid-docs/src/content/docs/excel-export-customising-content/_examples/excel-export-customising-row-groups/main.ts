@@ -9,6 +9,7 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -21,6 +22,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -28,7 +30,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const getParams: () => ExcelExportParams = () => ({

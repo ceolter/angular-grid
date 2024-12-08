@@ -1,5 +1,11 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { IServerSideDatasource, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    IServerSideDatasource,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -16,6 +22,7 @@ import { CustomAgeFilter } from './customAgeFilter';
 import { createFakeServer, createServerSideDatasource } from './server';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
@@ -24,7 +31,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     SetFilterModule,
     RowGroupingPanelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const countries = getCountries();

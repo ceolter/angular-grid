@@ -15,6 +15,7 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { ExcelExportModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
@@ -24,6 +25,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,

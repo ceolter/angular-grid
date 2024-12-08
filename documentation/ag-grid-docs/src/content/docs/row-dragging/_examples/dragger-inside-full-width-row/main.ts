@@ -9,6 +9,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowDragModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -17,6 +18,7 @@ import { getData } from './data';
 import { FullWidthCellRenderer } from './fullWidthCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

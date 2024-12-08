@@ -6,6 +6,7 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowStyleModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
@@ -13,6 +14,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './style.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,

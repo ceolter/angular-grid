@@ -4,6 +4,7 @@ import {
     GridStateModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
     colorSchemeVariable,
     createGrid,
@@ -12,6 +13,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowSelectionModule,
     GridStateModule,
     ClientSideRowModelModule,

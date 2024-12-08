@@ -2,6 +2,7 @@ import type { ColDef } from 'ag-grid-community';
 
 import {
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     colorSchemeDark,
     colorSchemeDarkWarm,
@@ -30,13 +31,14 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, createApp, defineComponent, ref } from 'vue';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */,
+    ValidationModule/* Development Only */
 ]);
 
 const baseThemes = [

@@ -2,6 +2,7 @@ import type { GridApi, GridOptions, ISetFilterParams, KeyCreatorParams } from 'a
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     ValidationModule,
     ValueFormatterParams,
     createGrid,
@@ -16,6 +17,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -23,7 +25,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     RowGroupingModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

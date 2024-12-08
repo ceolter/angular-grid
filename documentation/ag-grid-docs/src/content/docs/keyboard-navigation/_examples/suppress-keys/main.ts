@@ -8,6 +8,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowSelectionModule,
     ValidationModule,
     createGrid,
@@ -21,6 +22,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

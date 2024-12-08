@@ -2,6 +2,7 @@ import type { GridApi, GridOptions, IRowNode } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowApiModule,
     ValidationModule,
     createGrid,
@@ -9,6 +10,7 @@ import {
 import { ColumnMenuModule, ContextMenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnMenuModule,

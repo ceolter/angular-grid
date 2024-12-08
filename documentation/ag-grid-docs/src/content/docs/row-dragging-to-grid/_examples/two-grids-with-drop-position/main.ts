@@ -11,12 +11,14 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowStyleModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 // Register the required feature modules with the Grid
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,

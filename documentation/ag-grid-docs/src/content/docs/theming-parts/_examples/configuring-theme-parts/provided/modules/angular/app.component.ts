@@ -6,6 +6,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     colorSchemeDark,
     colorSchemeDarkBlue,
@@ -25,7 +26,13 @@ import {
 } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([SideBarModule, ColumnsToolPanelModule, FiltersToolPanelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    SideBarModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    ValidationModule/* Development Only */
+]);
 
 @Component({
     standalone: true,

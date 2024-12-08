@@ -5,12 +5,14 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
@@ -13,7 +14,11 @@ import {
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const themeLightWarm = themeQuartz.withPart(colorSchemeLightWarm);
 const themeLightCold = themeQuartz.withPart(colorSchemeLightCold);

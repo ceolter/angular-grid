@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     themeAlpine,
     themeBalham,
@@ -13,7 +14,11 @@ import { AgGridReact } from 'ag-grid-react';
 
 import './style.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule/* Development Only */
+]);
 
 const GridExample = () => {
     return (

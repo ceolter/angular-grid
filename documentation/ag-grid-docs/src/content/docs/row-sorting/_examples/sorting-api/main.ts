@@ -3,11 +3,19 @@ import {
     ClientSideRowModelModule,
     ColumnApiModule,
     ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnApiModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    ValidationModule /* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },

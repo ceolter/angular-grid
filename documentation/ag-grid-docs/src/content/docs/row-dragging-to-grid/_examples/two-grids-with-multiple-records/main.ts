@@ -12,11 +12,13 @@ import {
     ModuleRegistry,
     RowDragModule,
     RowSelectionModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,

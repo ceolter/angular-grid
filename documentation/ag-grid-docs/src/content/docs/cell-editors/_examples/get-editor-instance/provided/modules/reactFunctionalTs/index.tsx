@@ -2,14 +2,23 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, GridReadyEvent, ICellEditor } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { AgGridReact, getInstance } from 'ag-grid-react';
 
 import type { MySimpleInterface } from './mySimpleEditor';
 import MySimpleEditor from './mySimpleEditor';
 import './style.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const createRowData = () => {
     const cloneObject = (obj: any) => JSON.parse(JSON.stringify(obj));

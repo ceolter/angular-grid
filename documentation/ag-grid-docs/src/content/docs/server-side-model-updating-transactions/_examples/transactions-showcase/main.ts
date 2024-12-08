@@ -12,6 +12,7 @@ import {
     ColumnApiModule,
     HighlightChangesModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -25,6 +26,7 @@ import {
 import { getFakeServer, registerObserver } from './fakeServer';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     HighlightChangesModule,
     ColumnApiModule,
     RowGroupingModule,

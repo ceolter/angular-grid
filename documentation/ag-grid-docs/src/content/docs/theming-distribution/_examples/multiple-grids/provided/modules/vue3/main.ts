@@ -1,12 +1,23 @@
 import { createApp, defineComponent } from 'vue';
 
 import type { ColDef } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule, themeAlpine, themeBalham, themeQuartz } from 'ag-grid-community';
+import {
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    themeAlpine,
+    themeBalham,
+    themeQuartz,
+} from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const VueExample = defineComponent({
     template: `

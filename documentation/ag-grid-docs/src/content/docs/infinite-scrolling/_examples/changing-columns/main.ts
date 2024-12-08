@@ -1,7 +1,17 @@
 import type { GridApi, GridOptions, IDatasource, SortModelItem } from 'ag-grid-community';
-import { InfiniteRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    InfiniteRowModelModule,
+    ModuleRegistry,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    InfiniteRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

@@ -5,6 +5,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -17,7 +18,8 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     HighlightChangesModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */
+    TextEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

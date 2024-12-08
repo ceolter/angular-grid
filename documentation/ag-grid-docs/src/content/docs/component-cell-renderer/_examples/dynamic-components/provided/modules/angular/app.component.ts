@@ -2,7 +2,13 @@ import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridReadyEvent, IRowNode } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    TextFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 
 import { ChildMessageRenderer } from './child-message-renderer.component';
 import { CubeRenderer } from './cube-renderer.component';
@@ -12,6 +18,7 @@ import { SquareRenderer } from './square-renderer.component';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

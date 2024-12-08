@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     InfiniteRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -13,6 +14,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { getCountries } from './countries.jsx';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     InfiniteRowModelModule,
     SetFilterModule,

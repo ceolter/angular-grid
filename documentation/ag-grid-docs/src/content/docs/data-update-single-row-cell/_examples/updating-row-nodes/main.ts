@@ -4,11 +4,13 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     NumberFilterModule,

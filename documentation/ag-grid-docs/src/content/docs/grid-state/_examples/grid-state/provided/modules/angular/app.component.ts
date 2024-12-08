@@ -17,6 +17,7 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    NumberFilterModule,
     RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -32,6 +33,7 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     RowSelectionModule,
     GridStateModule,
     ClientSideRowModelModule,

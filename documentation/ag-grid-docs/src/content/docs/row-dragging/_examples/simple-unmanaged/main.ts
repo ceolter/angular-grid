@@ -3,13 +3,21 @@ import {
     ClientSideRowModelModule,
     ColumnApiModule,
     ModuleRegistry,
+    NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ColumnApiModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TextFilterModule,
+    NumberFilterModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    ValidationModule /* Development Only */
+]);
 
 let immutableStore: any[] = getData();
 

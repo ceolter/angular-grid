@@ -6,11 +6,13 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,

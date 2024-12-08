@@ -1,13 +1,21 @@
 import type { ColDef, GridApi, GridOptions, IDateFilterParams, ValueGetterParams } from 'ag-grid-community';
 import {
+    CellApiModule,
     ClientSideRowModelModule,
     DateFilterModule,
     ModuleRegistry,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, DateFilterModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    CellApiModule,
+    TextFilterModule,
+    ClientSideRowModelModule,
+    DateFilterModule,
+    ValidationModule /* Development Only */
+]);
 
 const originalColumnDefs: ColDef[] = [
     { field: 'athlete' },
