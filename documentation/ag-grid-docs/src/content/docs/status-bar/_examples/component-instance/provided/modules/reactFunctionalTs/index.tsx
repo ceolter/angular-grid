@@ -2,7 +2,12 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, IStatusPanel, RowSelectionOptions, StatusPanelDef } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact, getInstance } from 'ag-grid-react';
 
@@ -10,10 +15,11 @@ import ClickableStatusBarComponent from './clickableStatusBarComponent';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     StatusBarModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 export interface IClickableStatusBar extends IStatusPanel {

@@ -1,7 +1,12 @@
 import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -10,10 +15,11 @@ import CountStatusBarComponent from './countStatusBarComponent.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     StatusBarModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const rowSelection = {

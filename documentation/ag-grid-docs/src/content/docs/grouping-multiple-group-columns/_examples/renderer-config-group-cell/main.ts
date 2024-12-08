@@ -1,10 +1,21 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { CustomMedalCellRenderer } from './customMedalCellRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowSelectionModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ValidationModule /* Development Only */
+]);
 
 let gridApi: GridApi<IOlympicData>;
 

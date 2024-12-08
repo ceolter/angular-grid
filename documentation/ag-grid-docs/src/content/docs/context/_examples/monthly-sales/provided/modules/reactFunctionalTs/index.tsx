@@ -7,6 +7,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
+    RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
@@ -16,6 +17,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     CellStyleModule,
     QuickFilterModule,
     ClientSideRowModelModule,

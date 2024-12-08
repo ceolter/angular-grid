@@ -14,6 +14,7 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -22,6 +23,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,

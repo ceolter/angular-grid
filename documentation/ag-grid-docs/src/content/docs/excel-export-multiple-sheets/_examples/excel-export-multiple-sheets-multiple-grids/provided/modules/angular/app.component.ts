@@ -11,7 +11,12 @@ import type {
     ICellRendererParams,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ContextMenuModule,
@@ -22,11 +27,12 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */,
+    ValidationModule/* Development Only */
 ]);
 
 @Component({

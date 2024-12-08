@@ -9,11 +9,13 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     PaginationModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     PaginationModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

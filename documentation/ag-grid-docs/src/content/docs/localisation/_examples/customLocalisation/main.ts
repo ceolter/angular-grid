@@ -9,6 +9,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     PaginationModule,
+    RowSelectionModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -36,6 +37,7 @@ import { zzzLocale } from './locale';
 const AG_GRID_LOCALE_ZZZ: Record<string, string> = zzzLocale(AG_GRID_LOCALE_DE);
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,

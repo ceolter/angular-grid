@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -15,6 +16,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
@@ -22,7 +24,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

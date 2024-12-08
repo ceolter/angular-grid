@@ -3,17 +3,19 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

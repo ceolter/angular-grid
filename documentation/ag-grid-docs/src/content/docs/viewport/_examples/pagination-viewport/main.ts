@@ -12,6 +12,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     PaginationModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -21,6 +22,7 @@ import { createMockServer } from './mock-server';
 import { createViewportDatasource } from './viewport-datasource';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     PaginationModule,
     CellStyleModule,
     ViewportRowModelModule,

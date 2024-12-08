@@ -9,6 +9,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     PaginationModule,
+    RowSelectionModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -31,6 +32,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,

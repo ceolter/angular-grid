@@ -20,6 +20,7 @@ import {
     CsvExportModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowSelectionModule,
     SelectEditorModule,
     TooltipModule,
     ValidationModule,
@@ -48,6 +49,7 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     TooltipModule,
     CellStyleModule,
     ClientSideRowModelModule,

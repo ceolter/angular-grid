@@ -1,15 +1,22 @@
 import type { ColDef, GridApi, GridOptions, IAggregationStatusPanelParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 
 import { ClickableStatusBarComponent } from './clickableStatusBarComponent_typescript';
 import { CountStatusBarComponent } from './countStatusBarComponent_typescript';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

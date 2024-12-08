@@ -12,6 +12,7 @@ import {
     InfiniteRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -20,13 +21,14 @@ import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, SetFilterM
 import { getCountries } from './countries';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     ColumnsToolPanelModule,
     InfiniteRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const filterParams = { values: getCountries() };

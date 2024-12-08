@@ -10,12 +10,14 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     RowApiModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,

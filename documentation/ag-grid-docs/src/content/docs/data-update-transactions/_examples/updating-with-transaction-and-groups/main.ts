@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    RowSelectionModule,
     RowStyleModule,
     ValidationModule,
     createGrid,
@@ -12,6 +13,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createNewRowData, getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     RowApiModule,
     RowStyleModule,
     ClientSideRowModelModule,

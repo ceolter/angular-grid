@@ -12,6 +12,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowSelectionModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -19,6 +20,7 @@ import {
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,

@@ -13,6 +13,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
+    RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
@@ -21,6 +22,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     CellStyleModule,
     ClientSideRowModelModule,
     QuickFilterModule,

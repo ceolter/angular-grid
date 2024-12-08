@@ -2,6 +2,7 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowSelectionModule,
     TooltipModule,
     ValidationModule,
     createGrid,
@@ -9,6 +10,7 @@ import {
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     TooltipModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

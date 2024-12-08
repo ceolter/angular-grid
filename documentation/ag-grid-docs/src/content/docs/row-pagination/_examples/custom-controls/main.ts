@@ -3,12 +3,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     PaginationModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     PaginationModule,
     ClientSideRowModelModule,
     RowGroupingModule,

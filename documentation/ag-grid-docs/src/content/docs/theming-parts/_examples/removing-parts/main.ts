@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
     themeQuartz,
@@ -11,6 +12,7 @@ import {
 import './style.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     GridStateModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

@@ -11,11 +11,20 @@ import type {
     ICellRendererParams,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowSelectionModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 @Component({
     standalone: true,
     template: ` <i class="far fa-trash-alt" style="cursor: pointer" (click)="applyTransaction()"></i>`,

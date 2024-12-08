@@ -4,6 +4,7 @@ import {
     ModuleRegistry,
     PaginationModule,
     RowApiModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -16,6 +17,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     PaginationModule,
     RowApiModule,
     ClientSideRowModelModule,

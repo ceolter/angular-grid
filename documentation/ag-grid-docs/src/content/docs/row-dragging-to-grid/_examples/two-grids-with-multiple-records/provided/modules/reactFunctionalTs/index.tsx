@@ -9,13 +9,22 @@ import type {
     RowDragEndEvent,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowSelectionModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const SportRenderer = (props: CustomCellRendererProps) => {
     return (

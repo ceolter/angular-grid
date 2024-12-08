@@ -9,12 +9,21 @@ import type {
     RowDropZoneParams,
     RowSelectionOptions,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowSelectionModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowSelectionModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const SportRenderer = defineComponent({
     template: `<i class="far fa-trash-alt" style="cursor: pointer" @click="applyTransaction()"></i>`,

@@ -3,12 +3,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
     themeQuartz,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     RowApiModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

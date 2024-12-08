@@ -4,12 +4,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
+    RowSelectionModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     CellStyleModule,
     QuickFilterModule,
     ClientSideRowModelModule,

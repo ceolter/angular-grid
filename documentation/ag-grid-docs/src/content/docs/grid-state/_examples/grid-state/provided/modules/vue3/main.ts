@@ -13,6 +13,7 @@ import {
     ClientSideRowModelModule,
     GridStateModule,
     ModuleRegistry,
+    RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
 import {
@@ -27,6 +28,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     GridStateModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,

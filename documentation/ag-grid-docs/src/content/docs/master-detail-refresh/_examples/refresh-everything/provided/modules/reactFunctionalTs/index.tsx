@@ -7,6 +7,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     RowApiModule,
+    RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
@@ -16,6 +17,7 @@ import { AgGridReact } from 'ag-grid-react';
 import type { IAccount } from './interfaces';
 
 ModuleRegistry.registerModules([
+    RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
