@@ -8,12 +8,16 @@ import type {
     RowClassRules,
     RowDropZoneParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, RowStyleModule, ValidationModule } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 let rowIdSequence = 100;
 

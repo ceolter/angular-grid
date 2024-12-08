@@ -9,11 +9,15 @@ import type {
     RowClassParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { InfiniteRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, RowStyleModule, ValidationModule } from 'ag-grid-community';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    InfiniteRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const valueFormatter = function (params: ValueFormatterParams) {
     if (typeof params.value === 'number') {

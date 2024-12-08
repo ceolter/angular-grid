@@ -3,12 +3,14 @@ import {
     CellStyleModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowStyleModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowStyleModule,
     CellStyleModule,
     TextFilterModule,
     NumberFilterModule,

@@ -1,10 +1,20 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowStyleModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { getData } from './data';
 import { DragSourceRenderer } from './dragSourceRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const rowClassRules = {
     'red-row': 'data.color == "Red"',

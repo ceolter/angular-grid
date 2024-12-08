@@ -1,9 +1,19 @@
 import type { ColDef, GridApi, GridOptions, RowClassParams, RowStyle } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowStyleModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { CustomPinnedRowRenderer } from './customPinnedRowRenderer_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {

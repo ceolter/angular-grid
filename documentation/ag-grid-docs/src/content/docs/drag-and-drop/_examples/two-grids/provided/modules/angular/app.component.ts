@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, RowStyleModule, ValidationModule } from 'ag-grid-community';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 @Component({
     standalone: true,

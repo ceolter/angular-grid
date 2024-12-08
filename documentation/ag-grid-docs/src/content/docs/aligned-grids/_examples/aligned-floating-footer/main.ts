@@ -3,11 +3,13 @@ import {
     AlignedGridsModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowStyleModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowStyleModule,
     AlignedGridsModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

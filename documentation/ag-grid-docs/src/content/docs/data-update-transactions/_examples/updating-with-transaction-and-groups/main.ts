@@ -1,10 +1,21 @@
 import type { GridApi, GridOptions, RowClassParams, ValueFormatterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowStyleModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { createNewRowData, getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowStyleModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ValidationModule /* Development Only */
+]);
 
 function poundFormatter(params: ValueFormatterParams) {
     return ('£' + Math.floor(params.value)
