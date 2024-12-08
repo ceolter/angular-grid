@@ -1,5 +1,6 @@
 import type { CellValueChangedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -10,12 +11,13 @@ import {
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     SetFilterModule,
     HighlightChangesModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

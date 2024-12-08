@@ -1,5 +1,6 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ICellRendererParams,
@@ -12,12 +13,13 @@ import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-
 import { MultilineCellRenderer } from './multilineCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

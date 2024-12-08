@@ -15,6 +15,7 @@ import type {
     ValueSetterParams,
 } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
@@ -46,6 +47,7 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     ClipboardModule,
     ColumnsToolPanelModule,
@@ -65,7 +67,7 @@ ModuleRegistry.registerModules([
     NumberFilterModule,
     SelectEditorModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const colNames = [

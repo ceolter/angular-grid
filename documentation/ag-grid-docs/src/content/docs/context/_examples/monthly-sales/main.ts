@@ -1,5 +1,6 @@
 import type { ColDef, ColGroupDef, GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
@@ -9,6 +10,7 @@ import {
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     QuickFilterModule,
     ClientSideRowModelModule,
     FiltersToolPanelModule,

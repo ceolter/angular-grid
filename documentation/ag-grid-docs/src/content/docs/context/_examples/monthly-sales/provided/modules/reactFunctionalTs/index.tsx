@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import type { ColDef, ColGroupDef, GridReadyEvent, RowSelectionOptions } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
@@ -15,6 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     QuickFilterModule,
     ClientSideRowModelModule,
     RowGroupingModule,

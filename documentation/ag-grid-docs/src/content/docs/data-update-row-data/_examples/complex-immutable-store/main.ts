@@ -7,6 +7,7 @@ import type {
     ValueGetterParams,
 } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -18,12 +19,13 @@ import {
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     HighlightChangesModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const MIN_BOOK_COUNT = 10;

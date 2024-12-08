@@ -10,6 +10,7 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -19,11 +20,12 @@ import {
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     RowGroupingModule,
     HighlightChangesModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 declare let __basePath: string;

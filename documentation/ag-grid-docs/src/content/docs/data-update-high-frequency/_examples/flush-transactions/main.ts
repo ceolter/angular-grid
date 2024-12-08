@@ -7,6 +7,7 @@ import type {
     ValueFormatterParams,
 } from 'ag-grid-community';
 import {
+    CellStyleModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -18,11 +19,12 @@ import { RowGroupingModule, RowGroupingPanelModule } from 'ag-grid-enterprise';
 import { getData, globalRowData } from './data';
 
 ModuleRegistry.registerModules([
+    CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     RowGroupingPanelModule,
     HighlightChangesModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const UPDATE_COUNT = 20;
