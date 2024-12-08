@@ -2,12 +2,14 @@ import type { ColDef, GetRowIdParams, GridApi, GridOptions } from 'ag-grid-commu
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowDragModule,
     RowStyleModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

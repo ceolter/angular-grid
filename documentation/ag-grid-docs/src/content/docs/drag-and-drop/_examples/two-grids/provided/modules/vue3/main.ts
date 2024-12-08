@@ -1,12 +1,19 @@
 import { createApp, defineComponent } from 'vue';
 
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, RowStyleModule, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowDragModule,
+    RowStyleModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './style.css';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

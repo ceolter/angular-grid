@@ -10,6 +10,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowDragModule,
     RowSelectionModule,
     ValidationModule,
     createGrid,
@@ -17,6 +18,7 @@ import {
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     ColumnMenuModule,

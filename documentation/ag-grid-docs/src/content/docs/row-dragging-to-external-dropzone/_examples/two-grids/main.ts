@@ -9,12 +9,14 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowDragModule,
     RowStyleModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

@@ -13,6 +13,7 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    RowDragModule,
     RowSelectionModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -23,6 +24,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     CsvExportModule,

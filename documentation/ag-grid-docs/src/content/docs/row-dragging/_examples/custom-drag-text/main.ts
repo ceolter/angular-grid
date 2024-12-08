@@ -1,7 +1,17 @@
 import type { ColDef, GridApi, GridOptions, IRowDragItem } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowDragModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowDragModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const rowDragText = function (params: IRowDragItem) {
     // keep double equals here because data can be a string or number

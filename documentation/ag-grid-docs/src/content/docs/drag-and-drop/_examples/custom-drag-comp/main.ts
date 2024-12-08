@@ -2,6 +2,7 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowDragModule,
     RowStyleModule,
     ValidationModule,
     createGrid,
@@ -11,6 +12,7 @@ import { getData } from './data';
 import { DragSourceRenderer } from './dragSourceRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

@@ -3,7 +3,9 @@ import {
     ClientSideRowModelModule,
     ColDef,
     ModuleRegistry,
+    NumberEditorModule,
     RowApiModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -11,7 +13,9 @@ import {
 ModuleRegistry.registerModules([
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    TextEditorModule,
+    NumberEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 export interface ImageCellRendererParams extends ICellRendererParams {

@@ -3,6 +3,7 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowDragModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -10,6 +11,7 @@ import {
 import { CustomCellRenderer } from './customCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */
