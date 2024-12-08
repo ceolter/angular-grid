@@ -1,12 +1,16 @@
 import { createApp, defineComponent } from 'vue';
 
 import type { ColDef, GridReadyEvent, ICellRendererParams, IRowNode } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModule } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowApiModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const DeltaRenderer = defineComponent({
     template: `<span>

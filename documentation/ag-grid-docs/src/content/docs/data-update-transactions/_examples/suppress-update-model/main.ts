@@ -10,6 +10,7 @@ import {
     IFilterType,
     IsGroupOpenByDefaultParams,
     ModuleRegistry,
+    RowApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -18,6 +19,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,
