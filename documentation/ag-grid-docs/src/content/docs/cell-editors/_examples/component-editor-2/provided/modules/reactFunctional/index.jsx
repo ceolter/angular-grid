@@ -1,7 +1,12 @@
 import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberEditorModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -12,7 +17,12 @@ import MoodRenderer from './moodRenderer.jsx';
 import SimpleTextEditor from './simpleTextEditor.jsx';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RichSelectModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    NumberEditorModule,
+    ClientSideRowModelModule,
+    RichSelectModule,
+    ValidationModule /* Development Only */
+]);
 
 const GridExample = () => {
     const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
