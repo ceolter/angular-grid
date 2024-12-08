@@ -4,6 +4,7 @@ import type { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     RowStyleModule,
     ValidationModule,
@@ -13,6 +14,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     RowStyleModule,
     AlignedGridsModule,
     ClientSideRowModelModule,

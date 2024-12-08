@@ -5,6 +5,7 @@ import type { ColDef, ColGroupDef, GridReadyEvent, SizeColumnsToFitGridStrategy 
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
 } from 'ag-grid-community';
@@ -13,6 +14,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

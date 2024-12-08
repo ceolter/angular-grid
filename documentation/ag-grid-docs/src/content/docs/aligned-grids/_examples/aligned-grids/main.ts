@@ -2,12 +2,14 @@ import type { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,
     ValidationModule/* Development Only */

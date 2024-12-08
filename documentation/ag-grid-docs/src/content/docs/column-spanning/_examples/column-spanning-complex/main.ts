@@ -2,6 +2,7 @@ import type { CellClassRules, ColDef, ColSpanParams, GridApi, GridOptions, RowHe
 import {
     CellStyleModule,
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
     createGrid,
@@ -10,6 +11,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

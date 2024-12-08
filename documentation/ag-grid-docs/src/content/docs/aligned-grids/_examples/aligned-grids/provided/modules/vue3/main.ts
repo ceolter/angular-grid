@@ -4,12 +4,14 @@ import type { ColDef, ColGroupDef, GridOptions, GridReadyEvent } from 'ag-grid-c
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
 } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

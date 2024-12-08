@@ -1,7 +1,17 @@
 import type { ColDef, ColumnResizedEvent, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ColumnAutoSizeModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', width: 150, suppressSizeToFit: true },

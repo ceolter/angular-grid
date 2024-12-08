@@ -6,11 +6,21 @@ import type {
     GridSizeChangedEvent,
     RowHeightParams,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ColumnAutoSizeModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 let minRowHeight = 25;
 let currentRowHeight: number;

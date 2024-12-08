@@ -3,11 +3,20 @@ import { Component, ViewChild } from '@angular/core';
 
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, ColGroupDef, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ColumnAutoSizeModule,
+    ModuleRegistry,
+    ValidationModule,
+} from 'ag-grid-community';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 @Component({
     selector: 'my-app',
