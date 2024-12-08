@@ -5,6 +5,7 @@ import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -15,6 +16,7 @@ import { getData } from './data';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     TextFilterModule,
     ClientSideRowModelModule,
     TreeDataModule,

@@ -2,7 +2,12 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, GridReadyEvent, IMultiFilterParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberFilterModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -19,15 +24,15 @@ import type { IOlympicData } from './interfaces';
 import './style.css';
 
 ModuleRegistry.registerModules([
+    NumberFilterModule,
     ClientSideRowModelModule,
     MultiFilterModule,
-
     SetFilterModule,
     ColumnMenuModule,
     ContextMenuModule,
     ClipboardModule,
     FiltersToolPanelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const GridExample = () => {
