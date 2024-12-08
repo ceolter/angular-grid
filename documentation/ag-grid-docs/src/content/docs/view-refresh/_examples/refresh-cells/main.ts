@@ -4,11 +4,13 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     PinnedRowModule,
+    RowApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     HighlightChangesModule,
     PinnedRowModule,
     ClientSideRowModelModule,

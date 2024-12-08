@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     IFiltersToolPanel,
     ModuleRegistry,
+    RowApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -15,13 +16,14 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;
