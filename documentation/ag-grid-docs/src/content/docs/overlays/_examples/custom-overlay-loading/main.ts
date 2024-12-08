@@ -2,6 +2,7 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -10,6 +11,7 @@ import {
 import { CustomLoadingOverlay } from './customLoadingOverlay_typescript';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

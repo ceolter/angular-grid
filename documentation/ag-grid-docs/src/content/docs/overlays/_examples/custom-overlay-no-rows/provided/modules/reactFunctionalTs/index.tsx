@@ -5,6 +5,7 @@ import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -31,6 +32,7 @@ const defaultColDef = {
 };
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

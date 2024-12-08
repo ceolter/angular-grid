@@ -14,6 +14,7 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -21,6 +22,7 @@ import {
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     CellStyleModule,
     ClientSideRowModelModule,

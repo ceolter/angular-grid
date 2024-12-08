@@ -5,8 +5,10 @@ import type { ColDef, GridReadyEvent, ValueGetterParams } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -17,6 +19,8 @@ import MedalCellRenderer from './medalCellRenderer';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
     RowApiModule,

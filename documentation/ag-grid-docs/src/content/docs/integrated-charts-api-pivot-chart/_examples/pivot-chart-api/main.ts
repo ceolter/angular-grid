@@ -4,8 +4,10 @@ import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-commu
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -13,6 +15,8 @@ import {
 import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, PivotModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
     RowApiModule,

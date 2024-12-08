@@ -5,6 +5,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -13,6 +14,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,

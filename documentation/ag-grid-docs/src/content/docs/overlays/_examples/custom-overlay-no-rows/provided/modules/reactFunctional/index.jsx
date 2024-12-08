@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -25,6 +26,7 @@ const defaultColDef = {
 };
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

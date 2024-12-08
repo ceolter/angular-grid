@@ -13,8 +13,10 @@ import {
     CsvExportModule,
     LocaleModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     PaginationModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -37,6 +39,8 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,

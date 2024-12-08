@@ -7,6 +7,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -14,6 +15,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,

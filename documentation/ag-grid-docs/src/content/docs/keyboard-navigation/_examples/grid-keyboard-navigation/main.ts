@@ -2,8 +2,10 @@ import type { ColDef, ColGroupDef, GridApi, GridOptions } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     RowSelectionModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -16,6 +18,8 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

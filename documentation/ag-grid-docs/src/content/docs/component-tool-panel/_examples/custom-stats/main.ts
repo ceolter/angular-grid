@@ -2,7 +2,9 @@ import type { CellValueChangedEvent, ColDef, GridApi, GridOptions } from 'ag-gri
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -12,6 +14,8 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, SetFilterModule } from 
 import { CustomStatsToolPanel } from './customStatsToolPanel_typescript';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

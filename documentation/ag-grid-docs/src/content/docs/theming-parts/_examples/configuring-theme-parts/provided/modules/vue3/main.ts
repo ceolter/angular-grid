@@ -2,6 +2,7 @@ import type { ColDef } from 'ag-grid-community';
 
 import {
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     colorSchemeDark,
@@ -31,6 +32,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, createApp, defineComponent, ref } from 'vue';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     SideBarModule,
     ColumnsToolPanelModule,

@@ -1,12 +1,19 @@
 import type { GridApi, GridOptions, ValueFormatterParams, ValueParserParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TextEditorModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     ClientSideRowModelModule,
     ClipboardModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

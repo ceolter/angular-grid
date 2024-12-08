@@ -3,11 +3,15 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

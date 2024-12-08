@@ -2,8 +2,10 @@ import type { ColDef, GridApi, GridOptions, ValueGetterParams } from 'ag-grid-co
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -12,6 +14,8 @@ import {
 import { MedalCellRenderer } from './medalCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
     RowApiModule,

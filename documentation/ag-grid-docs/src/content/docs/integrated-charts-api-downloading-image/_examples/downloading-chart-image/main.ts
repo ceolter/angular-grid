@@ -12,6 +12,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -21,6 +22,7 @@ import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupin
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),

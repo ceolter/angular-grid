@@ -3,6 +3,7 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -11,6 +12,7 @@ import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModu
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ClipboardModule,

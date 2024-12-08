@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -13,6 +14,7 @@ import { ClickableStatusBarComponent } from './clickableStatusBarComponent_types
 import { CountStatusBarComponent } from './countStatusBarComponent_typescript';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

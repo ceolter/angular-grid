@@ -6,6 +6,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -18,6 +19,7 @@ import { SquareRenderer } from './square-renderer.component';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,

@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -10,6 +11,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

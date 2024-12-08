@@ -6,6 +6,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
@@ -17,6 +18,7 @@ import CountStatusBarComponent from './countStatusBarComponent';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

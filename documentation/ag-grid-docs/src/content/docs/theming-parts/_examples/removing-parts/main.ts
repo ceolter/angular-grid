@@ -4,6 +4,7 @@ import {
     GridStateModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -13,6 +14,7 @@ import {
 import './style.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
     GridStateModule,

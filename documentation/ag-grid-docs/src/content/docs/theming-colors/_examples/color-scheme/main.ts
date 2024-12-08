@@ -2,6 +2,7 @@ import type { ColDef, GridOptions, Part } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     colorSchemeDarkBlue,
@@ -13,6 +14,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

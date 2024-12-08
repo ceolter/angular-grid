@@ -4,6 +4,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     themeAlpine,
@@ -14,6 +15,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

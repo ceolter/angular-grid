@@ -13,6 +13,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     RowSelectionModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -20,6 +21,7 @@ import {
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     RowSelectionModule,
     CellStyleModule,
     ClientSideRowModelModule,

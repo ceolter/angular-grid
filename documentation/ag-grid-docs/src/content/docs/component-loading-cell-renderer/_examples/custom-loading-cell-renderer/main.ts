@@ -1,7 +1,9 @@
 import type { ColDef, GridApi, GridOptions, IServerSideDatasource, IServerSideGetRowsRequest } from 'ag-grid-community';
 import {
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -11,6 +13,8 @@ import { ServerSideRowModelModule } from 'ag-grid-enterprise';
 import { CustomLoadingCellRenderer } from './customLoadingCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
     ServerSideRowModelModule,

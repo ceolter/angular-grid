@@ -5,11 +5,13 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     RowApiModule,
     CellStyleModule,
     ClientSideRowModelModule,

@@ -2,6 +2,8 @@ import type { ColDef, GridApi, GridOptions, RowGroupOpenedEvent } from 'ag-grid-
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -9,6 +11,8 @@ import {
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
     RowGroupingModule,

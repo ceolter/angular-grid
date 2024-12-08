@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -12,6 +13,7 @@ import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 import { ClickableStatusBarComponent } from './clickableStatusBarComponent_typescript';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

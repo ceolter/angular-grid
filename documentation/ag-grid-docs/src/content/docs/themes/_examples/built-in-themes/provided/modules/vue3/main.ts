@@ -1,6 +1,7 @@
 import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     themeAlpine,
@@ -20,6 +21,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     TextFilterModule,
     SideBarModule,
     ColumnsToolPanelModule,

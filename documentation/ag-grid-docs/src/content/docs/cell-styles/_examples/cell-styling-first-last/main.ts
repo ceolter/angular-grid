@@ -5,12 +5,19 @@ import {
     ClientSideRowModelModule,
     ICellRendererParams,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     ValueParserParams,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },

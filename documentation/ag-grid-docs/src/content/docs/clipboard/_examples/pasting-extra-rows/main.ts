@@ -2,13 +2,17 @@ import type { ColDef, GridApi, GridOptions, ProcessDataFromClipboardParams } fro
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RowSelectionModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     RowSelectionModule,
     ClientSideRowModelModule,
     ClipboardModule,

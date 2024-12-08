@@ -10,7 +10,9 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     PinnedRowModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -18,6 +20,8 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     PinnedRowModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

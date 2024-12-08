@@ -11,6 +11,8 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     ValueCacheModule,
     createGrid,
@@ -20,6 +22,8 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     ValueCacheModule,
     HighlightChangesModule,
     CellStyleModule,

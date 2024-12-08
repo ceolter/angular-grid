@@ -11,12 +11,14 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { CellSelectionModule, ClipboardModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     ClipboardModule,

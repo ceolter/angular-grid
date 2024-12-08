@@ -9,12 +9,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    TextEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

@@ -4,7 +4,9 @@ import type { GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -14,6 +16,8 @@ import { ColumnMenuModule, ContextMenuModule, IntegratedChartsModule, RowGroupin
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
+    TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,
