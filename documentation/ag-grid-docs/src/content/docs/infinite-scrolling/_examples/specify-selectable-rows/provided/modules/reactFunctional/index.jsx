@@ -1,13 +1,7 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-    ClientSideRowModelModule,
-    InfiniteRowModelModule,
-    ModuleRegistry,
-    ValidationModule,
-} from 'ag-grid-community';
-import { InfiniteRowModelModule } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([InfiniteRowModelModule, ValidationModule /* Development Only */]);
