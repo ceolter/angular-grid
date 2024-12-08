@@ -1,6 +1,7 @@
 import type { GridApi, GridOptions, IRowNode, RefreshCellsParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    HighlightChangesModule,
     ModuleRegistry,
     PinnedRowModule,
     ValidationModule,
@@ -8,6 +9,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     PinnedRowModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

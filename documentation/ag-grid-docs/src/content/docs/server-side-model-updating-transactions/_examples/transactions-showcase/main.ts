@@ -8,7 +8,13 @@ import type {
     IsServerSideGroupOpenByDefaultParams,
     ServerSideTransaction,
 } from 'ag-grid-community';
-import { ColumnApiModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ColumnApiModule,
+    HighlightChangesModule,
+    ModuleRegistry,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     RowGroupingModule,
     RowGroupingPanelModule,
@@ -19,12 +25,13 @@ import {
 import { getFakeServer, registerObserver } from './fakeServer';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     ColumnApiModule,
     RowGroupingModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
     RowGroupingPanelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

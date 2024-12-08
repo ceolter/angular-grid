@@ -2,6 +2,7 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     GetRowIdParams,
+    HighlightChangesModule,
     IAggFuncParams,
     IDoesFilterPassParams,
     IFilterComp,
@@ -16,7 +17,12 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { createDataItem, getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    HighlightChangesModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ValidationModule /* Development Only */
+]);
 
 function getRowId(params) {
     return String(params.data.id);

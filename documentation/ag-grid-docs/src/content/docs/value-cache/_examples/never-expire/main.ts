@@ -9,6 +9,7 @@ import type {
 import {
     CellStyleModule,
     ClientSideRowModelModule,
+    HighlightChangesModule,
     ModuleRegistry,
     ValidationModule,
     createGrid,
@@ -18,6 +19,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,

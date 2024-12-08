@@ -7,16 +7,17 @@ import type {
     IServerSideGetRowsParams,
     ServerSideTransaction,
 } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import { HighlightChangesModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { data, dataObservers, randomUpdates } from './data';
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [

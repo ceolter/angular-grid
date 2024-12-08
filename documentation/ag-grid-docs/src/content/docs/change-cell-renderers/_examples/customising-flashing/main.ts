@@ -2,12 +2,14 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     CellStyleModule,
     ClientSideRowModelModule,
+    HighlightChangesModule,
     ModuleRegistry,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

@@ -1,13 +1,19 @@
 import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    HighlightChangesModule,
     ModuleRegistry,
     NumberFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, NumberFilterModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    HighlightChangesModule,
+    ClientSideRowModelModule,
+    NumberFilterModule,
+    ValidationModule /* Development Only */
+]);
 
 const rowData = [
     { id: 'aa', make: 'Toyota', model: 'Celica', price: 35000 },

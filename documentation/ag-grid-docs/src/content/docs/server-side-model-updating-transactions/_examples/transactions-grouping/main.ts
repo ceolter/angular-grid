@@ -9,17 +9,18 @@ import type {
     ServerSideTransaction,
     ServerSideTransactionResult,
 } from 'ag-grid-community';
-import { ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import { HighlightChangesModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { RowGroupingModule, ServerSideRowModelApiModule, ServerSideRowModelModule } from 'ag-grid-enterprise';
 
 import { changePortfolioOnServer, createRowOnServer, data, deletePortfolioOnServer } from './data';
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
+    HighlightChangesModule,
     RowGroupingModule,
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: ColDef[] = [
