@@ -6,6 +6,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { ColumnsToolPanelModule, FiltersToolPanelModule, SetFilterModule } from 'ag-grid-enterprise';
@@ -16,6 +17,7 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
