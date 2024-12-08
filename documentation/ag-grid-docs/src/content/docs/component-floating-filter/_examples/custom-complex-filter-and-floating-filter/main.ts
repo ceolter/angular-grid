@@ -8,6 +8,7 @@ import type {
 } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomFilterModule,
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -25,6 +26,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     DateFilterModule,
+    CustomFilterModule,
     ValidationModule /* Development Only */,
 ]);
 

@@ -11,6 +11,7 @@ import type {
 import {
     ClientSideRowModelModule,
     DateFilterModule,
+    LocaleModule,
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
@@ -21,6 +22,7 @@ import {
 declare let window: any;
 
 ModuleRegistry.registerModules([
+    LocaleModule,
     TextFilterModule,
     ClientSideRowModelModule,
     NumberFilterModule,

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    CustomFilterModule,
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
@@ -17,6 +18,7 @@ import './styles.css';
 ModuleRegistry.registerModules([
     TextFilterModule,
     TextEditorModule,
+    CustomFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */,
 ]);

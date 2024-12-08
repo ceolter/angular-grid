@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomFilterModule,
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
@@ -14,6 +15,7 @@ import { PartialMatchFilter } from './partialMatchFilter_typescript';
 ModuleRegistry.registerModules([
     TextFilterModule,
     TextEditorModule,
+    CustomFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */,
 ]);

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import type { ColDef, ColGroupDef, IFilter } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomFilterModule,
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
@@ -18,6 +19,7 @@ import './styles.css';
 ModuleRegistry.registerModules([
     TextFilterModule,
     TextEditorModule,
+    CustomFilterModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */,
 ]);

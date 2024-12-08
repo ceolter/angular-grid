@@ -11,6 +11,7 @@ import type {
 import {
     ClientSideRowModelModule,
     CsvExportModule,
+    LocaleModule,
     ModuleRegistry,
     NumberFilterModule,
     PaginationModule,
@@ -36,6 +37,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,
     ClipboardModule,
