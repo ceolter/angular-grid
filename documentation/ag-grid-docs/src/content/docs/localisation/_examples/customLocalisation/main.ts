@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererPara
 import {
     ClientSideRowModelModule,
     CsvExportModule,
+    LocaleModule,
     ModuleRegistry,
     NumberFilterModule,
     PaginationModule,
@@ -35,6 +36,7 @@ import { zzzLocale } from './locale';
 const AG_GRID_LOCALE_ZZZ: Record<string, string> = zzzLocale(AG_GRID_LOCALE_DE);
 
 ModuleRegistry.registerModules([
+    LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,
     ClipboardModule,

@@ -1,6 +1,7 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    LocaleModule,
     ModuleRegistry,
     NumberFilterModule,
     ValidationModule,
@@ -9,12 +10,13 @@ import {
 import { ColumnMenuModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    LocaleModule,
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi<IOlympicData>;

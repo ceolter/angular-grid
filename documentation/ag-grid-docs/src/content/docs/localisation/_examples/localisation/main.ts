@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridOptions, ICellRendererComp, ICellRendererPara
 import {
     ClientSideRowModelModule,
     CsvExportModule,
+    LocaleModule,
     ModuleRegistry,
     NumberFilterModule,
     PaginationModule,
@@ -30,6 +31,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    LocaleModule,
     PaginationModule,
     ClientSideRowModelModule,
     ClipboardModule,
