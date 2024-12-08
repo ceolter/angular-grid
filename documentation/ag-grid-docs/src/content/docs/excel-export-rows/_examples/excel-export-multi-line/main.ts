@@ -5,6 +5,7 @@ import {
     CsvExportModule,
     ICellRendererParams,
     ModuleRegistry,
+    RowAutoHeightModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -13,6 +14,7 @@ import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-
 import { MultilineCellRenderer } from './multilineCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    RowAutoHeightModule,
     CellStyleModule,
     ClientSideRowModelModule,
     CsvExportModule,
