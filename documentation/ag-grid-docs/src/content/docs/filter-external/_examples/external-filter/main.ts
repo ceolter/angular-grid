@@ -2,6 +2,7 @@ import type { ColDef, GridApi, GridOptions, IDateFilterParams, IRowNode } from '
 import {
     ClientSideRowModelModule,
     DateFilterModule,
+    ExternalFilterModule,
     ModuleRegistry,
     NumberFilterModule,
     ValidationModule,
@@ -10,6 +11,7 @@ import {
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ExternalFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
@@ -17,7 +19,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     NumberFilterModule,
     DateFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const dateFilterParams: IDateFilterParams = {

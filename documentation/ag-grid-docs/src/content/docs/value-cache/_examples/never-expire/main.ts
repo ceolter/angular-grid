@@ -12,6 +12,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     ValidationModule,
+    ValueCacheModule,
     createGrid,
 } from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -19,6 +20,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ValueCacheModule,
     HighlightChangesModule,
     CellStyleModule,
     ClientSideRowModelModule,
