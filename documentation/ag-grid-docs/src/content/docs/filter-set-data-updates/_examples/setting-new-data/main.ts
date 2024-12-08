@@ -1,8 +1,9 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
-    IFiltersToolPanel,
     ModuleRegistry,
+    TextEditorModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -21,6 +22,8 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
+    TextFilterModule,
+    TextEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

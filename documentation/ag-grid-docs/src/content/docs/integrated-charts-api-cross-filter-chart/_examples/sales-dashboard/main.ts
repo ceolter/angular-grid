@@ -9,8 +9,12 @@ import type {
 } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    DateEditorModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
+    TextEditorModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -38,6 +42,10 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     RowGroupingModule,
     NumberFilterModule,
+    TextFilterModule,
+    TextEditorModule,
+    DateEditorModule,
+    NumberEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

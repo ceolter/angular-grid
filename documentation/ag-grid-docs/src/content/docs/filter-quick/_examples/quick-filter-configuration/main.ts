@@ -2,8 +2,10 @@ import type { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     QuickFilterModule,
     RowApiModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -13,8 +15,10 @@ import { getData } from './data';
 ModuleRegistry.registerModules([
     RowApiModule,
     QuickFilterModule,
+    NumberEditorModule,
+    TextEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const getMedalString = function ({ gold, silver, bronze }: { gold: number; silver: number; bronze: number }) {

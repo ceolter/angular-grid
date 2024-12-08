@@ -1,9 +1,9 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
-    IFiltersToolPanel,
     ModuleRegistry,
     RowApiModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -23,7 +23,8 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     SetFilterModule,
-    ValidationModule /* Development Only */
+    TextEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

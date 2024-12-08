@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -27,6 +28,7 @@ ModuleRegistry.registerModules([
     MultiFilterModule,
     SetFilterModule,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule /* Development Only */,
 ]);
 

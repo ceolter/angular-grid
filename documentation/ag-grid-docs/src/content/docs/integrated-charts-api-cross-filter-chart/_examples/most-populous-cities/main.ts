@@ -1,7 +1,15 @@
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 import type { FirstDataRenderedEvent, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
+    TextFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -25,6 +33,9 @@ ModuleRegistry.registerModules([
     MultiFilterModule,
     SetFilterModule,
     RowGroupingModule,
+    TextFilterModule,
+    TextEditorModule,
+    NumberEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

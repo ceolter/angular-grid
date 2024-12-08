@@ -4,6 +4,7 @@ import {
     DateFilterModule,
     ModuleRegistry,
     NumberFilterModule,
+    TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -24,6 +25,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     NumberFilterModule,
     DateFilterModule,
+    TextFilterModule,
     ValidationModule /* Development Only */,
 ]);
 
