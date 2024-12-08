@@ -9,13 +9,10 @@ import type {
     GridReadyEvent,
 } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    MasterDetailModule,
-} from 'ag-grid-enterprise';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
+
+ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     MasterDetailModule,
     ColumnMenuModule,

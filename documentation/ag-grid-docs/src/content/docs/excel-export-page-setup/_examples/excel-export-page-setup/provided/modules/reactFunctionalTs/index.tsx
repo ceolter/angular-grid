@@ -5,9 +5,10 @@ import type { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
-import type { IOlympicData } from './interfaces';
+
 import type { IOlympicData } from './interfaces';
 import './styles.css';
+
 ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnMenuModule,

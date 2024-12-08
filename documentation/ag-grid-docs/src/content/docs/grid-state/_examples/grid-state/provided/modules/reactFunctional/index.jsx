@@ -2,10 +2,13 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule, PivotModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { CellSelectionModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    CellSelectionModule,
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    PivotModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';

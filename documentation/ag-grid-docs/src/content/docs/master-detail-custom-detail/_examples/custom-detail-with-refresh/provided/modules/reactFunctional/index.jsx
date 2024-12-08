@@ -2,9 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MasterDetailModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import DetailCellRenderer from './detailCellRenderer.jsx';
