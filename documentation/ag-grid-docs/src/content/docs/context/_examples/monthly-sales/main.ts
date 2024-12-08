@@ -1,13 +1,20 @@
 import type { ColDef, ColGroupDef, GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    QuickFilterModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    QuickFilterModule,
     ClientSideRowModelModule,
     FiltersToolPanelModule,
     RowGroupingModule,
     SetFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const monthValueGetter =
