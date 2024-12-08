@@ -1,6 +1,7 @@
 import type { GridApi, GridOptions, GridPreDestroyedEvent, StateUpdatedEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    GridStateModule,
     ModuleRegistry,
     PaginationModule,
     ValidationModule,
@@ -15,6 +16,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    GridStateModule,
     PaginationModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

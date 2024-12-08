@@ -9,7 +9,12 @@ import type {
     RowSelectionOptions,
     StateUpdatedEvent,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    GridStateModule,
+    ModuleRegistry,
+    ValidationModule,
+} from 'ag-grid-community';
 import {
     CellSelectionModule,
     ColumnsToolPanelModule,
@@ -22,12 +27,13 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    GridStateModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
     CellSelectionModule,
     PivotModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const VueExample = defineComponent({

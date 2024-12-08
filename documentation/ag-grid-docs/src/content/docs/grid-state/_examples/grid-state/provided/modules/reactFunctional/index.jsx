@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    GridStateModule,
     ModuleRegistry,
     PaginationModule,
     ValidationModule,
@@ -19,6 +20,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    GridStateModule,
     PaginationModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
