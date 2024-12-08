@@ -7,11 +7,21 @@ import type {
     RowEditingStoppedEvent,
     RowPinnedType,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    PinnedRowModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    PinnedRowModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 let gridApi: GridApi;
 

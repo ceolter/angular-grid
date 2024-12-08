@@ -4,6 +4,7 @@ import {
     CsvExportModule,
     ModuleRegistry,
     NumberFilterModule,
+    PinnedRowModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -11,6 +12,7 @@ import {
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    PinnedRowModule,
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
@@ -18,7 +20,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const columnDefs: (ColDef | ColGroupDef)[] = [

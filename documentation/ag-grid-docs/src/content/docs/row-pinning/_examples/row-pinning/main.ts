@@ -2,6 +2,7 @@ import type { ColDef, GridApi, GridOptions, RowClassParams, RowStyle } from 'ag-
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    PinnedRowModule,
     RowStyleModule,
     ValidationModule,
     createGrid,
@@ -10,6 +11,7 @@ import {
 import { CustomPinnedRowRenderer } from './customPinnedRowRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    PinnedRowModule,
     RowStyleModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */
