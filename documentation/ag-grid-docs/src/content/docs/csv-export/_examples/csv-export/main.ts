@@ -3,11 +3,19 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, CsvExportModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    CsvExportModule,
+    NumberEditorModule,
+    TextEditorModule,
+    ValidationModule /* Development Only */,
+]);
 
 let gridApi: GridApi;
 

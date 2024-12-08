@@ -3,6 +3,8 @@ import {
     ClientSideRowModelModule,
     CsvExportModule,
     ModuleRegistry,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -15,6 +17,8 @@ ModuleRegistry.registerModules([
     CsvExportModule,
     ColumnMenuModule,
     ContextMenuModule,
+    NumberEditorModule,
+    TextEditorModule,
     ValidationModule /* Development Only */,
 ]);
 
