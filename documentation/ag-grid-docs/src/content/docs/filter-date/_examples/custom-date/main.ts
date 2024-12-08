@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     DateFilterModule,
     ModuleRegistry,
+    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -12,9 +13,10 @@ import { CustomDateComponent } from './customDateComponent_typescript';
 
 ModuleRegistry.registerModules([
     TextFilterModule,
+    TextEditorModule,
     ClientSideRowModelModule,
     DateFilterModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const filterParams = {
