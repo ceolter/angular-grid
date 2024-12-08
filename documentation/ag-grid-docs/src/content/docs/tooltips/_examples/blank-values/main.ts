@@ -1,7 +1,17 @@
 import type { ColDef, GridApi, GridOptions, ITooltipParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TooltipModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TooltipModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const toolTipValueGetter = (params: ITooltipParams) =>
     params.value == null || params.value === '' ? '- Missing -' : params.value;

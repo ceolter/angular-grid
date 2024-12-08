@@ -21,6 +21,7 @@ import {
     ModuleRegistry,
     NumberFilterModule,
     SelectEditorModule,
+    TooltipModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -47,6 +48,7 @@ import { PersonFilter } from './person-filter_typescript';
 import { WinningsFilter } from './winnings-filter_typescript';
 
 ModuleRegistry.registerModules([
+    TooltipModule,
     CellStyleModule,
     ClientSideRowModelModule,
     ClipboardModule,

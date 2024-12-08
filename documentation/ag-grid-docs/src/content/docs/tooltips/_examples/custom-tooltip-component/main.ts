@@ -1,9 +1,19 @@
 import type { ColDef, GridApi, GridOptions, ITooltipParams } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TooltipModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { CustomTooltip } from './customTooltip_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TooltipModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const columnDefs: ColDef[] = [
     {
