@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, GridReadyEvent, SuppressKeyboardEventParams } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -9,7 +8,7 @@ import { AgGridReact } from 'ag-grid-react';
 import CustomElements from './customElements';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const GRID_CELL_CLASSNAME = 'ag-cell';
 

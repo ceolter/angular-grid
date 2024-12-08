@@ -1,18 +1,21 @@
 import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, RowSelectionOptions, StatusPanelDef } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { CellSelectionModule } from 'ag-grid-enterprise';
-import { StatusBarModule } from 'ag-grid-enterprise';
+import { CellSelectionModule, StatusBarModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import ClickableStatusBarComponent from './clickableStatusBarComponent';
 import CountStatusBarComponent from './countStatusBarComponent';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, StatusBarModule, CellSelectionModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
+    StatusBarModule,
+    CellSelectionModule,
+    ValidationModule /* Development Only */,
+]);
 
 const rowSelection: RowSelectionOptions = {
     mode: 'multiRow',

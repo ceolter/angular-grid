@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -15,7 +14,7 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 function getRowData() {

@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { CellSelectionModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -13,7 +12,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     StatusBarModule,
     CellSelectionModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 // creates a unique symbol, eg 'ADG' or 'ZJD'

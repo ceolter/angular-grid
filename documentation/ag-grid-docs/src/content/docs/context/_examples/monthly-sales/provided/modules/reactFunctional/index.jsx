@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { FiltersToolPanelModule } from 'ag-grid-enterprise';
 import { RowGroupingModule } from 'ag-grid-enterprise';
@@ -15,7 +14,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     FiltersToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const monthValueGetter =

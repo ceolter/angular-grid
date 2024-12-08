@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ClipboardModule } from 'ag-grid-enterprise';
 import { ExcelExportModule } from 'ag-grid-enterprise';
@@ -19,7 +18,7 @@ ModuleRegistry.registerModules([
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

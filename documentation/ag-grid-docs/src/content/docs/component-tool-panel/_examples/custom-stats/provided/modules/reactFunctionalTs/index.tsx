@@ -1,12 +1,9 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { CellValueChangedEvent, ColDef, GridReadyEvent, SideBarDef } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, SetFilterModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import CustomStatsToolPanel from './customStatsToolPanel';
@@ -19,7 +16,7 @@ ModuleRegistry.registerModules([
 
     FiltersToolPanelModule,
     SetFilterModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

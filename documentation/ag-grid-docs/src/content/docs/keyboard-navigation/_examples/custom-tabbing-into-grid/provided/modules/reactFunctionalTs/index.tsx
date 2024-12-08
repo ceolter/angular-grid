@@ -1,7 +1,6 @@
 import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type {
     CellFocusedParams,
     ColDef,
@@ -17,7 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const GridExample = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);

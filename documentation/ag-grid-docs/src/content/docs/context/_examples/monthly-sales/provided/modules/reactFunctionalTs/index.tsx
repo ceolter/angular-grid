@@ -1,14 +1,11 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, ColGroupDef, GridReadyEvent, RowSelectionOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { RowGroupingModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 import type { CustomCellRendererProps } from 'ag-grid-react';
-import { AgGridReact, CustomGroupCellRendererProps } from 'ag-grid-react';
+import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
@@ -17,7 +14,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     FiltersToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const monthValueGetter =

@@ -1,12 +1,9 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, FirstDataRenderedEvent, GridReadyEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { MasterDetailModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
+import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
 import DetailCellRenderer from './detailCellRenderer';
@@ -19,7 +16,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     ColumnsToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 let allRowData: any[];

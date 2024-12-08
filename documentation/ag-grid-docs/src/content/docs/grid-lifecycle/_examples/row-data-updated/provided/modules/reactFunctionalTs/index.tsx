@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import type { ColDef, FirstDataRenderedEvent, RowDataUpdatedEvent } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -10,7 +9,7 @@ import { fetchDataAsync } from './data';
 import type { TAthlete } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const updateRowCount = (id: string) => {
     const element = document.querySelector(`#${id} > .value`);

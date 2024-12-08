@@ -1,13 +1,15 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import type { ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule } from 'ag-grid-enterprise';
-import { FiltersToolPanelModule } from 'ag-grid-enterprise';
-import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
-import { SetFilterModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    FiltersToolPanelModule,
+    SetFilterModule,
+} from 'ag-grid-enterprise';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
@@ -19,7 +21,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const colourCellRenderer = (props: CustomCellRendererProps) => {

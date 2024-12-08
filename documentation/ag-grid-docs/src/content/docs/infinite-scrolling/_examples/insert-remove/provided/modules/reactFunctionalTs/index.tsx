@@ -9,13 +9,7 @@ import type {
     RowClassParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    InfiniteRowModelModule,
-    ModuleRegistry,
-    ValidationModule,
-} from 'ag-grid-community';
-import { InfiniteRowModelModule } from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 

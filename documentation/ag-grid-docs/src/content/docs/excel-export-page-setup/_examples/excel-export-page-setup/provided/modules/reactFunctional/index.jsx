@@ -1,7 +1,6 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { ExcelExportModule } from 'ag-grid-enterprise';
 import { ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -14,7 +13,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
-    ValidationModule/* Development Only */,
+    ValidationModule /* Development Only */,
 ]);
 
 const getNumber = (id) => {
