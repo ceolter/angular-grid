@@ -8,12 +8,21 @@ import type {
     GridReadyEvent,
     SizeColumnsToFitGridStrategy,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import {
+    AlignedGridsModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    ValidationModule,
+} from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    AlignedGridsModule,
+    ClientSideRowModelModule,
+    ValidationModule /* Development Only */
+]);
 
 const GridExample = () => {
     const topGridRef = useRef<AgGridReact>(null);
