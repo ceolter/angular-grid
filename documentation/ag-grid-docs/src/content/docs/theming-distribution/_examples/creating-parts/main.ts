@@ -72,6 +72,7 @@ const myCheckboxStyle = createPart({
         
             &:focus {
                 box-shadow: 0 0 3px 3px yellow;
+                outline: none;
             }
         }
         
