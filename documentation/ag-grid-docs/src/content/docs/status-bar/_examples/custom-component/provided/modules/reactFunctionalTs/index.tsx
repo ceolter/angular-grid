@@ -5,6 +5,7 @@ import type { ColDef, RowSelectionOptions, StatusPanelDef } from 'ag-grid-commun
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowSelectionModule,
     TextEditorModule,
     TextFilterModule,
@@ -21,6 +22,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
+    RowApiModule,
     ClientSideRowModelModule,
     StatusBarModule,
     CellSelectionModule,

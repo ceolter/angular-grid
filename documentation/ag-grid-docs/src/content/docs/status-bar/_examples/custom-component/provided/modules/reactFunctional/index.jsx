@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowSelectionModule,
     TextEditorModule,
     TextFilterModule,
@@ -20,6 +21,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
     RowSelectionModule,
+    RowApiModule,
     ClientSideRowModelModule,
     StatusBarModule,
     CellSelectionModule,
