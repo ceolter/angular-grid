@@ -1,3 +1,5 @@
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
 import type { GetContextMenuItemsParams, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
@@ -6,6 +8,7 @@ import {
     ColumnMenuModule,
     ContextMenuModule,
     ExcelExportModule,
+    IntegratedChartsModule,
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
@@ -15,6 +18,7 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     CellSelectionModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
     ValidationModule /* Development Only */,
 ]);
 
