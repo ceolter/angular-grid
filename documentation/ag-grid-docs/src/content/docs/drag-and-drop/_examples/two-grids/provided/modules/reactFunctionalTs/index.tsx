@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-commu
 import {
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
+    DragAndDropModule,
     ModuleRegistry,
     RowApiModule,
     RowDragModule,
@@ -17,6 +18,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    DragAndDropModule,
     ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,

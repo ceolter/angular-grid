@@ -1,6 +1,7 @@
 import type { DndSourceOnRowDragParams, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    DragAndDropModule,
     ModuleRegistry,
     RowDragModule,
     RowStyleModule,
@@ -12,6 +13,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    DragAndDropModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,

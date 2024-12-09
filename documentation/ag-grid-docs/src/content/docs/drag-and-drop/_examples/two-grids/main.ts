@@ -2,6 +2,7 @@ import type { ColDef, GetRowIdParams, GridApi, GridOptions } from 'ag-grid-commu
 import {
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
+    DragAndDropModule,
     ModuleRegistry,
     RowApiModule,
     RowDragModule,
@@ -12,6 +13,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    DragAndDropModule,
     ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
+    DragAndDropModule,
     ModuleRegistry,
     RowApiModule,
     RowDragModule,
@@ -16,6 +17,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    DragAndDropModule,
     ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,
