@@ -1,15 +1,10 @@
 import type { GridApi, GridOptions, IServerSideDatasource, IServerSideGetRowsRequest } from 'ag-grid-community';
-import {
-    ModuleRegistry,
-    ServerSideRowModelApiModule,
-    TextFilterModule,
-    ValidationModule,
-    createGrid,
-} from 'ag-grid-community';
+import { ModuleRegistry, TextFilterModule, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
     ContextMenuModule,
+    ServerSideRowModelApiModule,
     ServerSideRowModelModule,
     TreeDataModule,
 } from 'ag-grid-enterprise';
@@ -22,7 +17,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     TreeDataModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 interface FakeServer {
