@@ -30,8 +30,10 @@ sparklineOptions: {
             fill: 'orange'
         }
     },
-    paddingInner: 0.3,
-    paddingOuter: 0.1,
+    axis: {
+        paddingInner: 0.3,
+        paddingOuter: 0.1,
+    }
 },
 ```
 
@@ -148,7 +150,9 @@ Here's an example.
 sparklineOptions: {
     type: 'bar',
     direction: 'vertical',
-    paddingInner: 0.5, // sets the padding between columns.
+    axis: {
+        paddingInner: 0.5, // sets the padding between columns.
+    }
 }
 ```
 
@@ -171,7 +175,9 @@ Here's a snippet where the `paddingOuter` is set to `0`.
 sparklineOptions: {
     type: 'bar',
     direction: 'vertical',
-    paddingOuter: 0, // sets the padding on the outer edge of the first and last columns.
+    axis: {
+        paddingOuter: 0, // sets the padding on the outer edge of the first and last columns.
+    }
 }
 ```
 
