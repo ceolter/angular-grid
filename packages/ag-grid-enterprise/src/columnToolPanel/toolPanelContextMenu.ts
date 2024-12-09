@@ -38,8 +38,6 @@ export class ToolPanelContextMenu extends Component {
             column,
             beans: { colNames },
         } = this;
-        this.initializeProperties(column);
-        this.buildMenuItemMap();
 
         let displayName: string | null;
         if (isColumn(column)) {
@@ -47,7 +45,10 @@ export class ToolPanelContextMenu extends Component {
         } else {
             displayName = colNames.getDisplayNameForProvidedColumnGroup(null, column, 'columnToolPanel');
         }
+
         this.displayName = displayName;
+        this.initializeProperties(column);
+        this.buildMenuItemMap();
 
         if (this.isActive()) {
             this.mouseEvent.preventDefault();
