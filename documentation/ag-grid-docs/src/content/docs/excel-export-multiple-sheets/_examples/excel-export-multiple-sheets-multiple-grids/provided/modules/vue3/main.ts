@@ -10,6 +10,7 @@ import {
     ClientSideRowModelApiModule,
     CsvExportModule,
     ModuleRegistry,
+    RowDragModule,
     RowSelectionModule,
     TextFilterModule,
     ValidationModule,
@@ -22,6 +23,7 @@ import { createApp, defineComponent } from 'vue';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     ClientSideRowModelApiModule,
     TextFilterModule,
     RowSelectionModule,

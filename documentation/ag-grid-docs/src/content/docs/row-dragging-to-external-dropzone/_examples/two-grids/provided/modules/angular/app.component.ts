@@ -7,6 +7,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    RowDragModule,
     RowStyleModule,
     TextFilterModule,
     ValidationModule,
@@ -15,6 +16,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,

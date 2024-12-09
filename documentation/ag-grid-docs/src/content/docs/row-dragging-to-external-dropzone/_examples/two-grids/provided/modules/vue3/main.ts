@@ -6,6 +6,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
+    RowDragModule,
     RowStyleModule,
     TextFilterModule,
     ValidationModule,
@@ -15,6 +16,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,

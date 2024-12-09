@@ -2,12 +2,14 @@ import type { FirstDataRenderedEvent, GridApi, GridOptions, GridSizeChangedEvent
 import {
     ClientSideRowModelModule,
     ColumnApiModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnAutoSizeModule,
     ColumnApiModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */
