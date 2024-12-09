@@ -4,6 +4,7 @@ import {
     ColumnApiModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowDragModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -12,6 +13,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,

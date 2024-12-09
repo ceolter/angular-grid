@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowDragModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -17,6 +18,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,

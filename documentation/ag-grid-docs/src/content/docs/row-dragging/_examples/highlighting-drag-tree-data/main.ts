@@ -17,6 +17,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     RenderApiModule,
+    RowDragModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -25,6 +26,7 @@ import { TreeDataModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     ClientSideRowModelApiModule,
     RenderApiModule,
     CellStyleModule,

@@ -11,12 +11,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
+    RowDragModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowDragModule,
     TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,
