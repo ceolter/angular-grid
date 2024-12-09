@@ -11,6 +11,7 @@ import type {
 } from 'ag-grid-community';
 import {
     CellStyleModule,
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -22,6 +23,7 @@ import {
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextEditorModule,
     TextFilterModule,
     CellStyleModule,
