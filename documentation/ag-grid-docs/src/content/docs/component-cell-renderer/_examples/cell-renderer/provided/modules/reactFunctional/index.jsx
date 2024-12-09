@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -16,9 +17,10 @@ import './styles.css';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const createImageArr = (imageMultiplier, image) => {

@@ -1,7 +1,6 @@
 import type { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
-    ColDef,
     ColumnApiModule,
     ModuleRegistry,
     NumberEditorModule,
@@ -19,7 +18,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     TextEditorModule,
     NumberEditorModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 export interface ImageCellRendererParams extends ICellRendererParams {

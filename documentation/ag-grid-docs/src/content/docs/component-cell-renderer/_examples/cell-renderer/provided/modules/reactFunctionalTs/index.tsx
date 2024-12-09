@@ -5,6 +5,7 @@ import type { ColDef, ColGroupDef, ICellRendererParams } from 'ag-grid-community
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -18,9 +19,10 @@ import './styles.css';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 export interface ImageCellRendererParams extends CustomCellRendererProps {

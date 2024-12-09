@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions, ICellEditorComp, ICellEditorParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,
@@ -13,10 +14,11 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     TextEditorModule,
     ClientSideRowModelModule,
+    CustomEditorModule,
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class DatePicker implements ICellEditorComp {

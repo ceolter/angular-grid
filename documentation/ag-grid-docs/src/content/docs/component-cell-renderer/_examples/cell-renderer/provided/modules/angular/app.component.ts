@@ -7,6 +7,7 @@ import {
     ClientSideRowModelModule,
     ColumnApiModule,
     ModuleRegistry,
+    NumberEditorModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -19,9 +20,10 @@ ModuleRegistry.registerModules([
     ColumnApiModule,
     TextEditorModule,
     TextFilterModule,
+    NumberEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

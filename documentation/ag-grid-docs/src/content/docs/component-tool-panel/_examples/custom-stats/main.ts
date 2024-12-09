@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     TextFilterModule,
     EventApiModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

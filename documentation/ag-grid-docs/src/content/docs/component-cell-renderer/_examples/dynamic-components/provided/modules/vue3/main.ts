@@ -4,6 +4,7 @@ import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParam
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RenderApiModule,
     RowApiModule,
     TextEditorModule,
@@ -23,9 +24,10 @@ ModuleRegistry.registerModules([
     RenderApiModule,
     TextEditorModule,
     TextFilterModule,
+    NumberEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = defineComponent({

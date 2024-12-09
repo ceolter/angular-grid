@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridReadyEvent, IRowNode } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RenderApiModule,
     RowApiModule,
     TextEditorModule,
@@ -21,11 +22,12 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     RenderApiModule,
+    NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

@@ -5,6 +5,7 @@ import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RenderApiModule,
     RowApiModule,
     TextEditorModule,
@@ -20,9 +21,10 @@ ModuleRegistry.registerModules([
     RenderApiModule,
     TextEditorModule,
     TextFilterModule,
+    NumberEditorModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const SquareRenderer = (props: CustomCellRendererProps) => {

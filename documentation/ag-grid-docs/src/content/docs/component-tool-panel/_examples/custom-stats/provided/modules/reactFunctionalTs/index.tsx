@@ -9,6 +9,7 @@ import {
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
+    RowApiModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -30,8 +31,9 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
+    RowApiModule,
     EventApiModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

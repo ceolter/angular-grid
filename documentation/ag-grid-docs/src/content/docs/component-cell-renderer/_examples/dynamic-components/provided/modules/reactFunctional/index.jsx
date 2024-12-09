@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     RenderApiModule,
     RowApiModule,
     TextEditorModule,
@@ -16,11 +17,12 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     RenderApiModule,
+    NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const SquareRenderer = (props) => {
