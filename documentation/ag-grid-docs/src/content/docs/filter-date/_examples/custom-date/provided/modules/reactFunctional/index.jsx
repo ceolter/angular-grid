@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    DateFilterModule,
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
@@ -16,6 +17,7 @@ import CustomDateComponent from './customDateComponent.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    DateFilterModule,
     TextFilterModule,
     NumberFilterModule,
     NumberEditorModule,
@@ -45,7 +47,6 @@ const GridExample = () => {
     ]);
     const defaultColDef = useMemo(() => {
         return {
-            editable: true,
             flex: 1,
             minWidth: 100,
             filter: true,

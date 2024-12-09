@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    DateFilterModule,
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
@@ -18,6 +19,7 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    DateFilterModule,
     TextFilterModule,
     NumberFilterModule,
     NumberEditorModule,
@@ -47,7 +49,6 @@ const GridExample = () => {
     ]);
     const defaultColDef = useMemo<ColDef>(() => {
         return {
-            editable: true,
             flex: 1,
             minWidth: 100,
             filter: true,
