@@ -1,9 +1,17 @@
-import type { AgChartInstance, AgChartTheme, AgSparklineOptions, AgTooltipRendererResult } from 'ag-charts-types';
+import type {
+    AgChartInstance,
+    AgChartTheme,
+    AgChartThemeName,
+    AgSparklineOptions,
+    AgTooltipRendererResult,
+} from 'ag-charts-types';
 
 import type { ICellRenderer, ISparklineCellRendererParams } from 'ag-grid-community';
 import { Component, RefPlaceholder, _observeResize } from 'ag-grid-community';
 
 import { wrapFn } from './sparklinesUtils';
+
+export const DEFAULT_THEMES = ['ag-default', 'ag-material', 'ag-sheets', 'ag-polychroma', 'ag-vivid'];
 
 export class SparklineCellRenderer extends Component implements ICellRenderer {
     private readonly eSparkline: HTMLElement = RefPlaceholder;
@@ -17,10 +25,21 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         </div>`);
     }
 
+    postConstruct(): void {
+        this.addManagedPropertyListeners(['chartThemeOverrides', 'chartThemes'], (_event) => {
+            this.refresh(this.params);
+        });
+    }
+
     public init(params: ISparklineCellRendererParams): void {
         this.refresh(params);
         const unsubscribeFromResize = _observeResize(this.beans, this.getGui(), () => this.refresh(params));
         this.addDestroyFunc(() => unsubscribeFromResize());
+    }
+
+    private getThemeName(): string {
+        const availableThemes = this.gos.get('chartThemes');
+        return (availableThemes || DEFAULT_THEMES)[0];
     }
 
     public refresh(params?: ISparklineCellRendererParams): boolean {
@@ -54,6 +73,8 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
                 this.wrapItemStyler(theme.overrides.bar.series);
             }
 
+            this.updateTheme(this.sparklineOptions);
+
             // create new sparkline
             this.sparklineInstance = params.createSparkline!(this.sparklineOptions);
             return true;
@@ -62,12 +83,22 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
             this.sparklineOptions.width = width;
             this.sparklineOptions.height = height;
             this.sparklineOptions.data = this.processData(data);
+            this.updateTheme(this.sparklineOptions);
 
             this.sparklineInstance.updateDelta(this.sparklineOptions);
 
             return true;
         }
         return false;
+    }
+
+    private updateTheme(sparklineOptions: AgSparklineOptions) {
+        const themeName = this.getThemeName() as AgChartThemeName;
+        if (typeof sparklineOptions.theme === 'string' || !sparklineOptions.theme) {
+            sparklineOptions.theme = themeName;
+        } else if (sparklineOptions.theme) {
+            sparklineOptions.theme.baseTheme = themeName;
+        }
     }
 
     private processData(data: any[] = []) {

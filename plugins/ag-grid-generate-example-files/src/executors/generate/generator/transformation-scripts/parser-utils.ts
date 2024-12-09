@@ -645,9 +645,10 @@ export interface IAccount {
 export const DARK_INTEGRATED_START = '/** DARK INTEGRATED START **/';
 export const DARK_INTEGRATED_END = '/** DARK INTEGRATED END **/';
 
-// TODO detecting "enableCharts" in the example source would do this more reliably
+// TODO detecting "enableCharts" in the example source would do this more reliably (or also "sparklineOptions")
 const chartsExamplePathSubstrings = [
     '/integrated-charts-',
+    '/sparklines-',
     '/custom-icons/examples/icons-images',
     '/modules/examples/individual-registration',
     '/localisation/examples/callback',
