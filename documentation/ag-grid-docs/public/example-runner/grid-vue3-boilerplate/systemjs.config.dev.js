@@ -37,6 +37,9 @@
             ...systemJsMap,
         },
         packages: {
+            'css.js': {
+                defaultExtension: 'js',
+            },
             vue: {
                 defaultExtension: 'js',
             },

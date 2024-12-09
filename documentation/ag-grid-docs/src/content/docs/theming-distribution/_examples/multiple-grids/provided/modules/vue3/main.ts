@@ -2,7 +2,9 @@ import { createApp, defineComponent } from 'vue';
 
 import type { ColDef } from 'ag-grid-community';
 import {
+    ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -15,6 +17,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,

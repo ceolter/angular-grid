@@ -131,7 +131,6 @@ const VueExample = defineComponent({
         return {
             columnDefs,
             gridApi,
-            defaultColDef,
             rowData,
             columnsWidthOnPreDestroyed,
             showGrid,
