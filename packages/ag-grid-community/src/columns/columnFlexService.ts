@@ -65,7 +65,7 @@ export class ColumnFlexService extends BeanStub implements NamedBean {
         let hasFlexItems = false;
         const items = visibleCenterCols.map((col, i): FlexItem => {
             const flex = col.getFlex();
-            const isFlex = flex != null && i > flexAfterDisplayIndex;
+            const isFlex = flex != null && flex > 0 && i > flexAfterDisplayIndex;
 
             hasFlexItems ||= isFlex;
 
