@@ -60,7 +60,7 @@ const SocialProof = () => {
                 </div>
 
                 <div className={styles.stat}>
-                    <h4 className="text-2xl">13k+</h4>
+                    <h4 className="text-2xl">13K+</h4>
                     <p>Stars on GitHub</p>
                 </div>
 
