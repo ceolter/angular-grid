@@ -23,5 +23,5 @@
 }
 
 .hover-over {
-    background-color: #e5e5ff;
+    background-color: var(--ag-accent-color);
 }
