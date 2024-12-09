@@ -1,9 +1,3 @@
-@use 'design-system' as *;
-
-.topLine {
-    margin-left: 0.66em;
-}
-
 .animatedWordsOuter {
     --word-height: 1.3em;
     --word-index: 0;
@@ -16,6 +10,28 @@
     text-align: left;
     transform: translateY(0.3333em);
     overflow: hidden;
+
+    /* Gradient Effect */
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0.5em;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    &::before {
+        top: 0;
+        background: linear-gradient(to bottom, var(--color-brand-500), transparent);
+    }
+
+    &::after {
+        bottom: 0;
+        background: linear-gradient(to top, var(--color-brand-500), transparent);
+    }
 }
 
 .animatedWordsInner {
@@ -25,7 +41,7 @@
     left: 0;
     flex-direction: column;
     transform: translateY(calc(var(--word-height) * var(--word-index)));
-    transition: transform 0.1s ease-in-out;
+    transition: transform 2s ease-out; /* Adjusted to 2 seconds */
 }
 
 .animatedWord {
