@@ -26,9 +26,7 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
     }
 
     postConstruct(): void {
-        this.addManagedPropertyListeners(['chartThemeOverrides', 'chartThemes'], (_event) => {
-            this.refresh(this.params);
-        });
+        this.addManagedPropertyListeners(['chartThemeOverrides', 'chartThemes'], (_event) => this.refresh(this.params));
     }
 
     public init(params: ISparklineCellRendererParams): void {
