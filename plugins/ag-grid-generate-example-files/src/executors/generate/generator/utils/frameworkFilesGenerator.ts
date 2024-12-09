@@ -223,7 +223,7 @@ export const frameworkFilesGenerator: Partial<Record<InternalFramework, ConfigGe
         )();
 
         if (!isDev) {
-            mainJs = await prettier.format(mainJs, { parser: 'babel' });
+            mainJs = await prettier.format(mainJs, { parser: 'typescript' });
         }
 
         const entryFileName = getEntryFileName(internalFramework)!;
