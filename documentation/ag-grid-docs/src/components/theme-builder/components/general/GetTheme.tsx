@@ -1,6 +1,7 @@
 import Code from '@ag-website-shared/components/code/Code';
 import { Checkmark, Copy } from '@carbon/icons-react';
 import styled from '@emotion/styled';
+import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import { useMemo, useState } from 'react';
 
 import { type RenderedThemeInfo, useRenderedThemeInfo } from '../../model/rendered-theme';
@@ -27,7 +28,7 @@ const GetThemeDialog = () => {
         <DownloadThemeWrapper>
             <Paragraph>
                 Copy the code below into your application to use this theme. See the{' '}
-                <a href="/react-data-grid/theming/" target="_blank">
+                <a href={urlWithBaseUrl('/react-data-grid/theming/')} target="_blank">
                     Theming API documentation
                 </a>{' '}
                 for more information.
