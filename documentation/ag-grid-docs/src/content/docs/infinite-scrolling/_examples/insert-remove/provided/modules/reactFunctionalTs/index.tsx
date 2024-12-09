@@ -12,6 +12,7 @@ import type {
 import {
     InfiniteRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowStyleModule,
     ScrollApiModule,
     ValidationModule,
@@ -20,6 +21,7 @@ import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,

@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     InfiniteRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowStyleModule,
     ScrollApiModule,
     ValidationModule,
@@ -11,6 +12,7 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,

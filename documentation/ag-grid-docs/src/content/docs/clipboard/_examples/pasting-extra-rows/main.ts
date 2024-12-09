@@ -4,6 +4,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    RowApiModule,
     RowSelectionModule,
     TextEditorModule,
     ValidationModule,
@@ -12,6 +13,7 @@ import {
 import { CellSelectionModule, ClipboardModule, ColumnMenuModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ClientSideRowModelApiModule,
     NumberEditorModule,
     TextEditorModule,

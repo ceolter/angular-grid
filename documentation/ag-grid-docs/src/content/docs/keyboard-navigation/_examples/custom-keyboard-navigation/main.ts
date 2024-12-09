@@ -17,6 +17,7 @@ import {
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
+    RowApiModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -24,6 +25,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,

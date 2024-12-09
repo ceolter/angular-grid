@@ -4,12 +4,14 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    RowApiModule,
     TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     NumberEditorModule,
     TextEditorModule,
     CellStyleModule,

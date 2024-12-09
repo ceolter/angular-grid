@@ -14,6 +14,7 @@ import type {
 import {
     InfiniteRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowStyleModule,
     ScrollApiModule,
     ValidationModule,
@@ -21,6 +22,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,
