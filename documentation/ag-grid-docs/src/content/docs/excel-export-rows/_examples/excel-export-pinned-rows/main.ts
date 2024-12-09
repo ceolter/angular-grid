@@ -69,9 +69,9 @@ const gridOptions: GridOptions<IOlympicData> = {
             date: '01/08/2020',
             sport: 'Track & Field',
             gold: 22,
-            silver: '003',
+            silver: 3,
             bronze: 44,
-            total: 55,
+            total: 69,
         } as any,
     ],
 
@@ -82,9 +82,9 @@ const gridOptions: GridOptions<IOlympicData> = {
             date: '01/08/2030',
             sport: 'Track & Field',
             gold: 222,
-            silver: '005',
+            silver: 5,
             bronze: 244,
-            total: 255,
+            total: 571,
         } as any,
     ],
 };
