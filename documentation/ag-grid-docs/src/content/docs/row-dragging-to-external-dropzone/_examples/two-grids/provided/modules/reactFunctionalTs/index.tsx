@@ -138,7 +138,7 @@ const GridExample = () => {
                 eBinIcon.current!.style.transform = 'scale(1.5)';
             },
             onDragLeave: () => {
-                eBin.current!.style.color = 'black';
+                eBin.current!.style.removeProperty('color');
                 eBinIcon.current!.style.transform = 'scale(1)';
             },
             onDragStop: (params) => {
