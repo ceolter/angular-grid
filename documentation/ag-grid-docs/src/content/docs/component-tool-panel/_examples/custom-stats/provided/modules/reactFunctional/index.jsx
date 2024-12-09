@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    EventApiModule,
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
@@ -25,7 +26,8 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
     SetFilterModule,
-    ValidationModule /* Development Only */
+    EventApiModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

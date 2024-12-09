@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions, IAggregationStatusPanelParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    EventApiModule,
     ModuleRegistry,
     RowSelectionModule,
     TextEditorModule,
@@ -20,7 +21,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     CellSelectionModule,
     StatusBarModule,
-    ValidationModule /* Development Only */
+    EventApiModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -1,6 +1,7 @@
 import type { CellValueChangedEvent, ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    EventApiModule,
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
@@ -22,7 +23,8 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     SetFilterModule,
     TextFilterModule,
-    ValidationModule /* Development Only */
+    EventApiModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [
