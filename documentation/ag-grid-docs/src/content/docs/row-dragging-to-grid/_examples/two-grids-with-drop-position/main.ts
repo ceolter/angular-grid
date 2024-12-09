@@ -9,6 +9,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowDragModule,
     RowStyleModule,
     TextFilterModule,
@@ -18,6 +19,7 @@ import {
 
 // Register the required feature modules with the Grid
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,

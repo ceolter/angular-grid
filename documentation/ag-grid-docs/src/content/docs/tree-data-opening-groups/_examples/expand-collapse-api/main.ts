@@ -2,6 +2,7 @@ import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -11,10 +12,11 @@ import { TreeDataModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ClientSideRowModelModule,
     TreeDataModule,
     TextFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

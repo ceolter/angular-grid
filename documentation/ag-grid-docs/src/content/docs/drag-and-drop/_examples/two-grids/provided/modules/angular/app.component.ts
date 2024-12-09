@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-commu
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowDragModule,
     RowStyleModule,
     TextFilterModule,
@@ -14,6 +15,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,

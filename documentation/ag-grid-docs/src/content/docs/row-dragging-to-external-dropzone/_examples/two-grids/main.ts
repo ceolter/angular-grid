@@ -9,6 +9,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowDragModule,
     RowStyleModule,
     TextFilterModule,
@@ -17,6 +18,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,

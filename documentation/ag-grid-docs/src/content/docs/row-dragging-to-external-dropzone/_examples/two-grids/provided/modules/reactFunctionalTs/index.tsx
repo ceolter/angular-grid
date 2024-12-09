@@ -5,6 +5,7 @@ import type { ColDef, GetRowIdParams, GridApi, GridReadyEvent, RowDropZoneParams
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowDragModule,
     RowStyleModule,
     TextFilterModule,
@@ -15,6 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,

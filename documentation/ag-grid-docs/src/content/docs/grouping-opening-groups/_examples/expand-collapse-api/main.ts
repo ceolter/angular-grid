@@ -1,8 +1,19 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, RowGroupingModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    RowApiModule,
+    ClientSideRowModelModule,
+    RowGroupingModule,
+    ValidationModule /* Development Only */
+]);
 
 let gridApi: GridApi;
 

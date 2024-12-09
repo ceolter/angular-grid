@@ -5,6 +5,7 @@ import type { ColDef, GetRowIdParams, GridApi, GridReadyEvent, RowDropZoneParams
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowStyleModule,
     TextFilterModule,
     ValidationModule,
@@ -13,6 +14,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowStyleModule,
     ClientSideRowModelModule,

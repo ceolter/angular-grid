@@ -5,7 +5,13 @@ import type {
     IServerSideDatasource,
     IServerSideGetRowsRequest,
 } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 import {
     ColumnMenuModule,
     ColumnsToolPanelModule,
@@ -15,13 +21,14 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

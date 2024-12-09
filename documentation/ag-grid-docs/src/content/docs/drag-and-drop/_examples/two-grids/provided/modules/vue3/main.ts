@@ -4,6 +4,7 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     RowDragModule,
     RowStyleModule,
     TextFilterModule,
@@ -14,6 +15,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './style.css';
 
 ModuleRegistry.registerModules([
+    RowApiModule,
     TextFilterModule,
     RowDragModule,
     RowStyleModule,
