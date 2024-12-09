@@ -5,6 +5,7 @@ import type { ColDef, GridApi, GridReadyEvent, IRowNode } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -19,6 +20,7 @@ import { SquareRenderer } from './square-renderer.component';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,

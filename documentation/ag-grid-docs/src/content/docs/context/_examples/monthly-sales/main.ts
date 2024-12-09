@@ -4,6 +4,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
+    RenderApiModule,
     RowSelectionModule,
     ValidationModule,
     createGrid,
@@ -11,6 +12,7 @@ import {
 import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     RowSelectionModule,
     CellStyleModule,
     QuickFilterModule,

@@ -3,11 +3,13 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    RenderApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

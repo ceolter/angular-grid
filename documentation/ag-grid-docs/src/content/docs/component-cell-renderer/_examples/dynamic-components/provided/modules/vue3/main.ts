@@ -4,6 +4,7 @@ import type { ColDef, GridApi, GridReadyEvent, ICellRenderer, ICellRendererParam
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -19,6 +20,7 @@ import SquareRenderer from './squareRendererVue';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,

@@ -12,6 +12,7 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberEditorModule,
+    RenderApiModule,
     TextEditorModule,
     ValidationModule,
     ValueCacheModule,
@@ -22,6 +23,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     NumberEditorModule,
     TextEditorModule,
     ValueCacheModule,

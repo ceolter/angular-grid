@@ -5,6 +5,7 @@ import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -16,6 +17,7 @@ import type { CustomCellRendererProps } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,

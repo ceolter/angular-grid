@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    NumberEditorModule,
     TextEditorModule,
     ValidationModule,
     createGrid,
@@ -14,7 +15,8 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    NumberEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

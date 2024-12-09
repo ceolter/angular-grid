@@ -3,16 +3,20 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    NumberEditorModule,
+    RenderApiModule,
     TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     TextEditorModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
-    ValidationModule/* Development Only */
+    NumberEditorModule,
+    ValidationModule /* Development Only */
 ]);
 
 ///// left table
