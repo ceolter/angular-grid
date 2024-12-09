@@ -1,8 +1,11 @@
 import type { GridApi, GridOptions, ValueFormatterLiteParams, ValueParserLiteParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    DateEditorModule,
+    DateFilterModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -11,10 +14,13 @@ import {
 
 ModuleRegistry.registerModules([
     NumberEditorModule,
+    NumberFilterModule,
+    DateEditorModule,
+    DateFilterModule,
     TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

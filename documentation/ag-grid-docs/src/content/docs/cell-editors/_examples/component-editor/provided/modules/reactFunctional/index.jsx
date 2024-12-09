@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
@@ -16,8 +17,9 @@ import './styles.css';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

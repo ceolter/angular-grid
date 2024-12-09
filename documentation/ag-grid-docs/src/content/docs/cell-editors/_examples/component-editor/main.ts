@@ -1,6 +1,7 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
@@ -13,8 +14,9 @@ import { NumericEditor } from './numericEditor_typescript';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

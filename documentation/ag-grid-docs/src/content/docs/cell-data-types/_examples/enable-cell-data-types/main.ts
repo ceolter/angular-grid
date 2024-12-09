@@ -1,8 +1,12 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import {
+    CheckboxEditorModule,
     ClientSideRowModelModule,
+    DateEditorModule,
+    DateFilterModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -11,10 +15,14 @@ import {
 
 ModuleRegistry.registerModules([
     NumberEditorModule,
+    NumberFilterModule,
+    CheckboxEditorModule,
+    DateFilterModule,
+    DateEditorModule,
     TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 interface IOlympicDataTypes extends IOlympicData {

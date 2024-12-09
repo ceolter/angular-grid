@@ -12,6 +12,7 @@ import type {
 } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomFilterModule,
     HighlightChangesModule,
     ModuleRegistry,
     RowSelectionModule,
@@ -29,7 +30,8 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,
-    ValidationModule /* Development Only */
+    CustomFilterModule,
+    ValidationModule /* Development Only */,
 ]);
 
 let aggCallCount = 0;

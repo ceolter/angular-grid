@@ -1,15 +1,9 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
-    GetRowIdParams,
     HighlightChangesModule,
-    IAggFuncParams,
-    IDoesFilterPassParams,
-    IFilterComp,
-    IFilterParams,
-    IFilterType,
-    IsGroupOpenByDefaultParams,
     ModuleRegistry,
+    NumberFilterModule,
     RowApiModule,
     TextFilterModule,
     ValidationModule,
@@ -25,7 +19,8 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,
-    ValidationModule /* Development Only */
+    NumberFilterModule,
+    ValidationModule /* Development Only */,
 ]);
 
 function getRowId(params) {

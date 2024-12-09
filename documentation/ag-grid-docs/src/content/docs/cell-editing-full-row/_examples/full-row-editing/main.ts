@@ -1,8 +1,10 @@
 import type { CellValueChangedEvent, GridApi, GridOptions, RowValueChangedEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     SelectEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -16,6 +18,8 @@ ModuleRegistry.registerModules([
     ColumnMenuModule,
     ContextMenuModule,
     SelectEditorModule,
+    TextEditorModule,
+    CustomEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

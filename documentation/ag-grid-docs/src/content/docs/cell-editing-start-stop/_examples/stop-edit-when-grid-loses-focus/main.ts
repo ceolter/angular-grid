@@ -1,6 +1,7 @@
 import type { GridApi, GridOptions, ICellEditorComp, ICellEditorParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
@@ -15,8 +16,9 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
     NumberFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class YearCellEditor implements ICellEditorComp {
