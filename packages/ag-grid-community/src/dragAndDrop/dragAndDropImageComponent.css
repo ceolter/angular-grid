@@ -4,7 +4,6 @@
     cursor: move;
     white-space: nowrap;
     height: var(--ag-header-height);
-    max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     transform: translateY(calc(var(--ag-spacing) * 2));
