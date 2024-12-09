@@ -187,8 +187,7 @@
   .ag-set-filter-item {
     @include ag.unthemed-rtl(
       (
-        padding-left:
-          calc(
+        padding-left: calc(
             var(--ag-widget-container-horizontal-padding) + var(--ag-indentation-level) *
               var(--ag-set-filter-indent-size)
           ),
