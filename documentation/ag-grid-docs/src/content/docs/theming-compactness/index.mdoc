@@ -16,7 +16,7 @@ By default, row height is determined by the content height plus padding. Content
 
 The grid provides two ways of customising row height:
 
-`rowVerticalPaddingScale` and `headerVerticalPaddingScale` are plain numbers without units. The padding is multiplied by this number, so `0.75` would mean 3/4 of the usual padding. Using these scale parameters keeps the behaviour that the row size will increase when the font size increases, which is appropriate when end users can choose a font size.
+`rowVerticalPaddingScale` and `headerVerticalPaddingScale` are plain numbers without units. The padding is multiplied by this number, so `0.75` would mean 3/4 of the usual padding. Using these scale parameters preserves the behaviour that row size adjusts when font size changes, which is useful if font size is not known in advance.
 
 `rowHeight` and `headerHeight` are CSS length values - numbers with units. They set the height of the row or header to a fixed value, regardless of the font size or icon size.
 
