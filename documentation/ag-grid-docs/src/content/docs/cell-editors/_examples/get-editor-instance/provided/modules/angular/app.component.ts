@@ -5,6 +5,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridReadyEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,
@@ -19,8 +20,9 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

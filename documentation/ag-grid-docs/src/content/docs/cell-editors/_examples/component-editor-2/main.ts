@@ -1,8 +1,10 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -18,6 +20,8 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     RichSelectModule,
     NumberEditorModule,
+    TextEditorModule,
+    CustomEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

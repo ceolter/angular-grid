@@ -4,6 +4,7 @@ import {
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
+    NumberEditorModule,
     NumberFilterModule,
     RowApiModule,
     TextEditorModule,
@@ -20,7 +21,8 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     ClientSideRowModelModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */
+    NumberEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 const rowData = [

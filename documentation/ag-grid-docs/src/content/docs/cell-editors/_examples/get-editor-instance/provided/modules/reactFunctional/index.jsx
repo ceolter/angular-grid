@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,
@@ -18,8 +19,9 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const createRowData = () => {

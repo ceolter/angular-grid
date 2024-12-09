@@ -4,8 +4,10 @@ import { createRoot } from 'react-dom/client';
 import type { CellValueChangedEvent, ColDef, RowValueChangedEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     SelectEditorModule,
+    TextEditorModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule } from 'ag-grid-enterprise';
@@ -20,7 +22,9 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule /* Development Only */
+    CustomEditorModule,
+    TextEditorModule,
+    ValidationModule /* Development Only */,
 ]);
 
 function getRowData(): any[] {

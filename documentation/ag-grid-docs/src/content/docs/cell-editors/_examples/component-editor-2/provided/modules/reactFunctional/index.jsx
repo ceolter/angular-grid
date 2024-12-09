@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
+    TextEditorModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { RichSelectModule } from 'ag-grid-enterprise';
@@ -19,9 +21,11 @@ import './styles.css';
 
 ModuleRegistry.registerModules([
     NumberEditorModule,
+    TextEditorModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
     RichSelectModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

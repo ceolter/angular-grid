@@ -9,6 +9,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberEditorModule,
     TextEditorModule,
     ValidationModule,
     createGrid,
@@ -18,8 +19,9 @@ import { getData } from './data';
 
 ModuleRegistry.registerModules([
     TextEditorModule,
+    NumberEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

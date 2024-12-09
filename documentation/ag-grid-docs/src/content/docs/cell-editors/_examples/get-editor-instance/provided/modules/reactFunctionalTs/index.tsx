@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import type { ColDef, GridReadyEvent, ICellEditor } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    CustomEditorModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,
@@ -20,8 +21,9 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
+    CustomEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const createRowData = () => {
