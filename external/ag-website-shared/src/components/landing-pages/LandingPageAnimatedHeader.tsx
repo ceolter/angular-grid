@@ -4,43 +4,41 @@ import { useEffect, useState } from 'react';
 
 import styles from './LandingPageAnimatedHeader.module.scss';
 
+const WORDS = ['Javascript', 'Vue', 'Angular', 'React'];
+
 export const LandingPageAnimatedHeader: FunctionComponent = () => {
     const [wordIndex, setWordIndex] = useState(0);
-    const [noTransitions, setNoTransitions] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
         const advanceWord = () => {
-            if (wordIndex > 3) {
-                setNoTransitions(true);
-                setWordIndex(0);
-            } else {
-                setNoTransitions(false);
-                setWordIndex(wordIndex + 1);
-            }
+            setIsTransitioning(true);
+
+            setTimeout(() => {
+                setWordIndex((prevIndex) => (prevIndex + 1) % WORDS.length);
+                setIsTransitioning(false);
+            }, 500);
         };
 
-        const interval = setInterval(() => {
-            advanceWord();
-            if (wordIndex === 0) advanceWord();
-        }, 1500); // Adjusted interval to match 2-second transition
+        const interval = setInterval(advanceWord, 2500);
 
         return () => clearInterval(interval);
-    }, [wordIndex]);
+    }, []);
 
     return (
         <h1 className="text-xl">
             <span className={styles.topLine}>
                 The Best
-                <span
-                    className={classnames(styles.animatedWordsOuter, { ['no-transitions']: noTransitions })}
-                    style={{ ['--word-index']: wordIndex }}
-                >
-                    <span className={styles.animatedWordsInner}>
-                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
-                        <span className={classnames(styles.animatedWord, styles.vue)}>Vue</span>
-                        <span className={classnames(styles.animatedWord, styles.angular)}>Angular</span>
-                        <span className={classnames(styles.animatedWord, styles.react)}>React</span>
-                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
+                <span className={styles.animatedWordsContainer}>
+                    <span
+                        className={classnames(styles.animatedWord, styles[WORDS[wordIndex].toLowerCase()])}
+                        style={{
+                            opacity: isTransitioning ? 0 : 1,
+                            filter: isTransitioning ? 'blur(10px)' : 'blur(0)',
+                            transform: isTransitioning ? 'translateY(20px)' : 'translateY(0)',
+                        }}
+                    >
+                        {WORDS[wordIndex]}
                     </span>
                 </span>
             </span>
