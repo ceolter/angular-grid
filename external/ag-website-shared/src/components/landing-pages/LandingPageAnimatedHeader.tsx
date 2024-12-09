@@ -18,12 +18,12 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
                 setWordIndex(wordIndex + 1);
             }
         };
-    
+
         const interval = setInterval(() => {
             advanceWord();
             if (wordIndex === 0) advanceWord();
-        }, 2000); // Adjusted interval to match 2-second transition
-    
+        }, 1500); // Adjusted interval to match 2-second transition
+
         return () => clearInterval(interval);
     }, [wordIndex]);
 

@@ -24,12 +24,12 @@
     }
 
     &::before {
-        top: 0;
+        top: -16px;
         background: linear-gradient(to bottom, var(--color-brand-500), transparent);
     }
 
     &::after {
-        bottom: 0;
+        bottom: -8px;
         background: linear-gradient(to top, var(--color-brand-500), transparent);
     }
 }
@@ -41,7 +41,7 @@
     left: 0;
     flex-direction: column;
     transform: translateY(calc(var(--word-height) * var(--word-index)));
-    transition: transform 2s ease-out; /* Adjusted to 2 seconds */
+    transition: transform 1.5s ease-out; /* Adjusted to 2 seconds */
 }
 
 .animatedWord {
