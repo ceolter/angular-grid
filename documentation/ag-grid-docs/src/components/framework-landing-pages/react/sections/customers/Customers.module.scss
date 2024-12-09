@@ -70,12 +70,12 @@
 
     &::before {
         left: 0;
-        background-image: linear-gradient(90deg, transparent, var(--color-util-gray-900));
+        background-image: linear-gradient(90deg, var(--color-bg-primary), transparent);
     }
 
     &::after {
         right: 0;
-        background-image: linear-gradient(90deg, var(--color-util-gray-900), transparent);
+        background-image: linear-gradient(90deg, transparent, var(--color-bg-primary));
     }
 
     @media screen and (max-width: $breakpoint-hero-small) {
