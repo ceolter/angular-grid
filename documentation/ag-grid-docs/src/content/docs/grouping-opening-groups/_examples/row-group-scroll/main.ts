@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    ScrollApiModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -11,6 +12,7 @@ import {
 import { RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ScrollApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,

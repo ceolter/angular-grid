@@ -9,11 +9,18 @@ import type {
     RowClassParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { InfiniteRowModelModule, ModuleRegistry, RowStyleModule, ValidationModule } from 'ag-grid-community';
+import {
+    InfiniteRowModelModule,
+    ModuleRegistry,
+    RowStyleModule,
+    ScrollApiModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import type { CustomCellRendererProps } from 'ag-grid-react';
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,
     ValidationModule /* Development Only */

@@ -15,11 +15,13 @@ import {
     InfiniteRowModelModule,
     ModuleRegistry,
     RowStyleModule,
+    ScrollApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,
     ValidationModule /* Development Only */
