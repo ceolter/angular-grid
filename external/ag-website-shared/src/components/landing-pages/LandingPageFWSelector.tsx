@@ -14,12 +14,12 @@ export function LandingPageFWSelector({ data }) {
                 const frameworkDisplay = FRAMEWORK_DISPLAY_TEXT[framework.name];
                 const alt = `${frameworkDisplay} Data Grid`;
 
+                const href = framework.url
+                    ? framework.url
+                    : urlWithPrefix({ url: './getting-started', framework: framework.name });
+
                 return (
-                    <a
-                        href={urlWithPrefix({ url: './getting-started', framework: framework.name })}
-                        key={framework.name}
-                        className={styles.option}
-                    >
+                    <a href={href} key={framework.name} className={styles.option}>
                         <img src={urlWithBaseUrl(`/${fwLogos}${framework.name}.svg`)} alt={alt} />
 
                         <span>
