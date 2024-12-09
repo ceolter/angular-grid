@@ -6,7 +6,7 @@ export class PivotColsSvc extends BaseColsService implements NamedBean, IColsSer
     eventName = 'columnPivotChanged' as const;
     override columnProcessors = {
         set: (column: AgColumn, added: boolean, source: ColumnEventType) =>
-            this.setColPivotActive(column, true, source),
+            this.setColPivotActive(column, added, source),
         add: (column: AgColumn, added: boolean, source: ColumnEventType) =>
             this.setColPivotActive(column, true, source),
         remove: (column: AgColumn, added: boolean, source: ColumnEventType) =>
