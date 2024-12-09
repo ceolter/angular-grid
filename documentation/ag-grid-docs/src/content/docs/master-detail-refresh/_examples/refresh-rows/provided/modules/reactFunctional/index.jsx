@@ -2,6 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react
 import { createRoot } from 'react-dom/client';
 
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -13,6 +14,7 @@ import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDeta
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,

@@ -1,5 +1,6 @@
 import type { GridApi, GridOptions, RowDragCallbackParams, RowDragEndEvent } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -17,6 +18,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     NumberFilterModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

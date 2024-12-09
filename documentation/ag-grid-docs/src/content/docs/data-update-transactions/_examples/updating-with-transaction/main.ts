@@ -1,5 +1,6 @@
 import type { GridApi, GridOptions, RowNodeTransaction } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -11,6 +12,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     ClientSideRowModelModule,

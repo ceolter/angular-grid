@@ -9,6 +9,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     SelectEditorModule,
+    TextEditorModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -31,6 +32,7 @@ ModuleRegistry.registerModules([
     RichSelectModule,
     SetFilterModule,
     SelectEditorModule,
+    TextEditorModule,
     ValidationModule /* Development Only */,
 ]);
 

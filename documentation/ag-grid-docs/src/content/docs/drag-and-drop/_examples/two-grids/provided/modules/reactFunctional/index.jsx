@@ -2,6 +2,7 @@ import React, { StrictMode, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -15,6 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,
     RowDragModule,

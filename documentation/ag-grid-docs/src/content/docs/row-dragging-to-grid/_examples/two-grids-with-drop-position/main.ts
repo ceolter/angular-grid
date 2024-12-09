@@ -7,6 +7,7 @@ import type {
     RowDropZoneParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -19,6 +20,7 @@ import {
 
 // Register the required feature modules with the Grid
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     TextFilterModule,
     RowDragModule,

@@ -7,6 +7,7 @@ import type {
     ValueGetterParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -16,10 +17,11 @@ import {
 import { PivotModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     PivotModule,
     HighlightChangesModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 interface Student {

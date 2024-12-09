@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import type { ColDef, FirstDataRenderedEvent, GetRowIdParams, GridReadyEvent } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -17,6 +18,7 @@ import { AgGridReact } from 'ag-grid-react';
 import type { IAccount } from './interfaces';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,

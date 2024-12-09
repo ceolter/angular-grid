@@ -1,5 +1,6 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -16,6 +17,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
@@ -24,7 +26,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     TextEditorModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let gridApi: GridApi;

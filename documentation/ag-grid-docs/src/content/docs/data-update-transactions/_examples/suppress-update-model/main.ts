@@ -1,5 +1,6 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -14,13 +15,14 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextFilterModule,
     RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 function getRowId(params) {

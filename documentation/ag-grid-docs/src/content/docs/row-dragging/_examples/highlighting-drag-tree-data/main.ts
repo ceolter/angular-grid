@@ -13,6 +13,7 @@ import type {
 } from 'ag-grid-community';
 import {
     CellStyleModule,
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RenderApiModule,
@@ -24,6 +25,7 @@ import { TreeDataModule } from 'ag-grid-enterprise';
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RenderApiModule,
     CellStyleModule,
     ClientSideRowModelModule,

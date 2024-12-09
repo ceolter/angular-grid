@@ -1,6 +1,7 @@
 import type { GetRowIdParams, GridApi, GridOptions, IRowNode, ValueParserParams } from 'ag-grid-community';
 import {
     CellStyleModule,
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -12,6 +13,7 @@ import {
 import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     CellStyleModule,
     ClientSideRowModelModule,
     RowGroupingModule,
@@ -19,7 +21,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     NumberFilterModule,
     TextEditorModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let rowIdCounter = 0;

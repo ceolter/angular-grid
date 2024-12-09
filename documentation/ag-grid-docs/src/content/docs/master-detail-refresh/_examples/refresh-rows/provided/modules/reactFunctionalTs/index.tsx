@@ -9,6 +9,7 @@ import type {
     GridReadyEvent,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -20,6 +21,7 @@ import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDeta
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,

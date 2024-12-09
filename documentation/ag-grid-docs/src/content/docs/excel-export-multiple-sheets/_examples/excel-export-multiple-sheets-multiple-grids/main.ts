@@ -8,6 +8,7 @@ import type {
     ICellRendererParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowDragModule,
@@ -19,6 +20,7 @@ import {
 import { ColumnMenuModule, ContextMenuModule, ExcelExportModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextFilterModule,
     RowDragModule,
     RowSelectionModule,

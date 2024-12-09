@@ -1,5 +1,6 @@
 import type { CellEditRequestEvent, GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
@@ -9,6 +10,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     NumberEditorModule,
     TextEditorModule,
     ClientSideRowModelModule,

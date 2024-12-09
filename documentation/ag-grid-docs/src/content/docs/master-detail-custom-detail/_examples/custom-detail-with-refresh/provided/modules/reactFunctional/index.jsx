@@ -2,6 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -14,6 +15,7 @@ import DetailCellRenderer from './detailCellRenderer.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     MasterDetailModule,

@@ -11,6 +11,7 @@ import type {
     IsGroupOpenByDefaultParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     CustomFilterModule,
     HighlightChangesModule,
@@ -25,13 +26,14 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextFilterModule,
     RowSelectionModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
     RowGroupingModule,
     CustomFilterModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 let aggCallCount = 0;

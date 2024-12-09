@@ -6,6 +6,7 @@ import type {
     IDetailCellRendererParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -17,6 +18,7 @@ import {
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     HighlightChangesModule,

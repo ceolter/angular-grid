@@ -10,6 +10,7 @@ import type {
     RowSelectionOptions,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowDragModule,
@@ -23,6 +24,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextFilterModule,
     RowDragModule,
     RowSelectionModule,

@@ -10,6 +10,7 @@ import type {
     RowSelectionOptions,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
@@ -21,6 +22,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

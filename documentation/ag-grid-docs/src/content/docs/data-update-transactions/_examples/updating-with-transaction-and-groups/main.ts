@@ -1,5 +1,6 @@
 import type { GridApi, GridOptions, RowClassParams, ValueFormatterParams } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -13,6 +14,7 @@ import { RowGroupingModule } from 'ag-grid-enterprise';
 import { createNewRowData, getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowSelectionModule,
     RowApiModule,
     RowStyleModule,
