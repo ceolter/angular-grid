@@ -25,6 +25,10 @@
     cursor: pointer;
 }
 
+.ag-header-expand-icon {
+    margin-left: 4px;
+}
+
 .ag-header-row:where(:not(:first-child)) {
     :where(
             .ag-header-cell:not(.ag-header-span-height.ag-header-span-total, .ag-header-parent-hidden),
@@ -151,7 +155,7 @@
     flex: none;
     max-width: 100%;
     left: var(--ag-cell-horizontal-padding);
-    overflow: hidden;
+    overflow: visible;
 }
 
 .ag-header-group-text {
