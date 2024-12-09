@@ -3,8 +3,6 @@ import {
     ClientSideRowModelModule,
     DateFilterModule,
     ModuleRegistry,
-    NumberEditorModule,
-    TextEditorModule,
     TextFilterModule,
     ValidationModule,
     createGrid,
@@ -14,32 +12,10 @@ import { CustomDateComponent } from './customDateComponent_typescript';
 
 ModuleRegistry.registerModules([
     TextFilterModule,
-    TextEditorModule,
-    NumberEditorModule,
     ClientSideRowModelModule,
     DateFilterModule,
     ValidationModule /* Development Only */,
 ]);
-
-const filterParams = {
-    comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
-        const dateAsString = cellValue;
-        const dateParts = dateAsString.split('/');
-        const cellDate = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]));
-
-        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-            return 0;
-        }
-
-        if (cellDate < filterLocalDateAtMidnight) {
-            return -1;
-        }
-
-        if (cellDate > filterLocalDateAtMidnight) {
-            return 1;
-        }
-    },
-};
 
 const columnDefs: ColDef[] = [
     { field: 'athlete' },
@@ -47,8 +23,6 @@ const columnDefs: ColDef[] = [
     {
         field: 'date',
         minWidth: 190,
-        filter: 'agDateColumnFilter',
-        filterParams: filterParams,
     },
     { field: 'sport' },
 ];
@@ -77,6 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
         .then((response) => response.json())
         .then((data) => {
-            gridApi!.setGridOption('rowData', data);
+            gridApi!.setGridOption(
+                'rowData',
+                data.map((row: IOlympicData) => {
+                    const dateParts = (row.date as any).split('/');
+                    const date = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]));
+                    return {
+                        ...row,
+                        date,
+                    };
+                })
+            );
         });
 });
