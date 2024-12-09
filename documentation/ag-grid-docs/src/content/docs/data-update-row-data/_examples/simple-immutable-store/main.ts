@@ -1,6 +1,7 @@
 import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     RowSelectionModule,
     TextFilterModule,
@@ -10,6 +11,7 @@ import {
 import { CellSelectionModule, RowGroupingModule, StatusBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

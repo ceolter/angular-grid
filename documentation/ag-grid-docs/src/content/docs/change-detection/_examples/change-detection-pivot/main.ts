@@ -9,6 +9,7 @@ import type {
 import {
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
+    ColumnApiModule,
     HighlightChangesModule,
     ModuleRegistry,
     ValidationModule,
@@ -17,6 +18,7 @@ import {
 import { PivotModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     PivotModule,

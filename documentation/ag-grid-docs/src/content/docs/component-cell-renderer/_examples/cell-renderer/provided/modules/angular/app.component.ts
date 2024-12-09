@@ -5,6 +5,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, ICellRenderer, ICellRendererParams, IRowNode } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     RowApiModule,
     TextEditorModule,
@@ -15,6 +16,7 @@ import {
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextEditorModule,
     TextFilterModule,
     RowApiModule,

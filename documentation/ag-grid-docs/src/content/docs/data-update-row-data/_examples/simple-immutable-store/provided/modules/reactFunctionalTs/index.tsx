@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import type { ColDef, GetRowIdParams, GridApi, GridReadyEvent, RowSelectionOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     RowSelectionModule,
     TextFilterModule,
@@ -13,6 +14,7 @@ import { CellSelectionModule, RowGroupingModule, StatusBarModule } from 'ag-grid
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

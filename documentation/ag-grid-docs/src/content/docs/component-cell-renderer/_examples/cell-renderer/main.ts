@@ -2,6 +2,7 @@ import type { GridApi, GridOptions, ICellRendererParams } from 'ag-grid-communit
 import {
     ClientSideRowModelModule,
     ColDef,
+    ColumnApiModule,
     ModuleRegistry,
     NumberEditorModule,
     RowApiModule,
@@ -12,6 +13,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     RowApiModule,
     ClientSideRowModelModule,

@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions, IsFullWidthRowParams, RowHeightParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     PinnedRowModule,
     ValidationModule,
@@ -10,6 +11,7 @@ import {
 import { FullWidthCellRenderer } from './fullWidthCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     PinnedRowModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

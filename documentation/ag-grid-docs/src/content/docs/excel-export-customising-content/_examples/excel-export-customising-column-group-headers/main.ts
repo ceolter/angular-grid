@@ -7,6 +7,7 @@ import type {
 } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     CsvExportModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -24,6 +25,7 @@ import {
 } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     NumberFilterModule,
     ClientSideRowModelModule,
     CsvExportModule,

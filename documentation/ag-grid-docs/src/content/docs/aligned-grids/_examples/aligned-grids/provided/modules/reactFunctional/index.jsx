@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnApiModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -15,6 +16,7 @@ import { AgGridReact } from 'ag-grid-react';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     NumberFilterModule,
     ColumnAutoSizeModule,

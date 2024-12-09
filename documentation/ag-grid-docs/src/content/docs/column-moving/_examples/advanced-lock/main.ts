@@ -2,6 +2,7 @@ import type { ColDef, ColumnPinnedEvent, GridApi, GridOptions } from 'ag-grid-co
 import {
     CellStyleModule,
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
@@ -12,6 +13,7 @@ import {
 import { ControlsCellRenderer } from './controlsCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     NumberFilterModule,
     CellStyleModule,

@@ -4,6 +4,7 @@ import type { ColDef, ColGroupDef, GridOptions, GridReadyEvent } from 'ag-grid-c
 import {
     AlignedGridsModule,
     ClientSideRowModelModule,
+    ColumnApiModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -13,6 +14,7 @@ import {
 import { AgGridVue } from 'ag-grid-vue3';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     NumberFilterModule,
     ColumnAutoSizeModule,

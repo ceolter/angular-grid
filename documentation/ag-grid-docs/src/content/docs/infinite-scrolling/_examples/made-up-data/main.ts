@@ -1,5 +1,6 @@
 import type { ColDef, GetRowIdParams, GridApi, GridOptions, IDatasource, IGetRowsParams } from 'ag-grid-community';
 import {
+    ColumnApiModule,
     InfiniteRowModelModule,
     ModuleRegistry,
     RowSelectionModule,
@@ -8,6 +9,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     RowSelectionModule,
     InfiniteRowModelModule,
     ValidationModule /* Development Only */

@@ -1,6 +1,7 @@
 import type { ColDef, ColumnResizedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
     ValidationModule,
@@ -8,6 +9,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

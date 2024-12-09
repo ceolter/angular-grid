@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     TextEditorModule,
     ValidationModule,
@@ -13,6 +14,7 @@ import { getData } from './data.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

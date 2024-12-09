@@ -5,6 +5,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef, GridApi, GridOptions, GridPreDestroyedEvent, GridReadyEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     TextEditorModule,
     ValidationModule,
@@ -15,6 +16,7 @@ import { getData } from './data';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

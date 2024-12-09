@@ -13,6 +13,7 @@ import {
     CellStyleModule,
     ClientSideRowModelApiModule,
     ClientSideRowModelModule,
+    ColumnApiModule,
     HighlightChangesModule,
     ModuleRegistry,
     TextEditorModule,
@@ -23,6 +24,7 @@ import {
 import { IntegratedChartsModule, RowGroupingModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     ClientSideRowModelApiModule,
     TextEditorModule,
     TextFilterModule,

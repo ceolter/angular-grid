@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     RowSelectionModule,
     TextFilterModule,
@@ -12,6 +13,7 @@ import { CellSelectionModule, RowGroupingModule, StatusBarModule } from 'ag-grid
 import { AgGridReact } from 'ag-grid-react';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,

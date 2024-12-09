@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions, GridPreDestroyedEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     TextEditorModule,
     ValidationModule,
@@ -11,6 +12,7 @@ import type { TAthlete } from './data';
 import { getDataSet } from './data';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

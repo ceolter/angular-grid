@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import type { ColDef, GridApi, GridPreDestroyedEvent, GridReadyEvent } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     TextEditorModule,
     ValidationModule,
@@ -15,6 +16,7 @@ import { getData } from './data';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     TextEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */

@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnApiModule,
     ModuleRegistry,
     ScrollApiModule,
     ValidationModule,
@@ -8,6 +9,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ColumnApiModule,
     ScrollApiModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */
