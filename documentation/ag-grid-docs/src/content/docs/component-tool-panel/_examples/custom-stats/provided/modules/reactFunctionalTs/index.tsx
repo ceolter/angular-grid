@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import type { CellValueChangedEvent, ColDef, GridReadyEvent, SideBarDef } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     EventApiModule,
     ModuleRegistry,
@@ -20,6 +21,7 @@ import type { IOlympicData } from './interfaces';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
@@ -29,7 +31,7 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     SetFilterModule,
     EventApiModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const GridExample = () => {

@@ -1,5 +1,6 @@
 import type { GetRowIdParams, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     HighlightChangesModule,
     ModuleRegistry,
@@ -12,6 +13,7 @@ import {
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,

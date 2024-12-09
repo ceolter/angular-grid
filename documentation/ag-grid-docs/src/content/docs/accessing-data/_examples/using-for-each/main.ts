@@ -1,5 +1,6 @@
 import type { GridApi, GridOptions, IRowNode } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberFilterModule,
@@ -10,6 +11,7 @@ import {
 import { ColumnMenuModule, ContextMenuModule, RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     NumberFilterModule,
     RowApiModule,
     ClientSideRowModelModule,

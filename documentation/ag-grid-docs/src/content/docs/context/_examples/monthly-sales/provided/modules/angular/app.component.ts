@@ -13,6 +13,7 @@ import type {
 } from 'ag-grid-community';
 import {
     CellStyleModule,
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     QuickFilterModule,
@@ -25,6 +26,7 @@ import { FiltersToolPanelModule, RowGroupingModule, SetFilterModule } from 'ag-g
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RenderApiModule,
     RowSelectionModule,
     CellStyleModule,

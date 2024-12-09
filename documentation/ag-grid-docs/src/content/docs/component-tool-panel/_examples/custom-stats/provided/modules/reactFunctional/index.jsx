@@ -2,6 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     EventApiModule,
     ModuleRegistry,
@@ -18,6 +19,7 @@ import CustomStatsToolPanel from './customStatsToolPanel.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
@@ -27,7 +29,7 @@ ModuleRegistry.registerModules([
     FiltersToolPanelModule,
     SetFilterModule,
     EventApiModule,
-    ValidationModule /* Development Only */,
+    ValidationModule /* Development Only */
 ]);
 
 const GridExample = () => {

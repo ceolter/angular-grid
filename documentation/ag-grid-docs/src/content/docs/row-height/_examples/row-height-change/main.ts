@@ -1,5 +1,6 @@
 import type { GridApi, GridOptions, RowHeightParams } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -11,6 +12,7 @@ import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, RowGroupin
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

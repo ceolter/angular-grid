@@ -1,7 +1,13 @@
 import { createApp, defineComponent } from 'vue';
 
 import type { ChartRef, ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModule } from 'ag-grid-community';
+import {
+    ClientSideRowModelApiModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    RowApiModule,
+    ValidationModule,
+} from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
@@ -9,6 +15,7 @@ import DetailCellRenderer from './detailCellRendererVue';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     MasterDetailModule,
     ColumnMenuModule,

@@ -7,6 +7,7 @@ import type {
     RowHeightParams,
 } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
@@ -19,6 +20,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RenderApiModule,
     RowApiModule,
     ColumnAutoSizeModule,

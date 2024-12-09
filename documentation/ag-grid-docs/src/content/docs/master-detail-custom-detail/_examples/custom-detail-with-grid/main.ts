@@ -1,5 +1,6 @@
 import type { FirstDataRenderedEvent, GridApi, GridOptions } from 'ag-grid-community';
 import {
+    ClientSideRowModelApiModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     RowApiModule,
@@ -11,6 +12,7 @@ import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDeta
 import { DetailCellRenderer } from './detailCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelApiModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
