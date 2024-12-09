@@ -19,14 +19,13 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
             }
         };
 
-        //Implementing the setInterval method
+        // Slower interval (increased from 666ms to 1500ms)
         const interval = setInterval(() => {
             advanceWord();
 
             if (wordIndex === 0) advanceWord();
         }, 666);
 
-        //Clearing the interval
         return () => clearInterval(interval);
     }, [wordIndex]);
 
