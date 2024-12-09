@@ -1,6 +1,7 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    ColumnAutoSizeModule,
     ModuleRegistry,
     NumberFilterModule,
     TextFilterModule,
@@ -16,6 +17,7 @@ ModuleRegistry.registerModules([
     ColumnsToolPanelModule,
     ColumnMenuModule,
     ContextMenuModule,
+    ColumnAutoSizeModule,
     ValidationModule /* Development Only */,
 ]);
 
