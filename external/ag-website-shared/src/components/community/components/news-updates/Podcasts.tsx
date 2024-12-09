@@ -27,9 +27,7 @@ const Podcasts = ({ podcasts }) => {
                                     alt={`${podcast.publicationLogo} logo`}
                                 />
                                 <span className={styles.publication}>{podcast.publication}</span>
-                                <span>|</span>
                                 <span className={styles.host}>{podcast.host}</span>
-                                <span>|</span>
                                 <span className={styles.guests}>{guestsToString(podcast.guests)}</span>
                             </div>
                         </div>
