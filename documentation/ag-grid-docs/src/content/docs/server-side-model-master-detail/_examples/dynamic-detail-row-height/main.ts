@@ -10,6 +10,7 @@ import type {
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     ValidationModule,
     createGrid,
@@ -25,6 +26,7 @@ import {
 import { FakeServer } from './fakeServer';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     RowApiModule,
     ClientSideRowModelModule,
     ColumnsToolPanelModule,

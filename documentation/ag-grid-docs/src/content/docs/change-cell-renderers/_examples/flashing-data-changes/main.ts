@@ -3,12 +3,14 @@ import {
     CellStyleModule,
     ClientSideRowModelModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     RowApiModule,
     CellStyleModule,
     ClientSideRowModelModule,

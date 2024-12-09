@@ -6,6 +6,7 @@ import {
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
+    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -17,6 +18,7 @@ import MedalCellRenderer from './medalCellRenderer.jsx';
 import './styles.css';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,

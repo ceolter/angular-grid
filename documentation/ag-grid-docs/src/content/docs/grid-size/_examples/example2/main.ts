@@ -10,6 +10,7 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     ModuleRegistry,
+    RenderApiModule,
     RowApiModule,
     ValidationModule,
     createGrid,
@@ -18,6 +19,7 @@ import {
 import { getData } from './data';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     RowApiModule,
     ColumnAutoSizeModule,
     ClientSideRowModelModule,

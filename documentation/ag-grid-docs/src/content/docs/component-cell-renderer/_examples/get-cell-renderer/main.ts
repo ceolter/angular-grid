@@ -4,6 +4,7 @@ import {
     ModuleRegistry,
     NumberEditorModule,
     NumberFilterModule,
+    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     TextFilterModule,
@@ -14,6 +15,7 @@ import {
 import { MedalCellRenderer } from './medalCellRenderer_typescript';
 
 ModuleRegistry.registerModules([
+    RenderApiModule,
     NumberEditorModule,
     TextEditorModule,
     TextFilterModule,
