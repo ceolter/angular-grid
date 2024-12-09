@@ -237,6 +237,7 @@
         }
 
         #{$selector-darkmode} & {
+            color: var(--color-white);
             background-color: color-mix(in srgb, var(--color-white), var(--color-bg-primary) 90%);
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }

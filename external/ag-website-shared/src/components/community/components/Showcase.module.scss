@@ -26,6 +26,12 @@
 }
 
 .header {
+    aspect-ratio: 16 / 9;
+
+    @media screen and (min-width: $breakpoint-community-large) {
+        height: 160px;
+    }
+
     .image {
         width: 100%;
         height: 100%;

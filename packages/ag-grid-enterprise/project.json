@@ -104,7 +104,7 @@
         "target": "es2020",
         "format": ["cjs", "esm"],
         "sourcemap": true,
-        "metafile": true
+        "metafile": false
       },
       "configurations": {
         "watch": {

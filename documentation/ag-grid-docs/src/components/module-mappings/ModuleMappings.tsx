@@ -21,6 +21,7 @@ import { ModuleConfiguration } from './ModuleConfiguration';
 import styles from './ModuleMappings.module.scss';
 import { ModuleNameCellRenderer } from './ModuleNameCellRenderer';
 import { ModuleSearch } from './ModuleSearch';
+import { ALL_ENTERPRISE_MODULE } from './constants';
 import { useModuleConfig } from './useModuleConfig';
 
 interface Props {
@@ -88,6 +89,15 @@ export const ModuleMappings: FunctionComponent<Props> = ({ framework, modules })
         }
         const selectedCommunity: string[] = [];
         const selectedEnterprise: string[] = [];
+        if (bundleOption === 'AllEnterpriseModule') {
+            setSelectedModules({
+                community: [],
+                enterprise: [ALL_ENTERPRISE_MODULE],
+            });
+
+            return;
+        }
+
         api.forEachLeafNode((leaf) => {
             const { moduleName, isEnterprise, hide } = leaf.data;
             if (!hide && moduleName && leaf.isSelected()) {

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
-const LICENSE_MANAGER_FILE = 'enterprise-modules/core/src/license/shared/licenseManager.ts';
+const LICENSE_MANAGER_FILE = 'packages/ag-grid-enterprise/src/license/shared/licenseManager.ts';
 
 if (process.argv.length !== 3) {
     console.log('Usage: node scripts/deployments/prep_and_archive/updateLicenseManager.js NEW_LICENSE');

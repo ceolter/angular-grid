@@ -38,10 +38,13 @@
 
     position: sticky;
     width: 100%;
-    height: calc(100vh - var(--layout-site-header-height));
     top: var(--layout-site-header-height);
     overflow-x: hidden;
     overflow-y: auto;
+
+    @media screen and (min-width: $breakpoint-docs-nav-medium) {
+        height: calc(100vh - var(--layout-site-header-height));
+    }
 
     #{$selector-darkmode} & {
         --item-border-color: var(--color-util-gray-500);
