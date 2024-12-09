@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColGroupDef[] = [

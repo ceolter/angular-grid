@@ -9,7 +9,7 @@ ModuleRegistry.registerModules([
     RowAutoHeightModule,
     RowGroupingModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

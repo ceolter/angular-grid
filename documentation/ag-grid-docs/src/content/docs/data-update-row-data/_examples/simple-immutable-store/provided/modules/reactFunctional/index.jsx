@@ -20,7 +20,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     StatusBarModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 // creates a unique symbol, eg 'ADG' or 'ZJD'

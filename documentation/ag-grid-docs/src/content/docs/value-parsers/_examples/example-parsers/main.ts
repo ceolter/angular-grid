@@ -9,11 +9,7 @@ import {
 
 import { getData } from './data';
 
-ModuleRegistry.registerModules([
-    TextEditorModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */
-]);
+ModuleRegistry.registerModules([TextEditorModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 let gridApi: GridApi;
 

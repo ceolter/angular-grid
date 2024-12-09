@@ -33,7 +33,7 @@ ModuleRegistry.registerModules([
     ServerSideRowModelModule,
     ServerSideRowModelApiModule,
     RowGroupingPanelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([
     NumberFilterModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

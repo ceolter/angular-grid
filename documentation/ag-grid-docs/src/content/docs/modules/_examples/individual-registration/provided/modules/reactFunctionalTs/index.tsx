@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 const leftModules = [SetFilterModule, ClipboardModule, CsvExportModule];
 const rightModules = [TextFilterModule, NumberFilterModule, CsvExportModule, ExcelExportModule];

@@ -8,7 +8,7 @@ ModuleRegistry.registerModules([
     RowApiModule,
     RowGroupingModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

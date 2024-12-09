@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columns = [{ field: 'id', rowDrag: true }, { field: 'color' }, { field: 'value1' }, { field: 'value2' }];

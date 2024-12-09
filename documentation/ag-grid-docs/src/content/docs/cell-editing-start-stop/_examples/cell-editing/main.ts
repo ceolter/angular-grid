@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     PinnedRowModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

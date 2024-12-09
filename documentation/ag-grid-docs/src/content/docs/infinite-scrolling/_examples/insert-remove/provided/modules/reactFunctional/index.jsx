@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     ScrollApiModule,
     RowStyleModule,
     InfiniteRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const valueFormatter = function (params) {

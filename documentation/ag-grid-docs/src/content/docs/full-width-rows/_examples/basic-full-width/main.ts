@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     ColumnApiModule,
     PinnedRowModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const rowData = createData(100, 'body');

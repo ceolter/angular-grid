@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     CellStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let editableYear = 2012;

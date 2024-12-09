@@ -27,7 +27,7 @@ ModuleRegistry.registerModules([
     ExcelExportModule,
     CellSelectionModule,
     ClipboardModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = {

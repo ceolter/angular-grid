@@ -9,11 +9,7 @@ import { ClientSideRowModelModule, ModuleRegistry, RowApiModule, ValidationModul
 import { getData } from './data';
 import './styles.css';
 
-ModuleRegistry.registerModules([
-    RowApiModule,
-    ClientSideRowModelModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([RowApiModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 @Component({
     standalone: true,

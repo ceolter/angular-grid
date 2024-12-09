@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     ClientSideRowModelModule,
     NumberEditorModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 ///// left table

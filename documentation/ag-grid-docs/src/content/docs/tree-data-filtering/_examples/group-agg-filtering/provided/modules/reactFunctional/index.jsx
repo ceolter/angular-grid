@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     ClientSideRowModelModule,
     TreeDataModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

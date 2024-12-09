@@ -10,11 +10,7 @@ import {
 import { getData } from './data';
 import { ShowCellRenderer } from './showCellRenderer_typescript';
 
-ModuleRegistry.registerModules([
-    CellStyleModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */
-]);
+ModuleRegistry.registerModules([CellStyleModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 function rowSpan(params: RowSpanParams) {
     if (params.data.show) {

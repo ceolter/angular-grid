@@ -23,7 +23,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     StatusBarModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const rowSelection = {

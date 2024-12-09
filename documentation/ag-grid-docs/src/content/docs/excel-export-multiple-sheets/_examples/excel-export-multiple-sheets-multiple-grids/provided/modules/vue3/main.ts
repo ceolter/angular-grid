@@ -1,3 +1,5 @@
+import { createApp, defineComponent } from 'vue';
+
 import type {
     ColDef,
     GetRowIdParams,
@@ -18,8 +20,6 @@ import {
 import { ExcelExportModule, exportMultipleSheetsAsExcel } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp, defineComponent } from 'vue';
-
 import './styles.css';
 
 ModuleRegistry.registerModules([
@@ -29,7 +29,7 @@ ModuleRegistry.registerModules([
     RowSelectionModule,
     CsvExportModule,
     ExcelExportModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const SportRenderer = defineComponent({

@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     ClientSideRowModelModule,
     CellSelectionModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const daysList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

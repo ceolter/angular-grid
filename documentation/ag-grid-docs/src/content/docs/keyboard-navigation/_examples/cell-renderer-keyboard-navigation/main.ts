@@ -9,11 +9,7 @@ import {
 
 import { CustomElements } from './customElements_typescript';
 
-ModuleRegistry.registerModules([
-    TextFilterModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */
-]);
+ModuleRegistry.registerModules([TextFilterModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const GRID_CELL_CLASSNAME = 'ag-cell';
 

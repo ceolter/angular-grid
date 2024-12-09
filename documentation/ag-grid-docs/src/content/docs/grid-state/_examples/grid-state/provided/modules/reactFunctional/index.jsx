@@ -32,7 +32,7 @@ ModuleRegistry.registerModules([
     SetFilterModule,
     CellSelectionModule,
     PivotModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

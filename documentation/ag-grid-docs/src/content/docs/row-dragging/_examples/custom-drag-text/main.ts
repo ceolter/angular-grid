@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     NumberFilterModule,
     RowDragModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const rowDragText = function (params: IRowDragItem) {

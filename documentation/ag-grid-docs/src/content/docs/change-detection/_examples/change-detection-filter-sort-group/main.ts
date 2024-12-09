@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     NumberFilterModule,
     TextEditorModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

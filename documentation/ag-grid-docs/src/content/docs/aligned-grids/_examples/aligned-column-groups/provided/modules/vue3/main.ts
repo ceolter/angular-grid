@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     AlignedGridsModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = defineComponent({

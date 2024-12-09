@@ -10,7 +10,7 @@ import {
 ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     PinnedRowModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     NumberEditorModule,
     TextEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

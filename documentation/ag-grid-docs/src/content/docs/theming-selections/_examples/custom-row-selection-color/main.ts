@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([
     RowSelectionModule,
     RowApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const myTheme = themeQuartz.withParams({

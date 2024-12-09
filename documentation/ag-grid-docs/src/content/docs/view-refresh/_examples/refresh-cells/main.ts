@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     PinnedRowModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 // placing in 13 rows, so there are exactly enough rows to fill the grid, makes

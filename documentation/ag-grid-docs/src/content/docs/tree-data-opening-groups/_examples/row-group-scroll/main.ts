@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     TreeDataModule,
     TextFilterModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
     AlignedGridsModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColGroupDef[] = [

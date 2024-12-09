@@ -62,7 +62,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class NodeIdRenderer implements ICellRendererComp {

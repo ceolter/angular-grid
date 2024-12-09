@@ -32,7 +32,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     PivotModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const myTheme = themeQuartz.withPart(inputStyleUnderlined);

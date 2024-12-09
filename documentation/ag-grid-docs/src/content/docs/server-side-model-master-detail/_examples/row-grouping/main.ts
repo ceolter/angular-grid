@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

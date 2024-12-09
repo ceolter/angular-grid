@@ -1,3 +1,5 @@
+import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
+
 import {
     CellDoubleClickedEvent,
     CellKeyDownEvent,
@@ -8,15 +10,13 @@ import {
     ModuleRegistry,
     ValidationModule,
 } from 'ag-grid-community';
-
 import { RowGroupingModule } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
-import { createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
 
 import CustomGroupCellRenderer from './customGroupCellRenderer';
 import './styles.css';
 
-ModuleRegistry.registerModules([RowGroupingModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([RowGroupingModule, ValidationModule /* Development Only */]);
 
 const VueExample = defineComponent({
     template: `

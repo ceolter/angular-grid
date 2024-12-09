@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     RowDragModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let rowIdSequence = 100;

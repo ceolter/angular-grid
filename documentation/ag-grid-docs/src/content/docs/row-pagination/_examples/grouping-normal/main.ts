@@ -20,7 +20,7 @@ ModuleRegistry.registerModules([
     PaginationModule,
     ClientSideRowModelModule,
     RowGroupingModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

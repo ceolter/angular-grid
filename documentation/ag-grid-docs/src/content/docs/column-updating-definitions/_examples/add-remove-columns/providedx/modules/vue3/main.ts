@@ -1,11 +1,11 @@
+import { createApp } from 'vue';
+
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { createApp } from 'vue';
-
 import './styles.css';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule/* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const colDefsMedalsIncluded = [
     { field: 'athlete' },

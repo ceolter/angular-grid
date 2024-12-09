@@ -1,12 +1,7 @@
 import React, { StrictMode, useCallback, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-    ClientSideRowModelModule,
-    ColumnAutoSizeModule,
-    ModuleRegistry,
-    ValidationModule,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, ColumnAutoSizeModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
 import './styles.css';
@@ -14,7 +9,7 @@ import './styles.css';
 ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefinitions = [{ field: 'athlete' }, { field: 'age' }, { field: 'country' }, { field: 'sport' }];

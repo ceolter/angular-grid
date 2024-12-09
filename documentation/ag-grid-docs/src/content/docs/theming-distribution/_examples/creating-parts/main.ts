@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     RowSelectionModule,
     GridStateModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const myCheckboxStyle = createPart({

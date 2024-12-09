@@ -13,11 +13,7 @@ import { CustomButtonComponent } from './customButtonComponent_typescript';
 import { MissionResultRenderer } from './missionResultRenderer_typescript';
 import { PriceRenderer } from './priceRenderer_typescript';
 
-ModuleRegistry.registerModules([
-    CellStyleModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */
-]);
+ModuleRegistry.registerModules([CellStyleModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 // Grid API: Access to Grid API methods
 let gridApi: GridApi;

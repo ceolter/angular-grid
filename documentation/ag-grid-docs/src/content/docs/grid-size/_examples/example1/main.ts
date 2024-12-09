@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     ColumnApiModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IOlympicData>;

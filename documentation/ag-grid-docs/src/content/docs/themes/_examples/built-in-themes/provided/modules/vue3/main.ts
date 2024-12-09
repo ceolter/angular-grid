@@ -1,3 +1,5 @@
+import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
+
 import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
@@ -18,8 +20,6 @@ import {
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
 
-import { computed, createApp, defineComponent, onBeforeMount, ref, shallowRef } from 'vue';
-
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
@@ -29,7 +29,7 @@ ModuleRegistry.registerModules([
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const VueExample = defineComponent({

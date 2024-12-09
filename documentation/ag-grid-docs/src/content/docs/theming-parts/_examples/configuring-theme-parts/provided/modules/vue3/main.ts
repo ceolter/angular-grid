@@ -1,5 +1,6 @@
-import type { ColDef } from 'ag-grid-community';
+import { computed, createApp, defineComponent, ref } from 'vue';
 
+import type { ColDef } from 'ag-grid-community';
 import {
     ModuleRegistry,
     TextEditorModule,
@@ -29,7 +30,6 @@ import {
     SideBarModule,
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
-import { computed, createApp, defineComponent, ref } from 'vue';
 
 ModuleRegistry.registerModules([
     TextEditorModule,
@@ -40,7 +40,7 @@ ModuleRegistry.registerModules([
     ExcelExportModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const baseThemes = [

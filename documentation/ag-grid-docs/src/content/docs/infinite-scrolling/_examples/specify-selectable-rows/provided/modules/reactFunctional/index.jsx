@@ -1,19 +1,10 @@
 import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import {
-    InfiniteRowModelModule,
-    ModuleRegistry,
-    RowSelectionModule,
-    ValidationModule,
-} from 'ag-grid-community';
+import { InfiniteRowModelModule, ModuleRegistry, RowSelectionModule, ValidationModule } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([
-    RowSelectionModule,
-    InfiniteRowModelModule,
-    ValidationModule /* Development Only */
-]);
+ModuleRegistry.registerModules([RowSelectionModule, InfiniteRowModelModule, ValidationModule /* Development Only */]);
 
 const rowSelection = {
     mode: 'multiRow',

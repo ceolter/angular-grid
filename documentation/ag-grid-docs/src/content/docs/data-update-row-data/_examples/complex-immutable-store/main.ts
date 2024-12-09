@@ -29,7 +29,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     TextFilterModule,
     NumberFilterModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const MIN_BOOK_COUNT = 10;

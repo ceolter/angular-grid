@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     ColumnApiModule,
     ClientSideRowModelModule,
     PivotModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 function getColumnDefs(): ColDef[] {

@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     RowGroupingPanelModule,
     HighlightChangesModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const UPDATE_COUNT = 20;

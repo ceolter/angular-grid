@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 @Component({
     standalone: true,

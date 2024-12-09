@@ -1,7 +1,7 @@
-import type { ColDef, GridReadyEvent } from 'ag-grid-community';
-
-import { AgGridVue } from 'ag-grid-vue3';
 import { createApp, defineComponent } from 'vue';
+
+import type { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { AgGridVue } from 'ag-grid-vue3';
 
 export default defineComponent({
     template: `

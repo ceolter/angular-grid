@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     CellStyleModule,
     ViewportRowModelModule,
     HighlightChangesModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class RowIndexRenderer implements ICellRendererComp {

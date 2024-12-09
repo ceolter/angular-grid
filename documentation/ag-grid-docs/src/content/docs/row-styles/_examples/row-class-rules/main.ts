@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     RowApiModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

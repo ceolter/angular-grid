@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     ClientSideRowModelModule,
     RichSelectModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const languages = ['English', 'Spanish', 'French', 'Portuguese', '(other)'];

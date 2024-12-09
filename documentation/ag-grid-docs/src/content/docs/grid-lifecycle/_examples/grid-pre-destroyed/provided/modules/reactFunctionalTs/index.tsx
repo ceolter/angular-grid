@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([
     ColumnApiModule,
     TextEditorModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 interface ColumnWidth {

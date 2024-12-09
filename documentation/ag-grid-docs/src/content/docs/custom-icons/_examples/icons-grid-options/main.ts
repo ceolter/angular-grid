@@ -28,7 +28,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const myIcons = {

@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     CsvExportModule,
     ExcelExportModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const SportRenderer = (props) => {

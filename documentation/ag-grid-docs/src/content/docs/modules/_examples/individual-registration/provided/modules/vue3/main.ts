@@ -1,5 +1,6 @@
-import type { ColDef } from 'ag-grid-community';
+import { createApp, defineComponent } from 'vue';
 
+import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     CsvExportModule,
@@ -16,7 +17,6 @@ import {
     SetFilterModule,
 } from 'ag-grid-enterprise';
 import { AgGridVue } from 'ag-grid-vue3';
-import { createApp, defineComponent } from 'vue';
 
 import './styles.css';
 
@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnMenuModule,
     ContextMenuModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let rowIdSequence = 100;

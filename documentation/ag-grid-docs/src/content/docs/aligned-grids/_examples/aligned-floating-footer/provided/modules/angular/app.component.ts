@@ -21,7 +21,7 @@ ModuleRegistry.registerModules([
     ColumnAutoSizeModule,
     RowStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

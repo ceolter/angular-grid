@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     CellStyleModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 function formatNumber(number: number) {

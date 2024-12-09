@@ -8,7 +8,7 @@ ModuleRegistry.registerModules([
     HighlightChangesModule,
     RowGroupingModule,
     ServerSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let versionCounter: number = 0;

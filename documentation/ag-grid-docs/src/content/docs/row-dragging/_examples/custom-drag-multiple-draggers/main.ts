@@ -16,7 +16,7 @@ ModuleRegistry.registerModules([
     RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const athleteRowDragTextCallback = function (params: IRowDragItem, dragItemCount: number) {

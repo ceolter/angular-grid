@@ -2,12 +2,7 @@ import React, { StrictMode, useCallback, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import type { ColDef, GridReadyEvent, IMultiFilterParams } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    NumberFilterModule,
-    ValidationModule,
-} from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, NumberFilterModule, ValidationModule } from 'ag-grid-community';
 import {
     ClipboardModule,
     ColumnMenuModule,
@@ -32,7 +27,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     ClipboardModule,
     FiltersToolPanelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const GridExample = () => {

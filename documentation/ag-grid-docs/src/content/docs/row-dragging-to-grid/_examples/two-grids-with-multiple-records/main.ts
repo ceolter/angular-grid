@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     RowDragModule,
     RowSelectionModule,
     ClientSideRowModelModule,
-    ValidationModule/* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 class SportRenderer implements ICellRendererComp {

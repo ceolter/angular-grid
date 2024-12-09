@@ -35,7 +35,7 @@ ModuleRegistry.registerModules([
     RowGroupingModule,
     SetFilterModule,
     FiltersToolPanelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 @Component({

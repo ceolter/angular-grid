@@ -1,20 +1,11 @@
-import {
-    ClientSideRowModelModule,
-    ColumnApiModule,
-    ModuleRegistry,
-    ValidationModule,
-} from 'ag-grid-community';
-import { AgGridVue } from 'ag-grid-vue3';
-
 import { createApp } from 'vue';
+
+import { ClientSideRowModelModule, ColumnApiModule, ModuleRegistry, ValidationModule } from 'ag-grid-community';
+import { AgGridVue } from 'ag-grid-vue3';
 
 import './styles.css';
 
-ModuleRegistry.registerModules([
-    ColumnApiModule,
-    ClientSideRowModelModule,
-    ValidationModule/* Development Only */
-]);
+ModuleRegistry.registerModules([ColumnApiModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
 
 const VueExample = {
     template: `

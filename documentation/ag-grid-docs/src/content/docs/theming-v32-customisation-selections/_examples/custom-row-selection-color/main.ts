@@ -20,7 +20,7 @@ ModuleRegistry.registerModules([
     NumberFilterModule,
     RowSelectionModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [

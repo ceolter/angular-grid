@@ -26,7 +26,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     TextEditorModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi;

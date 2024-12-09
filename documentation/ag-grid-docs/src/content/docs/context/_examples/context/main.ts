@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     RenderApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const gbpFormatter = new Intl.NumberFormat('en-US', {

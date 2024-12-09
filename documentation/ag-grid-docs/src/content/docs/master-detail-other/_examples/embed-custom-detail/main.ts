@@ -14,7 +14,7 @@ ModuleRegistry.registerModules([
     RowApiModule,
     ClientSideRowModelModule,
     MasterDetailModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 let gridApi: GridApi<IAccount>;

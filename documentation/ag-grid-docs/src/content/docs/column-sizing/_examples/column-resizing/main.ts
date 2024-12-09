@@ -12,7 +12,7 @@ ModuleRegistry.registerModules([
     ColumnApiModule,
     ColumnAutoSizeModule,
     ClientSideRowModelModule,
-    ValidationModule /* Development Only */
+    ValidationModule /* Development Only */,
 ]);
 
 const columnDefs: ColDef[] = [
