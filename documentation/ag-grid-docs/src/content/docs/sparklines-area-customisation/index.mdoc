@@ -23,13 +23,25 @@ sparklineOptions: {
     type: 'area',
     fill: 'rgba(216, 204, 235, 0.3)',
     stroke: 'rgb(119,77,185)',
+    marker: {
+        enabled: true,
+        size: 0,
+        itemStyler: (params: any) => {
+            if (params.highlighted) {
+                return {
+                    size: 4
+                };
+            }
+        }
+    },
     highlightStyle: {
         item: {
-            fill: 'rgb(143,185,77)',
+            fill: 'rgb(143,185,77)'
         }
     },
     axis: {
-        stroke: 'rgb(204, 204, 235)',
+        type: 'category',
+        stroke: 'rgb(204, 204, 235)'
     }
 }
 ```
@@ -214,7 +226,7 @@ More advanced customisations are discussed separately in the following sections:
 
 * [Axis](./sparklines-axis-types/) - configure the axis type via `axis` options.
 * [Tooltips](./sparklines-tooltips/) - configure tooltips using `tooltip` options.
-* [Points of Interest](./sparklines-points-of-interest/) - configure individual points of interest using a `formatter`.
+* [Points of Interest](./sparklines-points-of-interest/) - configure individual points of interest using a `itemStyler`.
 
 ## Next Up
 

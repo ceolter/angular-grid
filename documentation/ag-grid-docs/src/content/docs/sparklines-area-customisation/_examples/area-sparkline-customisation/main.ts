@@ -33,10 +33,15 @@ const gridOptions: GridOptions = {
                         itemStyler: (params: any) => {
                             if (params.highlighted) {
                                 return {
-                                    size: 4,
-                                    fill: 'rgb(143,185,77)',
+                                    size: 7,
                                 };
                             }
+                        },
+                    },
+                    highlightStyle: {
+                        item: {
+                            fill: 'rgb(143,185,77)',
+                            strokeWidth: 0,
                         },
                     },
                     axis: {

@@ -391,7 +391,7 @@ The following example shows how to build progress bars using bar sparklines. Not
   additional bars in the same sparkline.
 * `min` and `max` properties have been set to `0` and `100`, indicating that the supplied data across all sparklines will contain values from `0` to `100`.
 * This allows easy comparisons of percentages across the different sparklines in the grid column as all sparklines will have the same domain.
-* The `formatter` callback function is used to dynamically set the fill color of each progress bar to different color values based on the data `yValue` .
+* The `itemStyler` callback function is used to dynamically set the fill color of each progress bar to different color values based on the data `yValue` .
 * Percentage Y values are displayed on the inside end of each bar by configuring `label` options.
 * The axis line and padding are removed to allow more space in each cell for the progress bar.
 
@@ -403,7 +403,7 @@ More advanced customisations are discussed separately in the following sections:
 
 * [Axis](./sparklines-axis-types/) - configure the axis type via `axis` options.
 * [Tooltips](./sparklines-tooltips/) - configure tooltips using `tooltip` options.
-* [Points of Interest](./sparklines-points-of-interest/) - configure individual points of interest using a `formatter`.
+* [Points of Interest](./sparklines-points-of-interest/) - configure individual points of interest using a `itemStyler`.
 
 ## Next Up
 

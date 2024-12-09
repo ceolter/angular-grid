@@ -34,9 +34,14 @@ const gridOptions: GridOptions = {
                             if (params.highlighted) {
                                 return {
                                     size: 7,
-                                    fill: 'rgb(124, 255, 178)',
                                 };
                             }
+                        },
+                    },
+                    highlightStyle: {
+                        item: {
+                            fill: 'rgb(124, 255, 178)',
+                            strokeWidth: 0,
                         },
                     },
                     padding: {
