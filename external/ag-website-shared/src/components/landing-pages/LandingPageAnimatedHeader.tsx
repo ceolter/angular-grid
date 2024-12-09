@@ -9,25 +9,15 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
     const [noTransitions, setNoTransitions] = useState(false);
 
     useEffect(() => {
-        const advanceWord = () => {
-            if (wordIndex > 3) {
-                setNoTransitions(true);
-                setWordIndex(0);
-            } else {
-                setNoTransitions(false);
-                setWordIndex(wordIndex + 1);
-            }
-        };
+        const delayMs = wordIndex === 0 ? 2000 : 1500;
 
-        //Implementing the setInterval method
-        const interval = setInterval(() => {
-            advanceWord();
+        const timeout = setTimeout(() => {
+            const nextWordIndex = (wordIndex + 1) % 5;
+            setNoTransitions(nextWordIndex === 0);
+            setWordIndex(nextWordIndex);
+        }, delayMs);
 
-            if (wordIndex === 0) advanceWord();
-        }, 666);
-
-        //Clearing the interval
-        return () => clearInterval(interval);
+        return () => clearTimeout(timeout);
     }, [wordIndex]);
 
     return (
@@ -35,8 +25,8 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
             <span className={styles.topLine}>
                 The Best
                 <span
-                    className={classnames(styles.animatedWordsOuter, { ['no-transitions']: noTransitions })}
-                    style={{ ['--word-index']: wordIndex }}
+                    className={classnames(styles.animatedWordsOuter, { 'no-transitions': noTransitions })}
+                    style={{ '--word-index': wordIndex }}
                 >
                     <span className={styles.animatedWordsInner}>
                         <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>

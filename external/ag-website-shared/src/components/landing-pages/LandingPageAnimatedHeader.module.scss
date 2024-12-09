@@ -24,12 +24,43 @@
     bottom: 0;
     left: 0;
     flex-direction: column;
-    transform: translateY(calc(var(--word-height) * var(--word-index)));
-    transition: transform 0.33s ease-in-out;
+    transform: translateY(calc(var(--word-height) * var(--word-index) * 1.5));
+    transition: transform 0.3s
+        linear(
+            0,
+            0.2,
+            0.5,
+            0.8,
+            1.1,
+            1.3,
+            1.36,
+            1.367,
+            1.31,
+            1.21,
+            1.1,
+            1,
+            0.93,
+            0.88,
+            0.87,
+            0.88,
+            0.91,
+            0.95,
+            0.99,
+            1.02,
+            1.04,
+            1.046,
+            1.044,
+            1.035,
+            1.02,
+            1.01,
+            1,
+            1 100% 100%
+        );
 }
 
 .animatedWord {
-    height: var(--word-height);
+    height: calc(var(--word-height) * 1.5);
+    padding-top: calc(var(--word-height) * 0.5);
     min-width: 7.5ch;
 }
 
