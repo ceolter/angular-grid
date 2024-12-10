@@ -3,6 +3,8 @@ import { basename } from 'path';
 import type { ExampleConfig, ParsedBindings } from '../types';
 import { templatePlaceholder } from './grid-vanilla-src-parser';
 import {
+    DARK_INTEGRATED_END,
+    DARK_INTEGRATED_START,
     addBindingImports,
     addGenericInterfaceImport,
     addLicenseManager,
@@ -188,11 +190,36 @@ export function vanillaToReactFunctionalTs(
         }
 
         let extraCoreTypes = [];
+        let darkModeWithGridRef = undefined;
         if (additionalInReady.length > 0) {
             extraCoreTypes = ['GridReadyEvent'];
+        } else {
+            // We need to check if we need to add integrated dark mode code for and example that does not have data or onGridReady
+            darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, true, 'gridRef.current?.api?');
         }
 
         const imports = getImports(bindings, exampleConfig, componentFilenames, extraCoreTypes, allStylesheets);
+
+        if (bindings.exampleName.includes('sparklines')) {
+            // TEMPORARY ONLY APPLY TO SPARKLINES EXAMPLES
+
+            const reactImportIdx = imports.findIndex((i) => i.includes('useState'));
+            if (darkModeWithGridRef) {
+                // wrap in useEffect
+                darkModeWithGridRef = darkModeWithGridRef.replace(
+                    DARK_INTEGRATED_START,
+                    `${DARK_INTEGRATED_START} const [tick, setTick] = useState(0);\nuseEffect(() => { setTick(1); `
+                );
+                darkModeWithGridRef = darkModeWithGridRef.replace(
+                    DARK_INTEGRATED_END,
+                    `}, [gridRef.current]); ${DARK_INTEGRATED_END}`
+                );
+
+                if (!imports[reactImportIdx].includes('useEffect')) {
+                    imports[reactImportIdx] = imports[reactImportIdx].replace('useState', 'useState, useEffect');
+                }
+            }
+        }
 
         const components: { [componentName: string]: string } = extractComponentInformation(
             properties,
@@ -334,7 +361,7 @@ const GridExample = () => {
     ${gridRefHook}
     ${stateProperties.join('\n    ')}
 
-${gridReady}
+${gridReady}${darkModeWithGridRef ? '\n' + darkModeWithGridRef : ''}
 
 ${[].concat(eventHandlers, externalEventHandlers, instanceMethods).join('\n\n   ')}
 

@@ -3,6 +3,8 @@ import { basename } from 'path';
 import type { ExampleConfig, ParsedBindings } from '../types';
 import { templatePlaceholder } from './grid-vanilla-src-parser';
 import {
+    DARK_INTEGRATED_END,
+    DARK_INTEGRATED_START,
     addBindingImports,
     addLicenseManager,
     addRelativeImports,
@@ -248,10 +250,36 @@ export function vanillaToReactFunctional(
         const componentEventAttributes = bindings.eventHandlers.map(
             (event) => `${event.handlerName}={${event.handlerName}}`
         );
+
+        let darkModeWithGridRef = undefined;
         if (additionalInReady.length > 0) {
             componentProps.push('onGridReady={onGridReady}');
+        } else {
+            // We need to check if we need to add integrated dark mode code for and example that does not have data or onGridReady
+            darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, true, 'gridRef.current?.api?');
         }
         componentProps.push(...componentEventAttributes);
+
+        if (bindings.exampleName.includes('sparklines')) {
+            // TEMPORARY ONLY APPLY TO SPARKLINES EXAMPLES
+
+            const reactImportIdx = imports.findIndex((i) => i.includes('useState'));
+            if (darkModeWithGridRef) {
+                // wrap in useEffect
+                darkModeWithGridRef = darkModeWithGridRef.replace(
+                    DARK_INTEGRATED_START,
+                    `${DARK_INTEGRATED_START} const [tick, setTick] = useState(0);\nuseEffect(() => { setTick(1); `
+                );
+                darkModeWithGridRef = darkModeWithGridRef.replace(
+                    DARK_INTEGRATED_END,
+                    `}, [gridRef.current]); ${DARK_INTEGRATED_END}`
+                );
+
+                if (!imports[reactImportIdx].includes('useEffect')) {
+                    imports[reactImportIdx] = imports[reactImportIdx].replace('useState', 'useState, useEffect');
+                }
+            }
+        }
 
         // convert this.xxx to just xxx
         // no real need for "this" in hooks
