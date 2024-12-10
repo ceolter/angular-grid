@@ -78,8 +78,8 @@ The `'number'` cell data type is used for `number` values.
 The following properties are set:
 
 * The [Number Cell Editor](./provided-cell-editors-number/) is used for editing.
-* For AG Grid Community, the [Number Filter](./filter-number/) is used.
-* For AG Grid Enterprise, `filterParams.comparator` is set to [Sort the Filter List](./filter-set-filter-list/#sorting-filter-lists).
+* When the [Set Filter is Disabled](./filter-set/#enabling-set-filters), the [Number Filter](./filter-number/) is used.
+* When the [Set Filter is Enabled](./filter-set/#enabling-set-filters), `filterParams.comparator` is set to [Sort the Filter List](./filter-set-filter-list/#sorting-filter-lists).
 
 To show only a certain number of decimal places, you can [Override the Pre-Defined Cell Data Type Definition](#overriding-the-pre-defined-cell-data-type-definitions) and provide your own Value Formatter. It is also possible to control the number of decimal places allowed during editing, by providing a precision to the [Number Cell Editor](./provided-cell-editors-number/).
 
@@ -92,8 +92,8 @@ The following properties are set:
 * The Checkbox Cell Renderer is used for rendering, which displays a checkbox. Set `cellRendererParams.disabled=true` for the checkbox to be read only.
 * The [Checkbox Cell Editor](./provided-cell-editors-checkbox/) is used for editing (similar to the renderer).
 * `suppressKeyboardEvent` is set to enable the {% kbd "␣ Space" /%} key to toggle the renderer value.
-* For AG Grid Community, the [Text Filter](./filter-text/) is used, and `filterParams` is set to display a single dropdown with `'True'`/`'False'` (or equivalents with [Localisation](./localisation/)).
-* For AG Grid Enterprise, `filterParams.valueFormatter` is set to show `'True'`/`'False'` (or equivalents with [Localisation](./localisation/)).
+* When the [Set Filter is Disabled](./filter-set/#enabling-set-filters), the [Text Filter](./filter-text/) is used, and `filterParams` is set to display a single dropdown with `'True'`/`'False'` (or equivalents with [Localisation](./localisation/)).
+* When the [Set Filter is Enabled](./filter-set/#enabling-set-filters), `filterParams.valueFormatter` is set to show `'True'`/`'False'` (or equivalents with [Localisation](./localisation/)).
 
 ### Date
 
@@ -104,7 +104,7 @@ The default Value Parser and Value Formatter use the ISO string format `'yyyy-mm
 The following properties are set:
 
 * The [Date Cell Editor](./provided-cell-editors-date/) is used for editing.
-* For AG Grid Enterprise, the [Set Filter Tree List](./filter-set-tree-list/) is enabled, and the [Values are Formatted](./filter-set-tree-list/#formatting-values) by setting `filterParams.treeListFormatter` to convert the months to names and `filterParams.valueFormatter` to format the Floating Filter values using the Value Formatter.
+* When the [Set Filter is Enabled](./filter-set/#enabling-set-filters), the [Set Filter Tree List](./filter-set-tree-list/) is enabled, and the [Values are Formatted](./filter-set-tree-list/#formatting-values) by setting `filterParams.treeListFormatter` to convert the months to names and `filterParams.valueFormatter` to format the Floating Filter values using the Value Formatter.
 
 ### Date as String
 
@@ -115,8 +115,8 @@ This data type uses the ISO string format `'yyyy-mm-dd'`. If you wish to use a d
 The following properties are set:
 
 * The [Date as String Cell Editor](./provided-cell-editors-date/#enabling-date-as-string-cell-editor) is used for editing.
-* For AG Grid Community, the [Date Filter](./filter-text/) is used, and `filterParams.comparator` is set to parse the `string` date values.
-* For AG Grid Enterprise, the [Set Filter Tree List](./filter-set-tree-list/) is enabled, with `filterParams.treeListPathGetter` set to convert the `string` date values into paths, and the [Values are Formatted](./filter-set-tree-list/#formatting-values) by setting `filterParams.treeListFormatter` to convert the months to names and `filterParams.valueFormatter` to format the Floating Filter values using the Value Formatter.
+* When the [Set Filter is Disabled](./filter-set/#enabling-set-filters), the [Date Filter](./filter-text/) is used, and `filterParams.comparator` is set to parse the `string` date values.
+* When the [Set Filter is Enabled](./filter-set/#enabling-set-filters), the [Set Filter Tree List](./filter-set-tree-list/) is enabled, with `filterParams.treeListPathGetter` set to convert the `string` date values into paths, and the [Values are Formatted](./filter-set-tree-list/#formatting-values) by setting `filterParams.treeListFormatter` to convert the months to names and `filterParams.valueFormatter` to format the Floating Filter values using the Value Formatter.
 
 ### Object
 
@@ -132,8 +132,8 @@ The following properties are set:
 
 * `cellEditorParams.useFormatter = true` so that the cell editor uses the Value Formatter.
 * A `comparator` is defined to allow [Custom Sorting](./row-sorting/#custom-sorting) using the Value Formatter.
-* For AG Grid Community, a [Filter Value Getter](./column-properties/#reference-filtering-filterValueGetter) is used to convert the value with the Value Formatter.
-* For AG Grid Enterprise, `filterParams.valueFormatter` is set to format the values using the Value Formatter.
+* When the [Set Filter is Disabled](./filter-set/#enabling-set-filters), a [Filter Value Getter](./column-properties/#reference-filtering-filterValueGetter) is used to convert the value with the Value Formatter.
+* When the [Set Filter is Enabled](./filter-set/#enabling-set-filters), `filterParams.valueFormatter` is set to format the values using the Value Formatter.
 
 ### Pre-Defined Cell Data Type Example
 
