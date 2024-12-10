@@ -109,17 +109,6 @@
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-/* We rely on line-height to centre text in a cell, which only works if there's
-   text in it but does not work for element children like images, so add a min
-   height if there's an element child. This :has(*) selector targets containers
-   that have children, but unlike :not(:empty), it will not consider a textNode
-   as child, so it will not target <button>Hello</button> as a target for
-   example.
-*/
-:where(.ag-cell:not(.ag-cell-auto-height) > :has(*)) {
-    min-height: calc(var(--ag-internal-content-line-height) - 2px);
-}
-
 .ag-cell {
     border-right: var(--ag-column-border);
 }

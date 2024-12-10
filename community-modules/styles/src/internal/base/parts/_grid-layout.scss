@@ -204,10 +204,6 @@
         -webkit-font-smoothing: subpixel-antialiased;
     }
 
-    .ag-cell:not(.ag-cell-auto-height) > :has(*) {
-        min-height: calc(min(var(--ag-row-height), var(--ag-internal-calculated-line-height)) - 2px);
-    }
-
     // in full width rows, a cell renderer is rendered directly into a row with no cell in between,
     // in which case we need to apply the padding to the cell renderer's wrapper.
     .ag-row > .ag-cell-wrapper {
