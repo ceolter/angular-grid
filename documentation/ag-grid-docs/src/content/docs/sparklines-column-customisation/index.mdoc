@@ -281,33 +281,35 @@ sparklineOptions: {
     direction: 'vertical',
     label: {
         enabled: true,
-        placement: 'center', // positions the labels in the center of the columns
+        placement: 'inside-center', // positions the labels in the center of the columns
     }
 }
 ```
 
-Label `placement` options include `insideBase`, `center`, `insideEnd` and `outsideEnd`. These are shown in the screenshots below.
+Label `placement` options include `inside-center`, `inside-start`, `inside-end`, `outside-start` or `outside-end` from the [AG Charts Label Options](https://www.ag-grid.com/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement) documentation.
+These are shown in the screenshots below.
 
 {% flex justifyContent="center" %}
-{% imageCaption imagePath="resources/custom-label-placement-insideBase.png" alt="Column label insideBase placement" constrained=true width="250px" enableDarkModeFilter=true %}
-insideBase
+{% imageCaption imagePath="resources/custom-label-placement-inside-start.png" alt="Bar label inside-start placement" constrained=true width="250px" enableDarkModeFilter=true %}
+inside-start
 {% /imageCaption %}
-{% imageCaption imagePath="resources/custom-label-placement-center.png" alt="Column label center placement" constrained=true width="250px" enableDarkModeFilter=true %}
-center
+{% imageCaption imagePath="resources/custom-label-placement-inside-center.png" alt="Bar label inside-center placement" constrained=true width="250px" enableDarkModeFilter=true %}
+inside-center
 {% /imageCaption %}
 {% /flex %}
 
 {% flex justifyContent="center" %}
-{% imageCaption imagePath="resources/custom-label-placement-insideEnd.png" alt="Column label insideEnd placement" constrained=true width="250px" enableDarkModeFilter=true %}
-insideEnd
+{% imageCaption imagePath="resources/custom-label-placement-inside-end.png" alt="Bar label inside-end placement" constrained=true width="250px" enableDarkModeFilter=true %}
+inside-end
 {% /imageCaption %}
-{% imageCaption imagePath="resources/custom-label-placement-outsideEnd.png" alt="Column label placement default" constrained=true width="250px" enableDarkModeFilter=true %}
-outsideEnd
+{% imageCaption imagePath="resources/custom-label-placement-outside-end.png" alt="Bar label outside-end placement" constrained=true width="250px" enableDarkModeFilter=true %}
+outside-end
 {% /imageCaption %}
 {% /flex %}
 
 {% note %}
-When configuring labels with placement:`outsideEnd`, it is recommended to add some padding to the sparkline using the `padding` options in order to prevent the labels from being clipped.
+When configuring labels with placement: `outside-end` or `outside-start`, it is recommended to add some padding to the sparkline using the `padding` options in order to prevent the
+labels from being clipped.
 {% /note %}
 
 ## Axis Line Options
