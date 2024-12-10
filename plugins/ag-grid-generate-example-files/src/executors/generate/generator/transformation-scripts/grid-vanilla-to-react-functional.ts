@@ -331,7 +331,7 @@ const GridExample = () => {
     const gridRef = useRef();
     ${stateProperties.join('\n    ')}
 
-${gridReady}
+${gridReady}${darkModeWithGridRef ? '\n' + darkModeWithGridRef : ''}
 
 ${[].concat(eventHandlers, externalEventHandlers, instanceMethods).join('\n\n   ')}
 
