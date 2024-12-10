@@ -42,9 +42,8 @@ export class ReadOnlyFloatingFilter extends Component implements IFloatingFilter
             // however that is not possible, as React Hooks and VueJS don't attached the methods to the Filter until
             // AFTER the filter is created, not allowing inspection before this (we create floating filters as columns
             // are drawn, but the parent filters are only created when needed).
-            const getModelAsString = filterInstance.getModelAsString;
-            if (getModelAsString) {
-                const modelAsString = getModelAsString(parentModel);
+            if (filterInstance.getModelAsString) {
+                const modelAsString = filterInstance.getModelAsString(parentModel);
                 this.eFloatingFilterText.setValue(modelAsString);
             }
         });
