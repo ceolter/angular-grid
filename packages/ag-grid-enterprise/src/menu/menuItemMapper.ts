@@ -158,7 +158,7 @@ export class MenuItemMapper extends BeanStub implements NamedBean {
                           }
                         : null;
                 case 'rowUnGroup': {
-                    if (rowGroupColsSvc) {
+                    if (rowGroupColsSvc && gos.isModuleRegistered('SharedRowGrouping')) {
                         const showRowGroup = column?.getColDef().showRowGroup;
                         const lockedGroups = gos.get('groupLockGroupColumns');
                         let name: string;

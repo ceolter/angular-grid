@@ -156,7 +156,7 @@ export class ColumnMenuFactory extends BeanStub implements NamedBean {
             result.push(MENU_ITEM_SEPARATOR);
         }
 
-        if (rowGroupColsSvc) {
+        if (rowGroupColsSvc && gos.isModuleRegistered('SharedRowGrouping')) {
             const numItems = result.length;
             const showRowGroup = colDef.showRowGroup;
             if (showRowGroup) {
