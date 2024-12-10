@@ -139,9 +139,6 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         cellSelection: {
             module: 'CellSelection',
-            dependencies: {
-                rowDragEntireRow: { required: [false, undefined] },
-            },
         },
         columnHoverHighlight: { module: 'ColumnHover' },
         datasource: {
@@ -437,6 +434,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         viewportRowModelPageSize: {
             validate({ viewportRowModelPageSize }) {
                 return toConstrainedNum('viewportRowModelPageSize', viewportRowModelPageSize, 1);
+            },
+        },
+        rowDragEntireRow: {
+            dependencies: {
+                cellSelection: { required: [undefined] },
             },
         },
     };
