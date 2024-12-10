@@ -75,7 +75,10 @@ const headings = errorPage
       ).concat(fullErrorTextHeading)
     : [topHeading, fullErrorTextHeading];
 const isArchive = getIsArchive();
-const migrationUrl = pathJoin(PRODUCTION_GRID_SITE_URL, '/documentation');
+const migrationUrl = pathJoin(
+    PRODUCTION_GRID_SITE_URL,
+    `/archive/33.0.0/${framework}-data-grid/upgrading-to-ag-grid-33/`
+);
 ---
 
 <Layout title={title} description={description} showSearchBar={true} showDocsNav={true}>
