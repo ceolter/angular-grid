@@ -13,7 +13,9 @@ function getOpenGroup({ menuData, pageName }: { menuData?: any; pageName: string
 
     function childrenHasPage({ group, children, pageName }) {
         children.forEach((child) => {
-            if (child.path === pageName) {
+            const hasPathMatch = (child.childPaths && child.childPaths.includes(pageName)) || child.path === pageName;
+
+            if (hasPathMatch) {
                 openGroup = group;
                 return;
             }
@@ -45,7 +47,7 @@ function Item({ itemData, framework, pageName }: { itemData?: any; framework: Fr
         : itemData.frameworks.filter((f) => {
               return f === framework;
           }).length > 0;
-    const isActive = pageName === itemData.path;
+    const isActive = (itemData.childPaths && itemData.childPaths.includes(pageName)) || pageName === itemData.path;
 
     const className = classnames(styles.item, itemData.icon ? styles.hasIcon : '', isActive ? styles.isActive : '');
 

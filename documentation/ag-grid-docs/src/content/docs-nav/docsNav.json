@@ -180,7 +180,27 @@
                         {
                             "type": "item",
                             "title": "Legacy Themes",
-                            "path": "theming-v32"
+                            "path": "theming-v32",
+                            "childPaths": [
+                                "theming-v32-custom-icons",
+                                "theming-v32-customisation",
+                                "theming-v32-customisation-borders",
+                                "theming-v32-customisation-colours",
+                                "theming-v32-customisation-compactness",
+                                "theming-v32-customisation-css",
+                                "theming-v32-customisation-headers",
+                                "theming-v32-customisation-popups",
+                                "theming-v32-customisation-sass",
+                                "theming-v32-customisation-sass-legacy",
+                                "theming-v32-customisation-selections",
+                                "theming-v32-customisation-tool-panels",
+                                "theming-v32-customisation-variables",
+                                "theming-v32-customisation-widgets",
+                                "theming-v32-themes",
+                                "theming-v32-upgrading-to-v28",
+                                "theming-v32-upgrading-to-v28-css",
+                                "theming-v32-upgrading-to-v28-sass"
+                            ]
                         }
                     ]
                 },

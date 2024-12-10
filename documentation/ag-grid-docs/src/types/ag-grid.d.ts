@@ -13,6 +13,7 @@ export type Library = 'charts' | 'grid';
  * Replicates Astro content validation in `src/content/config.ts`
  */
 export type MenuData = CollectionEntry<'menu'>['data'];
+
 export interface MenuSection {
     title?: string;
     excludeFromFeatures?: boolean;
@@ -21,6 +22,7 @@ export interface MenuSection {
     type?: 'whats-new';
     path?: string;
 }
+
 export interface MenuItem {
     title: string;
     path?: string;
@@ -30,6 +32,7 @@ export interface MenuItem {
     frameworks?: Framework[];
     isEnterprise?: boolean;
     items?: MenuItem[];
+    childPaths?: string[];
 }
 
 export interface FooterItem {
