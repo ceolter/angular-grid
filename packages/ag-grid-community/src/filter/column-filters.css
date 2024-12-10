@@ -90,12 +90,16 @@
 }
 
 .ag-filter-loading {
-    background-color: var(--ag-menu-background-color);
+    background-color: var(--ag-chrome-background-color);
     height: 100%;
     padding: var(--ag-widget-container-vertical-padding) var(--ag-widget-container-horizontal-padding);
     position: absolute;
     width: 100%;
     z-index: 1;
+
+    :where(.ag-menu) & {
+        background-color: var(--ag-menu-background-color);
+    }
 }
 
 .ag-filter-separator {
