@@ -39,11 +39,11 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
                     style={{ ['--word-index']: wordIndex }}
                 >
                     <span className={styles.animatedWordsInner}>
-                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
-                        <span className={classnames(styles.animatedWord, styles.vue)}>Vue</span>
-                        <span className={classnames(styles.animatedWord, styles.angular)}>Angular</span>
-                        <span className={classnames(styles.animatedWord, styles.react)}>React</span>
-                        <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
+                        <span className={styles.animatedWord}>Javascript</span>
+                        <span className={styles.animatedWord}>Vue</span>
+                        <span className={styles.animatedWord}>Angular</span>
+                        <span className={styles.animatedWord}>React</span>
+                        <span className={styles.animatedWord}>Javascript</span>
                     </span>
                 </span>
             </span>
