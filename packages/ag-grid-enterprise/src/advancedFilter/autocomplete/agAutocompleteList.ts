@@ -181,11 +181,11 @@ export class AgAutocompleteList extends PopupComponent {
     }
 
     private onMouseMove(mouseEvent: MouseEvent): void {
-        const { getGui, getScrollTop, getRowHeight } = this.virtualList;
-        const rect = getGui().getBoundingClientRect();
-        const scrollTop = getScrollTop();
+        const virtualList = this.virtualList;
+        const rect = virtualList.getGui().getBoundingClientRect();
+        const scrollTop = virtualList.getScrollTop();
         const mouseY = mouseEvent.clientY - rect.top + scrollTop;
-        const row = Math.floor(mouseY / getRowHeight());
+        const row = Math.floor(mouseY / virtualList.getRowHeight());
 
         this.checkSetSelectedValue(row);
     }
