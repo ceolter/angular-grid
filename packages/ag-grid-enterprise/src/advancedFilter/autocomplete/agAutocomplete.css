@@ -11,6 +11,10 @@
 .ag-autocomplete-list-popup {
     position: absolute;
     user-select: none;
+    border-radius: var(--ag-border-radius);
+    box-shadow: var(--ag-dropdown-shadow);
+    background-color: var(--ag-background-color);
+    padding: 0;
 }
 
 .ag-autocomplete-list {

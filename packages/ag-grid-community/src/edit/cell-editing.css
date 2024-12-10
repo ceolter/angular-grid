@@ -18,8 +18,7 @@
     }
 }
 
-:where(.ag-popup-editor) .ag-large-text,
-.ag-autocomplete-list-popup {
+:where(.ag-popup-editor) .ag-large-text {
     border-radius: var(--ag-border-radius);
     box-shadow: var(--ag-dropdown-shadow);
     background-color: var(--ag-background-color);
