@@ -114,10 +114,14 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         };
     }
 
-    private createDefaultContent(params: any) {
-        const xValue =
-            this.sparklineOptions.xKey || Array.isArray(this.sparklineOptions.data?.[0]) ? `${params.xValue} ` : '';
-        return `${xValue}${params.yValue}`;
+    private createDefaultContent(params: any, userRendererResult?: AgTooltipRendererResult): string {
+        const userTitle = userRendererResult?.title;
+        const xKeyProvided = this.sparklineOptions.xKey;
+        const tupleData = Array.isArray(this.sparklineOptions.data?.[0]);
+
+        const showXValue = !userTitle && (xKeyProvided || tupleData);
+
+        return `${showXValue ? `${params.xValue} ` : ''}${params.yValue}`;
     }
 
     private wrapItemStyler(container: { itemStyler?: any }) {
@@ -133,17 +137,17 @@ export class SparklineCellRenderer extends Component implements ICellRenderer {
         this.sparklineOptions.tooltip = {
             ...this.sparklineOptions.tooltip,
             renderer: wrapFn(this.sparklineOptions.tooltip!.renderer!, (fn, tooltipParams: any): any => {
-                const userResult = fn({
+                const userRendererResult = fn({
                     ...tooltipParams,
                     context: this.createContext(),
                 });
 
-                if (typeof userResult === 'string') {
-                    return userResult;
+                if (typeof userRendererResult === 'string') {
+                    return userRendererResult;
                 }
                 return {
-                    content: this.createDefaultContent(tooltipParams),
-                    ...userResult,
+                    content: this.createDefaultContent(tooltipParams, userRendererResult),
+                    ...userRendererResult,
                 };
             }),
         };
