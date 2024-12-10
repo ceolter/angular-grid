@@ -1,7 +1,8 @@
 @use 'design-system' as *;
 
 .topLine {
-    margin-left: 0.66em;
+    display: flex;
+    justify-content: center;
 }
 
 .animatedWordsOuter {
@@ -9,20 +10,16 @@
     --word-index: 0;
 
     position: relative;
-    display: inline-block;
-    min-width: 7.5ch;
+    display: inline-flex;
+    align-items: flex-end;
     height: var(--word-height);
     margin-left: 0.33ch;
     text-align: left;
-    transform: translateY(0.3333em);
     overflow: hidden;
 }
 
 .animatedWordsInner {
-    position: absolute;
     display: inline-flex;
-    bottom: 0;
-    left: 0;
     flex-direction: column;
     transform: translateY(calc(var(--word-height) * var(--word-index)));
     transition: transform 0.33s ease-in-out;
@@ -30,5 +27,4 @@
 
 .animatedWord {
     height: var(--word-height);
-    min-width: 7.5ch;
 }

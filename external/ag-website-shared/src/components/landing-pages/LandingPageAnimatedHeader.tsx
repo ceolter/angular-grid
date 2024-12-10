@@ -47,7 +47,6 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
                     </span>
                 </span>
             </span>
-            <br />
             Grid in the World
         </h1>
     );
