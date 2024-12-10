@@ -45,10 +45,10 @@ export class SelectionService extends BaseSelectionService implements NamedBean,
                 groupSelectsFiltered !== this.groupSelectsFiltered ||
                 selectionMode !== this.mode
             ) {
+                this.deselectAllRowNodes({ source: 'api' });
                 this.groupSelectsDescendants = groupSelectsDescendants;
                 this.groupSelectsFiltered = groupSelectsFiltered;
                 this.mode = selectionMode;
-                this.deselectAllRowNodes({ source: 'api' });
             }
         });
 
