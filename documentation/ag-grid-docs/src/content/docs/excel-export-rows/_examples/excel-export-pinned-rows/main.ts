@@ -84,7 +84,7 @@ const gridOptions: GridOptions<IOlympicData> = {
             gold: 222,
             silver: 5,
             bronze: 244,
-            total: 571,
+            total: 471,
         } as any,
     ],
 };
