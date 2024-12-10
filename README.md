@@ -57,28 +57,28 @@
 <details>
   <summary><strong>Table of Contents</strong></summary>
 
--   [JavaScript Data Grid | JavaScript Table](#javascript-data-grid--javascript-table)
-    -   [📖 Overview](#-overview)
+-   [JavaScript Data Grid | JavaScript Table]
+    -   [📖 Overview](#overview)
         -   [Features](#features)
         -   [Examples](#examples)
-    -   [⚡️ Quick Start](#️-quick-start)
+    -   [⚡️ Quick Start](#️quick-start)
         -   [Installation](#installation)
         -   [Setup](#setup)
         -   [Seed Projects](#seed-projects)
-    -   [🛠️ Customisations](#️-customisations)
+    -   [🛠️ Customisations](#️customisations)
         -   [Custom Components](#custom-components)
         -   [Themes](#themes)
         -   [Custom Themes](#custom-themes)
-    -   [🌍 Community](#-community)
+    -   [🌍 Community](#community)
         -   [Tools \& Extensions](#tools--extensions)
         -   [Showcase](#showcase)
         -   [Stargazers](#stargazers)
-    -   [🤝 Support](#-support)
+    -   [🤝 Support](#support)
         -   [Enterprise Support](#enterprise-support)
         -   [Bug Reports](#bug-reports)
         -   [Questions](#questions)
         -   [Contributing](#contributing)
-    -   [⚠️ License](#️-license)
+    -   [⚠️ License](#️license)
 
 </details>
 
