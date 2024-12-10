@@ -57,28 +57,28 @@
 <details>
   <summary><strong>Table of Contents</strong></summary>
 
--   [React Data Grid | React Table](#react-data-grid--react-table)
-    -   [📖 Overview](#-overview)
+-   [React Data Grid | React Table]
+    -   [📖 Overview](#overview)
         -   [Features](#features)
         -   [Examples](#examples)
-    -   [⚡️ Quick Start](#️-quick-start)
+    -   [⚡️ Quick Start](#️quick-start)
         -   [Installation](#installation)
         -   [Setup](#setup)
         -   [Seed Projects](#seed-projects)
-    -   [🛠️ Customisations](#️-customisations)
+    -   [🛠️ Customisations](#️customisations)
         -   [Custom Components](#custom-components)
         -   [Themes](#themes)
         -   [Custom Themes](#custom-themes)
-    -   [🌍 Community](#-community)
+    -   [🌍 Community](#community)
         -   [Tools \& Extensions](#tools--extensions)
         -   [Showcase](#showcase)
         -   [Stargazers](#stargazers)
-    -   [🤝 Support](#-support)
+    -   [🤝 Support](#support)
         -   [Enterprise Support](#enterprise-support)
         -   [Bug Reports](#bug-reports)
         -   [Questions](#questions)
         -   [Contributing](#contributing)
-    -   [⚠️ License](#️-license)
+    -   [⚠️ License](#️license)
 
 </details>
 
@@ -222,7 +222,7 @@ const GridExample = () => {
 
 ```js
 return (
-    // Set a height on the parent div because the grid will fill the available height
+    // set a height on the parent div because the grid fills the available space
     <div style={{ height: 500 }}>
         <AgGridReact rowData={rowData} columnDefs={colDefs} />
     </div>
@@ -395,7 +395,7 @@ AG Grid has 4 [themes](https://ag-grid.com/react-data-grid/themes/?utm_source=ag
 
 ### Custom Themes
 
-All AG Grid themes can be customised using the [Theming API](https://www.ag-grid.com/javascript-data-grid/theming/?utm_source=ag-grid-readme&utm_medium=repository&utm_campaign=github), or you can create a new theme from scratch with the help of our [Theme Builder](https://www.ag-grid.com/theme-builder/?utm_source=ag-grid-readme&utm_medium=repository&utm_campaign=github) or [Figma Design System](https://www.figma.com/community/file/1360600846643230092/ag-grid-design-system).
+All AG Grid themes can be customised using the [Theming API](https://www.ag-grid.com/react-data-grid/theming/?utm_source=ag-grid-react-readme&utm_medium=repository&utm_campaign=github), or you can create a new theme from scratch with the help of our [Theme Builder](https://www.ag-grid.com/theme-builder/?utm_source=ag-grid-react-readme&utm_medium=repository&utm_campaign=github) or [Figma Design System](https://www.figma.com/community/file/1360600846643230092/ag-grid-design-system).
 
 ## 🌍 Community
 

@@ -57,28 +57,28 @@
 <details>
   <summary><strong>Table of Contents</strong></summary>
 
--   [Vue3 Data Grid | Vue3 Table](#vue3-data-grid--vue3-table)
-    -   [📖 Overview](#-overview)
+-   [Vue3 Data Grid | Vue3 Table]
+    -   [📖 Overview](#overview)
         -   [Features](#features)
         -   [Examples](#examples)
-    -   [⚡️ Quick Start](#️-quick-start)
+    -   [⚡️ Quick Start](#️quick-start)
         -   [Installation](#installation)
         -   [Setup](#setup)
         -   [Seed Projects](#seed-projects)
-    -   [🛠️ Customisations](#️-customisations)
+    -   [🛠️ Customisations](#️customisations)
         -   [Custom Components](#custom-components)
         -   [Themes](#themes)
         -   [Custom Themes](#custom-themes)
-    -   [🌍 Community](#-community)
+    -   [🌍 Community](#community)
         -   [Tools \& Extensions](#tools--extensions)
         -   [Showcase](#showcase)
         -   [Stargazers](#stargazers)
-    -   [🤝 Support](#-support)
+    -   [🤝 Support](#support)
         -   [Enterprise Support](#enterprise-support)
         -   [Bug Reports](#bug-reports)
         -   [Questions](#questions)
         -   [Contributing](#contributing)
-    -   [⚠️ License](#️-license)
+    -   [⚠️ License](#️license)
 
 </details>
 
@@ -235,7 +235,7 @@ setup() {
 
 **3. Vue Data Grid Component**
 
-Rows and Columns are set as ag-grid-vue component attributes. Height is applied through the style attribute.
+Rows and Columns are set as ag-grid-vue component attributes. Grid height is applied through the style attribute.
 
 ```js
 <template>
@@ -415,7 +415,7 @@ AG Grid has 4 [themes](https://ag-grid.com/vue-data-grid/themes/?utm_source=ag-g
 
 ### Custom Themes
 
-All AG Grid themes can be customised using the [Theming API](https://www.ag-grid.com/javascript-data-grid/theming/?utm_source=ag-grid-readme&utm_medium=repository&utm_campaign=github), or you can create a new theme from scratch with the help of our [Theme Builder](https://www.ag-grid.com/theme-builder/?utm_source=ag-grid-readme&utm_medium=repository&utm_campaign=github) or [Figma Design System](https://www.figma.com/community/file/1360600846643230092/ag-grid-design-system).
+All AG Grid themes can be customised using the [Theming API](https://www.ag-grid.com/vue-data-grid/theming/?utm_source=ag-grid-vue3-readme&utm_medium=repository&utm_campaign=github), or you can create a new theme from scratch with the help of our [Theme Builder](https://www.ag-grid.com/theme-builder/?utm_source=ag-grid-vue3-readme&utm_medium=repository&utm_campaign=github) or [Figma Design System](https://www.figma.com/community/file/1360600846643230092/ag-grid-design-system).
 
 ## 🌍 Community
 
