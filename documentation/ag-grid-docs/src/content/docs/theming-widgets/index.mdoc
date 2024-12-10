@@ -41,7 +41,7 @@ const myTheme = themeQuartz.withPart(inputStyleUnderlined);
 
 ### Creating Your Own Text Input Styles
 
-If you'd like to create your own input styles you can remove the existing `inputStyle` part, see [Removing a Part](./theming-parts/#removing-a-part).
+If you'd like to create your own input styles from scratch you can remove the existing `inputStyle` part, see [Removing a Part](./theming-parts/#removing-a-part).
 
 ## Styling Checkboxes
 
@@ -82,6 +82,10 @@ If there is no parameter for the effect that you want to achieve, you can use CS
 The example above uses `checkboxCheckedShapeImage` to replace the default check mark with a X symbol. By default, `checkboxCheckedShapeImage` provides only the shape of the check mark, and the color is replaced using the `checkboxCheckedShapeColor` parameter.
 
 If you have SVG images containing their own color, this example demonstrates how to create a checkbox style with coloured SVG images. It removes the existing checkbox styles using `theme.removePart()` and adds new styles with CSS:
+
+### Creating Your Own Checkbox Styles
+
+If you'd like to create your own checkbox styles from scratch you can remove the existing `checkboxStyle` part, see [Removing a Part](./theming-parts/#removing-a-part).
 
 {% gridExampleRunner title="Checkbox Styling" name="checkboxes-custom-svg" exampleHeight=450 /%}
 
