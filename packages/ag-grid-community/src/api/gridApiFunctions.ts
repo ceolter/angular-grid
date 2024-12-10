@@ -25,6 +25,7 @@ import type {
     _ExcelExportGridApi,
     _FilterGridApi,
     _GridChartsGridApi,
+    _HighlightChangesGridApi,
     _InfiniteRowModelGridApi,
     _KeyboardNavigationGridApi,
     _MasterDetailGridApi,
@@ -143,12 +144,14 @@ export const gridApiFunctionsMap: Record<keyof GridApi, ValidationModuleName> = 
     ...mod<_RenderGridApi<any>>('RenderApi', {
         setGridAriaProperty: 0,
         refreshCells: 0,
-        flashCells: 0,
         refreshHeader: 0,
         isAnimationFrameQueueEmpty: 0,
         flushAllAnimationFrames: 0,
         getSizesForCurrentTheme: 0,
         getCellRendererInstances: 0,
+    }),
+    ...mod<_HighlightChangesGridApi<any>>('HighlightChanges', {
+        flashCells: 0,
     }),
     ...mod<_DragGridApi>('RowDrag', {
         addRowDropZone: 0,

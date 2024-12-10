@@ -7,6 +7,7 @@ import type {
 } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
+    HighlightChangesModule,
     ModuleRegistry,
     NumberEditorModule,
     RenderApiModule,
@@ -27,6 +28,7 @@ ModuleRegistry.registerModules([
     MasterDetailModule,
     ColumnMenuModule,
     ContextMenuModule,
+    HighlightChangesModule,
     ValidationModule /* Development Only */,
 ]);
 

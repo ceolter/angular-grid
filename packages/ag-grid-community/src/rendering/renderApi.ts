@@ -3,7 +3,7 @@ import type { BeanCollection } from '../context/context';
 import type { AgColumn } from '../entities/agColumn';
 import { _getRowHeightAsNumber } from '../gridOptionsUtils';
 import { getHeaderHeight } from '../headerRendering/headerUtils';
-import type { FlashCellsParams, RefreshCellsParams } from '../interfaces/iCellsParams';
+import type { RefreshCellsParams } from '../interfaces/iCellsParams';
 import type { GetCellRendererInstancesParams, ICellRenderer } from './cellRenderers/iCellRenderer';
 import { isRowInMap, mapRowNodes } from './rowRenderer';
 
@@ -23,18 +23,6 @@ export function setGridAriaProperty(beans: BeanCollection, property: string, val
 
 export function refreshCells<TData = any>(beans: BeanCollection, params: RefreshCellsParams<TData> = {}): void {
     beans.frameworkOverrides.wrapIncoming(() => beans.rowRenderer.refreshCells(params));
-}
-
-export function flashCells<TData = any>(beans: BeanCollection, params: FlashCellsParams<TData> = {}): void {
-    const { cellFlashSvc } = beans;
-    if (!cellFlashSvc) {
-        return;
-    }
-    beans.frameworkOverrides.wrapIncoming(() => {
-        beans.rowRenderer
-            .getCellCtrls(params.rowNodes, params.columns as AgColumn[])
-            .forEach((cellCtrl) => cellFlashSvc.flashCell(cellCtrl, params));
-    });
 }
 
 export function refreshHeader(beans: BeanCollection) {

@@ -799,9 +799,6 @@ export interface _RenderGridApi<TData> {
     /** Performs change detection on all cells, refreshing cells where required. */
     refreshCells(params?: RefreshCellsParams<TData>): void;
 
-    /** Flash rows, columns or individual cells. */
-    flashCells(params?: FlashCellsParams<TData>): void;
-
     /** Redraws the header. Useful if a column name changes, or something else that changes how the column header is displayed. */
     refreshHeader(): void;
 
@@ -818,6 +815,11 @@ export interface _RenderGridApi<TData> {
 
     /** Returns the list of active cell renderer instances. */
     getCellRendererInstances(params?: GetCellRendererInstancesParams<TData>): ICellRenderer<TData>[];
+}
+
+export interface _HighlightChangesGridApi<TData> {
+    /** Flash rows, columns or individual cells. */
+    flashCells(params?: FlashCellsParams<TData>): void;
 }
 
 export interface _SideBarGridApi<TData> {
@@ -1174,6 +1176,7 @@ export interface GridApi<TData = any>
         _OverlayGridApi,
         _PinnedRowGridApi,
         _RenderGridApi<TData>,
+        _HighlightChangesGridApi<TData>,
         _DragGridApi,
         _ColumnAutosizeApi,
         _ColumnResizeApi,

@@ -2,7 +2,6 @@ import type { _RenderGridApi } from '../api/gridApi';
 import type { _ModuleWithApi } from '../interfaces/iModule';
 import { VERSION } from '../version';
 import {
-    flashCells,
     flushAllAnimationFrames,
     getCellRendererInstances,
     getSizesForCurrentTheme,
@@ -21,7 +20,6 @@ export const RenderApiModule: _ModuleWithApi<_RenderGridApi<any>> = {
     apiFunctions: {
         setGridAriaProperty,
         refreshCells,
-        flashCells,
         refreshHeader,
         isAnimationFrameQueueEmpty,
         flushAllAnimationFrames,
