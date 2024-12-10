@@ -6,6 +6,7 @@
     display: flex;
     align-items: center;
     height: 24px;
+    min-height: unset !important; /* !important Used to overwrite Grid styles */
     font-size: 13px;
     padding-right: 8px;
 }
