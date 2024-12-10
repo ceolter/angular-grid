@@ -92,7 +92,7 @@ const myTheme = themeQuartz
 
 ## Theme Modes
 
-The `theme` grid option can be updated after the grid is initialised, so for most applications that need to change color scheme, e.g. to implement a dark mode toggle, you can create a light theme and a dark theme and switch between them as required.
+The standard way of changing a grid's appearance after initialisation is to update the value of the `theme` grid option. You might implement a dark mode toggle by preparing light and dark versions of a theme and switching between them in response to a button press.
 
 Often however, a grid application is embedded within a website, and the website and grid application have different codebases. It may not be easy to update the theme grid option in response to the website's dark mode changing.
 
