@@ -1,6 +1,7 @@
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
 import { AgColumn } from '../entities/agColumn';
+import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColDef } from '../entities/colDef';
 import type { GridOptions } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
@@ -198,7 +199,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
 
         // check first: one or more columns showing -- none are selection column
-        if (!visibleColumns.some((c) => c.isColumn && isColumnSelectionCol(c))) {
+        if (!visibleColumns.some(isLeafColumnSelectionCol)) {
             const existingState = _getColumnState(beans).find((state) => isColumnSelectionCol(state.colId));
 
             if (existingState) {
@@ -215,12 +216,33 @@ export class SelectionColService extends BeanStub implements NamedBean {
         // lastly, check only one column showing -- selection column
         if (visibleColumns.length === 1) {
             const firstColumn = visibleColumns[0];
+            const leafSelectionCol = getLeafColumnSelectionCol(firstColumn);
 
-            if (!firstColumn.isColumn || !isColumnSelectionCol(firstColumn)) {
+            if (!leafSelectionCol) {
                 return;
             }
 
-            _applyColumnState(beans, { state: [{ colId: firstColumn.getColId(), hide: true }] }, source);
+            _applyColumnState(beans, { state: [{ colId: leafSelectionCol.getColId(), hide: true }] }, source);
         }
     }
+}
+
+const isLeafColumnSelectionCol = (c: AgColumn | AgColumnGroup): boolean =>
+    c.isColumn ? isColumnSelectionCol(c) : c.getChildren()?.some(isLeafColumnSelectionCol) ?? false;
+
+function getLeafColumnSelectionCol(c: AgColumn | AgColumnGroup): AgColumn | null {
+    if (c.isColumn) {
+        return isColumnSelectionCol(c) ? c : null;
+    }
+
+    const children = c.getChildren() ?? [];
+
+    for (const child of children) {
+        const selCol = getLeafColumnSelectionCol(child);
+        if (selCol) {
+            return selCol;
+        }
+    }
+
+    return null;
 }
