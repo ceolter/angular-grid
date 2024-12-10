@@ -34,12 +34,12 @@ const gridOptions: GridOptions<IOlympicData> = {
 };
 
 function onRowSelected(event: RowSelectedEvent) {
-    window.alert('row ' + event.node.data.athlete + ' selected = ' + event.node.isSelected());
+    console.log('row ' + event.node.data.athlete + ' selected = ' + event.node.isSelected());
 }
 
 function onSelectionChanged(event: SelectionChangedEvent) {
     const rowCount = event.api.getSelectedNodes().length;
-    window.alert('selection changed, ' + rowCount + ' rows selected');
+    console.log('selection changed, ' + rowCount + ' rows selected');
 }
 
 // setup the grid after the page has finished loading
