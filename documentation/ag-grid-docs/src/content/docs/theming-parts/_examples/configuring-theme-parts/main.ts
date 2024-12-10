@@ -22,16 +22,28 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    PivotModule,
+    SideBarModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
     TextEditorModule,
     TextFilterModule,
     NumberEditorModule,
-    ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    ExcelExportModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
+    ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,

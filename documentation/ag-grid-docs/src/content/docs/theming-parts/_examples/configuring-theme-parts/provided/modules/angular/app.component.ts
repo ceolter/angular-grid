@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
+    ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
     TextEditorModule,
@@ -26,15 +27,28 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
+import {
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    ExcelExportModule,
+    FiltersToolPanelModule,
+    PivotModule,
+    SideBarModule,
+} from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
+    ClientSideRowModelModule,
     TextEditorModule,
     TextFilterModule,
     NumberEditorModule,
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    ExcelExportModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 

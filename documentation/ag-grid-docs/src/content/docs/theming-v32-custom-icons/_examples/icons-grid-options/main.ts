@@ -13,7 +13,7 @@ import {
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
-    RowGroupingModule,
+    PivotModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
 
@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([
     ClientSideRowModelModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
-    RowGroupingModule,
+    PivotModule,
     SideBarModule,
     ColumnMenuModule,
     ContextMenuModule,
