@@ -19,9 +19,13 @@
 }
 
 .test-header input {
-    margin: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
+.test-header #floating-rows {
+    vertical-align: bottom;
+}
 .ag-floating-top .ag-row-pinned.ag-row {
     background-color: #2244cc44;
 }
