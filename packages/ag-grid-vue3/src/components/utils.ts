@@ -80,8 +80,9 @@ import type {
     Theme,
     TreeDataDisplayType,
     UseGroupTotalRow
-} from "ag-grid-community";
+} from 'ag-grid-community';
 // @END_IMPORTS@
+
 // @START_EVENTS_IMPORTS@
 import type {
     AdvancedFilterBuilderVisibleChangedEvent,
@@ -139,6 +140,7 @@ import type {
     FirstDataRenderedEvent,
     FullWidthCellKeyDownEvent,
     GridColumnsChangedEvent,
+    GridPreDestroyedEvent,
     GridReadyEvent,
     GridSizeChangedEvent,
     HeaderFocusedEvent,
@@ -179,8 +181,10 @@ import type {
     UndoStartedEvent,
     ViewportChangedEvent,
     VirtualColumnsChangedEvent,
-    VirtualRowRemovedEvent,
+    VirtualRowRemovedEvent
 } from 'ag-grid-community';
+// @END_EVENTS_IMPORTS@
+
 import type { GridOptions, Module } from 'ag-grid-community';
 import type { AgChartTheme, AgChartThemeOverrides } from 'ag-charts-types';
 import { isProxy, isReactive, isRef, toRaw } from 'vue';
@@ -197,7 +201,7 @@ export interface Props<TData, TColDef> {
      * See [Providing Modules To Individual Grids](https://www.ag-grid.com/vue-data-grid/modules/#providing-modules-to-individual-grids) for more information.
      */
     modules?: Module[] | undefined;
-    // @START_PROPS@
+// @START_PROPS@
     /** Specifies the status bar components to use in the status bar.
          */
     statusBar?: { statusPanels: StatusPanelDef[] } | undefined,
@@ -1459,7 +1463,7 @@ export interface Props<TData, TColDef> {
 
     // @END_PROPS@
 
-    // @START_EVENT_PROP_TYPES@
+// @START_EVENT_PROP_TYPES@
    'onTool-panel-visible-changed': ToolPanelVisibleChangedEvent<TData>,
    'onTool-panel-size-changed': ToolPanelSizeChangedEvent<TData>,
    'onColumn-menu-visible-changed': ColumnMenuVisibleChangedEvent<TData>,
@@ -1513,6 +1517,7 @@ export interface Props<TData, TColDef> {
    'onChart-destroyed': ChartDestroyedEvent<TData>,
    'onCell-key-down': CellKeyDownEvent<TData> | FullWidthCellKeyDownEvent<TData>,
    'onGrid-ready': GridReadyEvent<TData>,
+   'onGrid-pre-destroyed': GridPreDestroyedEvent<TData>,
    'onFirst-data-rendered': FirstDataRenderedEvent<TData>,
    'onGrid-size-changed': GridSizeChangedEvent<TData>,
    'onModel-updated': ModelUpdatedEvent<TData>,
@@ -1564,7 +1569,8 @@ export function getProps() {
     return {
         gridOptions: {} as any,
         modules: [] as any,
-        // @START_DEFAULTS@
+
+// @START_DEFAULTS@
         statusBar: undefined,
         sideBar: undefined,
         suppressContextMenu: undefined,
@@ -1869,7 +1875,8 @@ export function getProps() {
         isFullWidthRow: undefined,
 
 // @END_DEFAULTS@
-        // @START_EVENT_PROPS@
+
+// @START_EVENT_PROPS@
         'onColumn-everything-changed': undefined,
         'onNew-columns-loaded': undefined,
         'onColumn-pivot-mode-changed': undefined,
@@ -1942,6 +1949,7 @@ export function getProps() {
         'onRow-clicked': undefined,
         'onRow-double-clicked': undefined,
         'onGrid-ready': undefined,
+        'onGrid-pre-destroyed': undefined,
         'onGrid-size-changed': undefined,
         'onViewport-changed': undefined,
         'onFirst-data-rendered': undefined,
@@ -1967,9 +1975,9 @@ export function getProps() {
         'onRow-drag-cancel': undefined
 // @END_EVENT_PROPS@
 
-        // _PUBLIC_EVENTS
     };
 }
+
 
 export const debounce = (func: () => void, delay: number) => {
     let timeout: number;

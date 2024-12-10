@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="TData = any, TColDef extends ColDef<TData> = ColDef<any>">
+
 // @START_IMPORTS@
 import type {
     AdvancedFilterBuilderVisibleChangedEvent,
@@ -56,6 +57,7 @@ import type {
     FirstDataRenderedEvent,
     FullWidthCellKeyDownEvent,
     GridColumnsChangedEvent,
+    GridPreDestroyedEvent,
     GridReadyEvent,
     GridSizeChangedEvent,
     HeaderFocusedEvent,
@@ -97,14 +99,15 @@ import type {
     ViewportChangedEvent,
     VirtualColumnsChangedEvent,
     VirtualRowRemovedEvent
-} from "ag-grid-community";
+} from 'ag-grid-community';
 // @END_IMPORTS@
+
 import { VueFrameworkComponentWrapper } from '@/components/VueFrameworkComponentWrapper';
 import { VueFrameworkOverrides } from '@/components/VueFrameworkOverrides';
 import type { Props } from '@/components/utils';
 import { debounce, deepToRaw, getProps } from '@/components/utils';
 import type { Ref } from 'vue';
-import { getCurrentInstance, markRaw, onMounted, ref, toRaw, toRefs, useTemplateRef, watch } from 'vue';
+import { getCurrentInstance, markRaw, onMounted, onUnmounted, ref, toRaw, toRefs, useTemplateRef, watch } from 'vue';
 
 import type { AgEventType, ColDef, GridApi, GridOptions, IRowNode } from 'ag-grid-community';
 import {
@@ -150,8 +153,6 @@ const ROW_DATA_EVENTS: Set<string> = new Set(['rowDataUpdated', 'cellValueChange
 const rowDataModel = defineModel<TData[]>();
 const rowDataUpdating: Ref<boolean> = ref(false);
 const emits = defineEmits<{
-    // @START_EVENTS@
-    // @END_EVENTS@
     'update:modelValue': [event: TData[]];
 }>();
 watch(
@@ -271,6 +272,13 @@ onMounted(() => {
 
     api.value = createGrid(rootRef.value!, gridOptions, gridParams);
     gridCreated.value = true;
+});
+
+onUnmounted(() => {
+  if (gridCreated.value) {
+    api?.value?.destroy();
+    isDestroyed.value = true;
+  }
 });
 
 defineExpose({

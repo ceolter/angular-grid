@@ -11,8 +11,8 @@ const { formatNode, findNode, getFullJsDoc } = getFormatterForTS(ts);
 const AG_CHART_TYPES = ['AgChartTheme', 'AgChartThemeOverrides'];
 
 const skippableProperties = ['gridOptions', 'reactiveCustomComponents'];
-const skippableEvents = ['gridPreDestroyed'];
-const skippableEventTypes = ['GridPreDestroyedEvent'];
+const skippableEvents = [];
+const skippableEventTypes = [];
 
 function writeSortedLines(toWrite, result) {
     toWrite.sort((a, b) => {
@@ -251,8 +251,8 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
         eventNameAsProps,
         eventPropTypes,
     } = getGridPropertiesAndEvents();
-    const importsForProps = `import type {${EOL}    ${types.join(',' + EOL + '    ')}${EOL}} from "ag-grid-community";`;
-    const importsForEvents = `import type {${EOL}    ${eventTypes.join(',' + EOL + '    ')}${EOL}} from "ag-grid-community";`;
+    const importsForProps = `import type {${EOL}    ${types.join(',' + EOL + '    ')}${EOL}} from 'ag-grid-community';`;
+    const importsForEvents = `import type {${EOL}    ${eventTypes.join(',' + EOL + '    ')}${EOL}} from 'ag-grid-community';`;
 
     const optionsForUtils = {
         files: './src/components/utils.ts',
@@ -267,7 +267,7 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
         to: [
             `// @START_PROPS@${EOL}${gridPropertiesAndEvents}    // @END_PROPS@`,
             `// @START_IMPORTS@${EOL}${importsForProps}${EOL}// @END_IMPORTS@`,
-            `// @START_EVENTS_IMPORTS@${EOL}${importsForEvents}// @END_EVENTS_IMPORTS@`,
+            `// @START_EVENTS_IMPORTS@${EOL}${importsForEvents}${EOL}// @END_EVENTS_IMPORTS@`,
             `// @START_DEFAULTS@${EOL}${defaults}// @END_DEFAULTS@`,
             `// @START_EVENT_PROPS@${EOL}${eventNameAsProps.join(`,${EOL}`)}${EOL}// @END_EVENT_PROPS@`,
             `// @START_EVENT_PROP_TYPES@${EOL}${eventPropTypes}${EOL}// @END_EVENT_PROP_TYPES@`,
@@ -284,12 +284,10 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
     const optionsForVue = {
         files: './src/components/AgGridVue.vue',
         from: [
-            /(\/\/ @START_IMPORTS@)[^]*(\/\/ @END_IMPORTS@)/,
-            // /(\/\/ @START_EVENTS@)[^]*(\/\/ @END_EVENTS@)/,
+            /(\/\/ @START_IMPORTS@)[^]*(\/\/ @END_IMPORTS@)/
         ],
         to: [
-            `// @START_IMPORTS@${EOL}${importsForEvents}${EOL}// @END_IMPORTS@`,
-            // `// @START_EVENTS@${EOL}${events}${EOL}// @END_EVENTS@`
+            `// @START_IMPORTS@${EOL}${importsForEvents}${EOL}// @END_IMPORTS@`
         ],
     };
 
