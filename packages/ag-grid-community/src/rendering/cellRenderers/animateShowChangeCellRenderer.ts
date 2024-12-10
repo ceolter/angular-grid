@@ -78,16 +78,16 @@ export class AnimateShowChangeCellRenderer extends Component implements ICellRen
     }
 
     public refresh(params: any, isInitialRender: boolean = false): boolean {
-        const value = params.value;
+        const { value, valueFormatted } = params;
 
         const { eValue, lastValue, beans } = this;
         if (value === lastValue) {
             return false;
         }
 
-        if (_exists(params.valueFormatted)) {
-            eValue.textContent = params.valueFormatted;
-        } else if (_exists(params.value)) {
+        if (_exists(valueFormatted)) {
+            eValue.textContent = valueFormatted;
+        } else if (_exists(value)) {
             eValue.textContent = value;
         } else {
             _clearElement(eValue);

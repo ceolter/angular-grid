@@ -67,6 +67,7 @@ export class GridBodyScrollFeature extends BeanStub {
     private lastScrollTop = -1;
 
     private scrollTimer: number = 0;
+    private needsRefreshedScrollPosition: boolean = true;
 
     private readonly resetLastHScrollDebounced: () => void;
     private readonly resetLastVScrollDebounced: () => void;
@@ -96,8 +97,15 @@ export class GridBodyScrollFeature extends BeanStub {
 
     public postConstruct(): void {
         this.enableRtl = this.gos.get('enableRtl');
+        const requireUpdatedScrollPosition = this.requireUpdatedScrollPosition.bind(this);
+
         this.addManagedEventListeners({
             displayedColumnsWidthChanged: this.onDisplayedColumnsWidthChanged.bind(this),
+            gridSizeChanged: requireUpdatedScrollPosition,
+        });
+
+        this.addManagedElementListeners(this.eBodyViewport, {
+            scroll: requireUpdatedScrollPosition,
         });
 
         this.ctrlsSvc.whenReady(this, (p) => {
@@ -105,6 +113,10 @@ export class GridBodyScrollFeature extends BeanStub {
             this.onDisplayedColumnsWidthChanged();
             this.addScrollListener();
         });
+    }
+
+    private requireUpdatedScrollPosition(): void {
+        this.needsRefreshedScrollPosition = true;
     }
 
     private addScrollListener() {
@@ -400,13 +412,25 @@ export class GridBodyScrollFeature extends BeanStub {
     }
 
     public getVScrollPosition(): VerticalScrollPosition {
-        this.lastScrollTop = this.eBodyViewport.scrollTop;
-        this.lastOffsetHeight = this.eBodyViewport.offsetHeight;
-        const result = {
-            top: this.lastScrollTop,
-            bottom: this.lastScrollTop + this.lastOffsetHeight,
+        if (!this.needsRefreshedScrollPosition) {
+            const { lastOffsetHeight, lastScrollTop } = this;
+
+            return {
+                top: lastScrollTop,
+                bottom: lastScrollTop + lastOffsetHeight,
+            };
+        }
+
+        this.needsRefreshedScrollPosition = false;
+
+        const { scrollTop, offsetHeight } = this.eBodyViewport;
+        this.lastScrollTop = scrollTop;
+        this.lastOffsetHeight = offsetHeight;
+
+        return {
+            top: scrollTop,
+            bottom: scrollTop + offsetHeight,
         };
-        return result;
     }
 
     /** Get an approximate scroll position that returns the last real value read.
