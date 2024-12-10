@@ -17,7 +17,7 @@ const getGridDependencies = ({
         dependencies.push('ag-grid-vue3');
     }
 
-    dependencies.push('ag-grid-community', 'ag-grid-enterprise');
+    dependencies.push('ag-grid-enterprise');
 
     if (isIntegratedCharts) {
         dependencies.push('ag-charts-enterprise');

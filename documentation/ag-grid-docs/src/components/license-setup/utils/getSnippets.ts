@@ -21,7 +21,7 @@ export const getDependenciesSnippet = ({
 
     const depObject: Record<string, string> = {};
     dependencies.forEach((dependency) => {
-        depObject[dependency] = `~${agLibraryVersion}`;
+        depObject[dependency] = agLibraryVersion;
     });
 
     return dependencies.length > 0 ? `dependencies: ${JSON.stringify(depObject, null, 4)}` : undefined;

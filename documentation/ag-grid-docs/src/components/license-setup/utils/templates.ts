@@ -12,7 +12,7 @@ import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} }
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
 import App from "./App";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule${isIntegratedCharts ? ', IntegratedChartsModule.with(AgChartsEnterpriseModule)' : ''}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
 import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
-ModuleRegistry.registerModules([ClientSideRowModelModule${isIntegratedCharts ? ', IntegratedChartsModule.with(AgChartsEnterpriseModule)' : ''}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -42,7 +42,7 @@ LicenseManager.setLicenseKey("${license}");
         return `import { ModuleRegistry, ClientSideRowModelModule, createGrid } from "ag-grid-community";
 import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
-ModuleRegistry.registerModules([ClientSideRowModelModule${isIntegratedCharts ? ', IntegratedChartsModule.with(AgChartsEnterpriseModule)' : ''}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -56,7 +56,7 @@ import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} }
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
 import { AgGridVue } from "ag-grid-vue3";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule${isIntegratedCharts ? ', IntegratedChartsModule.with(AgChartsEnterpriseModule)' : ''}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
