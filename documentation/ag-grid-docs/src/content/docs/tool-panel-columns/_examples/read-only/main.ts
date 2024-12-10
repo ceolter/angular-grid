@@ -74,8 +74,7 @@ const columnDefs: ColDef[] = [
     },
     {
         headerName: 'Total',
-        field: 'totalAgg',
-        valueGetter: 'node.group ? data.totalAgg : data.gold + data.silver + data.bronze',
+        field: 'total',
     },
 ];
 
