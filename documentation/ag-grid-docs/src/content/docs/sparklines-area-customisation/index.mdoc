@@ -29,14 +29,15 @@ sparklineOptions: {
         itemStyler: (params: any) => {
             if (params.highlighted) {
                 return {
-                    size: 4
+                    size: 7
                 };
             }
         }
     },
     highlightStyle: {
         item: {
-            fill: 'rgb(143,185,77)'
+            fill: 'rgb(143,185,77)',
+            strokeWidth: 0,
         }
     },
     axis: {
@@ -78,9 +79,9 @@ Custom line
 
 The markers are enabled by default but the size has been set to `0`px, making them invisible.
 
-The `size` property in the `highlightStyle` options is `6`px by default, allowing the markers to become visible when in the highlighted state.
+The `size` property in the `marker.itemStyler` is `10`px, allowing the markers to become visible when in the highlighted state.
 
-These formats can be modified to your liking by setting the `marker` and `highlightStyle` options as demonstrated below.
+These formats can be modified to your liking by setting the `marker.itemStyler` and `highlightStyle` options as demonstrated below.
 
 ```js
 sparklineOptions: {
