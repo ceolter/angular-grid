@@ -10,10 +10,12 @@ import {
     createGrid,
 } from 'ag-grid-community';
 import {
+    ClipboardModule,
     ColumnMenuModule,
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
+    PivotModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
 
@@ -28,6 +30,8 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     SetFilterModule,
     NumberFilterModule,
+    ClipboardModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 
