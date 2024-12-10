@@ -38,7 +38,7 @@ body {
     display: flex;
     flex-direction: column;
     text-align: center;
-    justify-content: center;
+    align-items: center;
 
     h1,
     h2 {
@@ -48,6 +48,10 @@ body {
 
     h1 {
         font-size: 28px;
+        text-align: left;
+        flex-direction: column;
+        display: inline-flex;
+        transform: translateX(0.66em);
 
         @media screen and (min-width: $breakpoint-hero-small) {
             font-size: var(--text-fs-2xl);

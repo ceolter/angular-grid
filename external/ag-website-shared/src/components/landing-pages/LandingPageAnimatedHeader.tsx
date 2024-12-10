@@ -9,7 +9,7 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
     const [noTransitions, setNoTransitions] = useState(false);
 
     useEffect(() => {
-        const delayMs = wordIndex === 0 ? 50 : 1250;
+        const delayMs = wordIndex === 0 ? 50 : 1000;
 
         const timeout = setTimeout(() => {
             const nextWordIndex = (wordIndex + 1) % 5;
@@ -37,7 +37,7 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
                     </span>
                 </span>
             </span>
-            Grid in the World
+            <span>Grid in the World</span>
         </h1>
     );
 };
