@@ -80,12 +80,20 @@
     border-right: var(--ag-pinned-column-border);
 }
 
-.ag-cell.ag-cell-first-right-pinned:not(.ag-cell-range-left, .ag-cell-range-single-cell, .ag-cell-focus) {
+.ag-cell.ag-cell-first-right-pinned:not(
+        .ag-cell-range-left,
+        .ag-cell-range-single-cell,
+        .ag-cell-focus:not(.ag-cell-range-selected):focus-within
+    ) {
     /* rtl:ignore */
     border-left: var(--ag-pinned-column-border);
 }
 
-.ag-cell.ag-cell-last-left-pinned:not(.ag-cell-range-right, .ag-cell-range-single-cell, .ag-cell-focus) {
+.ag-cell.ag-cell-last-left-pinned:not(
+        .ag-cell-range-right,
+        .ag-cell-range-single-cell,
+        .ag-cell-focus:not(.ag-cell-range-selected):focus-within
+    ) {
     /* rtl:ignore */
     border-right: var(--ag-pinned-column-border);
 }
