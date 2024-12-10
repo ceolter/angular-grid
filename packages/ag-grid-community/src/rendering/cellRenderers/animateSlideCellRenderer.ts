@@ -2,6 +2,7 @@ import { _getDocument } from '../../gridOptionsUtils';
 import { _clearElement } from '../../utils/dom';
 import { _exists, _missing } from '../../utils/generic';
 import { Component } from '../../widgets/component';
+import { animateSlideCellRendererCSS } from './animateSlideCellRenderer.css-GENERATED';
 import type { ICellRenderer } from './iCellRenderer';
 
 export class AnimateSlideCellRenderer extends Component implements ICellRenderer {
@@ -23,6 +24,7 @@ export class AnimateSlideCellRenderer extends Component implements ICellRenderer
         this.setTemplateFromElement(template);
 
         this.eCurrent = this.queryForHtmlElement('.ag-value-slide-current');
+        this.registerCSS(animateSlideCellRendererCSS);
     }
 
     public init(params: any): void {
