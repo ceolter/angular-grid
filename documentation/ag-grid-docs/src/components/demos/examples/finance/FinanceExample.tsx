@@ -307,6 +307,7 @@ export const FinanceExample: React.FC<Props> = ({
     );
 
     const themeClass = `${gridTheme}${isDarkMode ? '-dark' : ''}`;
+    const chartThemes = isDarkMode ? ['ag-default-dark'] : ['ag-default'];
 
     return (
         <div
@@ -315,6 +316,7 @@ export const FinanceExample: React.FC<Props> = ({
         >
             <AgGridReact
                 theme="legacy"
+                chartThemes={chartThemes}
                 ref={gridRef}
                 getRowId={getRowId}
                 rowData={rowData}
