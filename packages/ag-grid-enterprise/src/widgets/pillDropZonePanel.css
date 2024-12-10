@@ -150,5 +150,5 @@
 }
 
 .ag-column-drop-horizontal-half-width:where(:not(:last-child)) {
-    border-right: var(--ag-column-border);
+    border-right: solid 1px var(--ag-border-color);
 }
