@@ -161,14 +161,14 @@ function filterData(filterModel: any, data: any[]) {
         }
 
         if (filterModel.year) {
-            if (filterModel.year.indexOf(item.year.toString()) < 0) {
+            if (filterModel.year.values.indexOf(item.year.toString()) < 0) {
                 // year didn't match, so skip this record
                 continue;
             }
         }
 
         if (filterModel.country) {
-            if (filterModel.country.indexOf(item.country) < 0) {
+            if (filterModel.country.values.indexOf(item.country) < 0) {
                 continue;
             }
         }
