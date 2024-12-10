@@ -53,6 +53,13 @@ const gridOptions: GridOptions<IOlympicData> = {
         editable: true,
         filter: true,
     },
+    onFirstDataRendered: (params) => {
+        params.api.forEachNode((node) => {
+            if (node.rowIndex === 2 || node.rowIndex === 3 || node.rowIndex === 4) {
+                node.setSelected(true);
+            }
+        });
+    },
 };
 
 // setup the grid after the page has finished loading
@@ -64,10 +71,5 @@ document.addEventListener('DOMContentLoaded', function () {
         .then((response) => response.json())
         .then((data: IOlympicData[]) => {
             gridApi.setGridOption('rowData', data);
-            gridApi.forEachNode((node) => {
-                if (node.rowIndex === 2 || node.rowIndex === 3 || node.rowIndex === 4) {
-                    node.setSelected(true);
-                }
-            });
         });
 });
