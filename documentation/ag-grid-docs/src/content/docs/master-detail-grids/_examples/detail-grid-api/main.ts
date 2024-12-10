@@ -10,7 +10,6 @@ import {
     HighlightChangesModule,
     ModuleRegistry,
     NumberEditorModule,
-    RenderApiModule,
     RowApiModule,
     TextEditorModule,
     ValidationModule,
@@ -19,7 +18,6 @@ import {
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule, MasterDetailModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
-    RenderApiModule,
     TextEditorModule,
     NumberEditorModule,
     RowApiModule,
