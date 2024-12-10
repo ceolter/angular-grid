@@ -49,7 +49,7 @@ To prevent potential licensing and privacy implications, the grid will not load 
 * set the `loadThemeGoogleFonts` grid option to `true`, and the grid will load the font from Google's CDN
 * load the font yourself using a `@font-face` rule in your application's CSS
 
-If the font has not been loaded through either of the above methods, a warning will be logged to the console. Set `loadThemeGoogleFonts` to `false` to silence this warning.
+If the font has not been loaded through either of the above methods, the theme will fall back to the most appropriate font available on the system.
 
 This example demonstrates fonts loaded by the grid and by the application's style sheets:
 
