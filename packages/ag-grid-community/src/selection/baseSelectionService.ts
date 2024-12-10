@@ -92,7 +92,7 @@ export abstract class BaseSelectionService extends BeanStub {
         const translate = this.getLocaleTextFunc();
         const label = translate(
             selected ? 'ariaRowDeselect' : 'ariaRowSelect',
-            `Press SPACE to ${selected ? 'deselect' : 'select'} this row.`
+            `Press SPACE to ${selected ? 'deselect' : 'select'} this row`
         );
 
         this.beans.ariaAnnounce?.announceValue(label, 'rowSelection');
