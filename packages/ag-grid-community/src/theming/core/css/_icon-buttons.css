@@ -27,7 +27,7 @@
     position: relative;
     border-radius: 1px;
     background-color: color-mix(in srgb, transparent, var(--ag-accent-color) 14%);
-    box-shadow: 0 0 0 4px color-mix(in srgb, transparent, var(--ag-accent-color) 14%);
+    outline: solid 4px color-mix(in srgb, transparent, var(--ag-accent-color) 14%);
 
     &::after {
         content: '';
