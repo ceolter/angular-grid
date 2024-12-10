@@ -136,15 +136,26 @@ const gridOptions = {
 
 ```js
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
 ```
 
-**3. Define Rows and Columns**
+**3. Register Modules**
+
+Register the `AllCommunityModule` to access all Community features:
 
 ```js
-// Register all community features
-ModuleRegistry.registerModules([AllCommunityModule]);
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
 
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+```
+
+{% note %}
+To minimize bundle size, only register the modules you want to use. See the [Modules](./modules/) page for more information.
+{% /note %}
+
+**4. Define Rows and Columns**
+
+```js
 const GridExample = () => {
     // Row Data: The data to be displayed.
     const [rowData, setRowData] = useState([
@@ -165,7 +176,7 @@ const GridExample = () => {
 }
 ```
 
-**4. React Data Grid Component**
+**5. React Data Grid Component**
 
 The `AgGridReact` component is wrapped in a parent container `div`. Style is applied to the parent container.
 Rows and Columns are set as `AgGridReact` component attributes.
@@ -193,10 +204,24 @@ return (
 import { Component } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import type { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
 ```
 
-**3. Define Rows and Columns**
+**3. Register Modules**
+
+Register the `AllCommunityModule` to access all Community features:
+
+```js
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+```
+
+{% note %}
+To minimize bundle size, only register the modules you want to use. See the [Modules](./modules/) page for more information.
+{% /note %}
+
+**4. Define Rows and Columns**
 
 ```jsx
 // Register all community features
@@ -228,7 +253,7 @@ export class AppComponent {
 }
 ```
 
-**4. Angular Data Grid Component**
+**5. Angular Data Grid Component**
 
 Rows and Columns are set as `ag-grid-angular` component attributes.
 
@@ -254,10 +279,6 @@ template:
 <script>
 import { ref } from 'vue';
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; // Register Features
-
-// Register all community features
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default {
     name: "App",
@@ -269,7 +290,22 @@ export default {
 </script>
 ```
 
-**3. Define Rows and Columns**
+**3. Register Modules**
+
+Register the `AllCommunityModule` to access all Community features:
+
+```js
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+```
+
+{% note %}
+To minimize bundle size, only register the modules you want to use. See the [Modules](./modules/) page for more information.
+{% /note %}
+
+**4. Define Rows and Columns**
 
 ```js
 setup() {
@@ -295,7 +331,7 @@ setup() {
 },
 ```
 
-**4. Vue Data Grid Component**
+**5. Vue Data Grid Component**
 
 Rows and Columns are set as `ag-grid-vue` component attributes. Styling is applied through the class and style attributes.
 
@@ -313,15 +349,15 @@ Rows and Columns are set as `ag-grid-vue` component attributes. Styling is appli
 {% /if %}
 
 {% if isFramework("angular") %}
-**5. Running the Angular Data Grid**
+**6. Running the Angular Data Grid**
 {% /if %}
 
 {% if isFramework("react") %}
-**5. Running the React Data Grid**
+**6. Running the React Data Grid**
 {% /if %}
 
 {% if isFramework("vue") %}
-**5. Running the Vue Data Grid**
+**6. Running the Vue Data Grid**
 {% /if %}
 
 {% if isFramework("javascript") %}
