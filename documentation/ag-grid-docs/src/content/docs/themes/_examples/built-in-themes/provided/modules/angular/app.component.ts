@@ -15,7 +15,7 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, SideBarModule } from 'ag-grid-enterprise';
+import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
     TextEditorModule,
@@ -25,6 +25,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnsToolPanelModule,
     FiltersToolPanelModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 
