@@ -178,6 +178,7 @@ export const Pipeline = ({ location }) => {
                 detailCellRendererParams={detailCellRendererParams}
                 detailCellRenderer={DetailCellRenderer}
                 masterDetail={true}
+                loadThemeGoogleFonts={true}
                 rowData={rowData}
                 onGridReady={gridReady}
             ></Grid>

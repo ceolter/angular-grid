@@ -335,6 +335,7 @@ export const Changelog = () => {
                 defaultColDef={defaultColDef}
                 detailRowAutoHeight={true}
                 enableCellTextSelection={true}
+                loadThemeGoogleFonts={true}
                 detailCellRendererParams={detailCellRendererParams}
                 detailCellRenderer={DetailCellRenderer}
                 isRowMaster={isRowMaster}
