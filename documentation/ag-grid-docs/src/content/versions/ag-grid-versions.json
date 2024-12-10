@@ -2,14 +2,29 @@
     {
         "version": "33.0.0",
         "date": "December 11th 2024",
-        "landingPageHighlight": "Quality Improvements",
+        "landingPageHighlight": "Bundle Size Improvements, Context Menu Async Support, Default Column Header Customisation",
         "highlights": [
             {
-                "text": "Quality Improvements"
+                "text": "Bundle Size Improvements",
+                "path": "./modules"
+            },
+            {
+                "text": "Context Menu Async Support",
+                "path": "./context-menu/#context-menu-example"
+            },
+            {
+                "text": "Default Column Header Customization",
+                "path": "./column-headers/#inner-header-component"
+            },
+            {
+                "text": "Native Support for Vue 3 Composition API"
+            },
+            {
+                "text": "Theming Improvements"
             }
         ],
-        "notesPath": "./upgrading-to-ag-grid-32-3",
-        "hideBlogPostLink": true
+        "notesPath": "./upgrading-to-ag-grid-33",
+        "hideBlogPostLink": false
     },
     {
         "version": "32.3.0",
