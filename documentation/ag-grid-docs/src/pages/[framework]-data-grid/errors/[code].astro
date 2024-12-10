@@ -17,6 +17,7 @@ import {
 import Note from '@ag-website-shared/components/alert/Note';
 import { getIsArchive } from '@utils/env';
 import Warning from '@ag-website-shared/components/alert/Warning';
+import { pathJoin } from '@utils/pathJoin';
 
 interface Params {
     framework: Framework;
@@ -74,8 +75,7 @@ const headings = errorPage
       ).concat(fullErrorTextHeading)
     : [topHeading, fullErrorTextHeading];
 const isArchive = getIsArchive();
-// TODO: Update this when we have a migration page
-const migrationUrl = PRODUCTION_GRID_SITE_URL;
+const migrationUrl = pathJoin(PRODUCTION_GRID_SITE_URL, '/documentation');
 ---
 
 <Layout title={title} description={description} showSearchBar={true} showDocsNav={true}>
