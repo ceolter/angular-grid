@@ -9,7 +9,11 @@ export class PartialMatchFilter implements IFilterComp {
     init(params: IFilterParams): void {
         this.filterParams = params;
         this.gui = document.createElement('div');
-        this.gui.innerHTML = 'Partial Match Filter: <input id="filterText" type="text" />';
+        this.gui.style.borderRadius = '5px';
+        this.gui.style.width = '200px';
+        this.gui.style.height = '50px';
+        this.gui.style.padding = '10px';
+        this.gui.innerHTML = `Partial Match Filter: <input id="filterText" type="text" style="height: 20px" />`;
         this.eFilterText = this.gui.querySelector('#filterText')!;
         const listener = (event: any) => {
             this.filterText = event.target.value;

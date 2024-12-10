@@ -1,9 +1,7 @@
 export default {
     template: `
       <div style="border-radius: 5px; width: 200px; height: 50px; padding: 10px">
-      <div style="margin-left: 20px">
         Partial Match Filter: <input style="height: 20px" :ref="'input'" v-model="text">
-      </div>
       </div>
     `,
     data() {
