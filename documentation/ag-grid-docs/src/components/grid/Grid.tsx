@@ -1,7 +1,21 @@
 import { type FunctionComponent } from 'react';
 
-import { ClientSideRowModelModule } from 'ag-grid-community';
-import { ColumnsToolPanelModule, MasterDetailModule, SetFilterModule, StatusBarModule } from 'ag-grid-enterprise';
+import {
+    CellStyleModule,
+    ClientSideRowModelModule,
+    ColumnAutoSizeModule,
+    QuickFilterModule,
+    RowAutoHeightModule,
+    TextFilterModule,
+    TooltipModule,
+} from 'ag-grid-community';
+import {
+    AdvancedFilterModule,
+    ColumnsToolPanelModule,
+    MasterDetailModule,
+    SetFilterModule,
+    StatusBarModule,
+} from 'ag-grid-enterprise';
 import { AgGridReact, type AgGridReactProps } from 'ag-grid-react';
 
 import styles from './Grid.module.scss';
@@ -18,7 +32,14 @@ export const Grid: FunctionComponent<Props> = ({ gridHeight, ...props }) => {
                 suppressNoRowsOverlay={true}
                 {...props}
                 modules={[
+                    RowAutoHeightModule,
+                    TextFilterModule,
+                    CellStyleModule,
+                    ColumnAutoSizeModule,
+                    QuickFilterModule,
                     ClientSideRowModelModule,
+                    TooltipModule,
+                    AdvancedFilterModule,
                     MasterDetailModule,
                     SetFilterModule,
                     ColumnsToolPanelModule,

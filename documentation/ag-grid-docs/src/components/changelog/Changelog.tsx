@@ -7,7 +7,7 @@ import styles from '@pages-styles/pipelineChangelog.module.scss';
 import { IssueColDef, IssueTypeColDef } from '@utils/grid/issueColDefs';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
 import classnames from 'classnames';
-import React, { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 const ALL_FIX_VERSIONS = 'All Versions';
 
