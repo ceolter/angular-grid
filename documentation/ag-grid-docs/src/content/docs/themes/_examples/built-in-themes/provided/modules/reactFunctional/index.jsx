@@ -5,6 +5,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -18,6 +19,7 @@ import { AgGridReact } from 'ag-grid-react';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberFilterModule,
     NumberEditorModule,
     ClientSideRowModelModule,
     SideBarModule,

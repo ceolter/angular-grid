@@ -5,6 +5,7 @@ import type { ColDef } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    NumberFilterModule,
     TextFilterModule,
     ValidationModule,
     themeQuartz,
@@ -13,6 +14,7 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarMod
 
 ModuleRegistry.registerModules([
     TextFilterModule,
+    NumberFilterModule,
     ClientSideRowModelModule,
     SideBarModule,
     ColumnsToolPanelModule,

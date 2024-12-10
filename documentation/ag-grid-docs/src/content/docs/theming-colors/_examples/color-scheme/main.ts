@@ -3,6 +3,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -17,6 +18,7 @@ import {
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberFilterModule,
     NumberEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */,

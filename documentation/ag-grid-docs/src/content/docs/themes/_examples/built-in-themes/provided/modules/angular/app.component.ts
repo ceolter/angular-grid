@@ -8,6 +8,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -20,6 +21,7 @@ import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarMod
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberFilterModule,
     NumberEditorModule,
     ClientSideRowModelModule,
     SideBarModule,

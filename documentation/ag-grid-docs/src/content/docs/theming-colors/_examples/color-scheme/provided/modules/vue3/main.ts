@@ -5,6 +5,7 @@ import {
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
     ValidationModule,
@@ -21,6 +22,7 @@ import { AgGridVue } from 'ag-grid-vue3';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberFilterModule,
     NumberEditorModule,
     ClientSideRowModelModule,
     ValidationModule /* Development Only */,

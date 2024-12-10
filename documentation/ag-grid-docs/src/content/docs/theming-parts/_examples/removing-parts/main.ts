@@ -4,6 +4,7 @@ import {
     GridStateModule,
     ModuleRegistry,
     NumberEditorModule,
+    NumberFilterModule,
     RowSelectionModule,
     TextEditorModule,
     TextFilterModule,
@@ -17,6 +18,7 @@ import './style.css';
 ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
+    NumberFilterModule,
     NumberEditorModule,
     RowSelectionModule,
     GridStateModule,
