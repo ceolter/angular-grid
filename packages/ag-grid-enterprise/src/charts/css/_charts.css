@@ -343,9 +343,7 @@
 .ag-charts-format-sub-level-group-container {
     display: flex;
     flex-direction: column;
-    padding: var(--ag-widget-vertical-spacing) var(--ag-widget-container-horizontal-padding)
-        var(--ag-widget-container-vertical-padding);
-    gap: var(--ag-widget-vertical-spacing);
+    padding: var(--ag-widget-vertical-spacing) 0;
 }
 
 .ag-charts-settings-group-container {
@@ -392,7 +390,12 @@
 
 .ag-chart-menu-panel {
     border-left: solid 1px var(--ag-border-color);
-    background-color: var(--ag-chrome-background-color);
+
+    /* this is a hack to set the panel background color, because agPanel.css
+       is injected after this file and the default panel background is
+       overriding this. Ideally we need a way of controlling file order
+       to put panel styles before files that override them. */
+    --ag-panel-background-color: var(--ag-chrome-background-color);
 }
 
 .ag-charts-settings-group-title-bar,
@@ -417,8 +420,6 @@
 :where(.ag-charts-format-top-level-group) .ag-charts-format-top-level-group-container,
 .ag-charts-format-top-level-group-item,
 .ag-charts-format-sub-level-group,
-.ag-charts-format-sub-level-group-title-bar,
-.ag-charts-format-sub-level-group-container,
 .ag-charts-format-sub-level-group-item:last-child,
 .ag-charts-format-sub-level-group-container > *,
 .ag-charts-data-group-title-bar,
