@@ -1,20 +1,22 @@
-<div class="test-header" style="padding: 5px; justify-content: space-between">
-    <div style="align-items: start">
+<div class="test-header">
+    <div>
         <button onclick="updateRowData(0)">0 Rows</button>
         <button onclick="updateRowData(5)">5 Rows</button>
         <button onclick="updateRowData(50)">50 Rows</button>
     </div>
-    <div style="align-items: center">
-        <label>
-            <input type="checkbox" id="floating-rows" onclick="cbFloatingRows()" style="vertical-align: text-top" />
-            <span class="pinned-rows"></span>
-            Pinned Rows
-        </label>
-
+    <div>
         <button onclick="setAutoHeight()">Auto Height</button>
         <button onclick="setFixedHeight()">Fixed Height</button>
     </div>
-    <div style="align-items: end">Row Count = <span id="currentRowCount"></span></div>
+    <div>
+        <input name="pinned-rows" type="checkbox" id="floating-rows" onclick="cbFloatingRows()" />
+        <label for="pinned-rows">
+            Pinned Rows
+        </label>
+    </div>
+    <div>
+        Row Count = <span id="currentRowCount"></span>
+    </div>
 </div>
 
 <div id="myGrid"></div>

@@ -1,28 +1,31 @@
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    font-size: 13px;
+
+    margin-bottom: 1rem;
+}
+
+.test-header > div {
+    vertical-align: middle;
+    align-content: center;
+}
+
+.test-header button {
+    margin-right: 5px;
+    margin-bottom: 0 !important;
+    margin-top: 0;
+}
+
+.test-header input {
+    margin: 0 !important;
+}
+
 .ag-floating-top .ag-row-pinned.ag-row {
     background-color: #2244cc44;
 }
 
 .ag-floating-bottom .ag-row-pinned.ag-row {
     background-color: #2244cc44;
-}
-
-.test-header {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 13px;
-    margin-bottom: 1rem;
-    display: flex;
-}
-
-button {
-    float: left;
-    margin-right: 5px;
-}
-
-.pinned-rows {
-    background-color: #2244cc44;
-    width: 15px;
-    height: 15px;
-    border: 1px solid #888;
-    display: inline-block;
-    vertical-align: text-top;
 }
