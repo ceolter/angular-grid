@@ -54,6 +54,10 @@ export class PartialMatchFilter implements IFilterComp {
         return this.gui;
     }
 
+    afterGuiAttached() {
+        this.eFilterText.focus();
+    }
+
     componentMethod(message: string): void {
         alert(`Alert from PartialMatchFilterComponent: ${message}`);
     }
