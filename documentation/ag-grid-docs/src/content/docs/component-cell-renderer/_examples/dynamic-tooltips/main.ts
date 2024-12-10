@@ -4,6 +4,7 @@ import {
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
+    TooltipModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -14,6 +15,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
+    TooltipModule,
     ValidationModule /* Development Only */,
 ]);
 

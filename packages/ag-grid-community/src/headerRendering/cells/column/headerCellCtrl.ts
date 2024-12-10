@@ -157,8 +157,8 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
     }
 
     private createParams(): IHeaderParams {
-        const { menuSvc, sortSvc, colFilter } = this.beans;
-        const params: IHeaderParams = this.gos.addGridCommonParams({
+        const { menuSvc, sortSvc, colFilter, gos } = this.beans;
+        const params: IHeaderParams = gos.addGridCommonParams({
             column: this.column,
             displayName: this.displayName!,
             enableSorting: this.column.isSortable(),
@@ -195,6 +195,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             },
             eGridHeader: this.eGui,
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                gos.assertModuleRegistered('Tooltip', 3);
                 this.setupTooltip(value, shouldDisplayTooltip);
             },
         });

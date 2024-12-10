@@ -361,21 +361,23 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
     }
 
     private setTooltipAndCellRendererParams(value: V | null | (() => string), formattedValue: string | null): void {
-        if (this.params.showTooltips && (!_isShowTooltipWhenTruncated(this.gos) || !this.params.cellRenderer)) {
+        const gos = this.gos;
+        if (this.params.showTooltips && (!_isShowTooltipWhenTruncated(gos) || !this.params.cellRenderer)) {
             const newTooltipText = formattedValue != null ? formattedValue : _toStringOrNull(value);
             this.shouldDisplayTooltip = _getShouldDisplayTooltip(
-                this.gos,
+                gos,
                 () => this.eCheckbox.getGui().querySelector('.ag-label') as HTMLElement | undefined
             );
             this.tooltipFeature?.setTooltipAndRefresh(newTooltipText);
         }
 
-        this.cellRendererParams = this.gos.addGridCommonParams({
+        this.cellRendererParams = gos.addGridCommonParams({
             value,
             valueFormatted: formattedValue,
             colDef: this.params.colDef,
             column: this.params.column,
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                gos.assertModuleRegistered('Tooltip', 3);
                 this.shouldDisplayTooltip = shouldDisplayTooltip;
                 this.tooltipFeature?.setTooltipAndRefresh(value);
             },

@@ -7,6 +7,7 @@ import {
     ModuleRegistry,
     TextEditorModule,
     TextFilterModule,
+    TooltipModule,
     ValidationModule,
 } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
@@ -19,6 +20,7 @@ ModuleRegistry.registerModules([
     TextEditorModule,
     TextFilterModule,
     ClientSideRowModelModule,
+    TooltipModule,
     ValidationModule /* Development Only */,
 ]);
 

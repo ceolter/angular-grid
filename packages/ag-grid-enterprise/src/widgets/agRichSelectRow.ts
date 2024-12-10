@@ -151,6 +151,7 @@ export class RichSelectRow<TValue> extends Component {
                         richSelect?.setValue(value, true);
                     },
                     setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                        this.gos.assertModuleRegistered('Tooltip', 3);
                         this.shouldDisplayTooltip = shouldDisplayTooltip;
                         this.tooltipFeature?.setTooltipAndRefresh(value);
                     },

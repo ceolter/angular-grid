@@ -607,6 +607,7 @@ export function getError<TId extends ErrorId, TParams extends GetErrorParams<TId
 export const MISSING_MODULE_REASONS = {
     1: 'Charting Aggregation',
     2: 'pivotResultFields',
+    3: 'setTooltip',
 } as const;
 
 export type MissingModuleErrors = typeof MISSING_MODULE_REASONS;

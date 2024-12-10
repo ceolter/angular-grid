@@ -197,6 +197,7 @@ export class HeaderGroupCellCtrl extends AbstractHeaderCellCtrl<
                 colGroupSvc!.setColumnGroupOpened(this.column.getProvidedColumnGroup(), expanded, 'gridInitializing');
             },
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                gos.assertModuleRegistered('Tooltip', 3);
                 this.setupTooltip(value, shouldDisplayTooltip);
             },
         });

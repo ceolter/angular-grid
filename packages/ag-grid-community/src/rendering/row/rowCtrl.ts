@@ -1063,7 +1063,10 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
             addRenderedRowListener: this.addEventListener.bind(this),
             registerRowDragger: (rowDraggerElement, dragStartPixels, value, suppressVisibilityChange) =>
                 this.addFullWidthRowDragging(rowDraggerElement, dragStartPixels, value, suppressVisibilityChange),
-            setTooltip: (value, shouldDisplayTooltip) => this.refreshRowTooltip(value, shouldDisplayTooltip),
+            setTooltip: (value, shouldDisplayTooltip) => {
+                gos.assertModuleRegistered('Tooltip', 3);
+                this.refreshRowTooltip(value, shouldDisplayTooltip);
+            },
         } as WithoutGridCommon<ICellRendererParams>);
 
         const compFactory = this.beans.userCompFactory;

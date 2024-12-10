@@ -187,7 +187,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
     }
 
     private renderSelectedValue(): void {
-        const { value, eDisplayField, config } = this;
+        const { value, eDisplayField, config, gos } = this;
         const {
             allowTyping,
             cellRenderer,
@@ -227,6 +227,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
                         this.setValue(value, true);
                     },
                     setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                        gos.assertModuleRegistered('Tooltip', 3);
                         this.shouldDisplayTooltip = shouldDisplayTooltip;
                         this.tooltipFeature?.setTooltipAndRefresh(value);
                     },

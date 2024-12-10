@@ -1,9 +1,15 @@
 import type { ColGroupDef, GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
+import {
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    TooltipModule,
+    ValidationModule,
+    createGrid,
+} from 'ag-grid-community';
 
 import { CustomHeaderGroup } from './customHeaderGroup_typescript';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, TooltipModule, ValidationModule /* Development Only */]);
 
 const columnDefs: ColGroupDef[] = [
     {

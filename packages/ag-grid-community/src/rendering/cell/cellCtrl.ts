@@ -378,6 +378,7 @@ export class CellCtrl extends BeanStub {
                 suppressVisibilityChange?: boolean
             ) => this.registerRowDragger(rowDraggerElement, dragStartPixels, suppressVisibilityChange),
             setTooltip: (value: string, shouldDisplayTooltip: () => boolean) => {
+                gos.assertModuleRegistered('Tooltip', 3);
                 if (this.tooltipFeature) {
                     this.disableTooltipFeature();
                 }

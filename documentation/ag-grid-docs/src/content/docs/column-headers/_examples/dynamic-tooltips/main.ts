@@ -6,6 +6,7 @@ import {
     NumberFilterModule,
     TextEditorModule,
     TextFilterModule,
+    TooltipModule,
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
@@ -18,6 +19,7 @@ ModuleRegistry.registerModules([
     TextFilterModule,
     NumberFilterModule,
     ClientSideRowModelModule,
+    TooltipModule,
     ValidationModule /* Development Only */,
 ]);
 
