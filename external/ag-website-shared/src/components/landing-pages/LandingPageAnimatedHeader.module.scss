@@ -28,3 +28,22 @@
     height: calc(var(--word-height) * 1.5);
     padding-top: calc(var(--word-height) * 0.5);
 }
+
+.javascript {
+    color: #f7df1e; // Yellow
+}
+
+.react {
+    color: #61dafb; // Light Blue
+}
+
+.angular {
+    background: linear-gradient(90deg, #e40035, #f60a48 24%, #f20755 35%, #dc087d 49%, #9717e7 74%, #6c00f5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.vue {
+    color: #42b883; // Green
+}
