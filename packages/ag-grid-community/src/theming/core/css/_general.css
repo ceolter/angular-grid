@@ -498,6 +498,7 @@ always be 0 and then making a row sticky causes the grid to scroll. */
 
 :where(.ag-rtl) {
     direction: rtl;
+    text-align: right;
 
     .ag-body,
     .ag-floating-top,

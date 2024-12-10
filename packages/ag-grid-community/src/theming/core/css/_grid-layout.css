@@ -3,10 +3,6 @@
     specificities to work, one day it would be good to tackle this and properly
     refactor border styles to be less specific */
 
-.ag-rtl {
-    text-align: right;
-}
-
 .ag-row:not(.ag-row-level-0) .ag-pivot-leaf-group {
     margin-left: var(--ag-row-group-indent-size);
 }
