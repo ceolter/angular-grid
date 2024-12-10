@@ -36,6 +36,7 @@ const gridOptions: GridOptions = {
     },
     rowData: getStockData(),
     rowHeight: 50,
+    onGridReady: (params) => {},
 };
 
 // setup the grid after the page has finished loading

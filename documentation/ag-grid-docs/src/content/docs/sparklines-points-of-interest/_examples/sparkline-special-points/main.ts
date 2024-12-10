@@ -126,6 +126,7 @@ const gridOptions: GridOptions = {
         minWidth: 100,
     },
     rowData: getData(),
+    onGridReady: (params) => {},
 };
 
 function barItemStyler(params: any) {

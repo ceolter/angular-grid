@@ -61,6 +61,7 @@ const gridOptions: GridOptions = {
     },
     rowData: getData(),
     rowHeight: 50,
+    onGridReady: (params) => {},
 };
 
 function itemStyler(params: AgBarSeriesItemStylerParams<any>): AgBarSeriesStyle {

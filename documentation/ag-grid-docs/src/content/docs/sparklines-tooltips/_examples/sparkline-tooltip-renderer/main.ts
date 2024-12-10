@@ -42,6 +42,7 @@ const gridOptions: GridOptions = {
     },
     rowData: getData(),
     rowHeight: 50,
+    onGridReady: (params) => {},
 };
 
 function tooltipRenderer(params: any) {

@@ -63,6 +63,7 @@ const gridOptions: GridOptions = {
     },
     rowData: getData(),
     rowHeight: 80,
+    onGridReady: (params) => {},
 };
 
 // setup the grid after the page has finished loading

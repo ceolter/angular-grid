@@ -41,6 +41,7 @@ const gridOptions: GridOptions = {
     },
     rowData: getData(),
     rowHeight: 50,
+    onGridReady: (params) => {},
 };
 
 let intervalId: any;
