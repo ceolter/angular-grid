@@ -308,7 +308,7 @@ export class HeaderNavigationService extends BeanStub implements NamedBean {
                 columnsInPath.push(nextColumn);
             }
 
-            nextColumn = columnsInPath[columnsInPath.length - 1 - headerRowIndex];
+            nextColumn = columnsInPath[Math.max(0, columnsInPath.length - 1 - headerRowIndex)];
         }
 
         const { column, headerRowIndex: indexToFocus } = getHeaderIndexToFocus(nextColumn, headerRowIndex);
