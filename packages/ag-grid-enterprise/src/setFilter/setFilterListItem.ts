@@ -315,7 +315,7 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
             this.setSelected(isSelected, true);
         }
         this.setExpanded(isExpanded, true);
-        const { cellRendererComponent, cellRendererParams } = this;
+        const { cellRendererComponent, cellRendererParams, beans, params } = this;
         if (this.valueFunction) {
             // underlying value might have changed, so call again and re-render
             const value = this.valueFunction();
@@ -325,7 +325,13 @@ export class SetFilterListItem<V> extends Component<SetFilterListItemEvent> {
             }
         }
         if (cellRendererComponent) {
-            const success = cellRendererComponent.refresh?.(cellRendererParams as any);
+            // need to get correct params for refresh from comp details
+            const compDetails = _getCellRendererDetails<SetFilterParams<any, V>, ISetFilterCellRendererParams>(
+                beans.userCompFactory,
+                params,
+                cellRendererParams
+            );
+            const success = cellRendererComponent.refresh?.(compDetails?.params ?? cellRendererParams);
             if (!success) {
                 const oldComponent = cellRendererComponent;
                 this.renderCell();
