@@ -196,6 +196,14 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
             return "colDef.type should be of type 'string' | 'string[]'";
         },
     },
+    rowSpan: {
+        validate: (_options, { suppressRowTransform }) => {
+            if (!suppressRowTransform) {
+                return 'colDef.rowSpan requires suppressRowTransform to be enabled.';
+            }
+            return null;
+        },
+    },
 });
 
 type ColKey = keyof ColDef | keyof ColGroupDef;
