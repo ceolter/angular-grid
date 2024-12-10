@@ -19,8 +19,8 @@ import type { ICellRendererParams } from 'ag-grid-community';
                 </label>
                 <br />
                 <label>
-                    <b>Known For:</b>
-                    {{ data.summary }}
+                    <b>Language:</b>
+                    {{ data.language }}
                 </label>
                 <br />
             </div>

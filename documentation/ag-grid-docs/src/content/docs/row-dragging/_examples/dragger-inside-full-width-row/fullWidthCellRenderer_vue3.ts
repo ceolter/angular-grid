@@ -14,8 +14,8 @@ export default {
                     </label>
                     <br/>
                     <label>
-                        <b>Known For:</b>
-                        {{params.node.data.summary}}
+                        <b>Language:</b>
+                        {{params.node.data.language}}
                     </label>
                     <br/>
                 </div>

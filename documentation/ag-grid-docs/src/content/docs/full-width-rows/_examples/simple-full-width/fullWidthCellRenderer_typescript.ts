@@ -21,7 +21,7 @@ export class FullWidthCellRenderer implements ICellRendererComp {
                 <div class="full-width-summary">    
                     <span class="full-width-title">${data.name}</span><br/>    
                     <label><b>Population:</b> ${data.population}</label><br/>    
-                    <label><b>Known For:</b> ${data.summary}</label><br/>  
+                    <label><b>Language:</b> ${data.language}</label><br/>  
                 </div>  
                 <div class="full-width-center">${this.latinText()} 
                 </div>

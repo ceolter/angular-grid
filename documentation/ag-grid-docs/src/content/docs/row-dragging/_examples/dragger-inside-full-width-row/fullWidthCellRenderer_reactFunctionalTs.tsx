@@ -35,8 +35,8 @@ const FullWidthCellRenderer = (props: CustomCellRendererProps) => {
                 </label>
                 <br />
                 <label>
-                    <b>Known For:</b>
-                    {props.node.data.summary}
+                    <b>Language:</b>
+                    {props.node.data.language}
                 </label>
                 <br />
             </div>

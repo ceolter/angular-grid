@@ -1,5 +1,5 @@
 export function getData(): any[] {
-    return [
+    const rowData = [
         {
             // these attributes appear in the top level rows of the grid
             name: 'Ireland',
@@ -8,7 +8,6 @@ export function getData(): any[] {
             code: 'ie',
             // these are used in the panel
             population: 4000000,
-            summary: 'Master Drinkers',
         },
         // and then repeat for all the other countries
         {
@@ -17,7 +16,6 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 'es',
             population: 4000000,
-            summary: 'Bull Fighters',
         },
         {
             name: 'United Kingdom',
@@ -25,7 +23,6 @@ export function getData(): any[] {
             language: 'English',
             code: 'gb',
             population: 4000000,
-            summary: 'Center of the World',
         },
         {
             name: 'France',
@@ -33,7 +30,6 @@ export function getData(): any[] {
             language: 'French',
             code: 'fr',
             population: 4000000,
-            summary: 'Best Lovers',
         },
         {
             name: 'Germany',
@@ -41,7 +37,6 @@ export function getData(): any[] {
             language: 'German',
             code: 'de',
             population: 4000000,
-            summary: 'Always on Time',
         },
         {
             name: 'Sweden',
@@ -49,7 +44,6 @@ export function getData(): any[] {
             language: 'Swedish',
             code: 'se',
             population: 4000000,
-            summary: 'Home of Vikings',
         },
         {
             name: 'Norway',
@@ -57,7 +51,6 @@ export function getData(): any[] {
             language: 'Norwegian',
             code: 'no',
             population: 4000000,
-            summary: 'Best Vikings',
         },
         {
             name: 'Italy',
@@ -65,7 +58,6 @@ export function getData(): any[] {
             language: 'Italian',
             code: 'it',
             population: 4000000,
-            summary: 'Pizza Pizza',
         },
         {
             name: 'Greece',
@@ -73,7 +65,6 @@ export function getData(): any[] {
             language: 'Greek',
             code: 'gr',
             population: 4000000,
-            summary: 'Many Gods',
         },
         {
             name: 'Iceland',
@@ -81,7 +72,6 @@ export function getData(): any[] {
             language: 'Icelandic',
             code: 'is',
             population: 4000000,
-            summary: 'Exploding Volcano',
         },
         {
             name: 'Portugal',
@@ -89,7 +79,6 @@ export function getData(): any[] {
             language: 'Portuguese',
             code: 'pt',
             population: 4000000,
-            summary: 'Ship Builders',
         },
         {
             name: 'Malta',
@@ -97,7 +86,6 @@ export function getData(): any[] {
             language: 'Maltese',
             code: 'mt',
             population: 4000000,
-            summary: 'Fishermen',
         },
         {
             name: 'Brazil',
@@ -105,7 +93,6 @@ export function getData(): any[] {
             language: 'Portuguese',
             code: 'br',
             population: 4000000,
-            summary: 'Best Footballers',
         },
         {
             name: 'Argentina',
@@ -113,7 +100,6 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 'ar',
             population: 4000000,
-            summary: 'Beef Steaks',
         },
         {
             name: 'Colombia',
@@ -121,7 +107,6 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 'co',
             population: 4000000,
-            summary: 'Wonderful Hospitality',
         },
         {
             name: 'Peru',
@@ -129,7 +114,6 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 'pe',
             population: 4000000,
-            summary: 'Paddington Bear',
         },
         {
             name: 'Venezuela',
@@ -137,7 +121,6 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 've',
             population: 4000000,
-            summary: 'Never Been, Dunno',
         },
         {
             name: 'Uruguay',
@@ -145,7 +128,7 @@ export function getData(): any[] {
             language: 'Spanish',
             code: 'uy',
             population: 4000000,
-            summary: 'Excellent Food',
         },
     ];
+    return rowData;
 }

@@ -20,8 +20,8 @@ export default ({ node }: CustomCellRendererProps) => {
                 </label>
                 <br />
                 <label>
-                    <b>Known For:</b>
-                    {node.data.summary}
+                    <b>Language:</b>
+                    {node.data.language}
                 </label>
                 <br />
             </div>

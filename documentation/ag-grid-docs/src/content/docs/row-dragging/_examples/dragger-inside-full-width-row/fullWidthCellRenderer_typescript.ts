@@ -30,8 +30,8 @@ export class FullWidthCellRenderer implements ICellRendererComp {
             '    <label><b>Population:</b> ' +
             data.population +
             '</label><br/>' +
-            '    <label><b>Known For:</b> ' +
-            data.summary +
+            '    <label><b>Language:</b> ' +
+            data.language +
             '</label><br/>' +
             '  </div>' +
             '  <div class="full-width-center">' +
