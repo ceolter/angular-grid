@@ -48,6 +48,10 @@ const gridOptions: GridOptions<IOlympicData> = {
         minWidth: 100,
         filter: true,
     },
+    rowSelection: {
+        mode: 'singleRow',
+        checkboxes: false,
+    },
     onCellKeyDown: onCellKeyDown,
 };
 
