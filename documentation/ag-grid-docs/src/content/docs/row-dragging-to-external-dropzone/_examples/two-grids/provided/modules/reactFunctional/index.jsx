@@ -137,7 +137,7 @@ const GridExample = () => {
             },
             onDragStop: (params) => {
                 binDrop(params.node.data);
-                eBin.current.style.color = 'black';
+                eBin.current.style.removeProperty('color');
                 eBinIcon.current.style.transform = 'scale(1)';
             },
         };

@@ -175,7 +175,7 @@ function addBinZone(params: GridReadyEvent) {
             },
             onDragStop: (dragStopParams) => {
                 binDrop(dragStopParams.node.data);
-                eBin.style.color = 'black';
+                eBin.style.removeProperty('color');
                 icon.style.transform = 'scale(1)';
             },
         };

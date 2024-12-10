@@ -231,7 +231,7 @@ export class AppComponent {
             },
             onDragStop: (params) => {
                 this.binDrop(params.node.data);
-                this.eBin.nativeElement.style.color = 'black';
+                this.eBin.nativeElement.style.removeProperty('color');
                 this.eBinIcon.nativeElement.style.transform = 'scale(1)';
             },
         };
