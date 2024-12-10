@@ -851,6 +851,10 @@
         top: 0;
     }
 
+    .ag-sparkline-wrapper :where(canvas) {
+        position: absolute;
+    }
+
     .ag-full-width-row .ag-cell-wrapper.ag-row-group {
         height: 100%;
         align-items: center;
