@@ -137,6 +137,7 @@ export function createGrid<TData>(
         return {} as GridApi;
     }
     const gridParams: GridParams | undefined = params;
+    let destroyCallback: (() => void) | undefined;
     if (!gridParams?.setThemeOnGridDiv) {
         // frameworks already create an element owned by our code, so we can set
         // the theme class on it. JS users calling createGrid directly are
@@ -146,6 +147,7 @@ export function createGrid<TData>(
         newGridDiv.style.height = '100%';
         eGridDiv.appendChild(newGridDiv);
         eGridDiv = newGridDiv;
+        destroyCallback = () => eGridDiv.remove();
     }
     const api = new GridCoreCreator().create(
         eGridDiv,
@@ -155,7 +157,8 @@ export function createGrid<TData>(
             context.createBean(gridComp);
         },
         undefined,
-        params
+        params,
+        destroyCallback
     );
 
     return api;
@@ -171,7 +174,8 @@ export class GridCoreCreator {
         providedOptions: GridOptions,
         createUi: (context: Context) => void,
         acceptChanges?: (context: Context) => void,
-        params?: GridParams
+        params?: GridParams,
+        destroyCallback?: () => void
     ): GridApi {
         // Returns a shallow copy of the provided options, with global options merged in
         const gridOptions = GlobalGridOptions.applyGlobalGridOptions(providedOptions);
@@ -198,6 +202,7 @@ export class GridCoreCreator {
             beanInitComparator: gridBeanInitComparator,
             beanDestroyComparator: gridBeanDestroyComparator,
             derivedBeans: [createGridApi],
+            destroyCallback,
         };
 
         const context = new Context(contextParams);

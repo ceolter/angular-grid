@@ -108,6 +108,7 @@ import { GenericContext } from './genericContext';
 
 export interface ContextParams extends GenericContextParams<BeanName, BeanCollection> {
     gridId: string;
+    destroyCallback?: () => void;
 }
 
 export interface SingletonBean extends GenericSingletonBean<BeanName, BeanCollection> {}
@@ -309,18 +310,20 @@ export type BeanCollection = CoreBeanCollection & {
 
 export class Context extends GenericContext<BeanName, BeanCollection> {
     private gridId: string;
+    private destroyCallback?: () => void;
 
     protected override init(params: ContextParams): void {
         this.gridId = params.gridId;
 
         this.beans.context = this;
+        this.destroyCallback = params.destroyCallback;
         super.init(params);
     }
 
     public override destroy(): void {
         super.destroy();
-
         _unRegisterGridModules(this.gridId);
+        this.destroyCallback?.();
     }
 
     public getGridId(): string {
