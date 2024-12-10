@@ -2527,7 +2527,13 @@ export type RowSelectionOptions<TData = any, TValue = any> =
 
 interface CommonRowSelectionOptions<TData = any, TValue = any> {
     /**
-     * Modifies the selection behaviour when clicking a row, or pressing `Space` while focusing a row.
+     * Modifies the selection behaviour when clicking a row.
+     *
+     * Choosing `'enableSelection'` allows selection of a row by clicking the row itself.
+     * Choosing `'enableDeselection'` allows deselection of a row by CTRL-clicking the row itself.
+     * Choosing `true` allows both selection and deselection of a row by clicking.
+     * Choosing `false` prevents rows from being selected or deselected by clicking.
+     *
      * @default false
      */
     enableClickSelection?: boolean | 'enableDeselection' | 'enableSelection';
