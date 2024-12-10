@@ -71,6 +71,13 @@
     > * {
         flex: 1 1 auto;
     }
+
+    :where(.ag-input-field-input[type='date']) {
+        /* In Chrome the date input will not shrink from its default size in a flex
+           container, but it will grow. So we give it a very small width and it will
+           grow to the right size */
+        width: 1px;
+    }
 }
 
 .ag-floating-filter-button {
