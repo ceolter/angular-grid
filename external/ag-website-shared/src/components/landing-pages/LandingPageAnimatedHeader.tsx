@@ -9,7 +9,7 @@ export const LandingPageAnimatedHeader: FunctionComponent = () => {
     const [noTransitions, setNoTransitions] = useState(false);
 
     useEffect(() => {
-        const delayMs = wordIndex === 0 ? 10 : 1000;
+        const delayMs = wordIndex === 0 ? 50 : 1250;
 
         const timeout = setTimeout(() => {
             const nextWordIndex = (wordIndex + 1) % 5;
