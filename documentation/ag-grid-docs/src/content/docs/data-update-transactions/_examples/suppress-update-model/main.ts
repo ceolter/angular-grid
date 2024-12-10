@@ -10,13 +10,14 @@ import {
     ValidationModule,
     createGrid,
 } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
+import { RowGroupingModule, SetFilterModule } from 'ag-grid-enterprise';
 
 import { createDataItem, getData } from './data';
 
 ModuleRegistry.registerModules([
     ClientSideRowModelApiModule,
     TextFilterModule,
+    SetFilterModule,
     RowApiModule,
     HighlightChangesModule,
     ClientSideRowModelModule,
