@@ -2,6 +2,7 @@ import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
+    RowApiModule,
     TooltipModule,
     ValidationModule,
     createGrid,
@@ -9,7 +10,12 @@ import {
 
 import { CustomTooltip } from './customTooltip_typescript';
 
-ModuleRegistry.registerModules([TooltipModule, ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([
+    TooltipModule,
+    ClientSideRowModelModule,
+    RowApiModule,
+    ValidationModule /* Development Only */,
+]);
 
 const columnDefs: ColDef[] = [
     {
