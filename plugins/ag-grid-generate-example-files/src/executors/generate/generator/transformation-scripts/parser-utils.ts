@@ -680,7 +680,21 @@ const darkModeTs = `
         };
         
         // update chart themes when example first loads
-        updateChartThemes(isInitialModeDark);
+        let initialSet = false;
+        const maxTries = 5;
+        let tries = 0;
+        const trySetInitial = (delay) => {
+            if(params.api){
+                initialSet = true;
+                updateChartThemes(isInitialModeDark);
+            }else{
+                if(tries < maxTries){
+                    setTimeout(() => trySetInitial(), 250);
+                    tries++;
+                }   
+            }
+        }
+        trySetInitial(0);
                       
         interface ColorSchemeChangeEventDetail {
             darkMode: boolean;
@@ -713,7 +727,21 @@ const darkModeJS = `
         };
 
         // update chart themes when example first loads
-        updateChartThemes(isInitialModeDark);
+        let initialSet = false;
+        const maxTries = 5;
+        let tries = 0;
+        const trySetInitial = (delay) => {
+            if(params.api){
+                initialSet = true;
+                updateChartThemes(isInitialModeDark);
+            }else{
+                if(tries < maxTries){
+                    setTimeout(() => trySetInitial(), 250);
+                    tries++;
+                }   
+            }
+        }
+        trySetInitial(0);
 
         const handleColorSchemeChange = (event) => {
             const { darkMode } = event.detail;
