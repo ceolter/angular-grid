@@ -155,9 +155,9 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                             <LinkIcon href="#configure-your-application" />
                         </h3>
 
-                        <div className={styles.icQuestion}>
+                        <div className={styles.configureItems}>
                             <label
-                                className={classnames(styles.licensedProduct, styles.integratedProduct, {
+                                className={classnames({
                                     [styles.valid]: licensedProducts.grid && licensedProducts.charts,
                                     [styles.trial]:
                                         userLicenseIsTrial && licensedProducts.grid && licensedProducts.charts,
@@ -170,6 +170,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                                 Are you using Integrated Charts?{' '}
                                 <input
                                     type="checkbox"
+                                    className="switch"
                                     name="products"
                                     value="integratedEnterprise"
                                     checked={isIntegratedCharts}
@@ -178,18 +179,19 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                                     }}
                                 />
                             </label>
+
+                            <label>
+                                Framework:
+                                <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
+                            </label>
                         </div>
                     </div>
+
                     {licenseState.integratedChartsNoChartsError && (
                         <Warning>
                             {licenseState.integratedChartsNoChartsError}. <EmailSales />
                         </Warning>
                     )}
-
-                    <div className={styles.frameworkContainer}>
-                        <label>Framework</label>
-                        <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
-                    </div>
                 </div>
 
                 <div className={styles.results}>

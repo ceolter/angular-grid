@@ -151,40 +151,17 @@
     }
 }
 
-.licensedProduct {
-    strong {
-        position: relative;
-        font-size: var(--text-fs-lg);
-        line-height: var(--text-lh-ultra-tight);
-
-        &::after {
-            position: absolute;
-            top: $spacing-size-6;
-            left: 0;
-            font-size: var(--text-fs-sm);
-            font-weight: var(--text-regular);
-            color: var(--color-fg-quinary);
-            min-width: 160px;
-        }
-    }
-}
-
-.integratedProduct {
-    margin-top: $spacing-size-5;
-}
-
-.icQuestion {
+.configureItems {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-size-3 $spacing-size-8;
+    margin-top: $spacing-size-2;
 
     label {
-        margin-top: 0;
-    }
-
-    input {
-        position: relative;
-        margin-right: $spacing-size-1;
-        top: 4px;
+        display: flex;
+        align-items: center;
+        gap: $spacing-size-3;
     }
 }
 
