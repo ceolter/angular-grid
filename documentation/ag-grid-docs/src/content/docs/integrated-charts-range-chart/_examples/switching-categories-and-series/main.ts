@@ -42,7 +42,6 @@ const gridOptions: GridOptions = {
     popupParent: document.body,
     enableCharts: true,
     onFirstDataRendered: onFirstDataRendered,
-    onGridReady: () => {},
 };
 
 function onFirstDataRendered(params: FirstDataRenderedEvent) {
