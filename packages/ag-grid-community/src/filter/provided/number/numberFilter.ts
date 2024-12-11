@@ -194,4 +194,8 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         });
         return invalidInputs;
     }
+
+    protected override getFocusableInputElement(input?: AgInputTextField | null): HTMLElement | undefined {
+        return input?.getInputElement();
+    }
 }

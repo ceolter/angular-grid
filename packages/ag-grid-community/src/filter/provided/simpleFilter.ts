@@ -91,6 +91,8 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     // allow retrieval of all condition input values.
     protected abstract getValues(position: number): Tuple<V>;
 
+    protected abstract getFocusableInputElement(input?: E | null): HTMLElement | undefined;
+
     protected getNumberOfInputs(type?: ISimpleFilterModelType | null): number {
         const customOpts = this.optionsFactory.getCustomOption(type);
         if (customOpts) {
@@ -573,9 +575,9 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
             const { eFilterBody, eTypes } = this;
             let elementToFocus: HTMLElement | undefined;
             if (!this.isReadOnly()) {
-                const firstInput = this.getInputs(0)[0];
-                if (firstInput instanceof AgAbstractInputField && this.isConditionBodyVisible(0)) {
-                    elementToFocus = firstInput.getInputElement();
+                const firstInput = this.getFocusableInputElement(this.getInputs(0)[0]);
+                if (firstInput && this.isConditionBodyVisible(0)) {
+                    elementToFocus = firstInput;
                 } else {
                     // focus the dropdown instead
                     elementToFocus = eTypes[0]?.getFocusableElement();

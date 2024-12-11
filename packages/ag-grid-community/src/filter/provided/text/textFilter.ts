@@ -199,4 +199,8 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
     public getModelAsString(model: ISimpleFilterModel): string {
         return this.filterModelFormatter.getModelAsString(model) ?? '';
     }
+
+    protected override getFocusableInputElement(input?: AgInputTextField | null): HTMLElement | undefined {
+        return input?.getInputElement();
+    }
 }

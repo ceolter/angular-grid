@@ -294,6 +294,11 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     public getModelAsString(model: ISimpleFilterModel): string {
         return this.filterModelFormatter.getModelAsString(model) ?? '';
     }
+
+    protected override getFocusableInputElement(): HTMLElement | undefined {
+        // date comps focus themselves
+        return undefined;
+    }
 }
 
 function defaultDateComparator(filterDate: Date, cellValue: any): number {
