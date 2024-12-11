@@ -1,18 +1,5 @@
 @use 'design-system' as *;
 
-.hasLicenseInput {
-    display: flex;
-    flex-direction: row;
-    gap: $spacing-size-5;
-
-    label {
-        display: flex;
-        flex-direction: row;
-        gap: $spacing-size-2;
-        cursor: pointer;
-    }
-}
-
 .licenceWrapper {
     margin-top: $spacing-size-2;
     position: relative;
@@ -64,91 +51,21 @@
     margin-top: 0;
 }
 
-.licenseOutput {
-    margin-top: $spacing-size-1;
-    margin-bottom: $spacing-size-3;
-
-    span {
-        margin-right: $spacing-size-5;
-    }
-
-    .valid {
-        color: var(--color-positive);
-
-        svg {
-            --icon-color: var(--color-positive);
-        }
-    }
-
-    .invalid {
-        color: var(--color-negative);
-
-        svg {
-            --icon-color: var(--color-negative);
-        }
-    }
-
-    :global('.icon') {
-        --icon-size: 0.75em;
-    }
-}
-
 .licenseData {
     display: flex;
     flex-direction: column;
     gap: $spacing-size-8;
     margin-top: $spacing-size-2;
-
-    .inputList {
-        margin-bottom: $spacing-size-10;
-    }
 }
 
 .expired {
     color: var(--color-negative);
 }
 
-.frameworkContainer {
-    display: flex;
-    align-items: center;
-    gap: $spacing-size-2;
-}
-
 .frameworkLogo {
     width: $spacing-size-6;
     height: $spacing-size-6;
     border-radius: var(--radius-xs);
-}
-
-.inputList,
-.productsList {
-    display: flex;
-    gap: $spacing-size-8;
-    margin-top: $spacing-size-1;
-
-    label {
-        display: flex;
-        align-items: center;
-        gap: $spacing-size-2;
-    }
-}
-
-.productsList {
-    gap: $spacing-size-3;
-    flex-wrap: wrap;
-}
-
-.productWrapper {
-    padding: $spacing-size-3;
-    width: calc(50% - #{$spacing-size-3} / 2);
-    min-width: 260px;
-    border: 1px solid var(--color-border-secondary);
-    background-color: color-mix(in srgb, var(--color-util-brand-50), var(--color-bg-primary));
-    border-radius: var(--radius-sm);
-
-    #{$selector-darkmode} & {
-        background-color: var(--color-util-gray-200);
-    }
 }
 
 .configureItems {
