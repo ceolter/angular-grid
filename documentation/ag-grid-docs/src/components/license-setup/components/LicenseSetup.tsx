@@ -120,7 +120,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
 
                     {userLicense === '' && (
                         <span className={styles.licencePlaceholder}>
-                            <b>Paste your License Key here, e.g., </b>
+                            <b>Paste your License Key here: </b>
                             <span>{DUMMY_LICENSE_KEY}</span>
                         </span>
                     )}
