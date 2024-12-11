@@ -256,7 +256,7 @@ export function vanillaToReactFunctional(
             componentProps.push('onGridReady={onGridReady}');
         } else {
             // We need to check if we need to add integrated dark mode code for and example that does not have data or onGridReady
-            darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, false, 'gridRef.current?.api?');
+            darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, false, 'gridRef.current?.api');
         }
         componentProps.push(...componentEventAttributes);
 
