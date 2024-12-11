@@ -2,7 +2,14 @@ import * as JSON5 from 'json5';
 
 import { _ALL_EVENTS } from '../_copiedFromCore/eventTypes';
 import { _FUNCTION_GRID_OPTIONS } from '../_copiedFromCore/propertyKeys';
-import { getFunctionName, recognizedDomEvents } from './parser-utils';
+import type { ParsedBindings } from '../types';
+import {
+    DARK_INTEGRATED_END,
+    DARK_INTEGRATED_START,
+    getFunctionName,
+    getIntegratedDarkModeCode,
+    recognizedDomEvents,
+} from './parser-utils';
 
 const toTitleCase = (value: string) => value[0].toUpperCase() + value.slice(1);
 const toCamelCase = (value: string) => value.replace(/(?:-)(\w)/g, (_, c: string) => (c ? c.toUpperCase() : ''));
@@ -106,3 +113,24 @@ export const convertFunctionToConstCallbackTs = (code: string, callbackDependenc
 };
 
 export const EventAndCallbackNames = new Set([..._FUNCTION_GRID_OPTIONS, ..._ALL_EVENTS]);
+
+export function addChartsDarkModeIfRequired(bindings: ParsedBindings, imports: string[], useTypescript: boolean) {
+    let darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, useTypescript, 'gridRef.current?.api');
+    if (darkModeWithGridRef) {
+        const reactImportIdx = imports.findIndex((i) => i.includes('useState'));
+        // wrap in useEffect
+        darkModeWithGridRef = darkModeWithGridRef.replace(
+            DARK_INTEGRATED_START,
+            `${DARK_INTEGRATED_START} const [tick, setTick] = useState(0);\nuseEffect(() => { setTick(1); `
+        );
+        darkModeWithGridRef = darkModeWithGridRef.replace(
+            DARK_INTEGRATED_END,
+            `}, [gridRef.current]); ${DARK_INTEGRATED_END}`
+        );
+
+        if (!imports[reactImportIdx].includes('useEffect')) {
+            imports[reactImportIdx] = imports[reactImportIdx].replace('useState', 'useState, useEffect');
+        }
+    }
+    return darkModeWithGridRef;
+}

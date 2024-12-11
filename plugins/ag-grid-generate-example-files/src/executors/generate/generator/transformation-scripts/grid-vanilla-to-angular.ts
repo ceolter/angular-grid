@@ -25,8 +25,7 @@ function getOnGridReadyCode(
     readyCode: string,
     data: { url: string; callback: string },
     rowDataType: string | undefined,
-    hasApi: boolean,
-    exampleName: string
+    hasApi: boolean
 ): string {
     const additionalLines = [];
 
@@ -47,7 +46,6 @@ function getOnGridReadyCode(
         );
         return `
         onGridReady(params: GridReadyEvent${gridReadyEventParam}) {
-            ${getIntegratedDarkModeCode(exampleName, true)} 
             ${hasApi ? 'this.gridApi = params.api;' : ''}${additional}
         }`;
     } else {
@@ -197,41 +195,26 @@ export function vanillaToAngular(
             .join('\n\n');
 
         const hasGridApi = componentForCheckBody.includes('gridApi');
-        const gridReadyCode = getOnGridReadyCode(
-            bindings.onGridReady,
-            data,
-            rowDataType,
-            hasGridApi,
-            bindings.exampleName
-        );
+        const gridReadyCode = getOnGridReadyCode(bindings.onGridReady, data, rowDataType, hasGridApi);
         const additional = [];
-        let darkModeWithGridRef = undefined;
         if (gridReadyCode) {
             additional.push(gridReadyCode);
-        } else {
-            if (bindings.exampleName.includes('sparklines')) {
-                // TEMPORARY ONLY APPLY TO SPARKLINES EXAMPLES
+        }
 
-                darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, true, 'grid?.api');
-                const angularImportIdx = imports.findIndex((i) => i.includes('Component'));
-                if (darkModeWithGridRef) {
-                    // wrap in useEffect
-                    darkModeWithGridRef = darkModeWithGridRef.replace(
-                        DARK_INTEGRATED_START,
-                        `${DARK_INTEGRATED_START} 
+        let darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, true, 'grid?.api');
+        const angularImportIdx = imports.findIndex((i) => i.includes('Component'));
+        if (darkModeWithGridRef) {
+            darkModeWithGridRef = darkModeWithGridRef.replace(
+                DARK_INTEGRATED_START,
+                `${DARK_INTEGRATED_START} 
                         @ViewChild(AgGridAngular)
                         set agGrid(grid){
                             `
-                    );
-                    darkModeWithGridRef = darkModeWithGridRef.replace(DARK_INTEGRATED_END, `} ${DARK_INTEGRATED_END}`);
+            );
+            darkModeWithGridRef = darkModeWithGridRef.replace(DARK_INTEGRATED_END, `} ${DARK_INTEGRATED_END}`);
 
-                    if (!imports[angularImportIdx].includes('ViewChild')) {
-                        imports[angularImportIdx] = imports[angularImportIdx].replace(
-                            'Component',
-                            'Component, ViewChild'
-                        );
-                    }
-                }
+            if (!imports[angularImportIdx].includes('ViewChild')) {
+                imports[angularImportIdx] = imports[angularImportIdx].replace('Component', 'Component, ViewChild');
             }
         }
 
