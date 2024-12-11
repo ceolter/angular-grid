@@ -454,11 +454,12 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     private syncAfterDataChange(): AgPromise<void> {
+        const doApply = !this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!);
         const promise = this.valueModel.refreshValues();
 
         return promise.then(() => {
             this.checkAndRefreshVirtualList();
-            if (!this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!)) {
+            if (doApply) {
                 this.onBtApply(false, true);
             }
         });
