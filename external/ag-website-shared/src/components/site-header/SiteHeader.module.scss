@@ -5,6 +5,7 @@
     align-items: center;
     position: relative;
     background-color: var(--color-bg-site-header);
+    transition: background-color 0.5s ease-in-out;
 
     @media screen and (min-width: $breakpoint-docs-nav-medium) {
         position: sticky;
@@ -231,6 +232,7 @@ button.mobileNavButton {
 #mainNav {
     width: 100%;
     background-color: var(--color-bg-mobile-nav);
+    transition: background-color 0.5s ease-in-out;
 
     @media screen and (min-width: $breakpoint-site-header-small) {
         width: auto;
@@ -378,7 +380,7 @@ button.navLink {
         .navLink:hover svg,
         .navLink:hover .pseudoIcon {
             box-shadow:
-                0 0 0 4px var(--color-bg-site-header),
+                0 0 0 4px var(--color-bg-mobile-nav),
                 0 0 0 6px rgba(white, 0.3);
         }
     }
