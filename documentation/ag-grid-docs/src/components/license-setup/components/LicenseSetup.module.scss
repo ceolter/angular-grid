@@ -1,5 +1,9 @@
 @use 'design-system' as *;
 
+.form :global(.alert) {
+    margin: 0 0 6px;
+}
+
 .licenceWrapper {
     margin-top: $spacing-size-2;
     position: relative;
@@ -47,14 +51,10 @@
     }
 }
 
-.licenceWrapper + :global(.alert) {
-    margin-top: 0;
-}
-
 .licenseData {
     display: flex;
     flex-direction: column;
-    gap: $spacing-size-8;
+    gap: $spacing-size-4;
     margin-top: $spacing-size-2;
 }
 

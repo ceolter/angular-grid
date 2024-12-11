@@ -100,7 +100,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
 
     return (
         <>
-            <form>
+            <form className={styles.form}>
                 <h2 id="validate-your-license">
                     Validate Your Licence
                     <LinkIcon href="#validate-your-license" />
