@@ -195,6 +195,8 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                 </div>
 
                 <div className={styles.results}>
+                    <br />
+
                     <h3 id="add-your-dependencies">
                         Add Your Dependencies
                         <LinkIcon href="#add-your-dependencies" />
@@ -219,17 +221,13 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         <Snippet framework={framework} content={dependenciesSnippet} copyToClipboard />
                     )}
 
-                    <Note>
-                        If you are using an AG Grid version before 33.0.0, please see the documentation for your{' '}
-                        <a href={urlWithBaseUrl('/documentation-archive')}>version</a> for help on installing your
-                        license key.
-                    </Note>
-
                     <p>Or install using npm:</p>
 
                     {npmInstallSnippet && (
                         <Snippet framework={framework} content={npmInstallSnippet} language="bash" copyToClipboard />
                     )}
+
+                    <br />
 
                     <h3 id="set-up-your-application">
                         Set Up Your Application
@@ -246,6 +244,12 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                             {licenseState.gridNoChartsEnterpriseError}. <EmailSales />
                         </Warning>
                     )}
+
+                    <Note>
+                        If you are using an AG Grid version before 33.0.0, please see the documentation for your{' '}
+                        <a href={urlWithBaseUrl('/documentation-archive')}>version</a> for help on installing your
+                        license key.
+                    </Note>
 
                     <p>An example of how to set up your {productName} Enterprise License Key:</p>
 
