@@ -108,7 +108,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.addResizeAndMoveKeyboardListeners(compBean);
 
         compBean.addManagedPropertyListeners(
-            ['suppressMovableColumns', 'suppressMenuHide', 'suppressAggFuncInHeader'],
+            ['suppressMovableColumns', 'suppressMenuHide', 'suppressAggFuncInHeader', 'enableAdvancedFilter'],
             () => this.refresh()
         );
         compBean.addManagedListeners(this.column, { colDefChanged: () => this.refresh() });
