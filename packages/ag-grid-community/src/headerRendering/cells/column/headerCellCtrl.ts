@@ -596,7 +596,10 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private addActiveHeaderMouseListeners(compBean: BeanStub): void {
         const listener = (e: MouseEvent) => this.handleMouseOverChange(e.type === 'mouseenter');
-        const clickListener = () => this.dispatchColumnMouseEvent('columnHeaderClicked', this.column);
+        const clickListener = () => {
+            this.setActiveHeader(true);
+            this.dispatchColumnMouseEvent('columnHeaderClicked', this.column);
+        };
         const contextMenuListener = (event: MouseEvent) =>
             this.handleContextMenuMouseEvent(event, undefined, this.column);
 
