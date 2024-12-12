@@ -272,6 +272,8 @@ export const Changelog = () => {
                 minWidth: 200,
                 flex: 1,
                 filter: 'agTextColumnFilter',
+                wrapText: true,
+                autoHeight: true,
             },
             {
                 field: 'version',
