@@ -165,26 +165,8 @@ export class ValidationService extends BeanStub implements NamedBean {
             }
         };
 
-        const optionKeys = Object.keys(options) as (keyof T)[];
-        optionKeys.forEach((key: keyof T) => {
-            const deprecation = deprecations[key];
-            if (deprecation) {
-                const { message, version } = deprecation;
-                warnings.add(`As of v${version}, ${String(key)} is deprecated. ${message ?? ''}`);
-            }
-
-            const value = options[key];
-            if (value == null || value === false) {
-                // false implies feature is disabled, don't validate.
-                return;
-            }
-
-            const rules = getRules(key);
-            if (!rules) {
-                return;
-            }
-
-            const { module, dependencies, validate, supportedRowModels, expectedType } = rules;
+        const applyRules = (key: keyof T, value: NonNullable<T[keyof T]>, rules: OptionsValidation<T>) => {
+            const { module, dependencies, validate, supportedRowModels, expectedType, children } = rules;
 
             if (expectedType) {
                 const actualType = typeof value;
@@ -228,6 +210,7 @@ export class ValidationService extends BeanStub implements NamedBean {
                     return;
                 }
             }
+
             if (validate) {
                 const warning = validate(options, this.gridOptions, this.beans);
                 if (warning) {
@@ -235,6 +218,37 @@ export class ValidationService extends BeanStub implements NamedBean {
                     return;
                 }
             }
+
+            if (children) {
+                for (const [childKey, childRules] of Object.entries(children)) {
+                    if (typeof value === 'object' && childKey in value) {
+                        const sub = (value as any)[childKey];
+                        applyRules(childKey as any, sub, childRules as any);
+                    }
+                }
+            }
+        }
+
+        const optionKeys = Object.keys(options) as (keyof T)[];
+        optionKeys.forEach((key: keyof T) => {
+            const deprecation = deprecations[key];
+            if (deprecation) {
+                const { message, version } = deprecation;
+                warnings.add(`As of v${version}, ${String(key)} is deprecated. ${message ?? ''}`);
+            }
+
+            const value = options[key];
+            if (value == null || value === false) {
+                // false implies feature is disabled, don't validate.
+                return;
+            }
+
+            const rules = getRules(key);
+            if (!rules) {
+                return;
+            }
+
+            applyRules(key, value, rules);
         });
         if (warnings.size > 0) {
             warnings.forEach((warning) => {

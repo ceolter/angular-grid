@@ -116,7 +116,7 @@ function toConstrainedNum(
 /**
  * Validation rules for gridOptions
  */
-const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
+const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
     const definedValidations: Validations<GridOptions> = {
         alignedGrids: { module: 'AlignedGrids' },
         allowContextMenuWithControlKey: { module: 'ContextMenu' },
@@ -333,12 +333,25 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 if (rowSelection && typeof rowSelection !== 'object') {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
-                if (rowSelection && rowSelection.mode !== 'multiRow' && rowSelection.mode !== 'singleRow') {
-                    return `Selection mode "${(rowSelection as any).mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
-                }
                 return null;
             },
             module: 'SharedRowSelection',
+            children: {
+                mode: {
+                    validate(mode) {
+                        if (mode !== 'multiRow' && mode !== 'singleRow') {
+                            return `Selection mode "${mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
+                        }
+                        return null;
+                    }
+                },
+                checkboxes: {
+                    validate() {
+                        console.log('checkboxes');
+                        return null;
+                    }
+                },
+            }
         },
         rowStyle: {
             validate: (options) => {
