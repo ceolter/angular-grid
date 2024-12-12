@@ -4,7 +4,9 @@ import { AgCheckbox, AgSelect, Component, RefPlaceholder } from 'ag-grid-communi
 import type { AgGroupComponentParams } from '../../../../../widgets/agGroupComponent';
 import { AgGroupComponent, AgGroupComponentSelector } from '../../../../../widgets/agGroupComponent';
 import { AgSlider } from '../../../../widgets/agSlider';
+import { ChartController } from '../../../chartController';
 import type { ChartTranslationKey, ChartTranslationService } from '../../../services/chartTranslationService';
+import { ChartMenuContext } from '../../chartMenuContext';
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 import type { FontPanelParams } from '../fontPanel';
 import { FontPanel } from '../fontPanel';
@@ -12,20 +14,26 @@ import type { FormatPanelOptions } from '../formatPanel';
 
 export class LegendPanel extends Component {
     private chartTranslation: ChartTranslationService;
+    private readonly chartController: ChartController;
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
     }
     private readonly legendGroup: AgGroupComponent = RefPlaceholder;
+    private enabledGroup: AgGroupComponent = RefPlaceholder;
 
     private readonly key: string;
     private readonly isGradient: boolean;
 
-    constructor(private readonly options: FormatPanelOptions) {
+    constructor(
+        private readonly options: FormatPanelOptions,
+        private readonly chartMenuContext: ChartMenuContext
+    ) {
         super();
 
         this.isGradient = ['treemap', 'sunburst', 'heatmap'].includes(options.seriesType);
         this.key = this.isGradient ? 'gradientLegend' : 'legend';
+        this.chartController = chartMenuContext.chartController;
     }
 
     public postConstruct() {
@@ -42,7 +50,7 @@ export class LegendPanel extends Component {
                 )
             )
         );
-        const enabledGroup = this.createManagedBean(
+        this.enabledGroup = this.createManagedBean(
             new AgGroupComponent(
                 chartMenuParamsFactory.addEnableParams<AgGroupComponentParams>(`${this.key}.enabled`, {
                     cssIdentifier: 'charts-format-sub-level',
@@ -65,7 +73,7 @@ export class LegendPanel extends Component {
             title: this.chartTranslation.translate('legend'),
             suppressEnabledCheckbox: true,
             expanded,
-            items: [enabledGroup],
+            items: [this.enabledGroup],
         };
         this.setTemplate(
             /* html */ `<div>
@@ -78,6 +86,17 @@ export class LegendPanel extends Component {
             }
         );
         registerGroupComponent(this.legendGroup);
+
+        const listener = this.updateLegendEnabledState.bind(this);
+        this.addManagedListeners(this.chartController, {
+            chartModelUpdate: listener,
+            chartApiUpdate: listener,
+        });
+    }
+
+    private updateLegendEnabledState(): void {
+        const { valueCols } = this.chartController.getColStateForMenu();
+        this.enabledGroup.setEnabled(valueCols.filter((vc) => vc.selected).length > 1);
     }
 
     private getItems(chartMenuParamsFactory: ChartMenuParamsFactory): Component<any>[] {
