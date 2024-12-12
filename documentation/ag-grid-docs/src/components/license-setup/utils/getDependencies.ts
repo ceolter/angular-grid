@@ -48,12 +48,12 @@ export const getDependencies = ({
 }: {
     library: Library;
     framework: Framework;
-    isIntegratedCharts: boolean;
+    isIntegratedCharts?: boolean;
 }) => {
     return library === 'grid'
         ? getGridDependencies({
               framework,
-              isIntegratedCharts,
+              isIntegratedCharts: Boolean(isIntegratedCharts),
           })
         : getChartsDependencies({
               framework,
