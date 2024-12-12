@@ -2,6 +2,8 @@ import type { ExampleConfig, ParsedBindings } from '../types';
 import { convertTemplate, getImport, toConst, toInput, toMemberWithValue, toOutput } from './angular-utils';
 import { templatePlaceholder } from './grid-vanilla-src-parser';
 import {
+    DARK_INTEGRATED_END,
+    DARK_INTEGRATED_START,
     addBindingImports,
     addGenericInterfaceImport,
     addLicenseManager,
@@ -203,9 +205,34 @@ export function vanillaToAngular(
             bindings.exampleName
         );
         const additional = [];
-
+        let darkModeWithGridRef = undefined;
         if (gridReadyCode) {
             additional.push(gridReadyCode);
+        } else {
+            if (bindings.exampleName.includes('sparklines')) {
+                // TEMPORARY ONLY APPLY TO SPARKLINES EXAMPLES
+
+                darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, true, 'grid?.api');
+                const angularImportIdx = imports.findIndex((i) => i.includes('Component'));
+                if (darkModeWithGridRef) {
+                    // wrap in useEffect
+                    darkModeWithGridRef = darkModeWithGridRef.replace(
+                        DARK_INTEGRATED_START,
+                        `${DARK_INTEGRATED_START} 
+                        @ViewChild(AgGridAngular)
+                        set agGrid(grid){
+                            `
+                    );
+                    darkModeWithGridRef = darkModeWithGridRef.replace(DARK_INTEGRATED_END, `} ${DARK_INTEGRATED_END}`);
+
+                    if (!imports[angularImportIdx].includes('ViewChild')) {
+                        imports[angularImportIdx] = imports[angularImportIdx].replace(
+                            'Component',
+                            'Component, ViewChild'
+                        );
+                    }
+                }
+            }
         }
 
         const eventAttributes = bindings.eventHandlers
@@ -261,6 +288,7 @@ ${
         : ''
 }
     ${componentBody}
+    ${darkModeWithGridRef ?? ''}
 }
 
 ${bindings.classes.join('\n')}

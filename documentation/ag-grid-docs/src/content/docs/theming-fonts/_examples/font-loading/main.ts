@@ -1,31 +1,10 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
 import './style.css';
 
-ModuleRegistry.registerModules([
-    NumberEditorModule,
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    ClientSideRowModelModule,
-    SideBarModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    PivotModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 const columnDefs: ColDef[] = [
     { field: 'athlete', minWidth: 170 },
@@ -55,6 +34,9 @@ const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         editable: true,
         filter: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
     },
     sideBar: true,
 };

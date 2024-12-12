@@ -5,6 +5,7 @@ import {
     ClientSideRowModelModule,
     ColumnAutoSizeModule,
     QuickFilterModule,
+    RowApiModule,
     RowAutoHeightModule,
     TextFilterModule,
     TooltipModule,
@@ -33,6 +34,7 @@ export const Grid: FunctionComponent<Props> = ({ gridHeight, ...props }) => {
                 {...props}
                 modules={[
                     RowAutoHeightModule,
+                    RowApiModule,
                     TextFilterModule,
                     CellStyleModule,
                     ColumnAutoSizeModule,

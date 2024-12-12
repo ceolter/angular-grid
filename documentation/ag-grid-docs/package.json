@@ -2,7 +2,7 @@
   "name": "ag-grid-docs",
   "description": "Documentation for AG Grid",
   "type": "module",
-  "version": "33.0.0",
+  "version": "33.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ag-grid/ag-grid.git"
@@ -79,11 +79,11 @@
     "vite-plugin-svgr": "^4.2.0"
   },
   "devDependencies": {
-    "ag-grid-community": "33.0.0",
-    "ag-grid-angular": "33.0.0",
-    "ag-grid-react": "33.0.0",
-    "ag-grid-vue3": "33.0.0",
-    "ag-grid-enterprise": "33.0.0",
+    "ag-grid-community": "33.0.1",
+    "ag-grid-angular": "33.0.1",
+    "ag-grid-react": "33.0.1",
+    "ag-grid-vue3": "33.0.1",
+    "ag-grid-enterprise": "33.0.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/he": "^1.2.3",
     "ag-charts-angular": "11.0.0",

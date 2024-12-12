@@ -3,10 +3,10 @@ import { getDependencies } from './getDependencies';
 describe('grid getDependencies', () => {
     test.each`
         framework       | expected
-        ${'react'}      | ${['ag-grid-react', 'ag-grid-community', 'ag-grid-enterprise']}
-        ${'angular'}    | ${['ag-grid-angular', 'ag-grid-community', 'ag-grid-enterprise']}
-        ${'vue'}        | ${['ag-grid-vue3', 'ag-grid-community', 'ag-grid-enterprise']}
-        ${'javascript'} | ${['ag-grid-community', 'ag-grid-enterprise']}
+        ${'react'}      | ${['ag-grid-react', 'ag-grid-enterprise']}
+        ${'angular'}    | ${['ag-grid-angular', 'ag-grid-enterprise']}
+        ${'vue'}        | ${['ag-grid-vue3', 'ag-grid-enterprise']}
+        ${'javascript'} | ${['ag-grid-enterprise']}
     `('$framework { isIntegratedCharts: $isIntegratedCharts } is $expected', ({ framework, expected }) => {
         expect(
             getDependencies({

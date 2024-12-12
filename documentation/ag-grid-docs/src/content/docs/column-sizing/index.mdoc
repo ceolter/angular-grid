@@ -71,7 +71,7 @@ Columns can be auto-sized in two main ways:
 
 ### Auto-Size Columns to Fit Grid
 
-Columns can be resized to fit the width of the grid. The columns will scale (growing or shrinking) to fit the available width.
+Columns can be resized to fit the width of the grid. The columns will scale (growing or shrinking) to fit the available width unless they have `suppressSizeToFit=true`. In the example below, the Athlete column will not be affected when columns are sized to fit the grid because it's setting `suppressSizeToFit=true`.
 
 {% gridExampleRunner title="Auto-Size Columns to Fit Grid" name="column-sizing-to-fit" /%}
 

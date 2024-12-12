@@ -14,6 +14,8 @@ const getAgDevDependencies = (packageJson) =>
     packageJson.devDependencies ? Object.keys(packageJson.devDependencies).filter(isAgDependency) : [];
 const getAgPeerDependencies = (packageJson) =>
     packageJson.peerDependencies ? Object.keys(packageJson.peerDependencies).filter(isAgDependency) : [];
+const getAgOptionalDependencies = (packageJson) =>
+    packageJson.optionalDependencies ? Object.keys(packageJson.optionalDependencies).filter(isAgDependency) : [];
 
 const extractDependencies = (projectPackageJson, dependencies, devDependencies, depFilter) =>
     dependencies
@@ -37,6 +39,18 @@ const extractPeerDependencies = (projectPackageJson, dependencies, depFilter) =>
         .filter(depFilter)
         .map((dependency) => ({
             [dependency]: projectPackageJson.peerDependencies[dependency],
+        }))
+        .reduce((accumulator, current) => {
+            const dependency = Object.keys(current)[0];
+            accumulator[dependency] = current[dependency];
+            return accumulator;
+        }, {});
+
+const extractOptionalDependencies = (projectPackageJson, dependencies, depFilter) =>
+    dependencies
+        .filter(depFilter)
+        .map((dependency) => ({
+            [dependency]: projectPackageJson.optionalDependencies[dependency],
         }))
         .reduce((accumulator, current) => {
             const dependency = Object.keys(current)[0];
@@ -96,13 +110,20 @@ const getPackageInformation = () => {
 
         const dependencies = getAgDependencies(projectPackageJson);
         const peerDependencies = getAgPeerDependencies(projectPackageJson);
+        const optionalDependencies = getAgOptionalDependencies(projectPackageJson);
         const devDependencies = getAgDevDependencies(projectPackageJson);
 
         const agGridDeps = extractDependencies(projectPackageJson, dependencies, devDependencies, gridDependency);
         const agGridPeerDeps = projectPackageJson.peerDependencies
             ? extractPeerDependencies(projectPackageJson, peerDependencies, gridDependency)
             : {};
+        const agGridOptionalDeps = projectPackageJson.optionalDependencies
+            ? extractOptionalDependencies(projectPackageJson, optionalDependencies, gridDependency)
+            : {};
         const agChartDeps = extractDependencies(projectPackageJson, dependencies, devDependencies, chartDependency);
+        const agChartOptionalDeps = projectPackageJson.optionalDependencies
+            ? extractOptionalDependencies(projectPackageJson, optionalDependencies, chartDependency)
+            : {};
         const { agSubAngularVersion, agSubAngularGridDeps, agSubAngularChartDeps } =
             extractSubAngularProjectDependencies(packageDirectory);
 
@@ -113,7 +134,9 @@ const getPackageInformation = () => {
             isGridPackage: gridDependency(projectPackageJson.name),
             agGridDeps,
             agGridPeerDeps,
+            agGridOptionalDeps,
             agChartDeps,
+            agChartOptionalDeps,
             agSubAngularVersion,
             agSubAngularGridDeps,
             agSubAngularChartDeps,

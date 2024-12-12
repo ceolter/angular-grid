@@ -1,16 +1,7 @@
 @use 'design-system' as *;
 
-.hasLicenseInput {
-    display: flex;
-    flex-direction: row;
-    gap: $spacing-size-5;
-
-    label {
-        display: flex;
-        flex-direction: row;
-        gap: $spacing-size-2;
-        cursor: pointer;
-    }
+.form :global(.alert) {
+    margin: 0 0 6px;
 }
 
 .licenceWrapper {
@@ -30,6 +21,7 @@
 }
 
 .license {
+    resize: none;
     border-radius: var(--radius-md);
     border: 1px solid color-mix(in srgb, var(--color-border-secondary), var(--color-border-primary));
     background-color: var(--color-bg-secondary);
@@ -51,67 +43,20 @@
     overflow: hidden;
     pointer-events: none;
 
-    b {
-        opacity: 0.6;
-    }
-
     span {
         opacity: 0.5;
-    }
-}
-
-.licenceWrapper + :global(.alert) {
-    margin-top: 0;
-}
-
-.licenseOutput {
-    margin-top: $spacing-size-1;
-    margin-bottom: $spacing-size-3;
-
-    span {
-        margin-right: $spacing-size-5;
-    }
-
-    .valid {
-        color: var(--color-positive);
-
-        svg {
-            --icon-color: var(--color-positive);
-        }
-    }
-
-    .invalid {
-        color: var(--color-negative);
-
-        svg {
-            --icon-color: var(--color-negative);
-        }
-    }
-
-    :global('.icon') {
-        --icon-size: 0.75em;
     }
 }
 
 .licenseData {
     display: flex;
     flex-direction: column;
-    gap: $spacing-size-8;
+    gap: $spacing-size-4;
     margin-top: $spacing-size-2;
-
-    .inputList {
-        margin-bottom: $spacing-size-10;
-    }
 }
 
 .expired {
     color: var(--color-negative);
-}
-
-.frameworkContainer {
-    display: flex;
-    align-items: center;
-    gap: $spacing-size-2;
 }
 
 .frameworkLogo {
@@ -120,71 +65,17 @@
     border-radius: var(--radius-xs);
 }
 
-.inputList,
-.productsList {
+.configureItems {
     display: flex;
-    gap: $spacing-size-8;
-    margin-top: $spacing-size-1;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-size-3 $spacing-size-8;
+    margin-top: $spacing-size-2;
 
     label {
         display: flex;
         align-items: center;
-        gap: $spacing-size-2;
-    }
-}
-
-.productsList {
-    gap: $spacing-size-3;
-    flex-wrap: wrap;
-}
-
-.productWrapper {
-    padding: $spacing-size-3;
-    width: calc(50% - #{$spacing-size-3} / 2);
-    min-width: 260px;
-    border: 1px solid var(--color-border-secondary);
-    background-color: color-mix(in srgb, var(--color-util-brand-50), var(--color-bg-primary));
-    border-radius: var(--radius-sm);
-
-    #{$selector-darkmode} & {
-        background-color: var(--color-util-gray-200);
-    }
-}
-
-.licensedProduct {
-    strong {
-        position: relative;
-        font-size: var(--text-fs-lg);
-        line-height: var(--text-lh-ultra-tight);
-
-        &::after {
-            position: absolute;
-            top: $spacing-size-6;
-            left: 0;
-            font-size: var(--text-fs-sm);
-            font-weight: var(--text-regular);
-            color: var(--color-fg-quinary);
-            min-width: 160px;
-        }
-    }
-}
-
-.integratedProduct {
-    margin-top: $spacing-size-5;
-}
-
-.icQuestion {
-    display: flex;
-    align-items: center;
-
-    label {
-        margin-top: 0;
-    }
-
-    input {
-        position: relative;
-        margin-right: $spacing-size-1;
-        top: 4px;
+        gap: $spacing-size-3;
     }
 }
 

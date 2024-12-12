@@ -73,6 +73,7 @@ export class BlockUtils extends BeanStub implements NamedBean {
             rowNode.expanded = false;
             rowNode.field = params.field;
             rowNode.rowGroupColumn = params.rowGroupColumn;
+            rowNode.rowGroupIndex = params.level;
         }
 
         return rowNode;

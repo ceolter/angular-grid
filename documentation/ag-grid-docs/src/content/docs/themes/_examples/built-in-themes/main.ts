@@ -1,33 +1,17 @@
-import type { ColDef, GridOptions, GridTheme } from 'ag-grid-community';
+import type { ColDef, GridOptions, Theme } from 'ag-grid-community';
 import {
-    ClientSideRowModelModule,
+    AllCommunityModule,
     ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
     createGrid,
     themeAlpine,
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import { ColumnsToolPanelModule, FiltersToolPanelModule, PivotModule, SideBarModule } from 'ag-grid-enterprise';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    NumberEditorModule,
-    ClientSideRowModelModule,
-    SideBarModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    PivotModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
-const themes: Record<string, GridTheme> = {
+const themes: Record<string, Theme> = {
     quartz: themeQuartz,
     balham: themeBalham,
     alpine: themeAlpine,
@@ -51,6 +35,9 @@ const defaultColDef = {
     flex: 1,
     minWidth: 100,
     filter: true,
+    enableRowGroup: true,
+    enablePivot: true,
+    enableValue: true,
 };
 
 const gridOptions: GridOptions<IOlympicData> = {

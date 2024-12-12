@@ -88,7 +88,8 @@ function updateFileWithNewVersions(currentFile) {
         updateVersion,
         updateDependencies,
         updateDevDependencies,
-        updatePeerDependencies
+        updatePeerDependencies,
+        updateOptionalDependencies
     )(packageJson);
 
     fs.writeFileSync(currentFile, JSON.stringify(updatedPackageJson, null, 2), 'utf8');
@@ -126,6 +127,10 @@ function updateDevDependencies(fileContents) {
 
 function updatePeerDependencies(fileContents) {
     return updateDependency(fileContents, 'peerDependencies', gridNewVersion, chartsDependencyVersion);
+}
+
+function updateOptionalDependencies(fileContents) {
+    return updateDependency(fileContents, 'optionalDependencies', gridNewVersion, chartsDependencyVersion);
 }
 
 function updateDependency(fileContents, property, dependencyVersion, chartsDependencyVersion) {

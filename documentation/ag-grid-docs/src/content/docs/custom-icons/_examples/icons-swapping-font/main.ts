@@ -63,7 +63,10 @@ const gridOptions: GridOptions<IOlympicData> = {
         editable: true,
         filter: true,
     },
-    sideBar: true,
+
+    enableRowGroup: true,
+    enablePivot: true,
+    enableValue: true,
 };
 
 // setup the grid after the page has finished loading

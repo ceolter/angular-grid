@@ -237,7 +237,7 @@ export class GridSerializer extends BeanStub implements NamedBean {
 
             if (this.colModel.isPivotMode()) {
                 if (usingCsrm) {
-                    rowModel.forEachPivotNode(processRow, true);
+                    rowModel.forEachPivotNode(processRow, true, exportedRows === 'filteredAndSorted');
                 } else if (usingSsrm) {
                     rowModel.forEachNodeAfterFilterAndSort(processRow, true);
                 } else {

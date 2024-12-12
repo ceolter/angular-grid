@@ -102,7 +102,7 @@ export class GridBodyComp extends Component {
             setStickyTopWidth: (width) => (this.eStickyTop.style.width = width),
             setStickyBottomHeight: (height) => {
                 this.eStickyBottom.style.height = height;
-                this.eStickyBottom.classList.toggle('ag-hidden', height === '0px');
+                this.eStickyBottom.classList.toggle('ag-invisible', height === '0px');
             },
             setStickyBottomBottom: (bottom) => (this.eStickyBottom.style.bottom = bottom),
             setStickyBottomWidth: (width) => (this.eStickyBottom.style.width = width),
