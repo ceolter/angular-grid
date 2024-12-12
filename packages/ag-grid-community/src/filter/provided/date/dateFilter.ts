@@ -300,7 +300,7 @@ function defaultDateComparator(filterDate: Date, cellValue: any): number {
     // The default comparator assumes that the cellValue is a date
     const cellAsDate = cellValue as Date;
 
-    if (cellValue == null || cellAsDate < filterDate) {
+    if (cellValue == null || !(cellValue instanceof Date) || isNaN(cellAsDate.getTime()) || cellAsDate < filterDate) {
         return -1;
     }
     if (cellAsDate > filterDate) {
