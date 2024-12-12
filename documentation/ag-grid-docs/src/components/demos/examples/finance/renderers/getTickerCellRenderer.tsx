@@ -8,13 +8,18 @@ export const getTickerCellRenderer: (hideTickerName: boolean) => FunctionCompone
     ({ data }) => {
         return (
             data && (
-                <div>
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                    }}
+                >
                     <img
                         src={urlWithBaseUrl(`/example/finance/logos/${data.ticker}.png`)}
                         style={{
                             width: '20px',
                             height: '20px',
-                            marginRight: '5px',
                             borderRadius: '32px',
                         }}
                         alt={`${data.name} logo`}
