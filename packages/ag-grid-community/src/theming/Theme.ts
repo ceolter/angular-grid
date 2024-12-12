@@ -1,4 +1,4 @@
-import { _error, _logPreInitErr, _warn } from '../validation/logging';
+import { _error, _logPreInitErr } from '../validation/logging';
 import type { Part } from './Part';
 import { PartImpl, createPart, defaultModeName } from './Part';
 import type { CoreParams } from './core/core-css';

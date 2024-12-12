@@ -8,6 +8,7 @@ import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import fwLogos from '@ag-website-shared/images/fw-logos';
 import { FrameworkSelectorInsideDocs } from '@components/framework-selector-inside-doc/FrameworkSelectorInsideDocs';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classnames from 'classnames';
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
@@ -100,7 +101,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
 
     return (
         <>
-            <form>
+            <form className={styles.form}>
                 <h2 id="validate-your-license">
                     Validate Your Licence
                     <LinkIcon href="#validate-your-license" />
@@ -120,7 +121,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
 
                     {userLicense === '' && (
                         <span className={styles.licencePlaceholder}>
-                            <b>Paste your License Key here, e.g., </b>
+                            <b>Paste your License Key here: </b>
                             <span>{DUMMY_LICENSE_KEY}</span>
                         </span>
                     )}
@@ -155,9 +156,9 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                             <LinkIcon href="#configure-your-application" />
                         </h3>
 
-                        <div className={styles.icQuestion}>
+                        <div className={styles.configureItems}>
                             <label
-                                className={classnames(styles.licensedProduct, styles.integratedProduct, {
+                                className={classnames({
                                     [styles.valid]: licensedProducts.grid && licensedProducts.charts,
                                     [styles.trial]:
                                         userLicenseIsTrial && licensedProducts.grid && licensedProducts.charts,
@@ -170,6 +171,7 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                                 Are you using Integrated Charts?{' '}
                                 <input
                                     type="checkbox"
+                                    className="switch"
                                     name="products"
                                     value="integratedEnterprise"
                                     checked={isIntegratedCharts}
@@ -178,21 +180,24 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                                     }}
                                 />
                             </label>
+
+                            <label>
+                                Framework:
+                                <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
+                            </label>
                         </div>
                     </div>
+
                     {licenseState.integratedChartsNoChartsError && (
                         <Warning>
                             {licenseState.integratedChartsNoChartsError}. <EmailSales />
                         </Warning>
                     )}
-
-                    <div className={styles.frameworkContainer}>
-                        <label>Framework</label>
-                        <FrameworkSelectorInsideDocs path={path} currentFramework={framework} />
-                    </div>
                 </div>
 
                 <div className={styles.results}>
+                    <br />
+
                     <h3 id="add-your-dependencies">
                         Add Your Dependencies
                         <LinkIcon href="#add-your-dependencies" />
@@ -217,17 +222,13 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         <Snippet framework={framework} content={dependenciesSnippet} copyToClipboard />
                     )}
 
-                    <Note>
-                        If you are using an AG Grid version before 33.0.0, please see the documentation for your{' '}
-                        <a href={urlWithBaseUrl('/documentation-archive')}>version</a> for help on installing your
-                        license key.
-                    </Note>
-
                     <p>Or install using npm:</p>
 
                     {npmInstallSnippet && (
                         <Snippet framework={framework} content={npmInstallSnippet} language="bash" copyToClipboard />
                     )}
+
+                    <br />
 
                     <h3 id="set-up-your-application">
                         Set Up Your Application
@@ -245,6 +246,12 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         </Warning>
                     )}
 
+                    <Note>
+                        If you are using an AG Grid version before 33.0.0, please see the documentation for your{' '}
+                        <a href={urlWithBaseUrl('/documentation-archive')}>version</a> for help on installing your
+                        license key.
+                    </Note>
+
                     <p>An example of how to set up your {productName} Enterprise License Key:</p>
 
                     {licenseState.minimalModulesInfo && <Note>{licenseState.minimalModulesInfo}</Note>}
@@ -254,6 +261,20 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         content={bootstrapSnippet[library as keyof typeof bootstrapSnippet]}
                         copyToClipboard
                     />
+
+                    <Note>
+                        The code above imports all the grid features. You can reduce your bundle size and import only
+                        the modules for the features you are using. See the{' '}
+                        <a
+                            href={urlWithPrefix({
+                                framework,
+                                url: './modules',
+                            })}
+                        >
+                            Modules
+                        </a>{' '}
+                        page for more information.
+                    </Note>
 
                     <h2 id="seed-repos">
                         Seed Repositories

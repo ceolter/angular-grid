@@ -2,6 +2,7 @@ import React, { StrictMode, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import {
+    AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     NumberEditorModule,
@@ -26,6 +27,7 @@ import {
     themeQuartz,
 } from 'ag-grid-community';
 import {
+    AllEnterpriseModule,
     ColumnMenuModule,
     ColumnsToolPanelModule,
     ContextMenuModule,
@@ -36,21 +38,7 @@ import {
 } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    NumberEditorModule,
-    SideBarModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    ExcelExportModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    PivotModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 const baseThemes = [
     { id: 'themeQuartz', value: themeQuartz },

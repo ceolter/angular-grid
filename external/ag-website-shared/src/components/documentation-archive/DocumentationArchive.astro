@@ -3,7 +3,9 @@ import { Icon } from '@ag-website-shared/components/icon/Icon';
 import styles from './DocumentationArchive.module.scss';
 import type { Library } from '@ag-grid-types';
 import { pathJoin } from '@utils/pathJoin';
-import { PRODUCTION_GRID_SITE_URL, LEGACY_CHARTS_SITE_URL, PRODUCTION_CHARTS_SITE_URL } from '@constants';
+import { PRODUCTION_GRID_SITE_URL, PRODUCTION_CHARTS_SITE_URL } from '@constants';
+import { ArchiveLink } from './ArchiveLink';
+import { versionIsGreaterOrEqual } from '@ag-website-shared/utils/versionIsGreaterOrEqual';
 
 interface Props {
     site: Library;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 const { site, versionsData } = Astro.props as Props;
+
+const FIRST_GRID_VERSION_WITH_HOMEPAGE = '27.3.0';
 
 const getVersionType = (version: string) => {
     const [_, minor, patch] = version.split('.');
@@ -26,20 +30,6 @@ const getVersionType = (version: string) => {
 
 const isMajor = (version: string) => {
     return getVersionType(version) === 'Major';
-};
-
-const getArchiveUrl = (version: string) => {
-    const archiveBaseUrl = '/archive';
-    const [versionMajor, versionMinor] = version.split('.');
-    const major = parseInt(versionMajor, 10);
-    const minor = parseInt(versionMinor, 10);
-
-    let baseUrl = 'https://www.ag-grid.com';
-    if (site === 'charts') {
-        baseUrl = (major === 10 && minor >= 1) || major > 10 ? PRODUCTION_CHARTS_SITE_URL : LEGACY_CHARTS_SITE_URL;
-    }
-
-    return pathJoin(baseUrl, archiveBaseUrl, version);
 };
 
 const getChangelogUrl = (version: string) => {
@@ -60,6 +50,10 @@ const getChangelogUrl = (version: string) => {
             versionsData.slice(1).map(({ noArchive, version, versionType, date }) => {
                 if (noArchive) return;
 
+                const useDocumentationLink =
+                    (site === 'grid' && versionIsGreaterOrEqual(version, FIRST_GRID_VERSION_WITH_HOMEPAGE)) ||
+                    site === 'charts';
+
                 return (
                     <tr>
                         <td class="text-base text-monospace text-semibold">{version}</td>
@@ -79,9 +73,7 @@ const getChangelogUrl = (version: string) => {
                         </td>
 
                         <td>
-                            <a href={getArchiveUrl(version)}>
-                                Documentation <Icon name="arrowRight" />
-                            </a>
+                            <ArchiveLink site={site} version={version} useDocumentationLink={useDocumentationLink} />
                         </td>
                     </tr>
                 );

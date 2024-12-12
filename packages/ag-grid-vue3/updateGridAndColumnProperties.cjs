@@ -100,7 +100,7 @@ function generatePropsAndEmits({ typeLookup, eventTypeLookup, docLookup }) {
             eventsToWrite.push({ order, line });
             eventsPropTypesWrite.push({
                 order,
-                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}': ${eventType},${EOL}`,
+                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}'?: ${eventType},${EOL}`,
             });
         } else {
             missingEventTypes.push(event);
@@ -283,12 +283,8 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
 
     const optionsForVue = {
         files: './src/components/AgGridVue.vue',
-        from: [
-            /(\/\/ @START_IMPORTS@)[^]*(\/\/ @END_IMPORTS@)/
-        ],
-        to: [
-            `// @START_IMPORTS@${EOL}${importsForEvents}${EOL}// @END_IMPORTS@`
-        ],
+        from: [/(\/\/ @START_IMPORTS@)[^]*(\/\/ @END_IMPORTS@)/],
+        to: [`// @START_IMPORTS@${EOL}${importsForEvents}${EOL}// @END_IMPORTS@`],
     };
 
     replace(optionsForVue).then((filesChecked) => {

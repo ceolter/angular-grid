@@ -1391,8 +1391,10 @@ export class RowRenderer extends BeanStub implements NamedBean {
     }
 
     public getRenderedNodes() {
-        const renderedRows = this.rowCtrlsByRowIndex;
-        return Object.values(renderedRows).map((rowCtrl) => rowCtrl.rowNode);
+        const viewportRows = Object.values(this.rowCtrlsByRowIndex).map((rowCtrl) => rowCtrl.rowNode);
+        const stickyTopRows = this.getStickyTopRowCtrls().map((rowCtrl) => rowCtrl.rowNode);
+        const stickyBottomRows = this.getStickyBottomRowCtrls().map((rowCtrl) => rowCtrl.rowNode);
+        return [...stickyTopRows, ...viewportRows, ...stickyBottomRows];
     }
 
     public getRowByPosition(rowPosition: RowPosition): RowCtrl | null {

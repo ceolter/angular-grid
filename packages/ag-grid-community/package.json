@@ -1,6 +1,6 @@
 {
   "name": "ag-grid-community",
-  "version": "33.0.0",
+  "version": "33.0.1",
   "description": "Advanced Data Grid / Data Table supporting Javascript / Typescript / React / Angular / Vue",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
@@ -98,7 +98,7 @@
     "gulp": "^4.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-rename": "^2.0.0",
-    "@ag-grid-community/styles": "33.0.0",
+    "@ag-grid-community/styles": "33.0.1",
     "ts-loader": "^9.5.1",
     "style-loader": "^3.3.4",
     "css-loader": "^6.10.0",

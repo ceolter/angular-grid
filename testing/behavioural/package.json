@@ -1,6 +1,6 @@
 {
   "name": "ag-behavioural-testing",
-  "version": "33.0.0",
+  "version": "33.0.1",
   "private": true,
   "description": "Behavioural unit testing for ag-Grid",
   "dependencies": {
@@ -8,9 +8,9 @@
   },
   "type": "module",
   "devDependencies": {
-    "ag-grid-community": "33.0.0",
-    "ag-grid-enterprise": "33.0.0",
-    "ag-grid-react": "33.0.0",
+    "ag-grid-community": "33.0.1",
+    "ag-grid-enterprise": "33.0.1",
+    "ag-grid-react": "33.0.1",
     "@vitejs/plugin-react": "^4.3.1",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",

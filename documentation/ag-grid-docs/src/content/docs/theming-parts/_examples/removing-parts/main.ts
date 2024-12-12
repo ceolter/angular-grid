@@ -1,30 +1,10 @@
 import type { ColDef, GridOptions } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    GridStateModule,
-    ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    RowSelectionModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
 import './style.css';
 
-ModuleRegistry.registerModules([
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    NumberEditorModule,
-    RowSelectionModule,
-    GridStateModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 const myCustomTheme = themeQuartz.withoutPart('checkboxStyle');
 

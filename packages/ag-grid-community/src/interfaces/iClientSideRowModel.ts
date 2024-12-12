@@ -39,7 +39,11 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     forEachLeafNode(callback: (node: RowNode, index: number) => void): void;
     forEachNodeAfterFilter(callback: (node: RowNode, index: number) => void, includeFooterNodes?: boolean): void;
     forEachNodeAfterFilterAndSort(callback: (node: RowNode, index: number) => void, includeFooterNodes?: boolean): void;
-    forEachPivotNode(callback: (node: RowNode, index: number) => void, includeFooterNodes?: boolean): void;
+    forEachPivotNode(
+        callback: (node: RowNode, index: number) => void,
+        includeFooterNodes?: boolean,
+        afterSort?: boolean
+    ): void;
     resetRowHeights(): void;
     onRowHeightChanged(): void;
     onRowHeightChangedDebounced(): void;

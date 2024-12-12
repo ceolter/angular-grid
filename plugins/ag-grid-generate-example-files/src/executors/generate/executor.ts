@@ -154,6 +154,7 @@ export async function generateFiles(options: ExecutorOptions) {
         const packageJson = getPackageJson({
             isLocale,
             internalFramework,
+            isIntegratedCharts,
         });
         const frameworkExampleConfig = {
             ...exampleConfig,

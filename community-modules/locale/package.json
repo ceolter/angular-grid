@@ -1,6 +1,6 @@
 {
   "name": "@ag-grid-community/locale",
-  "version": "33.0.0",
+  "version": "33.0.1",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
   "module": "./dist/package/main.esm.mjs",

@@ -54,6 +54,9 @@ const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         editable: true,
         filter: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
     },
     autoGroupColumnDef: {
         headerName: 'Country',

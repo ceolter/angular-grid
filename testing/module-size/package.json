@@ -1,7 +1,7 @@
 {
   "name": "ag-grid-module-size",
   "private": true,
-  "version": "33.0.0",
+  "version": "33.0.1",
   "scripts": {
     "dev": "vite",
     "cp-app": "cp ./src/App_src.tsx ./src/App_AUTO.tsx",
@@ -12,9 +12,9 @@
     "test": "npm run module-stats"
   },
   "dependencies": {
-    "ag-grid-react": "33.0.0",
-    "ag-grid-community": "33.0.0",
-    "ag-grid-enterprise": "33.0.0",
+    "ag-grid-react": "33.0.1",
+    "ag-grid-community": "33.0.1",
+    "ag-grid-enterprise": "33.0.1",
     "ag-charts-community": "11.0.0",
     "ag-charts-enterprise": "11.0.0",
     "react": "^18.3.1",
