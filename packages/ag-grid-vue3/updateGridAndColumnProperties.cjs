@@ -70,8 +70,7 @@ function generatePropsAndEmits({ typeLookup, eventTypeLookup, docLookup }) {
         const inputType = getSafeType(typeName);
         let line = addDocLine(docLookup, property, '');
         let inputTypeWithGenerics = inputType;
-        if (property === 'columnDefs' ||
-            property === 'defaultColDef') {
+        if (property === 'columnDefs' || property === 'defaultColDef') {
             // Use the Generic hint types for improved type checking by updating the columnDefs property
             inputTypeWithGenerics = inputType.replace('<TData>', '');
         }
