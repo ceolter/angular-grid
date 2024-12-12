@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import ts from 'typescript';
 
+import { EXCLUDED_PROPERTIES } from '../../../../executors-utils';
 import { _ALL_EVENTS } from '../_copiedFromCore/eventTypes';
 import { _ALL_GRID_OPTIONS, _FUNCTION_GRID_OPTIONS } from '../_copiedFromCore/propertyKeys';
 import type { GridOptionsType, InlineGridStyles, ParsedBindings } from '../types';
@@ -381,7 +382,7 @@ function internalParser(
         return colDefs || '';
     };
 
-    PROPERTIES.forEach((propertyName) => {
+    PROPERTIES.filter((property) => !EXCLUDED_PROPERTIES.includes(property)).forEach((propertyName) => {
         registered.push(propertyName);
 
         // grab global variables named as grid properties
