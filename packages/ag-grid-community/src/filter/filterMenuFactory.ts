@@ -34,7 +34,8 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
     public showMenuAfterMouseEvent(
         column: AgColumn | undefined,
         mouseEvent: MouseEvent | Touch,
-        containerType: ContainerType
+        containerType: ContainerType,
+        onClosedCallback?: () => void
     ): void {
         this.showPopup(
             column,
@@ -48,14 +49,16 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             },
             containerType,
             mouseEvent.target as HTMLElement,
-            _isLegacyMenuEnabled(this.gos)
+            _isLegacyMenuEnabled(this.gos),
+            onClosedCallback
         );
     }
 
     public showMenuAfterButtonClick(
         column: AgColumn | undefined,
         eventSource: HTMLElement,
-        containerType: ContainerType
+        containerType: ContainerType,
+        onClosedCallback?: () => void
     ): void {
         let multiplier = -1;
         let alignSide: 'left' | 'right' = 'left';
@@ -85,7 +88,8 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             },
             containerType,
             eventSource,
-            isLegacyMenuEnabled
+            isLegacyMenuEnabled,
+            onClosedCallback
         );
     }
 
@@ -94,7 +98,8 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
         positionCallback: (eMenu: HTMLElement) => void,
         containerType: ContainerType,
         eventSource: HTMLElement,
-        isLegacyMenuEnabled: boolean
+        isLegacyMenuEnabled: boolean,
+        onClosedCallback?: () => void
     ): void {
         const comp = column ? this.createBean(new FilterWrapperComp(column, 'COLUMN_MENU')) : undefined;
         this.activeMenu = comp;
@@ -140,6 +145,7 @@ export class FilterMenuFactory extends BeanStub implements NamedBean, IMenuFacto
             afterGuiDetached();
             this.destroyBean(this.activeMenu);
             this.dispatchVisibleChangedEvent(false, containerType, column);
+            onClosedCallback?.();
         };
 
         const translate = this.getLocaleTextFunc();

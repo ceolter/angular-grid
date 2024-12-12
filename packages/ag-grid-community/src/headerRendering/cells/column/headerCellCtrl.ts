@@ -165,18 +165,20 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             enableMenu: this.menuEnabled,
             enableFilterButton: this.openFilterEnabled && !!menuSvc?.isHeaderFilterButtonEnabled(this.column),
             enableFilterIcon: !!colFilter && (!this.openFilterEnabled || _isLegacyMenuEnabled(this.gos)),
-            showColumnMenu: (buttonElement: HTMLElement) => {
+            showColumnMenu: (buttonElement: HTMLElement, onClosedCallback?: () => void) => {
                 menuSvc?.showColumnMenu({
                     column: this.column,
                     buttonElement,
                     positionBy: 'button',
+                    onClosedCallback,
                 });
             },
-            showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch) => {
+            showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch, onClosedCallback?: () => void) => {
                 menuSvc?.showColumnMenu({
                     column: this.column,
                     mouseEvent,
                     positionBy: 'mouse',
+                    onClosedCallback,
                 });
             },
             showFilter: (buttonElement: HTMLElement) => {

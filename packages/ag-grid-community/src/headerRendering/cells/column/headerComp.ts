@@ -43,13 +43,15 @@ export interface IHeaderParams<TData = any, TContext = any> extends AgGridCommon
      * Callback to request the grid to show the column menu.
      * Pass in the html element of the column menu button to have the
      * grid position the menu over the button.
+     * If provided, the grid will call `onClosedCallback` when the menu is closed.
      */
-    showColumnMenu: (source: HTMLElement) => void;
+    showColumnMenu: (source: HTMLElement, onClosedCallback?: () => void) => void;
     /**
      * Callback to request the grid to show the column menu.
      * Similar to `showColumnMenu`, but will position the menu next to the provided `mouseEvent`.
+     * If provided, the grid will call `onClosedCallback` when the menu is closed.
      */
-    showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch) => void;
+    showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch, onClosedCallback?: () => void) => void;
     /**
      * Callback to request the grid to show the filter.
      * Pass in the html element of the filter button to have the
@@ -271,8 +273,24 @@ export class HeaderComp extends Component implements IHeaderComp {
 
         const currentSuppressMenuHide = this.shouldSuppressMenuHide();
         this.currentSuppressMenuHide = currentSuppressMenuHide;
-        this.addManagedElementListeners(eMenu, { click: () => params.showColumnMenu(eMenu!) });
-        eMenu.classList.toggle('ag-header-menu-always-show', currentSuppressMenuHide);
+        this.addManagedElementListeners(eMenu, { click: () => this.showColumnMenu(this.eMenu!) });
+        this.toggleMenuAlwaysShow(currentSuppressMenuHide);
+    }
+
+    private toggleMenuAlwaysShow(alwaysShow: boolean): void {
+        this.eMenu?.classList.toggle('ag-header-menu-always-show', alwaysShow);
+    }
+
+    private showColumnMenu(element: HTMLElement): void {
+        const { currentSuppressMenuHide, params } = this;
+        if (!currentSuppressMenuHide) {
+            this.toggleMenuAlwaysShow(true);
+        }
+        params.showColumnMenu(element, () => {
+            if (!currentSuppressMenuHide) {
+                this.toggleMenuAlwaysShow(false);
+            }
+        });
     }
 
     public onMenuKeyboardShortcut(isFilterShortcut: boolean): boolean {
@@ -285,7 +303,7 @@ export class HeaderComp extends Component implements IHeaderComp {
                 return true;
             }
         } else if (params.enableMenu) {
-            params.showColumnMenu(eMenu ?? eFilterButton ?? this.getGui());
+            this.showColumnMenu(eMenu ?? eFilterButton ?? this.getGui());
             return true;
         }
         return false;
