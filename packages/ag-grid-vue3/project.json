@@ -12,11 +12,12 @@
     },
     "build": {
       "executor": "nx:run-script",
-      "dependsOn": ["ag-grid-community:build:package"],
+      "dependsOn": ["ag-grid-community:build"],
       "inputs": [
         "tsDeclarations",
         "{projectRoot}/src/**",
         "{projectRoot}/vite.config.ts",
+        "{projectRoot}/updateGridAndColumnProperties.cjs",
         "!{projectRoot}/dist",
         "{workspaceRoot}/packages/ag-grid-community/src/components/componentUtil.ts",
         "{workspaceRoot}/packages/ag-grid-community/src/propertyKeys.ts"

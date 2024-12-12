@@ -70,9 +70,9 @@ function generatePropsAndEmits({ typeLookup, eventTypeLookup, docLookup }) {
         const inputType = getSafeType(typeName);
         let line = addDocLine(docLookup, property, '');
         let inputTypeWithGenerics = inputType;
-        if (property === 'columnDefs') {
+        if (property === 'columnDefs' || property === 'defaultColDef') {
             // Use the Generic hint types for improved type checking by updating the columnDefs property
-            inputTypeWithGenerics = inputType.replace('ColDef<TData>', 'TColDef');
+            inputTypeWithGenerics = inputType.replace('<TData>', '');
         }
 
         line += `    ${property}?: ${inputTypeWithGenerics},${EOL}`;
@@ -100,7 +100,7 @@ function generatePropsAndEmits({ typeLookup, eventTypeLookup, docLookup }) {
             eventsToWrite.push({ order, line });
             eventsPropTypesWrite.push({
                 order,
-                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}': ${eventType},${EOL}`,
+                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}'?: ${eventType},${EOL}`,
             });
         } else {
             missingEventTypes.push(event);
