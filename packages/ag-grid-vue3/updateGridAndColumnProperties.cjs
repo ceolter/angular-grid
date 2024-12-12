@@ -100,7 +100,7 @@ function generatePropsAndEmits({ typeLookup, eventTypeLookup, docLookup }) {
             eventsToWrite.push({ order, line });
             eventsPropTypesWrite.push({
                 order,
-                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}': ${eventType},${EOL}`,
+                line: `   '${kebabNameToAttrEventName(kebabProperty(event))}'?: ${eventType},${EOL}`,
             });
         } else {
             missingEventTypes.push(event);
