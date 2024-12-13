@@ -1,6 +1,9 @@
 ---
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
+import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Alert } from '@ag-website-shared/components/alert/Alert';
+
+import styles from './Upgrade-33.module.scss';
 
 const framework = getFrameworkFromPath(Astro.url.pathname);
 ---
@@ -164,299 +167,299 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","IntegratedChartsModule","GridChartsModule","AgChartsCommunityModule","AgChartsEnterpriseModule","RowDragModule","getMainMenuItems","getContextMenuItems","mainMenuItems","contextMenuItems","chartMenuItems","columnGroup","navigator","api.getRowDropZoneParams","Grid","createGrid","selectAll","deselectAll","getFirstDisplayedRow","getLastDisplayedRow","getModel","getValue","getCellValue","showColumnMenuAfterButtonClick","showColumnMenuAfterMouseClick","IHeaderParams","autoSizeColumn","autoSizeColumns","setColumnWidths","moveColumn","moveColumns","addAggFunc","addAggFuncs","removeValueColumn","removeValueColumns","addValueColumn","addValueColumns","removeRowGroupColumn","removeRowGroupColumns","addRowGroupColumn","addRowGroupColumns","removePivotColumn","removePivotColumns","addPivotColumn","addPivotColumns","setColumnVisible","setColumnsVisible","setColumnPinned","setColumnsPinned","getColumnFilterModel","setColumnFilterModel","getServerSideGroupLevelParams","cellFlashDuration","enableCellChangeFlash","suppressGroupMaintainValueType","groupTotalRow","grandTotalRow","columnChooserParams","suppressHeaderMenuBut"RowDragEvent","vDirection","suppressFilterButton","colDef.suppressFloatingFilterButton","textCustomComparator","textMatcher","onParamsUpdated","refresh","valueGetter","getValue","footerValueGetter","totalValueGetter","flashDuration","fadeDuration","IToolPanelColumnCompParams","verticalText","charSet",,"name","sparklineOptions.label.placement"]'
 ></div>
 
-<details>
-    <summary>
-        View Breaking Changes
-    </summary>
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}>Breaking Changes <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
 
-<p>This release includes the following breaking changes:</p>
+    <div class={styles.detailsInner}>
+        <p>This release includes the following breaking changes:</p>
 
-<h3 id="packaging"> Packaging</h3>
-<p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also, the
-    package <code>ag-grid-charts-enterprise</code> is no longer published.</p>
-<p>For Integrated Charts and Sparklines, the application must now explicitly include either
-    <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> in its <code>package.json</code> and register
-    the module <code>AgChartsCommunityModule</code> or <code>AgChartsEnterpriseModule</code> as follows:
-</p>
-<p>The <code>GridChartsModule</code> has been replaced by the <code>IntegratedChartsModule</code>.</p>
-<pre class="code language-jsx"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> AgChartsEnterpriseModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-charts-enterprise'</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> ModuleRegistry <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-grid-community'</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token punctuation">{</span> IntegratedChartsModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-grid-enterprise'</span><span class="token punctuation">;</span>
+        <h3 id="packaging"> Packaging</h3>
+        <p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also, the
+            package <code>ag-grid-charts-enterprise</code> is no longer published.</p>
+        <p>For Integrated Charts and Sparklines, the application must now explicitly include either
+            <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> in its <code>package.json</code> and register
+            the module <code>AgChartsCommunityModule</code> or <code>AgChartsEnterpriseModule</code> as follows:
+        </p>
+        <p>The <code>GridChartsModule</code> has been replaced by the <code>IntegratedChartsModule</code>.</p>
+        <pre class="code language-jsx"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> AgChartsEnterpriseModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-charts-enterprise'</span><span class="token punctuation">;</span>
+        <span class="token keyword">import</span> <span class="token punctuation">{</span> ModuleRegistry <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-grid-community'</span><span class="token punctuation">;</span>
+        <span class="token keyword">import</span> <span class="token punctuation">{</span> IntegratedChartsModule <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'ag-grid-enterprise'</span><span class="token punctuation">;</span>
 
-ModuleRegistry<span class="token punctuation">.</span><span class="token function">registerModules</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
-    IntegratedChartsModule<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>AgChartsEnterpriseModule<span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token comment">// sparklines</span>
-    SparklinesModule<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>AgChartsEnterpriseModule<span class="token punctuation">)</span>
-<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre>
+        ModuleRegistry<span class="token punctuation">.</span><span class="token function">registerModules</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+            IntegratedChartsModule<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>AgChartsEnterpriseModule<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            <span class="token comment">// sparklines</span>
+            SparklinesModule<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span>AgChartsEnterpriseModule<span class="token punctuation">)</span>
+        <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        </code></pre>
 
-<h3 id="property-value-coercion">Property Value Coercion</h3>
-<p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:</p>
-<p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are
-    truthy.</p>
+        <h3 id="property-value-coercion">Property Value Coercion</h3>
+        <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:</p>
+        <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are
+            truthy.</p>
 
-<h3 id="react">React</h3>
-<ul>
-    <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
-    <li><code>AgGridReactProps</code>:<ul>
-            <li><code>disableStaticMarkup</code> no longer used.</li>
-            <li><code>legacyComponentRendering</code> no longer used.</li>
-        </ul>
-    </li>
-    <li><code>AgReactComponent</code>:<ul>
-            <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code>
-                if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
-                <code>ag-react-container</code> if needed.
+        <h3 id="react">React</h3>
+        <ul>
+            <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
+            <li><code>AgGridReactProps</code>:<ul>
+                    <li><code>disableStaticMarkup</code> no longer used.</li>
+                    <li><code>legacyComponentRendering</code> no longer used.</li>
+                </ul>
             </li>
-            <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
-            <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
-            <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
-            <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
-            <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
-            <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
-            <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
-            <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
-            <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
-            <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
-            <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
-            <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
-            <li><code>ITooltipReactComp</code> removed, no interface required.</li>
-        </ul>
-    </li>
-</ul>
-
-<h3 id="theming">Theming</h3>
-<p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme class
-    (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported. Applications using
-    CSS file-based themes must either pass a theme object to the theme grid option or the string <code>"legacy"</code>
-    to keep using class name-based themes. This is documented in the <a
-        href="https://ag-grid.com/javascript-data-grid/theming-migration/">Theming API Migration Guide</a>.</p>
-<p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific use case
-    its name indicates, instead of all cases as before. To have the custom icon apply to additional cases, set the
-    additional icon keys pointing to the same custom icon. See list of icons changed:</p>
-<ul>
-    <li>
-        <p><code>smallDown</code> (deprecated):</p>
-        <ul>
-            <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown</li>
-            <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu)</li>
-            <li><code>richSelectOpen</code> for Rich Select cell editor</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>smallLeft</code> (deprecated):</p>
-        <ul>
-            <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel</li>
-            <li><code>subMenuOpenRtl</code> for sub-menus</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>smallRight</code> (deprecated):</p>
-        <ul>
-            <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel</li>
-            <li><code>subMenuOpen</code> for sub-menus</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>previous</code>:</p>
-        <ul>
-            <li><code>previous</code> for pagination</li>
-            <li><code>chartsThemePrevious</code> for Integrated Charts theme picker</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>next</code>:</p>
-        <ul>
-            <li><code>next</code> for pagination</li>
-            <li><code>chartsThemeNext</code> for Integrated Charts theme picker</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>cancel</code>:</p>
-        <ul>
-            <li><code>cancel</code> for column drag pills</li>
-            <li><code>richSelectRemove</code> for Rich Select cell editor pills</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>menu</code>:</p>
-        <ul>
-            <li><code>menu</code> for button to launch the legacy column menu</li>
-            <li><code>legacyMenu</code> for legacy column menu tab header</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>menuAlt</code>:</p>
-        <ul>
-            <li><code>menuAlt</code> for new column menu</li>
-            <li><code>chartsMenu</code> for Integrated Charts menu</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>columns</code>:</p>
-        <ul>
-            <li><code>columns</code> for the column menu/column chooser</li>
-            <li><code>columnsToolPanel</code> for the Columns Tool Panel tab icon</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>filter</code>:</p>
-        <ul>
-            <li><code>filter</code> for buttons that open the filter (header/menu)</li>
-            <li><code>filtersToolPanel</code> for the Filters Tool Panel tab icon</li>
-            <li><code>filterActive</code> for displaying the filter is active (header with legacy column menu, Filters
-                Tool Panel item)</li>
-            <li><code>filterTab</code> for the filter tab of the legacy tabbed column menu</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>save</code>:</p>
-        <ul>
-            <li><code>save</code> for the export menu</li>
-            <li><code>chartsDownload</code> for Integrated Charts download</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>columnSelectClosed</code>:</p>
-        <ul>
-            <li><code>columnSelectClosed</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy
-                tabbed column menu</li>
-            <li><code>accordionClosed</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>columnSelectOpen</code>:</p>
-        <ul>
-            <li><code>columnSelectOpen</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy tabbed
-                column menu</li>
-            <li><code>accordionOpen</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
-        </ul>
-    </li>
-    <li>
-        <p><code>columnSelectIndeterminate</code>:</p>
-        <ul>
-            <li><code>columnSelectIndeterminate</code> for the Columns Tool Panel/Column Chooser/column tab in the
-                legacy tabbed column menu</li>
-            <li><code>accordionIndeterminate</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
+            <li><code>AgReactComponent</code>:<ul>
+                    <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code>
+                        if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
+                        <code>ag-react-container</code> if needed.
+                    </li>
+                    <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
+                    <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
+                    <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
+                    <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
+                    <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
+                    <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
+                    <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
+                    <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
+                    <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
+                    <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
+                    <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
+                    <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
+                    <li><code>ITooltipReactComp</code> removed, no interface required.</li>
+                </ul>
             </li>
         </ul>
-    </li>
-</ul>
 
-<h3 id="server-side-rendering">Server-side Rendering</h3>
-<p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and others.
-    If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
+        <h3 id="theming">Theming</h3>
+        <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme class
+            (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported. Applications using
+            CSS file-based themes must either pass a theme object to the theme grid option or the string <code>"legacy"</code>
+            to keep using class name-based themes. This is documented in the <a
+                href="https://ag-grid.com/javascript-data-grid/theming-migration/">Theming API Migration Guide</a>.</p>
+        <p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific use case
+            its name indicates, instead of all cases as before. To have the custom icon apply to additional cases, set the
+            additional icon keys pointing to the same custom icon. See list of icons changed:</p>
+        <ul>
+            <li>
+                <p><code>smallDown</code> (deprecated):</p>
+                <ul>
+                    <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown</li>
+                    <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu)</li>
+                    <li><code>richSelectOpen</code> for Rich Select cell editor</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>smallLeft</code> (deprecated):</p>
+                <ul>
+                    <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel</li>
+                    <li><code>subMenuOpenRtl</code> for sub-menus</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>smallRight</code> (deprecated):</p>
+                <ul>
+                    <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel</li>
+                    <li><code>subMenuOpen</code> for sub-menus</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>previous</code>:</p>
+                <ul>
+                    <li><code>previous</code> for pagination</li>
+                    <li><code>chartsThemePrevious</code> for Integrated Charts theme picker</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>next</code>:</p>
+                <ul>
+                    <li><code>next</code> for pagination</li>
+                    <li><code>chartsThemeNext</code> for Integrated Charts theme picker</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>cancel</code>:</p>
+                <ul>
+                    <li><code>cancel</code> for column drag pills</li>
+                    <li><code>richSelectRemove</code> for Rich Select cell editor pills</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>menu</code>:</p>
+                <ul>
+                    <li><code>menu</code> for button to launch the legacy column menu</li>
+                    <li><code>legacyMenu</code> for legacy column menu tab header</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>menuAlt</code>:</p>
+                <ul>
+                    <li><code>menuAlt</code> for new column menu</li>
+                    <li><code>chartsMenu</code> for Integrated Charts menu</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>columns</code>:</p>
+                <ul>
+                    <li><code>columns</code> for the column menu/column chooser</li>
+                    <li><code>columnsToolPanel</code> for the Columns Tool Panel tab icon</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>filter</code>:</p>
+                <ul>
+                    <li><code>filter</code> for buttons that open the filter (header/menu)</li>
+                    <li><code>filtersToolPanel</code> for the Filters Tool Panel tab icon</li>
+                    <li><code>filterActive</code> for displaying the filter is active (header with legacy column menu, Filters
+                        Tool Panel item)</li>
+                    <li><code>filterTab</code> for the filter tab of the legacy tabbed column menu</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>save</code>:</p>
+                <ul>
+                    <li><code>save</code> for the export menu</li>
+                    <li><code>chartsDownload</code> for Integrated Charts download</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>columnSelectClosed</code>:</p>
+                <ul>
+                    <li><code>columnSelectClosed</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy
+                        tabbed column menu</li>
+                    <li><code>accordionClosed</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>columnSelectOpen</code>:</p>
+                <ul>
+                    <li><code>columnSelectOpen</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy tabbed
+                        column menu</li>
+                    <li><code>accordionOpen</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
+                </ul>
+            </li>
+            <li>
+                <p><code>columnSelectIndeterminate</code>:</p>
+                <ul>
+                    <li><code>columnSelectIndeterminate</code> for the Columns Tool Panel/Column Chooser/column tab in the
+                        legacy tabbed column menu</li>
+                    <li><code>accordionIndeterminate</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
+                    </li>
+                </ul>
+            </li>
+        </ul>
 
-<h3 id="typing">Typing</h3>
-<ul>
-    <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as well as
-        the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have changed.
-        Instead of string values in the arrays (and in <code>defaultItems</code> in the callback), this is now typed to
-        <code>DefaultMenuItem</code> which only allows the available menu values.
-    </li>
-    <li>The type for the grid option <code>chartMenuItems</code> has changed. Instead of string values in the array (and
-        in <code>defaultItems</code> in the callback), this is now typed to <code>ChartDefaultMenuItem</code> which only
-        allows the available values.</li>
-    <li>The column property is now optional in the callback to get column menu items (in the grid option
-        <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
-        column group header or empty column space is right-clicked on. A new property <code>columnGroup</code> will be
-        provided when a column group header is right-clicked on.
-    </li>
-</ul>
+        <h3 id="server-side-rendering">Server-side Rendering</h3>
+        <p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and others.
+            If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
 
-<h3 id="integrated-charts"> Integrated Charts</h3>
-<p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the
-    Integrated Charts Advanced Settings.</p>
+        <h3 id="typing">Typing</h3>
+        <ul>
+            <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as well as
+                the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have changed.
+                Instead of string values in the arrays (and in <code>defaultItems</code> in the callback), this is now typed to
+                <code>DefaultMenuItem</code> which only allows the available menu values.
+            </li>
+            <li>The type for the grid option <code>chartMenuItems</code> has changed. Instead of string values in the array (and
+                in <code>defaultItems</code> in the callback), this is now typed to <code>ChartDefaultMenuItem</code> which only
+                allows the available values.</li>
+            <li>The column property is now optional in the callback to get column menu items (in the grid option
+                <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
+                column group header or empty column space is right-clicked on. A new property <code>columnGroup</code> will be
+                provided when a column group header is right-clicked on.
+            </li>
+        </ul>
 
-<h3 id="modules-1">Modules</h3>
-<p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.</p>
+        <h3 id="integrated-charts"> Integrated Charts</h3>
+        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the
+            Integrated Charts Advanced Settings.</p>
 
-<h3 id="server-side-row-model">Server-side Row Model</h3>
-<p>Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
-    removed. Please use the standard server-side row model functionality as documented.</p>
+        <h3 id="modules-1">Modules</h3>
+        <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.</p>
 
-<h3 id="floating-filters">Floating Filters</h3>
-<p>Floating filters provided via the <code>colDef.filter</code> values <code>text</code>, <code>number</code>,
-    <code>date</code>, <code>set</code>, <code>multi</code>, and <code>group</code> no longer work. Use the values
-    <code>agTextColumnFilter</code>, <code>agNumberColumnFilter</code>, <code>agDateColumnFilter</code>,
-    <code>agSetColumnFilter</code>, <code>agMultiColumnFilter</code>, and <code>agGroupColumnFilter</code> instead.
-</p>
+        <h3 id="server-side-row-model">Server-side Row Model</h3>
+        <p>Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
+            removed. Please use the standard server-side row model functionality as documented.</p>
 
-<h3 id="column-state">Column State</h3>
-<p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct types
-    instead of strings.</p>
+        <h3 id="floating-filters">Floating Filters</h3>
+        <p>Floating filters provided via the <code>colDef.filter</code> values <code>text</code>, <code>number</code>,
+            <code>date</code>, <code>set</code>, <code>multi</code>, and <code>group</code> no longer work. Use the values
+            <code>agTextColumnFilter</code>, <code>agNumberColumnFilter</code>, <code>agDateColumnFilter</code>,
+            <code>agSetColumnFilter</code>, <code>agMultiColumnFilter</code>, and <code>agGroupColumnFilter</code> instead.
+        </p>
 
-<h3 id="grid-state">Grid State</h3>
-<p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>. Restoring
-    grid state with the old <code>colId</code> will have no effect.</p>
+        <h3 id="column-state">Column State</h3>
+        <p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct types
+            instead of strings.</p>
 
-<h3 id="sparklines">Sparklines</h3>
-<ul>
-    <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and <code>direction: 'vertical'</code>
-        instead.</li>
-    <li><code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.</li>
-    <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
-    <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
-    <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
-    <li><code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
-        <code>sparklineOptions</code> properties instead.
-    </li>
-    <li><code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
-        <code>itemStyler</code> instead.
-    </li>
-    <li><code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code> instead.</li>
-    <li><code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
-        <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
-    </li>
-    <li><code>sparklineOptions.container</code> - removed.</li>
-    <li><code>sparklineOptions.label.placement</code> - updated to use <a
-            href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement">AG
-            Charts Label Placement</a>. Instead of <code>insideBase</code>, <code>center</code>, <code>insideEnd</code>
-        and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
-        <code>inside-end</code> or <code>outside-end</code>
-    </li>
-</ul>
+        <h3 id="grid-state">Grid State</h3>
+        <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>. Restoring
+            grid state with the old <code>colId</code> will have no effect.</p>
 
-<h3 id="grid-api-1">Grid API</h3>
-<ul>
-    <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
-    <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
-    <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the selection
-        mode, the event source is now the second argument. Both are optional.</li>
-    <li><code>getFirstDisplayedRow</code> - removed, use <code>getFirstDisplayedRowIndex</code> instead.</li>
-    <li><code>getLastDisplayedRow</code> - removed, use <code>getLastDisplayedRowIndex</code> instead.</li>
-    <li><code>getModel()</code> - removed, use the appropriate grid API methods instead.</li>
-    <li><code>getValue</code> - removed, use <code>getCellValue</code> instead.</li>
-    <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code> within a
-        header component, or <code>api.showColumnMenu</code> elsewhere.</li>
-    <li><code>showColumnMenuAfterMouseClick</code> - removed, use
-        <code>IHeaderParams.showColumnMenuAfterMouseClick</code> within a header component, or
-        <code>api.showColumnMenu</code> elsewhere.
-    </li>
-    <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
-    <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
-        <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
-    </li>
-    <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
-    </li>
-    <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
-    <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
-    </li>
-    <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
-    <li><code>removeRowGroupColumn(colKey)</code> - removed, please use <code>removeRowGroupColumns([colKey])</code>
-        instead.</li>
-    <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code> instead.
-    </li>
-    <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code> instead.
-    </li>
-    <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code> instead.</li>
-    <li><code>setColumnVisible(key, visible)</code> - removed, please use <code>setColumnsVisible([key], visible)</code>
-        instead.</li>
-    <li><code>setColumnPinned(key, pinned)</code> - removed, please use <code>setColumnsPinned([key], pinned)</code>
-        instead.</li>
-    <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
-        instead.</li>
-</ul>
+        <h3 id="sparklines">Sparklines</h3>
+        <ul>
+            <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and <code>direction: 'vertical'</code>
+                instead.</li>
+            <li><code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.</li>
+            <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
+            <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
+            <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
+            <li><code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
+                <code>sparklineOptions</code> properties instead.
+            </li>
+            <li><code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
+                <code>itemStyler</code> instead.
+            </li>
+            <li><code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code> instead.</li>
+            <li><code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
+                <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
+            </li>
+            <li><code>sparklineOptions.container</code> - removed.</li>
+            <li><code>sparklineOptions.label.placement</code> - updated to use <a
+                    href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement">AG
+                    Charts Label Placement</a>. Instead of <code>insideBase</code>, <code>center</code>, <code>insideEnd</code>
+                and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
+                <code>inside-end</code> or <code>outside-end</code>
+            </li>
+        </ul>
+
+        <h3 id="grid-api-1">Grid API</h3>
+        <ul>
+            <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
+            <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
+            <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the selection
+                mode, the event source is now the second argument. Both are optional.</li>
+            <li><code>getFirstDisplayedRow</code> - removed, use <code>getFirstDisplayedRowIndex</code> instead.</li>
+            <li><code>getLastDisplayedRow</code> - removed, use <code>getLastDisplayedRowIndex</code> instead.</li>
+            <li><code>getModel()</code> - removed, use the appropriate grid API methods instead.</li>
+            <li><code>getValue</code> - removed, use <code>getCellValue</code> instead.</li>
+            <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code> within a
+                header component, or <code>api.showColumnMenu</code> elsewhere.</li>
+            <li><code>showColumnMenuAfterMouseClick</code> - removed, use
+                <code>IHeaderParams.showColumnMenuAfterMouseClick</code> within a header component, or
+                <code>api.showColumnMenu</code> elsewhere.
+            </li>
+            <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
+            <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
+                <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
+            </li>
+            <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
+            </li>
+            <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
+            <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
+            </li>
+            <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
+            <li><code>removeRowGroupColumn(colKey)</code> - removed, please use <code>removeRowGroupColumns([colKey])</code>
+                instead.</li>
+            <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code> instead.
+            </li>
+            <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code> instead.
+            </li>
+            <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code> instead.</li>
+            <li><code>setColumnVisible(key, visible)</code> - removed, please use <code>setColumnsVisible([key], visible)</code>
+                instead.</li>
+            <li><code>setColumnPinned(key, pinned)</code> - removed, please use <code>setColumnsPinned([key], pinned)</code>
+                instead.</li>
+            <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
+                instead.</li>
+        </ul>
+        </div>
 </details>
 
 {/* ------------------------------------------------- */}
@@ -466,102 +469,102 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","suppressServerSideInfiniteScroll", "advancedFilterModel", "suppressAsyncEvents", "cellFlashDelay", "cellFadeDelay", "suppressGroupMaintainValueType", "groupIncludeFooter", "groupIncludeTotalFooter", "suppressServerSideInfiniteScroll", "serverSideSortOnServer", "serverSideFilterOnServer", "tabToNextCell", "tabToNextHeader", "suppressCellFlash", "columnsMenuParams", "suppressMenu", "RowDragEvent", "IFloatingFilterParams", "ITextFilterParams", "IFloatingFilter", "IFilterParams", "IDate", "IGroupCellRendererParams", "FlashCellsParams", "flashDelay", "fadeDelay", "ToolPanelColumnCompParams", "ExcelAlignment", "ExcelFont", "ExcelStyle"]'
 ></div>
 
-<details>
-    <summary>
-        View Removed Deprecated APIs
-    </summary>
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}>Removed Deprecated APIs <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
 
-    <h3 id="grid-options-1">React</h3>
+    <div class={styles.detailsInner}>
+            <h3 id="grid-options-1">React</h3>
 
-    <ul>
-        <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
-        <li><code>AgGridReactProps</code>:<ul>
-        <li><code>disableStaticMarkup</code> no longer used.</li>
-        <li><code>legacyComponentRendering</code> no longer used.</li>
+            <ul>
+                <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
+                <li><code>AgGridReactProps</code>:<ul>
+                <li><code>disableStaticMarkup</code> no longer used.</li>
+                <li><code>legacyComponentRendering</code> no longer used.</li>
+                </ul>
+                </li>
+                <li><code>AgReactComponent</code>:<ul>
+                <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code> if needed.
+                -<code>getReactContainerClasses</code> removed, apply styling directly to <code>ag-react-container</code> if needed.</li>
+                <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
+                <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
+                <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
+                <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
+                <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
+                <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
+                <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
+                <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
+                <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
+                <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
+                <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
+                <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
+                <li><code>ITooltipReactComp</code> removed, no interface required.</li>
+                </ul>
+                </li>
+                </ul>
+                
+
+
+            <h3 id="grid-options-1"> Grid Options</h3>
+        <ul>
+            <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
+            <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property removed
+                without replacement.</li>
+            <li><code>advancedFilterModel</code> - removed, please use <code>initialState.filter.advancedFilterModel</code>
+                instead.</li>
+            <li><code>suppressAsyncEvents</code> - removed, Events should be handled asynchronously.</li>
+            <li><code>cellFlashDelay</code> - removed, please use <code>cellFlashDuration</code> instead.</li>
+            <li><code>cellFadeDelay</code> - removed, please use <code>cellFadeDuration</code> instead.</li>
+            <li>Use <code>enableCellChangeFlash</code> in the <code>ColDef</code> or <code>defaultColDef</code> for all columns.
+            </li>
+            <li><code>suppressGroupMaintainValueType</code> - removed.</li>
+            <li><code>groupIncludeFooter</code> - removed, please use <code>groupTotalRow</code> instead.</li>
+            <li><code>groupIncludeTotalFooter</code> - removed, please use <code>grandTotalRow</code> instead.</li>
+            <li><code>suppressServerSideInfiniteScroll</code> - removed.</li>
+            <li><code>serverSideSortOnServer</code> - removed.</li>
+            <li><code>serverSideFilterOnServer</code> - removed.</li>
+            <li><code>tabToNextCell</code> returning <code>null</code> - removed.</li>
+            <li><code>tabToNextHeader</code> returning <code>null</code> - removed.</li>
         </ul>
-        </li>
-        <li><code>AgReactComponent</code>:<ul>
-        <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code> if needed.
-        -<code>getReactContainerClasses</code> removed, apply styling directly to <code>ag-react-container</code> if needed.</li>
-        <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
-        <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
-        <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
-        <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
-        <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
-        <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
-        <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
-        <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
-        <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
-        <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
-        <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
-        <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
-        <li><code>ITooltipReactComp</code> removed, no interface required.</li>
+
+        <h3 id="coldef"> ColDef</h3>
+        <ul>
+            <li><code>suppressCellFlash</code> - removed, please use <code>enableCellChangeFlash={false}</code> in the
+                <code>ColDef</code>.
+            </li>
+            <li><code>columnsMenuParams</code> - removed, please use <code>columnChooserParams</code> instead.</li>
+            <li><code>suppressMenu</code> - removed, please use <code>suppressHeaderMenuButton</code> instead.</li>
         </ul>
-        </li>
-        </ul>
-        
 
-
-    <h3 id="grid-options-1"> Grid Options</h3>
-<ul>
-    <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
-    <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property removed
-        without replacement.</li>
-    <li><code>advancedFilterModel</code> - removed, please use <code>initialState.filter.advancedFilterModel</code>
-        instead.</li>
-    <li><code>suppressAsyncEvents</code> - removed, Events should be handled asynchronously.</li>
-    <li><code>cellFlashDelay</code> - removed, please use <code>cellFlashDuration</code> instead.</li>
-    <li><code>cellFadeDelay</code> - removed, please use <code>cellFadeDuration</code> instead.</li>
-    <li>Use <code>enableCellChangeFlash</code> in the <code>ColDef</code> or <code>defaultColDef</code> for all columns.
-    </li>
-    <li><code>suppressGroupMaintainValueType</code> - removed.</li>
-    <li><code>groupIncludeFooter</code> - removed, please use <code>groupTotalRow</code> instead.</li>
-    <li><code>groupIncludeTotalFooter</code> - removed, please use <code>grandTotalRow</code> instead.</li>
-    <li><code>suppressServerSideInfiniteScroll</code> - removed.</li>
-    <li><code>serverSideSortOnServer</code> - removed.</li>
-    <li><code>serverSideFilterOnServer</code> - removed.</li>
-    <li><code>tabToNextCell</code> returning <code>null</code> - removed.</li>
-    <li><code>tabToNextHeader</code> returning <code>null</code> - removed.</li>
-</ul>
-
-<h3 id="coldef"> ColDef</h3>
-<ul>
-    <li><code>suppressCellFlash</code> - removed, please use <code>enableCellChangeFlash={false}</code> in the
-        <code>ColDef</code>.
-    </li>
-    <li><code>columnsMenuParams</code> - removed, please use <code>columnChooserParams</code> instead.</li>
-    <li><code>suppressMenu</code> - removed, please use <code>suppressHeaderMenuButton</code> instead.</li>
-</ul>
-
-<h3 id="interfaces"> Interfaces</h3>
-<ul>
-    <li><code>RowDragEvent</code> interface: <code>vDirection</code> property is now typed as
-        <code>'up' | 'down' | null</code>.
-    </li>
-    <li><code>IFloatingFilterParams</code>: <code>suppressFilterButton</code> - removed, please use
-        <code>colDef.suppressFloatingFilterButton</code> instead.
-    </li>
-    <li><code>ITextFilterParams</code>: <code>textCustomComparator</code> - removed, please use <code>textMatcher</code>
-        instead.</li>
-    <li><code>IFloatingFilter</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.
-    </li>
-    <li><code>IFilterParams</code>: <code>valueGetter</code> - removed, please use <code>getValue</code> instead.</li>
-    <li><code>IDate</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.</li>
-    <li><code>IGroupCellRendererParams</code>: <code>footerValueGetter</code> - removed, please use
-        <code>totalValueGetter</code> instead.
-    </li>
-    <li><code>FlashCellsParams</code>:<ul>
-            <li><code>flashDelay</code> - removed, please use <code>flashDuration</code> instead.</li>
-            <li><code>fadeDelay</code> - removed, please use <code>fadeDuration</code> instead.</li>
-        </ul>
-    </li>
-    <li><code>ToolPanelColumnCompParams</code>: <code>ToolPanelColumnCompParams</code> - removed, please use
-        <code>IToolPanelColumnCompParams</code> instead.
-    </li>
-    <li><code>ExcelAlignment</code>: Legacy property <code>verticalText</code> - removed.</li>
-    <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
-    <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
-</ul> 
+        <h3 id="interfaces"> Interfaces</h3>
+        <ul>
+            <li><code>RowDragEvent</code> interface: <code>vDirection</code> property is now typed as
+                <code>'up' | 'down' | null</code>.
+            </li>
+            <li><code>IFloatingFilterParams</code>: <code>suppressFilterButton</code> - removed, please use
+                <code>colDef.suppressFloatingFilterButton</code> instead.
+            </li>
+            <li><code>ITextFilterParams</code>: <code>textCustomComparator</code> - removed, please use <code>textMatcher</code>
+                instead.</li>
+            <li><code>IFloatingFilter</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.
+            </li>
+            <li><code>IFilterParams</code>: <code>valueGetter</code> - removed, please use <code>getValue</code> instead.</li>
+            <li><code>IDate</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.</li>
+            <li><code>IGroupCellRendererParams</code>: <code>footerValueGetter</code> - removed, please use
+                <code>totalValueGetter</code> instead.
+            </li>
+            <li><code>FlashCellsParams</code>:<ul>
+                    <li><code>flashDelay</code> - removed, please use <code>flashDuration</code> instead.</li>
+                    <li><code>fadeDelay</code> - removed, please use <code>fadeDuration</code> instead.</li>
+                </ul>
+            </li>
+            <li><code>ToolPanelColumnCompParams</code>: <code>ToolPanelColumnCompParams</code> - removed, please use
+                <code>IToolPanelColumnCompParams</code> instead.
+            </li>
+            <li><code>ExcelAlignment</code>: Legacy property <code>verticalText</code> - removed.</li>
+            <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
+            <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
+        </ul> 
+    </div>
 </details>
 
 {/* ------------------------------------------------- */}
@@ -571,100 +574,103 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     data-meta="[&amp;quot;ModuleRegistry.register&amp;quot;,&amp;quot;MenuModule&amp;quot;,&amp;quot;RangeSelectionModule&amp;quot;,&amp;quot;Column.isHovered&amp;quot;,&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;,&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;,&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
 </div>
 
-<details>
-    <summary>View Deprecations</summary>
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}>Deprecations <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
 
-    <h3 id="modules"> Modules</h3>
-<ul>
-    <li><code>ModuleRegistry.register(module)</code> - deprecated, use
-        <code>ModuleRegistry.registerModules([module])</code> instead.
-    </li>
-    <li><code>MenuModule</code> - deprecated, use <code>ColumnMenuModule</code> for the Column Menu and/or
-        <code>ContextMenuModule</code> for the Context Menu instead.
-    </li>
-    <li><code>RangeSelectionModule</code> - deprecated, use <code>CellSelectionModule</code> instead.</li>
-</ul>
+    <div class={styles.detailsInner}>
 
-<h3 id="column-object"> Column Object</h3>
-<ul>
-    <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
-</ul>
-
-<h3 id="grid-api"> Grid API</h3>
-<ul>
-    <li><code>deselectAllFiltered</code> - deprecated, use <code>deselectAll('filtered')</code> instead.</li>
-    <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.</li>
-    <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
-    <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
-</ul>
-
-<h3 id="grid-options"> Grid Options</h3>
-<ul>
-    <li><code>cellRendererParams.checkbox</code> - deprecated, use
-        <code>rowSelection.checkboxLocation = "autoGroupColumn"</code> instead.
-    </li>
-    <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.</li>
-    <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.</li>
-    <li><code>groupRemoveLowestSingleChildren</code> - deprecated, use
-        <code>groupHideParentOfSingleChild: 'leafGroupsOnly'</code> instead.
-    </li>
-    <li><code>groupRemoveSingleChildren</code> - deprecated, use <code>groupHideParentOfSingleChild: true</code>
-        instead.</li>
-    <li><code>suppressMakeColumnVisibleAfterUnGroup</code> - deprecated, use
-        <code>suppressGroupChangesColumnVisibility: "suppressShowOnUngroup"</code> instead.
-    </li>
-    <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding user
-        properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code> property
-        in both for storing arbitrary metadata.</li>
-    <li><code>suppressRowGroupHidesColumns</code> - deprecated, use
-        <code>suppressGroupChangesColumnVisibility: "suppressHideOnGroup"</code> instead.
-    </li>
-    <li>When setting both <code>suppressMakeColumnVisibleAfterUnGroup</code> and
-        <code>suppressRowGroupHidesColumns</code> to <code>true</code>, use
-        <code>suppressGroupChangesColumnVisibility: true</code> instead.
-    </li>
-</ul>
-
-<h3 id="row-node"> Row Node</h3>
-<ul>
-    <li><code>childIndex</code> - deprecated, use
-        <code>rowNode.parent?.childrenAfterSort?.findIndex(r =&gt; r === rowNode)</code> instead.
-    </li>
-    <li><code>firstChild</code> - deprecated, use <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
-        instead.</li>
-    <li><code>lastChild</code> - deprecated, use
-        <code>!!rowNode.parent?.childrenAfterSort &amp;&amp; (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)</code>
-        instead.
-    </li>
-</ul>
-
-<h3 id="row-node-events"> Row Node Events</h3>
-<ul>
-    <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
-        row children have changed.</li>
-    <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
-        row children have changed.</li>
-    <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
-        children have changed.</li>
-</ul>
-
-<h3 id="theming-custom-icons"> Theming Custom Icons</h3>
-<ul>
-    <li><code>smallDown</code> - deprecated, use:<ul>
-            <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown.</li>
-            <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).</li>
-            <li><code>richSelectOpen</code> for Rich Select cell editor.</li>
+            <h3 id="modules"> Modules</h3>
+        <ul>
+            <li><code>ModuleRegistry.register(module)</code> - deprecated, use
+                <code>ModuleRegistry.registerModules([module])</code> instead.
+            </li>
+            <li><code>MenuModule</code> - deprecated, use <code>ColumnMenuModule</code> for the Column Menu and/or
+                <code>ContextMenuModule</code> for the Context Menu instead.
+            </li>
+            <li><code>RangeSelectionModule</code> - deprecated, use <code>CellSelectionModule</code> instead.</li>
         </ul>
-    </li>
-    <li><code>smallLeft</code> - deprecated, use:<ul>
-            <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel.</li>
-            <li><code>subMenuOpenRtl</code> for sub-menus.</li>
+
+        <h3 id="column-object"> Column Object</h3>
+        <ul>
+            <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
         </ul>
-    </li>
-    <li><code>smallRight</code> - deprecated, use:<ul>
-            <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel.</li>
-            <li><code>subMenuOpen</code> for sub-menus.</li>
+
+        <h3 id="grid-api"> Grid API</h3>
+        <ul>
+            <li><code>deselectAllFiltered</code> - deprecated, use <code>deselectAll('filtered')</code> instead.</li>
+            <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.</li>
+            <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
+            <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
         </ul>
-    </li>
-</ul>
+
+        <h3 id="grid-options"> Grid Options</h3>
+        <ul>
+            <li><code>cellRendererParams.checkbox</code> - deprecated, use
+                <code>rowSelection.checkboxLocation = "autoGroupColumn"</code> instead.
+            </li>
+            <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.</li>
+            <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.</li>
+            <li><code>groupRemoveLowestSingleChildren</code> - deprecated, use
+                <code>groupHideParentOfSingleChild: 'leafGroupsOnly'</code> instead.
+            </li>
+            <li><code>groupRemoveSingleChildren</code> - deprecated, use <code>groupHideParentOfSingleChild: true</code>
+                instead.</li>
+            <li><code>suppressMakeColumnVisibleAfterUnGroup</code> - deprecated, use
+                <code>suppressGroupChangesColumnVisibility: "suppressShowOnUngroup"</code> instead.
+            </li>
+            <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding user
+                properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code> property
+                in both for storing arbitrary metadata.</li>
+            <li><code>suppressRowGroupHidesColumns</code> - deprecated, use
+                <code>suppressGroupChangesColumnVisibility: "suppressHideOnGroup"</code> instead.
+            </li>
+            <li>When setting both <code>suppressMakeColumnVisibleAfterUnGroup</code> and
+                <code>suppressRowGroupHidesColumns</code> to <code>true</code>, use
+                <code>suppressGroupChangesColumnVisibility: true</code> instead.
+            </li>
+        </ul>
+
+        <h3 id="row-node"> Row Node</h3>
+        <ul>
+            <li><code>childIndex</code> - deprecated, use
+                <code>rowNode.parent?.childrenAfterSort?.findIndex(r =&gt; r === rowNode)</code> instead.
+            </li>
+            <li><code>firstChild</code> - deprecated, use <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
+                instead.</li>
+            <li><code>lastChild</code> - deprecated, use
+                <code>!!rowNode.parent?.childrenAfterSort &amp;&amp; (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)</code>
+                instead.
+            </li>
+        </ul>
+
+        <h3 id="row-node-events"> Row Node Events</h3>
+        <ul>
+            <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+                row children have changed.</li>
+            <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+                row children have changed.</li>
+            <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
+                children have changed.</li>
+        </ul>
+
+        <h3 id="theming-custom-icons"> Theming Custom Icons</h3>
+        <ul>
+            <li><code>smallDown</code> - deprecated, use:<ul>
+                    <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown.</li>
+                    <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).</li>
+                    <li><code>richSelectOpen</code> for Rich Select cell editor.</li>
+                </ul>
+            </li>
+            <li><code>smallLeft</code> - deprecated, use:<ul>
+                    <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel.</li>
+                    <li><code>subMenuOpenRtl</code> for sub-menus.</li>
+                </ul>
+            </li>
+            <li><code>smallRight</code> - deprecated, use:<ul>
+                    <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel.</li>
+                    <li><code>subMenuOpen</code> for sub-menus.</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 </details>
