@@ -160,9 +160,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 {/* ------------------------------------------------- */}
 
 <h2 id="breaking-changes">Breaking Changes</h2>
-
         <div
-    data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","IntegratedChartsModule","GridChartsModule","AgChartsCommunityModule","AgChartsEnterpriseModule","RowDragModule","suppressServerSideInfiniteScroll","getMainMenuItems","getContextMenuItems","mainMenuItems","contextMenuItems","chartMenuItems","columnGroup","navigator","api.getRowDropZoneParams","Grid","createGrid","selectAll","deselectAll","getFirstDisplayedRow","getLastDisplayedRow","getModel","getValue","getCellValue","showColumnMenuAfterButtonClick","showColumnMenuAfterMouseClick","IHeaderParams","autoSizeColumn","autoSizeColumns","setColumnWidths","moveColumn","moveColumns","addAggFunc","addAggFuncs","removeValueColumn","removeValueColumns","addValueColumn","addValueColumns","removeRowGroupColumn","removeRowGroupColumns","addRowGroupColumn","addRowGroupColumns","removePivotColumn","removePivotColumns","addPivotColumn","addPivotColumns","setColumnVisible","setColumnsVisible","setColumnPinned","setColumnsPinned","getColumnFilterModel","setColumnFilterModel","suppressServerSideInfiniteScroll","getServerSideGroupLevelParams","advancedFilterModel","suppressAsyncEvents","cellFlashDelay","cellFlashDuration","cellFadeDelay","cellFadeDuration","enableCellChangeFlash","suppressGroupMaintainValueType","groupIncludeFooter","groupTotalRow","groupIncludeTotalFooter","grandTotalRow","serverSideSortOnServer","serverSideFilterOnServer","tabToNextCell","tabToNextHeader","suppressCellFlash","columnsMenuParams","columnChooserParams","suppressMenu","suppressHeaderMenuButton","RowDragEvent","vDirection","IFloatingFilterParams","suppressFilterButton","colDef.suppressFloatingFilterButton","ITextFilterParams","textCustomComparator","textMatcher","IFloatingFilter","onParamsUpdated","refresh","IFilterParams","valueGetter","getValue","IDate","IGroupCellRendererParams","footerValueGetter","totalValueGetter","FlashCellsParams","flashDelay","flashDuration","fadeDelay","fadeDuration","ToolPanelColumnCompParams","IToolPanelColumnCompParams","ExcelAlignment","verticalText","ExcelFont","charSet","ExcelStyle","name","sparklineOptions.label.placement"]'
+    data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","IntegratedChartsModule","GridChartsModule","AgChartsCommunityModule","AgChartsEnterpriseModule","RowDragModule","getMainMenuItems","getContextMenuItems","mainMenuItems","contextMenuItems","chartMenuItems","columnGroup","navigator","api.getRowDropZoneParams","Grid","createGrid","selectAll","deselectAll","getFirstDisplayedRow","getLastDisplayedRow","getModel","getValue","getCellValue","showColumnMenuAfterButtonClick","showColumnMenuAfterMouseClick","IHeaderParams","autoSizeColumn","autoSizeColumns","setColumnWidths","moveColumn","moveColumns","addAggFunc","addAggFuncs","removeValueColumn","removeValueColumns","addValueColumn","addValueColumns","removeRowGroupColumn","removeRowGroupColumns","addRowGroupColumn","addRowGroupColumns","removePivotColumn","removePivotColumns","addPivotColumn","addPivotColumns","setColumnVisible","setColumnsVisible","setColumnPinned","setColumnsPinned","getColumnFilterModel","setColumnFilterModel","getServerSideGroupLevelParams","cellFlashDuration","enableCellChangeFlash","suppressGroupMaintainValueType","groupTotalRow","grandTotalRow","columnChooserParams","suppressHeaderMenuBut"RowDragEvent","vDirection","suppressFilterButton","colDef.suppressFloatingFilterButton","textCustomComparator","textMatcher","onParamsUpdated","refresh","valueGetter","getValue","footerValueGetter","totalValueGetter","flashDuration","fadeDuration","IToolPanelColumnCompParams","verticalText","charSet",,"name","sparklineOptions.label.placement"]'
 ></div>
 
 <details>
@@ -458,8 +457,52 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
         instead.</li>
 </ul>
+</details>
 
-<h3 id="grid-options-1"> Grid Options</h3>
+{/* ------------------------------------------------- */}
+
+<h2 id="removal-of-deprecated-apis">Removal of Deprecated APIs</h2>
+        <div
+    data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","suppressServerSideInfiniteScroll", "advancedFilterModel", "suppressAsyncEvents", "cellFlashDelay", "cellFadeDelay", "suppressGroupMaintainValueType", "groupIncludeFooter", "groupIncludeTotalFooter", "suppressServerSideInfiniteScroll", "serverSideSortOnServer", "serverSideFilterOnServer", "tabToNextCell", "tabToNextHeader", "suppressCellFlash", "columnsMenuParams", "suppressMenu", "RowDragEvent", "IFloatingFilterParams", "ITextFilterParams", "IFloatingFilter", "IFilterParams", "IDate", "IGroupCellRendererParams", "FlashCellsParams", "flashDelay", "fadeDelay", "ToolPanelColumnCompParams", "ExcelAlignment", "ExcelFont", "ExcelStyle"]'
+></div>
+
+<details>
+    <summary>
+        View Removed Deprecated APIs
+    </summary>
+
+    <h3 id="grid-options-1">React</h3>
+
+    <ul>
+        <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
+        <li><code>AgGridReactProps</code>:<ul>
+        <li><code>disableStaticMarkup</code> no longer used.</li>
+        <li><code>legacyComponentRendering</code> no longer used.</li>
+        </ul>
+        </li>
+        <li><code>AgReactComponent</code>:<ul>
+        <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code> if needed.
+        -<code>getReactContainerClasses</code> removed, apply styling directly to <code>ag-react-container</code> if needed.</li>
+        <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
+        <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
+        <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
+        <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
+        <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
+        <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
+        <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
+        <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
+        <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
+        <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
+        <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
+        <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
+        <li><code>ITooltipReactComp</code> removed, no interface required.</li>
+        </ul>
+        </li>
+        </ul>
+        
+
+
+    <h3 id="grid-options-1"> Grid Options</h3>
 <ul>
     <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
     <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property removed
@@ -519,7 +562,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
     <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
 </ul> 
-
 </details>
 
 {/* ------------------------------------------------- */}
