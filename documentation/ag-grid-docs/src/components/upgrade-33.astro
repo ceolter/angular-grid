@@ -16,6 +16,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     the list of API breaking changes to see which ones apply to your codebase.
 </p>
 
+{/* ------------------------------------------------- */}
+
 <h2 id="changes-to-modules">Changes to Modules</h2>
 <p>
     Version 33 introduces a major change to how modules work to allow for smaller bundle sizes. Previously AG Grid
@@ -106,6 +108,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     </li>
 </ul>
 
+{/* ------------------------------------------------- */}
+
 <h2 id="codemods">Codemods</h2>
 <p>Follow these steps to upgrade your project's AG Grid version to <code>33.0.0</code>:</p>
 
@@ -152,188 +156,17 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 
 <p>See the <a href="/react-data-grid/codemods/">Codemods</a> documentation for more details.</p>
 
-<!-- 
+{/* ------------------------------------------------- */}
 
-<h2 id="codemods"> Codemods </h2>
-<p>Follow these steps to upgrade your project's AG Grid version to <code>33.0.0</code>:</p>
-<ol>
-    <li>
-        <p>Locate your project's <code>package.json</code> and note the version of AG Grid that you are currently using.
-        </p>
-    </li>
-    <li>
-        <p>Update any AG Grid dependencies listed in the <code>package.json</code> to version <code>33.0.0</code>.</p>
-    </li>
-    <li>
-        <p>Open a terminal and navigate to your project's root folder.</p>
-    </li>
-    <li>
-        <p>Run the <code>migrate</code> command of version <code>33.0</code> of the AG Grid codemod runner, where
-            <code>$FROM_VERSION</code> refers to your project's existing AG Grid version:
-        </p>
-        <pre class="code language-jsx"><code>npx @ag<span class="token operator">-</span>grid<span class="token operator">-</span>devtools<span class="token operator">/</span>cli@<span class="token number">33.0</span> migrate <span class="token operator">--</span>from<span class="token operator">=</span>$<span class="token constant">FROM_VERSION</span>
-</code></pre>
-        <p>This will update your project's source files to prepare for the new release.</p>
-        <p>By default the Codemod runner will locate all source files within the current directory. For projects with
-            more specific requirements, pass a list of input files to the <code>migrate</code> command, or specify the
-            <code>--help</code> argument to see more fine-grained usage instructions.
-        </p>
-    </li>
-</ol>
-<div class="alert _alert_1p97w_1"><svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor"
-        width="32" height="32" viewBox="0 0 32 32" aria-hidden="true" class="_icon_1jqgc_1 icon"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M17 22L17 14 13 14 13 16 15 16 15 22 12 22 12 24 20 24 20 22 17 22zM16 8a1.5 1.5 0 101.5 1.5A1.5 1.5 0 0016 8z">
-        </path>
-        <path d="M16,30A14,14,0,1,1,30,16,14,14,0,0,1,16,30ZM16,4A12,12,0,1,0,28,16,12,12,0,0,0,16,4Z"></path>
-    </svg>
-    <div>
-        <p>The Codemod runner will check the state of your project to ensure that you don't lose any work. If you would
-            rather see a diff of the changes instead of applying them, pass the <code>--dry-run</code> argument.</p>
-    </div>
-</div>
-<p>The codemod only transforms source files that make use of deprecated features, so if you aren't currently making use
-    of any of those APIs your source code will be unaffected by the codemod.</p>
-<p>See the <a href="/react-data-grid/codemods/">Codemods</a> documentation for more details.</p>
-
-
-<h2 id="deprecations"> Deprecations </h2>
+<h2 id="breaking-changes">Breaking Changes</h2>
 <div
-    data-meta="[&amp;quot;ModuleRegistry.register&amp;quot;,&amp;quot;MenuModule&amp;quot;,&amp;quot;RangeSelectionModule&amp;quot;,&amp;quot;Column.isHovered&amp;quot;,&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;,&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;,&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
+    data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","IntegratedChartsModule","GridChartsModule","AgChartsCommunityModule","AgChartsEnterpriseModule","RowDragModule","suppressServerSideInfiniteScroll","getMainMenuItems","getContextMenuItems","mainMenuItems","contextMenuItems","chartMenuItems","columnGroup","navigator","api.getRowDropZoneParams","Grid","createGrid","selectAll","deselectAll","getFirstDisplayedRow","getLastDisplayedRow","getModel","getValue","getCellValue","showColumnMenuAfterButtonClick","showColumnMenuAfterMouseClick","IHeaderParams","autoSizeColumn","autoSizeColumns","setColumnWidths","moveColumn","moveColumns","addAggFunc","addAggFuncs","removeValueColumn","removeValueColumns","addValueColumn","addValueColumns","removeRowGroupColumn","removeRowGroupColumns","addRowGroupColumn","addRowGroupColumns","removePivotColumn","removePivotColumns","addPivotColumn","addPivotColumns","setColumnVisible","setColumnsVisible","setColumnPinned","setColumnsPinned","getColumnFilterModel","setColumnFilterModel","suppressServerSideInfiniteScroll","getServerSideGroupLevelParams","advancedFilterModel","suppressAsyncEvents","cellFlashDelay","cellFlashDuration","cellFadeDelay","cellFadeDuration","enableCellChangeFlash","suppressGroupMaintainValueType","groupIncludeFooter","groupTotalRow","groupIncludeTotalFooter","grandTotalRow","serverSideSortOnServer","serverSideFilterOnServer","tabToNextCell","tabToNextHeader","suppressCellFlash","columnsMenuParams","columnChooserParams","suppressMenu","suppressHeaderMenuButton","RowDragEvent","vDirection","IFloatingFilterParams","suppressFilterButton","colDef.suppressFloatingFilterButton","ITextFilterParams","textCustomComparator","textMatcher","IFloatingFilter","onParamsUpdated","refresh","IFilterParams","valueGetter","getValue","IDate","IGroupCellRendererParams","footerValueGetter","totalValueGetter","FlashCellsParams","flashDelay","flashDuration","fadeDelay","fadeDuration","ToolPanelColumnCompParams","IToolPanelColumnCompParams","ExcelAlignment","verticalText","ExcelFont","charSet","ExcelStyle","name","sparklineOptions.label.placement"]'
+>
 </div>
 
-
-
-
-<h3 id="modules"> Modules </h3>
-<ul>
-    <li><code>ModuleRegistry.register(module)</code> - deprecated, use
-        <code>ModuleRegistry.registerModules([module])</code> instead.
-    </li>
-    <li><code>MenuModule</code> - deprecated, use <code>ColumnMenuModule</code> for the Column Menu and/or
-        <code>ContextMenuModule</code> for the Context Menu instead.
-    </li>
-    <li><code>RangeSelectionModule</code> - deprecated, use <code>CellSelectionModule</code> instead.</li>
-</ul>
-
-
-
-
-<h3 id="column-object"> Column Object </h3>
-<ul>
-    <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
-</ul>
-
-
-
-
-<h3 id="grid-api"> Grid API </h3>
-<ul>
-    <li><code>deselectAllFiltered</code> - deprecated, use <code>deselectAll('filtered')</code> instead.</li>
-    <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.</li>
-    <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
-    <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
-</ul>
-
-
-
-
-<h3 id="grid-options"> Grid Options </h3>
-<ul>
-    <li><code>cellRendererParams.checkbox</code> - deprecated, use
-        <code>rowSelection.checkboxLocation = "autoGroupColumn"</code> instead.
-    </li>
-    <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.</li>
-    <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.</li>
-    <li><code>groupRemoveLowestSingleChildren</code> - deprecated, use
-        <code>groupHideParentOfSingleChild: 'leafGroupsOnly'</code> instead.
-    </li>
-    <li><code>groupRemoveSingleChildren</code> - deprecated, use <code>groupHideParentOfSingleChild: true</code>
-        instead.</li>
-    <li><code>suppressMakeColumnVisibleAfterUnGroup</code> - deprecated, use
-        <code>suppressGroupChangesColumnVisibility: "suppressShowOnUngroup"</code> instead.
-    </li>
-    <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding user
-        properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code> property
-        in both for storing arbitrary metadata.</li>
-    <li><code>suppressRowGroupHidesColumns</code> - deprecated, use
-        <code>suppressGroupChangesColumnVisibility: "suppressHideOnGroup"</code> instead.
-    </li>
-    <li>When setting both <code>suppressMakeColumnVisibleAfterUnGroup</code> and
-        <code>suppressRowGroupHidesColumns</code> to <code>true</code>, use
-        <code>suppressGroupChangesColumnVisibility: true</code> instead.
-    </li>
-</ul>
-
-
-
-
-<h3 id="row-node"> Row Node </h3>
-<ul>
-    <li><code>childIndex</code> - deprecated, use
-        <code>rowNode.parent?.childrenAfterSort?.findIndex(r =&gt; r === rowNode)</code> instead.
-    </li>
-    <li><code>firstChild</code> - deprecated, use <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
-        instead.</li>
-    <li><code>lastChild</code> - deprecated, use
-        <code>!!rowNode.parent?.childrenAfterSort &amp;&amp; (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)</code>
-        instead.
-    </li>
-</ul>
-
-
-
-
-<h3 id="row-node-events"> Row Node Events </h3>
-<ul>
-    <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
-        row children have changed.</li>
-    <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
-        row children have changed.</li>
-    <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
-        children have changed.</li>
-</ul>
-
-
-
-
-<h3 id="theming-custom-icons"> Theming Custom Icons </h3>
-<ul>
-    <li><code>smallDown</code> - deprecated, use:<ul>
-            <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown.</li>
-            <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).</li>
-            <li><code>richSelectOpen</code> for Rich Select cell editor.</li>
-        </ul>
-    </li>
-    <li><code>smallLeft</code> - deprecated, use:<ul>
-            <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel.</li>
-            <li><code>subMenuOpenRtl</code> for sub-menus.</li>
-        </ul>
-    </li>
-    <li><code>smallRight</code> - deprecated, use:<ul>
-            <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel.</li>
-            <li><code>subMenuOpen</code> for sub-menus.</li>
-        </ul>
-    </li>
-</ul>
-
-
-
-
-
-
-
-<h2 id="breaking-changes"> Breaking Changes </h2>
-<div
-    data-meta="[&amp;quot;ag-grid-enterprise&amp;quot;,&amp;quot;ag-charts-community&amp;quot;,&amp;quot;ag-charts-enterprise&amp;quot;,&amp;quot;IntegratedChartsModule&amp;quot;,&amp;quot;GridChartsModule&amp;quot;,&amp;quot;AgChartsCommunityModule&amp;quot;,&amp;quot;AgChartsEnterpriseModule&amp;quot;,&amp;quot;RowDragModule&amp;quot;,&amp;quot;suppressServerSideInfiniteScroll&amp;quot;,&amp;quot;getMainMenuItems&amp;quot;,&amp;quot;getContextMenuItems&amp;quot;,&amp;quot;mainMenuItems&amp;quot;,&amp;quot;contextMenuItems&amp;quot;,&amp;quot;chartMenuItems&amp;quot;,&amp;quot;columnGroup&amp;quot;,&amp;quot;navigator&amp;quot;,&amp;quot;api.getRowDropZoneParams&amp;quot;,&amp;quot;Grid&amp;quot;,&amp;quot;createGrid&amp;quot;,&amp;quot;selectAll&amp;quot;,&amp;quot;deselectAll&amp;quot;,&amp;quot;getFirstDisplayedRow&amp;quot;,&amp;quot;getLastDisplayedRow&amp;quot;,&amp;quot;getModel&amp;quot;,&amp;quot;getValue&amp;quot;,&amp;quot;getCellValue&amp;quot;,&amp;quot;showColumnMenuAfterButtonClick&amp;quot;,&amp;quot;showColumnMenuAfterMouseClick&amp;quot;,&amp;quot;IHeaderParams&amp;quot;,&amp;quot;autoSizeColumn&amp;quot;,&amp;quot;autoSizeColumns&amp;quot;,&amp;quot;setColumnWidths&amp;quot;,&amp;quot;moveColumn&amp;quot;,&amp;quot;moveColumns&amp;quot;,&amp;quot;addAggFunc&amp;quot;,&amp;quot;addAggFuncs&amp;quot;,&amp;quot;removeValueColumn&amp;quot;,&amp;quot;removeValueColumns&amp;quot;,&amp;quot;addValueColumn&amp;quot;,&amp;quot;addValueColumns&amp;quot;,&amp;quot;removeRowGroupColumn&amp;quot;,&amp;quot;removeRowGroupColumns&amp;quot;,&amp;quot;addRowGroupColumn&amp;quot;,&amp;quot;addRowGroupColumns&amp;quot;,&amp;quot;removePivotColumn&amp;quot;,&amp;quot;removePivotColumns&amp;quot;,&amp;quot;addPivotColumn&amp;quot;,&amp;quot;addPivotColumns&amp;quot;,&amp;quot;setColumnVisible&amp;quot;,&amp;quot;setColumnsVisible&amp;quot;,&amp;quot;setColumnPinned&amp;quot;,&amp;quot;setColumnsPinned&amp;quot;,&amp;quot;getColumnFilterModel&amp;quot;,&amp;quot;setColumnFilterModel&amp;quot;,&amp;quot;suppressServerSideInfiniteScroll&amp;quot;,&amp;quot;getServerSideGroupLevelParams&amp;quot;,&amp;quot;advancedFilterModel&amp;quot;,&amp;quot;suppressAsyncEvents&amp;quot;,&amp;quot;cellFlashDelay&amp;quot;,&amp;quot;cellFlashDuration&amp;quot;,&amp;quot;cellFadeDelay&amp;quot;,&amp;quot;cellFadeDuration&amp;quot;,&amp;quot;enableCellChangeFlash&amp;quot;,&amp;quot;suppressGroupMaintainValueType&amp;quot;,&amp;quot;groupIncludeFooter&amp;quot;,&amp;quot;groupTotalRow&amp;quot;,&amp;quot;groupIncludeTotalFooter&amp;quot;,&amp;quot;grandTotalRow&amp;quot;,&amp;quot;serverSideSortOnServer&amp;quot;,&amp;quot;serverSideFilterOnServer&amp;quot;,&amp;quot;tabToNextCell&amp;quot;,&amp;quot;tabToNextHeader&amp;quot;,&amp;quot;suppressCellFlash&amp;quot;,&amp;quot;columnsMenuParams&amp;quot;,&amp;quot;columnChooserParams&amp;quot;,&amp;quot;suppressMenu&amp;quot;,&amp;quot;suppressHeaderMenuButton&amp;quot;,&amp;quot;RowDragEvent&amp;quot;,&amp;quot;vDirection&amp;quot;,&amp;quot;IFloatingFilterParams&amp;quot;,&amp;quot;suppressFilterButton&amp;quot;,&amp;quot;colDef.suppressFloatingFilterButton&amp;quot;,&amp;quot;ITextFilterParams&amp;quot;,&amp;quot;textCustomComparator&amp;quot;,&amp;quot;textMatcher&amp;quot;,&amp;quot;IFloatingFilter&amp;quot;,&amp;quot;onParamsUpdated&amp;quot;,&amp;quot;refresh&amp;quot;,&amp;quot;IFilterParams&amp;quot;,&amp;quot;valueGetter&amp;quot;,&amp;quot;getValue&amp;quot;,&amp;quot;IDate&amp;quot;,&amp;quot;IGroupCellRendererParams&amp;quot;,&amp;quot;footerValueGetter&amp;quot;,&amp;quot;totalValueGetter&amp;quot;,&amp;quot;FlashCellsParams&amp;quot;,&amp;quot;flashDelay&amp;quot;,&amp;quot;flashDuration&amp;quot;,&amp;quot;fadeDelay&amp;quot;,&amp;quot;fadeDuration&amp;quot;,&amp;quot;ToolPanelColumnCompParams&amp;quot;,&amp;quot;IToolPanelColumnCompParams&amp;quot;,&amp;quot;ExcelAlignment&amp;quot;,&amp;quot;verticalText&amp;quot;,&amp;quot;ExcelFont&amp;quot;,&amp;quot;charSet&amp;quot;,&amp;quot;ExcelStyle&amp;quot;,&amp;quot;name&amp;quot;,&amp;quot;sparklineOptions.label.placement&amp;quot;]">
-</div>
 <p>This release includes the following breaking changes:</p>
 
-
-
-
-<h3 id="packaging"> Packaging </h3>
+<h3 id="packaging"> Packaging</h3>
 <p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also, the
     package <code>ag-grid-charts-enterprise</code> is no longer published.</p>
 <p>For Integrated Charts and Sparklines, the application must now explicitly include either
@@ -352,18 +185,12 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
 <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 
-
-
-
-<h3 id="property-value-coercion"> Property Value Coercion </h3>
+<h3 id="property-value-coercion">Property Value Coercion</h3>
 <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:</p>
 <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are
     truthy.</p>
 
-
-
-
-<h3 id="react"> React </h3>
+<h3 id="react">React</h3>
 <ul>
     <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
     <li><code>AgGridReactProps</code>:<ul>
@@ -393,10 +220,7 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
-<h3 id="theming"> Theming </h3>
+<h3 id="theming">Theming</h3>
 <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme class
     (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported. Applications using
     CSS file-based themes must either pass a theme object to the theme grid option or the string <code>"legacy"</code>
@@ -514,17 +338,11 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
-<h3 id="server-side-rendering"> Server-side Rendering </h3>
+<h3 id="server-side-rendering">Server-side Rendering</h3>
 <p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and others.
     If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
 
-
-
-
-<h3 id="typing"> Typing </h3>
+<h3 id="typing">Typing</h3>
 <ul>
     <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as well as
         the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have changed.
@@ -541,54 +359,36 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
-<h3 id="integrated-charts"> Integrated Charts </h3>
+<h3 id="integrated-charts"> Integrated Charts</h3>
 <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the
     Integrated Charts Advanced Settings.</p>
 
 
 
 
-<h3 id="modules-1"> Modules </h3>
+<h3 id="modules-1">Modules</h3>
 <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.</p>
 
-
-
-
-<h3 id="server-side-row-model"> Server-side Row Model </h3>
+<h3 id="server-side-row-model">Server-side Row Model</h3>
 <p>Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
     removed. Please use the standard server-side row model functionality as documented.</p>
 
-
-
-
-<h3 id="floating-filters"> Floating Filters </h3>
+<h3 id="floating-filters">Floating Filters</h3>
 <p>Floating filters provided via the <code>colDef.filter</code> values <code>text</code>, <code>number</code>,
     <code>date</code>, <code>set</code>, <code>multi</code>, and <code>group</code> no longer work. Use the values
     <code>agTextColumnFilter</code>, <code>agNumberColumnFilter</code>, <code>agDateColumnFilter</code>,
     <code>agSetColumnFilter</code>, <code>agMultiColumnFilter</code>, and <code>agGroupColumnFilter</code> instead.
 </p>
 
-
-
-
-<h3 id="column-state"> Column State </h3>
+<h3 id="column-state">Column State</h3>
 <p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct types
     instead of strings.</p>
 
-
-
-
-<h3 id="grid-state"> Grid State </h3>
+<h3 id="grid-state">Grid State</h3>
 <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>. Restoring
     grid state with the old <code>colId</code> will have no effect.</p>
 
-
-
-
-<h3 id="sparklines"> Sparklines </h3>
+<h3 id="sparklines">Sparklines</h3>
 <ul>
     <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and <code>direction: 'vertical'</code>
         instead.</li>
@@ -615,10 +415,7 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
-<h3 id="grid-api-1"> Grid API </h3>
+<h3 id="grid-api-1">Grid API</h3>
 <ul>
     <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
     <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
@@ -636,11 +433,11 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
     <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
     <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
-        <code>setColumnWidths([{key: newWidth}])</code> instead.
+        <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
     </li>
     <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
     </li>
-    <li><code>addAggFunc(key, func)</code> - removed, please use <code>addAggFuncs({ key: func })</code> instead.</li>
+    <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
     <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
     </li>
     <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
@@ -659,10 +456,10 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
         instead.</li>
 </ul>
 
+<!-- 
 
 
-
-<h3 id="grid-options-1"> Grid Options </h3>
+<h3 id="grid-options-1"> Grid Options</h3>
 <ul>
     <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
     <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property removed
@@ -687,7 +484,7 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
 
 
 
-<h3 id="coldef"> ColDef </h3>
+<h3 id="coldef"> ColDef</h3>
 <ul>
     <li><code>suppressCellFlash</code> - removed, please use <code>enableCellChangeFlash={false}</code> in the
         <code>ColDef</code>.
@@ -699,7 +496,7 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
 
 
 
-<h3 id="interfaces"> Interfaces </h3>
+<h3 id="interfaces"> Interfaces</h3>
 <ul>
     <li><code>RowDragEvent</code> interface: <code>vDirection</code> property is now typed as
         <code>'up' | 'down' | null</code>.
@@ -727,14 +524,127 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>ExcelAlignment</code>: Legacy property <code>verticalText</code> - removed.</li>
     <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
     <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
+</ul> -->
+
+<!-- 
+
+
+<h2 id="deprecations"> Deprecations </h2>
+<div
+    data-meta="[&amp;quot;ModuleRegistry.register&amp;quot;,&amp;quot;MenuModule&amp;quot;,&amp;quot;RangeSelectionModule&amp;quot;,&amp;quot;Column.isHovered&amp;quot;,&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;,&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;,&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
+</div>
+
+
+
+
+<h3 id="modules"> Modules</h3>
+<ul>
+    <li><code>ModuleRegistry.register(module)</code> - deprecated, use
+        <code>ModuleRegistry.registerModules([module])</code> instead.
+    </li>
+    <li><code>MenuModule</code> - deprecated, use <code>ColumnMenuModule</code> for the Column Menu and/or
+        <code>ContextMenuModule</code> for the Context Menu instead.
+    </li>
+    <li><code>RangeSelectionModule</code> - deprecated, use <code>CellSelectionModule</code> instead.</li>
 </ul>
 
 
 
 
+<h3 id="column-object"> Column Object</h3>
+<ul>
+    <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
+</ul>
 
 
 
-<h2 id="changes-list"> Changes List </h2>
-<p>If you would like to see the full list of changes in this release, please see the <a
-        href="https://www.ag-grid.com/changelog/?fixVersion=33.0.0">Changelog</a>.</p> -->
+
+<h3 id="grid-api"> Grid API</h3>
+<ul>
+    <li><code>deselectAllFiltered</code> - deprecated, use <code>deselectAll('filtered')</code> instead.</li>
+    <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.</li>
+    <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
+    <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
+</ul>
+
+
+
+
+<h3 id="grid-options"> Grid Options</h3>
+<ul>
+    <li><code>cellRendererParams.checkbox</code> - deprecated, use
+        <code>rowSelection.checkboxLocation = "autoGroupColumn"</code> instead.
+    </li>
+    <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.</li>
+    <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.</li>
+    <li><code>groupRemoveLowestSingleChildren</code> - deprecated, use
+        <code>groupHideParentOfSingleChild: 'leafGroupsOnly'</code> instead.
+    </li>
+    <li><code>groupRemoveSingleChildren</code> - deprecated, use <code>groupHideParentOfSingleChild: true</code>
+        instead.</li>
+    <li><code>suppressMakeColumnVisibleAfterUnGroup</code> - deprecated, use
+        <code>suppressGroupChangesColumnVisibility: "suppressShowOnUngroup"</code> instead.
+    </li>
+    <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding user
+        properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code> property
+        in both for storing arbitrary metadata.</li>
+    <li><code>suppressRowGroupHidesColumns</code> - deprecated, use
+        <code>suppressGroupChangesColumnVisibility: "suppressHideOnGroup"</code> instead.
+    </li>
+    <li>When setting both <code>suppressMakeColumnVisibleAfterUnGroup</code> and
+        <code>suppressRowGroupHidesColumns</code> to <code>true</code>, use
+        <code>suppressGroupChangesColumnVisibility: true</code> instead.
+    </li>
+</ul>
+
+
+
+
+<h3 id="row-node"> Row Node</h3>
+<ul>
+    <li><code>childIndex</code> - deprecated, use
+        <code>rowNode.parent?.childrenAfterSort?.findIndex(r =&gt; r === rowNode)</code> instead.
+    </li>
+    <li><code>firstChild</code> - deprecated, use <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
+        instead.</li>
+    <li><code>lastChild</code> - deprecated, use
+        <code>!!rowNode.parent?.childrenAfterSort &amp;&amp; (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)</code>
+        instead.
+    </li>
+</ul>
+
+
+
+
+<h3 id="row-node-events"> Row Node Events</h3>
+<ul>
+    <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+        row children have changed.</li>
+    <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+        row children have changed.</li>
+    <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
+        children have changed.</li>
+</ul>
+
+
+
+
+<h3 id="theming-custom-icons"> Theming Custom Icons</h3>
+<ul>
+    <li><code>smallDown</code> - deprecated, use:<ul>
+            <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown.</li>
+            <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).</li>
+            <li><code>richSelectOpen</code> for Rich Select cell editor.</li>
+        </ul>
+    </li>
+    <li><code>smallLeft</code> - deprecated, use:<ul>
+            <li><code>panelDelimiterRtl</code> for Row Group Panel / Pivot Panel.</li>
+            <li><code>subMenuOpenRtl</code> for sub-menus.</li>
+        </ul>
+    </li>
+    <li><code>smallRight</code> - deprecated, use:<ul>
+            <li><code>panelDelimiter</code> for Row Group Panel / Pivot Panel.</li>
+            <li><code>subMenuOpen</code> for sub-menus.</li>
+        </ul>
+    </li>
+</ul>-->
