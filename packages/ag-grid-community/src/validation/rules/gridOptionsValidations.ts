@@ -333,57 +333,47 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                 }
 
                 const result = v
-                    .object(
-                        {
-                            mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).shallow(),
+                    .object({
+                        rowSelection: v
+                            .object({
+                                mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).required(),
 
-                            // common
-                            enableClickSelection: v
-                                .oneOf([v.boolean(), v.literal('enableDeselection'), v.literal('enableSelection')])
-                                .optional(),
-                            checkboxes: v.oneOf([v.boolean(), v.func()]).shallow().optional(),
-                            checkboxLocation: v
-                                .oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')])
-                                .shallow()
-                                .optional(),
-                            hideDisabledCheckboxes: v.boolean().optional(),
-                            isRowSelectable: v.func().optional(),
-                            copySelectedRows: v.boolean().optional(),
-                            enableSelectionWithoutKeys: v.boolean().optional(),
+                                // common
+                                enableClickSelection: v.oneOf([
+                                    v.boolean(),
+                                    v.literal('enableDeselection'),
+                                    v.literal('enableSelection'),
+                                ]),
+                                checkboxes: v.oneOf([v.boolean(), v.func()]),
+                                checkboxLocation: v.oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                                hideDisabledCheckboxes: v.boolean(),
+                                isRowSelectable: v.func(),
+                                copySelectedRows: v.boolean(),
+                                enableSelectionWithoutKeys: v.boolean(),
 
-                            // multi-row
-                            groupSelects: v
-                                ._if(() => rowSelection?.mode === 'multiRow')
-                                .then(
-                                    v
-                                        .oneOf([
+                                // multi-row
+                                groupSelects: v
+                                    ._if(() => rowSelection?.mode === 'multiRow')
+                                    .then(
+                                        v.oneOf([
                                             v.literal('self'),
                                             v.literal('descendants'),
                                             v.literal('filteredDescendants'),
                                         ])
-                                        .shallow()
-                                )
-                                .else(v._undefined())
-                                .optional(),
-                            selectAll: v
-                                ._if(() => rowSelection?.mode === 'multiRow')
-                                .then(
-                                    v
-                                        .oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')])
-                                        .shallow()
-                                )
-                                .else(v._undefined())
-                                .optional(),
-                            headerCheckbox: v
-                                ._if(() => rowSelection?.mode === 'multiRow')
-                                .then(v.boolean())
-                                .else(v._undefined())
-                                .optional(),
-                        },
-                        'rowSelection'
-                    )
-                    .only()
-                    .validate(rowSelection);
+                                    )
+                                    .else(v._undefined()),
+                                selectAll: v
+                                    ._if(() => rowSelection?.mode === 'multiRow')
+                                    .then(v.oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
+                                    .else(v._undefined()),
+                                headerCheckbox: v
+                                    ._if(() => rowSelection?.mode === 'multiRow')
+                                    .then(v.boolean())
+                                    .else(v._undefined()),
+                            })
+                            .only(),
+                    })
+                    .validate({ rowSelection });
 
                 return v.formatResult(result);
             },
