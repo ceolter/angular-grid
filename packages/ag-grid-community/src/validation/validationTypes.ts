@@ -34,12 +34,12 @@ export interface OptionsValidation<T extends object> {
     module?: ValidationModuleName | ValidationModuleName[];
     supportedRowModels?: RowModelType[];
     dependencies?: RequiredOptions<T>;
-    validate?: (options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
+    validate?: (value: T[keyof T], options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
     /** Currently only supports boolean or number */
     expectedType?: 'boolean' | 'number';
     children?: {
         [P in keyof T[keyof T]]?: OptionsValidation<T[keyof T] extends object ? T[keyof T] : never>;
-    }
+    };
 }
 
 // Each property key requires one of the values in the array to also be present.

@@ -56,7 +56,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
         return null;
     },
     cellRendererParams: {
-        validate: (colDef) => {
+        validate: (_, colDef) => {
             const groupColumn =
                 colDef.rowGroup != null ||
                 colDef.rowGroupIndex != null ||
@@ -103,19 +103,19 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     floatingFilter: { module: 'ColumnFilter' },
     headerCheckboxSelection: {
         supportedRowModels: ['clientSide', 'serverSide'],
-        validate: (_options, { rowSelection }) =>
+        validate: (_, _options, { rowSelection }) =>
             rowSelection === 'multiple' ? null : 'headerCheckboxSelection is only supported with rowSelection=multiple',
     },
     headerCheckboxSelectionCurrentPageOnly: {
         supportedRowModels: ['clientSide'],
-        validate: (_options, { rowSelection }) =>
+        validate: (_, _options, { rowSelection }) =>
             rowSelection === 'multiple'
                 ? null
                 : 'headerCheckboxSelectionCurrentPageOnly is only supported with rowSelection=multiple',
     },
     headerCheckboxSelectionFilteredOnly: {
         supportedRowModels: ['clientSide'],
-        validate: (_options, { rowSelection }) =>
+        validate: (_, _options, { rowSelection }) =>
             rowSelection === 'multiple'
                 ? null
                 : 'headerCheckboxSelectionFilteredOnly is only supported with rowSelection=multiple',
@@ -131,7 +131,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
         },
     },
     icons: {
-        validate: ({ icons }) => {
+        validate: (icons) => {
             if (icons) {
                 if (icons['smallDown']) {
                     return _errMsg(262);
@@ -162,9 +162,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     rowGroup: { module: 'SharedRowGrouping' },
     rowGroupIndex: { module: 'SharedRowGrouping' },
     sortingOrder: {
-        validate: (_options) => {
-            const sortingOrder = _options.sortingOrder;
-
+        validate: (sortingOrder) => {
             if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
                 const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
                 if (invalidItems.length > 0) {
@@ -179,9 +177,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     tooltipField: { module: 'Tooltip' },
     tooltipValueGetter: { module: 'Tooltip' },
     type: {
-        validate: (_options) => {
-            const type = _options.type;
-
+        validate: (type) => {
             if (type instanceof Array) {
                 const invalidArray = type.some((a) => typeof a !== 'string');
                 if (invalidArray) {
@@ -197,7 +193,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
         },
     },
     rowSpan: {
-        validate: (_options, { suppressRowTransform }) => {
+        validate: (_, _options, { suppressRowTransform }) => {
             if (!suppressRowTransform) {
                 return 'colDef.rowSpan requires suppressRowTransform to be enabled.';
             }

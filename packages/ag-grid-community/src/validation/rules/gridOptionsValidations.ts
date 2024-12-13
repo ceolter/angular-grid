@@ -121,19 +121,19 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         alignedGrids: { module: 'AlignedGrids' },
         allowContextMenuWithControlKey: { module: 'ContextMenu' },
         autoSizePadding: {
-            validate({ autoSizePadding }) {
+            validate(autoSizePadding) {
                 return toConstrainedNum('autoSizePadding', autoSizePadding, 0);
             },
         },
         autoSizeStrategy: { module: 'ColumnAutoSize' },
         cacheBlockSize: {
             supportedRowModels: ['serverSide', 'infinite'],
-            validate({ cacheBlockSize }) {
+            validate(cacheBlockSize) {
                 return toConstrainedNum('cacheBlockSize', cacheBlockSize, 1);
             },
         },
         cacheOverflowSize: {
-            validate({ cacheOverflowSize }) {
+            validate(cacheOverflowSize) {
                 return toConstrainedNum('cacheOverflowSize', cacheOverflowSize, 1);
             },
         },
@@ -147,8 +147,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         doesExternalFilterPass: { module: 'ExternalFilter' },
         domLayout: {
-            validate: (options) => {
-                const domLayout = options.domLayout;
+            validate: (domLayout) => {
                 const validLayouts: DomLayoutType[] = ['autoHeight', 'normal', 'print'];
                 if (domLayout && !validLayouts.includes(domLayout)) {
                     return `domLayout must be one of [${validLayouts.join()}], currently it's ${domLayout}`;
@@ -219,7 +218,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             },
         },
         icons: {
-            validate: ({ icons }) => {
+            validate: (icons) => {
                 if (icons) {
                     if (icons['smallDown']) {
                         return _errMsg(262);
@@ -235,7 +234,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             },
         },
         infiniteInitialRowCount: {
-            validate({ infiniteInitialRowCount }) {
+            validate(infiniteInitialRowCount) {
                 return toConstrainedNum('infiniteInitialRowCount', infiniteInitialRowCount, 1);
             },
         },
@@ -245,7 +244,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         initialState: { module: 'GridState' },
         isExternalFilterPresent: { module: 'ExternalFilter' },
         keepDetailRowsCount: {
-            validate({ keepDetailRowsCount }) {
+            validate(keepDetailRowsCount) {
                 return toConstrainedNum('keepDetailRowsCount', keepDetailRowsCount, 1);
             },
         },
@@ -255,17 +254,16 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         masterDetail: { module: 'SharedMasterDetail' },
         pagination: { module: 'Pagination' },
         paginationPageSize: {
-            validate({ paginationPageSize }) {
+            validate(paginationPageSize) {
                 return toConstrainedNum('paginationPageSize', paginationPageSize, 1);
             },
         },
         paginationPageSizeSelector: {
-            validate: (options) => {
-                const values = options.paginationPageSizeSelector;
-                if (typeof values === 'boolean' || values == null) {
+            validate: (paginationPageSizeSelector) => {
+                if (typeof paginationPageSizeSelector === 'boolean' || paginationPageSizeSelector == null) {
                     return null;
                 }
-                if (!values.length) {
+                if (!paginationPageSizeSelector.length) {
                     return `'paginationPageSizeSelector' cannot be an empty array.
                     If you want to hide the page size selector, set paginationPageSizeSelector to false.`;
                 }
@@ -293,13 +291,12 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             module: 'QuickFilter',
         },
         rowBuffer: {
-            validate({ rowBuffer }) {
+            validate(rowBuffer) {
                 return toConstrainedNum('rowBuffer', rowBuffer, 0);
             },
         },
         rowClass: {
-            validate: (options) => {
-                const rowClass = options.rowClass;
+            validate: (rowClass) => {
                 if (typeof rowClass === 'function') {
                     return 'rowClass should not be a function, please use getRowClass instead';
                 }
@@ -326,7 +323,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         rowGroupPanelShow: { module: 'RowGroupingPanel' },
         rowSelection: {
-            validate({ rowSelection }) {
+            validate(rowSelection) {
                 if (rowSelection && typeof rowSelection === 'string') {
                     return 'As of version 32.2.1, using `rowSelection` with the values "single" or "multiple" has been deprecated. Use the object value instead.';
                 }
@@ -343,19 +340,18 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                             return `Selection mode "${mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
                         }
                         return null;
-                    }
+                    },
                 },
                 checkboxes: {
                     validate() {
                         console.log('checkboxes');
                         return null;
-                    }
+                    },
                 },
-            }
+            },
         },
         rowStyle: {
-            validate: (options) => {
-                const rowStyle = options.rowStyle;
+            validate: (rowStyle) => {
                 if (rowStyle && typeof rowStyle === 'function') {
                     return 'rowStyle should be an object of key/value styles, not be a function, use getRowStyle() instead';
                 }
@@ -369,7 +365,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         serverSideInitialRowCount: {
             supportedRowModels: ['serverSide'],
-            validate({ serverSideInitialRowCount }) {
+            validate(serverSideInitialRowCount) {
                 return toConstrainedNum('serverSideInitialRowCount', serverSideInitialRowCount, 1);
             },
         },
@@ -381,9 +377,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         sideBar: { module: 'SideBar' },
         sortingOrder: {
-            validate: (_options) => {
-                const sortingOrder = _options.sortingOrder;
-
+            validate: (sortingOrder) => {
                 if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
                     const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
                     if (invalidItems.length > 0) {
@@ -397,16 +391,16 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         statusBar: { module: 'StatusBar' },
         tooltipHideDelay: {
-            validate: (options) => {
-                if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
+            validate: (tooltipHideDelay) => {
+                if (tooltipHideDelay && tooltipHideDelay < 0) {
                     return 'tooltipHideDelay should not be lower than 0';
                 }
                 return null;
             },
         },
         tooltipShowDelay: {
-            validate: (options) => {
-                if (options.tooltipShowDelay && options.tooltipShowDelay < 0) {
+            validate: (tooltipShowDelay) => {
+                if (tooltipShowDelay && tooltipShowDelay < 0) {
                     return 'tooltipShowDelay should not be lower than 0';
                 }
                 return null;
@@ -415,7 +409,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         treeData: {
             supportedRowModels: ['clientSide', 'serverSide'],
             module: 'SharedTreeData',
-            validate: (options) => {
+            validate: (_, options) => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
                     case 'clientSide': {
@@ -440,12 +434,12 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             module: 'ViewportRowModel',
         },
         viewportRowModelBufferSize: {
-            validate({ viewportRowModelBufferSize }) {
+            validate(viewportRowModelBufferSize) {
                 return toConstrainedNum('viewportRowModelBufferSize', viewportRowModelBufferSize, 0);
             },
         },
         viewportRowModelPageSize: {
-            validate({ viewportRowModelPageSize }) {
+            validate(viewportRowModelPageSize) {
                 return toConstrainedNum('viewportRowModelPageSize', viewportRowModelPageSize, 1);
             },
         },

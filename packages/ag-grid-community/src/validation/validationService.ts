@@ -212,7 +212,7 @@ export class ValidationService extends BeanStub implements NamedBean {
             }
 
             if (validate) {
-                const warning = validate(options, this.gridOptions, this.beans);
+                const warning = validate(value, options, this.gridOptions, this.beans);
                 if (warning) {
                     warnings.add(warning);
                     return;
@@ -227,7 +227,7 @@ export class ValidationService extends BeanStub implements NamedBean {
                     }
                 }
             }
-        }
+        };
 
         const optionKeys = Object.keys(options) as (keyof T)[];
         optionKeys.forEach((key: keyof T) => {
