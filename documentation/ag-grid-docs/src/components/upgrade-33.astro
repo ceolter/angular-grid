@@ -160,10 +160,15 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 {/* ------------------------------------------------- */}
 
 <h2 id="breaking-changes">Breaking Changes</h2>
-<div
+
+        <div
     data-meta='["ag-grid-enterprise","ag-charts-community","ag-charts-enterprise","IntegratedChartsModule","GridChartsModule","AgChartsCommunityModule","AgChartsEnterpriseModule","RowDragModule","suppressServerSideInfiniteScroll","getMainMenuItems","getContextMenuItems","mainMenuItems","contextMenuItems","chartMenuItems","columnGroup","navigator","api.getRowDropZoneParams","Grid","createGrid","selectAll","deselectAll","getFirstDisplayedRow","getLastDisplayedRow","getModel","getValue","getCellValue","showColumnMenuAfterButtonClick","showColumnMenuAfterMouseClick","IHeaderParams","autoSizeColumn","autoSizeColumns","setColumnWidths","moveColumn","moveColumns","addAggFunc","addAggFuncs","removeValueColumn","removeValueColumns","addValueColumn","addValueColumns","removeRowGroupColumn","removeRowGroupColumns","addRowGroupColumn","addRowGroupColumns","removePivotColumn","removePivotColumns","addPivotColumn","addPivotColumns","setColumnVisible","setColumnsVisible","setColumnPinned","setColumnsPinned","getColumnFilterModel","setColumnFilterModel","suppressServerSideInfiniteScroll","getServerSideGroupLevelParams","advancedFilterModel","suppressAsyncEvents","cellFlashDelay","cellFlashDuration","cellFadeDelay","cellFadeDuration","enableCellChangeFlash","suppressGroupMaintainValueType","groupIncludeFooter","groupTotalRow","groupIncludeTotalFooter","grandTotalRow","serverSideSortOnServer","serverSideFilterOnServer","tabToNextCell","tabToNextHeader","suppressCellFlash","columnsMenuParams","columnChooserParams","suppressMenu","suppressHeaderMenuButton","RowDragEvent","vDirection","IFloatingFilterParams","suppressFilterButton","colDef.suppressFloatingFilterButton","ITextFilterParams","textCustomComparator","textMatcher","IFloatingFilter","onParamsUpdated","refresh","IFilterParams","valueGetter","getValue","IDate","IGroupCellRendererParams","footerValueGetter","totalValueGetter","FlashCellsParams","flashDelay","flashDuration","fadeDelay","fadeDuration","ToolPanelColumnCompParams","IToolPanelColumnCompParams","ExcelAlignment","verticalText","ExcelFont","charSet","ExcelStyle","name","sparklineOptions.label.placement"]'
->
-</div>
+></div>
+
+<details>
+    <summary>
+        View Breaking Changes
+    </summary>
 
 <p>This release includes the following breaking changes:</p>
 
@@ -364,9 +369,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
 <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the
     Integrated Charts Advanced Settings.</p>
 
-
-
-
 <h3 id="modules-1">Modules</h3>
 <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.</p>
 
@@ -457,9 +459,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
         instead.</li>
 </ul>
 
-
-
-
 <h3 id="grid-options-1"> Grid Options</h3>
 <ul>
     <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
@@ -482,9 +481,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>tabToNextHeader</code> returning <code>null</code> - removed.</li>
 </ul>
 
-
-
-
 <h3 id="coldef"> ColDef</h3>
 <ul>
     <li><code>suppressCellFlash</code> - removed, please use <code>enableCellChangeFlash={false}</code> in the
@@ -493,9 +489,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>columnsMenuParams</code> - removed, please use <code>columnChooserParams</code> instead.</li>
     <li><code>suppressMenu</code> - removed, please use <code>suppressHeaderMenuButton</code> instead.</li>
 </ul>
-
-
-
 
 <h3 id="interfaces"> Interfaces</h3>
 <ul>
@@ -527,15 +520,19 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
 </ul> 
 
+</details>
+
+{/* ------------------------------------------------- */}
+
 <h2 id="deprecations">Deprecations</h2>
 <div
     data-meta="[&amp;quot;ModuleRegistry.register&amp;quot;,&amp;quot;MenuModule&amp;quot;,&amp;quot;RangeSelectionModule&amp;quot;,&amp;quot;Column.isHovered&amp;quot;,&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;,&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;,&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
 </div>
 
+<details>
+    <summary>View Deprecations</summary>
 
-
-
-<h3 id="modules"> Modules</h3>
+    <h3 id="modules"> Modules</h3>
 <ul>
     <li><code>ModuleRegistry.register(module)</code> - deprecated, use
         <code>ModuleRegistry.registerModules([module])</code> instead.
@@ -546,16 +543,10 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>RangeSelectionModule</code> - deprecated, use <code>CellSelectionModule</code> instead.</li>
 </ul>
 
-
-
-
 <h3 id="column-object"> Column Object</h3>
 <ul>
     <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
 </ul>
-
-
-
 
 <h3 id="grid-api"> Grid API</h3>
 <ul>
@@ -564,9 +555,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
     <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
 </ul>
-
-
-
 
 <h3 id="grid-options"> Grid Options</h3>
 <ul>
@@ -595,9 +583,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
 <h3 id="row-node"> Row Node</h3>
 <ul>
     <li><code>childIndex</code> - deprecated, use
@@ -611,9 +596,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     </li>
 </ul>
 
-
-
-
 <h3 id="row-node-events"> Row Node Events</h3>
 <ul>
     <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
@@ -623,9 +605,6 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
     <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
         children have changed.</li>
 </ul>
-
-
-
 
 <h3 id="theming-custom-icons"> Theming Custom Icons</h3>
 <ul>
@@ -646,3 +625,4 @@ ModuleRegistry<span class="token punctuation">.</span><span class="token functio
         </ul>
     </li>
 </ul>
+</details>
