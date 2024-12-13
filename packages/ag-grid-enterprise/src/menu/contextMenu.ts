@@ -171,14 +171,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     ): void {
         const rowNode = rowComp?.rowNode ?? null;
         const column = cellCtrl?.column ?? null;
-        let value = null;
         const { valueSvc, ctrlsSvc } = this.beans;
-
-        if (column) {
-            const event = mouseEvent ? mouseEvent : touchEvent;
-            cellCtrl.dispatchCellContextMenuEvent(event ?? null);
-            value = valueSvc.getValue(column, rowNode);
-        }
+        const value = column ? valueSvc.getValue(column, rowNode) : null;
 
         // if user clicked on a cell, anchor to that cell, otherwise anchor to the grid panel
         const gridBodyCon = ctrlsSvc.getGridBodyCtrl();
