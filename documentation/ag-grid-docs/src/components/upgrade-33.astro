@@ -1,5 +1,6 @@
 ---
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
+import { Alert } from '@ag-website-shared/components/alert/Alert';
 
 const framework = getFrameworkFromPath(Astro.url.pathname);
 ---
@@ -137,31 +138,12 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     </li>
 </ol>
 
-<div class="alert">
-    <svg
-        focusable="false"
-        preserveAspectRatio="xMidYMid meet"
-        fill="currentColor"
-        width="32"
-        height="32"
-        viewBox="0 0 32 32"
-        aria-hidden="true"
-        class="_icon_1jqgc_1 icon"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <path
-            d="M17 22L17 14 13 14 13 16 15 16 15 22 12 22 12 24 20 24 20 22 17 22zM16 8a1.5 1.5 0 101.5 1.5A1.5 1.5 0 0016 8z"
-        >
-        </path>
-        <path d="M16,30A14,14,0,1,1,30,16,14,14,0,0,1,16,30ZM16,4A12,12,0,1,0,28,16,12,12,0,0,0,16,4Z"></path>
-    </svg>
-    <div>
-        <p>
-            The Codemod runner will check the state of your project to ensure that you don't lose any work. If you would
-            rather see a diff of the changes instead of applying them, pass the <code>--dry-run</code> argument.
-        </p>
-    </div>
-</div>
+<Alert type="info">
+    <p>
+        The Codemod runner will check the state of your project to ensure that you don't lose any work. If you would
+        rather see a diff of the changes instead of applying them, pass the <code>--dry-run</code> argument.
+    </p>
+</Alert>
 
 <p>
     The codemod only transforms source files that make use of deprecated features, so if you aren't currently making use
