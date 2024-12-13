@@ -81,7 +81,7 @@
     initial-value: transparent;
 }
 
-/* Implement header cell hover and moving background colors as a pseudoelement,
+/* Implement header cell hover and moving background colors as a pseudo element,
    because some applications set the color of the header cells and we want the
    hover effect to overlay on top of this color rather than replacing it. */
 .ag-header-cell:where(:not(.ag-floating-filter)),
@@ -91,7 +91,7 @@
         position: absolute;
         inset: 0;
 
-        /* Use two stacked background-images so that hover and moving colous can
+        /* Use two stacked background-images so that hover and moving colors can
            be individually controlled and overlaid on top of each other.
            background-image can't be smoothly animated so instead define the
            colors as internal vars and transition them */
@@ -113,6 +113,8 @@
     &:where(.ag-header-cell-moving)::before {
         --ag-internal-moving-color: var(--ag-header-cell-moving-background-color);
         --ag-internal-hover-color: var(--ag-header-cell-hover-background-color);
+
+        box-shadow: inset var(--ag-focus-shadow);
     }
 }
 
