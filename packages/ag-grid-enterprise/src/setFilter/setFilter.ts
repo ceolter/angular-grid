@@ -1066,6 +1066,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
 
     private onGroupItemSelected(item: SetFilterModelTreeItem, isSelected: boolean): void {
         const recursiveGroupSelection = (i: SetFilterModelTreeItem) => {
+            if (!i.filterPasses) {
+                return;
+            }
             if (i.children) {
                 i.children.forEach((childItem) => recursiveGroupSelection(childItem));
             } else {
