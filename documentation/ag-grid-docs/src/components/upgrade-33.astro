@@ -24,7 +24,7 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 
 {/* ------------------------------------------------- */}
 
-<Heading level="2" id="changes-to-modules">Changes to Modules</Heading>
+<Heading level="2" id="cidhanges-to-modules">Changes to Modules</Heading>
 <p>
     Version 33 introduces a major change to how modules work to allow for smaller bundle sizes. Previously AG Grid
     supported two versions - modules and packages. These have now been merged together to allow for both a simpler
@@ -463,6 +463,47 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
                 </li>
                 </ul>
                 
+                <Heading level="3" id="grid-api-1">Grid API</Heading>
+        <ul>
+            <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
+            <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
+            <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the selection
+                mode, the event source is now the second argument. Both are optional.</li>
+            <li><code>getFirstDisplayedRow</code> - removed, use <code>getFirstDisplayedRowIndex</code> instead.</li>
+            <li><code>getLastDisplayedRow</code> - removed, use <code>getLastDisplayedRowIndex</code> instead.</li>
+            <li><code>getModel()</code> - removed, use the appropriate grid API methods instead.</li>
+            <li><code>getValue</code> - removed, use <code>getCellValue</code> instead.</li>
+            <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code> within a
+                header component, or <code>api.showColumnMenu</code> elsewhere.</li>
+            <li><code>showColumnMenuAfterMouseClick</code> - removed, use
+                <code>IHeaderParams.showColumnMenuAfterMouseClick</code> within a header component, or
+                <code>api.showColumnMenu</code> elsewhere.
+            </li>
+            <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
+            <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
+                <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
+            </li>
+            <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
+            </li>
+            <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
+            <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
+            </li>
+            <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
+            <li><code>removeRowGroupColumn(colKey)</code> - removed, please use <code>removeRowGroupColumns([colKey])</code>
+                instead.</li>
+            <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code> instead.
+            </li>
+            <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code> instead.
+            </li>
+            <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code> instead.</li>
+            <li><code>setColumnVisible(key, visible)</code> - removed, please use <code>setColumnsVisible([key], visible)</code>
+                instead.</li>
+            <li><code>setColumnPinned(key, pinned)</code> - removed, please use <code>setColumnsPinned([key], pinned)</code>
+                instead.</li>
+            <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
+                instead.</li>
+        </ul>
+
 
 
             <Heading level="3" id="grid-options-1"> Grid Options</Heading>
@@ -525,48 +566,6 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
             <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
         </ul> 
-
-
-        <Heading level="3" id="grid-api-1">Grid API</Heading>
-        <ul>
-            <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
-            <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
-            <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the selection
-                mode, the event source is now the second argument. Both are optional.</li>
-            <li><code>getFirstDisplayedRow</code> - removed, use <code>getFirstDisplayedRowIndex</code> instead.</li>
-            <li><code>getLastDisplayedRow</code> - removed, use <code>getLastDisplayedRowIndex</code> instead.</li>
-            <li><code>getModel()</code> - removed, use the appropriate grid API methods instead.</li>
-            <li><code>getValue</code> - removed, use <code>getCellValue</code> instead.</li>
-            <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code> within a
-                header component, or <code>api.showColumnMenu</code> elsewhere.</li>
-            <li><code>showColumnMenuAfterMouseClick</code> - removed, use
-                <code>IHeaderParams.showColumnMenuAfterMouseClick</code> within a header component, or
-                <code>api.showColumnMenu</code> elsewhere.
-            </li>
-            <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
-            <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
-                <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
-            </li>
-            <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
-            </li>
-            <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
-            <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
-            </li>
-            <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
-            <li><code>removeRowGroupColumn(colKey)</code> - removed, please use <code>removeRowGroupColumns([colKey])</code>
-                instead.</li>
-            <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code> instead.
-            </li>
-            <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code> instead.
-            </li>
-            <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code> instead.</li>
-            <li><code>setColumnVisible(key, visible)</code> - removed, please use <code>setColumnsVisible([key], visible)</code>
-                instead.</li>
-            <li><code>setColumnPinned(key, pinned)</code> - removed, please use <code>setColumnsPinned([key], pinned)</code>
-                instead.</li>
-            <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
-                instead.</li>
-        </ul>
     </div>
 </details>
 
