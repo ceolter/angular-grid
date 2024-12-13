@@ -34,7 +34,7 @@ export interface OptionsValidation<T extends object> {
     module?: ValidationModuleName | ValidationModuleName[];
     supportedRowModels?: RowModelType[];
     dependencies?: RequiredOptions<T>;
-    validate?: (value: T[keyof T], options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
+    validate?: (options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
     /** Currently only supports boolean or number */
     expectedType?: 'boolean' | 'number';
     children?: {

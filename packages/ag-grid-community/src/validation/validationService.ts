@@ -212,7 +212,7 @@ export class ValidationService extends BeanStub implements NamedBean {
             }
 
             if (validate) {
-                const warning = validate(value, options, this.gridOptions, this.beans);
+                const warning = validate(options, this.gridOptions, this.beans);
                 if (warning) {
                     warnings.add(warning);
                     return;

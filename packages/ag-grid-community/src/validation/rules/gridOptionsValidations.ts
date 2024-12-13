@@ -6,6 +6,7 @@ import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { _mergeDeep } from '../../utils/object';
 import { _errMsg, toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
+import * as v from './validationSchema';
 
 /**
  * Deprecations have been kept separately for ease of removing them in the future.
@@ -147,7 +148,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         doesExternalFilterPass: { module: 'ExternalFilter' },
         domLayout: {
-            validate: (domLayout) => {
+            validate: ({ domLayout }) => {
                 const validLayouts: DomLayoutType[] = ['autoHeight', 'normal', 'print'];
                 if (domLayout && !validLayouts.includes(domLayout)) {
                     return `domLayout must be one of [${validLayouts.join()}], currently it's ${domLayout}`;
@@ -218,7 +219,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             },
         },
         icons: {
-            validate: (icons) => {
+            validate: ({ icons }) => {
                 if (icons) {
                     if (icons['smallDown']) {
                         return _errMsg(262);
@@ -259,7 +260,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             },
         },
         paginationPageSizeSelector: {
-            validate: (paginationPageSizeSelector) => {
+            validate: ({ paginationPageSizeSelector }) => {
                 if (typeof paginationPageSizeSelector === 'boolean' || paginationPageSizeSelector == null) {
                     return null;
                 }
@@ -323,32 +324,70 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         rowGroupPanelShow: { module: 'RowGroupingPanel' },
         rowSelection: {
-            validate(rowSelection) {
+            validate({ rowSelection }) {
                 if (rowSelection && typeof rowSelection === 'string') {
                     return 'As of version 32.2.1, using `rowSelection` with the values "single" or "multiple" has been deprecated. Use the object value instead.';
                 }
                 if (rowSelection && typeof rowSelection !== 'object') {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
-                return null;
+
+                const result = v
+                    .object(
+                        {
+                            mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).shallow(),
+
+                            // common
+                            enableClickSelection: v
+                                .oneOf([v.boolean(), v.literal('enableDeselection'), v.literal('enableSelection')])
+                                .optional(),
+                            checkboxes: v.oneOf([v.boolean(), v.func()]).shallow().optional(),
+                            checkboxLocation: v
+                                .oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')])
+                                .shallow()
+                                .optional(),
+                            hideDisabledCheckboxes: v.boolean().optional(),
+                            isRowSelectable: v.func().optional(),
+                            copySelectedRows: v.boolean().optional(),
+                            enableSelectionWithoutKeys: v.boolean().optional(),
+
+                            // multi-row
+                            groupSelects: v
+                                ._if(() => rowSelection?.mode === 'multiRow')
+                                .then(
+                                    v
+                                        .oneOf([
+                                            v.literal('self'),
+                                            v.literal('descendants'),
+                                            v.literal('filteredDescendants'),
+                                        ])
+                                        .shallow()
+                                )
+                                .else(v._undefined())
+                                .optional(),
+                            selectAll: v
+                                ._if(() => rowSelection?.mode === 'multiRow')
+                                .then(
+                                    v
+                                        .oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')])
+                                        .shallow()
+                                )
+                                .else(v._undefined())
+                                .optional(),
+                            headerCheckbox: v
+                                ._if(() => rowSelection?.mode === 'multiRow')
+                                .then(v.boolean())
+                                .else(v._undefined())
+                                .optional(),
+                        },
+                        'rowSelection'
+                    )
+                    .only()
+                    .validate(rowSelection);
+
+                return v.formatResult(result);
             },
             module: 'SharedRowSelection',
-            children: {
-                mode: {
-                    validate(mode) {
-                        if (mode !== 'multiRow' && mode !== 'singleRow') {
-                            return `Selection mode "${mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
-                        }
-                        return null;
-                    },
-                },
-                checkboxes: {
-                    validate() {
-                        console.log('checkboxes');
-                        return null;
-                    },
-                },
-            },
         },
         rowStyle: {
             validate: (rowStyle) => {
@@ -391,7 +430,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         statusBar: { module: 'StatusBar' },
         tooltipHideDelay: {
-            validate: (tooltipHideDelay) => {
+            validate: ({ tooltipHideDelay }) => {
                 if (tooltipHideDelay && tooltipHideDelay < 0) {
                     return 'tooltipHideDelay should not be lower than 0';
                 }
@@ -399,7 +438,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
             },
         },
         tooltipShowDelay: {
-            validate: (tooltipShowDelay) => {
+            validate: ({ tooltipShowDelay }) => {
                 if (tooltipShowDelay && tooltipShowDelay < 0) {
                     return 'tooltipShowDelay should not be lower than 0';
                 }
