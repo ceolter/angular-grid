@@ -5,7 +5,7 @@ import React from 'react';
 import styles from '../FeatureTabs.module.scss';
 
 const CustomFeatures: React.FC = () => {
-    const codeExample = `import { themeQuartz }; // or themeBalham, themeMaterial, themeAlpine
+    const codeExample = `import { themeQuartz } from "ag-grid-community"; // or themeBalham, themeAlpine
 
 const myTheme = themeQuartz
     // Customise Theme Parameters 
