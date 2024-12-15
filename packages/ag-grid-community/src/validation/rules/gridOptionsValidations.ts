@@ -140,6 +140,35 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         },
         cellSelection: {
             module: 'CellSelection',
+            validate({ cellSelection }) {
+                const cellSelectionSchema = v.oneOf([
+                    v.boolean(),
+                    v
+                        .object({
+                            suppressMultiRanges: v.boolean(),
+                            handle: v.oneOf([
+                                v
+                                    .object({
+                                        mode: v.literal('range'),
+                                    })
+                                    .only(),
+                                v
+                                    .object({
+                                        mode: v.literal('fill'),
+                                        suppressClearOnFillReduction: v.boolean(),
+                                        direction: v.oneOf([v.literal('x'), v.literal('y'), v.literal('xy')]),
+                                        setFillValue: v.func(),
+                                    })
+                                    .only(),
+                            ]),
+                        })
+                        .only(),
+                ]);
+
+                const result = v.object({ cellSelection: cellSelectionSchema }).validate({ cellSelection });
+
+                return v.formatResult(result);
+            },
         },
         columnHoverHighlight: { module: 'ColumnHover' },
         datasource: {
@@ -332,48 +361,42 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
 
-                const result = v
+                const rowSelectionSchema = v
                     .object({
-                        rowSelection: v
-                            .object({
-                                mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).required(),
+                        mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).required(),
 
-                                // common
-                                enableClickSelection: v.oneOf([
-                                    v.boolean(),
-                                    v.literal('enableDeselection'),
-                                    v.literal('enableSelection'),
-                                ]),
-                                checkboxes: v.oneOf([v.boolean(), v.func()]),
-                                checkboxLocation: v.oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
-                                hideDisabledCheckboxes: v.boolean(),
-                                isRowSelectable: v.func(),
-                                copySelectedRows: v.boolean(),
-                                enableSelectionWithoutKeys: v.boolean(),
+                        // common
+                        enableClickSelection: v.oneOf([
+                            v.boolean(),
+                            v.literal('enableDeselection'),
+                            v.literal('enableSelection'),
+                        ]),
+                        checkboxes: v.oneOf([v.boolean(), v.func()]),
+                        checkboxLocation: v.oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                        hideDisabledCheckboxes: v.boolean(),
+                        isRowSelectable: v.func(),
+                        copySelectedRows: v.boolean(),
+                        enableSelectionWithoutKeys: v.boolean(),
 
-                                // multi-row
-                                groupSelects: v
-                                    ._if(() => rowSelection?.mode === 'multiRow')
-                                    .then(
-                                        v.oneOf([
-                                            v.literal('self'),
-                                            v.literal('descendants'),
-                                            v.literal('filteredDescendants'),
-                                        ])
-                                    )
-                                    .else(v._undefined()),
-                                selectAll: v
-                                    ._if(() => rowSelection?.mode === 'multiRow')
-                                    .then(v.oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
-                                    .else(v._undefined()),
-                                headerCheckbox: v
-                                    ._if(() => rowSelection?.mode === 'multiRow')
-                                    .then(v.boolean())
-                                    .else(v._undefined()),
-                            })
-                            .only(),
+                        // multi-row
+                        groupSelects: v
+                            ._if(() => rowSelection?.mode === 'multiRow')
+                            .then(
+                                v.oneOf([v.literal('self'), v.literal('descendants'), v.literal('filteredDescendants')])
+                            )
+                            .else(v._undefined()),
+                        selectAll: v
+                            ._if(() => rowSelection?.mode === 'multiRow')
+                            .then(v.oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
+                            .else(v._undefined()),
+                        headerCheckbox: v
+                            ._if(() => rowSelection?.mode === 'multiRow')
+                            .then(v.boolean())
+                            .else(v._undefined()),
                     })
-                    .validate({ rowSelection });
+                    .only();
+
+                const result = v.object({ rowSelection: rowSelectionSchema }).validate({ rowSelection });
 
                 return v.formatResult(result);
             },
