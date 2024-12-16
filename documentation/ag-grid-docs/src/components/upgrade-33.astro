@@ -9,6 +9,11 @@ import styles from './Upgrade-33.module.scss';
 
 const framework = getFrameworkFromPath(Astro.url.pathname);
 
+const isJS = framework === 'javascript';
+const isReact = framework === 'react';
+const isAngular = framework === 'angular';
+const isVue = framework === 'vue';
+
 const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-modules'});
 ---
 <p>Reductions in bundle size, updated theming, column header content customization</p>
@@ -32,6 +37,8 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
     supported two versions - modules and packages. These have now been merged together to allow for both a simpler
     configuration and greater optimisation of bundle size.
 </p>
+
+{ isJS && <p>If you are using the UMD bundle, then you do not need to make any changes as all modules are automatically registered. Otherwise, see the steps below.</p> }
 
 <Heading level="3" id="migrating-from-packages">Migrating from Packages</Heading>
 <p>
@@ -66,7 +73,9 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
     as below:
 </p>
 <ul>
-    <li><code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code>.</li>
+    { isReact && <li><code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code>.</li>}
+    { isAngular && <li><code>@ag-grid-community/angular</code> is replaced with <code>ag-grid-angular</code>.</li>}
+    { isVue && <li><code>@ag-grid-community/vue3</code> is replaced with <code>ag-grid-vue3</code>.</li>}
     <li>All other <code>@ag-grid-community/*</code> packages are replaced with <code>ag-grid-community</code>. (*)</li>
     <li>All <code>@ag-grid-enterprise/*</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
 </ul>
@@ -166,7 +175,7 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
     of any of those APIs your source code will be unaffected by the codemod.
 </p>
 
-<p>See the <a href="/react-data-grid/codemods/">Codemods</a> documentation for more details.</p>
+<p>See the <a href={{ framework, url: "./codemods/"}}>Codemods</a> documentation for more details.</p>
 
 {/* ------------------------------------------------- */}
 
@@ -205,43 +214,56 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
         <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
         <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:
         </p>
-        <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values
-            are
-            truthy.</p>
 
-        <Heading level="3" id="react">React</Heading>
-        <ul>
-            <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
-            <li><code>AgGridReactProps</code>:<ul>
-                    <li><code>disableStaticMarkup</code> no longer used.</li>
-                    <li><code>legacyComponentRendering</code> no longer used.</li>
-                </ul>
-            </li>
-            <li><code>AgReactComponent</code>:<ul>
-                    <li><code>getReactContainerStyle</code> removed, apply styling directly to
-                        <code>ag-react-container</code>
-                        if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
-                        <code>ag-react-container</code> if needed.
-                    </li>
-                    <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
-                    <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
-                    <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
-                    <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
-                    <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.
-                    </li>
-                    <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
-                    <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
-                    <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
-                    <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.
-                    </li>
-                    <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.
-                    </li>
-                    <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
-                    <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
-                    <li><code>ITooltipReactComp</code> removed, no interface required.</li>
-                </ul>
-            </li>
-        </ul>
+        { isAngular && <p>For boolean values provided as strings, all string values except “false” are truthy - only “false” will be false, any other spelling such as “FALSE” will be treated as true.</p> }
+        { !isAngular && <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are truthy.</p> }
+
+        { isReact && <div>
+            <Heading level="3" id="react">React</Heading>
+            <ul>
+                <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
+                <li><code>AgGridReactProps</code>:<ul>
+                        <li><code>disableStaticMarkup</code> no longer used.</li>
+                        <li><code>legacyComponentRendering</code> no longer used.</li>
+                    </ul>
+                </li>
+                <li><code>AgReactComponent</code>:<ul>
+                        <li><code>getReactContainerStyle</code> removed, apply styling directly to
+                            <code>ag-react-container</code>
+                            if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
+                            <code>ag-react-container</code> if needed.
+                        </li>
+                        <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
+                        <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
+                        <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
+                        <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
+                        <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.
+                        </li>
+                        <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
+                        <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
+                        <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
+                        <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.
+                        </li>
+                        <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.
+                        </li>
+                        <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
+                        <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
+                        <li><code>ITooltipReactComp</code> removed, no interface required.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div> }
+
+        { isAngular && <div>
+            <Heading level="3" id="angular-minimum-version">Angular Minimum Version</Heading>
+            <p>The minimum Angular version supported is now Angular 17. Please upgrade to Angular 17 to use this AG Grid version.</p>
+        </div> }
+
+
+        { isVue && <div>
+            <Heading level="3" id="vue-minimum-version">Vue Minimum Version</Heading>
+            <p>The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this AG Grid version.</p>
+        </div>}
 
         <Heading level="3" id="theming">Theming</Heading>
         <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme
