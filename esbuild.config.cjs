@@ -3,6 +3,14 @@ const { umdWrapper } = require('esbuild-plugin-umd-wrapper');
 const fs = require('fs/promises');
 const path = require('path');
 
+const exportedNames = {
+    react: 'React',
+    'react-dom': 'ReactDOM',
+    'ag-grid-community': 'agGrid',
+    'ag-grid-enterprise': 'agGrid',
+    'ag-grid-react': 'AgGridReact',
+};
+
 /** @type {import('esbuild').Plugin} */
 const postBuildMinificationPlugin = {
     name: 'minification-plugin',
@@ -49,17 +57,47 @@ const postBuildMinificationPlugin = {
     },
 };
 
-const exportedNames = {
-    'ag-grid-community': 'agGrid',
-    'ag-grid-enterprise': 'agGrid',
-    'ag-grid-react': 'AgGridReact',
+/** @type {import('esbuild').Plugin} */
+const umdWrapperAdaptorPlugin = {
+    name: 'umd-wrapper-adaptor',
+    setup(build) {
+        const { initialOptions } = build;
+
+        // Creates UMD banner + footer config.
+        const exportedName = exportedNames[process.env.NX_TASK_TARGET_PROJECT];
+        const umdWrapperInstance = umdWrapper({ libraryName: exportedName });
+        umdWrapperInstance.setup(build);
+
+        // Correct global variable name references.
+        const { banner } = build.initialOptions;
+        for (const external of initialOptions.external ?? []) {
+            const globalName = exportedNames[external];
+            if (globalName) {
+                banner.js = banner.js.replaceAll(`g["${external}"]`, `g["${globalName}"]`);
+            }
+        }
+
+        // Add `require()` function which uses resolved module references.
+        const externalsMap =
+            initialOptions.external?.map((e, i) => {
+                return `if (name === '${e}') return __d${String.fromCharCode(97 + i)};`;
+            }) ?? [];
+
+        build.initialOptions.banner.js += `
+if (typeof require === 'undefined') {
+    function require(name) {
+        ${externalsMap.join('\n        ')}
+        throw new Error('Unknown module: ' + name);
+    }
+}
+        `;
+    },
 };
-const exportedName = exportedNames[process.env.NX_TASK_TARGET_PROJECT];
 
 const plugins = [];
 let outExtension = {};
 if (process.env.NX_TASK_TARGET_TARGET?.endsWith('umd')) {
-    plugins.push(umdWrapper({ libraryName: exportedName }));
+    plugins.push(umdWrapperAdaptorPlugin);
     outExtension = {
         '.cjs': '.js',
     };
@@ -70,26 +108,12 @@ if (process.env.NX_TASK_TARGET_TARGET?.endsWith('umd')) {
     };
 }
 
-// let alias = {};
-// if (
-//     process.env.NX_TASK_TARGET_PROJECT === 'ag-grid-enterprise' ||
-//     process.env.NX_TASK_TARGET_PROJECT === 'ag-grid-charts-enterprise'
-// ) {
-//     alias = {
-//         '@ag-grid-community/core': 'ag-grid-community',
-//         '@ag-grid-community/client-side-row-model': 'ag-grid-community',
-//         '@ag-grid-community/csv-export': 'ag-grid-community',
-//         '@ag-grid-community/infinite-row-model': 'ag-grid-community',
-//     };
-// }
-
 plugins.push(postBuildMinificationPlugin);
 
 /** @type {import('esbuild').BuildOptions} */
 const options = {
     outExtension,
     plugins,
-    // alias,
 };
 
 module.exports = options;
