@@ -7,6 +7,7 @@ import {
     addBindingImports,
     addGenericInterfaceImport,
     addLicenseManager,
+    convertFunctionToProperty,
     findLocaleImport,
     getIntegratedDarkModeCode,
     getPropertyInterfaces,
@@ -152,7 +153,7 @@ export function vanillaToAngular(
         diParams.push('private http: HttpClient');
     }
 
-    const instanceMethods = bindings.instanceMethods.map(removeFunctionKeyword);
+    const instanceMethods = bindings.instanceMethods.map(convertFunctionToProperty);
 
     const eventHandlers = bindings.eventHandlers.map((event) => event.handler).map(removeFunctionKeyword);
     const externalEventHandlers = bindings.externalEventHandlers.map((handler) => removeFunctionKeyword(handler.body));
