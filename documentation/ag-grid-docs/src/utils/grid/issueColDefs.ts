@@ -8,6 +8,7 @@ export const IssueColDef = {
     field: 'key',
     headerName: 'Issue',
     width: 150,
+    maxWidth: 150,
     comparator: (a, b) => {
         const valA = a == null ? 0 : getIssueNumber(a);
         const valB = b == null ? 0 : getIssueNumber(b);

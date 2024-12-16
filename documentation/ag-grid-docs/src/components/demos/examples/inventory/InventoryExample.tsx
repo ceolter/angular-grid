@@ -3,7 +3,7 @@ import { type ChangeEvent, type FunctionComponent, useCallback, useMemo, useRef,
 import type {
     ColDef,
     GetDetailRowDataParams,
-    SizeColumnsToContentStrategy,
+    SizeColumnsToFitGridStrategy,
     ValueFormatterFunc,
     ValueFormatterParams,
     ValueGetterParams,
@@ -38,7 +38,7 @@ interface Props {
 
 const paginationPageSizeSelector = [5, 10, 20];
 
-const statuses = { all: 'All', active: 'Active', paused: 'On  Hold', outOfStock: 'Out of Stock' };
+const statuses = { all: 'All', active: 'Active', paused: 'On Hold', outOfStock: 'Out of Stock' };
 
 const statusFormatter: ValueFormatterFunc = ({ value }) => statuses[value as keyof typeof statuses] ?? '';
 
@@ -110,7 +110,7 @@ export const InventoryExample: FunctionComponent<Props> = ({ gridTheme = 'ag-the
         }),
         []
     );
-    const autoSizeStrategy = useMemo<SizeColumnsToContentStrategy>(
+    const autoSizeStrategy = useMemo<SizeColumnsToFitGridStrategy>(
         () => ({
             type: 'fitGridWidth',
         }),

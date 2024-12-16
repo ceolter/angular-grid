@@ -1,7 +1,7 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid, themeQuartz } from 'ag-grid-community';
+import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, ValidationModule /* Development Only */]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const myTheme = themeQuartz.withParams({
     borderColor: '#9696C8',

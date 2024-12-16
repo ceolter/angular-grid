@@ -8,6 +8,7 @@ import { Snippet } from '@ag-website-shared/components/snippet/Snippet';
 import fwLogos from '@ag-website-shared/images/fw-logos';
 import { FrameworkSelectorInsideDocs } from '@components/framework-selector-inside-doc/FrameworkSelectorInsideDocs';
 import { urlWithBaseUrl } from '@utils/urlWithBaseUrl';
+import { urlWithPrefix } from '@utils/urlWithPrefix';
 import classnames from 'classnames';
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
@@ -260,6 +261,20 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         content={bootstrapSnippet[library as keyof typeof bootstrapSnippet]}
                         copyToClipboard
                     />
+
+                    <Note>
+                        The code above imports all the grid features. You can reduce your bundle size and import only
+                        the modules for the features you are using. See the{' '}
+                        <a
+                            href={urlWithPrefix({
+                                framework,
+                                url: './modules',
+                            })}
+                        >
+                            Modules
+                        </a>{' '}
+                        page for more information.
+                    </Note>
 
                     <h2 id="seed-repos">
                         Seed Repositories

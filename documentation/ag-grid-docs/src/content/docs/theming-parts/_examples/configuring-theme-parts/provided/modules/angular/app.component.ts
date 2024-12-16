@@ -5,13 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { AgGridAngular } from 'ag-grid-angular';
 import type { ColDef } from 'ag-grid-community';
 import {
-    ClientSideRowModelModule,
+    AllCommunityModule,
     ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
     colorSchemeDark,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
@@ -28,31 +23,9 @@ import {
     themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
-import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    ExcelExportModule,
-    FiltersToolPanelModule,
-    PivotModule,
-    SideBarModule,
-} from 'ag-grid-enterprise';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    NumberEditorModule,
-    SideBarModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    ExcelExportModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    PivotModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 @Component({
     standalone: true,

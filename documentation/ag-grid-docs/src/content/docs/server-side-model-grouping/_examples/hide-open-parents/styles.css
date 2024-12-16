@@ -18,13 +18,13 @@
 }
 
 .ag-row-level-0 {
-    background-color: #cc222244 !important;
+    background-color: #cc222244;
 }
 .ag-row-level-1 {
-    background-color: #33cc3344 !important;
+    background-color: #33cc3344;
 }
 .ag-row-level-2 {
-    background-color: #2244cc44 !important;
+    background-color: #2244cc44;
 }
 .legend-item {
     display: inline-block;

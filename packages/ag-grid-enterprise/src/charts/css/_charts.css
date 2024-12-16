@@ -210,10 +210,12 @@
     cursor: pointer;
     border: solid 1px var(--ag-border-color);
     border-radius: 5px;
+    padding: 1px;
 
     &.ag-selected {
         border-color: var(--ag-accent-color);
         border-width: 2px;
+        padding: unset;
     }
 
     &:focus-visible {

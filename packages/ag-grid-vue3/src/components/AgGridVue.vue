@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="TData = any, TColDef extends ColDef<TData> = ColDef<any>">
+<script setup lang="ts" generic="TData = any">
 
 // @START_IMPORTS@
 import type {
@@ -123,7 +123,7 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
-const props = withDefaults(defineProps<Props<TData, TColDef>>(), getProps());
+const props = withDefaults(defineProps<Props<TData>>(), getProps());
 
 const rootRef = useTemplateRef<HTMLDivElement>('root');
 

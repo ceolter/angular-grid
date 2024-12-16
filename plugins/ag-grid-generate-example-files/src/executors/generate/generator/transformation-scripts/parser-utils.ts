@@ -59,7 +59,7 @@ export function getFunctionName(code: string): string {
 }
 
 export const convertFunctionToProperty = (code: string) =>
-    code.replace(/function\s+([^(\s]+)\s*\(([^)]*)\)/, '$1 = ($2) =>');
+    code.replace(/function\s+([^(\s]+)\s*\(([^)]*)\)(:[^{]+)?/, '$1 = ($2)$3 =>');
 
 export const convertFunctionToConstProperty = (code: string) =>
     code.replace(/function\s+([^(\s]+)\s*\(([^)]*)\)/, 'const $1 = ($2) =>');
@@ -655,9 +655,13 @@ const chartsExamplePathSubstrings = [
     '/localisation/examples/localisation',
 ];
 
-export function getIntegratedDarkModeCode(exampleName: string, typescript?: boolean, apiName = 'params.api'): string {
+export function getIntegratedDarkModeCode(
+    exampleName: string,
+    typescript?: boolean,
+    apiName = 'params.api'
+): string | undefined {
     if (!chartsExamplePathSubstrings.find((s) => exampleName.includes(s))) {
-        return '';
+        return undefined;
     }
     return `${DARK_INTEGRATED_START}${(typescript ? darkModeTs : darkModeJS).replace(/params\.api/g, apiName)}${DARK_INTEGRATED_END}`;
 }

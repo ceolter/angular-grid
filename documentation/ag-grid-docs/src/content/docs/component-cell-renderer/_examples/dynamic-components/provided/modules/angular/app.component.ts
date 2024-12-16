@@ -33,13 +33,12 @@ ModuleRegistry.registerModules([
 @Component({
     selector: 'my-app',
     standalone: true,
-    imports: [AgGridAngular, ChildMessageRenderer, CubeRenderer, CurrencyRenderer, ParamsRenderer, SquareRenderer],
+    imports: [AgGridAngular],
     template: ` <div class="example-wrapper">
         <button (click)="refreshEvenRowsCurrencyData()" style="margin-bottom: 10px" class="btn btn-primary">
             Refresh Even Row Currency Data
         </button>
         <ag-grid-angular
-            #agGrid
             style="width: 100%; height: 100%;"
             id="myGrid"
             [columnDefs]="columnDefs"

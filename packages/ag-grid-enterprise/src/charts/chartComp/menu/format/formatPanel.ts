@@ -78,7 +78,7 @@ export class FormatPanel extends Component {
                     this.chartPanelFeature.addComponent(new TitlesPanel(opts));
                     break;
                 case 'legend':
-                    this.chartPanelFeature.addComponent(new LegendPanel(opts));
+                    this.chartPanelFeature.addComponent(new LegendPanel(opts, this.chartMenuContext));
                     break;
                 case 'axis':
                     // Polar charts have different axis options from cartesian charts, so choose the appropriate panels

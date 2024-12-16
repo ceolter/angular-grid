@@ -1,11 +1,12 @@
-import type { ColDef, GetMainMenuItemsParams, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    PostProcessPopupParams,
-    ValidationModule,
-    createGrid,
+import type {
+    ColDef,
+    DefaultMenuItem,
+    GetMainMenuItemsParams,
+    GridApi,
+    GridOptions,
+    MenuItemDef,
 } from 'ag-grid-community';
+import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import { ColumnMenuModule, ColumnsToolPanelModule, ContextMenuModule } from 'ag-grid-enterprise';
 
 ModuleRegistry.registerModules([
@@ -21,7 +22,7 @@ const columnDefs: ColDef[] = [
     {
         field: 'age',
         mainMenuItems: (params: GetMainMenuItemsParams) => {
-            const athleteMenuItems: (MenuItemDef | string)[] = params.defaultItems.slice(0);
+            const athleteMenuItems: (MenuItemDef | DefaultMenuItem)[] = params.defaultItems.slice(0);
             athleteMenuItems.push({
                 name: 'A Custom Item',
                 action: () => {
@@ -86,7 +87,7 @@ const columnDefs: ColDef[] = [
     {
         field: 'year',
         mainMenuItems: (params: GetMainMenuItemsParams) => {
-            const menuItems: (MenuItemDef | string)[] = [];
+            const menuItems: (MenuItemDef | DefaultMenuItem)[] = [];
             const itemsToExclude = ['separator', 'pinSubMenu', 'valueAggSubMenu'];
             params.defaultItems.forEach((item) => {
                 if (itemsToExclude.indexOf(item) < 0) {

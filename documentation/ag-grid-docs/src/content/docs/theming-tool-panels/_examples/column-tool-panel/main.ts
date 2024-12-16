@@ -1,34 +1,8 @@
 import type { GridApi, GridOptions } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    ValidationModule,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
-import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    NumberEditorModule,
-    TextEditorModule,
-    NumberFilterModule,
-    ClientSideRowModelModule,
-    ColumnsToolPanelModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 let gridApi: GridApi<IOlympicData>;
 

@@ -263,13 +263,14 @@ export class HeaderComp extends Component implements IHeaderComp {
             return;
         }
 
-        const { gos, eMenu, params, currentSuppressMenuHide } = this;
+        const { gos, eMenu, params } = this;
 
         const isLegacyMenu = _isLegacyMenuEnabled(gos);
         this.addInIcon(isLegacyMenu ? 'menu' : 'menuAlt', eMenu, params.column as AgColumn);
         eMenu.classList.toggle('ag-header-menu-icon', !isLegacyMenu);
 
-        this.currentSuppressMenuHide = this.shouldSuppressMenuHide();
+        const currentSuppressMenuHide = this.shouldSuppressMenuHide();
+        this.currentSuppressMenuHide = currentSuppressMenuHide;
         this.addManagedElementListeners(eMenu, { click: () => params.showColumnMenu(eMenu!) });
         eMenu.classList.toggle('ag-header-menu-always-show', currentSuppressMenuHide);
     }

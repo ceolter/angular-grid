@@ -1,6 +1,6 @@
 .my-custom-drag-and-drop-cover {
     padding: 2rem;
-    color: white !important;
+    color: white;
     cursor: move;
     display: flex;
     align-items: center;

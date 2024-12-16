@@ -29,16 +29,16 @@ body {
 
 .custom-element button {
     width: 80px;
-    padding: 5px !important;
-    height: initial !important;
-    margin: 0 !important;
+    padding: 5px;
+    height: initial;
+    margin: 0;
 }
 
 .custom-element input {
     width: 100px;
-    padding: 5px !important;
-    height: initial !important;
-    margin: 0 !important;
+    padding: 5px;
+    height: initial;
+    margin: 0;
 }
 
 .custom-element a {

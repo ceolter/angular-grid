@@ -13,6 +13,7 @@ import {
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
+    PivotModule,
     RowGroupingModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
@@ -28,6 +29,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnMenuModule,
     ContextMenuModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 
@@ -85,6 +87,9 @@ const gridOptions: GridOptions<IOlympicData> = {
         width: 150,
         filter: true,
         floatingFilter: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
     },
     columnDefs: columnDefs,
     rowData: null,

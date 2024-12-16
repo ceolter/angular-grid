@@ -21,6 +21,7 @@
 }
 
 .license {
+    resize: none;
     border-radius: var(--radius-md);
     border: 1px solid color-mix(in srgb, var(--color-border-secondary), var(--color-border-primary));
     background-color: var(--color-bg-secondary);

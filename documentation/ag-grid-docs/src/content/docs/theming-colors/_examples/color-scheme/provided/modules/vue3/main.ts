@@ -2,31 +2,17 @@ import { createApp, defineComponent } from 'vue';
 
 import type { ColDef } from 'ag-grid-community';
 import {
-    ClientSideRowModelModule,
+    AllCommunityModule,
     ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
     colorSchemeDarkBlue,
     colorSchemeDarkWarm,
     colorSchemeLightCold,
     colorSchemeLightWarm,
-    themeAlpine,
-    themeBalham,
     themeQuartz,
 } from 'ag-grid-community';
 import { AgGridVue } from 'ag-grid-vue3';
 
-ModuleRegistry.registerModules([
-    TextEditorModule,
-    TextFilterModule,
-    NumberFilterModule,
-    NumberEditorModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const VueExample = defineComponent({
     template: `
