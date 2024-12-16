@@ -28,7 +28,7 @@ ModuleRegistry.registerModules([
 @Component({
     selector: 'my-app',
     standalone: true,
-    imports: [MySimpleEditor, AgGridAngular],
+    imports: [AgGridAngular],
     template: `
         <ag-grid-angular
             style="width: 100%; height: 100%;"
