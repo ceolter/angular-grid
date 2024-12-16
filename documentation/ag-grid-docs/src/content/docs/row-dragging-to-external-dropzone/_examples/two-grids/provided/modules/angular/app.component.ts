@@ -152,9 +152,9 @@ export class AppComponent {
         this.leftRowData = createLeftRowData();
     }
 
-    getRowId(params: GetRowIdParams) {
+    getRowId = (params: GetRowIdParams) => {
         return String(params.data.id);
-    }
+    };
 
     onGridReady(params: GridReadyEvent, side: string) {
         const api = params.api;
