@@ -66,7 +66,7 @@ class ObjectSchema extends BaseSchema implements Schema {
                 errors.push(...(result.errors ?? []));
                 delete this.fields[k];
             } else if (this._only) {
-                errors.push(`Unexpected field ${k} in ${name} object.`);
+                errors.push(`Unexpected field "${k}" in ${opts?.path?.[0] ?? 'this'} object.`);
             }
         }
 
@@ -75,7 +75,7 @@ class ObjectSchema extends BaseSchema implements Schema {
         if (remaining.length > 0) {
             for (const [k, v] of remaining) {
                 if (!v.isOptional()) {
-                    errors.push(`Missing field ${k} from ${name} object.`);
+                    errors.push(`Missing field "${k}" from ${opts?.path?.[0] ?? 'this'} object.`);
                 }
             }
         }

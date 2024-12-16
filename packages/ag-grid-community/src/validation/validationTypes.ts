@@ -22,10 +22,11 @@ type TypeOfArray<T> = NonNullable<T extends Array<infer U> ? U : T>;
 
 // Validation rules, either sub-validator, function returning rules, or rules.
 export type Validations<T extends object> = Partial<{
-    [key in keyof T]?:
+    [key in keyof T]:
         | (TypeOfArray<T[key]> extends object ? () => OptionsValidator<TypeOfArray<T[key]>> : never)
         | ((options: T, gridOptions: GridOptions, beans: BeanCollection) => OptionsValidation<T> | null)
-        | OptionsValidation<T>;
+        | OptionsValidation<T>
+        | undefined;
 }>;
 export type ValidationsRequired<T extends object> = Required<Validations<T>>;
 
@@ -37,9 +38,6 @@ export interface OptionsValidation<T extends object> {
     validate?: (options: T, gridOptions: GridOptions, beans: BeanCollection) => string | null;
     /** Currently only supports boolean or number */
     expectedType?: 'boolean' | 'number';
-    children?: {
-        [P in keyof T[keyof T]]?: OptionsValidation<T[keyof T] extends object ? T[keyof T] : never>;
-    };
 }
 
 // Each property key requires one of the values in the array to also be present.

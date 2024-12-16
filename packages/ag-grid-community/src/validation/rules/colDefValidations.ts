@@ -177,7 +177,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     tooltipField: { module: 'Tooltip' },
     tooltipValueGetter: { module: 'Tooltip' },
     type: {
-        validate: (type) => {
+        validate: ({ type }) => {
             if (type instanceof Array) {
                 const invalidArray = type.some((a) => typeof a !== 'string');
                 if (invalidArray) {
