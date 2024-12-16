@@ -1,9 +1,9 @@
 import { getChangedModelItemCount } from '@components/theme-builder/model/changed-model-items';
 import styled from '@emotion/styled';
 import { useStore } from 'jotai';
-import { type RefObject, memo, useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { type RefObject, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
-import { _asThemeImpl, colorSchemeLight, themeQuartz } from 'ag-grid-community';
+import { _asThemeImpl, colorSchemeLight, createGrid, themeQuartz } from 'ag-grid-community';
 
 import { ResetChangesModal } from '../general/ResetChangesModal';
 import { PresetRender } from './PresetRender';
@@ -11,6 +11,15 @@ import { type Preset, allPresets, applyPreset } from './presets';
 
 export const PresetSelector = memo(() => {
     const scrollerRef = useRef<HTMLDivElement>(null);
+
+    // PresetPreviews are little fake grids - react components that render divs
+    // with grid class names but no associated grid instance. Create a real grid
+    // here so that it will inject the necessary styles into the document for
+    // the presets to render.
+    useEffect(() => {
+        const api = createGrid(document.createElement('div'), { columnDefs: [], rowData: [] });
+        return () => api.destroy();
+    });
 
     return (
         <Scroller ref={scrollerRef}>
