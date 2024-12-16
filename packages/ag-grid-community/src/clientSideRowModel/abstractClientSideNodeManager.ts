@@ -8,7 +8,6 @@ import type {
 } from '../interfaces/iClientSideNodeManager';
 import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
-import { _exists } from '../utils/generic';
 import { _error, _warn } from '../validation/logging';
 
 const ROOT_NODE_ID = 'ROOT_NODE_ID';
@@ -130,27 +129,109 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     public setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
-        // convert the setRowData data into a transaction object by working out adds, removes and updates
+        this.dispatchRowDataUpdateStartedEvent(rowData);
 
-        const rowDataTransaction = this.createTransactionForRowData(rowData);
+        const changedRowNodes = params.changedRowNodes!;
+        const reorder = !this.gos.get('suppressMaintainUnsortedOrder');
+        const getRowIdFunc = _getRowIdCallback(this.gos)!;
 
-        // Apply the transaction
-        const result = this.updateRowData(rowDataTransaction, params.changedRowNodes!);
+        const rowDataLen = rowData.length;
 
-        let rowsOrderChanged = false;
-        // If true, we will not apply the new order specified in the rowData, but keep the old order.
-        if (!this.gos.get('suppressMaintainUnsortedOrder')) {
-            // we need to reorder the nodes to match the new data order
-            rowsOrderChanged = this.updateRowOrderFromRowData(rowData);
+        let newAllLeafChildren: ClientSideNodeManagerRowNode<TData>[] | null = null;
+
+        const rootNode = this.rootNode!;
+        const oldAllLeafChildren = rootNode.allLeafChildren!;
+        const oldAllLeafChildrenLen = oldAllLeafChildren.length;
+        let orderChanged = false;
+
+        if (reorder) {
+            for (let i = 0; i < rowDataLen; ++i) {
+                const data = rowData[i];
+                const id = getRowIdFunc({ data, level: 0 });
+                let node: ClientSideNodeManagerRowNode<TData> | undefined = this.getRowNode(id);
+                if (!node) {
+                    node = this.createRowNode(data, -1);
+                    changedRowNodes.add(node);
+                } else if (node.data !== data) {
+                    node.updateData(data);
+                    changedRowNodes.update(node);
+                }
+                if (newAllLeafChildren !== null || oldAllLeafChildren[i] !== node) {
+                    if (!newAllLeafChildren) {
+                        newAllLeafChildren = [];
+                        for (let j = 0; j < i; ++j) {
+                            newAllLeafChildren[j] = oldAllLeafChildren[j];
+                        }
+                    }
+                    node.sourceRowIndex = i;
+                    newAllLeafChildren![i] = node;
+                }
+            }
         }
 
-        const { rowNodeTransaction, rowsInserted } = result;
-        const { add, remove, update } = rowNodeTransaction;
-        if (rowsInserted || rowsOrderChanged || add.length || remove.length || update.length) {
-            params.step = 'group';
-            params.rowDataUpdated = true;
-            params.rowNodeTransactions = [rowNodeTransaction];
-            params.rowNodesOrderChanged = rowsInserted || rowsOrderChanged;
+        const removals = changedRowNodes.removals;
+        for (let i = 0, sourceRowIndex = 0; i < oldAllLeafChildrenLen; ++i) {
+            const node = newAllLeafChildren![i];
+            if (removals.has(node)) {
+                changedRowNodes.remove(node);
+                this.rowNodeDeleted(node);
+            } else {
+                orderChanged ||= node.sourceRowIndex !== sourceRowIndex;
+                ++sourceRowIndex;
+            }
+        }
+
+        // const oldAllLeafChildrenLen = oldAllLeafChildren?.length ?? 0;
+        // const newAllLeafChildren = new Array<RowNode<TData>>(processedNodes.size);
+        // let orderChanged = false;
+        // let writeIdx = 0;
+
+        // for (let i = 0; i < oldAllLeafChildrenLen; i++) {
+        //     const node = oldAllLeafChildren![i];
+        //     if (!processedNodes.has(node)) {
+        //         changedRowNodes.remove(node);
+        //         this.rowNodeDeleted(node);
+        //     } else if (!reorder) {
+        //         node.sourceRowIndex = writeIdx;
+        //         newAllLeafChildren[writeIdx++] = node;
+        //     }
+        // }
+        // if (reorder) {
+        //     let readIdx = 0;
+        //     for (const node of processedNodes) {
+        //         // TODO: handle deleted nodes
+        //         orderChanged ||=
+        //             readIdx < oldAllLeafChildrenLen &&
+        //             (node.sourceRowIndex < 0 || oldAllLeafChildren![readIdx++] !== node);
+        //         node.sourceRowIndex = writeIdx;
+        //         newAllLeafChildren[writeIdx++] = node;
+        //     }
+        // } else if (appendedNodes) {
+        //     for (let i = 0, len = appendedNodes.length; i < len; ++i) {
+        //         const node = appendedNodes[i];
+        //         node.sourceRowIndex = writeIdx;
+        //         newAllLeafChildren[writeIdx++] = node;
+        //     }
+        // }
+
+        // if (changedRowNodes.removals.size || changedRowNodes.updates.size || orderChanged) {
+        //     rootNode.allLeafChildren = newAllLeafChildren;
+        //     const sibling = rootNode.sibling;
+        //     if (sibling) {
+        //         sibling.allLeafChildren = newAllLeafChildren;
+        //     }
+        //     params.rowDataUpdated = true;
+        //     params.rowNodesOrderChanged ||= orderChanged;
+        // }
+    }
+
+    /** Called when a node needs to be deleted */
+    protected rowNodeDeleted(node: RowNode<TData>): void {
+        node.clearRowTopAndRowIndex(); // so row renderer knows to fade row out (and not reposition it)
+        const id = node.id!;
+        const allNodesMap = this.allNodesMap;
+        if (allNodesMap[id] === node) {
+            delete allNodesMap[id];
         }
     }
 
@@ -176,91 +257,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         this.deselectNodes(nodesToUnselect);
 
         return updateRowDataResult;
-    }
-
-    /** Converts the setRowData() command to a transaction */
-    private createTransactionForRowData(rowData: TData[]): RowDataTransaction<TData> {
-        const getRowIdFunc = _getRowIdCallback(this.gos)!;
-
-        // get a map of the existing data, that we are going to modify as we find rows to not delete
-        const existingNodesMap: { [id: string]: RowNode | undefined } = { ...this.allNodesMap };
-
-        const remove: TData[] = [];
-        const update: TData[] = [];
-        const add: TData[] = [];
-
-        if (_exists(rowData)) {
-            // split all the new data in the following:
-            // if new, push to 'add'
-            // if update, push to 'update'
-            // if not changed, do not include in the transaction
-            rowData.forEach((data: TData) => {
-                const id = getRowIdFunc({ data, level: 0 });
-                const existingNode = existingNodesMap[id];
-
-                if (existingNode) {
-                    const dataHasChanged = existingNode.data !== data;
-                    if (dataHasChanged) {
-                        update.push(data);
-                    }
-                    // otherwise, if data not changed, we just don't include it anywhere, as it's not a delta
-
-                    existingNodesMap[id] = undefined; // remove from list, so we know the item is not to be removed
-                } else {
-                    add.push(data);
-                }
-            });
-        }
-
-        // at this point, all rows that are left, should be removed
-        for (const rowNode of Object.values(existingNodesMap)) {
-            if (rowNode) {
-                remove.push(rowNode.data);
-            }
-        }
-
-        return { remove, update, add };
-    }
-
-    /**
-     * Used by setImmutableRowData, after updateRowData, after updating with a generated transaction to
-     * apply the order as specified by the the new data. We use sourceRowIndex to determine the order of the rows.
-     * Time complexity is O(n) where n is the number of rows/rowData
-     * @returns true if the order changed, otherwise false
-     */
-    private updateRowOrderFromRowData(rowData: TData[]): boolean {
-        const rows = this.rootNode?.allLeafChildren;
-        const rowsLength = rows?.length ?? 0;
-        const rowsOutOfOrder = new Map<TData, AbstractClientSideNodeManager.RowNode<TData>>();
-        let firstIndexOutOfOrder = -1;
-        let lastIndexOutOfOrder = -1;
-
-        // Step 1: Build the rowsOutOfOrder mapping data => row for the rows out of order, in O(n)
-        for (let i = 0; i < rowsLength; ++i) {
-            const row = rows![i];
-            const data = row.data;
-            if (data !== rowData[i]) {
-                // The row is not in the correct position
-                if (lastIndexOutOfOrder < 0) {
-                    firstIndexOutOfOrder = i; // First row out of order was found
-                }
-                lastIndexOutOfOrder = i; // Last row out of order
-                rowsOutOfOrder.set(data!, row); // A new row out of order was found, add it to the map
-            }
-        }
-        if (firstIndexOutOfOrder < 0) {
-            return false; // No rows out of order
-        }
-
-        // Step 2: Overwrite the rows out of order we find in the map, in O(n)
-        for (let i = firstIndexOutOfOrder; i <= lastIndexOutOfOrder; ++i) {
-            const row = rowsOutOfOrder.get(rowData[i]);
-            if (row !== undefined) {
-                rows![i] = row; // Out of order row found, overwrite it
-                row.sourceRowIndex = i; // Update its position
-            }
-        }
-        return true; // The order changed
     }
 
     protected executeAdd(

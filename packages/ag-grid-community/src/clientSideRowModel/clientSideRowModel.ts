@@ -348,7 +348,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
                 this.nodeManager.setImmutableRowData(params, newRowData);
             } else {
-                params.step = 'group';
                 params.rowDataUpdated = true;
                 params.newData = true;
 
@@ -363,7 +362,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (params.step === 'nothing') {
+        if (params.rowDataUpdated) {
+            params.step = 'group';
+        } else if (params.step === 'nothing') {
             for (const { refreshProps, step } of this.orderedStages) {
                 if (properties.some((prop) => refreshProps.has(prop))) {
                     params.step = step;
