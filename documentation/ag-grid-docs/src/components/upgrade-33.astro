@@ -1,12 +1,15 @@
 ---
 import { getFrameworkFromPath } from '@components/docs/utils/urlPaths';
+import { urlWithPrefix } from '@utils/urlWithPrefix';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Alert } from '@ag-website-shared/components/alert/Alert';
-import Heading  from '@ag-website-shared/components/heading/Heading.astro';
+import Heading from '@ag-website-shared/components/heading/Heading.astro';
 
 import styles from './Upgrade-33.module.scss';
 
 const framework = getFrameworkFromPath(Astro.url.pathname);
+
+const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-modules'});
 ---
 <p>Reductions in bundle size, updated theming, column header content customization</p>
 
@@ -17,14 +20,10 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     accessibility as described in the <a href="https://blog.ag-grid.com/whats-new-in-ag-grid-33/">release post</a>.
     These major improvements require certain breaking changes as listed below.
 </p>
-<p>
-    Please use the <a href="https://ag-grid.com/javascript-data-grid/upgrading-to-ag-grid-33/#codemods">codemods</a> 
-    to start your migration, then review the changes to <a href="https://ag-grid.com/javascript-data-grid/upgrading-to-ag-grid-33/#changes-to-modules">modules</a> 
-    and <a href="https://ag-grid.com/javascript-data-grid/upgrading-to-ag-grid-33/#theming">themes</a>. Finally, go through
-    the list of <a href="https://ag-grid.com/javascript-data-grid/upgrading-to-ag-grid-33/#removal-of-deprecated-apis"> Removals of deprecated APIs</a> 
-    to see which ones apply to your codebase.
+<p> Please use the <a href="#codemods">codemods</a> to start your migration, then review the changes to <a
+    href="#changes-to-modules">modules</a> and <a href="#theming">themes</a>. Finally, go through the list of <a
+    href="#removal-of-deprecated-apis">Removals of deprecated APIs</a> to see which ones apply to your codebase.
 </p>
-
 {/* ------------------------------------------------- */}
 
 <Heading level="2" id="cidhanges-to-modules">Changes to Modules</Heading>
@@ -51,12 +50,13 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 <p>
     (*) If you are using the enterprise features Integrated Charts or Sparklines, then you need to provide the relevant
     module from AG Charts to <code>AllEnterpriseModule</code>. Use the <a
-        href="/react-data-grid/modules/#selecting-modules">Module Selector</a
-    > tool to help generate the correct registration code.
+        href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
+    registration code.
 </p>
 <p>If you want to optimise your bundle size, you can register only the modules that you are using.</p>
 <p>
-    See the <a href="/react-data-grid/modules/">Modules</a> page for help on selecting modules, as well as more information
+    See the <a href={urlWithPrefix({framework, url: "./modules/"})}>Modules</a> page for help on selecting modules, as well as more
+    information
     on how to register modules (including registering different modules for different grid instances).
 </p>
 
@@ -76,11 +76,13 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     been split into smaller modules.
 </p>
 <p>
-    You can use the <a href="/react-data-grid/modules/#selecting-modules">Module Selector</a> tool to work out which modules
+    You can use the <a href={moduleSelectionUrl}>Module Selector</a> tool to work out which
+    modules
     you require.
 </p>
 <p>
-    To help identify missing modules, we recommend including the <code>ValidationModule</code> in your development build.
+    To help identify missing modules, we recommend including the <code>ValidationModule</code> in your development
+    build.
     This will provide details on which module is missing for a particular feature.
 </p>
 <p>
@@ -93,14 +95,14 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         <code>GridChartsModule</code> - This has been replaced with <code>IntegratedChartsModule</code>. This
         additionally needs to be passed the relevant module from AG Charts, e.g.
         <code>IntegratedChartsModule.with(AgChartsEnterpriseModule)</code>. Use the <a
-            href="/react-data-grid/modules/#selecting-modules">Module Selector</a
-        > tool to help generate the correct registration code.
+            href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
+        registration code.
     </li>
     <li>
         <code>SparklinesModule</code> - This needs to be passed the relevant module from AG Charts, e.g.
         <code>SparklinesModule.with(AgChartsCommunityModule)</code>. Use the <a
-            href="/react-data-grid/modules/#selecting-modules">Module Selector</a
-        > tool to help generate the correct registration code.
+            href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
+        registration code.
     </li>
     <li><code>ColumnsToolPanelModule</code> - This no longer imports the <code>RowGroupingModule</code> by default.</li>
     <li><code>ExcelExportModule</code> - This no longer imports the <code>CsvExportModule</code> by default.</li>
@@ -110,7 +112,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
     </li>
     <li><code>RangeSelectionModule</code> - This has been replaced with <code>CellSelectionModule</code>.</li>
     <li>
-        <code>RowGroupingModule</code> - This has been split into several modules. <code>RowGroupingModule</code> now only
+        <code>RowGroupingModule</code> - This has been split into several modules. <code>RowGroupingModule</code> now
+        only
         contains Row Grouping. Tree Data uses <code>TreeDataModule</code>, Pivoting uses <code>PivotModule</code>, the
         Row Grouping Panel / Pivot Panel uses <code>RowGroupingPanelModule</code>, and the Group Filter uses
         <code>GroupFilterModule</code>.
@@ -125,7 +128,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 <ol>
     <li>
         <p>
-            Locate your project's <code>package.json</code> and note the version of AG Grid that you are currently using.
+            Locate your project's <code>package.json</code> and note the version of AG Grid that you are currently
+            using.
         </p>
     </li>
     <li>
@@ -139,8 +143,7 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             Run the <code>migrate</code> command of version <code>33.0</code> of the AG Grid codemod runner, where
             <code>$FROM_VERSION</code> refers to your project's existing AG Grid version:
         </p>
-        <pre
-            class="code language-jsx"><code>npx @ag<span class="token operator">-</span>grid<span class="token operator">-</span>devtools<span class="token operator">/</span>cli@<span class="token number">33.0</span> migrate <span class="token operator">--</span>from<span class="token operator">=</span>$<span class="token constant">FROM_VERSION</span>
+        <pre class="code language-jsx"><code>npx @ag<span class="token operator">-</span>grid<span class="token operator">-</span>devtools<span class="token operator">/</span>cli@<span class="token number">33.0</span> migrate <span class="token operator">--</span>from<span class="token operator">=</span>$<span class="token constant">FROM_VERSION</span>
 </code></pre>
         <p>This will update your project's source files to prepare for the new release.</p>
         <p>
@@ -179,10 +182,12 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         <p>This release includes the following breaking changes:</p>
 
         <Heading level="3" id="packaging"> Packaging</Heading>
-        <p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also, the
+        <p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also,
+            the
             package <code>ag-grid-charts-enterprise</code> is no longer published.</p>
         <p>For Integrated Charts and Sparklines, the application must now explicitly include either
-            <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> in its <code>package.json</code> and register
+            <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> in its <code>package.json</code> and
+            register
             the module <code>AgChartsCommunityModule</code> or <code>AgChartsEnterpriseModule</code> as follows:
         </p>
         <p>The <code>GridChartsModule</code> has been replaced by the <code>IntegratedChartsModule</code>.</p>
@@ -198,8 +203,10 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         </code></pre>
 
         <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
-        <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:</p>
-        <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are
+        <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:
+        </p>
+        <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values
+            are
             truthy.</p>
 
         <Heading level="3" id="react">React</Heading>
@@ -211,7 +218,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
                 </ul>
             </li>
             <li><code>AgReactComponent</code>:<ul>
-                    <li><code>getReactContainerStyle</code> removed, apply styling directly to <code>ag-react-container</code>
+                    <li><code>getReactContainerStyle</code> removed, apply styling directly to
+                        <code>ag-react-container</code>
                         if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
                         <code>ag-react-container</code> if needed.
                     </li>
@@ -219,12 +227,15 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
                     <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
                     <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
                     <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
-                    <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.</li>
+                    <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.
+                    </li>
                     <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
                     <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
                     <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
-                    <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.</li>
-                    <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.</li>
+                    <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.
+                    </li>
+                    <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.
+                    </li>
                     <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
                     <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
                     <li><code>ITooltipReactComp</code> removed, no interface required.</li>
@@ -233,15 +244,20 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         </ul>
 
         <Heading level="3" id="theming">Theming</Heading>
-        <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme class
-            (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported. Applications using
-            CSS file-based themes must either pass a theme object to the theme grid option or the string <code>"legacy"</code>
+        <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme
+            class
+            (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported.
+            Applications using
+            CSS file-based themes must either pass a theme object to the theme grid option or the string
+            <code>"legacy"</code>
             to keep using class name-based themes. This is documented in the <a
-                href="https://ag-grid.com/javascript-data-grid/theming-migration/">Theming API Migration Guide</a>.</p>
+                href={urlWithPrefix({framework, url: './theming-migration/'})}>Theming API Migration Guide</a>.</p>
 
         <Heading level="3" id="custom-icons">Custom Icons</Heading>
-        <p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific use case
-            its name indicates, instead of all cases as before. To have the custom icon apply to additional cases, set the
+        <p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific
+            use case
+            its name indicates, instead of all cases as before. To have the custom icon apply to additional cases, set
+            the
             additional icon keys pointing to the same custom icon. See list of icons changed:</p>
         <ul>
             <li>
@@ -313,7 +329,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
                 <ul>
                     <li><code>filter</code> for buttons that open the filter (header/menu)</li>
                     <li><code>filtersToolPanel</code> for the Filters Tool Panel tab icon</li>
-                    <li><code>filterActive</code> for displaying the filter is active (header with legacy column menu, Filters
+                    <li><code>filterActive</code> for displaying the filter is active (header with legacy column menu,
+                        Filters
                         Tool Panel item)</li>
                     <li><code>filterTab</code> for the filter tab of the legacy tabbed column menu</li>
                 </ul>
@@ -328,57 +345,73 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li>
                 <p><code>columnSelectClosed</code>:</p>
                 <ul>
-                    <li><code>columnSelectClosed</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy
+                    <li><code>columnSelectClosed</code> for the Columns Tool Panel/Column Chooser/column tab in the
+                        legacy
                         tabbed column menu</li>
-                    <li><code>accordionClosed</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
+                    <li><code>accordionClosed</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
+                    </li>
                 </ul>
             </li>
             <li>
                 <p><code>columnSelectOpen</code>:</p>
                 <ul>
-                    <li><code>columnSelectOpen</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy tabbed
+                    <li><code>columnSelectOpen</code> for the Columns Tool Panel/Column Chooser/column tab in the legacy
+                        tabbed
                         column menu</li>
-                    <li><code>accordionOpen</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)</li>
+                    <li><code>accordionOpen</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
+                    </li>
                 </ul>
             </li>
             <li>
                 <p><code>columnSelectIndeterminate</code>:</p>
                 <ul>
-                    <li><code>columnSelectIndeterminate</code> for the Columns Tool Panel/Column Chooser/column tab in the
+                    <li><code>columnSelectIndeterminate</code> for the Columns Tool Panel/Column Chooser/column tab in
+                        the
                         legacy tabbed column menu</li>
-                    <li><code>accordionIndeterminate</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
+                    <li><code>accordionIndeterminate</code> for accordions (Filters Tool Panel, Integrated Charts tool
+                        panels)
                     </li>
                 </ul>
             </li>
         </ul>
 
         <Heading level="3" id="server-side-rendering">Server-side Rendering</Heading>
-        <p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and others.
+        <p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and
+            others.
             If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
 
         <Heading level="3" id="typing">Typing</Heading>
         <ul>
-            <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as well as
-                the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have changed.
-                Instead of string values in the arrays (and in <code>defaultItems</code> in the callback), this is now typed to
+            <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as
+                well as
+                the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have
+                changed.
+                Instead of string values in the arrays (and in <code>defaultItems</code> in the callback), this is now
+                typed to
                 <code>DefaultMenuItem</code> which only allows the available menu values.
             </li>
-            <li>The type for the grid option <code>chartMenuItems</code> has changed. Instead of string values in the array (and
-                in <code>defaultItems</code> in the callback), this is now typed to <code>ChartDefaultMenuItem</code> which only
+            <li>The type for the grid option <code>chartMenuItems</code> has changed. Instead of string values in the
+                array (and
+                in <code>defaultItems</code> in the callback), this is now typed to <code>ChartDefaultMenuItem</code>
+                which only
                 allows the available values.</li>
             <li>The column property is now optional in the callback to get column menu items (in the grid option
-                <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
-                column group header or empty column space is right-clicked on. A new property <code>columnGroup</code> will be
+                <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null
+                when a
+                column group header or empty column space is right-clicked on. A new property <code>columnGroup</code>
+                will be
                 provided when a column group header is right-clicked on.
             </li>
         </ul>
 
         <Heading level="3" id="integrated-charts"> Integrated Charts</Heading>
-        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the
+        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of
+            the
             Integrated Charts Advanced Settings.</p>
 
         <Heading level="3" id="modules-1">Modules</Heading>
-        <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.</p>
+        <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not
+            registered.</p>
 
         <Heading level="3" id="server-side-row-model">Server-side Row Model</Heading>
         <p>Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
@@ -386,22 +419,27 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 
         <Heading level="3" id="floating-filters">Floating Filters</Heading>
         <p>Floating filters provided via the <code>colDef.filter</code> values <code>text</code>, <code>number</code>,
-            <code>date</code>, <code>set</code>, <code>multi</code>, and <code>group</code> no longer work. Use the values
+            <code>date</code>, <code>set</code>, <code>multi</code>, and <code>group</code> no longer work. Use the
+            values
             <code>agTextColumnFilter</code>, <code>agNumberColumnFilter</code>, <code>agDateColumnFilter</code>,
-            <code>agSetColumnFilter</code>, <code>agMultiColumnFilter</code>, and <code>agGroupColumnFilter</code> instead.
+            <code>agSetColumnFilter</code>, <code>agMultiColumnFilter</code>, and <code>agGroupColumnFilter</code>
+            instead.
         </p>
 
         <Heading level="3" id="column-state">Column State</Heading>
-        <p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct types
+        <p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct
+            types
             instead of strings.</p>
 
         <Heading level="3" id="grid-state">Grid State</Heading>
-        <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>. Restoring
+        <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
+            Restoring
             grid state with the old <code>colId</code> will have no effect.</p>
 
         <Heading level="3" id="sparklines">Sparklines</Heading>
         <ul>
-            <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and <code>direction: 'vertical'</code>
+            <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and
+                <code>direction: 'vertical'</code>
                 instead.</li>
             <li><code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.</li>
             <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
@@ -413,19 +451,21 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li><code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
                 <code>itemStyler</code> instead.
             </li>
-            <li><code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code> instead.</li>
+            <li><code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code>
+                instead.</li>
             <li><code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
                 <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
             </li>
             <li><code>sparklineOptions.container</code> - removed.</li>
             <li><code>sparklineOptions.label.placement</code> - updated to use <a
                     href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement">AG
-                    Charts Label Placement</a>. Instead of <code>insideBase</code>, <code>center</code>, <code>insideEnd</code>
+                    Charts Label Placement</a>. Instead of <code>insideBase</code>, <code>center</code>,
+                <code>insideEnd</code>
                 and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
                 <code>inside-end</code> or <code>outside-end</code>
             </li>
         </ul>
-        </div>
+    </div>
 </details>
 
 {/* ------------------------------------------------- */}
@@ -433,69 +473,89 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 <Heading level="2" id="removal-of-deprecated-apis">Removal of Deprecated APIs</Heading>
 
 <details class={styles.details}>
-    <summary class:list={[styles.summary, 'button-secondary']}>Removed Deprecated APIs <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
+    <summary class:list={[styles.summary, 'button-secondary' ]}>Removed Deprecated APIs
+        <Icon svgClasses={styles.summaryChevron} name="chevronRight" />
+    </summary>
 
     <div class={styles.detailsInner}>
-                <Heading level="3" id="grid-api-1">Grid API</Heading>
-                <div 
-                data-meta='[&amp;quot;Grid&amp;quot;,&amp;quot;api&amp;quot;,&amp;quot;selectAll&amp;quot;,&amp;quot;deselectAll&amp;quot;,&amp;quot;getFirstDisplayedRow&amp;quot;,&amp;quot;getLastDisplayedRow&amp;quot;,&amp;quot;getModel&amp;quot;,&amp;quot;getValue&amp;quot;,&amp;quot;showColumnMenuAfterButtonClick&amp;quot;,&amp;quot;showColumnMenuAfterMouseClick&amp;quot;,&amp;quot;autoSizeColumn&amp;quot;,&amp;quot;setColumnWidths&amp;quot;,&amp;quot;moveColumn&amp;quot;,&amp;quot;addAggFunc&amp;quot;,&amp;quot;removeValueColumn&amp;quot;,&amp;quot;addValueColumn&amp;quot;,&amp;quot;removeRowGroupColumn&amp;quot;,&amp;quot;addRowGroupColumn&amp;quot;,&amp;quot;removePivotColumn&amp;quot;,&amp;quot;addPivotColumn&amp;quot;,&amp;quot;setColumnVisible&amp;quot;,&amp;quot;setColumnPinned&amp;quot;]'>
-                </div>
+        <Heading level="3" id="grid-api-1">Grid API</Heading>
+        <div
+            data-meta='[&amp;quot;Grid&amp;quot;,&amp;quot;api&amp;quot;,&amp;quot;selectAll&amp;quot;,&amp;quot;deselectAll&amp;quot;,&amp;quot;getFirstDisplayedRow&amp;quot;,&amp;quot;getLastDisplayedRow&amp;quot;,&amp;quot;getModel&amp;quot;,&amp;quot;getValue&amp;quot;,&amp;quot;showColumnMenuAfterButtonClick&amp;quot;,&amp;quot;showColumnMenuAfterMouseClick&amp;quot;,&amp;quot;autoSizeColumn&amp;quot;,&amp;quot;setColumnWidths&amp;quot;,&amp;quot;moveColumn&amp;quot;,&amp;quot;addAggFunc&amp;quot;,&amp;quot;removeValueColumn&amp;quot;,&amp;quot;addValueColumn&amp;quot;,&amp;quot;removeRowGroupColumn&amp;quot;,&amp;quot;addRowGroupColumn&amp;quot;,&amp;quot;removePivotColumn&amp;quot;,&amp;quot;addPivotColumn&amp;quot;,&amp;quot;setColumnVisible&amp;quot;,&amp;quot;setColumnPinned&amp;quot;]'>
+        </div>
         <ul>
             <li><code>new Grid()</code> - removed, use <code>createGrid</code> instead.</li>
-            <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.</li>
-            <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the selection
+            <li><code>api</code> - no longer mutated onto the provided <code>gridOptions</code> for Javascript users.
+            </li>
+            <li>First argument of <code>selectAll</code> and <code>deselectAll</code> grid API methods is now the
+                selection
                 mode, the event source is now the second argument. Both are optional.</li>
             <li><code>getFirstDisplayedRow</code> - removed, use <code>getFirstDisplayedRowIndex</code> instead.</li>
             <li><code>getLastDisplayedRow</code> - removed, use <code>getLastDisplayedRowIndex</code> instead.</li>
             <li><code>getModel()</code> - removed, use the appropriate grid API methods instead.</li>
             <li><code>getValue</code> - removed, use <code>getCellValue</code> instead.</li>
-            <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code> within a
+            <li><code>showColumnMenuAfterButtonClick</code> - removed, use <code>IHeaderParams.showColumnMenu</code>
+                within a
                 header component, or <code>api.showColumnMenu</code> elsewhere.</li>
             <li><code>showColumnMenuAfterMouseClick</code> - removed, use
                 <code>IHeaderParams.showColumnMenuAfterMouseClick</code> within a header component, or
                 <code>api.showColumnMenu</code> elsewhere.
             </li>
-            <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.</li>
+            <li><code>autoSizeColumn(key)</code> - removed, please use <code>autoSizeColumns([colKey])</code> instead.
+            </li>
             <li><code>setColumnWidths(key, newWidth)</code> - removed, please use
                 <code>{`setColumnWidths([{key: newWidth}])`}</code> instead.
             </li>
-            <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code> instead.
+            <li><code>moveColumn(key, toIndex)</code> - removed, please use <code>moveColumns([key], toIndex)</code>
+                instead.
             </li>
-            <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code> instead.</li>
-            <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code> instead.
-            </li>
-            <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code> instead.</li>
-            <li><code>removeRowGroupColumn(colKey)</code> - removed, please use <code>removeRowGroupColumns([colKey])</code>
+            <li><code>addAggFunc(key, func)</code> - removed, please use <code>{`addAggFuncs({ key: func })`}</code>
                 instead.</li>
-            <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code> instead.
+            <li><code>removeValueColumn(colKey)</code> - removed, please use <code>removeValueColumns([colKey])</code>
+                instead.
             </li>
-            <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code> instead.
+            <li><code>addValueColumn(colKey)</code> - removed, please use <code>addValueColumns([colKey])</code>
+                instead.</li>
+            <li><code>removeRowGroupColumn(colKey)</code> - removed, please use
+                <code>removeRowGroupColumns([colKey])</code>
+                instead.</li>
+            <li><code>addRowGroupColumn(colKey)</code> - removed, please use <code>addRowGroupColumns([colKey])</code>
+                instead.
             </li>
-            <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code> instead.</li>
-            <li><code>setColumnVisible(key, visible)</code> - removed, please use <code>setColumnsVisible([key], visible)</code>
+            <li><code>removePivotColumn(colKey)</code> - removed, please use <code>removePivotColumns([colKey])</code>
+                instead.
+            </li>
+            <li><code>addPivotColumn(colKey)</code> - removed, please use <code>addPivotColumns([colKey])</code>
                 instead.</li>
-            <li><code>setColumnPinned(key, pinned)</code> - removed, please use <code>setColumnsPinned([key], pinned)</code>
+            <li><code>setColumnVisible(key, visible)</code> - removed, please use
+                <code>setColumnsVisible([key], visible)</code>
                 instead.</li>
-            <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or <code>setColumnFilterModel</code>
+            <li><code>setColumnPinned(key, pinned)</code> - removed, please use
+                <code>setColumnsPinned([key], pinned)</code>
+                instead.</li>
+            <li>To get/set individual filter models, use <code>getColumnFilterModel</code> or
+                <code>setColumnFilterModel</code>
                 instead.</li>
         </ul>
 
 
 
-            <Heading level="3" id="grid-options-1"> Grid Options</Heading>
-            <div 
-            data-meta='[&amp;quot;suppressServerSideInfiniteScroll&amp;quot;,&amp;quot;getServerSideGroupLevelParams&amp;quot;,&amp;quot;advancedFilterModel&amp;quot;,&amp;quot;suppressAsyncEvents&amp;quot;,&amp;quot;cellFlashDelay&amp;quot;,&amp;quot;cellFadeDelay&amp;quot;,&amp;quot;enableCellChangeFlash&amp;quot;,&amp;quot;suppressGroupMaintainValueType&amp;quot;,&amp;quot;groupIncludeFooter&amp;quot;,&amp;quot;groupIncludeTotalFooter&amp;quot;,&amp;quot;serverSideSortOnServer&amp;quot;,&amp;quot;serverSideFilterOnServer&amp;quot;,&amp;quot;tabToNextCell&amp;quot;,&amp;quot;tabToNextHeader&amp;quot;]'>  
-            </div>
+        <Heading level="3" id="grid-options-1"> Grid Options</Heading>
+        <div
+            data-meta='[&amp;quot;suppressServerSideInfiniteScroll&amp;quot;,&amp;quot;getServerSideGroupLevelParams&amp;quot;,&amp;quot;advancedFilterModel&amp;quot;,&amp;quot;suppressAsyncEvents&amp;quot;,&amp;quot;cellFlashDelay&amp;quot;,&amp;quot;cellFadeDelay&amp;quot;,&amp;quot;enableCellChangeFlash&amp;quot;,&amp;quot;suppressGroupMaintainValueType&amp;quot;,&amp;quot;groupIncludeFooter&amp;quot;,&amp;quot;groupIncludeTotalFooter&amp;quot;,&amp;quot;serverSideSortOnServer&amp;quot;,&amp;quot;serverSideFilterOnServer&amp;quot;,&amp;quot;tabToNextCell&amp;quot;,&amp;quot;tabToNextHeader&amp;quot;]'>
+        </div>
         <ul>
             <li><code>suppressServerSideInfiniteScroll</code> - removed without replacement.</li>
-            <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property removed
+            <li>Interface <code>getServerSideGroupLevelParams</code> - <code>suppressInfiniteScroll</code> property
+                removed
                 without replacement.</li>
-            <li><code>advancedFilterModel</code> - removed, please use <code>initialState.filter.advancedFilterModel</code>
+            <li><code>advancedFilterModel</code> - removed, please use
+                <code>initialState.filter.advancedFilterModel</code>
                 instead.</li>
             <li><code>suppressAsyncEvents</code> - removed, Events should be handled asynchronously.</li>
             <li><code>cellFlashDelay</code> - removed, please use <code>cellFlashDuration</code> instead.</li>
             <li><code>cellFadeDelay</code> - removed, please use <code>cellFadeDuration</code> instead.</li>
-            <li><code>enableCellChangeFlash</code> - removed, set <code>enableCellChangeFlash</code> in the <code>ColDef</code> or <code>defaultColDef</code> for all columns.
+            <li><code>enableCellChangeFlash</code> - removed, set <code>enableCellChangeFlash</code> in the
+                <code>ColDef</code> or <code>defaultColDef</code> for all columns.
             </li>
             <li><code>suppressGroupMaintainValueType</code> - removed.</li>
             <li><code>groupIncludeFooter</code> - removed, please use <code>groupTotalRow</code> instead.</li>
@@ -507,8 +567,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         </ul>
 
         <Heading level="3" id="coldef"> ColDef</Heading>
-        <div 
-        data-meta='[&amp;quot;suppressCellFlash&amp;quot;,&amp;quot;columnsMenuParams&amp;quot;,&amp;quot;suppressMenu&amp;quot;]'>
+        <div
+            data-meta='[&amp;quot;suppressCellFlash&amp;quot;,&amp;quot;columnsMenuParams&amp;quot;,&amp;quot;suppressMenu&amp;quot;]'>
         </div>
         <ul>
             <li><code>suppressCellFlash</code> - removed, please use <code>enableCellChangeFlash: false</code> in the
@@ -519,8 +579,8 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         </ul>
 
         <Heading level="3" id="interfaces"> Interfaces</Heading>
-        <div 
-        data-meta='[&amp;quot;vDirection&amp;quot;,&amp;quot;suppressFilterButton&amp;quot;,&amp;quot;textCustomComparator&amp;quot;,&amp;quot;onParamsUpdated&amp;quot;,&amp;quot;valueGetter&amp;quot;,&amp;quot;footerValueGetter&amp;quot;,&amp;quot;flashDelay&amp;quot;,&amp;quot;fadeDelay&amp;quot;,&amp;quot;ToolPanelColumnCompParams&amp;quot;,&amp;quot;verticalText&amp;quot;,&amp;quot;charSet&amp;quot;,&amp;quot;name&amp;quot;]'>            
+        <div
+            data-meta='[&amp;quot;vDirection&amp;quot;,&amp;quot;suppressFilterButton&amp;quot;,&amp;quot;textCustomComparator&amp;quot;,&amp;quot;onParamsUpdated&amp;quot;,&amp;quot;valueGetter&amp;quot;,&amp;quot;footerValueGetter&amp;quot;,&amp;quot;flashDelay&amp;quot;,&amp;quot;fadeDelay&amp;quot;,&amp;quot;ToolPanelColumnCompParams&amp;quot;,&amp;quot;verticalText&amp;quot;,&amp;quot;charSet&amp;quot;,&amp;quot;name&amp;quot;]'>
         </div>
         <ul>
             <li><code>RowDragEvent</code> interface: <code>vDirection</code> property is now typed as
@@ -529,12 +589,16 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li><code>IFloatingFilterParams</code>: <code>suppressFilterButton</code> - removed, please use
                 <code>colDef.suppressFloatingFilterButton</code> instead.
             </li>
-            <li><code>ITextFilterParams</code>: <code>textCustomComparator</code> - removed, please use <code>textMatcher</code>
+            <li><code>ITextFilterParams</code>: <code>textCustomComparator</code> - removed, please use
+                <code>textMatcher</code>
                 instead.</li>
-            <li><code>IFloatingFilter</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.
+            <li><code>IFloatingFilter</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code>
+                instead.
             </li>
-            <li><code>IFilterParams</code>: <code>valueGetter</code> - removed, please use <code>getValue</code> instead.</li>
-            <li><code>IDate</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.</li>
+            <li><code>IFilterParams</code>: <code>valueGetter</code> - removed, please use <code>getValue</code>
+                instead.</li>
+            <li><code>IDate</code>: <code>onParamsUpdated</code> - removed, please use <code>refresh</code> instead.
+            </li>
             <li><code>IGroupCellRendererParams</code>: <code>footerValueGetter</code> - removed, please use
                 <code>totalValueGetter</code> instead.
             </li>
@@ -549,7 +613,7 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li><code>ExcelAlignment</code>: Legacy property <code>verticalText</code> - removed.</li>
             <li><code>ExcelFont</code>: Legacy property <code>charSet</code> - removed.</li>
             <li><code>ExcelStyle</code>: Legacy property <code>name</code> - removed.</li>
-        </ul> 
+        </ul>
     </div>
 </details>
 
@@ -561,14 +625,16 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 </div>
 
 <details class={styles.details}>
-    <summary class:list={[styles.summary, 'button-secondary']}>Deprecations <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
+    <summary class:list={[styles.summary, 'button-secondary' ]}>Deprecations
+        <Icon svgClasses={styles.summaryChevron} name="chevronRight" />
+    </summary>
 
     <div class={styles.detailsInner}>
 
-            <Heading level="3" id="modules"> Modules</Heading>
-            <div
+        <Heading level="3" id="modules"> Modules</Heading>
+        <div
             data-meta="[&amp;quot;ModuleRegistry.register&amp;quot;,&amp;quot;MenuModule&amp;quot;,&amp;quot;RangeSelectionModule&amp;quot;]">
-            </div>
+        </div>
         <ul>
             <li><code>ModuleRegistry.register(module)</code> - deprecated, use
                 <code>ModuleRegistry.registerModules([module])</code> instead.
@@ -580,34 +646,37 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
         </ul>
 
         <Heading level="3" id="column-object"> Column Object</Heading>
-        <div
-        data-meta="[&amp;quot;Column.isHovered&amp;quot;]">
-        </div>  
+        <div data-meta="[&amp;quot;Column.isHovered&amp;quot;]">
+        </div>
         <ul>
             <li><code>Column.isHovered()</code> - deprecated, use <code>api.isColumnHovered(column)</code> instead.</li>
         </ul>
 
         <Heading level="3" id="grid-api"> Grid API</Heading>
         <div
-        data-meta="[&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;]">
+            data-meta="[&amp;quot;deselectAllFiltered&amp;quot;,&amp;quot;deselectAllOnCurrentPage&amp;quot;,&amp;quot;selectAllFiltered&amp;quot;,&amp;quot;selectAllOnCurrentPage&amp;quot;]">
         </div>
         <ul>
             <li><code>deselectAllFiltered</code> - deprecated, use <code>deselectAll('filtered')</code> instead.</li>
-            <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.</li>
+            <li><code>deselectAllOnCurrentPage</code> - deprecated, use <code>deselectAll('currentPage')</code> instead.
+            </li>
             <li><code>selectAllFiltered</code> - deprecated, use <code>selectAll('filtered')</code> instead.</li>
-            <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.</li>
+            <li><code>selectAllOnCurrentPage</code> - deprecated, use <code>selectAll('currentPage')</code> instead.
+            </li>
         </ul>
 
         <Heading level="3" id="grid-options"> Grid Options</Heading>
         <div
-        data-meta="[&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;]">
+            data-meta="[&amp;quot;cellRendererParams.checkbox&amp;quot;,&amp;quot;gridOptions.sortingOrder&amp;quot;,&amp;quot;gridOptions.unSortIcon&amp;quot;,&amp;quot;groupRemoveLowestSingleChildren&amp;quot;,&amp;quot;groupRemoveSingleChildren&amp;quot;,&amp;quot;suppressMakeColumnVisibleAfterUnGroup&amp;quot;,&amp;quot;suppressPropertyNamesCheck&amp;quot;,&amp;quot;suppressRowGroupHidesColumns&amp;quot;]">
         </div>
         <ul>
             <li><code>cellRendererParams.checkbox</code> - deprecated, use
                 <code>rowSelection.checkboxLocation = "autoGroupColumn"</code> instead.
             </li>
-            <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.</li>
-            <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.</li>
+            <li><code>gridOptions.sortingOrder</code> - deprecated, use <code>defaultColDef.sortingOrder</code> instead.
+            </li>
+            <li><code>gridOptions.unSortIcon</code> - deprecated, use <code>defaultColDef.unSortIcon</code> instead.
+            </li>
             <li><code>groupRemoveLowestSingleChildren</code> - deprecated, use
                 <code>groupHideParentOfSingleChild: 'leafGroupsOnly'</code> instead.
             </li>
@@ -616,8 +685,10 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
             <li><code>suppressMakeColumnVisibleAfterUnGroup</code> - deprecated, use
                 <code>suppressGroupChangesColumnVisibility: "suppressShowOnUngroup"</code> instead.
             </li>
-            <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding user
-                properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code> property
+            <li><code>suppressPropertyNamesCheck</code> - deprecated without replacement. Previously used for adding
+                user
+                properties in <code>gridOptions</code> and <code>columnDefs</code>. Now, use the <code>context</code>
+                property
                 in both for storing arbitrary metadata.</li>
             <li><code>suppressRowGroupHidesColumns</code> - deprecated, use
                 <code>suppressGroupChangesColumnVisibility: "suppressHideOnGroup"</code> instead.
@@ -630,13 +701,14 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 
         <Heading level="3" id="row-node"> Row Node</Heading>
         <div
-        data-meta="[&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
+            data-meta="[&amp;quot;childIndex&amp;quot;,&amp;quot;firstChild&amp;quot;,&amp;quot;lastChild&amp;quot;,&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;,&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
         </div>
         <ul>
             <li><code>childIndex</code> - deprecated, use
                 <code>rowNode.parent?.childrenAfterSort?.findIndex(r =&gt; r === rowNode)</code> instead.
             </li>
-            <li><code>firstChild</code> - deprecated, use <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
+            <li><code>firstChild</code> - deprecated, use
+                <code>rowNode.parent?.childrenAfterSort?.[0] === rowNode</code>
                 instead.</li>
             <li><code>lastChild</code> - deprecated, use
                 <code>!!rowNode.parent?.childrenAfterSort &amp;&amp; (rowNode.parent.childrenAfterSort[rowNode.parent.childrenAfterSort.length - 1] === rowNode)</code>
@@ -646,25 +718,28 @@ const framework = getFrameworkFromPath(Astro.url.pathname);
 
         <Heading level="3" id="row-node-events"> Row Node Events</Heading>
         <div
-        data-meta="[&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;]">
+            data-meta="[&amp;quot;childIndexChanged&amp;quot;,&amp;quot;firstChildChanged&amp;quot;,&amp;quot;lastChildChanged&amp;quot;]">
         </div>
         <ul>
-            <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+            <li><code>childIndexChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine
+                when
                 row children have changed.</li>
-            <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when
+            <li><code>firstChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine
+                when
                 row children have changed.</li>
-            <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine when row
+            <li><code>lastChildChanged</code> - deprecated, use the global <code>modelUpdated</code> event to determine
+                when row
                 children have changed.</li>
         </ul>
 
         <Heading level="3" id="theming-custom-icons"> Theming Custom Icons</Heading>
-        <div
-        data-meta="[&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
+        <div data-meta="[&amp;quot;smallDown&amp;quot;,&amp;quot;smallLeft&amp;quot;,&amp;quot;smallRight&amp;quot;]">
         </div>
         <ul>
             <li><code>smallDown</code> - deprecated, use:<ul>
                     <li><code>advancedFilterBuilderSelect</code> for Advanced Filter Builder dropdown.</li>
-                    <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).</li>
+                    <li><code>selectOpen</code> for Select cell editor and dropdowns (e.g., Integrated Charts menu).
+                    </li>
                     <li><code>richSelectOpen</code> for Rich Select cell editor.</li>
                 </ul>
             </li>
