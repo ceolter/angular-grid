@@ -108,8 +108,9 @@ export class VirtualList<
         this.addDestroyFunc(destroyObserver);
     }
 
-    protected focusInnerElement(fromBottom: boolean): void {
+    protected focusInnerElement(fromBottom: boolean): boolean {
         this.focusRow(fromBottom ? this.model.getRowCount() - 1 : 0);
+        return true;
     }
 
     protected onFocusIn(e: FocusEvent): void {

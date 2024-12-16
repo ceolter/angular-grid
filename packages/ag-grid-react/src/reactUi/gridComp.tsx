@@ -190,6 +190,8 @@ const GridComp = ({ context }: GridCompProps) => {
         setTabGuardReady(ref !== null);
     }, []);
 
+    const isFocusable = useCallback(() => !gridCtrlRef.current?.isFocusable(), []);
+
     return (
         <div ref={setRef} className={rootWrapperClasses} style={topStyle} role="presentation">
             <div className={rootWrapperBodyClasses} ref={setGridBodyParent} role="presentation">
@@ -201,6 +203,7 @@ const GridComp = ({ context }: GridCompProps) => {
                             onTabKeyDown={onTabKeyDown}
                             gridCtrl={gridCtrlRef.current!}
                             forceFocusOutWhenTabGuardsAreEmpty={true}
+                            isEmpty={isFocusable}
                         >
                             {
                                 // we wait for initialised before rending the children, so GridComp has created and registered with it's
