@@ -1,15 +1,16 @@
 import type { BeanCollection } from 'ag-grid-community';
-import { Component } from 'ag-grid-community';
+import { Component, RefPlaceholder } from 'ag-grid-community';
 
 import type { AgGroupComponentParams } from '../../../../../widgets/agGroupComponent';
 import { AgGroupComponentSelector } from '../../../../../widgets/agGroupComponent';
 import { AgColorPickerSelector } from '../../../../widgets/agColorPicker';
-import { AgSliderSelector } from '../../../../widgets/agSlider';
+import { AgSlider, AgSliderSelector } from '../../../../widgets/agSlider';
 import type { ChartTranslationService } from '../../../services/chartTranslationService';
 import type { ChartMenuParamsFactory } from '../../chartMenuParamsFactory';
 
 export class AxisTicksPanel extends Component {
     private chartTranslation: ChartTranslationService;
+    private readonly axisTicksSizeSlider: AgSlider = RefPlaceholder;
 
     public wireBeans(beans: BeanCollection): void {
         this.chartTranslation = beans.chartTranslation as ChartTranslationService;
@@ -48,5 +49,9 @@ export class AxisTicksPanel extends Component {
                 axisTicksSizeSlider: axisTicksSizeSliderParams,
             }
         );
+    }
+
+    public setTickSizeSliderDisplayed(displayed: boolean): void {
+        this.axisTicksSizeSlider.setDisplayed(displayed);
     }
 }
