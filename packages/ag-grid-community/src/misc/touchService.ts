@@ -38,6 +38,9 @@ export class TouchService extends BeanStub implements NamedBean {
 
         const listener = (mouseListener?: MouseEvent, touch?: Touch, touchEvent?: TouchEvent) => {
             const { rowCtrl, cellCtrl } = ctrl.getControlsForEventTarget(touchEvent?.target ?? null);
+            if (cellCtrl?.column) {
+                cellCtrl.dispatchCellContextMenuEvent(touchEvent ?? null);
+            }
             this.beans.contextMenuSvc?.handleContextMenuMouseEvent(undefined, touchEvent, rowCtrl, cellCtrl!);
         };
         this.mockContextMenu(ctrl, ctrl.element, listener);
