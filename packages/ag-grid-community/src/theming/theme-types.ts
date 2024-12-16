@@ -284,7 +284,7 @@ export type FontFamilyValue =
     | { ref: string };
 
 export const fontFamilyValueToCss = (value: FontFamilyValue): string | false => {
-    if (typeof value === 'string') return quoteUnsafeChars(value);
+    if (typeof value === 'string') return value;
     if (value && 'googleFont' in value) return fontFamilyValueToCss(value.googleFont);
     if (value && 'ref' in value) return paramToVariableExpression(value.ref);
     if (Array.isArray(value)) {
@@ -301,9 +301,10 @@ export const fontFamilyValueToCss = (value: FontFamilyValue): string | false => 
 };
 
 const quoteUnsafeChars = (font: string) =>
-    // don't quote safe identifier names, so that people can specify fonts
-    // like sans-serif which are keywords not strings
-    /^[\w-]+$/.test(font) ? font : JSON.stringify(font);
+    // don't quote var() expressions or quote safe identifier names, so that
+    // people can specify fonts like sans-serif which are keywords not strings,
+    // or var(--my-var)
+    /^[\w-]+$|\w\(/.test(font) ? font : JSON.stringify(font);
 
 /**
  * A CSS font-weight value e.g. `500` or `"bold"`
