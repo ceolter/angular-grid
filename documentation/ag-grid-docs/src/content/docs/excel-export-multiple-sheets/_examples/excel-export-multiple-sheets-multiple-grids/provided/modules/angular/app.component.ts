@@ -47,7 +47,6 @@ ModuleRegistry.registerModules([
 })
 export class SportRenderer implements ICellRendererAngularComp {
     private params!: ICellRendererParams;
-    private value!: string;
 
     agInit(params: ICellRendererParams): void {
         this.params = params;
@@ -226,7 +225,7 @@ export class AppComponent {
             },
         });
 
-        this.leftApi.addRowDropZone(dropZoneParams);
+        this.leftApi.addRowDropZone(dropZoneParams!);
     }
 
     onExcelExport() {

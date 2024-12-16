@@ -93,7 +93,6 @@ export class IconRenderer implements ICellRenderer {
                 <button (click)="randomiseFrost()">Randomise Frost</button>
             </div>
             <ag-grid-angular
-                #agGrid
                 style="width: 100%; height: 100%;"
                 [columnDefs]="columnDefs"
                 [defaultColDef]="defaultColDef"
