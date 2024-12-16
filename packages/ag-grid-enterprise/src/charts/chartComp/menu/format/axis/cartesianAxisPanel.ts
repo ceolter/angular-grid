@@ -327,7 +327,7 @@ export class CartesianAxisPanel extends Component {
         this.axisGroup.addItem(axisTicksComp);
         this.activePanels.push(axisTicksComp);
 
-        const updateTickFn = () => axisTicksComp.setTickSizeSliderDisplayed(this.hasConfigurableTickLengthsAndSize());
+        const updateTickFn = () => axisTicksComp.setTickSizeSliderDisplayed(this.isGroupedCategoryAxis());
 
         this.updateFuncs.push(updateTickFn);
 
@@ -413,7 +413,7 @@ export class CartesianAxisPanel extends Component {
         // init rotation comp state
         rotationComp.setDisplayed(!autoRotate);
 
-        const autoRotateUpdateFn = () => autoRotateCheckbox.setDisplayed(this.hasConfigurableTickLengthsAndSize());
+        const autoRotateUpdateFn = () => autoRotateCheckbox.setDisplayed(this.isGroupedCategoryAxis());
 
         this.updateFuncs.push(autoRotateUpdateFn);
 
@@ -450,7 +450,7 @@ export class CartesianAxisPanel extends Component {
         return this.createBean(angleSelect);
     }
 
-    private hasConfigurableTickLengthsAndSize(): boolean {
+    private isGroupedCategoryAxis(): boolean {
         const axisOptionsType = this.chartOptionsService.getCartesianAxisOptionsProxy(this.axisType).getValue('type');
 
         if (axisOptionsType === 'grouped-category') {
