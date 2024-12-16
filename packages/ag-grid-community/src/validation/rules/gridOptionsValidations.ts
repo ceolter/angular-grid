@@ -141,29 +141,30 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
         cellSelection: {
             module: 'CellSelection',
             validate({ cellSelection }) {
-                const cellSelectionSchema = v.oneOf([
-                    v.boolean(),
-                    v
-                        .object({
-                            suppressMultiRanges: v.boolean(),
-                            handle: v.oneOf([
-                                v
-                                    .object({
-                                        mode: v.literal('range'),
-                                    })
-                                    .only(),
-                                v
-                                    .object({
-                                        mode: v.literal('fill'),
-                                        suppressClearOnFillReduction: v.boolean(),
-                                        direction: v.oneOf([v.literal('x'), v.literal('y'), v.literal('xy')]),
-                                        setFillValue: v.func(),
-                                    })
-                                    .only(),
-                            ]),
-                        })
-                        .only(),
-                ]);
+                if (typeof cellSelection === 'boolean') {
+                    return null;
+                }
+
+                const cellSelectionSchema = v
+                    .object({
+                        suppressMultiRanges: v.boolean(),
+                        handle: v.oneOf([
+                            v
+                                .object({
+                                    mode: v.literal('range'),
+                                })
+                                .only(),
+                            v
+                                .object({
+                                    mode: v.literal('fill'),
+                                    suppressClearOnFillReduction: v.boolean(),
+                                    direction: v.oneOf([v.literal('x'), v.literal('y'), v.literal('xy')]),
+                                    setFillValue: v.func(),
+                                })
+                                .only(),
+                        ]),
+                    })
+                    .only();
 
                 const result = v.object({ cellSelection: cellSelectionSchema }).validate({ cellSelection });
 

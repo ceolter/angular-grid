@@ -127,7 +127,7 @@ class OneOfSchema extends BaseSchema implements Schema {
         let headline = `${formatPath(_opts)}Expected ${this.label()}`;
 
         for (const option of this.options) {
-            const result = option.validate(x);
+            const result = option.validate(x, _opts);
 
             if (result.errors.length > 0) {
                 labels.push(option.label());
@@ -140,7 +140,7 @@ class OneOfSchema extends BaseSchema implements Schema {
         if (!atLeastOneSuccessful && errors.length > 0) {
             headline += labels.join(', ') + '.';
 
-            return { errors: this.msg ? [this.msg] : [headline].concat(this._deep ? errors : []) };
+            return { errors: this.msg ? [this.msg] : this._deep ? errors : [headline] };
         }
 
         return { errors: [] };
