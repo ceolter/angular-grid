@@ -94,8 +94,8 @@ export abstract class BaseGridSerializingSession<T> implements GridSerializingSe
     }
 
     private shouldRenderGroupSummaryCell(node: RowNode, column: AgColumn, currentColumnIndex: number): boolean {
-        const isGroupNode = node && node.group;
-        // only on group rows
+        const isGroupNode = node && node.group && !node.treeNode;
+        // only on group rows when grouping, and not for tree data group nodes
         if (!isGroupNode) {
             return false;
         }
@@ -209,6 +209,14 @@ export abstract class BaseGridSerializingSession<T> implements GridSerializingSe
         }
 
         if (column.getColDef().useValueFormatterForExport !== false) {
+            console.log('column.getColDef().useValueFormatterForExport !== false');
+            console.log({
+                rowId: rowNode.id,
+                colId: column.getColId(),
+                value,
+                formatted: this.valueSvc.formatValue(column, rowNode, value),
+            });
+
             return {
                 value: value ?? '',
                 valueFormatted: this.valueSvc.formatValue(column, rowNode, value),
