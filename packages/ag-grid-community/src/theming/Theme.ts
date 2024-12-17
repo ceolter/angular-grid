@@ -8,6 +8,9 @@ import type { WithParamTypes } from './theme-types';
 import { paramValueToCss } from './theme-types';
 import { paramToVariableName } from './theme-utils';
 
+// For testing, if true, only Vanilla examples will work and they will use legacy themes.
+export const FORCE_LEGACY_THEMES = false;
+
 export type Theme<TParams = unknown> = {
     /**
      * Return a new theme that uses an theme part. The part will replace any
@@ -83,6 +86,8 @@ export class ThemeImpl {
     _startUse({ container, loadThemeGoogleFonts }: GridThemeUseArgs): void {
         if (IS_SSR) return;
 
+        if (FORCE_LEGACY_THEMES) return;
+
         uninstallLegacyCSS();
 
         _injectCoreAndModuleCSS(container);
@@ -107,6 +112,8 @@ export class ThemeImpl {
      * the provided class name
      */
     _getCssClass(this: ThemeImpl): string {
+        if (FORCE_LEGACY_THEMES) return 'ag-theme-quartz';
+
         return (this._cssClassCache ??= deduplicatePartsByFeature(this.parts)
             .map((part) => part.use())
             .filter(Boolean)

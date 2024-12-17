@@ -24,13 +24,13 @@
 }
 
 .gold-header {
-    background-color: gold !important;
+    background-color: gold;
 }
 
 .silver-header {
-    background-color: silver !important;
+    background-color: silver;
 }
 
 .bronze-header {
-    background-color: chocolate !important;
+    background-color: chocolate;
 }

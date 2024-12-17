@@ -13,6 +13,7 @@ import {
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
+    PivotModule,
     RowGroupingModule,
     SideBarModule,
 } from 'ag-grid-enterprise';
@@ -28,6 +29,7 @@ ModuleRegistry.registerModules([
     SideBarModule,
     ColumnMenuModule,
     ContextMenuModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 

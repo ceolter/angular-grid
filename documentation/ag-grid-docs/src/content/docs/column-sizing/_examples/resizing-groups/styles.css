@@ -10,11 +10,11 @@
 }
 
 .fixed-size-header {
-    background-color: #cc222244 !important;
+    background-color: #cc222244;
 }
 
 .resizable-header {
-    background-color: #33cc3344 !important;
+    background-color: #33cc3344;
 }
 
 .legend-box {

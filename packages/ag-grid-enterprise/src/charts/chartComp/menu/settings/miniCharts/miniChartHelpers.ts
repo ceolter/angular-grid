@@ -245,7 +245,7 @@ export function createPolarPaths(
             path.path[i > 0 ? 'lineTo' : 'moveTo'](x, y);
 
             if (markerSize > 0) {
-                const marker = new _Scene.Circle();
+                const marker = new _Scene.Marker({ shape: 'circle' });
                 marker.x = x;
                 marker.y = y;
                 marker.size = markerSize;

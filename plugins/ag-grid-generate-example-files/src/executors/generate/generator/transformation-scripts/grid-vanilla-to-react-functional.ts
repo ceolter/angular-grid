@@ -3,20 +3,18 @@ import { basename } from 'path';
 import type { ExampleConfig, ParsedBindings } from '../types';
 import { templatePlaceholder } from './grid-vanilla-src-parser';
 import {
-    DARK_INTEGRATED_END,
-    DARK_INTEGRATED_START,
     addBindingImports,
     addLicenseManager,
     addRelativeImports,
     convertFunctionToConstProperty,
     findLocaleImport,
     getFunctionName,
-    getIntegratedDarkModeCode,
     isInstanceMethod,
     preferParamsApi,
 } from './parser-utils';
 import {
     EventAndCallbackNames,
+    addChartsDarkModeIfRequired,
     convertFunctionToConstCallback,
     convertFunctionalTemplate,
     getImport,
@@ -159,8 +157,6 @@ export function vanillaToReactFunctional(
 
         const additionalInReady = [];
         if (data) {
-            additionalInReady.push(`${getIntegratedDarkModeCode(bindings.exampleName)}`);
-
             const setRowDataBlock = data.callback.replace("gridApi.setGridOption('rowData',", 'setRowData(');
             additionalInReady.push(`
                 fetch(${data.url})
@@ -169,7 +165,6 @@ export function vanillaToReactFunctional(
         }
 
         if (onGridReady) {
-            additionalInReady.push(`${getIntegratedDarkModeCode(bindings.exampleName)}`);
             const hackedHandler = onGridReady
                 .replace(/^{|}$/g, '')
                 .replace("gridApi.setGridOption('rowData',", 'setRowData(');
@@ -251,35 +246,12 @@ export function vanillaToReactFunctional(
             (event) => `${event.handlerName}={${event.handlerName}}`
         );
 
-        let darkModeWithGridRef = undefined;
         if (additionalInReady.length > 0) {
             componentProps.push('onGridReady={onGridReady}');
-        } else {
-            // We need to check if we need to add integrated dark mode code for and example that does not have data or onGridReady
-            darkModeWithGridRef = getIntegratedDarkModeCode(bindings.exampleName, false, 'gridRef.current?.api');
         }
         componentProps.push(...componentEventAttributes);
 
-        if (bindings.exampleName.includes('sparklines')) {
-            // TEMPORARY ONLY APPLY TO SPARKLINES EXAMPLES
-
-            const reactImportIdx = imports.findIndex((i) => i.includes('useState'));
-            if (darkModeWithGridRef) {
-                // wrap in useEffect
-                darkModeWithGridRef = darkModeWithGridRef.replace(
-                    DARK_INTEGRATED_START,
-                    `${DARK_INTEGRATED_START} const [tick, setTick] = useState(0);\nuseEffect(() => { setTick(1); `
-                );
-                darkModeWithGridRef = darkModeWithGridRef.replace(
-                    DARK_INTEGRATED_END,
-                    `}, [gridRef.current]); ${DARK_INTEGRATED_END}`
-                );
-
-                if (!imports[reactImportIdx].includes('useEffect')) {
-                    imports[reactImportIdx] = imports[reactImportIdx].replace('useState', 'useState, useEffect');
-                }
-            }
-        }
+        const darkModeWithGridRef = addChartsDarkModeIfRequired(bindings, imports, false);
 
         // convert this.xxx to just xxx
         // no real need for "this" in hooks

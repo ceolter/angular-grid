@@ -217,10 +217,11 @@ export async function generateFiles(options: ExecutorOptions) {
 
                 // Add Dark Mode code to the provided files if they are an integrated example
                 if (isIntegratedCharts && fileName === mainFileName) {
-                    const code = getIntegratedDarkModeCode(
-                        folderPath,
-                        TYPESCRIPT_INTERNAL_FRAMEWORKS.includes(internalFramework)
-                    );
+                    const code =
+                        getIntegratedDarkModeCode(
+                            folderPath,
+                            TYPESCRIPT_INTERNAL_FRAMEWORKS.includes(internalFramework)
+                        ) ?? '';
                     const fileContent = provideFrameworkFiles[fileName];
                     const providedPlaceholder = '/** PROVIDED EXAMPLE DARK INTEGRATED **/';
                     if (

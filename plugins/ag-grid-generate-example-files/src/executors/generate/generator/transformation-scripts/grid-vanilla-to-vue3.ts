@@ -45,7 +45,7 @@ function getOnGridReadyCode(bindings: ParsedBindings): string {
         additionalLines.length > 0 ? `\n\n        ${additionalLines.join('\n        ')}` : ''
     );
     return `const onGridReady = (params: GridReadyEvent) => {
-        ${getIntegratedDarkModeCode(bindings.exampleName)}
+        ${getIntegratedDarkModeCode(bindings.exampleName) ?? ''}
         gridApi.value = params.api;
         ${additional}
     }`;

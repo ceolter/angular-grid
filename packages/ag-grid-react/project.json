@@ -82,9 +82,9 @@
       "dependsOn": ["build:package"],
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "packages/ag-grid-react/dist/umd",
+        "outputPath": "{projectRoot}/dist/umd",
         "outputFileName": "ag-grid-react",
-        "main": "packages/ag-grid-react/dist/package/index.esm.mjs",
+        "main": "{projectRoot}/dist/package/index.cjs.js",
         "tsConfig": "packages/ag-grid-react/tsconfig.lib.json",
         "esbuildConfig": "esbuild.config.cjs",
         "platform": "browser",
@@ -97,6 +97,9 @@
         "sourcemap": true
       },
       "configurations": {
+        "staging": {
+          "sourcemap": false
+        },
         "production": {
           "sourcemap": false
         },

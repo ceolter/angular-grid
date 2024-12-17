@@ -1,0 +1,62 @@
+@use 'design-system' as *;
+
+// Provide some extra padding at the bottom of the page
+.details:last-child {
+    margin-bottom: $spacing-size-24;
+
+    &[open] {
+        margin-bottom: $spacing-size-16;
+    }
+}
+
+.summary {
+    --icon-size: #{$spacing-size-5};
+    --icon-color: var(--color-link);
+
+    display: block;
+    color: var(--color-link);
+    cursor: pointer;
+
+    &:hover {
+        --icon-color: var(--color-link-hover);
+
+        color: var(--color-link-hover);
+    }
+
+    &:active {
+        background-color: var(--color-button-secondary-bg-hover);
+    }
+
+    &::before {
+        content: 'View ';
+    }
+
+    .details[open] & {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+
+        &::before {
+            content: 'Hide ';
+        }
+    }
+}
+
+.summaryChevron {
+    transition: transform $transition-default-timing;
+
+    .details[open] & {
+        transform: rotate(90deg);
+    }
+}
+
+.detailsInner {
+    border: 1px solid var(--color-button-secondary-border);
+    border-top: none;
+    padding: $spacing-size-4 $spacing-size-4 $spacing-size-6;
+    border-bottom-right-radius: var(--radius-sm);
+    border-bottom-left-radius: var(--radius-sm);
+
+    > *:first-child {
+        margin-top: 0;
+    }
+}

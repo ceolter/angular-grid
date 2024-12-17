@@ -580,9 +580,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
             this.disposeColumnListener(colId);
         });
 
-        const allFiltersAreGroupFilters = columns.every(
-            (column) => column.getColDef().filter === 'agGroupColumnFilter'
-        );
+        const allFiltersAreGroupFilters = columns.every(isGroupFilter);
         // don't call `onFilterChanged` if only group column filter is present as it has no model
         if (columns.length > 0 && !allFiltersAreGroupFilters) {
             // When a filter changes as a side effect of a column changes,
@@ -598,7 +596,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         // Group column filters can be dependant on underlying column filters, but don't normally get created until they're used for the first time.
         // Instead, create them by default when any filter changes.
         this.beans.autoColSvc?.getAutoCols()?.forEach((groupColumn) => {
-            if (groupColumn.getColDef().filter === 'agGroupColumnFilter') {
+            if (isGroupFilter(groupColumn)) {
                 this.getOrCreateFilterWrapper(groupColumn);
             }
         });
@@ -679,10 +677,13 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         delete this.initialFilterModel[colId];
 
         if (filterWrapper) {
-            this.disposeFilterWrapper(filterWrapper, source);
-            this.beans.filterManager?.onFilterChanged({
-                columns: [column],
-                source: 'api',
+            this.disposeFilterWrapper(filterWrapper, source).then((wasActive) => {
+                if (wasActive && this.isAlive()) {
+                    this.beans.filterManager?.onFilterChanged({
+                        columns: [column],
+                        source: 'api',
+                    });
+                }
             });
         }
     }
@@ -699,20 +700,26 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
     private disposeFilterWrapper(
         filterWrapper: FilterWrapper,
         source: 'api' | 'columnChanged' | 'gridDestroyed' | 'advancedFilterEnabled' | 'paramsUpdated'
-    ): void {
-        filterWrapper.filterPromise?.then((filter) => {
-            this.destroyBean(filter);
+    ): AgPromise<boolean> {
+        return (
+            filterWrapper.filterPromise?.then((filter) => {
+                const isActive = !!filter?.isFilterActive();
 
-            this.setColFilterActive(filterWrapper.column, false, 'filterDestroyed');
+                this.destroyBean(filter);
 
-            this.allColumnFilters.delete(filterWrapper.column.getColId());
+                this.setColFilterActive(filterWrapper.column, false, 'filterDestroyed');
 
-            this.eventSvc.dispatchEvent({
-                type: 'filterDestroyed',
-                source,
-                column: filterWrapper.column,
-            });
-        });
+                this.allColumnFilters.delete(filterWrapper.column.getColId());
+
+                this.eventSvc.dispatchEvent({
+                    type: 'filterDestroyed',
+                    source,
+                    column: filterWrapper.column,
+                });
+
+                return isActive;
+            }) ?? AgPromise.resolve(false)
+        );
     }
 
     private filterModifiedCallbackFactory(filter: IFilterComp<any>, column: AgColumn<any>) {
@@ -1052,6 +1059,10 @@ function setModelOnFilterWrapper(filterPromise: AgPromise<IFilterComp> | null, n
             (filter!.setModel(newModel) || AgPromise.resolve()).then(() => resolve());
         });
     });
+}
+
+function isGroupFilter(column: AgColumn): boolean {
+    return column.getColDef().filter === 'agGroupColumnFilter';
 }
 
 export interface FilterWrapper {

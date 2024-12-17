@@ -193,7 +193,7 @@ export interface Properties {
     [propertyName: string]: any;
 }
 
-export interface Props<TData, TColDef> {
+export interface Props<TData> {
     /** Provided an initial gridOptions configuration to the component. If a property is specified in both gridOptions and via component binding the component binding takes precedence.  */
     gridOptions?: GridOptions<TData> | undefined;
     /**
@@ -315,10 +315,10 @@ export interface Props<TData, TColDef> {
     suppressCutToClipboard?: boolean | undefined,
     /** Array of Column / Column Group definitions.
          */
-    columnDefs?: (TColDef | ColGroupDef<TData>)[] | null | undefined,
+    columnDefs?: (ColDef | ColGroupDef<TData>)[] | null | undefined,
     /** A default column definition. Items defined in the actual column definitions get precedence.
          */
-    defaultColDef?: ColDef<TData> | undefined,
+    defaultColDef?: ColDef | undefined,
     /** A default column group definition. All column group definitions will use these properties. Items defined in the actual column group definition get precedence.
          * @initial
          */

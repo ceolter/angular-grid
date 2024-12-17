@@ -456,12 +456,13 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     private syncAfterDataChange(): AgPromise<void> {
+        const doApply = !this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!);
         const promise = this.valueModel.refreshValues();
 
         return promise.then(() => {
             if (this.isAlive()) {
                 this.checkAndRefreshVirtualList();
-                if (!this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!)) {
+                if (doApply) {
                     this.onBtApply(false, true);
                 }
             }
@@ -1076,6 +1077,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
 
     private onGroupItemSelected(item: SetFilterModelTreeItem, isSelected: boolean): void {
         const recursiveGroupSelection = (i: SetFilterModelTreeItem) => {
+            if (!i.filterPasses) {
+                return;
+            }
             if (i.children) {
                 i.children.forEach((childItem) => recursiveGroupSelection(childItem));
             } else {

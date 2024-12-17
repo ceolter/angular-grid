@@ -15,6 +15,7 @@ import {
     ColumnsToolPanelModule,
     ContextMenuModule,
     FiltersToolPanelModule,
+    PivotModule,
     RowGroupingModule,
     SetFilterModule,
 } from 'ag-grid-enterprise';
@@ -30,6 +31,7 @@ ModuleRegistry.registerModules([
     ContextMenuModule,
     RowGroupingModule,
     SetFilterModule,
+    PivotModule,
     ValidationModule /* Development Only */,
 ]);
 
@@ -62,11 +64,10 @@ const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         editable: true,
         filter: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
     },
-
-    enableRowGroup: true,
-    enablePivot: true,
-    enableValue: true,
 };
 
 // setup the grid after the page has finished loading

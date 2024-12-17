@@ -35,7 +35,7 @@
     margin-left: 125px;
     padding: 25px;
     display: block;
-    height: calc(100% - 50px) !important;
+    height: calc(100% - 50px);
 }
 
 .full-width-grid-toolbar {

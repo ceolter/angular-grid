@@ -758,7 +758,7 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'textColor',
     },
     headerCellHoverBackgroundColor: 'transparent',
-    headerCellMovingBackgroundColor: { ref: 'backgroundColor' },
+    headerCellMovingBackgroundColor: { ref: 'headerCellHoverBackgroundColor' },
     headerCellBackgroundTransitionDuration: '0.2s',
     cellTextColor: {
         ref: 'textColor',
