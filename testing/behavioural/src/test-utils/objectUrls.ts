@@ -43,6 +43,11 @@ export const objectUrls = {
             }, 1);
         });
     },
+
+    async pullBlob(): Promise<BlobWithUrl> {
+        const blobs = await this.pullBlobs();
+        return blobs[blobs.length - 1];
+    },
 };
 
 function initialize(): void {

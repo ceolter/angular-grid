@@ -5,7 +5,7 @@ import { ExcelExportModule, TreeDataModule } from 'ag-grid-enterprise';
 
 import { TestGridsManager, objectUrls } from '../../test-utils';
 
-describe('ag-grid tree excel export', () => {
+describe('ag-grid hierarchical tree excel export', () => {
     const gridsManager = new TestGridsManager({
         modules: [ClientSideRowModelModule, TreeDataModule, ExcelExportModule],
     });
@@ -22,11 +22,21 @@ describe('ag-grid tree excel export', () => {
 
     test('excel exports calls value getter for groups and leafs', async () => {
         const rowData = [
-            { uiId: '1', productHierarchy: ['Product Group'], value: 100 },
-            { uiId: '2', productHierarchy: ['Product Group', 'Product Sub Group'], value: 200 },
-            { uiId: '3', productHierarchy: ['Product Group', 'Product Sub Group', 'Product 1'], value: 300 },
-            { uiId: '4', productHierarchy: ['Product Group', 'Product Sub Group', 'Product 2'], value: 400 },
-            { uiId: '5', productHierarchy: ['Product Group', 'filler', 'Product 3'], value: 500 },
+            {
+                uiId: '1',
+                value: 100,
+                children: [
+                    {
+                        uiId: '2',
+                        value: 200,
+                        children: [
+                            { uiId: '3', value: 300 },
+                            { uiId: '4', value: 400 },
+                        ],
+                    },
+                    { uiId: '5', value: 500 },
+                ],
+            },
         ];
 
         const api = gridsManager.createGrid('myGrid', {
@@ -44,7 +54,7 @@ describe('ag-grid tree excel export', () => {
             rowData,
             treeData: true,
             groupDefaultExpanded: -1,
-            getDataPath: (data) => data.productHierarchy,
+            ['treeDataChildrenField' as any]: 'children',
             getRowId: (params) => params.data.uiId,
         });
 
@@ -55,8 +65,7 @@ describe('ag-grid tree excel export', () => {
             { Group: 'grp-1', value: 'value-200' },
             { Group: 'grp-2', value: 'value-300' },
             { Group: 'grp-3', value: 'value-400' },
-            { Group: 'grp-4', value: 'filler' },
-            { Group: 'grp-5', value: 'value-500' },
+            { Group: 'grp-4', value: 'value-500' },
         ]);
 
         // Try to disable tree data now
