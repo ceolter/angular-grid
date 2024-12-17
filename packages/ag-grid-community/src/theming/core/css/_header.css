@@ -113,8 +113,6 @@
     &:where(.ag-header-cell-moving)::before {
         --ag-internal-moving-color: var(--ag-header-cell-moving-background-color);
         --ag-internal-hover-color: var(--ag-header-cell-hover-background-color);
-
-        box-shadow: inset var(--ag-focus-shadow);
     }
 }
 
