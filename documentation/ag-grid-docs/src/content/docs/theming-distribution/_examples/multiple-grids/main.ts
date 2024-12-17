@@ -1,11 +1,7 @@
-import type { ColDef, GridOptions, GridTheme } from 'ag-grid-community';
+import type { ColDef, GridOptions, Theme } from 'ag-grid-community';
 import {
-    ClientSideRowModelModule,
+    AllCommunityModule,
     ModuleRegistry,
-    NumberEditorModule,
-    TextEditorModule,
-    TextFilterModule,
-    ValidationModule,
     createGrid,
     themeAlpine,
     themeBalham,
@@ -14,13 +10,7 @@ import {
 
 import './style.css';
 
-ModuleRegistry.registerModules([
-    TextEditorModule,
-    TextFilterModule,
-    NumberEditorModule,
-    ClientSideRowModelModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const columnDefs: ColDef[] = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
 
@@ -34,7 +24,7 @@ const rowData: any[] = (() => {
     return rowData;
 })();
 
-const createThemedGrid = (theme: GridTheme, selector: string) => {
+const createThemedGrid = (theme: Theme, selector: string) => {
     const gridOptions: GridOptions<IOlympicData> = {
         theme,
         columnDefs,

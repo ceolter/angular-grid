@@ -28,7 +28,7 @@ pre.code code,
     #{$selector-darkmode} & {
         -webkit-font-smoothing: antialiased;
 
-        color: var(--default-text-color);
+        color: var(--color-fg-primary);
     }
 }
 
@@ -57,13 +57,13 @@ pre.code,
 
     #{$selector-darkmode} & {
         color-scheme: dark;
-        --comment-color: #aaabb3;
+        --comment-color: #7e8a9e;
         --tag-color: #bf9fea;
         --string-color: #bfda7f;
-        --punctuation-color: var(--default-text-color);
+        --punctuation-color: var(--color-fg-primary);
         --keyword-color: #7ac1d1;
         --symbol-color: #36d8d6;
-        --function-color: var(--default-text-color);
+        --function-color: var(--color-fg-primary);
         --deleted-color: #9a050f;
         --selector-color: #36d8d6;
         --important-color: #e90;
@@ -260,7 +260,7 @@ code[class*='language-css'] {
 
 .language-bash {
     .token.function {
-        color: var(--default-text-color);
+        color: var(--color-fg-primary);
         font-weight: 600;
     }
 }

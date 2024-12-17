@@ -1,6 +1,6 @@
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
-import type { GetContextMenuItemsParams, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
+import type { DefaultMenuItem, GetContextMenuItemsParams, GridApi, GridOptions, MenuItemDef } from 'ag-grid-community';
 import { ClientSideRowModelModule, ModuleRegistry, ValidationModule, createGrid } from 'ag-grid-community';
 import {
     CellSelectionModule,
@@ -52,8 +52,8 @@ function createFlagImg(flag: string) {
 
 function getContextMenuItems(
     params: GetContextMenuItemsParams
-): (string | MenuItemDef)[] | Promise<(string | MenuItemDef)[]> {
-    const result: (string | MenuItemDef)[] = [
+): (DefaultMenuItem | MenuItemDef)[] | Promise<(DefaultMenuItem | MenuItemDef)[]> {
+    const result: (DefaultMenuItem | MenuItemDef)[] = [
         {
             // custom item
             name: 'Alert ' + params.value,

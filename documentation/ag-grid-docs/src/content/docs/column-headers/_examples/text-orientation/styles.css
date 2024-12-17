@@ -1,7 +1,7 @@
 .ag-header-cell-label {
     /*Necessary to allow for text to grow vertically*/
     height: 100%;
-    padding: 0 !important;
+    padding: 0;
 }
 
 .ag-header-cell-label .ag-header-cell-text {

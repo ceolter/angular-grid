@@ -1,4 +1,4 @@
-import type { Circle, Path } from 'ag-charts-types/scene';
+import type { Marker, Path } from 'ag-charts-types/scene';
 
 import type { ChartType } from 'ag-grid-community';
 
@@ -9,7 +9,7 @@ import { MiniChartWithPolarAxes } from '../miniChartWithPolarAxes';
 export class MiniRadarLine extends MiniChartWithPolarAxes {
     static chartType: ChartType = 'radarLine';
     private readonly lines: Path[];
-    private readonly markers: Circle[];
+    private readonly markers: Marker[];
     private readonly markerSize: number = 4;
 
     private data = [

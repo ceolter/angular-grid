@@ -27,13 +27,6 @@ import { ChangedRowNodes } from './changedRowNodes';
 import { updateRowNodeAfterFilter } from './filterStage';
 import { updateRowNodeAfterSort } from './sortStage';
 
-enum RecursionType {
-    Normal,
-    AfterFilter,
-    AfterFilterAndSort,
-    PivotNodes,
-}
-
 interface ClientSideRowModelRootNode extends RowNode {
     childrenAfterGroup: RowNode[] | null;
 }
@@ -941,110 +934,75 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     public forEachNode(callback: (node: RowNode, index: number) => void, includeFooterNodes: boolean = false): void {
-        this.recursivelyWalkNodesAndCallback({
-            nodes: [...(this.rootNode?.childrenAfterGroup || [])],
-            callback,
-            recursionType: RecursionType.Normal,
-            index: 0,
-            includeFooterNodes,
-        });
+        this.depthFirstSearchRowNodes(callback, includeFooterNodes);
     }
 
     public forEachNodeAfterFilter(
         callback: (node: RowNode, index: number) => void,
         includeFooterNodes: boolean = false
     ): void {
-        this.recursivelyWalkNodesAndCallback({
-            nodes: [...(this.rootNode?.childrenAfterAggFilter || [])],
-            callback,
-            recursionType: RecursionType.AfterFilter,
-            index: 0,
-            includeFooterNodes,
-        });
+        this.depthFirstSearchRowNodes(callback, includeFooterNodes, (node) => node.childrenAfterAggFilter);
     }
 
     public forEachNodeAfterFilterAndSort(
         callback: (node: RowNode, index: number) => void,
         includeFooterNodes: boolean = false
     ): void {
-        this.recursivelyWalkNodesAndCallback({
-            nodes: [...(this.rootNode?.childrenAfterSort || [])],
-            callback,
-            recursionType: RecursionType.AfterFilterAndSort,
-            index: 0,
-            includeFooterNodes,
-        });
+        this.depthFirstSearchRowNodes(callback, includeFooterNodes, (node) => node.childrenAfterSort);
     }
 
     public forEachPivotNode(
         callback: (node: RowNode, index: number) => void,
-        includeFooterNodes: boolean = false
+        includeFooterNodes: boolean = false,
+        afterSort: boolean = false
     ): void {
-        const rootNode = this.rootNode;
-        if (rootNode) {
-            this.recursivelyWalkNodesAndCallback({
-                nodes: [rootNode],
-                callback,
-                recursionType: RecursionType.PivotNodes,
-                index: 0,
-                includeFooterNodes,
-            });
-        }
+        const childrenField = afterSort ? 'childrenAfterSort' : 'childrenAfterGroup';
+        // for pivot, we don't go below leafGroup levels
+        this.depthFirstSearchRowNodes(callback, includeFooterNodes, (node) =>
+            !node.leafGroup ? node[childrenField] : null
+        );
     }
 
-    // iterates through each item in memory, and calls the callback function
-    // nodes - the rowNodes to traverse
-    // callback - the user provided callback
-    // recursion type - need this to know what child nodes to recurse, eg if looking at all nodes, or filtered notes etc
-    // index - works similar to the index in forEach in javascript's array function
-    private recursivelyWalkNodesAndCallback(params: {
-        nodes: RowNode[];
-        callback: (node: RowNode, index: number) => void;
-        recursionType: RecursionType;
-        index: number;
-        includeFooterNodes: boolean;
-    }): number {
-        const { nodes, callback, recursionType, includeFooterNodes } = params;
-        let { index } = params;
+    /**
+     * Iterate through each node and all of its children
+     * @param callback the function to execute for each node
+     * @param includeFooterNodes whether to also iterate over footer nodes
+     * @param nodes the nodes to start iterating over
+     * @param getChildren a function to determine the recursion strategy
+     * @param startIndex the index to start from
+     * @returns the index ended at
+     */
+    private depthFirstSearchRowNodes(
+        callback: (node: RowNode, index: number) => void,
+        includeFooterNodes: boolean = false,
+        getChildren: (node: RowNode) => RowNode[] | null = (node) => node.childrenAfterGroup,
+        node: RowNode | null = this.rootNode,
+        startIndex: number = 0
+    ): number {
+        let index = startIndex;
+        if (!node) {
+            return index;
+        }
+
+        const isRootNode = node === this.rootNode;
+        if (!isRootNode) {
+            callback(node, index++);
+        }
 
         const { footerSvc } = this.beans;
 
-        footerSvc?.addNodes(params, nodes, callback, includeFooterNodes, this.rootNode, 'top');
-
-        for (let i = 0; i < nodes.length; i++) {
-            const node = nodes[i];
-            callback(node, index++);
-            // go to the next level if it is a group
-            if (node.hasChildren() && !node.footer) {
-                // depending on the recursion type, we pick a difference set of children
-                let nodeChildren: RowNode[] | null = null;
-                switch (recursionType) {
-                    case RecursionType.Normal:
-                        nodeChildren = node.childrenAfterGroup;
-                        break;
-                    case RecursionType.AfterFilter:
-                        nodeChildren = node.childrenAfterAggFilter;
-                        break;
-                    case RecursionType.AfterFilterAndSort:
-                        nodeChildren = node.childrenAfterSort;
-                        break;
-                    case RecursionType.PivotNodes:
-                        // for pivot, we don't go below leafGroup levels
-                        nodeChildren = !node.leafGroup ? node.childrenAfterSort : null;
-                        break;
+        if (node.hasChildren() && !node.footer) {
+            const children = getChildren(node);
+            if (children) {
+                index = footerSvc?.addTotalRows(index, node, callback, includeFooterNodes, isRootNode, 'top') ?? index;
+                for (const node of children) {
+                    index = this.depthFirstSearchRowNodes(callback, includeFooterNodes, getChildren, node, index);
                 }
-                if (nodeChildren) {
-                    index = this.recursivelyWalkNodesAndCallback({
-                        nodes: [...nodeChildren],
-                        callback,
-                        recursionType,
-                        index,
-                        includeFooterNodes,
-                    });
-                }
+                return (
+                    footerSvc?.addTotalRows(index, node, callback, includeFooterNodes, isRootNode, 'bottom') ?? index
+                );
             }
         }
-        footerSvc?.addNodes(params, nodes, callback, includeFooterNodes, this.rootNode, 'bottom');
         return index;
     }
 

@@ -65,7 +65,7 @@ export const frameworkFilesGenerator: Partial<Record<InternalFramework, ConfigGe
         // Javascript is packages only
         mainJs = removeModuleRegistration(mainJs);
 
-        const integratedDarkModeCode = getIntegratedDarkModeCode(bindings.exampleName, false, 'gridApi');
+        const integratedDarkModeCode = getIntegratedDarkModeCode(bindings.exampleName, false, 'gridApi') ?? '';
         mainJs = mainJs.replace(/agGrid\.createGrid(.*);/g, `agGrid.createGrid$1; ${integratedDarkModeCode}`);
 
         // remove any leading new lines

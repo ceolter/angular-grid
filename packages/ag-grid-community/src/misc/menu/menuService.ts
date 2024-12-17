@@ -14,6 +14,7 @@ import { _requestAnimationFrame } from '../animationFrameService';
 
 interface BaseShowColumnMenuParams {
     column?: Column;
+    onClosedCallback?: () => void;
 }
 
 interface BaseShowFilterMenuParams {
@@ -152,14 +153,14 @@ export class MenuService extends BeanStub implements NamedBean {
         containerType: ContainerType,
         filtersOnly?: boolean
     ): void {
-        const { positionBy } = params;
+        const { positionBy, onClosedCallback } = params;
         const column = params.column as AgColumn | undefined;
         if (positionBy === 'button') {
             const { buttonElement } = params;
-            menuFactory?.showMenuAfterButtonClick(column, buttonElement, containerType, filtersOnly);
+            menuFactory?.showMenuAfterButtonClick(column, buttonElement, containerType, onClosedCallback, filtersOnly);
         } else if (positionBy === 'mouse') {
             const { mouseEvent } = params;
-            menuFactory?.showMenuAfterMouseEvent(column, mouseEvent, containerType, filtersOnly);
+            menuFactory?.showMenuAfterMouseEvent(column, mouseEvent, containerType, onClosedCallback, filtersOnly);
         } else if (column) {
             const beans = this.beans;
             const ctrlsSvc = beans.ctrlsSvc;
@@ -176,6 +177,7 @@ export class MenuService extends BeanStub implements NamedBean {
                         column,
                         headerCellCtrl.getAnchorElementForMenu(filtersOnly),
                         containerType,
+                        onClosedCallback,
                         true
                     );
                 }

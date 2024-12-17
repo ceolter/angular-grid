@@ -1,10 +1,10 @@
 .ag-basic .ag-cell {
-    padding-top: 2px !important;
-    padding-bottom: 2px !important;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 label {
-    font-weight: normal !important;
+    font-weight: normal;
 }
 
 .cell-act {

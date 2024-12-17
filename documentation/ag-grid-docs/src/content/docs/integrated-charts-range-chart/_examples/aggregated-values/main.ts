@@ -45,7 +45,6 @@ const gridOptions: GridOptions = {
         },
     },
     onFirstDataRendered: onFirstDataRendered,
-    onGridReady: () => {},
 };
 
 function onFirstDataRendered(params: FirstDataRenderedEvent) {

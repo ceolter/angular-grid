@@ -1,39 +1,8 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    NumberEditorModule,
-    NumberFilterModule,
-    TextEditorModule,
-    ValidationModule,
-    createGrid,
-    inputStyleUnderlined,
-    themeQuartz,
-} from 'ag-grid-community';
-import {
-    ColumnMenuModule,
-    ColumnsToolPanelModule,
-    ContextMenuModule,
-    FiltersToolPanelModule,
-    PivotModule,
-    RowGroupingModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid, inputStyleUnderlined, themeQuartz } from 'ag-grid-community';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    NumberEditorModule,
-    TextEditorModule,
-    NumberFilterModule,
-    ClientSideRowModelModule,
-    ColumnsToolPanelModule,
-    FiltersToolPanelModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-    PivotModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 const myTheme = themeQuartz.withPart(inputStyleUnderlined);
 
@@ -59,6 +28,9 @@ const gridOptions: GridOptions<IOlympicData> = {
     defaultColDef: {
         editable: true,
         filter: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
     },
     sideBar: true,
 };

@@ -1,5 +1,6 @@
 import type { Environment } from '../environment';
 import { _getAllRegisteredModules } from '../modules/moduleRegistry';
+import { FORCE_LEGACY_THEMES } from './Theme';
 import { coreCSS } from './core/core.css-GENERATED';
 
 export const IS_SSR = typeof window !== 'object' || !window?.document?.fonts?.forEach;
@@ -13,6 +14,7 @@ let injections = new WeakMap<HTMLElement, Injection>();
 
 export const _injectGlobalCSS = (css: string, container: HTMLElement, debugId: string) => {
     if (IS_SSR) return;
+    if (FORCE_LEGACY_THEMES) return;
 
     // if the container is attached to the main document, inject into the head
     // (only one instance of each stylesheet created per document). Otherwise

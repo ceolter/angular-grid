@@ -144,12 +144,7 @@ export interface BaseFilterParams<TData = any, TContext = any> extends AgGridCom
     /** The column definition for the column. */
     colDef: ColDef<TData>;
     /**
-     * The row model, helpful for looking up data values if needed.
-     * If the filter needs to know which rows are
-     * a) in the table,
-     * b) currently visible (i.e. not already filtered),
-     * c) which groups,
-     * d) what order - all of this can be read from the rowModel.
+     * @deprecated 33.1 Use the corresponding methods on the grid API (`api`) instead.
      */
     rowModel: IRowModel;
 

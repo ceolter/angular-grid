@@ -10,6 +10,6 @@ export const FlagCellRenderer: FunctionComponent<CustomCellRendererProps> = ({ v
         <div className={styles.employeeData}>
             <span>{value}</span>
         </div>
-        <img className={styles.image} src={urlWithBaseUrl(`/example/hr/${flag}.svg`)} alt={value.toLowerCase()} />
+        <img className={styles.flagImage} src={urlWithBaseUrl(`/example/hr/${flag}.svg`)} alt={value.toLowerCase()} />
     </div>
 );

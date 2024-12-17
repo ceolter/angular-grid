@@ -7,12 +7,12 @@ export const GRID_LICENSE_TEMPLATES: LicenseTemplate = {
     react: ({ license, isIntegratedCharts }) => `import React from "react";
 import { render } from "react-dom";
 
-import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
-import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
+import { ModuleRegistry } from "ag-grid-community";
+import { AllEnterpriseModule, LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
 import App from "./App";
 
-ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    AllEnterpriseModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'AllEnterpriseModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 `,
     angular: ({ license, isIntegratedCharts }) => {
-        return `import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
-import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
+        return `import { ModuleRegistry } from "ag-grid-community";
+import { AllEnterpriseModule, LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
-ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    AllEnterpriseModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'AllEnterpriseModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -39,10 +39,10 @@ LicenseManager.setLicenseKey("${license}");
 `;
     },
     javascript: ({ license, isIntegratedCharts }) => {
-        return `import { ModuleRegistry, ClientSideRowModelModule, createGrid } from "ag-grid-community";
-import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
+        return `import { ModuleRegistry, createGrid } from "ag-grid-community";
+import { AllEnterpriseModule, LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
-ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    AllEnterpriseModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'AllEnterpriseModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 
@@ -51,12 +51,12 @@ createGrid(<dom element>, gridOptions);
     },
     vue: ({ license, isIntegratedCharts }) => {
         return `<script>
-import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
-import { LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
+import { ModuleRegistry } from "ag-grid-community";
+import { AllEnterpriseModule, LicenseManager${isIntegratedCharts ? ', IntegratedChartsModule' : ''} } from "ag-grid-enterprise";
 ${isIntegratedCharts ? 'import { AgChartsEnterpriseModule } from "ag-charts-enterprise";\n' : ''}
 import { AgGridVue } from "ag-grid-vue3";
 
-ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    ClientSideRowModelModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'ClientSideRowModelModule'}]);
+ModuleRegistry.registerModules([${isIntegratedCharts ? '\n    AllEnterpriseModule,\n    IntegratedChartsModule.with(AgChartsEnterpriseModule)\n' : 'AllEnterpriseModule'}]);
 
 LicenseManager.setLicenseKey("${license}");
 

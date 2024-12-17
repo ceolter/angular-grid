@@ -1,32 +1,8 @@
 import type { ColDef, GridApi, GridOptions } from 'ag-grid-community';
-import {
-    ClientSideRowModelModule,
-    DateFilterModule,
-    ModuleRegistry,
-    NumberFilterModule,
-    ValidationModule,
-    createGrid,
-    themeQuartz,
-} from 'ag-grid-community';
-import {
-    ClipboardModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-} from 'ag-grid-enterprise';
+import { AllCommunityModule, ModuleRegistry, createGrid, themeQuartz } from 'ag-grid-community';
+import { AllEnterpriseModule } from 'ag-grid-enterprise';
 
-ModuleRegistry.registerModules([
-    ClientSideRowModelModule,
-    ClipboardModule,
-    ColumnMenuModule,
-    ContextMenuModule,
-    RowGroupingModule,
-    SetFilterModule,
-    NumberFilterModule,
-    DateFilterModule,
-    ValidationModule /* Development Only */,
-]);
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 // Set a blue background and red shadows for all menus
 const myTheme = themeQuartz.withParams({
