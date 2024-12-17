@@ -535,7 +535,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         const params: IFilterParams = this.gos.addGridCommonParams({
             column,
             colDef,
-            rowModel: this.beans.rowModel,
+            rowModel: this.beans.rowModel, // @deprecated v33.1
             filterChangedCallback: () => {},
             filterModifiedCallback: () => {},
             getValue: this.createGetValue(column),
