@@ -37,10 +37,6 @@
     "typeName": "any[]",
     "typesToInclude": []
   },
-  "chartThemes": {
-    "typeName": "string[]",
-    "typesToInclude": []
-  },
   "rowClass": {
     "typeName": "string | string[]",
     "typesToInclude": []
@@ -173,18 +169,6 @@
     "typeName": "{\n        statusPanels: StatusPanelDef[];\n    }",
     "typesToInclude": [
       "StatusPanelDef"
-    ]
-  },
-  "chartThemeOverrides": {
-    "typeName": "AgChartThemeOverrides",
-    "typesToInclude": [
-      "AgChartThemeOverrides"
-    ]
-  },
-  "customChartThemes": {
-    "typeName": "{\n        [name: string]: AgChartTheme;\n    }",
-    "typesToInclude": [
-      "AgChartTheme"
     ]
   },
   "chartToolPanelsDef": {

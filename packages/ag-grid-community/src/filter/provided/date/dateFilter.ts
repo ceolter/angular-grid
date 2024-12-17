@@ -61,6 +61,10 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
         return this.dateFilterParams.comparator ?? defaultDateComparator;
     }
 
+    protected override isValid(value: Date): boolean {
+        return value instanceof Date && !isNaN(value.getTime());
+    }
+
     protected override setParams(params: DateFilterParams): void {
         this.dateFilterParams = params;
 
@@ -300,7 +304,7 @@ function defaultDateComparator(filterDate: Date, cellValue: any): number {
     // The default comparator assumes that the cellValue is a date
     const cellAsDate = cellValue as Date;
 
-    if (cellValue == null || cellAsDate < filterDate) {
+    if (cellAsDate < filterDate) {
         return -1;
     }
     if (cellAsDate > filterDate) {

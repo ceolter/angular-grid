@@ -49,6 +49,10 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         };
     }
 
+    protected override isValid(value: number): boolean {
+        return !isNaN(value);
+    }
+
     protected override setParams(params: NumberFilterParams): void {
         this.numberFilterParams = params;
 

@@ -69,10 +69,16 @@ export class AngularFrameworkOverrides extends VanillaFrameworkOverrides {
         existingFrameworkEventListenerService: IFrameworkEventListenerService<any, any> | undefined,
         localEventService: LocalEventService<any>
     ): IFrameworkEventListenerService<any, any> | undefined {
-        if (this.shouldWrapOutgoing && !existingFrameworkEventListenerService) {
-            localEventService.setFrameworkOverrides(this);
-            return new AngularFrameworkEventListenerService(this);
+        if (this.shouldWrapOutgoing) {
+            return (
+                existingFrameworkEventListenerService ??
+                (() => {
+                    localEventService.setFrameworkOverrides(this);
+                    return new AngularFrameworkEventListenerService(this);
+                })()
+            );
         }
+
         return undefined;
     }
 

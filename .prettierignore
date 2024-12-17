@@ -27,3 +27,6 @@ packages/ag-grid-vue3/vite.config.d.ts
 # vue3 - needs revisiting but as it stands the formatting is removing imports required by vue3 so ignore for now
 packages/ag-grid-vue3/src/components/AgGridVue.vue
 packages/ag-grid-vue3/src/components/utils.ts
+
+# ignore for now - throws an error when processed
+documentation/ag-grid-docs/src/components/upgrade-33.astro
