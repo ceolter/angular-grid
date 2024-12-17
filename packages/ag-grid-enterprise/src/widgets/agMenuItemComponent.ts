@@ -9,7 +9,6 @@ import {
     _setAriaRole,
 } from 'ag-grid-community';
 import type {
-    AgColumn,
     AgEvent,
     BeanCollection,
     Component,
@@ -225,19 +224,14 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         const { popupSvc } = this;
         const positionCallback = () => {
             const eventSource = this.eGui!;
+            const { column, node } = this.contextParams;
             popupSvc?.positionPopupForMenu({
                 eventSource,
                 ePopup,
+                event: event instanceof MouseEvent ? event : undefined,
+                column,
+                node,
             });
-            const { column, node } = this.contextParams;
-            popupSvc?.callPostProcessPopup(
-                'subMenu',
-                ePopup,
-                eventSource,
-                event instanceof MouseEvent ? event : undefined,
-                column as AgColumn,
-                node
-            );
         };
 
         const translate = this.getLocaleTextFunc();

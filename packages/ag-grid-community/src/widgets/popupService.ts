@@ -1,12 +1,12 @@
 import { KeyCode } from '../constants/keyCode';
 import type { NamedBean } from '../context/bean';
 import { BeanStub } from '../context/beanStub';
-import type { AgColumn } from '../entities/agColumn';
 import type { CssVariablesChanged } from '../events';
 import type { GridCtrl } from '../gridComp/gridCtrl';
 import { _getActiveDomElement, _getDocument } from '../gridOptionsUtils';
 import type { IAfterGuiAttachedParams } from '../interfaces/iAfterGuiAttachedParams';
 import type { PostProcessPopupParams } from '../interfaces/iCallbackParams';
+import type { Column } from '../interfaces/iColumn';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { PopupEventParams, PopupPositionParams } from '../interfaces/iPopup';
 import type { IRowNode } from '../interfaces/iRowNode';
@@ -101,63 +101,85 @@ export class PopupService extends BeanStub implements NamedBean {
         return this.gridCtrl.getGui();
     }
 
-    public positionPopupForMenu(params: { eventSource: HTMLElement; ePopup: HTMLElement }): void {
-        const { eventSource, ePopup } = params;
-
-        const popupIdx = this.getPopupIndex(ePopup);
-
-        if (popupIdx !== -1) {
-            const popup = this.popupList[popupIdx];
-            popup.alignedToElement = eventSource;
-        }
+    public positionPopupForMenu(params: {
+        eventSource: HTMLElement;
+        ePopup: HTMLElement;
+        column: Column | null;
+        node: IRowNode | null;
+        event?: MouseEvent | KeyboardEvent;
+    }): void {
+        const { eventSource, ePopup, column, node, event } = params;
 
         const sourceRect = eventSource.getBoundingClientRect();
         const parentRect = this.getParentRect();
-        const y = this.keepXYWithinBounds(ePopup, sourceRect.top - parentRect.top, DIRECTION.vertical);
 
-        const minWidth = ePopup.clientWidth > 0 ? ePopup.clientWidth : 200;
-        ePopup.style.minWidth = `${minWidth}px`;
-        const widthOfParent = parentRect.right - parentRect.left;
-        const maxX = widthOfParent - minWidth;
+        this.setAlignedTo(eventSource, ePopup);
 
-        // the x position of the popup depends on RTL or LTR. for normal cases, LTR, we put the child popup
-        // to the right, unless it doesn't fit and we then put it to the left. for RTL it's the other way around,
-        // we try place it first to the left, and then if not to the right.
-        let x: number;
-        if (this.gos.get('enableRtl')) {
-            // for RTL, try left first
-            x = xLeftPosition();
-            if (x < 0) {
-                x = xRightPosition();
-                this.setAlignedStyles(ePopup, 'left');
+        let minWidthSet = false;
+
+        const updatePosition = () => {
+            const y = this.keepXYWithinBounds(ePopup, sourceRect.top - parentRect.top, DIRECTION.vertical);
+
+            const minWidth = ePopup.clientWidth > 0 ? ePopup.clientWidth : 200;
+            if (!minWidthSet) {
+                ePopup.style.minWidth = `${minWidth}px`;
+                minWidthSet = true;
             }
-            if (x > maxX) {
-                x = 0;
-                this.setAlignedStyles(ePopup, 'right');
-            }
-        } else {
-            // for LTR, try right first
-            x = xRightPosition();
-            if (x > maxX) {
+            const widthOfParent = parentRect.right - parentRect.left;
+            const maxX = widthOfParent - minWidth;
+
+            // the x position of the popup depends on RTL or LTR. for normal cases, LTR, we put the child popup
+            // to the right, unless it doesn't fit and we then put it to the left. for RTL it's the other way around,
+            // we try place it first to the left, and then if not to the right.
+            let x: number;
+            if (this.gos.get('enableRtl')) {
+                // for RTL, try left first
                 x = xLeftPosition();
-                this.setAlignedStyles(ePopup, 'right');
+                if (x < 0) {
+                    x = xRightPosition();
+                    this.setAlignedStyles(ePopup, 'left');
+                }
+                if (x > maxX) {
+                    x = 0;
+                    this.setAlignedStyles(ePopup, 'right');
+                }
+            } else {
+                // for LTR, try right first
+                x = xRightPosition();
+                if (x > maxX) {
+                    x = xLeftPosition();
+                    this.setAlignedStyles(ePopup, 'right');
+                }
+                if (x < 0) {
+                    x = 0;
+                    this.setAlignedStyles(ePopup, 'left');
+                }
             }
-            if (x < 0) {
-                x = 0;
-                this.setAlignedStyles(ePopup, 'left');
+            return { x, y };
+
+            function xRightPosition(): number {
+                return sourceRect.right - parentRect.left - 2;
             }
-        }
 
-        ePopup.style.left = `${x}px`;
-        ePopup.style.top = `${y}px`;
+            function xLeftPosition(): number {
+                return sourceRect.left - parentRect.left - minWidth;
+            }
+        };
 
-        function xRightPosition(): number {
-            return sourceRect.right - parentRect.left - 2;
-        }
-
-        function xLeftPosition(): number {
-            return sourceRect.left - parentRect.left - minWidth;
-        }
+        this.positionPopup({
+            ePopup,
+            keepWithinBounds: true,
+            updatePosition,
+            postProcessCallback: () =>
+                this.callPostProcessPopup(
+                    'subMenu',
+                    ePopup,
+                    eventSource,
+                    event instanceof MouseEvent ? event : undefined,
+                    column,
+                    node
+                ),
+        });
     }
 
     public positionPopupUnderMouseEvent(
@@ -210,12 +232,7 @@ export class PopupService extends BeanStub implements NamedBean {
         const sourceRect = eventSource.getBoundingClientRect();
         const parentRect = this.getParentRect() as DOMRect;
 
-        const popupIdx = this.getPopupIndex(ePopup);
-
-        if (popupIdx !== -1) {
-            const popup = this.popupList[popupIdx];
-            popup.alignedToElement = eventSource;
-        }
+        this.setAlignedTo(eventSource, ePopup);
 
         const updatePosition = () => {
             let x = sourceRect.left - parentRect.left;
@@ -302,12 +319,21 @@ export class PopupService extends BeanStub implements NamedBean {
         ePopup.classList.add(`ag-popup-positioned-${positioned}`);
     }
 
+    private setAlignedTo(eventSource: HTMLElement, ePopup: HTMLElement): void {
+        const popupIdx = this.getPopupIndex(ePopup);
+
+        if (popupIdx !== -1) {
+            const popup = this.popupList[popupIdx];
+            popup.alignedToElement = eventSource;
+        }
+    }
+
     public callPostProcessPopup(
         type: string,
         ePopup: HTMLElement,
         eventSource?: HTMLElement | null,
         mouseEvent?: MouseEvent | Touch | null,
-        column?: AgColumn | null,
+        column?: Column | null,
         rowNode?: IRowNode | null
     ): void {
         const callback = this.gos.getCallback('postProcessPopup');

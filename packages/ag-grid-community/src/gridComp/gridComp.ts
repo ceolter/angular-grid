@@ -57,6 +57,7 @@ export class GridComp extends TabGuardComp {
             onTabKeyDown: () => undefined,
             focusInnerElement: (fromBottom) => ctrl.focusInnerElement(fromBottom),
             forceFocusOutWhenTabGuardsAreEmpty: true,
+            isEmpty: () => !ctrl.isFocusable(),
         });
     }
 

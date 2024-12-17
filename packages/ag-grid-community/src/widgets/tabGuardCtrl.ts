@@ -25,13 +25,14 @@ export class TabGuardCtrl extends BeanStub {
     // Instead, focus must be handled manually
     private readonly isFocusableContainer: boolean;
 
-    private readonly providedFocusInnerElement?: (fromBottom: boolean) => void;
+    private readonly providedFocusInnerElement?: (fromBottom: boolean) => boolean;
     private readonly providedFocusIn?: (event: FocusEvent) => void;
     private readonly providedFocusOut?: (event: FocusEvent) => void;
 
     private readonly providedShouldStopEventPropagation?: () => boolean;
     private readonly providedOnTabKeyDown?: (e: KeyboardEvent) => void;
     private readonly providedHandleKeyDown?: (e: KeyboardEvent) => void;
+    private readonly providedIsEmpty?: () => boolean;
 
     private skipTabGuardFocus: boolean = false;
     private forcingFocusOut: boolean = false;
@@ -46,12 +47,13 @@ export class TabGuardCtrl extends BeanStub {
         focusTrapActive?: boolean;
         forceFocusOutWhenTabGuardsAreEmpty?: boolean;
         isFocusableContainer?: boolean;
-        focusInnerElement?: (fromBottom: boolean) => void;
+        focusInnerElement?: (fromBottom: boolean) => boolean;
         onFocusIn?: (event: FocusEvent) => void;
         onFocusOut?: (event: FocusEvent) => void;
         shouldStopEventPropagation?: () => boolean;
         onTabKeyDown?: (e: KeyboardEvent) => void;
         handleKeyDown?: (e: KeyboardEvent) => void;
+        isEmpty?: () => boolean;
     }) {
         super();
 
@@ -68,6 +70,7 @@ export class TabGuardCtrl extends BeanStub {
             shouldStopEventPropagation,
             onTabKeyDown,
             handleKeyDown,
+            isEmpty,
             eFocusableElement,
         } = params;
 
@@ -86,6 +89,7 @@ export class TabGuardCtrl extends BeanStub {
         this.providedShouldStopEventPropagation = shouldStopEventPropagation;
         this.providedOnTabKeyDown = onTabKeyDown;
         this.providedHandleKeyDown = handleKeyDown;
+        this.providedIsEmpty = isEmpty;
     }
 
     public postConstruct() {
@@ -153,7 +157,9 @@ export class TabGuardCtrl extends BeanStub {
         // in the TabGuard itself and has nowhere to go, so we need to manually find
         // the closest element to focus by calling `forceFocusOutWhenTabGuardAreEmpty`.
         if (this.forceFocusOutWhenTabGuardsAreEmpty) {
-            const isEmpty = _findFocusableElements(this.eFocusableElement, '.ag-tab-guard').length === 0;
+            const isEmpty = this.providedIsEmpty
+                ? this.providedIsEmpty()
+                : _findFocusableElements(this.eFocusableElement, '.ag-tab-guard').length === 0;
             if (isEmpty) {
                 this.findNextElementOutsideAndFocus(e.target === this.eBottomGuard);
                 return;
@@ -166,10 +172,12 @@ export class TabGuardCtrl extends BeanStub {
 
         const fromBottom = e.target === this.eBottomGuard;
 
-        if (this.providedFocusInnerElement) {
-            this.providedFocusInnerElement(fromBottom);
-        } else {
-            this.focusInnerElement(fromBottom);
+        const hasFocusedInnerElement = this.providedFocusInnerElement
+            ? this.providedFocusInnerElement(fromBottom)
+            : this.focusInnerElement(fromBottom);
+        if (!hasFocusedInnerElement && this.forceFocusOutWhenTabGuardsAreEmpty) {
+            // nothing actually got focused, so force out
+            this.findNextElementOutsideAndFocus(e.target === this.eBottomGuard);
         }
     }
 
@@ -280,7 +288,7 @@ export class TabGuardCtrl extends BeanStub {
         e.preventDefault();
     }
 
-    public focusInnerElement(fromBottom = false): void {
+    public focusInnerElement(fromBottom = false): boolean {
         const focusable = _findFocusableElements(this.eFocusableElement);
 
         if (this.tabGuardsAreActive()) {
@@ -290,10 +298,11 @@ export class TabGuardCtrl extends BeanStub {
         }
 
         if (!focusable.length) {
-            return;
+            return false;
         }
 
         focusable[fromBottom ? focusable.length - 1 : 0].focus({ preventScroll: true });
+        return true;
     }
 
     public getNextFocusableElement(backwards?: boolean): HTMLElement | null {

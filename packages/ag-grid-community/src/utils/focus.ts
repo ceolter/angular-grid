@@ -102,8 +102,17 @@ export function _findFocusableElements(
     return diff(nodes, excludeNodes);
 }
 
-export function _focusInto(rootNode: HTMLElement, up = false, onlyUnmanaged = false): boolean {
-    const focusableElements = _findFocusableElements(rootNode, null, onlyUnmanaged);
+export function _focusInto(
+    rootNode: HTMLElement,
+    up = false,
+    onlyUnmanaged = false,
+    excludeTabGuards = false
+): boolean {
+    const focusableElements = _findFocusableElements(
+        rootNode,
+        excludeTabGuards ? '.ag-tab-guard' : null,
+        onlyUnmanaged
+    );
     const toFocus = up ? _last(focusableElements) : focusableElements[0];
 
     if (toFocus) {
