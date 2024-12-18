@@ -148,7 +148,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                 const cellSelectionSchema = v
                     .object({
                         suppressMultiRanges: v.boolean(),
-                        handle: v.oneOf([
+                        handle: v.union([
                             v
                                 .object({
                                     mode: v.literal('range'),
@@ -158,7 +158,7 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                                 .object({
                                     mode: v.literal('fill'),
                                     suppressClearOnFillReduction: v.boolean(),
-                                    direction: v.oneOf([v.literal('x'), v.literal('y'), v.literal('xy')]),
+                                    direction: v.union([v.literal('x'), v.literal('y'), v.literal('xy')]),
                                     setFillValue: v.func(),
                                 })
                                 .only(),
@@ -364,16 +364,16 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
 
                 const rowSelectionSchema = v
                     .object({
-                        mode: v.oneOf([v.literal('multiRow'), v.literal('singleRow')]).required(),
+                        mode: v.union([v.literal('multiRow'), v.literal('singleRow')]).required(),
 
                         // common
-                        enableClickSelection: v.oneOf([
+                        enableClickSelection: v.union([
                             v.boolean(),
                             v.literal('enableDeselection'),
                             v.literal('enableSelection'),
                         ]),
-                        checkboxes: v.oneOf([v.boolean(), v.func()]),
-                        checkboxLocation: v.oneOf([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                        checkboxes: v.union([v.boolean(), v.func()]),
+                        checkboxLocation: v.union([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
                         hideDisabledCheckboxes: v.boolean(),
                         isRowSelectable: v.func(),
                         copySelectedRows: v.boolean(),
@@ -383,12 +383,12 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                         groupSelects: v
                             ._if(() => rowSelection?.mode === 'multiRow')
                             .then(
-                                v.oneOf([v.literal('self'), v.literal('descendants'), v.literal('filteredDescendants')])
+                                v.union([v.literal('self'), v.literal('descendants'), v.literal('filteredDescendants')])
                             )
                             .else(v._undefined()),
                         selectAll: v
                             ._if(() => rowSelection?.mode === 'multiRow')
-                            .then(v.oneOf([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
+                            .then(v.union([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
                             .else(v._undefined()),
                         headerCheckbox: v
                             ._if(() => rowSelection?.mode === 'multiRow')

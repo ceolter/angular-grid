@@ -104,7 +104,7 @@ class LiteralSchema extends BaseSchema implements Schema {
     }
 }
 
-class OneOfSchema extends BaseSchema implements Schema {
+class UnionSchema extends BaseSchema implements Schema {
     private _deep = false;
 
     constructor(private options: Schema[]) {
@@ -115,7 +115,7 @@ class OneOfSchema extends BaseSchema implements Schema {
         return 'one of: ';
     }
 
-    deep(): OneOfSchema {
+    deep(): this {
         this._deep = true;
         return this;
     }
@@ -238,7 +238,7 @@ export const object = (o: Record<string, Schema>): ObjectSchema => new ObjectSch
 
 export const literal = (x: unknown): LiteralSchema => new LiteralSchema(x);
 
-export const oneOf = (xs: Schema[]): OneOfSchema => new OneOfSchema(xs);
+export const union = (xs: Schema[]): UnionSchema => new UnionSchema(xs);
 
 export const func = (): FunctionSchema => new FunctionSchema();
 
