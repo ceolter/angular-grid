@@ -56,16 +56,16 @@ const isVue = framework === 'vue';
 
         <p>To match the existing behaviour of simply register the <code>AllCommunityModule</code> via the ModuleRegistry before any grid is created. This module contains all the features that were previously automatically included as part of <code>ag-grid-community</code>.</p>
         <p>
-            <Code code={"import { ModuleRegistry, AllCommunityModules } from 'ag-grid-community';\n\nModuleRegistry.registerModules([AllCommunityModules]);"} ></Code>
+            <Code code={"import { AllCommunityModules, ModuleRegistry } from 'ag-grid-community';\n\nModuleRegistry.registerModules([AllCommunityModules]);"} ></Code>
         </p>
 
 <Heading level="3" id="migrating-from-enterprise">Migrating from AG Grid Enterprise</Heading>
 <code>ag-grid-enterprise</code>
 <p>To match the existing behaviour simply register the <code>AllEnterpriseModule</code> via the ModuleRegistry before any grid is created. A good place to add this code is alongside your LicenseManager. </p>
 <p>
-        <Code code={`import { ModuleRegistry } from 'ag-grid-community';
-import { AllEnterpriseModule } from 'ag-grid-enterprise';
+        <Code code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 
+LicenseManager.setLicenseKey('your License Key');
 ModuleRegistry.registerModules([AllEnterpriseModule]);`} ></Code>
     </p>
 
@@ -182,6 +182,11 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`} ></Code>
 <p>
     AG Grid Enterprise no longer includes AG Charts as part of its distribution to avoid bloating the bundle size. If you are using either Integrated Charts or Sparklines, you must now explicitly include either the community / enterprise <a href="https://ag-grid.com/charts/" target="_blank">AG Charts </a> library as a dependency. 
 
+    <details class={styles.details}> 
+        <summary class:list={[styles.summary, 'button-secondary']}>Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
+    
+        <div class={styles.detailsInner}>
+
     <p>The following shows the changes required for an application using Integrated Charts / Sparklines via the AllEnterpriseModule with the Enterprise version of AG Charts.</p>
     <Code language={'diff'} code={
         `"dependencies": {
@@ -199,7 +204,7 @@ ModuleRegistry.registerModules([
 </p>
 
 <p>
-    If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code>SparklinesModule</code> also require the AG Charts module to be registered.
+    If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code>SparklinesModule</code> also require the AG Charts module to be registered when they are used.
 </p>
 <Code code={`import { IntegratedChartsModule, SparklinesModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
@@ -209,7 +214,8 @@ ModuleRegistry.registerModules([
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SparklinesModule.with(AgChartsEnterpriseModule)
 ]);`} ></Code>
-
+</div>
+</details>
 
 {/* ------------------------------------------------- */}
 
