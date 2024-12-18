@@ -224,5 +224,8 @@ export default defineMarkdocConfig({
         moduleMappings: {
             render: component('./src/components/module-mappings/ModuleMappings.astro'),
         },
+        upgrade33: {
+            render: component('./src/components/upgrade-33.astro'),
+        },
     },
 });
