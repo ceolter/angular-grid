@@ -4,6 +4,7 @@ import { urlWithPrefix } from '@utils/urlWithPrefix';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import { Alert } from '@ag-website-shared/components/alert/Alert';
 import Heading from '@ag-website-shared/components/heading/Heading.astro';
+import Code from '@ag-website-shared/components/code/Code';
 
 import styles from './Upgrade-33.module.scss';
 
@@ -21,7 +22,7 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
 <Heading level="2" id="whats-new">What's New</Heading>
 
 <p>
-    AG Grid 33 significantly reduces bundle size via modularization and enhances functionality, theming, quality and
+    AG Grid 33 significantly reduces bundle size via modularization and enhances functionality, theming and
     accessibility as described in the <a href="https://blog.ag-grid.com/whats-new-in-ag-grid-33/">release post</a>.
     These major improvements require certain breaking changes as listed below.
 </p>
@@ -31,103 +32,237 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
 </p>
 {/* ------------------------------------------------- */}
 
-<Heading level="2" id="cidhanges-to-modules">Changes to Modules</Heading>
+<Heading level="2" id="changes-to-modules">Changes to Modules</Heading>
 <p>
     Version 33 introduces a major change to how modules work to allow for smaller bundle sizes. Previously AG Grid
-    supported two versions - modules and packages. These have now been merged together to allow for both a simpler
+    supported two approaches - modules and packages. These have now been merged together to allow for simpler
     configuration and greater optimisation of bundle size.
 </p>
 
 { isJS && <p>If you are using the UMD bundle, then you do not need to make any changes as all modules are automatically registered. Otherwise, see the steps below.</p> }
 
-<Heading level="3" id="migrating-from-packages">Migrating from Packages</Heading>
-<p>
-    If you were previously using packages (e.g. <code>ag-grid-community</code>), you now need to register the feature
-    modules that you are using in the grid.
-</p>
-<p>The simplest way to do this is to use one of the bundles to register all the features:</p>
-<ul>
-    <li><code>AllCommunityModule</code> for AG Grid Community.</li>
-    <li><code>AllEnterpriseModule</code> for AG Grid Enterprise. (*)</li>
-</ul>
-<p>
-    This can then be passed to the module registry, e.g.
-    <code>ModuleRegistry.registerModules([AllCommunityModule])</code>.
-</p>
-<p>
-    (*) If you are using the enterprise features Integrated Charts or Sparklines, then you need to provide the relevant
-    module from AG Charts to <code>AllEnterpriseModule</code>. Use the <a
-        href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
-    registration code.
-</p>
-<p>If you want to optimise your bundle size, you can register only the modules that you are using.</p>
-<p>
-    See the <a href={urlWithPrefix({framework, url: "./modules/"})}>Modules</a> page for help on selecting modules, as well as more
-    information
-    on how to register modules (including registering different modules for different grid instances).
-</p>
+{/* ------------------------------------------------- */}
 
-<Heading level="3" id="migrating-from-modules">Migrating from Modules</Heading>
-<p>
-    All NPM packages for the modules version of AG Grid (e.g. <code>@ag-grid-community/core</code>) have been replaced
-    as below:
-</p>
-<ul>
-    { isReact && <li><code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code>.</li>}
-    { isAngular && <li><code>@ag-grid-community/angular</code> is replaced with <code>ag-grid-angular</code>.</li>}
-    { isVue && <li><code>@ag-grid-community/vue3</code> is replaced with <code>ag-grid-vue3</code>.</li>}
-    <li>All other <code>@ag-grid-community/*</code> packages are replaced with <code>ag-grid-community</code>. (*)</li>
-    <li>All <code>@ag-grid-enterprise/*</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
-</ul>
-<p>(*) Note that <code>@ag-grid-community/locale</code> remains unchanged.</p>
-<p>
-    Additionally, many features have been removed from the core module into their own modules, and some modules have
-    been split into smaller modules.
-</p>
-<p>
-    You can use the <a href={moduleSelectionUrl}>Module Selector</a> tool to work out which
-    modules
-    you require.
-</p>
-<p>
-    To help identify missing modules, we recommend including the <code>ValidationModule</code> in your development
-    build.
-    This will provide details on which module is missing for a particular feature.
-</p>
-<p>
-    The core community module has been split into many modules. See the Module Selector for the full list of new
-    modules.
-</p>
-<p>The following changes have been made to existing modules:</p>
-<ul>
-    <li>
-        <code>GridChartsModule</code> - This has been replaced with <code>IntegratedChartsModule</code>. This
-        additionally needs to be passed the relevant module from AG Charts, e.g.
-        <code>IntegratedChartsModule.with(AgChartsEnterpriseModule)</code>. Use the <a
-            href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
-        registration code.
-    </li>
-    <li>
-        <code>SparklinesModule</code> - This needs to be passed the relevant module from AG Charts, e.g.
-        <code>SparklinesModule.with(AgChartsCommunityModule)</code>. Use the <a
-            href={moduleSelectionUrl}>Module Selector</a> tool to help generate the correct
-        registration code.
-    </li>
-    <li><code>ColumnsToolPanelModule</code> - This no longer imports the <code>RowGroupingModule</code> by default.</li>
-    <li><code>ExcelExportModule</code> - This no longer imports the <code>CsvExportModule</code> by default.</li>
-    <li>
-        <code>MenuModule</code> - This has been split into <code>ColumnMenuModule</code> for the Column Menu, and
-        <code>ContextMenuModule</code> for the Context Menu.
-    </li>
-    <li><code>RangeSelectionModule</code> - This has been replaced with <code>CellSelectionModule</code>.</li>
-    <li>
-        <code>RowGroupingModule</code> - This has been split into several modules. <code>RowGroupingModule</code> now
-        only
-        contains Row Grouping. Tree Data uses <code>TreeDataModule</code>, Pivoting uses <code>PivotModule</code>, the
-        Row Grouping Panel / Pivot Panel uses <code>RowGroupingPanelModule</code>, and the Group Filter uses
-        <code>GroupFilterModule</code>.
-    </li>
-</ul>
+<Heading level="3" id="migrating-from-packages">Migrating From Packages</Heading>
+        <div>
+           <p> If are currently using AG Grid packages then view the Package Migration Steps. </p>
+           <p>
+            { isReact && <code>ag-grid-react</code>}{ isAngular && <code>ag-grid-angular</code>}{ isVue && <code>ag-grid-vue3</code>} /
+            
+           <code>ag-grid-community</code>  / <code>ag-grid-enterprise</code>  / <code>ag-grid-charts-enterprise</code> </p>
+           <p></p>
+        </div>
+
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}>Package Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
+
+    <div class={styles.detailsInner}>
+        <p>
+            Previously when using packages all grid features where automatically registered. In v33, to enable tree shaking of features, you must now register the modules you are using. See <a href={urlWithPrefix({framework, url: "./modules/"})}>Modules</a> for more information.
+        </p>
+        <h3> AG Grid Community</h3>
+        <p>To match the existing behaviour simply register the AllCommunityModule via the ModuleRegistry before any grid is created. </p>
+        <p>
+            <Code code={"import { ModuleRegistry, AllCommunityModules } from 'ag-grid-community';\n\nModuleRegistry.registerModules([AllCommunityModules]);"} ></Code>
+        </p>
+        <Alert type="info">
+            <p>
+                The following Enterprise modifications are all handled by v33 of the CodeMod tool.
+                <p><code>npx @ag-grid-devtools/cli@33.0 migrate --from=$FROM_VERSION</code></p>
+            </p>
+        </Alert>
+        <h3> AG Grid Enterprise</h3>
+        <p>To match the existing behaviour simply register the AllEnterpriseModule via the ModuleRegistry alongside your LicenseManger. </p>
+        <p>
+            <Code code={"import { ModuleRegistry } from 'ag-grid-community';\nimport { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';\n\nLicenseManager.setLicenseKey('your License Key');\nModuleRegistry.registerModules([AllEnterpriseModule]);"} ></Code>
+        </p>    
+
+        <Heading level="3" id="migrating-integrated-charts">AG Charts Integrated / Sparklines </Heading>
+        <p>
+            AG Grid Enterprise no longer includes AG Charts as part of its distribution. If you are using either Integrated Charts or Sparklines, you must now install either <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> and register the relevant module as follows. 
+        </p>
+        <p>
+            If you are currently using AG Charts Community via <code>ag-grid-enterprise</code> then the equivalent code is:
+        </p>
+        <p>
+            <Code code={`import { ModuleRegistry } from 'ag-grid-community';
+import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
+import { AgChartsCommunityModule } from 'ag-charts-community';
+
+LicenseManager.setLicenseKey('your License Key');
+ModuleRegistry.registerModules([
+    AllEnterpriseModule.with(AgChartsCommunityModule)
+]);`} ></Code>
+        </p>
+        <p>
+            If you are currently using AG Charts Enterprise via <code>ag-grid-charts-enterprise</code> then this package is replaced by <code>ag-grid-enterprise</code> and <code> ag-charts-enterprise</code> the equivalent code is:
+        </p>
+        <p>
+            <Code language={'diff'} code={
+            `"dependencies": {
+-   "ag-grid-charts-enterprise": "^32.3.0",
++   "ag-grid-enterprise": "^33.0.0",
++   "ag-charts-enterprise": "^11.0.0",
+}
+`} ></Code>
+            <Code code={`import { ModuleRegistry } from 'ag-grid-community';
+import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
+import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
+
+LicenseManager.setLicenseKey('your License Key');
+ModuleRegistry.registerModules([
+    AllEnterpriseModule.with(AgChartsEnterpriseModule)
+]);`} ></Code>
+        </p>
+
+        <p>
+            For more information about modules see the <a href={urlWithPrefix({framework, url: "./modules/"})}>Modules</a> page for help on selecting modules, as well as more
+            information
+            on how to register modules (including registering different modules for different grid instances).
+        </p>
+        
+    </div>
+</details>
+
+
+{/* ------------------------------------------------- */}
+
+<Heading level="3" id="migrating-from-modules">Migrating From Modules</Heading>
+        <div>
+           <p> If are currently using AG Grid modules then view the Module Migration Steps. </p>
+           <p>
+            { isReact && <code>@ag-grid-community/react</code>}{ isAngular && <code>@ag-grid-community/angular</code>}{ isVue && <code>@ag-grid-community/vue3</code>} /
+            
+           <code>@ag-grid-community/**</code>  / <code>@ag-grid-enterprise/**</code></p>
+           <p></p>
+        </div>
+
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}>Module Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
+
+    <div class={styles.detailsInner}>
+
+        <p>
+            All NPM packages for the modules version of AG Grid, e.g <code>@ag-grid-community/core</code> have been merged together into either <code>ag-grid-community</code> or <code>ag-grid-enterprise</code> as follows:
+        </p>
+        <ul>
+            { isReact && <li><code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code></li>}
+            { isAngular && <li><code>@ag-grid-community/angular</code> is replaced with <code>ag-grid-angular</code></li>}
+            { isVue && <li><code>@ag-grid-community/vue3</code> is replaced with <code>ag-grid-vue3</code></li>}
+            <li>All <code>@ag-grid-community/**</code> packages are replaced with <code>ag-grid-community</code> 
+            <ul>
+                <li><p>Apart from <code>@ag-grid-community/locale</code> which remains unchanged.</p></li>
+            </ul>
+            </li>
+            <li>All <code>@ag-grid-enterprise/**</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
+        </ul>
+
+        <h3>Update package.json</h3>
+        <p>Update your <code>package.json</code> to reflect the new package names like in this example. </p>
+        <Code language={'diff'} code={
+`"dependencies": {
+-${isReact ? '    "@ag-grid-community/react": "^32.3.0",' : ''}${isAngular ? '    "@ag-grid-community/angular": "^32.3.0",' : ''}${isVue ? '    "@ag-grid-community/vue3": "^32.3.0",' : ''}
+-    "@ag-grid-community/client-side-row-model": "^32.3.0",
+-    "@ag-grid-enterprise/clipboard": "^32.3.0",
+-    "@ag-grid-community/locale": "^32.3.0",
++${isReact ? '    "ag-grid-react": "^33.0.0",' : ''}${isAngular ? '    "ag-grid-angular": "^33.0.0",' : ''}${isVue ? '    "ag-grid-vue3": "^33.0.0",' : ''}
++    "ag-grid-community": "^33.0.0",
++    "ag-grid-enterprise": "^33.0.0",
++    "@ag-grid-community/locale": "^33.0.0"
+}`} ></Code>
+        <Alert type="info">
+            <p>
+                We strongly recommend using v33 of the CodeMod as it will update all your import paths and update your module registration to ensure backwards compatibility.
+                <p><code>npx @ag-grid-devtools/cli@33.0 migrate --from=$FROM_VERSION</code></p>
+            </p>
+        </Alert>
+        
+        <p>
+            To take full advantage of the new modules you can use the <a href={moduleSelectionUrl}>Module Selector</a> tool to work out which
+            modules you require.
+        </p>
+        <h3> Validation Module</h3>
+        <p>
+            To help identify missing modules and configuration issues at development time, we recommend including the <code>ValidationModule</code> in your development
+            build. This will provide helpful details on missing modules for a particular feature. This is provided as a separate module so that it can be excluded from production builds saving even more bundle size. It is included in the <code>AllCommunityModule</code>.
+        </p>
+
+        <h3> Changes to Existing Modules</h3>
+
+        <p>The following changes have been made to existing modules to ensure that each feature only includes the minimal code required for that feature:</p>
+        <ul>
+            <li><code>ColumnsToolPanelModule</code> - no longer imports the <code>RowGroupingModule</code></li>
+            <li><code>ExcelExportModule</code> - no longer imports the <code>CsvExportModule</code></li>
+            <li>
+                <code>MenuModule</code> - split into <code>ColumnMenuModule</code> for the Column Menu, and
+                <code>ContextMenuModule</code> for the Context Menu.
+            </li>
+            <li><code>RangeSelectionModule</code> - replaced with <code>CellSelectionModule</code>.</li>
+            <li>
+                <code>RowGroupingModule</code> - split into several modules.
+                <ul>
+                    <li><code>RowGroupingModule</code> - Row Grouping only </li>
+                    <li><code>TreeDataModule</code> - Tree Data</li>
+                    <li><code>PivotModule</code> - Pivoting</li>
+                    <li><code>RowGroupingPanelModule</code> - Row Grouping Panel / Pivot Panel</li>
+                    <li><code>GroupFilterModule</code> - Group Filter</li>
+                </ul>
+            </li>
+            <li>
+                <code>GridChartsModule</code> - replaced with <code>IntegratedChartsModule</code> and requires AG Charts module to be registered.
+            </li>
+            <li>
+                <code>SparklinesModule</code> - requires AG Charts module to be registered.
+            </li>
+        </ul>
+
+        <Heading level="3" id="migrating-integrated-charts">AG Charts Integrated / Sparklines </Heading>
+        <p>
+            If you are using either Integrated Charts or Sparklines, you must now install either <code>ag-charts-community</code> or <code>ag-charts-enterprise</code> and register the relevant module as follows. 
+        </p>
+        <p>
+            If you are currently using AG Chart Community via <code>@ag-grid-enterprise/charts</code> then the equivalent code is:
+        </p>
+        <p>
+<Code language={'diff'} code={
+`"dependencies": {
+-    "@ag-grid-enterprise/charts": "^32.3.0",
++    "ag-grid-enterprise": "^33.0.0",
++    "ag-charts-community": "^11.0.0"
+}`} ></Code>
+            <Code code={"import { ModuleRegistry } from 'ag-grid-community';\nimport { IntegratedChartsModule } from 'ag-grid-enterprise';\nimport { AgChartsCommunityModule } from 'ag-charts-community';\n\nModuleRegistry.registerModules([\n\tIntegratedChartsModule.with(AgChartsCommunityModule),\n]);"} ></Code>
+        </p>
+        <p>
+            If you are currently using AG Charts Enterprise via <code>@ag-grid-enterprise/charts-enterprise</code> then the equivalent code is:
+        </p>
+        <p>
+<Code language={'diff'} code={
+`"dependencies": {
+-    "@ag-grid-enterprise/charts-enterprise": "^32.3.0",
++    "ag-grid-enterprise": "^33.0.0",
++    "ag-charts-enterprise": "^11.0.0"
+}`} ></Code>
+            <Code code={"import { ModuleRegistry } from 'ag-grid-community';\nimport { IntegratedChartsModule } from 'ag-grid-enterprise';\nimport { AgChartsEnterpriseModule } from 'ag-charts-enterprise';\n\nModuleRegistry.registerModules([\n\tIntegratedChartsModule.with(AgChartsEnterpriseModule)\n]);"} ></Code>
+        </p>
+        <p>
+            If you are currently using Sparklines via <code>@ag-grid-enterprise/sparklines</code> then the equivalent code is:
+        </p>
+        <p>
+            <Code code={"import { ModuleRegistry } from 'ag-grid-community';\nimport { SparklinesModule } from 'ag-grid-enterprise';\nimport { AgChartsCommunityModule } from 'ag-charts-community';\n\nModuleRegistry.registerModules([\n\tSparklinesModule.with(AgChartsCommunityModule),\n]);"} ></Code>
+        </p>
+        
+        <h3> Optimizing Bundle Size</h3>
+        <p>
+            The Codemod tool is designed to match the existing behaviour of your application. However, to take full advantage of the new modules you may wish to use the <a href={urlWithPrefix({framework, url: "./modules/"})}>Module Selector</a> tool to work out which modules you require.
+            </p>
+
+        <p>
+            You will also find information on alternative ways to register modules (including registering different modules for different grid instances).
+        </p>
+        
+    </div>
+</details>
+
 
 {/* ------------------------------------------------- */}
 
@@ -190,7 +325,7 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
     <div class={styles.detailsInner}>
         <p>This release includes the following breaking changes:</p>
 
-        <Heading level="3" id="packaging"> Packaging</Heading>
+        <Heading level="3" id="packaging"> NPM Packages</Heading>
         <p><code>ag-grid-enterprise</code> no longer includes <code>ag-charts-community</code> as a dependency. Also,
             the
             package <code>ag-grid-charts-enterprise</code> is no longer published.</p>
@@ -402,34 +537,27 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
             others.
             If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
 
-        <Heading level="3" id="typing">Typing</Heading>
+        <Heading level="3" id="typing">Stricter Types</Heading>
+        <p>The following properties are now strictly typed to only their valid values instead of <code>string</code>:</p>
         <ul>
-            <li>The types for the grid options <code>getMainMenuItems</code> and <code>getContextMenuItems</code>, as
-                well as
-                the column definition properties <code>mainMenuItems</code> and <code>contextMenuItems</code>, have
-                changed.
-                Instead of string values in the arrays (and in <code>defaultItems</code> in the callback), this is now
-                typed to
-                <code>DefaultMenuItem</code> which only allows the available menu values.
-            </li>
-            <li>The type for the grid option <code>chartMenuItems</code> has changed. Instead of string values in the
-                array (and
-                in <code>defaultItems</code> in the callback), this is now typed to <code>ChartDefaultMenuItem</code>
-                which only
-                allows the available values.</li>
-            <li>The column property is now optional in the callback to get column menu items (in the grid option
-                <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null
-                when a
-                column group header or empty column space is right-clicked on. A new property <code>columnGroup</code>
-                will be
-                provided when a column group header is right-clicked on.
-            </li>
+            <li>gridOption - <code>chartMenuItems</code>
+            <li>gridOption - <code>getMainMenuItems</code> and <code>getContextMenuItems</code> including the <code>defaultItems</code> parameter in the callback</li>
+                </li>   
+                <li>columnDefs - <code>mainMenuItems</code> and <code>contextMenuItems</code>
+                </li> 
+                
+
         </ul>
 
-        <Heading level="3" id="integrated-charts"> Integrated Charts</Heading>
-        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of
-            the
-            Integrated Charts Advanced Settings.</p>
+        <Heading level="3" id="typing">Column Menu</Heading>
+        <p>The column property is now optional in the callback to get column menu items (in the grid option
+            <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null
+            when a
+            column group header or empty column space is right-cpcked on. A new property <code>columnGroup</code>
+            will be
+            provided when a column group header is right-clicked on.
+        </p>
+
 
         <Heading level="3" id="modules-1">Modules</Heading>
         <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not
@@ -457,6 +585,9 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
         <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
             Restoring
             grid state with the old <code>colId</code> will have no effect.</p>
+
+        <Heading level="3" id="integrated-charts"> Integrated Charts</Heading>
+        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the Integrated Charts Advanced Settings.</p>
 
         <Heading level="3" id="sparklines">Sparklines</Heading>
         <ul>
