@@ -39,6 +39,12 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
     configuration and greater optimisation of bundle size.
 </p>
 
+<Alert type="success">
+    <p>
+        We strongly recommend using the Codmod to assist your migration as it will handle all the module changes for you.
+    </p>
+    <p><code>npx @ag-grid-devtools/cli@33.0 migrate --from=$FROM_VERSION</code></p>
+</Alert>
 { isJS && <p>If you are using the UMD bundle, then you do not need to make any changes as all modules are automatically registered. Otherwise, see the steps below.</p> }
 
 {/* ------------------------------------------------- */}
@@ -53,7 +59,7 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
            <p></p>
         </div>
 
-<details class={styles.details}>
+<!-- <details class={styles.details}> -->
     <summary class:list={[styles.summary, 'button-secondary']}>Package Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
 
     <div class={styles.detailsInner}>
@@ -85,6 +91,12 @@ const moduleSelectionUrl = urlWithPrefix({framework, url: './modules/#selecting-
             If you are currently using AG Charts Community via <code>ag-grid-enterprise</code> then the equivalent code is:
         </p>
         <p>
+        <Code language={'diff'} code={
+            `"dependencies": {
+   "ag-grid-enterprise": "^33.0.0",
++   "ag-charts-community": "^11.0.0",
+}
+`} ></Code>
             <Code code={`import { ModuleRegistry } from 'ag-grid-community';
 import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
 import { AgChartsCommunityModule } from 'ag-charts-community';
@@ -122,7 +134,7 @@ ModuleRegistry.registerModules([
         </p>
         
     </div>
-</details>
+<!-- </details> -->
 
 
 {/* ------------------------------------------------- */}
@@ -137,7 +149,7 @@ ModuleRegistry.registerModules([
            <p></p>
         </div>
 
-<details class={styles.details}>
+<!-- <details class={styles.details}> -->
     <summary class:list={[styles.summary, 'button-secondary']}>Module Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
 
     <div class={styles.detailsInner}>
@@ -261,10 +273,17 @@ ModuleRegistry.registerModules([
         </p>
         
     </div>
-</details>
+<!-- </details> -->
 
 
 {/* ------------------------------------------------- */}
+
+<Heading level="2" id="theming">Theming</Heading>
+<p>The Theming API is now the default theming method of the grid. The default value for <code>gridOptions.theme</code> has changed from <code>legacy</code> to <code>quartz</code>.
+    
+   <p> To continue theming the grid via a theme class, i.e <code>class="ag-theme-quartz"</code>, on the parent element of the grid and CSS files set  <code>theme:"legacy"</code>. This is documented in the <a
+        href={urlWithPrefix({framework, url: './theming-migration/'})}>Theming API Migration Guide</a>.</p>
+
 
 <Heading level="2" id="codemods">Codemods</Heading>
 <p>Follow these steps to upgrade your project's AG Grid version to <code>33.0.0</code>:</p>
@@ -400,15 +419,7 @@ ModuleRegistry.registerModules([
             <p>The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this AG Grid version.</p>
         </div>}
 
-        <Heading level="3" id="theming">Theming</Heading>
-        <p>The Theming API is now the default theming method of the grid. Because of this, setting the theme via a theme
-            class
-            (<code>class="ag-theme-quartz"</code>) on the parent element of the grid is no longer supported.
-            Applications using
-            CSS file-based themes must either pass a theme object to the theme grid option or the string
-            <code>"legacy"</code>
-            to keep using class name-based themes. This is documented in the <a
-                href={urlWithPrefix({framework, url: './theming-migration/'})}>Theming API Migration Guide</a>.</p>
+
 
         <Heading level="3" id="custom-icons">Custom Icons</Heading>
         <p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific
