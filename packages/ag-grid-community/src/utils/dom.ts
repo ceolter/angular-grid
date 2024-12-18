@@ -533,7 +533,7 @@ export function _getTextSelectionRanges(beans: BeanCollection): { selection: Sel
 }
 
 export function _preserveRangesWhile(beans: BeanCollection, fn: () => void): void {
-    if (!_isBrowserFirefox()) {
+    if (!_isBrowserFirefox() && !_isBrowserSafari()) {
         return fn();
     }
 
