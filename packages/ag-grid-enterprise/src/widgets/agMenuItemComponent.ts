@@ -3,6 +3,7 @@ import {
     BeanStub,
     KeyCode,
     _loadTemplate,
+    _preserveRangesWhile,
     _setAriaDisabled,
     _setAriaExpanded,
     _setAriaLevel,
@@ -299,7 +300,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
         this.menuItemComp.setActive?.(true);
         if (!this.suppressFocus) {
-            this.eGui!.focus({ preventScroll: true });
+            _preserveRangesWhile(this.beans, () => this.eGui!.focus({ preventScroll: true }));
         }
 
         if (openSubMenu && this.params.subMenu) {

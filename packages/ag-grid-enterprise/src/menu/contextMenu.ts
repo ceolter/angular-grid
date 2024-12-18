@@ -28,6 +28,7 @@ import {
     _isNothingFocused,
     _isPromise,
     _isVisible,
+    _preserveRangesWhile,
     _warn,
 } from 'ag-grid-community';
 
@@ -329,9 +330,11 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             eChild: eMenuGui,
             closeOnEsc: true,
             closedCallback: (e) => {
-                eGridBodyGui.classList.remove(CSS_CONTEXT_MENU_OPEN);
-                this.destroyBean(menu);
-                this.dispatchVisibleChangedEvent(false, e === undefined ? 'api' : 'ui');
+                _preserveRangesWhile(this.beans, () => {
+                    eGridBodyGui.classList.remove(CSS_CONTEXT_MENU_OPEN);
+                    this.destroyBean(menu);
+                    this.dispatchVisibleChangedEvent(false, e === undefined ? 'api' : 'ui');
+                });
             },
             click: mouseEvent,
             positionCallback: () => {
@@ -487,7 +490,7 @@ class ContextMenu extends Component<ContextMenuEvent> {
 
         const menuList = this.menuList;
         if (menuList) {
-            _focusInto(menuList.getGui());
+            _preserveRangesWhile(this.beans, () => _focusInto(menuList.getGui()));
         }
     }
 
