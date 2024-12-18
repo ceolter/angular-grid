@@ -519,11 +519,12 @@ export function _observeResize(beans: BeanCollection, element: HTMLElement, call
 
 export function _getTextSelectionRanges(beans: BeanCollection): { selection: Selection | null; ranges: Range[] } {
     const rootNode = _getRootNode(beans);
-    const selection = 'getSelection' in rootNode ? rootNode.getSelection() : null;
-    const ranges = [];
+    const selection = 'getSelection' in rootNode ? (rootNode.getSelection() as Selection) : null;
+    const ranges: Range[] = [];
 
     for (let i = 0; i < (selection?.rangeCount ?? 0); i++) {
         const range = selection?.getRangeAt(i);
+
         if (range) {
             ranges.push(range);
         }
