@@ -2,10 +2,11 @@ interface ValidationResult {
     errors: string[];
 }
 
-interface Schema {
+interface Schema<T> {
+    readonly _output: T;
     isOptional(): boolean;
     label(): string;
-    message(s: string): Schema;
+    message(s: string): Schema<T>;
     validate(x: unknown, opts?: ValidationOptions): ValidationResult;
 }
 
@@ -13,7 +14,8 @@ interface ValidationOptions {
     path?: string[];
 }
 
-abstract class BaseSchema implements Schema {
+abstract class BaseSchema<T> implements Schema<T> {
+    abstract readonly _output: T;
     protected _required = false;
     protected msg: string | null = null;
 
@@ -35,10 +37,13 @@ abstract class BaseSchema implements Schema {
     abstract validate(x: unknown, opts?: ValidationOptions): ValidationResult;
 }
 
-class ObjectSchema extends BaseSchema implements Schema {
+type SchemaObject<T extends object> = { [K in keyof T]: Schema<any> };
+
+class ObjectSchema<T extends object> extends BaseSchema<InferObject<T>> implements Schema<InferObject<T>> {
+    readonly _output: InferObject<T>;
     private _only = false;
 
-    constructor(private fields: Record<string, Schema>) {
+    constructor(private fields: SchemaObject<T>) {
         super();
     }
 
@@ -46,7 +51,7 @@ class ObjectSchema extends BaseSchema implements Schema {
         return 'an object value';
     }
 
-    only(): ObjectSchema {
+    only(): this {
         this._only = true;
         return this;
     }
@@ -62,15 +67,15 @@ class ObjectSchema extends BaseSchema implements Schema {
         for (const [k, v] of Object.entries(x)) {
             if (k in this.fields) {
                 const path = (opts?.path ?? []).concat(k);
-                const result = this.fields[k].validate(v, { path });
+                const result = this.fields[k as keyof T].validate(v, { path });
                 errors.push(...(result.errors ?? []));
-                delete this.fields[k];
+                delete this.fields[k as keyof T];
             } else if (this._only) {
                 errors.push(`Unexpected field "${k}" in ${opts?.path?.[0] ?? 'this'} object.`);
             }
         }
 
-        const remaining = Object.entries(this.fields);
+        const remaining = Object.entries<Schema<any>>(this.fields);
 
         if (remaining.length > 0) {
             for (const [k, v] of remaining) {
@@ -84,8 +89,10 @@ class ObjectSchema extends BaseSchema implements Schema {
     }
 }
 
-class LiteralSchema extends BaseSchema implements Schema {
-    constructor(private literal: unknown) {
+class LiteralSchema<T> extends BaseSchema<T> implements Schema<T> {
+    readonly _output: T;
+
+    constructor(private literal: T) {
         super();
     }
 
@@ -104,10 +111,17 @@ class LiteralSchema extends BaseSchema implements Schema {
     }
 }
 
-class UnionSchema extends BaseSchema implements Schema {
+type UnionOptions = [Schema<any>, ...Schema<any>[]];
+
+class UnionSchema<T extends UnionOptions>
+    extends BaseSchema<T[number]['_output']>
+    implements Schema<T[number]['_output']>
+{
+    readonly _output: T;
+
     private _deep = false;
 
-    constructor(private options: Schema[]) {
+    constructor(private options: UnionOptions) {
         super();
     }
 
@@ -147,7 +161,9 @@ class UnionSchema extends BaseSchema implements Schema {
     }
 }
 
-class FunctionSchema extends BaseSchema implements Schema {
+class FunctionSchema<T extends () => any> extends BaseSchema<T> implements Schema<T> {
+    readonly _output: T;
+
     override label(): string {
         return 'a function';
     }
@@ -163,7 +179,9 @@ class FunctionSchema extends BaseSchema implements Schema {
     }
 }
 
-class BooleanSchema extends BaseSchema implements Schema {
+class BooleanSchema extends BaseSchema<boolean> implements Schema<boolean> {
+    readonly _output: boolean;
+
     override label(): string {
         return 'a boolean';
     }
@@ -218,7 +236,9 @@ class ConditionalSchema extends BaseSchema implements Schema {
     }
 }
 
-class UndefinedSchema extends BaseSchema implements Schema {
+class UndefinedSchema extends BaseSchema<undefined> implements Schema<undefined> {
+    readonly _output: undefined;
+
     override label(): string {
         return 'undefined';
     }
@@ -234,13 +254,13 @@ class UndefinedSchema extends BaseSchema implements Schema {
     }
 }
 
-export const object = (o: Record<string, Schema>): ObjectSchema => new ObjectSchema(o);
+export const object = <T extends object>(o: { [K in keyof T]: Schema<any> }): ObjectSchema<T> => new ObjectSchema<T>(o);
 
-export const literal = (x: unknown): LiteralSchema => new LiteralSchema(x);
+export const literal = <T>(x: T): LiteralSchema<T> => new LiteralSchema(x);
 
-export const union = (xs: Schema[]): UnionSchema => new UnionSchema(xs);
+export const union = <T extends UnionOptions>(xs: T): UnionSchema<T> => new UnionSchema(xs);
 
-export const func = (): FunctionSchema => new FunctionSchema();
+export const func = <T extends () => any>(): FunctionSchema<T> => new FunctionSchema<T>();
 
 export const boolean = (): BooleanSchema => new BooleanSchema();
 
@@ -261,3 +281,23 @@ export const formatPath = ({ path = [] }: ValidationOptions = {}) => {
     const str = path.join('.');
     return str.length > 0 ? str + ': ' : str;
 };
+
+type InferTuple<T extends readonly any[]> = {
+    [K in keyof T]: T[K] extends Schema<infer T> ? T : never;
+};
+type InferObject<T extends object> = {
+    [K in keyof T]: T[K] extends Schema<infer T> ? T : never;
+};
+type Infer<T extends Schema<any>> = T['_output'] extends [...any[]]
+    ? InferTuple<T['_output']>
+    : T['_output'] extends object
+      ? InferObject<T['_output']>
+      : T['_output'];
+
+const x = union([literal('foo'), boolean(), literal('hi')]);
+const y = object({
+    foo: literal('foo'),
+    bar: boolean(),
+});
+type Q = Infer<typeof x>;
+type P = Infer<typeof y>;
