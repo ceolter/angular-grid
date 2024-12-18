@@ -114,8 +114,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             openSubMenu: (activateFirstItem) => this.openSubMenu(activateFirstItem),
             closeSubMenu: () => this.closeSubMenu(),
             closeMenu: (event) => this.closeMenu(event),
-            updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) =>
-                this.refreshTooltip(tooltip, shouldDisplayTooltip),
+            updateTooltip: (tooltip, shouldDisplayTooltip) => this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
         });
         return (
@@ -323,7 +322,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.isActive = false;
 
         if (this.subMenuIsOpen) {
-            this.hideSubMenu!();
+            this.hideSubMenu?.();
         }
     }
 

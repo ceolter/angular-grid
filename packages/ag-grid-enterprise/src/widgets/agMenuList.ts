@@ -43,8 +43,7 @@ export class AgMenuList extends TabGuardComp<AgMenuListEvent> {
 
     private onTabKeyDown(e: KeyboardEvent) {
         const parent = this.getParentComponent();
-        const parentGui = parent && parent.getGui();
-        const isManaged = parentGui && parentGui.classList.contains('ag-focus-managed');
+        const isManaged = parent?.getGui()?.classList.contains('ag-focus-managed');
 
         if (!isManaged) {
             e.preventDefault();
