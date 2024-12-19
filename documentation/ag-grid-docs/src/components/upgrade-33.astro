@@ -17,7 +17,7 @@ const isAngular = framework === 'angular';
 const isVue = framework === 'vue';
 ---
 
-<p>Reductions in bundle size, updated theming, column header content customization</p>
+<p>Reductions in bundle size, updated theming, column header content customization.</p>
 
 <Heading level="2" id="whats-new">What's New</Heading>
 
@@ -68,29 +68,58 @@ const isVue = framework === 'vue';
 <code>ag-grid-community</code>
 
 <p>
-    To match the existing behaviour of simply register the <code>AllCommunityModule</code> via the ModuleRegistry before
-    any grid is created. This module contains all the features that were previously automatically included as part of <code
-        >ag-grid-community</code
+    To match the existing behaviour simply register the <i>AllCommunityModule</i> bundle via the ModuleRegistry before any
+    grid is created. This module contains all the features that were previously included as part of <i
+        >ag-grid-community</i
     >.
 </p>
 <p>
+    Most users will want to set <i>{'{'}theme: "legacy"{'}'}</i> if not already using the new Theming Api, see <a
+        href="#theming">Theming</a
+    > for more details.
+</p>
+<p>
     <Code
-        code={"import { AllCommunityModules, ModuleRegistry } from 'ag-grid-community';\n\nModuleRegistry.registerModules([AllCommunityModules]);"}
+        code={`import { AllCommunityModules, ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModules]);
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({ theme: "legacy"});
+`}
     />
 </p>
 
 <Heading level="3" id="migrating-from-enterprise">Migrating from AG Grid Enterprise</Heading>
 <code>ag-grid-enterprise</code>
 <p>
-    To match the existing behaviour simply register the <code>AllEnterpriseModule</code> via the ModuleRegistry before any
-    grid is created. A good place to add this code is alongside your LicenseManager.
+    To match the existing behaviour simply register the <i>AllEnterpriseModule</i> bundle via the ModuleRegistry alongside
+    your LicenseManager.
+</p>
+<p>
+    If you are using Integrated Charts or Sparklines, see the <a href="#migrating-integrated-charts">
+        migration steps</a
+    > below.
+</p>
+<p>
+    Most users will want to set <i>{'{'}theme: "legacy"{'}'}</i> if not already using the new Theming Api, see <a
+        href="#theming">Theming</a
+    > for more details.
 </p>
 <p>
     <Code
-        code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
+        code={`import { ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
+import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
 
 LicenseManager.setLicenseKey('your License Key');
-ModuleRegistry.registerModules([AllEnterpriseModule]);`}
+
+// Register all enterprise features
+ModuleRegistry.registerModules([AllEnterpriseModule]);
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({ theme: "legacy"});
+`}
     />
 </p>
 
@@ -101,7 +130,7 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`}
 <p></p>
 <p>
     In v33 there is no longer a requirement for separate NPM feature modules to achieve tree shaking. This means we can
-    simply export all the modules from either <code>ag-grid-community</code> or <code>ag-grid-enterprise</code> as follows:
+    simply export all the modules from either <i>ag-grid-community</i> or <i>ag-grid-enterprise</i> as follows:
 </p>
 <ul>
     {
@@ -126,17 +155,15 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`}
         )
     }
     <li>
-        All <code>@ag-grid-community/**</code> packages are replaced with <code>ag-grid-community</code>
+        <code>@ag-grid-community/**</code> packages are replaced with <code>ag-grid-community</code>
         <ul>
             <li><p>Apart from <code>@ag-grid-community/locale</code> which remains unchanged.</p></li>
         </ul>
     </li>
-    <li>All <code>@ag-grid-enterprise/**</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
+    <li><code>@ag-grid-enterprise/**</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
 </ul>
 
-<p>
-    Here is an example of a typical <code>package.json</code> diff for the migration:
-</p>
+<p>Here is an example of a typical package.json diff for the migration:</p>
 <details class={styles.details}>
     <summary class:list={[styles.summary, 'button-secondary']}
         >an example package.json diff <Icon svgClasses={styles.summaryChevron} name="chevronRight" /></summary
@@ -181,11 +208,11 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`}
 
 <h3>Validation Module</h3>
 <p>
-    To help identify missing modules and configuration issues at development time, we recommend including the <code
-        >ValidationModule</code
+    To help identify missing modules and configuration issues at development time, we recommend including the <i
+        >ValidationModule</i
     > in your development build. This will provide helpful details on missing modules for a particular feature. This is provided
     as a separate module so that it can be excluded from production builds saving even more bundle size. It is included in
-    the <code>AllCommunityModule</code>.
+    the <i>AllCommunityModule</i>.
 </p>
 
 <h3>Changes to Existing Modules</h3>
@@ -242,13 +269,16 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`}
 
     <details class={styles.details}>
         <summary class:list={[styles.summary, 'button-secondary']}
-            >Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight" /></summary
+            >Integrated Charts / Sparklines Migration Steps <Icon
+                svgClasses={styles.summaryChevron}
+                name="chevronRight"
+            /></summary
         >
 
         <div class={styles.detailsInner}>
             <p>
-                The following shows the changes required for an application using Integrated Charts / Sparklines via the
-                AllEnterpriseModule with the Enterprise version of AG Charts.
+                For an application using Integrated Charts / Sparklines via the <i>AllEnterpriseModule</i> bundle with the
+                Enterprise version of AG Charts first add <i>ag-charts-enterprise</i> to your package.json dependencies.
             </p>
             <Code
                 language={'diff'}
@@ -258,6 +288,10 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`}
 }
 `}
             />
+            <p>
+                Then pass the <i>AgChartsEnterpriseModule</i> to the <i>AllEnterpriseModule</i> to activate the charting
+                features.
+            </p>
             <Code
                 code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
@@ -267,15 +301,14 @@ ModuleRegistry.registerModules([
     AllEnterpriseModule.with(AgChartsEnterpriseModule)
 ]);`}
             />
-        </div>
 
-        <p>
-            If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code
-                >SparklinesModule</code
-            > also require the AG Charts module to be registered when they are used.
-        </p>
-        <Code
-            code={`import { IntegratedChartsModule, SparklinesModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
+            <p>
+                If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code
+                    >SparklinesModule</code
+                > also require the AG Charts module to be registered when they are used.
+            </p>
+            <Code
+                code={`import { IntegratedChartsModule, SparklinesModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 LicenseManager.setLicenseKey('your License Key');
@@ -283,7 +316,8 @@ ModuleRegistry.registerModules([
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SparklinesModule.with(AgChartsEnterpriseModule)
 ]);`}
-        />
+            />
+        </div>
     </details>
 </p>
 
@@ -300,22 +334,18 @@ ModuleRegistry.registerModules([
 <h3 id="legacy-theming">Continue with Legacy Themes</h3>
 <p>
     If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of
-    themes by passing the string <code>"legacy"</code> to the <code>theme</code> grid option. You can then continue to use
-    legacy themes.
+    themes by setting the grid option <code>theme:"legacy"</code>. You can then continue to use legacy themes.
 </p>
 <p>
-    If you have multiple grids you may find using a <a
+    If you have multiple grids you can mark them all as using legacy themes via a <a
         href={urlWithPrefix({ framework, url: '././grid-interface/#global-grid-options' })}>Global Grid Option</a
-    > to be a convenient way to set the theme to "legacy" for all grids in your application. Enterprise users can define
-    this alongside their license key.
+    >. Enterprise users can define this alongside their license key.
 </p>
 <Code
     code={`import { provideGlobalGridOptions } from 'ag-grid-community';
 
 // Mark all grids as using legacy themes
-provideGlobalGridOptions({
-    theme: "legacy",
-});
+provideGlobalGridOptions({ theme: "legacy" });
 `}
 />
 
@@ -456,7 +486,10 @@ provideGlobalGridOptions({
                                 <li>
                                     <code>getReactContainerStyle</code> removed, apply styling directly to
                                     <code>ag-react-container</code>
-                                    if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
+                                    if needed.
+                                </li>
+                                <li>
+                                    <code>getReactContainerClasses</code> removed, apply styling directly to
                                     <code>ag-react-container</code> if needed.
                                 </li>
                                 <li>
