@@ -17,7 +17,7 @@ const isAngular = framework === 'angular';
 const isVue = framework === 'vue';
 
 ---
-<p>Reductions in bundle size, updated theming, column header content customization</p>
+<p>Reductions in bundle size, updated theming, column header content customization.</p>
 
 <Heading level="2" id="whats-new">What's New</Heading>
 
@@ -54,57 +54,116 @@ const isVue = framework === 'vue';
 <Heading level="3" id="migrating-from-community">Migrating from AG Grid Community</Heading>
 <code>ag-grid-community</code>     
 
-        <p>To match the existing behaviour of simply register the <code>AllCommunityModule</code> via the ModuleRegistry before any grid is created. This module contains all the features that were previously automatically included as part of <code>ag-grid-community</code>.</p>
-        <p>
-            <Code code={"import { AllCommunityModules, ModuleRegistry } from 'ag-grid-community';\n\nModuleRegistry.registerModules([AllCommunityModules]);"} ></Code>
-        </p>
+<p>
+    To match the existing behaviour simply register the <i>AllCommunityModule</i> bundle via the ModuleRegistry before any
+    grid is created. This module contains all the features that were previously included as part of <i
+        >ag-grid-community</i
+    >.
+</p>
+<p>
+    Most users will want to set <i>{'{'}theme: "legacy"{'}'}</i> if not already using the new Theming Api, see <a
+        href="#theming">Theming</a
+    > for more details.
+</p>
+<p>
+    <Code
+        code={`import { AllCommunityModules, ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
+
+// Register all community features
+ModuleRegistry.registerModules([AllCommunityModules]);
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({ theme: "legacy"});
+`}
+    />
+</p>
 
 <Heading level="3" id="migrating-from-enterprise">Migrating from AG Grid Enterprise</Heading>
 <code>ag-grid-enterprise</code>
-<p>To match the existing behaviour simply register the <code>AllEnterpriseModule</code> via the ModuleRegistry before any grid is created. A good place to add this code is alongside your LicenseManager. </p>
 <p>
-        <Code code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
+    To match the existing behaviour simply register the <i>AllEnterpriseModule</i> bundle via the ModuleRegistry alongside
+    your LicenseManager.
+</p>
+<p>
+    If you are using Integrated Charts or Sparklines, see the <a href="#migrating-integrated-charts">
+        migration steps</a
+    > below.
+</p>
+<p>
+    Most users will want to set <i>{'{'}theme: "legacy"{'}'}</i> if not already using the new Theming Api, see <a
+        href="#theming">Theming</a
+    > for more details.
+</p>
+<p>
+    <Code
+        code={`import { ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
+import { AllEnterpriseModule, LicenseManager } from 'ag-grid-enterprise';
 
 LicenseManager.setLicenseKey('your License Key');
-ModuleRegistry.registerModules([AllEnterpriseModule]);`} ></Code>
-    </p>
+
+// Register all enterprise features
+ModuleRegistry.registerModules([AllEnterpriseModule]);
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({ theme: "legacy"});
+`}
+    />
+</p>
 
 
    
 
 <Heading level="3" id="migrating-from-modules">Migrating from AG Grid Modules</Heading>
-        
-        
-<code>@ag-grid-community/**</code>  / <code>@ag-grid-enterprise/**</code>
 
-        
-        <p></p>
-    <p>
-        In v33 there is no longer a requirement for separate NPM feature modules to achieve tree shaking. This means we can simply export all the modules from either <code>ag-grid-community</code> or <code>ag-grid-enterprise</code> as follows:
-    </p>
-    <ul>
-        { isReact && <li><code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code></li>}
-        { isAngular && <li><code>@ag-grid-community/angular</code> is replaced with <code>ag-grid-angular</code></li>}
-        { isVue && <li><code>@ag-grid-community/vue3</code> is replaced with <code>ag-grid-vue3</code></li>}
-        <li>All <code>@ag-grid-community/**</code> packages are replaced with <code>ag-grid-community</code> 
+<code>@ag-grid-community/**</code> / <code>@ag-grid-enterprise/**</code>
+
+<p></p>
+<p>
+    In v33 there is no longer a requirement for separate NPM feature modules to achieve tree shaking. This means we can
+    simply export all the modules from either <i>ag-grid-community</i> or <i>ag-grid-enterprise</i> as follows:
+</p>
+<ul>
+    {
+        isReact && (
+            <li>
+                <code>@ag-grid-community/react</code> is replaced with <code>ag-grid-react</code>
+            </li>
+        )
+    }
+    {
+        isAngular && (
+            <li>
+                <code>@ag-grid-community/angular</code> is replaced with <code>ag-grid-angular</code>
+            </li>
+        )
+    }
+    {
+        isVue && (
+            <li>
+                <code>@ag-grid-community/vue3</code> is replaced with <code>ag-grid-vue3</code>
+            </li>
+        )
+    }
+    <li>
+        <code>@ag-grid-community/**</code> packages are replaced with <code>ag-grid-community</code>
         <ul>
             <li><p>Apart from <code>@ag-grid-community/locale</code> which remains unchanged.</p></li>
         </ul>
-        </li>
-        <li>All <code>@ag-grid-enterprise/**</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
-    </ul>
+    </li>
+    <li><code>@ag-grid-enterprise/**</code> packages are replaced with <code>ag-grid-enterprise</code>.</li>
+</ul>
 
-    <p>
-        Here is an example of a typical <code>package.json</code> diff for the migration:
-    </p>
-    <details class={styles.details}> 
-        <summary class:list={[styles.summary, 'button-secondary']}>an example package.json diff <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
-    
-        <div class={styles.detailsInner}>
-    
-            <p> AG Grid Community </p>
-            <Code language={'diff'} code={
-    `"dependencies": {
+<p>Here is an example of a typical package.json diff for the migration:</p>
+<details class={styles.details}>
+    <summary class:list={[styles.summary, 'button-secondary']}
+        >an example package.json diff <Icon svgClasses={styles.summaryChevron} name="chevronRight" /></summary
+    >
+
+    <div class={styles.detailsInner}>
+        <p>AG Grid Community</p>
+        <Code
+            language={'diff'}
+            code={`"dependencies": {
 -${isReact ? '    "@ag-grid-community/react": "^32.3.0",' : ''}${isAngular ? '    "@ag-grid-community/angular": "^32.3.0",' : ''}${isVue ? '    "@ag-grid-community/vue3": "^32.3.0",' : ''}
 -    "@ag-grid-community/client-side-row-model": "^32.3.0",
 -    "@ag-grid-community/csv-export": "^32.3.0",
@@ -134,11 +193,14 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`} ></Code>
         <p><code>npx @ag-grid-devtools/cli@33.0 migrate --from=$FROM_VERSION</code></p>
     </Alert>
 
-    <h3> Validation Module</h3>
-    <p>
-        To help identify missing modules and configuration issues at development time, we recommend including the <code>ValidationModule</code> in your development
-        build. This will provide helpful details on missing modules for a particular feature. This is provided as a separate module so that it can be excluded from production builds saving even more bundle size. It is included in the <code>AllCommunityModule</code>.
-    </p>
+<h3>Validation Module</h3>
+<p>
+    To help identify missing modules and configuration issues at development time, we recommend including the <i
+        >ValidationModule</i
+    > in your development build. This will provide helpful details on missing modules for a particular feature. This is provided
+    as a separate module so that it can be excluded from production builds saving even more bundle size. It is included in
+    the <i>AllCommunityModule</i>.
+</p>
 
     <h3> Changes to Existing Modules</h3>
     <p> The following changes have been made to the existing modules to ensure that each feature only includes the minimal code required for that feature:</p>
@@ -182,40 +244,59 @@ ModuleRegistry.registerModules([AllEnterpriseModule]);`} ></Code>
 <p>
     AG Grid Enterprise no longer includes AG Charts as part of its distribution to avoid bloating the bundle size. If you are using either Integrated Charts or Sparklines, you must now explicitly include either the community / enterprise <a href="https://ag-grid.com/charts/" target="_blank">AG Charts </a> library as a dependency. 
 
-    <details class={styles.details}> 
-        <summary class:list={[styles.summary, 'button-secondary']}>Migration Steps <Icon svgClasses={styles.summaryChevron} name="chevronRight"/></summary>
-    
-        <div class={styles.detailsInner}>
+    <details class={styles.details}>
+        <summary class:list={[styles.summary, 'button-secondary']}
+            >Integrated Charts / Sparklines Migration Steps <Icon
+                svgClasses={styles.summaryChevron}
+                name="chevronRight"
+            /></summary
+        >
 
-    <p>The following shows the changes required for an application using Integrated Charts / Sparklines via the AllEnterpriseModule with the Enterprise version of AG Charts.</p>
-    <Code language={'diff'} code={
-        `"dependencies": {
+        <div class={styles.detailsInner}>
+            <p>
+                For an application using Integrated Charts / Sparklines via the <i>AllEnterpriseModule</i> bundle with the
+                Enterprise version of AG Charts first add <i>ag-charts-enterprise</i> to your package.json dependencies.
+            </p>
+            <Code
+                language={'diff'}
+                code={`"dependencies": {
     "ag-grid-enterprise": "${agGridVersion}",
 +   "ag-charts-enterprise": "${agChartsVersion}",
 }
-`} ></Code>
-<Code code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
+`}
+            />
+            <p>
+                Then pass the <i>AgChartsEnterpriseModule</i> to the <i>AllEnterpriseModule</i> to activate the charting
+                features.
+            </p>
+            <Code
+                code={`import { AllEnterpriseModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 LicenseManager.setLicenseKey('your License Key');
 ModuleRegistry.registerModules([
     AllEnterpriseModule.with(AgChartsEnterpriseModule)
-]);`} ></Code>
-</p>
+]);`}
+            />
 
-<p>
-    If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code>SparklinesModule</code> also require the AG Charts module to be registered when they are used.
-</p>
-<Code code={`import { IntegratedChartsModule, SparklinesModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
+            <p>
+                If you are using AG Grid Modules, then both the <code>IntegratedChartsModule</code> and <code
+                    >SparklinesModule</code
+                > also require the AG Charts module to be registered when they are used.
+            </p>
+            <Code
+                code={`import { IntegratedChartsModule, SparklinesModule, LicenseManager, ModuleRegistry } from 'ag-grid-enterprise';
 import { AgChartsEnterpriseModule } from 'ag-charts-enterprise';
 
 LicenseManager.setLicenseKey('your License Key');
 ModuleRegistry.registerModules([
     IntegratedChartsModule.with(AgChartsEnterpriseModule),
     SparklinesModule.with(AgChartsEnterpriseModule)
-]);`} ></Code>
-</div>
-</details>
+]);`}
+            />
+        </div>
+    </details>
+</p>
 
 {/* ------------------------------------------------- */}
 
@@ -225,19 +306,21 @@ ModuleRegistry.registerModules([
 
 <h3 id="legacy-theming">Continue with Legacy Themes</h3>
 <p>
-If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of themes by passing the string <code>"legacy"</code> to the <code>theme</code> grid option. You can then continue to use legacy themes.
+    If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of
+    themes by setting the grid option <code>theme:"legacy"</code>. You can then continue to use legacy themes.
 </p>
 <p>
-If you have multiple grids you may find using a <a href={urlWithPrefix({ framework, url: "././grid-interface/#global-grid-options"})}>Global Grid Option</a> to be a convenient way to set the theme to "legacy" for all grids in your application. Enterprise users can define this alongside their license key.
+    If you have multiple grids you can mark them all as using legacy themes via a <a
+        href={urlWithPrefix({ framework, url: '././grid-interface/#global-grid-options' })}>Global Grid Option</a
+    >. Enterprise users can define this alongside their license key.
 </p>
 <Code code={`import { provideGlobalGridOptions } from 'ag-grid-community';
 
 // Mark all grids as using legacy themes
-provideGlobalGridOptions({
-    theme: "legacy",
-});
-`} ></Code>
-    
+provideGlobalGridOptions({ theme: "legacy" });
+`}
+/>
+
 {/* ------------------------------------------------- */}
 
 <Heading level="2" id="codemods">Codemods</Heading>
@@ -245,13 +328,14 @@ provideGlobalGridOptions({
 
 <ol>
     <li>
-        <p>
-            Locate your project's <code>package.json</code> and note the version of AG Grid that you are currently
-            using.
-        </p>
+        <p>Locate your project's package.json and note the version of AG Grid that you are currently using.</p>
     </li>
     <li>
-        <p>Update any AG Grid dependencies listed in the <code>package.json</code> as outline above to version <code>{agGridVersion}</code>.</p>
+        <p>
+            Update any AG Grid dependencies listed in the package.json as outline above to version <code
+                >{agGridVersion}</code
+            >.
+        </p>
     </li>
     <li>
         <p>Open a terminal and navigate to your project's root folder.</p>
@@ -304,65 +388,239 @@ provideGlobalGridOptions({
         <Heading level="3" > Changes To Modules / Packages</Heading>
         <p>Changes outline above in the <a href={urlWithPrefix({framework, url: "./upgrading-to-ag-grid-33/#changes-to-modules"})}> Changes to Modules / Packages section </a></p>
 
-        <Heading level="3" >Integrated Charts / Sparklines</Heading>
-        <p>Changes outline above in the <a href={urlWithPrefix({framework, url: "./upgrading-to-ag-grid-33/#migrating-integrated-charts"})}> Integrated Charts / Sparklines section </a></p>
-
-
-        <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
-        <p>For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:
+        <Heading level="3">Integrated Charts / Sparklines</Heading>
+        <p>
+            Changes outline above in the <a
+                href={urlWithPrefix({ framework, url: './upgrading-to-ag-grid-33/#migrating-integrated-charts' })}
+            >
+                Integrated Charts / Sparklines section
+            </a>
         </p>
 
-        { isAngular && <p>For boolean values provided as strings, all string values except “false” are truthy - only “false” will be false, any other spelling such as “FALSE” will be treated as true.</p> }
-        { !isAngular && <p>For boolean values provided as strings, “false” is no longer converted to false anymore - all string values are truthy.</p> }
+        {
+            isAngular && (
+                <div>
+                    <Heading level="3" id="angular-minimum-version">
+                        Angular Minimum Version
+                    </Heading>
+                    <p>
+                        The minimum Angular version supported is now Angular 17. Please upgrade to Angular 17 to use
+                        this AG Grid version.
+                    </p>
+                </div>
+            )
+        }
 
-        { isReact && <div>
-            <Heading level="3" id="react">React</Heading>
-            <ul>
-                <li><code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.</li>
-                <li><code>AgGridReactProps</code>:<ul>
-                        <li><code>disableStaticMarkup</code> no longer used.</li>
-                        <li><code>legacyComponentRendering</code> no longer used.</li>
+        {
+            isVue && (
+                <div>
+                    <Heading level="3" id="vue-minimum-version">
+                        Vue Minimum Version
+                    </Heading>
+                    <p>
+                        The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this
+                        AG Grid version.
+                    </p>
+                </div>
+            )
+        }
+
+        <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
+        <p>
+            For non-TS users or users who use TS but avoid type validation there's changes in property value coercion:
+
+            {
+                isAngular
+                    ? `For boolean values provided as strings, the Angular provided booleanAttribute is now used. All string values except “false” are truthy - only “false”
+                    will be false, any other spelling such as “FALSE” will be treated as true.`
+                    : `For boolean values provided as strings, “false” is no longer converted to false any more - all string
+                    values are truthy.`
+            }
+        </p>
+
+        {
+            isReact && (
+                <div>
+                    <Heading level="3" id="react">
+                        React
+                    </Heading>
+                    <ul>
+                        <li>
+                            <code>AgReactUiProps</code> removed, please use <code>AgGridReactProps</code> instead.
+                        </li>
+                        <li>
+                            <code>AgGridReactProps</code>:
+                            <ul>
+                                <li>
+                                    <code>disableStaticMarkup</code> no longer used.
+                                </li>
+                                <li>
+                                    <code>legacyComponentRendering</code> no longer used.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <code>AgReactComponent</code>:
+                            <ul>
+                                <li>
+                                    <code>getReactContainerStyle</code> removed, apply styling directly to
+                                    <code>ag-react-container</code>
+                                    if needed.
+                                </li>
+                                <li>
+                                    <code>getReactContainerClasses</code> removed, apply styling directly to
+                                    <code>ag-react-container</code> if needed.
+                                </li>
+                                <li>
+                                    <code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.
+                                </li>
+                                <li>
+                                    <code>IDateReactComp</code> removed, please use <code>IDate</code> instead.
+                                </li>
+                                <li>
+                                    <code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.
+                                </li>
+                                <li>
+                                    <code>IFloatingFilterReactComp</code> removed, please use{' '}
+                                    <code>IFloatingFilter</code> instead.
+                                </li>
+                                <li>
+                                    <code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>ILoadingCellRendererReactComp</code> removed, no interface required.
+                                </li>
+                                <li>
+                                    <code>ILoadingOverlayReactComp</code> removed, please use{' '}
+                                    <code>ILoadingOverlay</code> instead.
+                                </li>
+                                <li>
+                                    <code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code>{' '}
+                                    instead.
+                                </li>
+                                <li>
+                                    <code>ITooltipReactComp</code> removed, no interface required.
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
-                </li>
-                <li><code>AgReactComponent</code>:<ul>
-                        <li><code>getReactContainerStyle</code> removed, apply styling directly to
-                            <code>ag-react-container</code>
-                            if needed. -<code>getReactContainerClasses</code> removed, apply styling directly to
-                            <code>ag-react-container</code> if needed.
-                        </li>
-                        <li><code>IHeaderGroupReactComp</code> removed, please use <code>IHeaderGroup</code> instead.</li>
-                        <li><code>IHeaderReactComp</code> removed, please use <code>IHeader</code> instead.</li>
-                        <li><code>IDateReactComp</code> removed, please use <code>IDate</code> instead.</li>
-                        <li><code>IFilterReactComp</code> removed, please use <code>IFilter</code> instead.</li>
-                        <li><code>IFloatingFilterReactComp</code> removed, please use <code>IFloatingFilter</code> instead.
-                        </li>
-                        <li><code>ICellRendererReactComp</code> removed, please use <code>ICellRenderer</code> instead.</li>
-                        <li><code>ICellEditorReactComp</code> removed, please use <code>ICellEditor</code> instead.</li>
-                        <li><code>ILoadingCellRendererReactComp</code> removed, no interface required.</li>
-                        <li><code>ILoadingOverlayReactComp</code> removed, please use <code>ILoadingOverlay</code> instead.
-                        </li>
-                        <li><code>INoRowsOverlayReactComp</code> removed, please use <code>INoRowsOverlay</code> instead.
-                        </li>
-                        <li><code>IStatusPanelReactComp</code> removed, please use <code>IStatusPanel</code> instead.</li>
-                        <li><code>IToolPanelReactComp</code> removed, please use <code>IToolPanel</code> instead.</li>
-                        <li><code>ITooltipReactComp</code> removed, no interface required.</li>
-                    </ul>
-                </li>
-            </ul>
-        </div> }
+                </div>
+            )
+        }
 
-        { isAngular && <div>
-            <Heading level="3" id="angular-minimum-version">Angular Minimum Version</Heading>
-            <p>The minimum Angular version supported is now Angular 17. Please upgrade to Angular 17 to use this AG Grid version.</p>
-        </div> }
+        <Heading level="3" id="server-side-rendering">Server-side Rendering</Heading>
+        <p>
+            AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement
+            and others. If possible you should avoid rendering AG Grid on the server as this is not supported.
+        </p>
 
+        <Heading level="3" id="typing">Stricter Types</Heading>
+        <p>
+            The following properties are now strictly typed to only their valid values instead of <code>string</code>:
+        </p>
+        <ul>
+            <li>
+                gridOptions - <code>chartMenuItems</code> / <code>getMainMenuItems</code> / <code
+                    >getContextMenuItems</code
+                >
+            </li>
+            <li>columnDefs - <code>mainMenuItems</code> / <code>contextMenuItems</code></li>
+        </ul>
 
-        { isVue && <div>
-            <Heading level="3" id="vue-minimum-version">Vue Minimum Version</Heading>
-            <p>The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this AG Grid version.</p>
-        </div>}
+        <Heading level="3" id="typing">Column Menu</Heading>
+        <p>
+            The column property is now optional in the callback to get column menu items (in the grid option
+            <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
+            column group header or empty column space is right-cpcked on. A new property <code>columnGroup</code>
+            will be provided when a column group header is right-clicked on.
+        </p>
 
+        <Heading level="3" id="modules-1">Row Drop Zone</Heading>
+        <p>
+            <code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.
+        </p>
 
+        <Heading level="3" id="server-side-row-model">Server-side Row Model</Heading>
+        <p>
+            Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
+            removed. Please use the standard server-side row model functionality as documented.
+        </p>
+
+        <Heading level="3" id="column-state">Column State</Heading>
+        <p>
+            Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct
+            types instead of strings.
+        </p>
+
+        <Heading level="3" id="grid-state">Grid State</Heading>
+        <p>
+            Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
+            Restoring grid state with the old <code>colId</code> will have no effect.
+        </p>
+
+        <Heading level="3" id="integrated-charts">Integrated Charts</Heading>
+        <p>
+            <code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of
+            the Integrated Charts Advanced Settings.
+        </p>
+
+        <Heading level="3" id="sparklines">Sparklines</Heading>
+        <ul>
+            <li>
+                <code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and
+                <code>direction: 'vertical'</code>
+                instead.
+            </li>
+            <li>
+                <code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.
+            </li>
+            <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
+            <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
+            <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
+            <li>
+                <code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
+                <code>sparklineOptions</code> properties instead.
+            </li>
+            <li>
+                <code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
+                <code>itemStyler</code> instead.
+            </li>
+            <li>
+                <code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code>
+                instead.
+            </li>
+            <li>
+                <code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
+                <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
+            </li>
+            <li><code>sparklineOptions.container</code> - removed.</li>
+            <li>
+                <code>sparklineOptions.label.placement</code> - updated to use <a
+                    href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement"
+                    >AG Charts Label Placement</a
+                >. Instead of <code>insideBase</code>, <code>center</code>,
+                <code>insideEnd</code>
+                and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
+                <code>inside-end</code> or <code>outside-end</code>
+            </li>
+        </ul>
 
         <Heading level="3" id="custom-icons">Custom Icons</Heading>
         <p>Setting any of the custom icons listed below will have the provided custom icon only apply in the specific
@@ -483,84 +741,6 @@ provideGlobalGridOptions({
                         panels)
                     </li>
                 </ul>
-            </li>
-        </ul>
-
-        <Heading level="3" id="server-side-rendering">Server-side Rendering</Heading>
-        <p>AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement and
-            others.
-            If possible you should avoid rendering AG Grid on the server as this is not supported.</p>
-
-        <Heading level="3" id="typing">Stricter Types</Heading>
-        <p>The following properties are now strictly typed to only their valid values instead of <code>string</code>:</p>
-        <ul>
-            <li>gridOption - <code>chartMenuItems</code>
-            <li>gridOption - <code>getMainMenuItems</code> and <code>getContextMenuItems</code> including the <code>defaultItems</code> parameter in the callback</li>
-                </li>   
-                <li>columnDefs - <code>mainMenuItems</code> and <code>contextMenuItems</code>
-                </li> 
-                
-
-        </ul>
-
-        <Heading level="3" id="typing">Column Menu</Heading>
-        <p>The column property is now optional in the callback to get column menu items (in the grid option
-            <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null
-            when a
-            column group header or empty column space is right-cpcked on. A new property <code>columnGroup</code>
-            will be
-            provided when a column group header is right-clicked on.
-        </p>
-
-
-        <Heading level="3" id="modules-1">Row Drop Zone</Heading>
-        <p><code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not
-            registered.</p>
-
-        <Heading level="3" id="server-side-row-model">Server-side Row Model</Heading>
-        <p>Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
-            removed. Please use the standard server-side row model functionality as documented.</p>
-
-        <Heading level="3" id="column-state">Column State</Heading>
-        <p>Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct
-            types
-            instead of strings.</p>
-
-        <Heading level="3" id="grid-state">Grid State</Heading>
-        <p>Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
-            Restoring
-            grid state with the old <code>colId</code> will have no effect.</p>
-
-        <Heading level="3" id="integrated-charts"> Integrated Charts</Heading>
-        <p><code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of the Integrated Charts Advanced Settings.</p>
-
-        <Heading level="3" id="sparklines">Sparklines</Heading>
-        <ul>
-            <li><code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and
-                <code>direction: 'vertical'</code>
-                instead.</li>
-            <li><code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.</li>
-            <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
-            <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
-            <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
-            <li><code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
-                <code>sparklineOptions</code> properties instead.
-            </li>
-            <li><code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
-                <code>itemStyler</code> instead.
-            </li>
-            <li><code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code>
-                instead.</li>
-            <li><code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
-                <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
-            </li>
-            <li><code>sparklineOptions.container</code> - removed.</li>
-            <li><code>sparklineOptions.label.placement</code> - updated to use <a
-                    href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement">AG
-                    Charts Label Placement</a>. Instead of <code>insideBase</code>, <code>center</code>,
-                <code>insideEnd</code>
-                and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
-                <code>inside-end</code> or <code>outside-end</code>
             </li>
         </ul>
     </div>
