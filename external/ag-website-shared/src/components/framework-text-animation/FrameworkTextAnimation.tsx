@@ -4,9 +4,17 @@ import { useEffect, useState } from 'react';
 
 import styles from './FrameworkTextAnimation.module.scss';
 
-export const FrameworkTextAnimation: FunctionComponent = () => {
+interface Props {
+    prefix?: string;
+    suffix?: string;
+}
+
+export const FrameworkTextAnimation: FunctionComponent<Props> = ({ prefix, suffix }) => {
     const [wordIndex, setWordIndex] = useState(0);
     const [noTransitions, setNoTransitions] = useState(false);
+
+    prefix = prefix ? `${prefix} ` : '';
+    suffix = suffix ? ` ${suffix}` : '';
 
     useEffect(() => {
         const delayMs = wordIndex === 0 ? 50 : 2500;
@@ -26,11 +34,11 @@ export const FrameworkTextAnimation: FunctionComponent = () => {
             style={{ '--word-index': wordIndex }}
         >
             <span className={styles.animatedWordsInner}>
-                <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
-                <span className={classnames(styles.animatedWord, styles.vue)}>Vue</span>
-                <span className={classnames(styles.animatedWord, styles.angular)}>Angular</span>
-                <span className={classnames(styles.animatedWord, styles.react)}>React</span>
-                <span className={classnames(styles.animatedWord, styles.javascript)}>Javascript</span>
+                <span className={styles.javascript}>{`${prefix}Javascript${suffix}`}</span>
+                <span className={styles.vue}>{`${prefix}Vue${suffix}`}</span>
+                <span className={styles.angular}>{`${prefix}Angular${suffix}`}</span>
+                <span className={styles.react}>{`${prefix}React${suffix}`}</span>
+                <span className={styles.javascript}>{`${prefix}Javascript${suffix}`}</span>
             </span>
         </span>
     );
