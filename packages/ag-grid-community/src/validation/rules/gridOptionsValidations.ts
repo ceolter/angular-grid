@@ -362,11 +362,28 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
 
-                const rowSelectionSchema = v
+                const singleRowSchema = v
                     .object({
-                        mode: v.union([v.literal('multiRow'), v.literal('singleRow')]).required(),
+                        mode: v.literal('singleRow'),
 
-                        // common
+                        enableClickSelection: v.union([
+                            v.boolean(),
+                            v.literal('enableDeselection'),
+                            v.literal('enableSelection'),
+                        ]),
+                        checkboxes: v.union([v.boolean(), v.func()]),
+                        checkboxLocation: v.union([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                        hideDisabledCheckboxes: v.boolean(),
+                        isRowSelectable: v.func(),
+                        copySelectedRows: v.boolean(),
+                        enableSelectionWithoutKeys: v.boolean(),
+                    })
+                    .only();
+
+                const mulitRowSchema = v
+                    .object({
+                        mode: v.literal('multiRow').required(),
+
                         enableClickSelection: v.union([
                             v.boolean(),
                             v.literal('enableDeselection'),
@@ -380,22 +397,21 @@ const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
                         enableSelectionWithoutKeys: v.boolean(),
 
                         // multi-row
-                        groupSelects: v
-                            ._if(() => rowSelection?.mode === 'multiRow')
-                            .then(
-                                v.union([v.literal('self'), v.literal('descendants'), v.literal('filteredDescendants')])
-                            )
-                            .else(v._undefined()),
-                        selectAll: v
-                            ._if(() => rowSelection?.mode === 'multiRow')
-                            .then(v.union([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]))
-                            .else(v._undefined()),
-                        headerCheckbox: v
-                            ._if(() => rowSelection?.mode === 'multiRow')
-                            .then(v.boolean())
-                            .else(v._undefined()),
+                        groupSelects: v.union([
+                            v.literal('self'),
+                            v.literal('descendants'),
+                            v.literal('filteredDescendants'),
+                        ]),
+                        selectAll: v.union([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]),
+                        headerCheckbox: v.boolean(),
                     })
                     .only();
+
+                const rowSelectionSchema = v.union([singleRowSchema, mulitRowSchema]);
+
+                type X = v.Infer<typeof rowSelectionSchema>;
+
+                const object: { rowSelection: X } = { rowSelection: rowSelectionSchema };
 
                 const result = v.object({ rowSelection: rowSelectionSchema }).validate({ rowSelection });
 

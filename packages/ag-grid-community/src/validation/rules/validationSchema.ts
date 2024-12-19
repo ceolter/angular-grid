@@ -37,14 +37,14 @@ abstract class BaseSchema<T> implements Schema<T> {
     abstract validate(x: unknown, opts?: ValidationOptions): ValidationResult;
 }
 
-type SchemaObject<T extends object> = { [K in keyof T]: Schema<any> };
-
 class ObjectSchema<T extends object> extends BaseSchema<InferObject<T>> implements Schema<InferObject<T>> {
     readonly _output: InferObject<T>;
     private _only = false;
+    private fields: Record<string, Schema<any>>;
 
-    constructor(private fields: SchemaObject<T>) {
+    constructor(fields: T) {
         super();
+        this.fields = fields as Record<string, Schema<any>>;
     }
 
     label(): string {
@@ -67,9 +67,9 @@ class ObjectSchema<T extends object> extends BaseSchema<InferObject<T>> implemen
         for (const [k, v] of Object.entries(x)) {
             if (k in this.fields) {
                 const path = (opts?.path ?? []).concat(k);
-                const result = this.fields[k as keyof T].validate(v, { path });
+                const result = this.fields[k].validate(v, { path });
                 errors.push(...(result.errors ?? []));
-                delete this.fields[k as keyof T];
+                delete this.fields[k];
             } else if (this._only) {
                 errors.push(`Unexpected field "${k}" in ${opts?.path?.[0] ?? 'this'} object.`);
             }
@@ -117,7 +117,7 @@ class UnionSchema<T extends UnionOptions>
     extends BaseSchema<T[number]['_output']>
     implements Schema<T[number]['_output']>
 {
-    readonly _output: T;
+    readonly _output: T[number]['_output'];
 
     private _deep = false;
 
@@ -254,9 +254,9 @@ class UndefinedSchema extends BaseSchema<undefined> implements Schema<undefined>
     }
 }
 
-export const object = <T extends object>(o: { [K in keyof T]: Schema<any> }): ObjectSchema<T> => new ObjectSchema<T>(o);
+export const object = <T extends object>(o: T): ObjectSchema<typeof o> => new ObjectSchema(o);
 
-export const literal = <T>(x: T): LiteralSchema<T> => new LiteralSchema(x);
+export const literal = <const T>(x: T): LiteralSchema<T> => new LiteralSchema(x);
 
 export const union = <T extends UnionOptions>(xs: T): UnionSchema<T> => new UnionSchema(xs);
 
@@ -282,22 +282,22 @@ export const formatPath = ({ path = [] }: ValidationOptions = {}) => {
     return str.length > 0 ? str + ': ' : str;
 };
 
-type InferTuple<T extends readonly any[]> = {
-    [K in keyof T]: T[K] extends Schema<infer T> ? T : never;
-};
 type InferObject<T extends object> = {
-    [K in keyof T]: T[K] extends Schema<infer T> ? T : never;
+    [K in keyof T]: T[K] extends Schema<infer U> ? TryInfer<U> : never;
 };
-type Infer<T extends Schema<any>> = T['_output'] extends [...any[]]
-    ? InferTuple<T['_output']>
-    : T['_output'] extends object
-      ? InferObject<T['_output']>
-      : T['_output'];
+type TryInfer<T> = T extends Schema<any> ? Infer<T> : T extends object ? InferObject<T> : T;
+export type Infer<T extends Schema<any>> = T['_output'];
 
 const x = union([literal('foo'), boolean(), literal('hi')]);
 const y = object({
     foo: literal('foo'),
     bar: boolean(),
+    baz: object({ waz: boolean() }),
 });
+const qqq = y._output['baz'];
+type X = InferObject<typeof q._output>;
+const q = object({ foo: literal('bar'), bar: func() });
+const z = union([y, q]);
 type Q = Infer<typeof x>;
 type P = Infer<typeof y>;
+type R = Infer<typeof z>;
