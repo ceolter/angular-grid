@@ -11,6 +11,44 @@ import type { IRowNode } from './iRowNode';
 export type IFilterType = string | { new (): IFilterComp } | boolean;
 export type IFloatingFilterType = string | { new (): IFloatingFilterComp };
 
+export interface FilterEvaluatorFuncParams<TData = any, TModel = any> extends IDoesFilterPassParams<TData> {
+    model: TModel | null;
+}
+
+export interface FilterEvaluatorParams<TData = any, TContext = any, TValue = any, TModel = any>
+    extends AgGridCommon<TData, TContext> {
+    model: TModel | null;
+    colDef: ColDef<TData, TValue>;
+    column: Column<TValue>;
+    /**
+     * Get the cell value for the given row node and column, which can be the column ID, definition, or `Column` object.
+     * If no column is provided, the column this filter is on will be used.
+     */
+    getValue: <TValue = any>(
+        node: IRowNode<TData>,
+        column?: string | ColDef<TData, TValue> | Column<TValue>
+    ) => TValue | null | undefined;
+}
+
+export interface FilterEvaluator<TData = any, TContext = any, TValue = any, TModel = any, TCustomParams = object> {
+    init?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
+    refresh?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
+    doesFilterPass(params: FilterEvaluatorFuncParams<TData, TModel>): boolean;
+    destroy?(): void;
+}
+
+export interface FilterEvaluatorGeneratorFuncParams<TData = any, TContext = any, TValue = any>
+    extends AgGridCommon<TData, TContext> {
+    colDef: ColDef<TData, TValue>;
+    column: Column<TValue>;
+}
+
+export interface FilterEvaluatorGeneratorFunc<TData = any, TContext = any, TValue = any, TModel = any> {
+    (
+        params: FilterEvaluatorGeneratorFuncParams<TData, TContext, TValue>
+    ): FilterEvaluator<TData, TContext, TValue, TModel>;
+}
+
 export interface IFilterDef {
     /**
      * Filter component to use for this column.
@@ -21,6 +59,7 @@ export interface IFilterDef {
     filter?: any;
     /** Params to be passed to the filter component specified in `filter`. */
     filterParams?: any;
+    filterEvaluator?: FilterEvaluatorGeneratorFunc;
 
     /**
      * The custom component to be used for rendering the floating filter.
@@ -185,6 +224,13 @@ export interface IFilterParams<TData = any, TContext = any> extends BaseFilterPa
      * Apart from emitting the event, the grid takes no further action.
      */
     filterModifiedCallback: () => void;
+}
+
+export interface FilterDisplayParams<TData = any, TContext = any, TModel = any> extends IFilterParams<TData, TContext> {
+    /** The current filter model for the component. */
+    model: TModel | null;
+    /** Callback that should be called every time the model in the component changes. */
+    onModelChange: (model: TModel | null) => void;
 }
 
 /**

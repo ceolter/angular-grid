@@ -2,16 +2,15 @@ import { _setAriaRole } from '../../../utils/aria';
 import { _makeNull } from '../../../utils/generic';
 import { AgInputNumberField } from '../../../widgets/agInputNumberField';
 import { AgInputTextField } from '../../../widgets/agInputTextField';
-import type { Comparator } from '../iScalarFilter';
 import type { ISimpleFilterModel, Tuple } from '../iSimpleFilter';
-import { ScalarFilter } from '../scalarFilter';
+import { SimpleFilter } from '../simpleFilter';
 import type { SimpleFilterModelFormatter } from '../simpleFilterModelFormatter';
 import type { NumberFilterModel, NumberFilterParams } from './iNumberFilter';
-import { DEFAULT_NUMBER_FILTER_OPTIONS } from './numberFilterConstants';
+import { NumberFilterHelper } from './numberFilterHelper';
 import { NumberFilterModelFormatter } from './numberFilterModelFormatter';
-import { getAllowedCharPattern } from './numberFilterUtils';
+import { getAllowedCharPattern, processNumberFilterValue } from './numberFilterUtils';
 
-export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
+export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
     private readonly eValuesFrom: (AgInputTextField | AgInputNumberField)[] = [];
     private readonly eValuesTo: (AgInputTextField | AgInputNumberField)[] = [];
 
@@ -21,7 +20,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
     protected filterType = 'number' as const;
 
     constructor() {
-        super('numberFilter');
+        super('numberFilter', new NumberFilterHelper());
     }
 
     override refresh(params: NumberFilterParams): boolean {
@@ -32,26 +31,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         return super.refresh(params);
     }
 
-    protected mapValuesFromModel(filterModel: NumberFilterModel | null): Tuple<number> {
-        const { filter, filterTo, type } = filterModel || {};
-        return [this.processValue(filter), this.processValue(filterTo)].slice(0, this.getNumberOfInputs(type));
-    }
-
     protected override defaultDebounceMs: number = 500;
-
-    protected comparator(): Comparator<number> {
-        return (left: number, right: number): number => {
-            if (left === right) {
-                return 0;
-            }
-
-            return left < right ? 1 : -1;
-        };
-    }
-
-    protected override isValid(value: number): boolean {
-        return !isNaN(value);
-    }
 
     protected override setParams(params: NumberFilterParams): void {
         this.numberFilterParams = params;
@@ -62,10 +42,6 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
             this.optionsFactory,
             this.numberFilterParams.numberFormatter
         );
-    }
-
-    protected getDefaultFilterOptions(): string[] {
-        return DEFAULT_NUMBER_FILTER_OPTIONS;
     }
 
     protected override setElementValue(
@@ -119,7 +95,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         const result: Tuple<number> = [];
         this.forEachPositionInput(position, (element, index, _elPosition, numberOfInputs) => {
             if (index < numberOfInputs) {
-                result.push(this.processValue(this.stringToFloat(element.getValue())));
+                result.push(processNumberFilterValue(this.stringToFloat(element.getValue())));
             }
         });
 
@@ -130,13 +106,6 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
         return (
             aSimple.filter === bSimple.filter && aSimple.filterTo === bSimple.filterTo && aSimple.type === bSimple.type
         );
-    }
-
-    private processValue(value?: number | null): number | null {
-        if (value == null) {
-            return null;
-        }
-        return isNaN(value) ? null : value;
     }
 
     private stringToFloat(value?: string | number | null): number | null {

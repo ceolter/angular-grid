@@ -11,7 +11,7 @@ import type {
 import type { IDateComp, IDateParams } from '../../interfaces/dateComponent';
 import type { ICellEditorComp, ICellEditorParams } from '../../interfaces/iCellEditor';
 import type { AgGridCommon, WithoutGridCommon } from '../../interfaces/iCommon';
-import type { IFilterComp, IFilterDef, IFilterParams } from '../../interfaces/iFilter';
+import type { BaseFilterParams, IFilterComp, IFilterDef, IFilterParams } from '../../interfaces/iFilter';
 import type { IFrameworkOverrides } from '../../interfaces/iFrameworkOverrides';
 import type { ILoadingCellRendererComp } from '../../interfaces/iLoadingCellRenderer';
 import type { ComponentType, UserCompDetails } from '../../interfaces/iUserCompDetails';
@@ -239,7 +239,7 @@ export function _getCellEditorDetails(
 export function _getFilterDetails(
     userCompFactory: UserComponentFactory,
     def: IFilterDef,
-    params: WithoutGridCommon<IFilterParams>,
+    params: WithoutGridCommon<BaseFilterParams>,
     defaultFilter: string
 ): UserCompDetails<IFilterComp> | undefined {
     return userCompFactory.getCompDetails(def, FilterComponent, defaultFilter, params, true);

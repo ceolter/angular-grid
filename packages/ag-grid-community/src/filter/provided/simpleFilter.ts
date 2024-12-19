@@ -1,5 +1,5 @@
 import type { IAfterGuiAttachedParams } from '../../interfaces/iAfterGuiAttachedParams';
-import type { IDoesFilterPassParams, IFilterOptionDef } from '../../interfaces/iFilter';
+import type { IFilterOptionDef } from '../../interfaces/iFilter';
 import { _areEqual } from '../../utils/array';
 import { _removeFromParent, _setDisabled, _setDisplayed } from '../../utils/dom';
 import { AgPromise } from '../../utils/promise';
@@ -23,9 +23,10 @@ import type {
 } from './iSimpleFilter';
 import { OptionsFactory } from './optionsFactory';
 import { ProvidedFilter } from './providedFilter';
+import type { SimpleFilterHelper } from './simpleFilterHelper';
 import {
-    evaluateCustomFilter,
     getDefaultJoinOperator,
+    getNumberOfInputs,
     removeItems,
     validateAndUpdateConditions,
 } from './simpleFilterUtils';
@@ -57,7 +58,13 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     private filterListOptions: ListOption[];
 
     protected optionsFactory: OptionsFactory;
-    protected abstract getDefaultFilterOptions(): string[];
+
+    constructor(
+        filterNameKey: keyof typeof FILTER_LOCALE_TEXT,
+        private readonly helper: SimpleFilterHelper<M, V>
+    ) {
+        super(filterNameKey);
+    }
 
     protected abstract createValueElement(): HTMLElement;
 
@@ -71,43 +78,11 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     // returned in a CombinedFilter object.
     protected abstract createCondition(position: number): M;
 
-    // because the sub-class filter models have different attribute names, we have to map
-    protected abstract mapValuesFromModel(filterModel: ISimpleFilterModel | null): Tuple<V>;
-
-    // allow value-type specific handling of null cell values.
-    protected abstract evaluateNullValue(filterType?: ISimpleFilterModelType | null): boolean;
-
-    // allow value-type specific handling of non-null cell values.
-    protected abstract evaluateNonNullValue(
-        range: Tuple<V>,
-        cellValue: V,
-        filterModel: M,
-        params: IDoesFilterPassParams
-    ): boolean;
-
     // allow iteration of all condition inputs managed by sub-classes.
     protected abstract getInputs(position: number): Tuple<E>;
 
     // allow retrieval of all condition input values.
     protected abstract getValues(position: number): Tuple<V>;
-
-    protected getNumberOfInputs(type?: ISimpleFilterModelType | null): number {
-        const customOpts = this.optionsFactory.getCustomOption(type);
-        if (customOpts) {
-            const { numberOfInputs } = customOpts;
-            return numberOfInputs != null ? numberOfInputs : 1;
-        }
-
-        const zeroInputTypes: ISimpleFilterModelType[] = ['empty', 'notBlank', 'blank'];
-
-        if (type && zeroInputTypes.indexOf(type) >= 0) {
-            return 0;
-        } else if (type === 'inRange') {
-            return 2;
-        }
-
-        return 1;
-    }
 
     // floating filter calls this when user applies filter from floating filter
     public onFloatingFilterChanged(type: string | null | undefined, value: V | null): void {
@@ -206,7 +181,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         // Do Not refresh when one of the existing condition options is not in new options list
         const newOptionsList =
             newParams.filterOptions?.map((option) => (typeof option === 'string' ? option : option.displayKey)) ??
-            this.getDefaultFilterOptions();
+            this.helper.defaultOptions;
 
         const allConditionsExistInNewOptionsList =
             !conditions ||
@@ -296,27 +271,9 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         return AgPromise.resolve();
     }
 
-    public doesFilterPass(params: IDoesFilterPassParams): boolean {
-        const model = this.getModel();
-
-        if (model == null) {
-            return true;
-        }
-
-        const { operator } = model as ICombinedSimpleModel<M>;
-        const models: M[] = [];
-
-        if (operator) {
-            const combinedModel = model as ICombinedSimpleModel<M>;
-
-            models.push(...(combinedModel.conditions ?? []));
-        } else {
-            models.push(model as M);
-        }
-
-        const combineFunction = operator && operator === 'OR' ? 'some' : 'every';
-
-        return models[combineFunction]((m) => this.individualConditionPasses(params, m));
+    public doesFilterPass(): boolean {
+        // TODO remove
+        return true;
     }
 
     protected override setParams(params: SimpleFilterParams): void {
@@ -328,7 +285,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         this.filterPlaceholder = params.filterPlaceholder;
 
         this.optionsFactory = new OptionsFactory();
-        this.optionsFactory.init(params, this.getDefaultFilterOptions());
+        this.optionsFactory.init(params, this.helper.defaultOptions);
         this.createFilterListOptions();
 
         this.createOption();
@@ -723,7 +680,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         type: ISimpleFilterModelType | null,
         cb: (element: E, index: number, position: number, numberOfInputs: number) => void
     ): void {
-        const numberOfInputs = this.getNumberOfInputs(type);
+        const numberOfInputs = getNumberOfInputs(type, this.optionsFactory);
         const inputs = this.getInputs(position);
         for (let index = 0; index < inputs.length; index++) {
             const input = inputs[index];
@@ -748,7 +705,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     private isConditionBodyVisible(position: number): boolean {
         // Check that the condition needs inputs.
         const type = this.getConditionType(position);
-        const numberOfInputs = this.getNumberOfInputs(type);
+        const numberOfInputs = getNumberOfInputs(type, this.optionsFactory);
         return numberOfInputs > 0;
     }
 
@@ -887,7 +844,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
 
     // puts model values into the UI
     private setConditionIntoUi(model: M | null, position: number): void {
-        const values = this.mapValuesFromModel(model);
+        const values = this.helper.mapValuesFromModel(model, this.optionsFactory);
         this.forEachInput((element, index, elPosition) => {
             if (elPosition !== position) {
                 return;
@@ -915,24 +872,6 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         this.forEachPositionInput(position, (element) => {
             this.attachElementOnChange(element, this.listener);
         });
-    }
-
-    /** returns true if the row passes the said condition */
-    protected individualConditionPasses(params: IDoesFilterPassParams, filterModel: M) {
-        const cellValue = this.getCellValue(params.node);
-        const values = this.mapValuesFromModel(filterModel);
-        const customFilterOption = this.optionsFactory.getCustomOption(filterModel.type);
-
-        const customFilterResult = evaluateCustomFilter<V>(customFilterOption, values, cellValue);
-        if (customFilterResult != null) {
-            return customFilterResult;
-        }
-
-        if (cellValue == null) {
-            return this.evaluateNullValue(filterModel.type);
-        }
-
-        return this.evaluateNonNullValue(values, cellValue, filterModel, params);
     }
 
     protected hasInvalidInputs(): boolean {

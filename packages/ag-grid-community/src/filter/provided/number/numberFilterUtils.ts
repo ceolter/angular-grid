@@ -5,3 +5,10 @@ export function getAllowedCharPattern(filterParams?: NumberFilterParams): string
 
     return allowedCharPattern ?? null;
 }
+
+export function processNumberFilterValue(value?: number | null): number | null {
+    if (value == null) {
+        return null;
+    }
+    return isNaN(value) ? null : value;
+}

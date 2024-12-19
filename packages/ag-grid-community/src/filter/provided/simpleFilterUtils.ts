@@ -1,6 +1,7 @@
 import type { IFilterOptionDef } from '../../interfaces/iFilter';
 import { _warn } from '../../validation/logging';
-import type { JoinOperator, Tuple } from './iSimpleFilter';
+import type { ISimpleFilterModelType, JoinOperator, Tuple } from './iSimpleFilter';
+import type { OptionsFactory } from './optionsFactory';
 
 export function removeItems<T>(items: T[], startPosition: number, deleteCount?: number): T[] {
     return deleteCount == null ? items.splice(startPosition) : items.splice(startPosition, deleteCount);
@@ -42,4 +43,25 @@ export function validateAndUpdateConditions<M>(conditions: M[], maxNumConditions
         numConditions = maxNumConditions;
     }
     return numConditions;
+}
+
+export function getNumberOfInputs(
+    type: ISimpleFilterModelType | null | undefined,
+    optionsFactory: OptionsFactory
+): number {
+    const customOpts = optionsFactory.getCustomOption(type);
+    if (customOpts) {
+        const { numberOfInputs } = customOpts;
+        return numberOfInputs != null ? numberOfInputs : 1;
+    }
+
+    const zeroInputTypes: ISimpleFilterModelType[] = ['empty', 'notBlank', 'blank'];
+
+    if (type && zeroInputTypes.indexOf(type) >= 0) {
+        return 0;
+    } else if (type === 'inRange') {
+        return 2;
+    }
+
+    return 1;
 }

@@ -121,7 +121,13 @@ export type DynamicBeanName =
     | 'headerFilterCellCtrl'
     | 'headerGroupCellCtrl'
     | 'rangeHandle'
-    | 'tooltipFeature';
+    | 'tooltipFeature'
+    | 'agSetColumnFilterEvaluator'
+    | 'agMultiColumnFilterEvaluator'
+    | 'agGroupColumnFilterEvaluator'
+    | 'agNumberColumnFilterEvaluator'
+    | 'agDateColumnFilterEvaluator'
+    | 'agTextColumnFilterEvaluator';
 
 export type UserComponentName =
     | 'agDragAndDropImage'

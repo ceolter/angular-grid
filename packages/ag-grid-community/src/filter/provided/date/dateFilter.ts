@@ -3,19 +3,18 @@ import type { IAfterGuiAttachedParams } from '../../../interfaces/iAfterGuiAttac
 import { _parseDateTimeFromString, _serialiseDate } from '../../../utils/date';
 import { _warn } from '../../../validation/logging';
 import type { FILTER_LOCALE_TEXT } from '../../filterLocaleText';
-import type { Comparator } from '../iScalarFilter';
 import type { ISimpleFilterModel, Tuple } from '../iSimpleFilter';
-import { ScalarFilter } from '../scalarFilter';
+import { SimpleFilter } from '../simpleFilter';
 import { removeItems } from '../simpleFilterUtils';
 import { DateCompWrapper } from './dateCompWrapper';
-import { DEFAULT_DATE_FILTER_OPTIONS } from './dateFilterConstants';
+import { DateFilterHelper } from './dateFilterHelper';
 import { DateFilterModelFormatter } from './dateFilterModelFormatter';
 import type { DateFilterModel, DateFilterParams } from './iDateFilter';
 
 const DEFAULT_MIN_YEAR = 1000;
 const DEFAULT_MAX_YEAR = Infinity;
 
-export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrapper> {
+export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateCompWrapper> {
     private readonly eConditionPanelsFrom: HTMLElement[] = [];
     private readonly eConditionPanelsTo: HTMLElement[] = [];
 
@@ -32,37 +31,13 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     protected filterType = 'date' as const;
 
     constructor() {
-        super('dateFilter');
+        super('dateFilter', new DateFilterHelper());
     }
 
     public override afterGuiAttached(params?: IAfterGuiAttachedParams): void {
         super.afterGuiAttached(params);
 
         this.dateConditionFromComps[0].afterGuiAttached(params);
-    }
-
-    protected mapValuesFromModel(filterModel: DateFilterModel | null): Tuple<Date> {
-        // unlike the other filters, we do two things here:
-        // 1) allow for different attribute names (same as done for other filters) (eg the 'from' and 'to'
-        //    are in different locations in Date and Number filter models)
-        // 2) convert the type (because Date filter uses Dates, however model is 'string')
-        //
-        // NOTE: The conversion of string to date also removes the timezone - i.e. when user picks
-        //       a date from the UI, it will have timezone info in it. This is lost when creating
-        //       the model. When we recreate the date again here, it's without a timezone.
-        const { dateFrom, dateTo, type } = filterModel || {};
-        return [
-            (dateFrom && _parseDateTimeFromString(dateFrom)) || null,
-            (dateTo && _parseDateTimeFromString(dateTo)) || null,
-        ].slice(0, this.getNumberOfInputs(type));
-    }
-
-    protected comparator(): Comparator<Date> {
-        return this.dateFilterParams.comparator ?? defaultDateComparator;
-    }
-
-    protected override isValid(value: Date): boolean {
-        return value instanceof Date && !isNaN(value.getTime());
     }
 
     protected override setParams(params: DateFilterParams): void {
@@ -138,10 +113,6 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
 
     protected override setElementDisabled(element: DateCompWrapper, disabled: boolean): void {
         element.setDisabled(disabled);
-    }
-
-    protected getDefaultFilterOptions(): string[] {
-        return DEFAULT_DATE_FILTER_OPTIONS;
     }
 
     protected createValueElement(): HTMLElement {
@@ -298,18 +269,4 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     public getModelAsString(model: ISimpleFilterModel): string {
         return this.filterModelFormatter.getModelAsString(model) ?? '';
     }
-}
-
-function defaultDateComparator(filterDate: Date, cellValue: any): number {
-    // The default comparator assumes that the cellValue is a date
-    const cellAsDate = cellValue as Date;
-
-    if (cellAsDate < filterDate) {
-        return -1;
-    }
-    if (cellAsDate > filterDate) {
-        return 1;
-    }
-
-    return 0;
 }

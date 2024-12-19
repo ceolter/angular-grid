@@ -24,11 +24,14 @@ import { FilterMenuFactory } from './filterMenuFactory';
 import { FilterValueService } from './filterValueService';
 import { ReadOnlyFloatingFilter } from './floating/provided/readOnlyFloatingFilter';
 import { DateFilter } from './provided/date/dateFilter';
+import { DateFilterEvaluator } from './provided/date/dateFilterEvaluator';
 import { DateFloatingFilter } from './provided/date/dateFloatingFilter';
 import { DefaultDateComponent } from './provided/date/defaultDateComponent';
 import { NumberFilter } from './provided/number/numberFilter';
+import { NumberFilterEvaluator } from './provided/number/numberFilterEvaluator';
 import { NumberFloatingFilter } from './provided/number/numberFloatingFilter';
 import { TextFilter } from './provided/text/textFilter';
+import { TextFilterEvaluator } from './provided/text/textFilterEvaluator';
 import { TextFloatingFilter } from './provided/text/textFloatingFilter';
 import { getQuickFilter, isQuickFilterPresent, resetQuickFilter } from './quickFilterApi';
 import { QuickFilterService } from './quickFilterService';
@@ -115,6 +118,9 @@ export const TextFilterModule: _ModuleWithoutApi = {
         agTextColumnFilter: TextFilter,
         agTextColumnFloatingFilter: TextFloatingFilter,
     },
+    dynamicBeans: {
+        agTextColumnFilterEvaluator: TextFilterEvaluator,
+    },
 };
 
 /**
@@ -127,6 +133,9 @@ export const NumberFilterModule: _ModuleWithoutApi = {
     userComponents: {
         agNumberColumnFilter: NumberFilter,
         agNumberColumnFloatingFilter: NumberFloatingFilter,
+    },
+    dynamicBeans: {
+        agNumberColumnFilterEvaluator: NumberFilterEvaluator,
     },
 };
 
@@ -141,6 +150,9 @@ export const DateFilterModule: _ModuleWithoutApi = {
         agDateColumnFilter: DateFilter,
         agDateInput: DefaultDateComponent,
         agDateColumnFloatingFilter: DateFloatingFilter,
+    },
+    dynamicBeans: {
+        agDateColumnFilterEvaluator: DateFilterEvaluator,
     },
 };
 

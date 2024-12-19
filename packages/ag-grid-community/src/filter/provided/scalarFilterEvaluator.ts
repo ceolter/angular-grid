@@ -1,25 +1,17 @@
 import { _warn } from '../../validation/logging';
-import type { AgInputTextField } from '../../widgets/agInputTextField';
-import type { Comparator, ScalarFilterParams } from './iScalarFilter';
+import type { Comparator, IScalarFilterParams } from './iScalarFilter';
 import type { ISimpleFilterModel, ISimpleFilterModelType, Tuple } from './iSimpleFilter';
-import { SimpleFilter } from './simpleFilter';
+import { SimpleFilterEvaluator } from './simpleFilterEvaluator';
 import { isBlank } from './simpleFilterUtils';
 
-export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputTextField> extends SimpleFilter<
-    M,
-    V,
-    E
-> {
-    private scalarFilterParams: ScalarFilterParams;
+export abstract class ScalarFilterEvaluator<
+    TModel extends ISimpleFilterModel,
+    TValue,
+    TParams extends IScalarFilterParams,
+> extends SimpleFilterEvaluator<TModel, TValue, TParams> {
+    protected abstract comparator(): Comparator<TValue>;
 
-    protected abstract comparator(): Comparator<V>;
-
-    protected abstract isValid(value: V): boolean;
-
-    protected override setParams(params: ScalarFilterParams): void {
-        super.setParams(params);
-        this.scalarFilterParams = params;
-    }
+    protected abstract isValid(value: TValue): boolean;
 
     protected evaluateNullValue(filterType?: ISimpleFilterModelType | null) {
         const {
@@ -28,7 +20,7 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
             includeBlanksInGreaterThan,
             includeBlanksInLessThan,
             includeBlanksInRange,
-        } = this.scalarFilterParams;
+        } = this.params;
         switch (filterType) {
             case 'equals':
                 if (includeBlanksInEquals) {
@@ -67,7 +59,7 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
         return false;
     }
 
-    protected evaluateNonNullValue(values: Tuple<V>, cellValue: V, filterModel: M): boolean {
+    protected evaluateNonNullValue(values: Tuple<TValue>, cellValue: TValue, filterModel: TModel): boolean {
         const type = filterModel.type;
         if (!this.isValid(cellValue)) {
             return type === 'notEqual' || type === 'notBlank';
@@ -98,7 +90,7 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
             case 'inRange': {
                 const compareToResult = comparator(values[1]!, cellValue);
 
-                return this.scalarFilterParams.inRangeInclusive
+                return this.params.inRangeInclusive
                     ? compareResult >= 0 && compareToResult <= 0
                     : compareResult > 0 && compareToResult < 0;
             }

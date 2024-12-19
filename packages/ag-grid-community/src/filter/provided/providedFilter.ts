@@ -1,6 +1,6 @@
 import type { FilterChangedEventSourceType } from '../../events';
 import type { ContainerType, IAfterGuiAttachedParams } from '../../interfaces/iAfterGuiAttachedParams';
-import type { IDoesFilterPassParams, IFilterComp } from '../../interfaces/iFilter';
+import type { FilterDisplayParams, IDoesFilterPassParams, IFilterComp } from '../../interfaces/iFilter';
 import type { PopupEventParams } from '../../interfaces/iPopup';
 import type { IRowNode } from '../../interfaces/iRowNode';
 import { PositionableFeature } from '../../rendering/features/positionableFeature';
@@ -314,6 +314,8 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         const previousModel = this.appliedModel;
 
         this.appliedModel = newModel;
+
+        (this.params as FilterDisplayParams).onModelChange(newModel);
 
         // models can be same if user pasted same content into text field, or maybe just changed the case
         // and it's a case insensitive filter

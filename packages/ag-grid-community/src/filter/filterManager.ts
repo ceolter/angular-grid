@@ -213,11 +213,11 @@ export class FilterManager extends BeanStub implements NamedBean {
         );
     }
 
-    public doesRowPassOtherFilters(filterToSkip: IFilterComp, node: any): boolean {
-        return this.doesRowPassFilter({ rowNode: node, filterInstanceToSkip: filterToSkip });
+    public doesRowPassOtherFilters(colIdToSkip: string, rowNode: RowNode): boolean {
+        return this.doesRowPassFilter({ rowNode, colIdToSkip });
     }
 
-    public doesRowPassAggregateFilters(params: { rowNode: RowNode; filterInstanceToSkip?: IFilterComp }): boolean {
+    public doesRowPassAggregateFilters(params: { rowNode: RowNode; colIdToSkip?: string }): boolean {
         const { rowNode } = params;
 
         if (this.alwaysPassFilter?.(rowNode)) {
@@ -229,10 +229,7 @@ export class FilterManager extends BeanStub implements NamedBean {
             return false;
         }
 
-        if (
-            this.isAggregateFilterPresent() &&
-            !this.colFilter!.doAggregateFiltersPass(rowNode, params.filterInstanceToSkip)
-        ) {
+        if (this.isAggregateFilterPresent() && !this.colFilter!.doAggregateFiltersPass(rowNode, params.colIdToSkip)) {
             return false;
         }
 
@@ -240,7 +237,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         return true;
     }
 
-    public doesRowPassFilter(params: { rowNode: RowNode; filterInstanceToSkip?: IFilterComp }): boolean {
+    public doesRowPassFilter(params: { rowNode: RowNode; colIdToSkip?: string }): boolean {
         const { rowNode } = params;
 
         if (this.alwaysPassFilter?.(rowNode)) {
@@ -261,10 +258,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         }
 
         // lastly, check column filter
-        if (
-            this.isColumnFilterPresent() &&
-            !this.colFilter!.doColumnFiltersPass(rowNode, params.filterInstanceToSkip)
-        ) {
+        if (this.isColumnFilterPresent() && !this.colFilter!.doColumnFiltersPass(rowNode, params.colIdToSkip)) {
             return false;
         }
 
