@@ -1,6 +1,7 @@
 {
   "name": "@ag-grid-community/locale",
   "version": "33.0.1",
+  "description": "Localisation Module for AG Grid, providing translations in 31 languages.",
   "main": "./dist/package/main.cjs.js",
   "types": "./dist/types/src/main.d.ts",
   "module": "./dist/package/main.esm.mjs",

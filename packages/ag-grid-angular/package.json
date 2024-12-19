@@ -1,6 +1,7 @@
 {
   "name": "ag-grid-angular",
   "version": "33.0.1",
+  "description": "AG Grid Angular Component",
   "scripts": {
     "clean": "rimraf dist",
     "ng": "./node_modules/.bin/ng",
