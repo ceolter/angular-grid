@@ -356,13 +356,11 @@ provideGlobalGridOptions({ theme: "legacy" });
 
 <ol>
     <li>
-        <p>
-            Locate your project's <code>package.json</code> and note the version of AG Grid that you are currently using.
-        </p>
+        <p>Locate your project's package.json and note the version of AG Grid that you are currently using.</p>
     </li>
     <li>
         <p>
-            Update any AG Grid dependencies listed in the <code>package.json</code> as outline above to version <code
+            Update any AG Grid dependencies listed in the package.json as outline above to version <code
                 >{agGridVersion}</code
             >.
         </p>
@@ -437,27 +435,46 @@ provideGlobalGridOptions({ theme: "legacy" });
             </a>
         </p>
 
-        <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
-        <p>
-            For non-TS users and users who use TS but avoid type validation there's changes in property value coercion:
-        </p>
-
         {
             isAngular && (
-                <p>
-                    For boolean values provided as strings, all string values except “false” are truthy - only “false”
-                    will be false, any other spelling such as “FALSE” will be treated as true.
-                </p>
+                <div>
+                    <Heading level="3" id="angular-minimum-version">
+                        Angular Minimum Version
+                    </Heading>
+                    <p>
+                        The minimum Angular version supported is now Angular 17. Please upgrade to Angular 17 to use
+                        this AG Grid version.
+                    </p>
+                </div>
             )
         }
+
         {
-            !isAngular && (
-                <p>
-                    For boolean values provided as strings, “false” is no longer converted to false anymore - all string
-                    values are truthy.
-                </p>
+            isVue && (
+                <div>
+                    <Heading level="3" id="vue-minimum-version">
+                        Vue Minimum Version
+                    </Heading>
+                    <p>
+                        The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this
+                        AG Grid version.
+                    </p>
+                </div>
             )
         }
+
+        <Heading level="3" id="property-value-coercion">Property Value Coercion</Heading>
+        <p>
+            For non-TS users or users who use TS but avoid type validation there's changes in property value coercion:
+
+            {
+                isAngular
+                    ? `For boolean values provided as strings, the Angular provided booleanAttribute is now used. All string values except “false” are truthy - only “false”
+                    will be false, any other spelling such as “FALSE” will be treated as true.`
+                    : `For boolean values provided as strings, “false” is no longer converted to false any more - all string
+                    values are truthy.`
+            }
+        </p>
 
         {
             isReact && (
@@ -546,33 +563,102 @@ provideGlobalGridOptions({ theme: "legacy" });
             )
         }
 
-        {
-            isAngular && (
-                <div>
-                    <Heading level="3" id="angular-minimum-version">
-                        Angular Minimum Version
-                    </Heading>
-                    <p>
-                        The minimum Angular version supported is now Angular 17. Please upgrade to Angular 17 to use
-                        this AG Grid version.
-                    </p>
-                </div>
-            )
-        }
+        <Heading level="3" id="server-side-rendering">Server-side Rendering</Heading>
+        <p>
+            AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement
+            and others. If possible you should avoid rendering AG Grid on the server as this is not supported.
+        </p>
 
-        {
-            isVue && (
-                <div>
-                    <Heading level="3" id="vue-minimum-version">
-                        Vue Minimum Version
-                    </Heading>
-                    <p>
-                        The minimum Vue version supported is now Vue 3.5. Please upgrade to Vue 3.5 or later to use this
-                        AG Grid version.
-                    </p>
-                </div>
-            )
-        }
+        <Heading level="3" id="typing">Stricter Types</Heading>
+        <p>
+            The following properties are now strictly typed to only their valid values instead of <code>string</code>:
+        </p>
+        <ul>
+            <li>
+                gridOptions - <code>chartMenuItems</code> / <code>getMainMenuItems</code> / <code
+                    >getContextMenuItems</code
+                >
+            </li>
+            <li>columnDefs - <code>mainMenuItems</code> / <code>contextMenuItems</code></li>
+        </ul>
+
+        <Heading level="3" id="typing">Column Menu</Heading>
+        <p>
+            The column property is now optional in the callback to get column menu items (in the grid option
+            <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
+            column group header or empty column space is right-cpcked on. A new property <code>columnGroup</code>
+            will be provided when a column group header is right-clicked on.
+        </p>
+
+        <Heading level="3" id="modules-1">Row Drop Zone</Heading>
+        <p>
+            <code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.
+        </p>
+
+        <Heading level="3" id="server-side-row-model">Server-side Row Model</Heading>
+        <p>
+            Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
+            removed. Please use the standard server-side row model functionality as documented.
+        </p>
+
+        <Heading level="3" id="column-state">Column State</Heading>
+        <p>
+            Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct
+            types instead of strings.
+        </p>
+
+        <Heading level="3" id="grid-state">Grid State</Heading>
+        <p>
+            Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
+            Restoring grid state with the old <code>colId</code> will have no effect.
+        </p>
+
+        <Heading level="3" id="integrated-charts">Integrated Charts</Heading>
+        <p>
+            <code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of
+            the Integrated Charts Advanced Settings.
+        </p>
+
+        <Heading level="3" id="sparklines">Sparklines</Heading>
+        <ul>
+            <li>
+                <code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and
+                <code>direction: 'vertical'</code>
+                instead.
+            </li>
+            <li>
+                <code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.
+            </li>
+            <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
+            <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
+            <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
+            <li>
+                <code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
+                <code>sparklineOptions</code> properties instead.
+            </li>
+            <li>
+                <code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
+                <code>itemStyler</code> instead.
+            </li>
+            <li>
+                <code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code>
+                instead.
+            </li>
+            <li>
+                <code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
+                <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
+            </li>
+            <li><code>sparklineOptions.container</code> - removed.</li>
+            <li>
+                <code>sparklineOptions.label.placement</code> - updated to use <a
+                    href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement"
+                    >AG Charts Label Placement</a
+                >. Instead of <code>insideBase</code>, <code>center</code>,
+                <code>insideEnd</code>
+                and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
+                <code>inside-end</code> or <code>outside-end</code>
+            </li>
+        </ul>
 
         <Heading level="3" id="custom-icons">Custom Icons</Heading>
         <p>
@@ -701,106 +787,6 @@ provideGlobalGridOptions({ theme: "legacy" });
                         <code>accordionIndeterminate</code> for accordions (Filters Tool Panel, Integrated Charts tool panels)
                     </li>
                 </ul>
-            </li>
-        </ul>
-
-        <Heading level="3" id="server-side-rendering">Server-side Rendering</Heading>
-        <p>
-            AG Grid no longer patches global properties that are not present in a Server environment, i.e HTMLElement
-            and others. If possible you should avoid rendering AG Grid on the server as this is not supported.
-        </p>
-
-        <Heading level="3" id="typing">Stricter Types</Heading>
-        <p>
-            The following properties are now strictly typed to only their valid values instead of <code>string</code>:
-        </p>
-        <ul>
-            <li>
-                gridOption - <code>chartMenuItems</code>
-                <li>
-                    gridOption - <code>getMainMenuItems</code> and <code>getContextMenuItems</code> including the <code
-                        >defaultItems</code
-                    > parameter in the callback
-                </li>
-            </li>
-            <li>columnDefs - <code>mainMenuItems</code> and <code>contextMenuItems</code></li>
-        </ul>
-
-        <Heading level="3" id="typing">Column Menu</Heading>
-        <p>
-            The column property is now optional in the callback to get column menu items (in the grid option
-            <code>getMainMenuItems</code> or <code>colDef.mainMenuItems</code>). <code>column</code> will be null when a
-            column group header or empty column space is right-cpcked on. A new property <code>columnGroup</code>
-            will be provided when a column group header is right-clicked on.
-        </p>
-
-        <Heading level="3" id="modules-1">Row Drop Zone</Heading>
-        <p>
-            <code>api.getRowDropZoneParams()</code> returns undefined if the <code>RowDragModule</code> is not registered.
-        </p>
-
-        <Heading level="3" id="server-side-row-model">Server-side Row Model</Heading>
-        <p>
-            Server-side Row Model full store (activated by <code>suppressServerSideInfiniteScroll</code> property) is now
-            removed. Please use the standard server-side row model functionality as documented.
-        </p>
-
-        <Heading level="3" id="column-state">Column State</Heading>
-        <p>
-            Column state properties in the column definition are no longer parsed to number/boolean. Provide the correct
-            types instead of strings.
-        </p>
-
-        <Heading level="3" id="grid-state">Grid State</Heading>
-        <p>
-            Grid state <code>colId ag-Grid-ControlsColumn</code> is now named <code>ag-Grid-SelectionColumn</code>.
-            Restoring grid state with the old <code>colId</code> will have no effect.
-        </p>
-
-        <Heading level="3" id="integrated-charts">Integrated Charts</Heading>
-        <p>
-            <code>navigator</code> is removed from <code>ChartFormatPanelGroup</code>. Navigator setting is now part of
-            the Integrated Charts Advanced Settings.
-        </p>
-
-        <Heading level="3" id="sparklines">Sparklines</Heading>
-        <ul>
-            <li>
-                <code>type: 'column'</code> - removed, use <code>type: 'bar'</code> and
-                <code>direction: 'vertical'</code>
-                instead.
-            </li>
-            <li>
-                <code>tooltip.renderer</code> no longer returns tooltip font colour and opacity - use CSS instead.
-            </li>
-            <li><code>tooltip.xOffset / tooltip.yOffset</code> - removed, use CSS instead.</li>
-            <li><code>tooltip.container</code> - removed, AG Charts now handles this.</li>
-            <li><code>marker.formatter</code> - removed, use <code>marker.itemStyler</code> instead.</li>
-            <li>
-                <code>sparklineOptions.[line, area, bar, column]</code> to apply styles - removed, use
-                <code>sparklineOptions</code> properties instead.
-            </li>
-            <li>
-                <code>highlightStyle</code> now follows the AG Charts options - for more customisation options use an
-                <code>itemStyler</code> instead.
-            </li>
-            <li>
-                <code>sparklineOptions.valueAxisDomain</code> - removed, use <code>sparklineOptions.min/max</code>
-                instead.
-            </li>
-            <li>
-                <code>sparklineOptions.paddingInner / sparklineOptions.paddingOuter</code> - removed, use
-                <code>sparklineOptions.axis.paddingInner / sparklineOptions.axis.paddingOuter</code> instead.
-            </li>
-            <li><code>sparklineOptions.container</code> - removed.</li>
-            <li>
-                <code>sparklineOptions.label.placement</code> - updated to use <a
-                    href="https://www.ag-grid.com/charts/javascript/bar-series/#reference-AgBarSeriesOptions-label-placement"
-                    >AG Charts Label Placement</a
-                >. Instead of <code>insideBase</code>, <code>center</code>,
-                <code>insideEnd</code>
-                and <code>outsideEnd</code>, please use <code>inside-center</code>, <code>inside-start</code>,
-                <code>inside-end</code> or <code>outside-end</code>
             </li>
         </ul>
     </div>
