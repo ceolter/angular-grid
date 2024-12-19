@@ -16,13 +16,14 @@ interface TabGuardProps {
     forceFocusOutWhenTabGuardsAreEmpty?: boolean;
     gridCtrl: GridCtrl;
     onTabKeyDown: (e: KeyboardEvent) => void;
+    isEmpty?: () => boolean;
 }
 
 const TabGuardCompRef: ForwardRefRenderFunction<TabGuardCompCallback, TabGuardProps> = (
     props: any,
     forwardRef: any
 ) => {
-    const { children, eFocusableElement, onTabKeyDown, gridCtrl, forceFocusOutWhenTabGuardsAreEmpty } = props;
+    const { children, eFocusableElement, onTabKeyDown, gridCtrl, forceFocusOutWhenTabGuardsAreEmpty, isEmpty } = props;
     const { context } = useContext(BeansContext);
 
     const topTabGuardRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +71,7 @@ const TabGuardCompRef: ForwardRefRenderFunction<TabGuardCompCallback, TabGuardPr
                     onTabKeyDown: onTabKeyDown,
                     forceFocusOutWhenTabGuardsAreEmpty: forceFocusOutWhenTabGuardsAreEmpty,
                     focusInnerElement: (fromBottom: any) => gridCtrl.focusInnerElement(fromBottom),
+                    isEmpty,
                 })
             );
         }

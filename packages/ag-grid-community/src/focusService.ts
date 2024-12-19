@@ -513,7 +513,11 @@ export class FocusService extends BeanStub implements NamedBean {
                 return true;
             }
 
-            return _focusNextGridCoreContainer(this.beans, false);
+            if (backwards) {
+                return false;
+            }
+
+            return _focusNextGridCoreContainer(this.beans, backwards);
         }
 
         const nextRow = backwards ? _getLastRow(this.beans) : _getFirstRow(this.beans);

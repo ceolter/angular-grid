@@ -970,6 +970,7 @@ export {
     _getInnerWidth,
     _isNodeOrElement,
     _observeResize,
+    _preserveRangesWhile,
 } from './utils/dom';
 export { _stopPropagationForAgGrid, _isStopPropagationForAgGrid, _isElementInEventPath } from './utils/event';
 export { _warnOnce, _debounce, _doOnce, _waitUntil } from './utils/function';

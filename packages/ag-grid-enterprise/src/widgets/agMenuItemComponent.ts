@@ -3,13 +3,13 @@ import {
     BeanStub,
     KeyCode,
     _loadTemplate,
+    _preserveRangesWhile,
     _setAriaDisabled,
     _setAriaExpanded,
     _setAriaLevel,
     _setAriaRole,
 } from 'ag-grid-community';
 import type {
-    AgColumn,
     AgEvent,
     BeanCollection,
     Component,
@@ -114,8 +114,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             openSubMenu: (activateFirstItem) => this.openSubMenu(activateFirstItem),
             closeSubMenu: () => this.closeSubMenu(),
             closeMenu: (event) => this.closeMenu(event),
-            updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) =>
-                this.refreshTooltip(tooltip, shouldDisplayTooltip),
+            updateTooltip: (tooltip, shouldDisplayTooltip) => this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
         });
         return (
@@ -225,19 +224,14 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         const { popupSvc } = this;
         const positionCallback = () => {
             const eventSource = this.eGui!;
+            const { column, node } = this.contextParams;
             popupSvc?.positionPopupForMenu({
                 eventSource,
                 ePopup,
+                event: event instanceof MouseEvent ? event : undefined,
+                column,
+                node,
             });
-            const { column, node } = this.contextParams;
-            popupSvc?.callPostProcessPopup(
-                'subMenu',
-                ePopup,
-                eventSource,
-                event instanceof MouseEvent ? event : undefined,
-                column as AgColumn,
-                node
-            );
         };
 
         const translate = this.getLocaleTextFunc();
@@ -305,7 +299,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
         this.menuItemComp.setActive?.(true);
         if (!this.suppressFocus) {
-            this.eGui!.focus({ preventScroll: true });
+            _preserveRangesWhile(this.beans, () => this.eGui!.focus({ preventScroll: true }));
         }
 
         if (openSubMenu && this.params.subMenu) {
@@ -328,7 +322,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.isActive = false;
 
         if (this.subMenuIsOpen) {
-            this.hideSubMenu!();
+            this.hideSubMenu?.();
         }
     }
 

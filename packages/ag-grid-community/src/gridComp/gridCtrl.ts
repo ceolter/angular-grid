@@ -7,7 +7,7 @@ import type { LayoutView } from '../styling/layoutFeature';
 import { LayoutFeature } from '../styling/layoutFeature';
 import { _last } from '../utils/array';
 import { _observeResize } from '../utils/dom';
-import { _findTabbableParent, _focusInto, _isHeaderFocusSuppressed } from '../utils/focus';
+import { _findTabbableParent, _focusInto, _isCellFocusSuppressed, _isHeaderFocusSuppressed } from '../utils/focus';
 import type { ComponentSelector } from '../widgets/component';
 
 export interface IGridComp extends LayoutView {
@@ -133,22 +133,22 @@ export class GridCtrl extends BeanStub {
 
         if (fromBottom) {
             if (focusableContainers.length > 1) {
-                return this.focusContainer(_last(focusableContainers), true);
+                return this.focusContainer(_last(focusableContainers), fromBottom);
             }
 
             const lastColumn = _last(allColumns);
-            if (focusSvc.focusGridView(lastColumn, true)) {
+            if (focusSvc.focusGridView(lastColumn, fromBottom)) {
                 return true;
             }
         }
 
         if (this.gos.get('headerHeight') === 0 || _isHeaderFocusSuppressed(this.beans)) {
-            if (focusSvc.focusGridView(allColumns[0])) {
+            if (focusSvc.focusGridView(allColumns[0], fromBottom)) {
                 return true;
             }
 
             for (let i = 1; i < focusableContainers.length; i++) {
-                if (_focusInto(focusableContainers[i].getGui())) {
+                if (_focusInto(focusableContainers[i].getGui(), fromBottom)) {
                     return true;
                 }
             }
@@ -185,6 +185,13 @@ export class GridCtrl extends BeanStub {
         });
     }
 
+    public isFocusable(): boolean {
+        const beans = this.beans;
+        return (
+            !_isCellFocusSuppressed(beans) || !_isHeaderFocusSuppressed(beans) || !!beans.sideBar?.comp?.isDisplayed()
+        );
+    }
+
     private getNextFocusableIndex(
         focusableContainers: FocusableContainer[],
         backwards?: boolean
@@ -203,7 +210,7 @@ export class GridCtrl extends BeanStub {
 
     private focusContainer(comp: FocusableContainer, up?: boolean): boolean {
         comp.setAllowFocus?.(true);
-        const result = _focusInto(comp.getGui(), up);
+        const result = _focusInto(comp.getGui(), up, false, true);
         comp.setAllowFocus?.(false);
         return result;
     }

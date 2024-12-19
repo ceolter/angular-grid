@@ -196,11 +196,12 @@ export class TabbedLayout extends TabGuardComp {
         }
     }
 
-    private focusInnerElement(fromBottom?: boolean): void {
+    private focusInnerElement(fromBottom?: boolean): boolean {
         if (fromBottom) {
-            this.focusBody(true);
+            return this.focusBody(true);
         } else {
             this.focusHeader();
+            return true;
         }
     }
 
@@ -208,8 +209,8 @@ export class TabbedLayout extends TabGuardComp {
         this.activeItem.eHeaderButton.focus({ preventScroll });
     }
 
-    private focusBody(fromBottom?: boolean): void {
-        _focusInto(this.eBody, fromBottom);
+    private focusBody(fromBottom?: boolean): boolean {
+        return _focusInto(this.eBody, fromBottom);
     }
 
     public setAfterAttachedParams(params: IAfterGuiAttachedParams): void {

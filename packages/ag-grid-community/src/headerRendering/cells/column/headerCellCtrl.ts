@@ -422,7 +422,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private setupMenuClass(compBean: BeanStub): void {
         const listener = () => {
-            this.comp.addOrRemoveCssClass('ag-column-menu-visible', this.column.isMenuVisible());
+            this.comp?.addOrRemoveCssClass('ag-column-menu-visible', this.column.isMenuVisible());
         };
 
         compBean.addManagedListeners(this.column, { menuVisibleChanged: listener });
