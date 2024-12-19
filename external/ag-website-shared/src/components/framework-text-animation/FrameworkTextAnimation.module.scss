@@ -1,9 +1,5 @@
 @use 'design-system' as *;
 
-.topLine {
-    display: inline-flex;
-}
-
 .animatedWordsOuter {
     --word-height: 1.3em;
     --word-index: 0;
@@ -21,12 +17,12 @@
     display: inline-flex;
     flex-direction: column;
     transform: translateY(calc(var(--word-height) * var(--word-index) * 1.5));
-    transition: transform 0.2s cubic-bezier(0.4, 0.3, 0.5, 1.5);
-}
+    transition: transform 0.25s cubic-bezier(0.6, 0.3, 0.5, 1.4);
 
-.animatedWord {
-    height: calc(var(--word-height) * 1.5);
-    padding-top: calc(var(--word-height) * 0.5);
+    > span {
+        height: calc(var(--word-height) * 1.5);
+        padding-top: calc(var(--word-height) * 0.5);
+    }
 }
 
 .javascript {

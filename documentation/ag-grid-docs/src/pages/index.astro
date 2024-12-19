@@ -19,7 +19,7 @@ import { Finance } from 'src/components/demos/examples/finance';
 import { ThemeBuilderHomepage } from '@components/theme-builder-homepage/ThemeBuilderHomepage';
 import { AutomatedRowGrouping } from '@ag-website-shared/components/automated-examples/AutomatedRowGrouping';
 import { AutomatedIntegratedCharts } from '@ag-website-shared/components/automated-examples/AutomatedIntegratedCharts';
-import { LandingPageAnimatedHeader } from '@ag-website-shared/components/landing-pages/LandingPageAnimatedHeader';
+import { FrameworkTextAnimation } from '@ag-website-shared/components/framework-text-animation/FrameworkTextAnimation';
 import LogoMark from '@components/logo/LogoMark';
 
 const { data: versionsData } = await getEntry('versions', 'ag-grid-versions');
@@ -72,7 +72,14 @@ const frameworksData = [
                 <noscript>
                     <h1>The Best JavaScript Grid in the World</h1>
                 </noscript>
-                <LandingPageAnimatedHeader client:load />
+
+                <h1 className="text-xl">
+                    <span className={styles.heroTopLine}>
+                        <span>The Best</span>
+                        <FrameworkTextAnimation client:load />
+                    </span>
+                    <span>Grid in the World</span>
+                </h1>
 
                 <h2 class="text-base normal-weight-text">
                     Add high-performance, feature rich, and fully customisable Data Grids to your application in minutes

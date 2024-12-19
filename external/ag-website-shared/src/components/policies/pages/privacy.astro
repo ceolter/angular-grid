@@ -17,82 +17,80 @@ const { name } = Astro.props;
     showDocsNav={false}
 >
     <div class:list={styles.policyPage}>
-        <section class="layout-grid">
-            <div class="layout-max-width-small">
-                <h1>AG Grid Privacy Policy</h1>
-                <hr />
+        <div class="layout-max-width-small">
+            <h1>AG Grid Privacy Policy</h1>
+            <hr />
 
-                <header>
-                    <div id="introduction" class={styles.introduction}>
-                        <h4>Effective Date: 6 July 2022</h4>
-                        <p>Welcome to AG Grid's Privacy Policy.</p>
-                        <p>
-                            <strong>Your privacy is important to us.</strong>
-                        </p>
-                        <p>
-                            At ag-grid, we are fully committed to protecting your personal data and complying with all
-                            data privacy laws.{' '}
-                        </p>
-                        <p>
-                            This policy serves as a guide and reference point for how we may collect and use personal
-                            information, and the rights and choices available to all our visitors and customers.
-                        </p>
-                        <p>
-                            We strongly recommend you read our policy and understand what we collect, how we collect it,
-                            what we do with it, how we protect it, and your rights regarding information, <strong
-                                >before</strong
-                            > you use or access any of our services.
-                        </p>
-                    </div>
-
-                    <nav>
-                        <ul class="list-style-none">
-                            <li>
-                                <a href="# active">Guide</a>
-                            </li>
-                            <li>
-                                <a href="#intro-privacy">Introduction</a>
-                            </li>
-                            <li>
-                                <a href="#data-what-why">
-                                    What Do We Collect And For What Purpose And Ground We Process It
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#data-how-we-collect">How We Collect Your Personal Data</a>
-                            </li>
-                            <li>
-                                <a href="#marketing-comms">Marketing Communications</a>
-                            </li>
-                            <li>
-                                <a href="#data-disclosure">Disclosures Of Your Personal Data</a>
-                            </li>
-                            <li>
-                                <a href="#intl-transfers">International Transfers</a>
-                            </li>
-                            <li>
-                                <a href="#data-security">Data Security</a>
-                            </li>
-                            <li>
-                                <a href="#data-retention">Data Retention</a>
-                            </li>
-                            <li>
-                                <a href="#legal-rights">Your Legal Rights</a>
-                            </li>
-                            <li>
-                                <a href="#third-party-links">Third-Party Links</a>
-                            </li>
-                            <li>
-                                <a href="#cookies-privacy">Cookies</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-
-                <div class={styles.policyList}>
-                    <PrivacyPolicies />
+            <header>
+                <div id="introduction" class={styles.introduction}>
+                    <h4>Effective Date: 6 July 2022</h4>
+                    <p>Welcome to AG Grid's Privacy Policy.</p>
+                    <p>
+                        <strong>Your privacy is important to us.</strong>
+                    </p>
+                    <p>
+                        At ag-grid, we are fully committed to protecting your personal data and complying with all data
+                        privacy laws.{' '}
+                    </p>
+                    <p>
+                        This policy serves as a guide and reference point for how we may collect and use personal
+                        information, and the rights and choices available to all our visitors and customers.
+                    </p>
+                    <p>
+                        We strongly recommend you read our policy and understand what we collect, how we collect it,
+                        what we do with it, how we protect it, and your rights regarding information, <strong
+                            >before</strong
+                        > you use or access any of our services.
+                    </p>
                 </div>
+
+                <nav>
+                    <ul class="list-style-none">
+                        <li>
+                            <a href="# active">Guide</a>
+                        </li>
+                        <li>
+                            <a href="#intro-privacy">Introduction</a>
+                        </li>
+                        <li>
+                            <a href="#data-what-why">
+                                What Do We Collect And For What Purpose And Ground We Process It
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#data-how-we-collect">How We Collect Your Personal Data</a>
+                        </li>
+                        <li>
+                            <a href="#marketing-comms">Marketing Communications</a>
+                        </li>
+                        <li>
+                            <a href="#data-disclosure">Disclosures Of Your Personal Data</a>
+                        </li>
+                        <li>
+                            <a href="#intl-transfers">International Transfers</a>
+                        </li>
+                        <li>
+                            <a href="#data-security">Data Security</a>
+                        </li>
+                        <li>
+                            <a href="#data-retention">Data Retention</a>
+                        </li>
+                        <li>
+                            <a href="#legal-rights">Your Legal Rights</a>
+                        </li>
+                        <li>
+                            <a href="#third-party-links">Third-Party Links</a>
+                        </li>
+                        <li>
+                            <a href="#cookies-privacy">Cookies</a>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+
+            <div class={styles.policyList}>
+                <PrivacyPolicies />
             </div>
-        </section>
+        </div>
     </div>
 </Layout>

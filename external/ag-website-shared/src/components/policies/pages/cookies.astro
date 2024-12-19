@@ -17,41 +17,39 @@ const { name } = Astro.props;
     showDocsNav={false}
 >
     <div class:list={styles.policyPage}>
-        <section class="layout-grid">
-            <div class="layout-max-width-small">
-                <h1>Cookies Policy</h1>
-                <hr />
+        <div class="layout-max-width-small">
+            <h1>Cookies Policy</h1>
+            <hr />
 
-                <header>
-                    <div id="introduction" class={styles.introduction}>
-                        <h4>Effective Date: May 17, 2018</h4>
-                    </div>
-
-                    <nav>
-                        <ul class="list-style-none">
-                            <li>
-                                <a href="#">Cookies Guide</a>
-                            </li>
-                            <li>
-                                <a href="#manage-your-cookie-consent">Manage Cookie Consent</a>
-                            </li>
-                            <li>
-                                <a href="#intro-privacy">What is a Cookie?</a>
-                            </li>
-                            <li>
-                                <a href="#cookies-how-we-use">How Do We Use Cookies?</a>
-                            </li>
-                            <li>
-                                <a href="#third-party-cookies">Third-party Cookies</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-
-                <div class={styles.policyList}>
-                    <CookiesPolicies />
+            <header>
+                <div id="introduction" class={styles.introduction}>
+                    <h4>Effective Date: May 17, 2018</h4>
                 </div>
+
+                <nav>
+                    <ul class="list-style-none">
+                        <li>
+                            <a href="#">Cookies Guide</a>
+                        </li>
+                        <li>
+                            <a href="#manage-your-cookie-consent">Manage Cookie Consent</a>
+                        </li>
+                        <li>
+                            <a href="#intro-privacy">What is a Cookie?</a>
+                        </li>
+                        <li>
+                            <a href="#cookies-how-we-use">How Do We Use Cookies?</a>
+                        </li>
+                        <li>
+                            <a href="#third-party-cookies">Third-party Cookies</a>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+
+            <div class={styles.policyList}>
+                <CookiesPolicies />
             </div>
-        </section>
+        </div>
     </div>
 </Layout>
