@@ -67,6 +67,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         columnOrGroup: AgColumn | AgProvidedColumnGroup | undefined,
         mouseEvent: MouseEvent | Touch,
         containerType: ContainerType,
+        onClosedCallback?: () => void,
         filtersOnly?: boolean
     ): void {
         const { column, columnGroup } = this.splitColumnOrGroup(columnOrGroup);
@@ -92,7 +93,8 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             containerType,
             defaultTab,
             undefined,
-            mouseEvent.target as HTMLElement
+            mouseEvent.target as HTMLElement,
+            onClosedCallback
         );
     }
 
@@ -110,6 +112,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         columnOrGroup: AgColumn | AgProvidedColumnGroup | undefined,
         eventSource: HTMLElement,
         containerType: ContainerType,
+        onClosedCallback?: () => void,
         filtersOnly?: boolean
     ): void {
         let multiplier = -1;
@@ -155,7 +158,8 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
             containerType,
             defaultTab,
             restrictToTabs,
-            eventSource
+            eventSource,
+            onClosedCallback
         );
     }
 
@@ -166,7 +170,8 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         containerType: ContainerType,
         defaultTab?: string,
         restrictToTabs?: ColumnMenuTab[],
-        eventSource?: HTMLElement
+        eventSource?: HTMLElement,
+        onClosedCallback?: () => void
     ): void {
         const menuParams = this.getMenuParams(column, columnGroup, restrictToTabs, eventSource);
         if (!menuParams) {
@@ -185,6 +190,7 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
                 // if we don't have a column, then the menu wasn't launched via keyboard navigation
                 (menuUtils as MenuUtils).restoreFocusOnClose(restoreFocusParams, eComp, e);
             }
+            onClosedCallback?.();
         });
 
         const translate = this.getLocaleTextFunc();

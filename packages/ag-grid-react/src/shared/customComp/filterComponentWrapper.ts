@@ -1,4 +1,5 @@
-import type { AgPromise, IDoesFilterPassParams, IFilter, IFilterParams } from 'ag-grid-community';
+import type { IAfterGuiAttachedParams, IDoesFilterPassParams, IFilter, IFilterParams } from 'ag-grid-community';
+import { AgPromise } from 'ag-grid-community';
 
 import { CustomComponentWrapper } from './customComponentWrapper';
 import type { CustomFilterCallbacks, CustomFilterProps } from './interfaces';
@@ -12,6 +13,10 @@ export class FilterComponentWrapper
     private readonly onUiChange = () => this.sourceParams.filterChangedCallback();
     private expectingNewMethods = true;
     private hasBeenActive = false;
+    private resolveSetMethodsCallback!: () => void;
+    private awaitSetMethodsCallback = new AgPromise<void>((resolve) => {
+        this.resolveSetMethodsCallback = resolve;
+    });
 
     public isFilterActive(): boolean {
         return this.model != null;
@@ -38,6 +43,16 @@ export class FilterComponentWrapper
         return true;
     }
 
+    public afterGuiAttached(params?: IAfterGuiAttachedParams): void {
+        const providedMethods = this.providedMethods;
+        if (!providedMethods) {
+            // setMethods hasn't been called yet
+            this.awaitSetMethodsCallback.then(() => this.providedMethods?.afterGuiAttached?.(params));
+        } else {
+            providedMethods.afterGuiAttached?.(params);
+        }
+    }
+
     protected override getOptionalMethods(): string[] {
         return ['afterGuiAttached', 'afterGuiDetached', 'onNewRowsLoaded', 'getModelAsString', 'onAnyFilterChanged'];
     }
@@ -59,6 +74,7 @@ export class FilterComponentWrapper
         }
         this.expectingNewMethods = false;
         super.setMethods(methods);
+        this.resolveSetMethodsCallback();
     }
 
     private updateModel(model: any): void {

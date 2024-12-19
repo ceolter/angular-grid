@@ -233,7 +233,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         }
 
         this.valueModel.updateOnParamsChange(params).then(() => {
-            this.refreshFilterValues();
+            if (this.isAlive()) {
+                this.refreshFilterValues();
+            }
         });
 
         return true;
@@ -454,12 +456,15 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     }
 
     private syncAfterDataChange(): AgPromise<void> {
+        const doApply = !this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!);
         const promise = this.valueModel.refreshValues();
 
         return promise.then(() => {
-            this.checkAndRefreshVirtualList();
-            if (!this.applyActive || this.areModelsEqual(this.getModel()!, this.getModelFromUi()!)) {
-                this.onBtApply(false, true);
+            if (this.isAlive()) {
+                this.checkAndRefreshVirtualList();
+                if (doApply) {
+                    this.onBtApply(false, true);
+                }
             }
         });
     }
@@ -928,8 +933,10 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
      */
     public setFilterValues(values: (V | null)[]): void {
         this.valueModel.overrideValues(values).then(() => {
-            this.checkAndRefreshVirtualList();
-            this.onUiChanged();
+            if (this.isAlive()) {
+                this.checkAndRefreshVirtualList();
+                this.onUiChanged();
+            }
         });
     }
 
@@ -949,9 +956,11 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
         }
 
         this.valueModel.refreshValues().then(() => {
-            this.hardRefreshVirtualList = true;
-            this.checkAndRefreshVirtualList();
-            this.onUiChanged();
+            if (this.isAlive()) {
+                this.hardRefreshVirtualList = true;
+                this.checkAndRefreshVirtualList();
+                this.onUiChanged();
+            }
         });
     }
 
@@ -963,7 +972,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
             }
 
             this.valueModel.refreshAfterAnyFilterChanged().then((refresh) => {
-                if (refresh) {
+                if (refresh && this.isAlive()) {
                     this.checkAndRefreshVirtualList();
                     this.showOrHideResults();
                 }
@@ -1017,9 +1026,11 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     ): void {
         // override the default behaviour as we don't always want to clear the mini filter
         this.setModelAndRefresh(currentModel == null ? null : currentModel.values).then(() => {
-            this.onUiChanged(false, 'prevent');
+            if (this.isAlive()) {
+                this.onUiChanged(false, 'prevent');
 
-            afterUiUpdatedFunc?.();
+                afterUiUpdatedFunc?.();
+            }
         });
     }
 
@@ -1066,6 +1077,9 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
 
     private onGroupItemSelected(item: SetFilterModelTreeItem, isSelected: boolean): void {
         const recursiveGroupSelection = (i: SetFilterModelTreeItem) => {
+            if (!i.filterPasses) {
+                return;
+            }
             if (i.children) {
                 i.children.forEach((childItem) => recursiveGroupSelection(childItem));
             } else {

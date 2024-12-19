@@ -171,12 +171,6 @@
       "StatusPanelDef"
     ]
   },
-  "customChartThemes": {
-    "typeName": "{\n        [name: string]: AgChartTheme;\n    }",
-    "typesToInclude": [
-      "AgChartTheme"
-    ]
-  },
   "chartToolPanelsDef": {
     "typeName": "ChartToolPanelsDef",
     "typesToInclude": [

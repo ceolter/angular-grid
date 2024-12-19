@@ -94,8 +94,8 @@ export abstract class BaseGridSerializingSession<T> implements GridSerializingSe
     }
 
     private shouldRenderGroupSummaryCell(node: RowNode, column: AgColumn, currentColumnIndex: number): boolean {
-        const isGroupNode = node && node.group;
-        // only on group rows
+        // only on group rows when grouping, and not for tree data group nodes
+        const isGroupNode = node.group && !this.gos.get('treeData');
         if (!isGroupNode) {
             return false;
         }

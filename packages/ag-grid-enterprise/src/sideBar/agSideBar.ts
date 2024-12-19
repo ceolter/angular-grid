@@ -82,20 +82,25 @@ export class AgSideBar extends Component implements ISideBar {
         const activeElement = _getActiveDomElement(beans) as HTMLElement;
         const openPanel = eGui.querySelector('.ag-tool-panel-wrapper:not(.ag-hidden)') as HTMLElement;
         const target = e.target as HTMLElement;
+        const backwards = e.shiftKey;
 
         if (!openPanel) {
-            return _focusNextGridCoreContainer(beans, e.shiftKey, true);
+            if (_focusNextGridCoreContainer(beans, backwards)) {
+                e.preventDefault();
+                return true;
+            }
+            return _focusNextGridCoreContainer(beans, backwards, true);
         }
 
         if (sideBarGui.contains(activeElement)) {
-            if (_focusInto(openPanel, e.shiftKey)) {
+            if (_focusInto(openPanel, backwards)) {
                 e.preventDefault();
             }
             return;
         }
 
         // only handle backwards focus to target the sideBar buttons
-        if (!e.shiftKey) {
+        if (!backwards) {
             return;
         }
 
@@ -103,7 +108,7 @@ export class AgSideBar extends Component implements ISideBar {
 
         if (openPanel.contains(activeElement)) {
             nextEl = _findNextFocusableElement(beans, openPanel, undefined, true);
-        } else if (isTargetUnderManagedComponent(openPanel, target) && e.shiftKey) {
+        } else if (isTargetUnderManagedComponent(openPanel, target) && backwards) {
             nextEl = findFocusableElementBeforeTabGuard(openPanel, target);
         }
 

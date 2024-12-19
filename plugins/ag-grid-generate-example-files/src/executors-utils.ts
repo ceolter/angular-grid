@@ -5,7 +5,7 @@ import * as glob from 'glob';
 import * as path from 'path';
 import * as ts from 'typescript';
 
-export const EXCLUDED_PROPERTIES = ['chartThemeOverrides', 'chartThemes'];
+export const EXCLUDED_PROPERTIES = ['chartThemeOverrides', 'chartThemes', 'customChartThemes'];
 
 export type TaskResult = {
     success: boolean;

@@ -7,12 +7,14 @@ export interface IMenuFactory {
         column: AgColumn | undefined,
         eventSource: HTMLElement,
         containerType: ContainerType,
+        onClosedCallback?: () => void,
         filtersOnly?: boolean
     ): void;
     showMenuAfterMouseEvent(
         column: AgColumn | undefined,
         mouseEvent: MouseEvent | Touch,
         containerType: ContainerType,
+        onClosedCallback?: () => void,
         filtersOnly?: boolean
     ): void;
     showMenuAfterContextMenuEvent(

@@ -4,3 +4,4 @@ export * from './utils';
 export * from './grid-test-utils';
 export * from './testGridsManager';
 export * from './rows-snapshot';
+export * from './objectUrls';

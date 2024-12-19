@@ -7,7 +7,7 @@ import type { ITabGuard } from './tabGuardCtrl';
 import { TabGuardClassNames, TabGuardCtrl } from './tabGuardCtrl';
 
 export interface TabGuardParams {
-    focusInnerElement?: (fromBottom: boolean) => void;
+    focusInnerElement?: (fromBottom: boolean) => boolean;
     shouldStopEventPropagation?: () => boolean;
     /**
      * @return `true` to prevent the default onFocusIn behavior
@@ -19,6 +19,11 @@ export interface TabGuardParams {
     onFocusOut?: (e: FocusEvent) => void;
     onTabKeyDown?: (e: KeyboardEvent) => void;
     handleKeyDown?: (e: KeyboardEvent) => void;
+    /**
+     * By default will check for focusable elements to see if empty.
+     * Provide this to override.
+     */
+    isEmpty?: () => boolean;
     /**
      * Set to true to create a circular focus pattern when keyboard tabbing.
      */
@@ -70,6 +75,7 @@ export class TabGuardFeature extends BeanStub {
             handleKeyDown,
             onTabKeyDown,
             shouldStopEventPropagation,
+            isEmpty,
             forceFocusOutWhenTabGuardsAreEmpty,
             isFocusableContainer,
         } = params;
@@ -87,6 +93,7 @@ export class TabGuardFeature extends BeanStub {
                 handleKeyDown,
                 onTabKeyDown,
                 shouldStopEventPropagation,
+                isEmpty,
                 forceFocusOutWhenTabGuardsAreEmpty,
                 isFocusableContainer,
             })

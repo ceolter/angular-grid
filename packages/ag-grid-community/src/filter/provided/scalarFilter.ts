@@ -14,6 +14,8 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
 
     protected abstract comparator(): Comparator<V>;
 
+    protected abstract isValid(value: V): boolean;
+
     protected override setParams(params: ScalarFilterParams): void {
         super.setParams(params);
         this.scalarFilterParams = params;
@@ -66,10 +68,15 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
     }
 
     protected evaluateNonNullValue(values: Tuple<V>, cellValue: V, filterModel: M): boolean {
+        const type = filterModel.type;
+        if (!this.isValid(cellValue)) {
+            return type === 'notEqual' || type === 'notBlank';
+        }
+
         const comparator = this.comparator();
         const compareResult = values[0] != null ? comparator(values[0]!, cellValue) : 0;
 
-        switch (filterModel.type) {
+        switch (type) {
             case 'equals':
                 return compareResult === 0;
 
@@ -103,7 +110,7 @@ export abstract class ScalarFilter<M extends ISimpleFilterModel, V, E = AgInputT
                 return !isBlank(cellValue);
 
             default:
-                _warn(76, { filterModelType: filterModel.type });
+                _warn(76, { filterModelType: type });
                 return true;
         }
     }

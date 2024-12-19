@@ -81,9 +81,9 @@ export class PaginationComp extends TabGuardComp implements FocusableContainer {
             onTabKeyDown: () => {},
             focusInnerElement: (fromBottom) => {
                 if (this.allowFocusInnerElement) {
-                    this.tabGuardFeature.getTabGuardCtrl().focusInnerElement(fromBottom);
+                    return this.tabGuardFeature.getTabGuardCtrl().focusInnerElement(fromBottom);
                 } else {
-                    _focusGridInnerElement(this.beans, fromBottom);
+                    return _focusGridInnerElement(this.beans, fromBottom);
                 }
             },
             forceFocusOutWhenTabGuardsAreEmpty: true,

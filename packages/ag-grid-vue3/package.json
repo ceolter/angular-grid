@@ -25,6 +25,14 @@
   "main": "./dist/main.umd.js",
   "module": "./dist/main.mjs",
   "typings": "./dist/typings/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/main.mjs",
+      "types": "./dist/typings/main.d.ts",
+      "require": "./dist/main.umd.js",
+      "default": "./dist/main.umd.js"
+    }
+  },
   "scripts": {
     "clean": "rimraf dist lib",
     "dev": "vite",

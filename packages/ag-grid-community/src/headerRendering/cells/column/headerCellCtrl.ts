@@ -108,7 +108,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
         this.addResizeAndMoveKeyboardListeners(compBean);
 
         compBean.addManagedPropertyListeners(
-            ['suppressMovableColumns', 'suppressMenuHide', 'suppressAggFuncInHeader'],
+            ['suppressMovableColumns', 'suppressMenuHide', 'suppressAggFuncInHeader', 'enableAdvancedFilter'],
             () => this.refresh()
         );
         compBean.addManagedListeners(this.column, { colDefChanged: () => this.refresh() });
@@ -165,18 +165,20 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
             enableMenu: this.menuEnabled,
             enableFilterButton: this.openFilterEnabled && !!menuSvc?.isHeaderFilterButtonEnabled(this.column),
             enableFilterIcon: !!colFilter && (!this.openFilterEnabled || _isLegacyMenuEnabled(this.gos)),
-            showColumnMenu: (buttonElement: HTMLElement) => {
+            showColumnMenu: (buttonElement: HTMLElement, onClosedCallback?: () => void) => {
                 menuSvc?.showColumnMenu({
                     column: this.column,
                     buttonElement,
                     positionBy: 'button',
+                    onClosedCallback,
                 });
             },
-            showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch) => {
+            showColumnMenuAfterMouseClick: (mouseEvent: MouseEvent | Touch, onClosedCallback?: () => void) => {
                 menuSvc?.showColumnMenu({
                     column: this.column,
                     mouseEvent,
                     positionBy: 'mouse',
+                    onClosedCallback,
                 });
             },
             showFilter: (buttonElement: HTMLElement) => {
@@ -420,7 +422,7 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private setupMenuClass(compBean: BeanStub): void {
         const listener = () => {
-            this.comp.addOrRemoveCssClass('ag-column-menu-visible', this.column.isMenuVisible());
+            this.comp?.addOrRemoveCssClass('ag-column-menu-visible', this.column.isMenuVisible());
         };
 
         compBean.addManagedListeners(this.column, { menuVisibleChanged: listener });
@@ -596,7 +598,10 @@ export class HeaderCellCtrl extends AbstractHeaderCellCtrl<IHeaderCellComp, AgCo
 
     private addActiveHeaderMouseListeners(compBean: BeanStub): void {
         const listener = (e: MouseEvent) => this.handleMouseOverChange(e.type === 'mouseenter');
-        const clickListener = () => this.dispatchColumnMouseEvent('columnHeaderClicked', this.column);
+        const clickListener = () => {
+            this.setActiveHeader(true);
+            this.dispatchColumnMouseEvent('columnHeaderClicked', this.column);
+        };
         const contextMenuListener = (event: MouseEvent) =>
             this.handleContextMenuMouseEvent(event, undefined, this.column);
 

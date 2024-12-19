@@ -28,6 +28,7 @@ import {
     _isNothingFocused,
     _isPromise,
     _isVisible,
+    _preserveRangesWhile,
     _warn,
 } from 'ag-grid-community';
 
@@ -87,7 +88,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             const suppressExcel = gos.get('suppressExcelExport') || !excelCreator;
             const suppressCsv = gos.get('suppressCsvExport') || !csvCreator;
             const onIPad = _isIOSUserAgent();
-            const anyExport: boolean = !onIPad && (!suppressExcel || !suppressCsv);
+            const anyExport = !onIPad && (!suppressExcel || !suppressCsv);
             if (anyExport) {
                 defaultMenuOptions.push('export');
             }
@@ -114,11 +115,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const userFunc = gos.getCallback('getContextMenuItems');
 
-        if (userFunc) {
-            return userFunc({ column, node, value, defaultItems, event: mouseEvent });
-        }
-
-        return defaultMenuOptions;
+        return userFunc?.({ column, node, value, defaultItems, event: mouseEvent }) ?? defaultMenuOptions;
     }
 
     public getContextMenuPosition(rowNode?: RowNode | null, column?: AgColumn | null): { x: number; y: number } {
@@ -126,10 +123,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         const eGui = this.getCellGui(rowCtrl, column);
 
         if (!eGui) {
-            if (rowCtrl) {
-                return { x: 0, y: rowCtrl.getRowYPosition() };
-            }
-            return { x: 0, y: 0 };
+            return { x: 0, y: rowCtrl?.getRowYPosition() ?? 0 };
         }
 
         const rect = eGui.getBoundingClientRect();
@@ -141,8 +135,8 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
     }
 
     public showContextMenu(params: EventShowContextMenuParams & { anchorToElement?: HTMLElement }): void {
-        const rowNode = params.rowNode as RowNode | null | undefined;
-        const column = params.column as AgColumn | null | undefined;
+        const rowNode = (params.rowNode ?? null) as RowNode | null;
+        const column = (params.column ?? null) as AgColumn | null;
         let { anchorToElement, value } = params;
 
         if (rowNode && column && value == null) {
@@ -153,13 +147,10 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             anchorToElement = this.getContextMenuAnchorElement(rowNode, column);
         }
 
-        this.onContextMenu(
+        (this.beans.menuUtils as MenuUtils).onContextMenu(
             (params as MouseShowContextMenuParams).mouseEvent ?? null,
             (params as TouchShowContextMenuParam).touchEvent ?? null,
-            rowNode ?? null,
-            column ?? null,
-            value,
-            anchorToElement
+            (eventOrTouch) => this.showMenu(rowNode, column, value, eventOrTouch, anchorToElement!)
         );
     }
 
@@ -186,19 +177,6 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
             value,
             anchorToElement,
         } as EventShowContextMenuParams);
-    }
-
-    private onContextMenu(
-        mouseEvent: MouseEvent | null,
-        touchEvent: TouchEvent | null,
-        rowNode: RowNode | null,
-        column: AgColumn | null,
-        value: any,
-        anchorToElement: HTMLElement
-    ): void {
-        (this.beans.menuUtils as MenuUtils).onContextMenu(mouseEvent, touchEvent, (eventOrTouch) =>
-            this.showMenu(rowNode, column, value, eventOrTouch, anchorToElement)
-        );
     }
 
     private showMenu(
@@ -235,9 +213,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
                     this.createContextMenu({ menuItems, node, column, value, mouseEvent, anchorToElement });
                 }
 
-                if (this.destroyLoadingSpinner) {
-                    this.destroyLoadingSpinner();
-                }
+                this.destroyLoadingSpinner?.();
             });
             return true;
         }
@@ -312,10 +288,10 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         }
 
         const positionParams = {
-            column: column,
+            column,
             rowNode: node,
             type: 'contextMenu',
-            mouseEvent: mouseEvent,
+            mouseEvent,
             ePopup: eMenuGui,
             // move one pixel away so that accidentally double clicking
             // won't show the browser's contextmenu
@@ -324,25 +300,27 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
 
         const translate = this.getLocaleTextFunc();
 
-        const addPopupRes = popupSvc!.addPopup({
+        const addPopupRes = popupSvc?.addPopup({
             modal: true,
             eChild: eMenuGui,
             closeOnEsc: true,
             closedCallback: (e) => {
-                eGridBodyGui.classList.remove(CSS_CONTEXT_MENU_OPEN);
-                this.destroyBean(menu);
-                this.dispatchVisibleChangedEvent(false, e === undefined ? 'api' : 'ui');
+                _preserveRangesWhile(this.beans, () => {
+                    eGridBodyGui.classList.remove(CSS_CONTEXT_MENU_OPEN);
+                    this.destroyBean(menu);
+                    this.dispatchVisibleChangedEvent(false, e === undefined ? 'api' : 'ui');
+                });
             },
             click: mouseEvent,
             positionCallback: () => {
                 const isRtl = this.gos.get('enableRtl');
-                popupSvc!.positionPopupUnderMouseEvent({
+                popupSvc?.positionPopupUnderMouseEvent({
                     ...positionParams,
                     nudgeX: isRtl ? (eMenuGui.offsetWidth + 1) * -1 : 1,
                 });
             },
             // so when browser is scrolled down, or grid is scrolled, context menu stays with cell
-            anchorToElement: anchorToElement,
+            anchorToElement,
             ariaLabel: translate('ariaLabelContextMenu', 'Context Menu'),
         });
 
@@ -413,7 +391,7 @@ export class ContextMenuService extends BeanStub implements NamedBean, IContextM
         return cellCtrl?.eGui || undefined;
     }
 
-    private getContextMenuAnchorElement(rowNode?: RowNode | null, column?: AgColumn | null): HTMLElement {
+    private getContextMenuAnchorElement(rowNode: RowNode | null, column?: AgColumn | null): HTMLElement {
         const gridBodyEl = this.beans.ctrlsSvc.getGridBodyCtrl().eGridBody;
         const rowCtrl = this.getRowCtrl(rowNode);
 
@@ -478,16 +456,16 @@ class ContextMenu extends Component<ContextMenuEvent> {
         menuList.addEventListener('closeMenu', (e) => this.dispatchLocalEvent(e));
     }
 
-    public afterGuiAttached(params: IAfterGuiAttachedParams): void {
-        if (params.hidePopup) {
-            this.addDestroyFunc(params.hidePopup);
+    public afterGuiAttached({ hidePopup }: IAfterGuiAttachedParams): void {
+        if (hidePopup) {
+            this.addDestroyFunc(hidePopup);
         }
 
         this.focusedCell = this.beans.focusSvc.getFocusedCell();
 
         const menuList = this.menuList;
         if (menuList) {
-            _focusInto(menuList.getGui());
+            _preserveRangesWhile(this.beans, () => _focusInto(menuList.getGui()));
         }
     }
 
