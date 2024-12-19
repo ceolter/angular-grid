@@ -581,7 +581,7 @@ export const AG_GRID_ERRORS = {
     264: () =>
         'As of v33, icon key "smallRight" is deprecated. Use "panelDelimiter" for Row Group Panel / Pivot Panel, "subMenuOpen" for sub-menus.' as const,
     265: ({ colId }: { colId: string }) =>
-        `Unable to infer chart data type for column '${colId}' if first data entry is null. Please specify "chartDataType" in column definition. For more information, see ${baseDocLink}/integrated-charts-range-chart#coldef.chartdatatype .` as const,
+        `Unable to infer chart data type for column '${colId}' if first data entry is null. Please specify "chartDataType", or a "cellDataType" in the column definition. For more information, see ${baseDocLink}/integrated-charts-range-chart#coldefchartdatatype .` as const,
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;
