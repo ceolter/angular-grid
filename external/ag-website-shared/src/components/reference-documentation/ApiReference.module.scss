@@ -46,6 +46,13 @@
     :global(.docPage) & {
         margin-bottom: $spacing-size-4;
     }
+
+    // Hack to get around <astro-island/> sibling selector issues
+    [component-export='ApiReferenceWithContext'] + [component-export='ApiReferenceWithContext'] & {
+        margin-top: $spacing-size-8;
+        padding-top: $spacing-size-6;
+        border-top: 1px solid var(--color-border-secondary);
+    }
 }
 
 .propertyDescription {
@@ -97,7 +104,7 @@
         border-bottom-color: var(--color-util-gray-400);
     }
 
-    :global(.tabs-outer) & {
+    :global(.tabs-outer) .apiReference > & {
         &:first-child {
             border-top: none;
         }

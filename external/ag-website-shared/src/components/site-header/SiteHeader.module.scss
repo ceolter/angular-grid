@@ -382,6 +382,12 @@ button.navLink {
             box-shadow:
                 0 0 0 4px var(--color-bg-mobile-nav),
                 0 0 0 6px rgba(white, 0.3);
+
+            #{$selector-darkmode}:not(:has([data-is-homepage])) & {
+                box-shadow:
+                    0 0 0 4px var(--color-bg-primary),
+                    0 0 0 6px rgba(white, 0.3);
+            }
         }
     }
 }
