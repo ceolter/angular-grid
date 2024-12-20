@@ -94,7 +94,7 @@ export class NumberFloatingFilter extends TextInputFloatingFilter<NumberFilterMo
     }
 
     public override refresh(params: INumberFloatingFilterParams): void {
-        const allowedCharPattern = getAllowedCharPattern(params.filterParams);
+        const allowedCharPattern = getAllowedCharPattern(params.filterParams as NumberFilterParams);
         if (allowedCharPattern !== this.allowedCharPattern) {
             this.recreateFloatingFilterInputService(params);
         }
@@ -107,7 +107,7 @@ export class NumberFloatingFilter extends TextInputFloatingFilter<NumberFilterMo
     }
 
     protected createFloatingFilterInputService(params: INumberFloatingFilterParams): FloatingFilterInputService {
-        this.allowedCharPattern = getAllowedCharPattern(params.filterParams);
+        this.allowedCharPattern = getAllowedCharPattern(params.filterParams as NumberFilterParams);
         if (this.allowedCharPattern) {
             // need to use text input
             return this.createManagedBean(

@@ -69,8 +69,6 @@ beforeEach(() => {
 
     setValueModel = mock<SetValueModel<string>>(
         'getModel',
-        'setAppliedModelKeys',
-        'addToAppliedModelKeys',
         'isEverythingVisibleSelected',
         'showAddCurrentSelectionToFilter',
         'isAddCurrentSelectionToFilterChecked'
@@ -187,8 +185,6 @@ describe('applyModel', () => {
         (excelMode) => {
             setValueModel = mock<SetValueModel<string>>(
                 'getModel',
-                'setAppliedModelKeys',
-                'addToAppliedModelKeys',
                 'isEverythingVisibleSelected',
                 'selectAllMatchingMiniFilter',
                 'showAddCurrentSelectionToFilter',

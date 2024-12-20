@@ -10,11 +10,10 @@ import { NumberFilterHelper } from './numberFilterHelper';
 import { NumberFilterModelFormatter } from './numberFilterModelFormatter';
 import { getAllowedCharPattern, processNumberFilterValue } from './numberFilterUtils';
 
-export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
+export class NumberFilter extends SimpleFilter<NumberFilterModel, number, NumberFilterParams> {
     private readonly eValuesFrom: (AgInputTextField | AgInputNumberField)[] = [];
     private readonly eValuesTo: (AgInputTextField | AgInputNumberField)[] = [];
 
-    private numberFilterParams: NumberFilterParams;
     private filterModelFormatter: SimpleFilterModelFormatter;
 
     protected filterType = 'number' as const;
@@ -24,7 +23,7 @@ export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
     }
 
     override refresh(params: NumberFilterParams): boolean {
-        if (this.numberFilterParams.allowedCharPattern !== params.allowedCharPattern) {
+        if (this.params.allowedCharPattern !== params.allowedCharPattern) {
             return false;
         }
 
@@ -34,13 +33,11 @@ export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
     protected override defaultDebounceMs: number = 500;
 
     protected override setParams(params: NumberFilterParams): void {
-        this.numberFilterParams = params;
-
         super.setParams(params);
         this.filterModelFormatter = new NumberFilterModelFormatter(
             this.getLocaleTextFunc.bind(this),
             this.optionsFactory,
-            this.numberFilterParams.numberFormatter
+            this.params.numberFormatter
         );
     }
 
@@ -50,13 +47,13 @@ export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
         fromFloatingFilter?: boolean
     ): void {
         // values from floating filter are directly from the input, not from the model
-        const { numberFormatter } = this.numberFilterParams;
+        const { numberFormatter } = this.params;
         const valueToSet = !fromFloatingFilter && numberFormatter ? numberFormatter(value ?? null) : value;
         super.setElementValue(element, valueToSet as any);
     }
 
     protected createValueElement(): HTMLElement {
-        const allowedCharPattern = getAllowedCharPattern(this.numberFilterParams);
+        const allowedCharPattern = getAllowedCharPattern(this.params);
 
         const eCondition = document.createElement('div');
         eCondition.classList.add('ag-filter-body');
@@ -119,7 +116,7 @@ export class NumberFilter extends SimpleFilter<NumberFilterModel, number> {
             filterText = null;
         }
 
-        const numberParser = this.numberFilterParams.numberParser;
+        const numberParser = this.params.numberParser;
         if (numberParser) {
             return numberParser(filterText);
         }

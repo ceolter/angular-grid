@@ -2,15 +2,13 @@ import type { IFilterParams } from '../../interfaces/iFilter';
 import type { ISimpleFilterParams } from './iSimpleFilter';
 
 /**
- * Parameters provided by the grid to the `init` method of a `ScalarFilter`.
- * Do not use in `colDef.filterParams` - see `IScalarFilterParams` instead.
+ * @deprecated v33.1 Internal only. Use `IScalarFilterParams`
  */
-
 export type ScalarFilterParams<TData = any> = IScalarFilterParams & IFilterParams<TData>;
+
 /**
  * Common parameters in `colDef.filterParams` used by all scalar filters. Extended by the specific filter types.
  */
-
 export interface IScalarFilterParams extends ISimpleFilterParams {
     /** If `true`, the `'inRange'` filter option will include values equal to the start and end of the range. */
     inRangeInclusive?: boolean;

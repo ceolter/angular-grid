@@ -1,4 +1,4 @@
-import type { IFilterOptionDef, IFilterParams, ProvidedFilterModel } from '../../interfaces/iFilter';
+import type { FilterDisplayParams, IFilterOptionDef, ProvidedFilterModel } from '../../interfaces/iFilter';
 import type { IFloatingFilterParent } from '../floating/floatingFilter';
 import type { IProvidedFilter, IProvidedFilterParams } from './iProvidedFilter';
 
@@ -22,16 +22,17 @@ export interface IFilterPlaceholderFunctionParams {
     placeholder: string;
 }
 export type FilterPlaceholderFunction = (params: IFilterPlaceholderFunctionParams) => string;
+
 /**
  * Parameters provided by the grid to the `init` method of a `SimpleFilter`.
  * Do not use in `colDef.filterParams` - see `ISimpleFilterParams` instead.
  */
+export type SimpleFilterParams<TData = any, TContext = any, TModel = any> = ISimpleFilterParams &
+    FilterDisplayParams<TData, TContext, TModel>;
 
-export type SimpleFilterParams<TData = any> = ISimpleFilterParams & IFilterParams<TData>;
 /**
  * Common parameters in `colDef.filterParams` used by all simple filters. Extended by the specific filter types.
  */
-
 export interface ISimpleFilterParams extends IProvidedFilterParams {
     /**
      * Array of filter options to present to the user.

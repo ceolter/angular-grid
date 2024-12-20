@@ -14,14 +14,13 @@ import type { DateFilterModel, DateFilterParams } from './iDateFilter';
 const DEFAULT_MIN_YEAR = 1000;
 const DEFAULT_MAX_YEAR = Infinity;
 
-export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateCompWrapper> {
+export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateFilterParams, DateCompWrapper> {
     private readonly eConditionPanelsFrom: HTMLElement[] = [];
     private readonly eConditionPanelsTo: HTMLElement[] = [];
 
     private readonly dateConditionFromComps: DateCompWrapper[] = [];
     private readonly dateConditionToComps: DateCompWrapper[] = [];
 
-    private dateFilterParams: DateFilterParams;
     private minValidYear: number = DEFAULT_MIN_YEAR;
     private maxValidYear: number = DEFAULT_MAX_YEAR;
     private minValidDate: Date | null = null;
@@ -41,8 +40,6 @@ export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateCompWrap
     }
 
     protected override setParams(params: DateFilterParams): void {
-        this.dateFilterParams = params;
-
         super.setParams(params);
 
         const yearParser = (param: keyof DateFilterParams, fallback: number) => {
@@ -81,7 +78,7 @@ export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateCompWrap
         }
 
         this.filterModelFormatter = new DateFilterModelFormatter(
-            this.dateFilterParams,
+            this.params,
             this.getLocaleTextFunc.bind(this),
             this.optionsFactory
         );
@@ -94,7 +91,7 @@ export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateCompWrap
             userCompFactory,
             {
                 onDateChanged: () => this.onUiChanged(),
-                filterParams: this.dateFilterParams,
+                filterParams: this.params,
                 location: 'filter',
             },
             element

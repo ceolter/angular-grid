@@ -8,13 +8,12 @@ import { TextFilterHelper } from './textFilterHelper';
 import { TextFilterModelFormatter } from './textFilterModelFormatter';
 import { trimInputForFilter } from './textFilterUtils';
 
-export class TextFilter extends SimpleFilter<TextFilterModel, string> {
+export class TextFilter extends SimpleFilter<TextFilterModel, string, TextFilterParams> {
     protected filterType = 'text' as const;
 
     private readonly eValuesFrom: AgInputTextField[] = [];
     private readonly eValuesTo: AgInputTextField[] = [];
 
-    private textFilterParams: TextFilterParams;
     private filterModelFormatter: TextFilterModelFormatter;
 
     constructor() {
@@ -24,8 +23,6 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
     protected override defaultDebounceMs: number = 500;
 
     protected override setParams(params: TextFilterParams): void {
-        this.textFilterParams = params;
-
         super.setParams(params);
 
         this.filterModelFormatter = new TextFilterModelFormatter(
@@ -76,7 +73,7 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string> {
         this.forEachPositionInput(position, (element, index, _elPosition, numberOfInputs) => {
             if (index < numberOfInputs) {
                 let value = _makeNull(element.getValue());
-                if (applySideEffects && this.textFilterParams.trimInput) {
+                if (applySideEffects && this.params.trimInput) {
                     value = trimInputForFilter(value) ?? null;
                     element.setValue(value, true); // ensure clean value is visible
                 }

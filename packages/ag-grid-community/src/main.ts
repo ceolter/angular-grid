@@ -172,6 +172,12 @@ export {
     FilterModel,
     BaseFilter,
     BaseFilterParams,
+    FilterDisplayParams,
+    FilterEvaluator,
+    FilterEvaluatorFuncParams,
+    FilterEvaluatorGeneratorFunc,
+    FilterEvaluatorGeneratorFuncParams,
+    FilterEvaluatorParams,
 } from './interfaces/iFilter';
 export {
     ISetFilter,

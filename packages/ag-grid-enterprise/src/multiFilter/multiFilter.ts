@@ -288,7 +288,7 @@ export class MultiFilter extends TabGuardComp implements IFilterComp, IMultiFilt
         const model: IMultiFilterModel = {
             filterType: this.filterType,
             filterModels: this.filters!.map((filter) => {
-                const providedFilter = filter as ProvidedFilter<IMultiFilterModel, unknown>;
+                const providedFilter = filter as ProvidedFilter<IMultiFilterModel, unknown, MultiFilterParams>;
 
                 if (typeof providedFilter.getModelFromUi === 'function') {
                     return providedFilter.getModelFromUi();

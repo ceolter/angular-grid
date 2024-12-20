@@ -1,6 +1,6 @@
 import type { FilterChangedEventSourceType } from '../../events';
 import type { ContainerType, IAfterGuiAttachedParams } from '../../interfaces/iAfterGuiAttachedParams';
-import type { FilterDisplayParams, IDoesFilterPassParams, IFilterComp } from '../../interfaces/iFilter';
+import type { IDoesFilterPassParams, IFilterComp, ProvidedFilterModel } from '../../interfaces/iFilter';
 import type { PopupEventParams } from '../../interfaces/iPopup';
 import type { IRowNode } from '../../interfaces/iRowNode';
 import { PositionableFeature } from '../../rendering/features/positionableFeature';
@@ -24,23 +24,17 @@ import type { IProvidedFilter, ProvidedFilterParams } from './iProvidedFilter';
  * @param M type of filter-model managed by the concrete sub-class that extends this type
  * @param V type of value managed by the concrete sub-class that extends this type
  */
-export abstract class ProvidedFilter<M, V> extends Component implements IProvidedFilter, IFilterComp {
-    // each level in the hierarchy will save params with the appropriate type for that level.
-    private params: ProvidedFilterParams;
+export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends ProvidedFilterParams<any, M>>
+    extends Component
+    implements IProvidedFilter, IFilterComp
+{
+    protected params: P;
 
     protected applyActive = false;
     private hidePopup: ((params: PopupEventParams) => void) | null | undefined = null;
     // a debounce of the onBtApply method
     private onBtApplyDebounce: () => void;
     private debouncePending = false;
-
-    // after the user hits 'apply' the model gets copied to here. this is then the model that we use for
-    // all filtering. so if user changes UI but doesn't hit apply, then the UI will be out of sync with this model.
-    // this is what we want, as the UI should only become the 'active' filter once it's applied. when apply is
-    // inactive, this model will be in sync (following the debounce ms). if the UI is not a valid filter
-    // (eg the value is missing so nothing to filter on, or for set filter all checkboxes are checked so filter
-    // not active) then this appliedModel will be null/undefined.
-    private appliedModel: M | null = null;
 
     private positionableFeature: PositionableFeature | undefined;
 
@@ -94,8 +88,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     public isFilterActive(): boolean {
-        // filter is active if we have a valid applied model
-        return !!this.appliedModel;
+        return this.params.model != null;
     }
 
     protected resetTemplate(paramsMap?: any) {
@@ -121,7 +114,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         return !!this.params.readOnly;
     }
 
-    public init(params: ProvidedFilterParams): void {
+    public init(params: P): void {
         this.setParams(params);
 
         this.resetUiToDefaults(true).then(() => {
@@ -130,14 +123,14 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         });
     }
 
-    protected setParams(params: ProvidedFilterParams): void {
+    protected setParams(params: P): void {
         this.params = params;
         this.applyActive = isUseApplyButton(params);
 
         this.resetButtonsPanel(params);
     }
 
-    protected updateParams(params: ProvidedFilterParams): void {
+    protected updateParams(params: P): void {
         this.params = params;
         this.applyActive = isUseApplyButton(params);
 
@@ -147,7 +140,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         });
     }
 
-    private resetButtonsPanel(newParams: ProvidedFilterParams, oldParams?: ProvidedFilterParams): void {
+    private resetButtonsPanel(newParams: P, oldParams?: P): void {
         const { buttons: oldButtons, readOnly: oldReadOnly } = oldParams ?? {};
         const { buttons, readOnly } = newParams;
         if (oldReadOnly === readOnly && _jsonEquals(oldButtons, buttons)) {
@@ -249,7 +242,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     }
 
     public getModel(): M | null {
-        return this.appliedModel ?? null;
+        return this.params.model;
     }
 
     public setModel(model: M | null): AgPromise<void> {
@@ -303,19 +296,22 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     /**
      * Applies changes made in the UI to the filter, and returns true if the model has changed.
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public applyModel(source: 'api' | 'ui' | 'rowDataUpdated' = 'api'): boolean {
+    public applyModel(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        source: 'api' | 'ui' | 'rowDataUpdated' = 'api',
+        updateBeforeModelChange?: (newModel: M | null) => void
+    ): boolean {
         const newModel = this.getModelFromUi();
 
         if (!this.isModelValid(newModel!)) {
             return false;
         }
 
-        const previousModel = this.appliedModel;
+        const previousModel = this.params.model;
 
-        this.appliedModel = newModel;
+        updateBeforeModelChange?.(newModel);
 
-        (this.params as FilterDisplayParams).onModelChange(newModel);
+        this.params.onModelChange(newModel);
 
         // models can be same if user pasted same content into text field, or maybe just changed the case
         // and it's a case insensitive filter
@@ -431,7 +427,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         this.positionableFeature?.constrainSizeToAvailableHeight(false);
     }
 
-    public refresh(newParams: ProvidedFilterParams): boolean {
+    public refresh(newParams: P): boolean {
         const oldParams = this.params;
         this.params = newParams;
 
@@ -451,8 +447,6 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
         if (this.positionableFeature) {
             this.positionableFeature = this.destroyBean(this.positionableFeature);
         }
-
-        this.appliedModel = null;
 
         super.destroy();
     }

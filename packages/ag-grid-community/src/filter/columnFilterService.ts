@@ -626,6 +626,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 this.model[colId] = model;
                 filterChangedCallback();
             };
+            displayParams.filterChangedCallback = () => {};
         } else {
             const legacyParams = params as IFilterParams;
             legacyParams.filterModifiedCallback = () =>
@@ -640,15 +641,14 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         return additionalParams ? { ...params, ...additionalParams } : params;
     }
 
-    public createFilterParams(column: AgColumn, colDef: ColDef): IFilterParams {
-        const params: IFilterParams = this.gos.addGridCommonParams({
+    public createFilterParams(column: AgColumn, colDef: ColDef): BaseFilterParams {
+        const params = this.gos.addGridCommonParams<BaseFilterParams>({
             column,
             colDef,
             rowModel: this.beans.rowModel, // @deprecated v33.1
-            filterChangedCallback: () => {},
-            filterModifiedCallback: () => {},
             getValue: this.createGetValue(column),
             doesRowPassOtherFilter: () => true,
+            filterModifiedCallback: () => {},
         });
 
         return params;
@@ -684,7 +684,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                 }
             }
             const evaluatorTypeMap = {
-                // agSetColumnFilter: 'agSetColumnFilterEvaluator',
+                agSetColumnFilter: 'agSetColumnFilterEvaluator',
                 // agMultiColumnFilter: 'agMultiColumnFilterEvaluator',
                 // agGroupColumnFilter: 'agGroupColumnFilterEvaluator',
                 agNumberColumnFilter: 'agNumberColumnFilterEvaluator',
@@ -798,6 +798,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                     filterInstance = parentFilterInstance as IFilterComp;
                     filterChangedCallback();
                 }),
+            filterModifiedCallback: () => {},
         };
         const { userCompFactory, frameworkOverrides } = this.beans;
         const finalFilterParams = _mergeFilterParamsWithApplicationProvidedParams(
@@ -863,6 +864,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         filterWrapper: FilterWrapper,
         source: 'api' | 'columnChanged' | 'gridDestroyed' | 'advancedFilterEnabled' | 'paramsUpdated'
     ): AgPromise<boolean> {
+        this.destroyBean(filterWrapper.evaluator);
         return (
             filterWrapper.filterPromise?.then((filter) => {
                 const isActive = !!filter?.isFilterActive();

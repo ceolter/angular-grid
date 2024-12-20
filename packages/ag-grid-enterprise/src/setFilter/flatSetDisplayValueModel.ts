@@ -9,7 +9,7 @@ export class FlatSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
 
     constructor(
         private readonly valueSvc: ValueService,
-        private readonly valueFormatter: ((params: ValueFormatterParams) => string) | undefined,
+        private readonly getValueFormatter: () => ((params: ValueFormatterParams) => string) | undefined,
         private readonly formatter: TextFormatter,
         private readonly column: AgColumn
     ) {}
@@ -31,6 +31,8 @@ export class FlatSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
     ): void {
         this.displayedKeys = [];
 
+        const valueFormatter = this.getValueFormatter();
+
         for (const key of availableKeys) {
             if (key == null) {
                 if (nullMatchesFilter) {
@@ -38,13 +40,7 @@ export class FlatSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
                 }
             } else {
                 const value = getValue(key);
-                const valueFormatterValue = this.valueSvc.formatValue(
-                    this.column,
-                    null,
-                    value,
-                    this.valueFormatter,
-                    false
-                );
+                const valueFormatterValue = this.valueSvc.formatValue(this.column, null, value, valueFormatter, false);
 
                 const textFormatterValue = this.formatter(valueFormatterValue);
 

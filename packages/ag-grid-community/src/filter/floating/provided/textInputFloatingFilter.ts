@@ -68,10 +68,10 @@ export abstract class TextInputFloatingFilter<M extends ModelUnion> extends Simp
             autoComplete,
         });
 
-        this.applyActive = isUseApplyButton(params.filterParams);
+        this.applyActive = isUseApplyButton(params.filterParams as TextFilterParams);
 
         if (!readOnly) {
-            const debounceMs = getDebounceMs(params.filterParams, defaultDebounceMs);
+            const debounceMs = getDebounceMs(params.filterParams as TextFilterParams, defaultDebounceMs);
             const toDebounce: (e: KeyboardEvent) => void = _debounce(
                 this,
                 this.syncUpWithParentFilter.bind(this),

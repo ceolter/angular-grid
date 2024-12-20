@@ -88,7 +88,6 @@ export class FilterComponentWrapper
         props.onUiChange = this.onUiChange;
         // remove props in IFilterParams but not CustomFilterProps
         delete (props as any).filterChangedCallback;
-        delete (props as any).filterModifiedCallback;
         return props;
     }
 }

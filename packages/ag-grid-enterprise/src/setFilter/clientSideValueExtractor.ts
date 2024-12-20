@@ -1,39 +1,29 @@
-import type {
-    AgColumn,
-    AgEventType,
-    IClientSideRowModel,
-    IColsService,
-    RowNode,
-    SetFilterParams,
-    ValueService,
-} from 'ag-grid-community';
+import type { AgColumn, IClientSideRowModel, IColsService, RowNode, SetFilterParams } from 'ag-grid-community';
 import { AgPromise, _makeNull } from 'ag-grid-community';
+import { BeanStub } from 'ag-grid-community';
 
 import { processDataPath } from './setFilterUtils';
 
 /** @param V type of value in the Set Filter */
-export class ClientSideValuesExtractor<V> {
+export class ClientSideValuesExtractor<V> extends BeanStub {
     constructor(
-        private readonly rowModel: IClientSideRowModel,
         private readonly filterParams: SetFilterParams<any, V>,
         private readonly createKey: (value: V | null | undefined, node?: RowNode) => string | null,
         private readonly caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat,
-        private readonly valueSvc: ValueService,
         private readonly treeDataOrGrouping: boolean,
         private readonly treeData: boolean,
         private readonly groupAllowUnbalanced: boolean,
-        private readonly addManagedEventListeners: (
-            handlers: Partial<Record<AgEventType, (event?: any) => void>>
-        ) => (() => null)[],
         private readonly rowGroupColsSvc?: IColsService
-    ) {}
+    ) {
+        super();
+    }
 
     public extractUniqueValuesAsync(
         predicate: (node: RowNode) => boolean,
         existingValues?: Map<string | null, V | null>
     ): AgPromise<Map<string | null, V | null>> {
         return new AgPromise((resolve) => {
-            if (this.rowModel.isRowDataLoaded()) {
+            if ((this.beans.rowModel as IClientSideRowModel).isRowDataLoaded()) {
                 resolve(this.extractUniqueValues(predicate, existingValues));
             } else {
                 const [destroyFunc] = this.addManagedEventListeners({
@@ -73,7 +63,7 @@ export class ClientSideValuesExtractor<V> {
             }
         };
 
-        this.rowModel.forEachLeafNode((node) => {
+        (this.beans.rowModel as IClientSideRowModel).forEachLeafNode((node) => {
             // only pull values from rows that have data. this means we skip filler group nodes.
             if (!node.data || !predicate(node)) {
                 return;
@@ -113,7 +103,7 @@ export class ClientSideValuesExtractor<V> {
             }
             dataPath = node.getRoute() ?? [node.key ?? node.id!];
         } else {
-            dataPath = groupedCols.map((groupCol) => this.valueSvc.getKeyForNode(groupCol, node));
+            dataPath = groupedCols.map((groupCol) => this.beans.valueSvc.getKeyForNode(groupCol, node));
             dataPath.push(this.getValue(node) as any);
         }
         const processedDataPath = processDataPath(dataPath, treeData, this.groupAllowUnbalanced);

@@ -44,7 +44,7 @@ export class DateFloatingFilter extends SimpleFloatingFilter {
     public override init(params: IFloatingFilterParams<DateFilter>): void {
         super.init(params);
         this.params = params;
-        this.filterParams = params.filterParams;
+        this.filterParams = params.filterParams as DateFilterParams;
 
         this.createDateComponent();
         this.filterModelFormatter = new DateFilterModelFormatter(
@@ -59,7 +59,7 @@ export class DateFloatingFilter extends SimpleFloatingFilter {
     public override refresh(params: IFloatingFilterParams<DateFilter>): void {
         super.refresh(params);
         this.params = params;
-        this.filterParams = params.filterParams;
+        this.filterParams = params.filterParams as DateFilterParams;
 
         const dateParams = this.gos.addGridCommonParams(this.getDateComponentParams());
         this.dateComp.updateParams(dateParams);
@@ -119,7 +119,7 @@ export class DateFloatingFilter extends SimpleFloatingFilter {
 
     private getDateComponentParams(): WithoutGridCommon<IDateParams> {
         const { filterParams, column } = this.params;
-        const debounceMs = getDebounceMs(filterParams, this.defaultDebounceMs);
+        const debounceMs = getDebounceMs(filterParams as DateFilterParams, this.defaultDebounceMs);
         return {
             onDateChanged: _debounce(this, this.onDateChanged.bind(this), debounceMs),
             filterParams: column.getColDef().filterParams,

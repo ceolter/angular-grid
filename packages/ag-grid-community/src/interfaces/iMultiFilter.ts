@@ -1,10 +1,10 @@
 import type { IProvidedFilter } from '../filter/provided/iProvidedFilter';
 import type { AgPromise } from '../utils/promise';
 import type {
+    FilterDisplayParams,
     IFilter,
     IFilterComp,
     IFilterDef,
-    IFilterParams,
     IFilterType,
     IFloatingFilterType,
     ProvidedFilterModel,
@@ -39,7 +39,7 @@ export interface IMultiFilterDef extends IFilterDef {
  * Parameters provided by the grid to the `init` method of a `MultiFilter`.
  * Do not use in `colDef.filterParams` - see `IMultiFilterParams` instead.
  */
-export type MultiFilterParams<TData = any> = IMultiFilterParams & IFilterParams<TData>;
+export type MultiFilterParams<TData = any> = IMultiFilterParams & FilterDisplayParams<TData, any, IMultiFilterModel>;
 
 /**
  * Parameters used in `colDef.filterParams` to configure a Multi Filter (`agMultiColumnFilter`).

@@ -203,6 +203,12 @@ export interface BaseFilterParams<TData = any, TContext = any> extends AgGridCom
      * items that are no longer available due to the state of other filters (like Excel type filtering).
      */
     doesRowPassOtherFilter: (rowNode: IRowNode<TData>) => boolean; // TODO: this method should be "doesRowPassOtherFilters"
+    /**
+     * A function callback, to be optionally called, when the filter UI changes.
+     * The grid will respond with emitting a FilterModifiedEvent.
+     * Apart from emitting the event, the grid takes no further action.
+     */
+    filterModifiedCallback: () => void;
 }
 
 /**
@@ -218,12 +224,6 @@ export interface IFilterParams<TData = any, TContext = any> extends BaseFilterPa
      * attributes are not used by the grid).
      */
     filterChangedCallback: (additionalEventAttributes?: any) => void;
-    /**
-     * A function callback, to be optionally called, when the filter UI changes.
-     * The grid will respond with emitting a FilterModifiedEvent.
-     * Apart from emitting the event, the grid takes no further action.
-     */
-    filterModifiedCallback: () => void;
 }
 
 export interface FilterDisplayParams<TData = any, TContext = any, TModel = any> extends IFilterParams<TData, TContext> {
@@ -231,6 +231,10 @@ export interface FilterDisplayParams<TData = any, TContext = any, TModel = any> 
     model: TModel | null;
     /** Callback that should be called every time the model in the component changes. */
     onModelChange: (model: TModel | null) => void;
+    /**
+     * @deprecated V33.1 Not used when using filter evaluators
+     */
+    filterChangedCallback: (additionalEventAttributes?: any) => void;
 }
 
 /**

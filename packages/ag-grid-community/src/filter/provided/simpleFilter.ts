@@ -38,8 +38,8 @@ import {
  * @param V type of value managed by the concrete sub-class that extends this type
  * @param E type of UI element used for collecting user-input
  */
-export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputTextField>
-    extends ProvidedFilter<M | ICombinedSimpleModel<M>, V>
+export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends SimpleFilterParams, E = AgInputTextField>
+    extends ProvidedFilter<M | ICombinedSimpleModel<M>, V, P>
     implements ISimpleFilter
 {
     protected readonly eTypes: AgSelect[] = [];
@@ -174,7 +174,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         return res;
     }
 
-    private shouldRefresh(newParams: SimpleFilterParams): boolean {
+    private shouldRefresh(newParams: P): boolean {
         const model = this.getModel();
         const conditions: ISimpleFilterModel[] | null = model ? (<any>model).conditions ?? [model] : null;
 
@@ -202,7 +202,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         return true;
     }
 
-    override refresh(newParams: SimpleFilterParams): boolean {
+    override refresh(newParams: P): boolean {
         if (!this.shouldRefresh(newParams)) {
             return false;
         }
@@ -276,7 +276,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         return true;
     }
 
-    protected override setParams(params: SimpleFilterParams): void {
+    protected override setParams(params: P): void {
         super.setParams(params);
 
         this.setNumConditions(params);
@@ -298,7 +298,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
         }
     }
 
-    private setNumConditions(params: SimpleFilterParams): void {
+    private setNumConditions(params: P): void {
         let maxNumConditions = params.maxNumConditions ?? 2;
         if (maxNumConditions < 1) {
             _warn(79);

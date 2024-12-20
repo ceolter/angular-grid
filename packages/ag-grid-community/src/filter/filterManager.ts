@@ -10,7 +10,7 @@ import { _getGroupAggFiltering } from '../gridOptionsUtils';
 import type { AdvancedFilterModel } from '../interfaces/advancedFilterModel';
 import type { IAdvancedFilterService } from '../interfaces/iAdvancedFilterService';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
-import type { FilterModel, IFilter, IFilterComp, IFilterParams } from '../interfaces/iFilter';
+import type { BaseFilterParams, FilterModel, IFilter, IFilterComp } from '../interfaces/iFilter';
 import type { IRowNode } from '../interfaces/iRowNode';
 import type { UserCompDetails } from '../interfaces/iUserCompDetails';
 import { _mergeDeep } from '../utils/object';
@@ -282,7 +282,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         return this.colFilter!.getDefaultFloatingFilter(column);
     }
 
-    public createFilterParams(column: AgColumn, colDef: ColDef): IFilterParams {
+    public createFilterParams(column: AgColumn, colDef: ColDef): BaseFilterParams {
         return this.colFilter!.createFilterParams(column, colDef);
     }
 

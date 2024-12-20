@@ -2,13 +2,13 @@ import type { AgColumn } from '../../../entities/agColumn';
 import type { FilterChangedEvent } from '../../../events';
 import type { ProvidedFilterModel } from '../../../interfaces/iFilter';
 import { Component } from '../../../widgets/component';
-import type { ProvidedFilterParams } from '../../provided/iProvidedFilter';
-import type { ScalarFilterParams } from '../../provided/iScalarFilter';
+import type { IProvidedFilterParams } from '../../provided/iProvidedFilter';
 import type {
     ICombinedSimpleModel,
     ISimpleFilter,
     ISimpleFilterModel,
     ISimpleFilterModelType,
+    ISimpleFilterParams,
 } from '../../provided/iSimpleFilter';
 import { OptionsFactory } from '../../provided/optionsFactory';
 import type { SimpleFilterModelFormatter } from '../../provided/simpleFilterModelFormatter';
@@ -76,7 +76,7 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     private setSimpleParams(params: IFloatingFilterParams, update: boolean = true): void {
         const optionsFactory = new OptionsFactory();
         this.optionsFactory = optionsFactory;
-        optionsFactory.init(params.filterParams as ScalarFilterParams, this.getDefaultOptions());
+        optionsFactory.init(params.filterParams as ISimpleFilterParams, this.getDefaultOptions());
 
         const defaultOption = optionsFactory.defaultOption;
         // Initial call
@@ -84,9 +84,9 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
             this.lastType = defaultOption;
         }
 
-        // readOnly is a property of ProvidedFilterParams - we need to find a better (type-safe)
+        // readOnly is a property of IProvidedFilterParams - we need to find a better (type-safe)
         // way to support reading this in the future.
-        this.readOnly = !!(params.filterParams as ProvidedFilterParams).readOnly;
+        this.readOnly = !!(params.filterParams as IProvidedFilterParams).readOnly;
 
         // we are editable if:
         // 1) there is a type (user has configured filter wrong if not type)
