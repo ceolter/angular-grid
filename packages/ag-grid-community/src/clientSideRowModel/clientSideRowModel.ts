@@ -35,13 +35,9 @@ interface ClientSideRowModelRowNode extends RowNode {
     sourceRowIndex: number;
 }
 
-export interface BatchTransactionItem<TData = any> {
+interface BatchTransactionItem<TData = any> {
     rowDataTransaction: RowDataTransaction<TData>;
     callback: ((res: RowNodeTransaction<TData>) => void) | undefined;
-}
-
-export interface RowNodeMap {
-    [id: string]: RowNode;
 }
 
 export class ClientSideRowModel extends BeanStub implements IClientSideRowModel, NamedBean {

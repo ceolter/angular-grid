@@ -129,100 +129,92 @@ export abstract class AbstractClientSideNodeManager<TData = any>
     }
 
     public setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
-        this.dispatchRowDataUpdateStartedEvent(rowData);
-
-        const changedRowNodes = params.changedRowNodes!;
-        const reorder = !this.gos.get('suppressMaintainUnsortedOrder');
         const getRowIdFunc = _getRowIdCallback(this.gos)!;
-
-        const rowDataLen = rowData.length;
-
-        let newAllLeafChildren: ClientSideNodeManagerRowNode<TData>[] | null = null;
-
+        const reorder = !this.gos.get('suppressMaintainUnsortedOrder');
+        const changedRowNodes = params.changedRowNodes!;
+        const appendedNodes: ClientSideNodeManagerRowNode<TData>[] | null = reorder ? null : [];
+        const processedNodes = new Set<ClientSideNodeManagerRowNode<TData>>();
         const rootNode = this.rootNode!;
         const oldAllLeafChildren = rootNode.allLeafChildren!;
         const oldAllLeafChildrenLen = oldAllLeafChildren.length;
-        let orderChanged = false;
 
-        if (reorder) {
-            for (let i = 0; i < rowDataLen; ++i) {
-                const data = rowData[i];
-                const id = getRowIdFunc({ data, level: 0 });
-                let node: ClientSideNodeManagerRowNode<TData> | undefined = this.getRowNode(id);
-                if (!node) {
-                    node = this.createRowNode(data, -1);
-                    changedRowNodes.add(node);
-                } else if (node.data !== data) {
+        let nodesAdded = false;
+        let nodesRemoved = false;
+        let nodesUpdated = false;
+        let orderChanged = false;
+        for (let i = 0, prevSourceRowIndex = -1, len = rowData.length; i < len; i++) {
+            const data = rowData[i];
+            let node: ClientSideNodeManagerRowNode<TData> | undefined = this.getRowNode(
+                getRowIdFunc({ data, level: 0 })
+            );
+            if (!node) {
+                node = this.createRowNode(data, -1);
+                changedRowNodes.add(node);
+                appendedNodes?.push(node);
+                nodesAdded = true;
+            } else {
+                if (reorder) {
+                    const sourceRowIndex = node.sourceRowIndex;
+                    orderChanged ||=
+                        sourceRowIndex <= prevSourceRowIndex || // A node was moved up, so order changed
+                        nodesAdded; // A node was inserted not at the end
+                    prevSourceRowIndex = sourceRowIndex;
+                }
+                if (node.data !== data) {
+                    nodesUpdated = true;
                     node.updateData(data);
                     changedRowNodes.update(node);
                 }
-                if (newAllLeafChildren !== null || oldAllLeafChildren[i] !== node) {
-                    if (!newAllLeafChildren) {
-                        newAllLeafChildren = [];
-                        for (let j = 0; j < i; ++j) {
-                            newAllLeafChildren[j] = oldAllLeafChildren[j];
-                        }
+            }
+            processedNodes.add(node);
+        }
+
+        // Destroy the remaining unprocessed node and collect the removed that were selected.
+        const nodesToUnselect: RowNode<TData>[] = [];
+        for (let i = 0; i < oldAllLeafChildrenLen; i++) {
+            const node = oldAllLeafChildren[i];
+            if (!processedNodes.has(node)) {
+                nodesRemoved = true;
+                if (node.isSelected()) {
+                    nodesToUnselect.push(node);
+                }
+                this.rowNodeDeleted(node);
+                changedRowNodes.remove(node);
+            }
+        }
+
+        if (nodesAdded || nodesRemoved || orderChanged) {
+            const newAllLeafChildren = new Array<RowNode<TData>>(processedNodes.size); // Preallocate
+            let writeIdx = 0;
+            if (!reorder) {
+                // All the old nodes will be in the new array in the order they were in the old array
+                // At the end of this loop, processedNodes will contain only the new appended nodes
+                for (let i = 0; i < oldAllLeafChildrenLen; ++i) {
+                    const node = oldAllLeafChildren[i];
+                    if (processedNodes.delete(node)) {
+                        node.sourceRowIndex = writeIdx;
+                        newAllLeafChildren[writeIdx++] = node;
                     }
-                    node.sourceRowIndex = i;
-                    newAllLeafChildren![i] = node;
                 }
             }
-        }
 
-        const removals = changedRowNodes.removals;
-        for (let i = 0, sourceRowIndex = 0; i < oldAllLeafChildrenLen; ++i) {
-            const node = newAllLeafChildren![i];
-            if (removals.has(node)) {
-                changedRowNodes.remove(node);
-                this.rowNodeDeleted(node);
-            } else {
-                orderChanged ||= node.sourceRowIndex !== sourceRowIndex;
-                ++sourceRowIndex;
+            for (const node of processedNodes) {
+                node.sourceRowIndex = writeIdx;
+                newAllLeafChildren[writeIdx++] = node;
             }
+
+            rootNode.allLeafChildren = newAllLeafChildren;
+            const sibling = rootNode.sibling;
+            if (sibling) {
+                sibling.allLeafChildren = newAllLeafChildren;
+            }
+            params.rowNodesOrderChanged ||= orderChanged;
         }
 
-        // const oldAllLeafChildrenLen = oldAllLeafChildren?.length ?? 0;
-        // const newAllLeafChildren = new Array<RowNode<TData>>(processedNodes.size);
-        // let orderChanged = false;
-        // let writeIdx = 0;
-
-        // for (let i = 0; i < oldAllLeafChildrenLen; i++) {
-        //     const node = oldAllLeafChildren![i];
-        //     if (!processedNodes.has(node)) {
-        //         changedRowNodes.remove(node);
-        //         this.rowNodeDeleted(node);
-        //     } else if (!reorder) {
-        //         node.sourceRowIndex = writeIdx;
-        //         newAllLeafChildren[writeIdx++] = node;
-        //     }
-        // }
-        // if (reorder) {
-        //     let readIdx = 0;
-        //     for (const node of processedNodes) {
-        //         // TODO: handle deleted nodes
-        //         orderChanged ||=
-        //             readIdx < oldAllLeafChildrenLen &&
-        //             (node.sourceRowIndex < 0 || oldAllLeafChildren![readIdx++] !== node);
-        //         node.sourceRowIndex = writeIdx;
-        //         newAllLeafChildren[writeIdx++] = node;
-        //     }
-        // } else if (appendedNodes) {
-        //     for (let i = 0, len = appendedNodes.length; i < len; ++i) {
-        //         const node = appendedNodes[i];
-        //         node.sourceRowIndex = writeIdx;
-        //         newAllLeafChildren[writeIdx++] = node;
-        //     }
-        // }
-
-        // if (changedRowNodes.removals.size || changedRowNodes.updates.size || orderChanged) {
-        //     rootNode.allLeafChildren = newAllLeafChildren;
-        //     const sibling = rootNode.sibling;
-        //     if (sibling) {
-        //         sibling.allLeafChildren = newAllLeafChildren;
-        //     }
-        //     params.rowDataUpdated = true;
-        //     params.rowNodesOrderChanged ||= orderChanged;
-        // }
+        if (nodesAdded || nodesRemoved || orderChanged || nodesUpdated) {
+            this.deselectNodes(nodesToUnselect);
+            params.rowDataUpdated = true;
+        }
     }
 
     /** Called when a node needs to be deleted */
