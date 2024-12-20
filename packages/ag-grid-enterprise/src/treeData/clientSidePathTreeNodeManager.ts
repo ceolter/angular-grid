@@ -1,8 +1,8 @@
 import { _warn } from 'ag-grid-community';
 import type {
     ChangedPath,
-    ChangedRowNodes,
     GetDataPath,
+    IChangedRowNodes,
     NamedBean,
     RefreshModelParams,
     RowNode,
@@ -50,7 +50,7 @@ export class ClientSidePathTreeNodeManager<TData>
     }
 
     private executeTransactions(
-        changedRowNodes: ChangedRowNodes,
+        changedRowNodes: IChangedRowNodes,
         changedPath: ChangedPath | undefined,
         rowNodesOrderMaybeChanged: boolean | undefined
     ): void {
