@@ -12,7 +12,22 @@ To understand the technical context of this change, see [Understanding the Themi
 
 In v33, the `theme` grid option has a default value, and if no value is provided the quartz theme will be used.
 
-If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of themes by passing the string `"legacy"` to the theme grid option. You can then continue to use legacy themes.
+### Continue with legacy themes
+
+If you want to upgrade to v33 without immediately adopting the Theming API, you can opt back in to the v32 style of themes by passing the string `"legacy"` to the `theme` grid option. You can then continue to use legacy themes.
+
+If you have multiple grids you may find using a [Global Grid Option](./grid-interface/#global-grid-options) to be a convenient way to set the theme to `"legacy"` for all grids in your application.
+
+```ts
+import { provideGlobalGridOptions } from 'ag-grid-community';
+
+// Mark all grids as using legacy themes
+provideGlobalGridOptions({
+    theme: "legacy",
+});
+```
+
+### Adopt the Theming API
 
 To adopt the v33 themes, follow these steps:
 

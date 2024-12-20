@@ -3,6 +3,7 @@ import {
     BeanStub,
     KeyCode,
     _loadTemplate,
+    _preserveRangesWhile,
     _setAriaDisabled,
     _setAriaExpanded,
     _setAriaLevel,
@@ -113,8 +114,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
             openSubMenu: (activateFirstItem) => this.openSubMenu(activateFirstItem),
             closeSubMenu: () => this.closeSubMenu(),
             closeMenu: (event) => this.closeMenu(event),
-            updateTooltip: (tooltip?: string, shouldDisplayTooltip?: () => boolean) =>
-                this.refreshTooltip(tooltip, shouldDisplayTooltip),
+            updateTooltip: (tooltip, shouldDisplayTooltip) => this.refreshTooltip(tooltip, shouldDisplayTooltip),
             onItemActivated: () => this.onItemActivated(),
         });
         return (
@@ -299,7 +299,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
         this.menuItemComp.setActive?.(true);
         if (!this.suppressFocus) {
-            this.eGui!.focus({ preventScroll: true });
+            _preserveRangesWhile(this.beans, () => this.eGui!.focus({ preventScroll: true }));
         }
 
         if (openSubMenu && this.params.subMenu) {
@@ -322,7 +322,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         this.isActive = false;
 
         if (this.subMenuIsOpen) {
-            this.hideSubMenu!();
+            this.hideSubMenu?.();
         }
     }
 

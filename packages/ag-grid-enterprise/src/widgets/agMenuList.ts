@@ -5,6 +5,7 @@ import {
     TabGuardComp,
     _last,
     _loadTemplate,
+    _preserveRangesWhile,
     _stopPropagationForAgGrid,
     _warn,
 } from 'ag-grid-community';
@@ -34,7 +35,7 @@ export class AgMenuList extends TabGuardComp<AgMenuListEvent> {
     public postConstruct() {
         this.initialiseTabGuard({
             onTabKeyDown: (e) => this.onTabKeyDown(e),
-            handleKeyDown: (e) => this.handleKeyDown(e),
+            handleKeyDown: (e) => _preserveRangesWhile(this.beans, () => this.handleKeyDown(e)),
             onFocusIn: (e) => this.handleFocusIn(e),
             onFocusOut: (e) => this.handleFocusOut(e),
         });
@@ -42,8 +43,7 @@ export class AgMenuList extends TabGuardComp<AgMenuListEvent> {
 
     private onTabKeyDown(e: KeyboardEvent) {
         const parent = this.getParentComponent();
-        const parentGui = parent && parent.getGui();
-        const isManaged = parentGui && parentGui.classList.contains('ag-focus-managed');
+        const isManaged = parent?.getGui()?.classList.contains('ag-focus-managed');
 
         if (!isManaged) {
             e.preventDefault();

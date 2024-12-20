@@ -26,6 +26,7 @@
 
 input[type='search'].searchInput {
     width: 100%;
+    height: var(--input-height);
     padding: $spacing-size-6 $spacing-size-6 $spacing-size-6 $spacing-size-16;
     font-size: 20px;
     border: none;

@@ -137,5 +137,10 @@
   ],
   "vitest.workspaceConfig": "vitest.workspace.ts",
   "jest.rootPath": "testing/behavioural",
-  "jest.runMode": "watch"
+  "jest.runMode": "watch",
+  "files.watcherExclude": {
+    "**/.nx/**": true,
+    "**/dist/**": true,
+    "**/node_modules/**": true
+  }
 }
