@@ -61,6 +61,8 @@ export interface IClientSideRowModel<TData = any> extends IRowModel {
     isRowDataLoaded(): boolean;
 }
 
+export type IChangedRowNodes<TData = any> = ChangedRowNodes<TData>;
+
 export interface RefreshModelParams<TData = any> {
     /** how much of the pipeline to execute */
     step: ClientSideRowModelStage;
@@ -88,7 +90,7 @@ export interface RefreshModelParams<TData = any> {
     /**
      * A data structure that holds the affected row nodes, if this was an update and not a full reload.
      */
-    changedRowNodes?: ChangedRowNodes<TData>;
+    changedRowNodes?: IChangedRowNodes<TData>;
 
     /** The changedPath, if any */
     changedPath?: ChangedPath;
