@@ -5,13 +5,14 @@ import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import { _isColumnsSortingCoupledToGroup } from '../gridOptionsUtils';
 import type { PostSortRowsParams } from '../interfaces/iCallbackParams';
-import type { ClientSideRowModelStage, IChangedRowNodes } from '../interfaces/iClientSideRowModel';
+import type { ClientSideRowModelStage } from '../interfaces/iClientSideRowModel';
 import type { WithoutGridCommon } from '../interfaces/iCommon';
 import type { IRowNodeStage, StageExecuteParams } from '../interfaces/iRowNodeStage';
 import type { SortOption } from '../interfaces/iSortOption';
 import type { RowNodeSorter, SortedRowNode } from '../sort/rowNodeSorter';
 import type { ChangedPath } from '../utils/changedPath';
 import { _exists, _missing } from '../utils/generic';
+import type { ChangedRowNodes } from './changedRowNodes';
 
 function updateChildIndexes(rowNode: RowNode): void {
     if (_missing(rowNode.childrenAfterSort)) {
@@ -86,7 +87,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
         sortOptions: SortOption[],
         sortActive: boolean,
         useDeltaSort: boolean,
-        changedRowNodes: IChangedRowNodes | undefined,
+        changedRowNodes: ChangedRowNodes | undefined,
         changedPath: ChangedPath | undefined,
         sortContainsGroupColumns: boolean
     ): void {
@@ -151,7 +152,7 @@ export class SortStage extends BeanStub implements NamedBean, IRowNodeStage {
 function doDeltaSort(
     rowNodeSorter: RowNodeSorter,
     rowNode: RowNode,
-    changedRowNodes: IChangedRowNodes,
+    changedRowNodes: ChangedRowNodes,
     changedPath: ChangedPath | undefined,
     sortOptions: SortOption[]
 ): RowNode[] {

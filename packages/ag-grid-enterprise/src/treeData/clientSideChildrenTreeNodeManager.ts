@@ -1,10 +1,4 @@
-import type {
-    AbstractClientSideNodeManager,
-    IClientSideNodeManager,
-    NamedBean,
-    RefreshModelParams,
-    RowNode,
-} from 'ag-grid-community';
+import type { AbstractClientSideNodeManager, NamedBean, RefreshModelParams, RowNode } from 'ag-grid-community';
 import { ChangedPath, _error, _getRowIdCallback, _warn } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
@@ -15,7 +9,7 @@ import type { TreeRow } from './treeRow';
 
 export class ClientSideChildrenTreeNodeManager<TData>
     extends AbstractClientSideTreeNodeManager<TData>
-    implements IClientSideNodeManager<TData>, NamedBean
+    implements NamedBean
 {
     beanName = 'csrmChildrenTreeNodeSvc' as const;
 

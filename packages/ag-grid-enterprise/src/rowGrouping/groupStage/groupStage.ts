@@ -2,10 +2,10 @@ import type {
     AgColumn,
     BeanCollection,
     ChangedPath,
+    ChangedRowNodes,
     ClientSideRowModelStage,
     ColumnModel,
     GridOptions,
-    IChangedRowNodes,
     IColsService,
     IRowNodeStage,
     ISelectionService,
@@ -160,7 +160,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         return details;
     }
 
-    private handleDeltaUpdate(details: GroupingDetails, { updates, removals }: IChangedRowNodes): void {
+    private handleDeltaUpdate(details: GroupingDetails, { updates, removals }: ChangedRowNodes): void {
         const batchRemover = new BatchRemover();
 
         if (removals.size) {

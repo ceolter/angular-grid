@@ -7,10 +7,8 @@ import type { RowHighlightPosition } from '../entities/rowNode';
 import { ROW_ID_PREFIX_ROW_GROUP, RowNode } from '../entities/rowNode';
 import type { CssVariablesChanged, FilterChangedEvent } from '../events';
 import { _getGroupSelectsDescendants, _getRowHeightForNode, _isAnimateRows, _isDomLayout } from '../gridOptionsUtils';
-import type { IClientSideNodeManager } from '../interfaces/iClientSideNodeManager';
 import type {
     ClientSideRowModelStage,
-    IChangedRowNodes,
     IClientSideRowModel,
     RefreshModelParams,
 } from '../interfaces/iClientSideRowModel';
@@ -23,6 +21,7 @@ import { ChangedPath } from '../utils/changedPath';
 import { _debounce } from '../utils/function';
 import { _warn } from '../validation/logging';
 import type { ValueCache } from '../valueService/valueCache';
+import type { AbstractClientSideNodeManager } from './abstractClientSideNodeManager';
 import { ChangedRowNodes } from './changedRowNodes';
 import { updateRowNodeAfterFilter } from './filterStage';
 import { updateRowNodeAfterSort } from './sortStage';
@@ -77,7 +76,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public rootNode: RowNode | null = null;
 
     private rowsToDisplay: RowNode[] = []; // the rows mapped to rows to display
-    private nodeManager: IClientSideNodeManager<any>;
+    private nodeManager: AbstractClientSideNodeManager<any>;
     private rowDataTransactionBatch: BatchTransactionItem[] | null;
     private lastHighlightedRow: RowNode | null;
     private applyAsyncTransactionsTimeout: number | undefined;
@@ -143,7 +142,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
         const isTree = childrenField || treeData;
 
-        let nodeManager: IClientSideNodeManager<any> | undefined;
+        let nodeManager: AbstractClientSideNodeManager<any> | undefined;
         if (isTree) {
             nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
         }
@@ -157,7 +156,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             this.nodeManager = nodeManager;
         }
 
-        nodeManager.activate(this.rootNode);
+        nodeManager.activate(this.rootNode!);
     }
 
     private addPropertyListeners() {
@@ -1021,7 +1020,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
     }
 
-    private doSort(changedRowNodes: IChangedRowNodes | undefined, changedPath: ChangedPath) {
+    private doSort(changedRowNodes: ChangedRowNodes | undefined, changedPath: ChangedPath) {
         const { groupHideOpenParentsSvc } = this.beans;
         if (this.sortStage) {
             this.sortStage.execute({
@@ -1046,7 +1045,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private doRowGrouping(
         rowNodeTransactions: RowNodeTransaction[] | undefined,
-        changedRowNodes: IChangedRowNodes | undefined,
+        changedRowNodes: ChangedRowNodes | undefined,
         changedPath: ChangedPath,
         rowNodesOrderChanged: boolean,
         afterColumnsChanged: boolean
@@ -1213,7 +1212,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private commitTransactions(
         rowNodeTransactions: RowNodeTransaction[],
         rowNodesOrderChanged: boolean,
-        changedRowNodes: IChangedRowNodes
+        changedRowNodes: ChangedRowNodes
     ): void {
         this.refreshModel({
             step: 'group',

@@ -529,7 +529,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
     }
 
-    public refreshModel(params: RefreshModelParams<TData>): void {
+    public override refreshModel(params: RefreshModelParams<TData>): void {
         if (!params.afterColumnsChanged) {
             return; // nothing to do
         }

@@ -2,13 +2,11 @@ import { BeanStub } from '../context/beanStub';
 import type { GetRowIdFunc } from '../entities/gridOptions';
 import { RowNode } from '../entities/rowNode';
 import { _getRowIdCallback } from '../gridOptionsUtils';
-import type {
-    ClientSideNodeManagerUpdateRowDataResult,
-    IClientSideNodeManager,
-} from '../interfaces/iClientSideNodeManager';
-import type { IChangedRowNodes, RefreshModelParams } from '../interfaces/iClientSideRowModel';
+import type { RefreshModelParams } from '../interfaces/iClientSideRowModel';
 import type { RowDataTransaction } from '../interfaces/rowDataTransaction';
+import type { RowNodeTransaction } from '../interfaces/rowNodeTransaction';
 import { _error, _warn } from '../validation/logging';
+import type { ChangedRowNodes } from './changedRowNodes';
 
 const ROOT_NODE_ID = 'ROOT_NODE_ID';
 
@@ -30,16 +28,24 @@ interface ClientSideNodeManagerRootNode<TData> extends RowNode<TData> {
     childrenAfterGroup: ClientSideNodeManagerRowNode<TData>[] | null;
 }
 
+/** Result of ClientSideNodeManager.updateRowData method */
+export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
+    changedRowNodes: ChangedRowNodes<TData>;
+
+    /** The RowNodeTransaction containing all the removals, updates and additions */
+    rowNodeTransaction: RowNodeTransaction<TData>;
+
+    /** True if at least one row was inserted (and not just appended) */
+    rowsInserted: boolean;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace AbstractClientSideNodeManager {
     export type RowNode<TData> = ClientSideNodeManagerRowNode<TData>;
     export type RootNode<TData> = ClientSideNodeManagerRootNode<TData>;
 }
 
-export abstract class AbstractClientSideNodeManager<TData = any>
-    extends BeanStub
-    implements IClientSideNodeManager<TData>
-{
+export abstract class AbstractClientSideNodeManager<TData = any> extends BeanStub {
     private nextId = 0;
     protected allNodesMap: { [id: string]: RowNode<TData> } = {};
 
@@ -229,7 +235,7 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
     public updateRowData(
         rowDataTran: RowDataTransaction<TData>,
-        changedRowNodes: IChangedRowNodes<TData>
+        changedRowNodes: ChangedRowNodes<TData>
     ): ClientSideNodeManagerUpdateRowDataResult<TData> {
         this.dispatchRowDataUpdateStartedEvent(rowDataTran.add);
 
@@ -496,4 +502,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
 
         return rowNode || null;
     }
+
+    public refreshModel?(params: RefreshModelParams<TData>): void;
 }
