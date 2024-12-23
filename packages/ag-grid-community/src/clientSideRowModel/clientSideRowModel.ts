@@ -714,8 +714,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        // return true if we are only doing updates
-        return true;
+        return true; // Nothing changed, or only updates with no new rows and no removals
     }
 
     public refreshModel(params: RefreshModelParams): void {
