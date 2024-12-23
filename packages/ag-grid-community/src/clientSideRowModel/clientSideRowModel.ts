@@ -708,8 +708,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             return false; // There are removals
         }
 
-        for (const rowNode of updates.keys()) {
-            if (updates.get(rowNode)) {
+        for (const newRow of updates.values()) {
+            if (newRow) {
                 return false; // There are new rows
             }
         }
