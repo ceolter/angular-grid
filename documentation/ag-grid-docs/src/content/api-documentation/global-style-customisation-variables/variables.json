@@ -195,7 +195,7 @@
         },
         "--ag-row-border-width": {
             "description": "The thickness of the border between grid rows. Set this to a border thickness, e.g. `1px`.",
-            "type": "a CSS border style (e.g. `solid` or `dotted`)"
+            "type": "CSS length (e.g. `0`, `4px` or `50%`)"
         },
         "--ag-row-border-color": {
             "description": "Colour of the border between grid rows, or `transparent` to display no border",
