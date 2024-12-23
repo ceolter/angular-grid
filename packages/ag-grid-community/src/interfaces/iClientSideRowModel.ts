@@ -96,12 +96,6 @@ export interface RefreshModelParams<TData = any> {
     changedPath?: ChangedPath;
 
     /**
-     * List of transactions being executed for a delta update.
-     * To see the affected nodes for a delta update, use `changedRowNodes` instead.
-     */
-    rowNodeTransactions?: RowNodeTransaction<TData>[];
-
-    /**
      * if NOT new data, then this flag tells grid to check if rows already
      * exist for the nodes (matching by node id) and reuses the row if it does.
      */
