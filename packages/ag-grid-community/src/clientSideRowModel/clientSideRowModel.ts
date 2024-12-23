@@ -673,7 +673,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.refreshModel({ step: this.colModel.isPivotActive() ? 'pivot' : 'aggregate' });
     }
 
-    private createChangePath(rowNodeTransactions: (RowNodeTransaction | null)[] | undefined): ChangedPath {
+    private createChangePath(enabled: boolean): ChangedPath {
         // for updates, if the row is updated at all, then we re-calc all the values
         // in that row. we could compare each value to each old value, however if we
         // did this, we would be calling the valueSvc twice, once on the old value
@@ -682,11 +682,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // the impacted parent rows are recalculated, parents who's children have
         // not changed are not impacted.
 
-        const noTransactions = !rowNodeTransactions?.length;
-
         const changedPath = new ChangedPath(false, this.rootNode!);
 
-        if (noTransactions) {
+        if (!enabled) {
             changedPath.active = false;
         }
 
@@ -730,9 +728,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // let start: number;
         // console.log('======= start =======');
 
-        const rowNodeTransactions = params.rowNodeTransactions;
-
-        const changedPath = (params.changedPath ??= this.createChangePath(rowNodeTransactions));
+        const changedPath = (params.changedPath ??= this.createChangePath(!params.newData && !!params.rowDataUpdated));
 
         this.nodeManager.refreshModel?.(params);
 
@@ -1223,7 +1219,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
             changedRowNodes,
-            changedPath: this.createChangePath(rowNodeTransactions),
+            changedPath: this.createChangePath(true),
         });
     }
 
