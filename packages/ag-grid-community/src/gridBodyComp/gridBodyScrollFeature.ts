@@ -515,7 +515,7 @@ export class GridBodyScrollFeature extends BeanStub {
         const { rowModel } = this.beans;
         const rowCount = rowModel.getRowCount();
 
-        if (typeof index !== 'number' || index < 0 || index >= rowCount) {
+        if (typeof index !== 'number' || !Number.isInteger(index) || index < 0 || index >= rowCount) {
             _warn(88, { index });
             return;
         }
