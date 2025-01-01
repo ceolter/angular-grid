@@ -693,25 +693,17 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private isSuppressModelUpdateAfterUpdateTransaction(params: RefreshModelParams): boolean {
         if (!this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
-            return false;
+            return false; // Not suppressed
         }
 
         const { changedRowNodes, newData, rowDataUpdated } = params;
 
         if (!changedRowNodes || newData || !rowDataUpdated) {
-            return false;
+            return false; // Not a transaction update
         }
 
-        const { removals, updates } = changedRowNodes;
-
-        if (removals.size) {
-            return false; // There are removals
-        }
-
-        for (const newRow of updates.values()) {
-            if (newRow) {
-                return false; // There are new rows
-            }
+        if (changedRowNodes.removals.size || changedRowNodes.adds.size) {
+            return false; // There are added rows or removed rows, not just updates
         }
 
         return true; // Nothing changed, or only updates with no new rows and no removals

@@ -160,24 +160,22 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         return details;
     }
 
-    private handleDeltaUpdate(details: GroupingDetails, { updates, removals }: IChangedRowNodes): void {
+    private handleDeltaUpdate(details: GroupingDetails, { removals, updates, adds }: IChangedRowNodes): void {
         const batchRemover = new BatchRemover();
 
         if (removals.size) {
             this.removeNodes(removals, details, batchRemover);
         }
 
-        const changedPath = details.changedPath;
+        for (const rowNode of updates) {
+            this.moveNodeInWrongPath(rowNode, details, batchRemover);
+        }
 
-        for (const rowNode of updates.keys()) {
-            const created = updates.get(rowNode);
-            if (created) {
-                this.insertOneNode(rowNode, details);
-                if (changedPath.active) {
-                    changedPath.addParentNode(rowNode.parent);
-                }
-            } else {
-                this.moveNodeInWrongPath(rowNode, details, batchRemover);
+        const changedPath = details.changedPath;
+        for (const rowNode of adds) {
+            this.insertOneNode(rowNode, details);
+            if (changedPath.active) {
+                changedPath.addParentNode(rowNode.parent);
             }
         }
 
