@@ -68,10 +68,12 @@ export class ClientSidePathTreeNodeManager<TData>
             }
         }
 
-        const updates = changedRowNodes.updates;
         const getDataPath = this.gos.get('getDataPath');
-        for (const row of updates.keys()) {
-            this.addOrUpdateRow(getDataPath, row, updates.get(row)!);
+        for (const row of changedRowNodes.updates) {
+            this.addOrUpdateRow(getDataPath, row, false);
+        }
+        for (const row of changedRowNodes.adds) {
+            this.addOrUpdateRow(getDataPath, row, true);
         }
 
         const rows = treeRoot.row?.allLeafChildren;

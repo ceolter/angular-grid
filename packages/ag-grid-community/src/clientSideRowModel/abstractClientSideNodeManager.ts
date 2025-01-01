@@ -132,7 +132,6 @@ export abstract class AbstractClientSideNodeManager<TData = any>
         const getRowIdFunc = _getRowIdCallback(this.gos)!;
         const reorder = !this.gos.get('suppressMaintainUnsortedOrder');
         const changedRowNodes = params.changedRowNodes!;
-        const appendedNodes: ClientSideNodeManagerRowNode<TData>[] | null = reorder ? null : [];
         const processedNodes = new Set<ClientSideNodeManagerRowNode<TData>>();
         const rootNode = this.rootNode!;
         const oldAllLeafChildren = rootNode.allLeafChildren!;
@@ -148,10 +147,9 @@ export abstract class AbstractClientSideNodeManager<TData = any>
                 getRowIdFunc({ data, level: 0 })
             );
             if (!node) {
+                nodesAdded = true;
                 node = this.createRowNode(data, -1);
                 changedRowNodes.add(node);
-                appendedNodes?.push(node);
-                nodesAdded = true;
             } else {
                 if (reorder) {
                     const sourceRowIndex = node.sourceRowIndex;
