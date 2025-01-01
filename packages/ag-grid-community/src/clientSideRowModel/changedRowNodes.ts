@@ -16,9 +16,8 @@ export class ChangedRowNodes<TData = any> {
 
     /** Marks a row as updated. Order of operations is: remove, update, add */
     public update(node: IRowNode<TData>): void {
-        const { adds, updates } = this;
-        if (!adds.has(node as RowNode<TData>)) {
-            updates.add(node as RowNode<TData>);
+        if (!this.adds.has(node as RowNode<TData>)) {
+            this.updates.add(node as RowNode<TData>);
         }
     }
 
