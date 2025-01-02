@@ -64,7 +64,7 @@ class TestFilter extends ProvidedFilter<ProvidedFilterModel, string> {
         return !this.modelHasChanged;
     }
 
-    protected filterType: string = 'test';
+    public readonly filterType = 'text';
 
     public getModelFromUi(): ProvidedFilterModel {
         return this.uiModel;
