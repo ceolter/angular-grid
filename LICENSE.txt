@@ -1,7 +1,7 @@
 
 This project is made up of many packages. There are two license types: MIT and Commercial.
 
-Each package has it's own license file explaining the license for that package.
+Each package has its own license file explaining the license for that package.
 
 The following packages are MIT licensed:
 
