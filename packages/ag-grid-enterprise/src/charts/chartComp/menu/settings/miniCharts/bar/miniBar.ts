@@ -17,7 +17,7 @@ export class MiniBar extends MiniChartWithAxes {
         const size = this.size;
         const data = [2, 3, 4];
 
-        const yScale = new _Scene.BandScale();
+        const yScale = new _Scene.CategoryScale();
         yScale.domain = [0, 1, 2];
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.3;
