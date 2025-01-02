@@ -155,7 +155,7 @@ describe('ag-grid rows-ordering', () => {
         expect(compareCalled).toBe(true);
 
         compareCalled = false;
-        await executeTransactionsAsync([{ add: [{ x: '7' }] }, { remove: [{ x: '4' }] }], api);
+        await executeTransactionsAsync([{ add: [{ id: '7', value: 700 }] }, { remove: [{ id: '4' }] }], api);
         await asyncSetTimeout(1);
 
         await new GridRows(api, 'data', gridRowsOptions).check(`
@@ -163,11 +163,27 @@ describe('ag-grid rows-ordering', () => {
             ├── LEAF id:1 value:1
             ├── LEAF id:2 value:2
             ├── LEAF id:5 value:5
-            ├── LEAF id:4 value:40
-            └── LEAF id:3 value:300
+            ├── LEAF id:3 value:300
+            └── LEAF id:7 value:700
         `);
         expect(rowDataUpdatedCount).toBe(4);
         expect(modelUpdatedCount).toBe(3);
+        expect(compareCalled).toBe(true);
+
+        compareCalled = false;
+        await executeTransactionsAsync([{ add: [{ id: '8', value: 8 }] }, { remove: [{ id: '8' }] }], api);
+        await asyncSetTimeout(1);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 value:1
+            ├── LEAF id:2 value:2
+            ├── LEAF id:5 value:5
+            ├── LEAF id:3 value:300
+            └── LEAF id:7 value:700
+        `);
+        expect(rowDataUpdatedCount).toBe(5);
+        expect(modelUpdatedCount).toBe(4);
         expect(compareCalled).toBe(true);
 
         compareCalled = false;
@@ -181,8 +197,8 @@ describe('ag-grid rows-ordering', () => {
             ├── LEAF id:5 value:5
             └── LEAF id:4 value:40
         `);
-        expect(rowDataUpdatedCount).toBe(5);
-        expect(modelUpdatedCount).toBe(4);
+        expect(rowDataUpdatedCount).toBe(6);
+        expect(modelUpdatedCount).toBe(5);
         expect(compareCalled).toBe(true);
 
         compareCalled = false;
@@ -196,8 +212,8 @@ describe('ag-grid rows-ordering', () => {
             ├── LEAF id:1 value:100
             └── LEAF id:4 value:400
         `);
-        expect(rowDataUpdatedCount).toBe(6);
-        expect(modelUpdatedCount).toBe(5);
+        expect(rowDataUpdatedCount).toBe(7);
+        expect(modelUpdatedCount).toBe(6);
         expect(compareCalled).toBe(true);
     });
 });
