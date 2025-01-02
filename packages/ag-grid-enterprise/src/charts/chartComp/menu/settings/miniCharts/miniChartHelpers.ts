@@ -26,7 +26,7 @@ export function createColumnRects(params: CreateColumnRectsParams) {
         agChartsExports: { _Scene },
     } = params;
 
-    const xScale = new _Scene.BandScale();
+    const xScale = new _Scene.CategoryScale();
     xScale.domain = xScaleDomain;
     xScale.range = [padding, size - padding];
     xScale.paddingInner = xScalePadding;

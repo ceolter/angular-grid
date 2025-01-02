@@ -80,7 +80,7 @@ export class CellMouseListenerFeature extends BeanStub {
 
         // edit on single click, but not if extending a range
         if (editOnSingleClick && !(mouseEvent.shiftKey && rangeSvc?.getCellRanges().length != 0)) {
-            editSvc?.startRowOrCellEdit(this.cellCtrl);
+            editSvc?.startRowOrCellEdit(this.cellCtrl, undefined, mouseEvent);
         }
     }
 

@@ -32,7 +32,7 @@ export class MiniRadialBar extends MiniChartWithPolarAxes {
         const innerRadiusRatio = 0.4;
         const innerRadius = radius * innerRadiusRatio;
 
-        const radiusScale = new _Scene.BandScale();
+        const radiusScale = new _Scene.CategoryScale();
         radiusScale.domain = data[0].map((_, index) => index);
         radiusScale.range = [innerRadius, radius];
         radiusScale.paddingInner = 0.5;

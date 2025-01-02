@@ -66,7 +66,7 @@ export class MiniWaterfall extends MiniChartWithAxes {
         yScale.domain = [Math.min(min, 0), max];
         yScale.range = [size - scalePadding, scalePadding];
 
-        const xScale = new _Scene.BandScale();
+        const xScale = new _Scene.CategoryScale();
         xScale.domain = data.map((_, index) => index);
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.2;

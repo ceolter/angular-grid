@@ -33,13 +33,13 @@ export class MiniHeatmap extends MiniChart {
         );
         const domain = data.map((_, index) => index);
 
-        const xScale = new _Scene.BandScale();
+        const xScale = new _Scene.CategoryScale();
         xScale.domain = domain;
         xScale.range = [padding, size - padding];
         xScale.paddingInner = 0.01;
         xScale.paddingOuter = 0.1;
 
-        const yScale = new _Scene.BandScale();
+        const yScale = new _Scene.CategoryScale();
         yScale.domain = domain;
         yScale.range = [padding, size - padding];
         yScale.paddingInner = 0.01;
