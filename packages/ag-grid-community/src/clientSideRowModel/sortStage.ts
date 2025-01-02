@@ -164,10 +164,10 @@ function doDeltaSort(
     const untouchedRows = new Set<string>();
     const touchedRows: SortedRowNode[] = [];
 
-    const { updates, adds } = changedRowNodes;
+    const updates = changedRowNodes.updates;
     for (let i = 0, len = unsortedRows.length; i < len; ++i) {
         const row = unsortedRows[i];
-        if (updates.has(row) || adds.has(row) || (changedPath && !changedPath.canSkip(row))) {
+        if (updates.has(row) || (changedPath && !changedPath.canSkip(row))) {
             touchedRows.push({
                 currentPos: touchedRows.length,
                 rowNode: row,

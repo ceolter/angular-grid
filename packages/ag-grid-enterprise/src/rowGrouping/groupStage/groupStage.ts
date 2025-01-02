@@ -149,7 +149,7 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
             pivotMode: this.colModel.isPivotMode(),
             groupedColCount: groupedCols?.length ?? 0,
             rowNodesOrderChanged: !!rowNodesOrderChanged,
-            // if no transaction and not immutable row data set, then it's shotgun, changed path would be 'not active' at this point anyway
+            // if no transaction, then it's shotgun, changed path would be 'not active' at this point anyway
             changedPath: changedPath!,
             groupAllowUnbalanced: this.gos.get('groupAllowUnbalanced'),
             isGroupOpenByDefault: this.gos.getCallback('isGroupOpenByDefault') as any,
@@ -160,22 +160,24 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
         return details;
     }
 
-    private handleDeltaUpdate(details: GroupingDetails, { removals, updates, adds }: IChangedRowNodes): void {
+    private handleDeltaUpdate(details: GroupingDetails, { updates, removals }: IChangedRowNodes): void {
         const batchRemover = new BatchRemover();
 
         if (removals.size) {
             this.removeNodes(removals, details, batchRemover);
         }
 
-        for (const rowNode of updates) {
-            this.moveNodeInWrongPath(rowNode, details, batchRemover);
-        }
-
         const changedPath = details.changedPath;
-        for (const rowNode of adds) {
-            this.insertOneNode(rowNode, details);
-            if (changedPath.active) {
-                changedPath.addParentNode(rowNode.parent);
+
+        for (const rowNode of updates.keys()) {
+            const created = updates.get(rowNode);
+            if (created) {
+                this.insertOneNode(rowNode, details);
+                if (changedPath.active) {
+                    changedPath.addParentNode(rowNode.parent);
+                }
+            } else {
+                this.moveNodeInWrongPath(rowNode, details, batchRemover);
             }
         }
 

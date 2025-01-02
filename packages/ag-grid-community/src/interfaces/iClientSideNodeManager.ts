@@ -3,6 +3,8 @@ import type { IChangedRowNodes, RefreshModelParams } from './iClientSideRowModel
 import type { RowDataTransaction } from './rowDataTransaction';
 import type { RowNodeTransaction } from './rowNodeTransaction';
 
+export type RowDataChildrenGetter<TData = any> = (data: TData | null | undefined) => TData[] | null | undefined;
+
 /** Result of IClientSideNodeManager.updateRowData method */
 export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
     changedRowNodes: IChangedRowNodes<TData>;
