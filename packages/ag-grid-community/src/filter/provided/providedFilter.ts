@@ -66,7 +66,7 @@ export abstract class ProvidedFilter<M, V> extends Component implements IProvide
     protected abstract areModelsEqual(a: M, b: M): boolean;
 
     /** Used to get the filter type for filter models. */
-    protected abstract filterType: string;
+    public abstract readonly filterType: 'text' | 'number' | 'date' | 'set' | 'multi';
 
     public postConstruct(): void {
         this.resetTemplate(); // do this first to create the DOM

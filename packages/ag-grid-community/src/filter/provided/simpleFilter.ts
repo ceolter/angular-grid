@@ -41,6 +41,8 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, E = AgInputT
     extends ProvidedFilter<M | ICombinedSimpleModel<M>, V>
     implements ISimpleFilter
 {
+    public abstract override readonly filterType: 'number' | 'text' | 'date';
+
     protected readonly eTypes: AgSelect[] = [];
     protected readonly eJoinOperatorPanels: HTMLElement[] = [];
     protected readonly eJoinOperatorsAnd: AgRadioButton[] = [];

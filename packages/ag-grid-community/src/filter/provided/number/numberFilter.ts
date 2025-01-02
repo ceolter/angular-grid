@@ -18,7 +18,7 @@ export class NumberFilter extends ScalarFilter<NumberFilterModel, number> {
     private numberFilterParams: NumberFilterParams;
     private filterModelFormatter: SimpleFilterModelFormatter;
 
-    protected filterType = 'number' as const;
+    public readonly filterType = 'number' as const;
 
     constructor() {
         super('numberFilter');

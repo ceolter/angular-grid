@@ -5,7 +5,9 @@ import type { IProvidedFilter, IProvidedFilterParams } from './iProvidedFilter';
 export type JoinOperator = 'AND' | 'OR';
 /** Interface contract for the public aspects of the SimpleFilter implementation(s). */
 
-export interface ISimpleFilter extends IProvidedFilter, IFloatingFilterParent {}
+export interface ISimpleFilter extends IProvidedFilter, IFloatingFilterParent {
+    readonly filterType: 'text' | 'number' | 'date';
+}
 
 export interface IFilterPlaceholderFunctionParams {
     /**
