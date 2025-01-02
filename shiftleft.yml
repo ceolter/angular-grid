@@ -1,0 +1,15 @@
+version: 2
+build_rules:
+  - id: Allow no critical findings
+    severities:
+      - critical
+  - id: Allow one OSS or container finding
+    finding_types:
+      - oss_vuln
+      - container
+    threshold: 1
+  - id: Allow no reachable OSS vulnerability
+    finding_types:
+      - oss_vuln
+    options:
+      reachable: true
