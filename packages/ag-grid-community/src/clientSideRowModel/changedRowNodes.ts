@@ -8,9 +8,9 @@ export class ChangedRowNodes<TData = any> {
 
     /** Marks a row as removed. Order of operations is: remove, update, add */
     public remove(node: IRowNode<TData>): void {
-        this.removals.add(node as RowNode<TData>);
-        if (!this.updates.delete(node as RowNode<TData>)) {
-            this.adds.delete(node as RowNode<TData>);
+        if (!this.adds.delete(node as RowNode<TData>)) {
+            this.updates.delete(node as RowNode<TData>);
+            this.removals.add(node as RowNode<TData>);
         }
     }
 

@@ -183,8 +183,8 @@ describe('ag-grid rows-ordering', () => {
             └── LEAF id:7 value:700
         `);
         expect(rowDataUpdatedCount).toBe(5);
-        expect(modelUpdatedCount).toBe(4);
-        expect(compareCalled).toBe(true);
+        expect(modelUpdatedCount).toBe(3);
+        expect(compareCalled).toBe(false);
 
         compareCalled = false;
         api.updateGridOptions({ suppressModelUpdateAfterUpdateTransaction: false, rowData: rowData3 });
@@ -198,7 +198,7 @@ describe('ag-grid rows-ordering', () => {
             └── LEAF id:4 value:40
         `);
         expect(rowDataUpdatedCount).toBe(6);
-        expect(modelUpdatedCount).toBe(5);
+        expect(modelUpdatedCount).toBe(4);
         expect(compareCalled).toBe(true);
 
         compareCalled = false;
@@ -213,7 +213,7 @@ describe('ag-grid rows-ordering', () => {
             └── LEAF id:4 value:400
         `);
         expect(rowDataUpdatedCount).toBe(7);
-        expect(modelUpdatedCount).toBe(6);
+        expect(modelUpdatedCount).toBe(5);
         expect(compareCalled).toBe(true);
     });
 });
