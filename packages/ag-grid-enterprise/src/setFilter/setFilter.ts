@@ -56,7 +56,7 @@ export class SetFilter<V = string> extends ProvidedFilter<SetFilterModel, V> imp
     private valueSvc: ValueService;
     private dataTypeSvc?: DataTypeService;
 
-    protected filterType = 'set' as const;
+    public readonly filterType = 'set' as const;
 
     public wireBeans(beans: BeanCollection) {
         this.rowGroupColsSvc = beans.rowGroupColsSvc;

@@ -17,6 +17,8 @@ export interface SetFilterModel extends ProvidedFilterModel {
  * @param V type of value in the Set Filter
  */
 export interface ISetFilter<V = string> extends IProvidedFilter {
+    readonly filterType: 'set';
+
     /**
      * Returns a model representing the current state of the filter, or `null` if the filter is
      * not active.

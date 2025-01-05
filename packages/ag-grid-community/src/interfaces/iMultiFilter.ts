@@ -12,6 +12,8 @@ import type {
 
 /** Interface contract for the public aspects of the ProvidedFilter implementation(s). */
 export interface IMultiFilter extends IProvidedFilter {
+    readonly filterType: 'multi';
+
     /** @returns the child filter instance at the given index. */
     getChildFilterInstance(index: number): IFilter | undefined;
 }

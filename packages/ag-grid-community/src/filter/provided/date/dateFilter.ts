@@ -29,7 +29,7 @@ export class DateFilter extends ScalarFilter<DateFilterModel, Date, DateCompWrap
     private maxValidDate: Date | null = null;
     private filterModelFormatter: DateFilterModelFormatter;
 
-    protected filterType = 'date' as const;
+    public readonly filterType = 'date' as const;
 
     constructor() {
         super('dateFilter');
