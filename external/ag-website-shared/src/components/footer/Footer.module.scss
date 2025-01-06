@@ -38,6 +38,7 @@
     margin-right: auto;
     margin-left: auto;
     padding: $spacing-size-2;
+
     @media screen and (min-width: $breakpoint-site-footer-five-column) {
         justify-content: space-between;
     }
