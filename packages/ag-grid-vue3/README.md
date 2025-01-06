@@ -207,7 +207,23 @@ export default {
 </script>
 ```
 
-**2. Define Rows and Columns**
+**2. Register Modules**
+
+Register the `AllCommunityModule` to access all Community features:
+
+```js
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+```
+
+<blockquote>
+    <p>ℹ️ <b>Note:</b></p>
+    <p>To minimize bundle size, only register the modules you want to use. See the <a href="https://www.ag-grid.com/vue-data-grid/modules/">Modules</a> page for more information.</p>
+</blockquote>
+
+**3. Define Rows and Columns**
 
 ```js
 setup() {
@@ -233,7 +249,7 @@ setup() {
 },
 ```
 
-**3. Vue Data Grid Component**
+**4. Vue Data Grid Component**
 
 Rows and Columns are set as ag-grid-vue component attributes. Grid height is applied through the style attribute.
 

@@ -1,12 +1,5 @@
 // Framework Code Snippets
-const {
-    quickStartReact,
-    quickStartReactModule,
-    quickStartAngular,
-    quickStartAngularModule,
-    quickStartVue3,
-    quickStartVue3Module,
-} = require('./readme-framework-content');
+const { quickStartReact, quickStartAngular, quickStartVue3 } = require('./readme-framework-content');
 
 // README Files
 const patterns = [
@@ -89,7 +82,7 @@ const updateContent = (readme) => {
     newReadme = updateQuickStartDescription(newReadme, packageTitle);
 
     // Update Setup for Frameworks
-    newReadme = updateSetup(newReadme, packageTitle, isModule);
+    newReadme = updateSetup(newReadme, packageTitle);
 
     // Update Installation for Modules
     if (isModule) {
@@ -143,18 +136,18 @@ const updateQuickStartDescription = (content, packageTitle) => {
     return content.replace(regex, newSection);
 };
 
-const updateSetup = (content, packageTitle, isModule) => {
+const updateSetup = (content, packageTitle) => {
     let newContent;
     const normalizedTitle = packageTitle.trim().toLowerCase();
     switch (normalizedTitle) {
         case 'react':
-            newContent = isModule ? quickStartReactModule : quickStartReact;
+            newContent = quickStartReact;
             break;
         case 'angular':
-            newContent = isModule ? quickStartAngularModule : quickStartAngular;
+            newContent = quickStartAngular;
             break;
         case 'vue3':
-            newContent = isModule ? quickStartVue3Module : quickStartVue3;
+            newContent = quickStartVue3;
             break;
         default:
             return content;

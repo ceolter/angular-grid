@@ -199,7 +199,23 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 ```
 
-**2. Define Rows and Columns**
+**2. Register Modules**
+
+Register the `AllCommunityModule` to access all Community features:
+
+```js
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+```
+
+<blockquote>
+    <p>ℹ️ <b>Note:</b></p>
+    <p>To minimize bundle size, only register the modules you want to use. See the <a href="https://www.ag-grid.com/angular-data-grid/modules/">Modules</a> page for more information.</p>
+</blockquote>
+
+**3. Define Rows and Columns**
 
 ```js
 @Component({
@@ -228,7 +244,7 @@ export class AppComponent {
 }
 ```
 
-**3. Create the Angular Data Grid Component**
+**4. Create the Angular Data Grid Component**
 
 ```js
 template: `
