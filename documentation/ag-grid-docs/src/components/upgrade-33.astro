@@ -80,10 +80,10 @@ const isVue = framework === 'vue';
 </p>
 <p>
     <Code
-        code={`import { AllCommunityModules, ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
+        code={`import { AllCommunityModule, ModuleRegistry, provideGlobalGridOptions } from 'ag-grid-community';
 
 // Register all community features
-ModuleRegistry.registerModules([AllCommunityModules]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 // Mark all grids as using legacy themes
 provideGlobalGridOptions({ theme: "legacy"});
