@@ -145,7 +145,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
 
         let destroyFunc: () => null;
 
-        if (this.isAgEventEmitter(object)) {
+        if (isAgEventEmitter(object)) {
             object.__addEventListener(event, listener);
             destroyFunc = () => {
                 (object as IAgEventEmitter<T>).__removeEventListener(event, listener);
@@ -172,13 +172,6 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
             this.destroyFunctions = this.destroyFunctions.filter((fn) => fn !== destroyFunc);
             return null;
         };
-    }
-
-    // type guard for IAgEventEmitter
-    private isAgEventEmitter<TEvent extends string>(
-        object: IEventEmitter<TEvent> | IAgEventEmitter<TEvent>
-    ): object is IAgEventEmitter<TEvent> {
-        return (object as IAgEventEmitter<TEvent>).__addEventListener !== undefined;
     }
 
     /**
@@ -314,4 +307,11 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     protected destroyBeans<T extends Bean | null | undefined>(beans: T[], context?: Context): T[] {
         return (context || this.stubContext).destroyBeans(beans);
     }
+}
+
+// type guard for IAgEventEmitter
+function isAgEventEmitter<TEvent extends string>(
+    object: IEventEmitter<TEvent> | IAgEventEmitter<TEvent>
+): object is IAgEventEmitter<TEvent> {
+    return (object as IAgEventEmitter<TEvent>).__addEventListener !== undefined;
 }
