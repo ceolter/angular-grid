@@ -1,6 +1,7 @@
 @use 'design-system' as *;
 
 .footer {
+    width: 100%;
     border-top: 1px solid var(--color-border-secondary);
     padding-top: $spacing-size-10;
     padding-bottom: calc($spacing-size-10 * 2);
@@ -33,6 +34,10 @@
 }
 
 .footerColumns {
+    max-width: calc(var(--layout-max-width-small) + var(--layout-horizontal-margins) * 2);
+    margin-right: auto;
+    margin-left: auto;
+    padding: $spacing-size-2;
     @media screen and (min-width: $breakpoint-site-footer-five-column) {
         justify-content: space-between;
     }
