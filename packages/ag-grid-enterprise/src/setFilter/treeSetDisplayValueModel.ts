@@ -1,11 +1,19 @@
 import type { TextFormatter } from 'ag-grid-community';
-import { _warn } from 'ag-grid-community';
+import { _missing, _warn } from 'ag-grid-community';
 
 import type { ISetDisplayValueModel, SetFilterModelTreeItem } from './iSetDisplayValueModel';
 import { SET_FILTER_ADD_SELECTION_TO_FILTER, SET_FILTER_SELECT_ALL } from './iSetDisplayValueModel';
 
-const DATE_TREE_LIST_PATH_GETTER = (date: Date | null) =>
-    date ? [String(date.getFullYear()), String(date.getMonth() + 1), String(date.getDate())] : null;
+const DATE_TREE_LIST_PATH_GETTER = (date: Date | null) => {
+    if (_missing(date)) {
+        return null;
+    }
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+        return ['NaN'];
+    }
+    return [String(date.getFullYear()), String(date.getMonth() + 1), String(date.getDate())];
+};
+
 export class TreeSetDisplayValueModel<V> implements ISetDisplayValueModel<V> {
     /** all displayed items in a tree structure */
     private allDisplayedItemsTree: SetFilterModelTreeItem[] = [];

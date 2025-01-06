@@ -953,6 +953,9 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
                         },
                         treeList: true,
                         treeListFormatter: (pathKey: string | null, level: number) => {
+                            if (pathKey === 'NaN') {
+                                return translate('invalidDate', 'Invalid Date');
+                            }
                             if (level === 1 && pathKey != null) {
                                 const monthKey = MONTH_KEYS[Number(pathKey) - 1];
                                 return translate(monthKey, MONTH_LOCALE_TEXT[monthKey]);
