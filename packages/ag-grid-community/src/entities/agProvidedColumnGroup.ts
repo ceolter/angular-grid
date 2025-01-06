@@ -157,10 +157,10 @@ export class AgProvidedColumnGroup extends BeanStub<AgProvidedColumnGroupEvent> 
         }
 
         const listener = this.onColumnVisibilityChanged.bind(this);
-        this.getLeafColumns().forEach((col) => col.addEventListener('visibleChanged', listener));
+        this.getLeafColumns().forEach((col) => col.__addEventListener('visibleChanged', listener));
 
         this.expandableListenerRemoveCallback = () => {
-            this.getLeafColumns().forEach((col) => col.removeEventListener('visibleChanged', listener));
+            this.getLeafColumns().forEach((col) => col.__removeEventListener('visibleChanged', listener));
             this.expandableListenerRemoveCallback = null;
         };
     }

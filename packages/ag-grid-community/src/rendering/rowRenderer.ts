@@ -339,18 +339,18 @@ export class RowRenderer extends BeanStub implements NamedBean {
                 forEachCellWithThisCol((cellCtrl) => cellCtrl.onColDefChanged());
             };
 
-            col.addEventListener('leftChanged', leftChangedListener);
-            col.addEventListener('widthChanged', widthChangedListener);
-            col.addEventListener('firstRightPinnedChanged', firstRightPinnedChangedListener);
-            col.addEventListener('lastLeftPinnedChanged', lastLeftPinnedChangedListener);
-            col.addEventListener('colDefChanged', colDefChangedListener);
+            col.__addEventListener('leftChanged', leftChangedListener);
+            col.__addEventListener('widthChanged', widthChangedListener);
+            col.__addEventListener('firstRightPinnedChanged', firstRightPinnedChangedListener);
+            col.__addEventListener('lastLeftPinnedChanged', lastLeftPinnedChangedListener);
+            col.__addEventListener('colDefChanged', colDefChangedListener);
 
             this.destroyFuncsForColumnListeners.push(() => {
-                col.removeEventListener('leftChanged', leftChangedListener);
-                col.removeEventListener('widthChanged', widthChangedListener);
-                col.removeEventListener('firstRightPinnedChanged', firstRightPinnedChangedListener);
-                col.removeEventListener('lastLeftPinnedChanged', lastLeftPinnedChangedListener);
-                col.removeEventListener('colDefChanged', colDefChangedListener);
+                col.__removeEventListener('leftChanged', leftChangedListener);
+                col.__removeEventListener('widthChanged', widthChangedListener);
+                col.__removeEventListener('firstRightPinnedChanged', firstRightPinnedChangedListener);
+                col.__removeEventListener('lastLeftPinnedChanged', lastLeftPinnedChangedListener);
+                col.__removeEventListener('colDefChanged', colDefChangedListener);
             });
         });
     }

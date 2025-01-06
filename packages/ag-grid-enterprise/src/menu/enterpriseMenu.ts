@@ -257,12 +257,12 @@ export class EnterpriseMenuFactory extends BeanStub implements NamedBean, IMenuF
         closedFuncsArr: (() => void)[]
     ) {
         stopAnchoringPromise.then((stopAnchoringFunc: () => void) => {
-            column.addEventListener('leftChanged', stopAnchoringFunc);
-            column.addEventListener('visibleChanged', stopAnchoringFunc);
+            column.__addEventListener('leftChanged', stopAnchoringFunc);
+            column.__addEventListener('visibleChanged', stopAnchoringFunc);
 
             closedFuncsArr.push(() => {
-                column.removeEventListener('leftChanged', stopAnchoringFunc);
-                column.removeEventListener('visibleChanged', stopAnchoringFunc);
+                column.__removeEventListener('leftChanged', stopAnchoringFunc);
+                column.__removeEventListener('visibleChanged', stopAnchoringFunc);
             });
         });
     }

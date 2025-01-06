@@ -224,9 +224,9 @@ export class DataTypeService extends BeanStub implements NamedBean {
         ) => {
             columnStateUpdates.add(event.key);
         };
-        column.addEventListener('columnStateUpdated', columnListener);
+        column.__addEventListener('columnStateUpdated', columnListener);
         this.columnStateUpdateListenerDestroyFuncs.push(() =>
-            column.removeEventListener('columnStateUpdated', columnListener)
+            column.__removeEventListener('columnStateUpdated', columnListener)
         );
     }
 
