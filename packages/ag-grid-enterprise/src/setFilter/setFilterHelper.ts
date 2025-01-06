@@ -9,8 +9,6 @@ import type {
 } from 'ag-grid-community';
 import { BeanStub, GROUP_AUTO_COLUMN_ID, _error, _makeNull, _toStringOrNull } from 'ag-grid-community';
 
-import { SetValueModelFilteringKeys } from './filteringKeys';
-
 export interface SetFilterHelperParams<TValue = string> extends ISetFilterParams<any, TValue> {
     colDef: ColDef<any, TValue>;
     column: Column<TValue>;
@@ -25,18 +23,9 @@ export class SetFilterHelper<TValue = string> extends BeanStub {
     public noValueFormatterSupplied = false;
 
     private params: SetFilterHelperParams<TValue>;
-    /**
-     * Here we keep track of the keys that are currently being used for filtering.
-     * In most cases, the filtering keys are the same as the selected keys,
-     * but for the specific case when excelMode = 'windows' and the user has ticked 'Add current selection to filter',
-     * the filtering keys can be different from the selected keys.
-     */
-    public filteringKeys: SetValueModelFilteringKeys;
 
     public init(params: SetFilterHelperParams<TValue>): void {
         this.refresh(params);
-
-        this.filteringKeys = new SetValueModelFilteringKeys({ caseFormat: this.caseFormat.bind(this) });
     }
 
     public refresh(params: SetFilterHelperParams<TValue>): void {

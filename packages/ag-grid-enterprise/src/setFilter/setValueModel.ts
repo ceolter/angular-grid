@@ -21,7 +21,6 @@ import {
 } from 'ag-grid-community';
 
 import { ClientSideValuesExtractor } from './clientSideValueExtractor';
-import type { SetValueModelFilteringKeys } from './filteringKeys';
 import { FlatSetDisplayValueModel } from './flatSetDisplayValueModel';
 import type { ISetDisplayValueModel, SetFilterModelTreeItem } from './iSetDisplayValueModel';
 import type { ISetFilterLocaleText } from './localeText';
@@ -43,7 +42,6 @@ export interface SetValueModelParams<V> {
     usingComplexObjects?: boolean;
     treeDataTreeList?: boolean;
     groupingTreeList?: boolean;
-    filteringKeys: SetValueModelFilteringKeys;
 }
 
 type SetValueModelEvent = 'availableValuesChanged' | 'loadingStart' | 'loadingEnd';
@@ -85,14 +83,6 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     /** Keys that have been selected for this filter. */
     private selectedKeys = new Set<string | null>();
 
-    /**
-     * Here we keep track of the keys that are currently being used for filtering.
-     * In most cases, the filtering keys are the same as the selected keys,
-     * but for the specific case when excelMode = 'windows' and the user has ticked 'Add current selection to filter',
-     * the filtering keys can be different from the selected keys.
-     */
-    private filteringKeys: SetValueModelFilteringKeys;
-
     private initialised: boolean = false;
 
     constructor(private params: SetValueModelParams<V>) {
@@ -109,7 +99,6 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
             translate,
             caseFormat,
             createKey,
-            filteringKeys,
         } = this.params;
         const {
             column,
@@ -133,7 +122,6 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
         this.formatter = textFormatter ?? ((value) => value ?? null);
         this.doesRowPassOtherFilters = doesRowPassOtherFilter;
         this.suppressSorting = suppressSorting || false;
-        this.filteringKeys = filteringKeys;
         const keyComparator = comparator ?? (colDef.comparator as (a: any, b: any) => number);
         const treeDataOrGrouping = !!treeDataTreeList || !!groupingTreeList;
         // If using complex objects and a comparator is provided, sort by values, otherwise need to sort by the string keys.
@@ -615,19 +603,14 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
         // When excelMode = 'windows' and the user has ticked 'Add current selection to filter'
         // the filtering keys can be different from the selected keys, and they should be included
         // in the model.
-        const filteringKeys = this.isAddCurrentSelectionToFilterChecked()
-            ? this.filteringKeys.allFilteringKeys()
-            : null;
+        const filteringKeys = this.isAddCurrentSelectionToFilterChecked() ? this.filterParams.model?.values : undefined;
 
-        if (filteringKeys && filteringKeys.size > 0) {
+        if (filteringKeys?.length) {
             if (this.selectedKeys) {
                 // When existing filtering keys are present along with selected keys,
                 // we combine them and return the result.
                 // We use a set structure to avoid duplicates
-                const modelKeys = new Set<string | null>([
-                    ...Array.from(filteringKeys),
-                    ...Array.from(this.selectedKeys).filter((key) => !filteringKeys.has(key)),
-                ]);
+                const modelKeys = new Set<string | null>([...filteringKeys, ...this.selectedKeys]);
                 return Array.from(modelKeys);
             }
 

@@ -43,11 +43,11 @@ export class TextFilterEvaluator extends SimpleFilterEvaluator<TextFilterModel, 
         super(new TextFilterHelper());
     }
 
-    public override init(
+    protected override updateParams(
         params: FilterEvaluatorParams<any, any, string, TextFilterModel | ICombinedSimpleModel<TextFilterModel>> &
             ITextFilterParams
     ): void {
-        super.init(params);
+        super.updateParams(params);
 
         this.matcher = params.textMatcher ?? defaultMatcher;
         this.formatter = params.textFormatter ?? (params.caseSensitive ? defaultFormatter : defaultLowercaseFormatter);

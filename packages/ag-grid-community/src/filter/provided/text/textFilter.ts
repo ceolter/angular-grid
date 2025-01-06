@@ -22,8 +22,8 @@ export class TextFilter extends SimpleFilter<TextFilterModel, string, TextFilter
 
     protected override defaultDebounceMs: number = 500;
 
-    protected override setParams(params: TextFilterParams): void {
-        super.setParams(params);
+    protected override commonUpdateSimpleParams(params: TextFilterParams): void {
+        super.commonUpdateSimpleParams(params);
 
         this.filterModelFormatter = new TextFilterModelFormatter(
             this.getLocaleTextFunc.bind(this),

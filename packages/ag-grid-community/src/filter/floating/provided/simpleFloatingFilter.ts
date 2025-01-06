@@ -70,15 +70,15 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     }
 
     public init(params: IFloatingFilterParams): void {
-        this.setSimpleParams(params, false);
-    }
-
-    private setSimpleParams(params: IFloatingFilterParams, update: boolean = true): void {
         const optionsFactory = new OptionsFactory();
         this.optionsFactory = optionsFactory;
         optionsFactory.init(params.filterParams as ISimpleFilterParams, this.getDefaultOptions());
 
-        const defaultOption = optionsFactory.defaultOption;
+        this.setSimpleParams(params, false);
+    }
+
+    private setSimpleParams(params: IFloatingFilterParams, update: boolean = true): void {
+        const defaultOption = this.optionsFactory.defaultOption;
         // Initial call
         if (!update) {
             this.lastType = defaultOption;
@@ -97,6 +97,8 @@ export abstract class SimpleFloatingFilter extends Component implements IFloatin
     }
 
     public refresh(params: IFloatingFilterParams): void {
+        this.optionsFactory.refresh(params.filterParams as ISimpleFilterParams, this.getDefaultOptions());
+
         this.setSimpleParams(params);
     }
 

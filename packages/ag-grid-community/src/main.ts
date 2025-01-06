@@ -178,6 +178,7 @@ export {
     FilterEvaluatorGeneratorFunc,
     FilterEvaluatorGeneratorFuncParams,
     FilterEvaluatorParams,
+    FilterModelValidation,
 } from './interfaces/iFilter';
 export {
     ISetFilter,

@@ -2,6 +2,7 @@ import type {
     FilterEvaluator,
     FilterEvaluatorFuncParams,
     FilterEvaluatorParams,
+    FilterModelValidation,
     IDoesFilterPassParams,
 } from '../../interfaces/iFilter';
 import type {
@@ -38,11 +39,27 @@ export abstract class SimpleFilterEvaluator<
     public init(
         params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
     ): void {
-        this.params = params;
-
         const optionsFactory = new OptionsFactory();
         this.optionsFactory = optionsFactory;
         optionsFactory.init(params, this.helper.defaultOptions);
+
+        this.updateParams(params);
+    }
+
+    public refresh(
+        params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
+    ): void {
+        if (params.source === 'apiParams') {
+            this.optionsFactory.refresh(params, this.helper.defaultOptions);
+
+            this.updateParams(params);
+        }
+    }
+
+    protected updateParams(
+        params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
+    ): void {
+        this.params = params;
     }
 
     public doesFilterPass(params: FilterEvaluatorFuncParams<any, TModel | ICombinedSimpleModel<TModel>>): boolean {
@@ -68,6 +85,40 @@ export abstract class SimpleFilterEvaluator<
         const cellValue = this.params.getValue(params.node);
 
         return models[combineFunction]((m) => this.individualConditionPasses(params, m, cellValue));
+    }
+
+    public validateModel(
+        params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
+    ): FilterModelValidation<TModel | ICombinedSimpleModel<TModel>> {
+        const { model, filterOptions, maxNumConditions } = params;
+
+        const conditions: TModel[] | null = model ? (<ICombinedSimpleModel<TModel>>model).conditions ?? [model] : null;
+
+        // Invalid when one of the existing condition options is not in new options list
+        const newOptionsList =
+            filterOptions?.map((option) => (typeof option === 'string' ? option : option.displayKey)) ??
+            this.helper.defaultOptions;
+
+        const allConditionsExistInNewOptionsList =
+            !conditions ||
+            conditions.every((condition) => newOptionsList.find((option) => option === condition.type) !== undefined);
+
+        if (!allConditionsExistInNewOptionsList) {
+            return { valid: false, model: null };
+        }
+
+        // Check number of conditions vs maxNumConditions
+        if (typeof maxNumConditions === 'number' && conditions && conditions.length > maxNumConditions) {
+            return {
+                valid: false,
+                model: {
+                    ...(model as ICombinedSimpleModel<TModel>),
+                    conditions: conditions.slice(0, maxNumConditions),
+                },
+            };
+        }
+
+        return { valid: true };
     }
 
     /** returns true if the row passes the said condition */

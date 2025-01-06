@@ -20,6 +20,7 @@ export interface FilterEvaluatorParams<TData = any, TContext = any, TValue = any
     model: TModel | null;
     colDef: ColDef<TData, TValue>;
     column: Column<TValue>;
+    source: 'init' | 'ui' | 'apiModel' | 'apiParams';
     /**
      * Get the cell value for the given row node and column, which can be the column ID, definition, or `Column` object.
      * If no column is provided, the column this filter is on will be used.
@@ -30,10 +31,18 @@ export interface FilterEvaluatorParams<TData = any, TContext = any, TValue = any
     ) => TValue | null | undefined;
 }
 
+export interface FilterModelValidation<TModel = any> {
+    valid: boolean;
+    model?: TModel | null;
+}
+
 export interface FilterEvaluator<TData = any, TContext = any, TValue = any, TModel = any, TCustomParams = object> {
     init?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
     refresh?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
     doesFilterPass(params: FilterEvaluatorFuncParams<TData, TModel>): boolean;
+    validateModel?(
+        params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams
+    ): FilterModelValidation<TModel> | Promise<FilterModelValidation<TModel>>;
     destroy?(): void;
 }
 
@@ -230,7 +239,8 @@ export interface FilterDisplayParams<TData = any, TContext = any, TModel = any> 
     /** The current filter model for the component. */
     model: TModel | null;
     /** Callback that should be called every time the model in the component changes. */
-    onModelChange: (model: TModel | null) => void;
+    onModelChange: (model: TModel | null, additionalEventAttributes?: any) => void;
+    source: 'init' | 'ui' | 'apiModel' | 'apiParams' | 'validation';
     /**
      * @deprecated V33.1 Not used when using filter evaluators
      */

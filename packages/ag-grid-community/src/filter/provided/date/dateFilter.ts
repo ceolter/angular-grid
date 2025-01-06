@@ -39,13 +39,14 @@ export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateFilterPa
         this.dateConditionFromComps[0].afterGuiAttached(params);
     }
 
-    protected override setParams(params: DateFilterParams): void {
-        super.setParams(params);
+    protected override commonUpdateSimpleParams(params: DateFilterParams): void {
+        super.commonUpdateSimpleParams(params);
 
         const yearParser = (param: keyof DateFilterParams, fallback: number) => {
-            if (params[param] != null) {
-                if (!isNaN(params[param])) {
-                    return params[param] == null ? fallback : Number(params[param]);
+            const value = params[param];
+            if (value != null) {
+                if (!isNaN(value)) {
+                    return value == null ? fallback : Number(value);
                 } else {
                     _warn(82, { param });
                 }
@@ -54,31 +55,29 @@ export class DateFilter extends SimpleFilter<DateFilterModel, Date, DateFilterPa
             return fallback;
         };
 
-        this.minValidYear = yearParser('minValidYear', DEFAULT_MIN_YEAR);
-        this.maxValidYear = yearParser('maxValidYear', DEFAULT_MAX_YEAR);
+        const minValidYear = yearParser('minValidYear', DEFAULT_MIN_YEAR);
+        const maxValidYear = yearParser('maxValidYear', DEFAULT_MAX_YEAR);
+        this.minValidYear = minValidYear;
+        this.maxValidYear = maxValidYear;
 
-        if (this.minValidYear > this.maxValidYear) {
+        if (minValidYear > maxValidYear) {
             _warn(83);
         }
 
-        this.minValidDate = params.minValidDate
-            ? params.minValidDate instanceof Date
-                ? params.minValidDate
-                : _parseDateTimeFromString(params.minValidDate)
-            : null;
+        const { minValidDate, maxValidDate } = params;
 
-        this.maxValidDate = params.maxValidDate
-            ? params.maxValidDate instanceof Date
-                ? params.maxValidDate
-                : _parseDateTimeFromString(params.maxValidDate)
-            : null;
+        const parsedMinValidDate = minValidDate instanceof Date ? minValidDate : _parseDateTimeFromString(minValidDate);
+        this.minValidDate = parsedMinValidDate;
 
-        if (this.minValidDate && this.maxValidDate && this.minValidDate > this.maxValidDate) {
+        const parsedMaxValidDate = maxValidDate instanceof Date ? maxValidDate : _parseDateTimeFromString(maxValidDate);
+        this.maxValidDate = parsedMaxValidDate;
+
+        if (parsedMinValidDate && parsedMaxValidDate && parsedMinValidDate > parsedMaxValidDate) {
             _warn(84);
         }
 
         this.filterModelFormatter = new DateFilterModelFormatter(
-            this.params,
+            params,
             this.getLocaleTextFunc.bind(this),
             this.optionsFactory
         );

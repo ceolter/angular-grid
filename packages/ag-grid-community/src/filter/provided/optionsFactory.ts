@@ -6,12 +6,22 @@ import type { ISimpleFilterParams } from './iSimpleFilter';
 export class OptionsFactory {
     protected customFilterOptions: { [name: string]: IFilterOptionDef } = {};
     public filterOptions: (IFilterOptionDef | string)[];
-    public defaultOption: string;
+    public defaultOption?: string;
 
     public init(params: ISimpleFilterParams, defaultOptions: string[]): void {
-        this.filterOptions = params.filterOptions || defaultOptions;
+        this.filterOptions = params.filterOptions ?? defaultOptions;
         this.mapCustomOptions();
-        this.selectDefaultItem(params);
+        this.defaultOption = this.getDefaultItem(params.defaultOption);
+    }
+
+    public refresh(params: ISimpleFilterParams, defaultOptions: string[]): void {
+        const filterOptions = params.filterOptions ?? defaultOptions;
+        if (this.filterOptions !== filterOptions) {
+            this.filterOptions = filterOptions;
+            this.customFilterOptions = {};
+            this.mapCustomOptions();
+        }
+        this.defaultOption = this.getDefaultItem(params.defaultOption);
     }
 
     private mapCustomOptions(): void {
@@ -44,17 +54,17 @@ export class OptionsFactory {
         });
     }
 
-    private selectDefaultItem(params: ISimpleFilterParams): void {
+    private getDefaultItem(defaultOption?: string): string | undefined {
         const { filterOptions } = this;
-        if (params.defaultOption) {
-            this.defaultOption = params.defaultOption;
+        if (defaultOption) {
+            return defaultOption;
         } else if (filterOptions.length >= 1) {
             const firstFilterOption = filterOptions[0];
 
             if (typeof firstFilterOption === 'string') {
-                this.defaultOption = firstFilterOption;
+                return firstFilterOption;
             } else if (firstFilterOption.displayKey) {
-                this.defaultOption = firstFilterOption.displayKey;
+                return firstFilterOption.displayKey;
             } else {
                 // invalid FilterOptionDef supplied as it doesn't contain a 'displayKey
                 _warn(73);
@@ -63,6 +73,7 @@ export class OptionsFactory {
             //no filter options for filter
             _warn(74);
         }
+        return undefined;
     }
 
     public getCustomOption(name?: string | null): IFilterOptionDef | undefined {

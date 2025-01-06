@@ -62,6 +62,91 @@ export class SetFilter<V = string>
         super('setFilter');
     }
 
+    protected override setParams(params: SetFilterParams<any, V>): void {
+        applyExcelModeOptions(params);
+        super.setParams(params);
+
+        const helper = (this.beans.setFilterSvc as SetFilterService).getHelper(params);
+        this.helper = helper;
+
+        this.valueModel = this.createManagedBean(
+            new SetValueModel({
+                filterParams: params,
+                translate: (key) => translateForSetFilter(this, key),
+                caseFormat: (v) => helper.caseFormat(v),
+                createKey: helper.createKey,
+                getValueFormatter: () => helper.valueFormatter,
+                usingComplexObjects: !!(params.keyCreator ?? params.colDef.keyCreator),
+                treeDataTreeList: helper.treeDataTreeList,
+                groupingTreeList: helper.groupingTreeList,
+            })
+        );
+
+        const setIsLoading = this.setIsLoading.bind(this);
+        this.addManagedListeners(this.valueModel, {
+            loadingStart: () => setIsLoading(true),
+            loadingEnd: () => setIsLoading(false),
+        });
+
+        this.initialiseFilterBodyUi();
+
+        this.addEventListenersForDataChanges();
+    }
+
+    public override refresh(newParams: SetFilterParams<any, V>): boolean {
+        applyExcelModeOptions(newParams);
+        return super.refresh(newParams);
+    }
+
+    // TODO - need to update to make the stuff work that this was refreshing
+    // protected override canRefresh(newParams: SetFilterParams<any, V>, oldParams: SetFilterParams<any, V>): boolean {
+    //     if (!super.canRefresh(newParams, oldParams)) {
+    //         return false;
+    //     }
+
+    //     applyExcelModeOptions(newParams);
+
+    //     // Those params have a large impact and should trigger a reload when they change.
+    //     const paramsThatForceReload: (keyof SetFilterParams<any, V>)[] = [
+    //         'treeList',
+    //         'treeListPathGetter',
+    //         'caseSensitive',
+    //     ];
+
+    //     if (paramsThatForceReload.some((param) => newParams[param] !== oldParams[param])) {
+    //         return false;
+    //     }
+
+    //     if (this.helper.haveColDefParamsChanged(newParams)) {
+    //         return false;
+    //     }
+
+    //     return true;
+    // }
+
+    protected override updateParams(
+        newParams: SetFilterParams<any, V>,
+        oldParams: SetFilterParams<any, V>
+    ): AgPromise<void> {
+        return new AgPromise((resolve) =>
+            super.updateParams(newParams, oldParams).then(() => {
+                this.helper.refresh(newParams);
+                this.updateMiniFilter();
+
+                if (newParams.suppressSelectAll !== oldParams.suppressSelectAll) {
+                    this.createVirtualListModel(newParams);
+                }
+
+                this.valueModel.updateOnParamsChange(newParams).then(() => {
+                    if (this.isAlive()) {
+                        this.refreshFilterValues();
+                    }
+                    resolve();
+                });
+            })
+        );
+    }
+
     public doesFilterPass(): boolean {
         // TODO remove
         return true;
@@ -164,57 +249,14 @@ export class SetFilter<V = string>
         return 'set-filter';
     }
 
-    public override setModel(model: SetFilterModel | null): AgPromise<void> {
+    protected override doSetModel(model: SetFilterModel | null): AgPromise<void> {
         if (model == null && this.valueModel.getModel() == null) {
             // refreshing is expensive. if new and old model are both null (e.g. nothing set), skip.
             // mini filter isn't contained within the model, so always reset
             this.setMiniFilter(null);
             return AgPromise.resolve();
         }
-        return super.setModel(model);
-    }
-
-    override refresh(params: SetFilterParams<any, V>): boolean {
-        const oldParams = this.params;
-
-        applyExcelModeOptions(params);
-
-        if (!super.refresh(params)) {
-            return false;
-        }
-
-        // Those params have a large impact and should trigger a reload when they change.
-        const paramsThatForceReload: (keyof SetFilterParams<any, V>)[] = [
-            'treeList',
-            'treeListPathGetter',
-            'caseSensitive',
-            'comparator',
-            'excelMode',
-        ];
-
-        if (paramsThatForceReload.some((param) => params[param] !== oldParams?.[param])) {
-            return false;
-        }
-
-        if (this.helper.haveColDefParamsChanged(params)) {
-            return false;
-        }
-
-        super.updateParams(params);
-        this.helper.refresh(params);
-        this.updateMiniFilter();
-
-        if (params.suppressSelectAll !== oldParams?.suppressSelectAll) {
-            this.createVirtualListModel(params);
-        }
-
-        this.valueModel.updateOnParamsChange(params).then(() => {
-            if (this.isAlive()) {
-                this.refreshFilterValues();
-            }
-        });
-
-        return true;
+        return super.doSetModel(model);
     }
 
     private setModelAndRefresh(values: SetFilterModelValue | null): AgPromise<void> {
@@ -260,38 +302,6 @@ export class SetFilter<V = string>
         }
 
         return a != null && b != null && _areEqual(a.values, b.values);
-    }
-
-    public override setParams(params: SetFilterParams<any, V>): void {
-        applyExcelModeOptions(params);
-
-        super.setParams(params);
-
-        this.helper = (this.beans.setFilterSvc as SetFilterService).getHelper(params);
-
-        this.valueModel = this.createManagedBean(
-            new SetValueModel({
-                filterParams: params,
-                translate: (key) => translateForSetFilter(this, key),
-                caseFormat: (v) => this.helper.caseFormat(v),
-                createKey: this.helper.createKey,
-                getValueFormatter: () => this.helper.valueFormatter,
-                usingComplexObjects: !!(params.keyCreator ?? params.colDef.keyCreator),
-                treeDataTreeList: this.helper.treeDataTreeList,
-                groupingTreeList: this.helper.groupingTreeList,
-                filteringKeys: this.helper.filteringKeys,
-            })
-        );
-
-        const setIsLoading = this.setIsLoading.bind(this);
-        this.addManagedListeners(this.valueModel, {
-            loadingStart: () => setIsLoading(true),
-            loadingEnd: () => setIsLoading(false),
-        });
-
-        this.initialiseFilterBodyUi();
-
-        this.addEventListenersForDataChanges();
     }
 
     private onAddCurrentSelectionToFilterChange(newValue: boolean) {
@@ -672,40 +682,17 @@ export class SetFilter<V = string>
         }
     }
 
-    public override applyModel(source: 'api' | 'ui' | 'rowDataUpdated' = 'api'): boolean {
+    protected override doApplyModel(source: 'api' | 'ui' | 'rowDataUpdated' = 'api'): {
+        changed: boolean;
+        model: SetFilterModel | null;
+    } {
         if (this.params.excelMode && source !== 'rowDataUpdated' && this.valueModel.isEverythingVisibleSelected()) {
             // In Excel, if the filter is applied with all visible values selected, then any active filter on the
             // column is removed. This ensures the filter is removed in this situation.
             this.valueModel.selectAllMatchingMiniFilter();
         }
 
-        // Here we implement AG-9090 TC2
-        // When 'Add current selection to filter' is visible and checked, but no filter is applied:
-        // Do NOT apply the current selection as filter.
-        const shouldKeepCurrentSelection =
-            this.valueModel.showAddCurrentSelectionToFilter() && this.valueModel.isAddCurrentSelectionToFilterChecked();
-        if (shouldKeepCurrentSelection && !this.getModel()) {
-            return false;
-        }
-
-        const result = super.applyModel(source, (appliedModel) => {
-            // keep appliedModelKeys in sync with the applied model
-            if (appliedModel) {
-                if (!shouldKeepCurrentSelection) {
-                    this.helper.filteringKeys.setFilteringKeys(new Set());
-                }
-
-                appliedModel.values.forEach((key) => {
-                    this.helper.filteringKeys.addFilteringKey(key);
-                });
-            } else {
-                if (!shouldKeepCurrentSelection) {
-                    this.helper.filteringKeys.setFilteringKeys(null);
-                }
-            }
-        });
-
-        return result;
+        return super.doApplyModel(source);
     }
 
     protected override isModelValid(model: SetFilterModel): boolean {

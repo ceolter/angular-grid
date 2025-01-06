@@ -22,22 +22,15 @@ export class NumberFilter extends SimpleFilter<NumberFilterModel, number, Number
         super('numberFilter', new NumberFilterHelper());
     }
 
-    override refresh(params: NumberFilterParams): boolean {
-        if (this.params.allowedCharPattern !== params.allowedCharPattern) {
-            return false;
-        }
-
-        return super.refresh(params);
-    }
-
     protected override defaultDebounceMs: number = 500;
 
-    protected override setParams(params: NumberFilterParams): void {
-        super.setParams(params);
+    protected override commonUpdateSimpleParams(params: NumberFilterParams): void {
+        super.commonUpdateSimpleParams(params);
+
         this.filterModelFormatter = new NumberFilterModelFormatter(
             this.getLocaleTextFunc.bind(this),
             this.optionsFactory,
-            this.params.numberFormatter
+            params.numberFormatter
         );
     }
 

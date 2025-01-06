@@ -84,6 +84,43 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
     // allow retrieval of all condition input values.
     protected abstract getValues(position: number): Tuple<V>;
 
+    protected override setParams(params: P): void {
+        super.setParams(params);
+
+        this.optionsFactory = new OptionsFactory();
+        this.optionsFactory.init(params, this.helper.defaultOptions);
+
+        this.commonUpdateSimpleParams(params);
+
+        this.createOption();
+        this.createMissingConditionsAndOperators();
+    }
+
+    protected override updateParams(newParams: P, oldParams: P): AgPromise<void> {
+        this.optionsFactory.refresh(newParams, this.helper.defaultOptions);
+
+        return super.updateParams(newParams, oldParams).then(() => {
+            this.commonUpdateSimpleParams(newParams);
+        });
+    }
+
+    protected commonUpdateSimpleParams(params: P): void {
+        this.setNumConditions(params);
+
+        this.defaultJoinOperator = getDefaultJoinOperator(params.defaultJoinOperator);
+        this.filterPlaceholder = params.filterPlaceholder;
+
+        this.createFilterListOptions();
+
+        if (this.isReadOnly()) {
+            // only do this when read only (so no other focusable elements), otherwise the tab order breaks
+            // as the tabbed layout managed focus feature will focus the body when it shouldn't
+            this.eFilterBody.setAttribute('tabindex', '-1');
+        } else {
+            this.eFilterBody.removeAttribute('tabindex');
+        }
+    }
+
     // floating filter calls this when user applies filter from floating filter
     public onFloatingFilterChanged(type: string | null | undefined, value: V | null): void {
         this.setTypeFromFloatingFilter(type);
@@ -174,52 +211,6 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
         return res;
     }
 
-    private shouldRefresh(newParams: P): boolean {
-        const model = this.getModel();
-        const conditions: ISimpleFilterModel[] | null = model ? (<any>model).conditions ?? [model] : null;
-
-        // Do Not refresh when one of the existing condition options is not in new options list
-        const newOptionsList =
-            newParams.filterOptions?.map((option) => (typeof option === 'string' ? option : option.displayKey)) ??
-            this.helper.defaultOptions;
-
-        const allConditionsExistInNewOptionsList =
-            !conditions ||
-            conditions.every((condition) => newOptionsList.find((option) => option === condition.type) !== undefined);
-        if (!allConditionsExistInNewOptionsList) {
-            return false;
-        }
-
-        // Check number of conditions vs maxNumConditions
-        if (
-            typeof newParams.maxNumConditions === 'number' &&
-            conditions &&
-            conditions.length > newParams.maxNumConditions
-        ) {
-            return false;
-        }
-
-        return true;
-    }
-
-    override refresh(newParams: P): boolean {
-        if (!this.shouldRefresh(newParams)) {
-            return false;
-        }
-
-        const parentRefreshed = super.refresh(newParams);
-        if (!parentRefreshed) {
-            return false;
-        }
-
-        this.setParams(newParams);
-        this.removeConditionsAndOperators(0);
-        this.createOption();
-        this.setModel(this.getModel());
-
-        return true;
-    }
-
     protected setModelIntoUi(model: ISimpleFilterModel | ICombinedSimpleModel<M>): AgPromise<void> {
         const isCombined = (model as any).operator;
 
@@ -274,28 +265,6 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
     public doesFilterPass(): boolean {
         // TODO remove
         return true;
-    }
-
-    protected override setParams(params: P): void {
-        super.setParams(params);
-
-        this.setNumConditions(params);
-
-        this.defaultJoinOperator = getDefaultJoinOperator(params.defaultJoinOperator);
-        this.filterPlaceholder = params.filterPlaceholder;
-
-        this.optionsFactory = new OptionsFactory();
-        this.optionsFactory.init(params, this.helper.defaultOptions);
-        this.createFilterListOptions();
-
-        this.createOption();
-        this.createMissingConditionsAndOperators();
-
-        if (this.isReadOnly()) {
-            // only do this when read only (so no other focusable elements), otherwise the tab order breaks
-            // as the tabbed layout managed focus feature will focus the body when it shouldn't
-            this.eFilterBody.setAttribute('tabindex', '-1');
-        }
     }
 
     private setNumConditions(params: P): void {
