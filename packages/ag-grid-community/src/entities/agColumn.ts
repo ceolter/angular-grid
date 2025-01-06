@@ -12,6 +12,7 @@ import type {
     HeaderColumnId,
     ProvidedColumnGroup,
 } from '../interfaces/iColumn';
+import type { IAgEventEmitter } from '../interfaces/iEventEmitter';
 import type { IFrameworkEventListenerService } from '../interfaces/iFrameworkEventListenerService';
 import type { IRowNode } from '../interfaces/iRowNode';
 import { LocalEventService } from '../localEventService';
@@ -51,7 +52,10 @@ export function isColumn(col: Column | ColumnGroup | ProvidedColumnGroup): col i
 // appear as a child of either the original tree or the displayed tree. However the relevant group classes
 // for each type only implements one, as each group can only appear in it's associated tree (eg ProvidedColumnGroup
 // can only appear in OriginalColumn tree).
-export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements Column {
+export class AgColumn<TValue = any>
+    extends BeanStub<ColumnEventName>
+    implements Column, IAgEventEmitter<ColumnEventName>
+{
     public readonly isColumn = true as const;
 
     private frameworkEventListenerService?: IFrameworkEventListenerService<any, any>;
@@ -251,6 +255,22 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         return this.highlighted;
     }
 
+    public __addEventListener<T extends ColumnEventName>(
+        eventType: T,
+        listener: (params: ColumnEvent<T>) => void
+    ): void {
+        this.colEventSvc.addEventListener(eventType, listener);
+    }
+    public __removeEventListener<T extends ColumnEventName>(
+        eventType: T,
+        listener: (params: ColumnEvent<T>) => void
+    ): void {
+        this.colEventSvc.removeEventListener(eventType, listener);
+    }
+
+    /**
+     * PUBLIC USE ONLY: for internal use within AG Grid use the `__addEventListener` and `__removeEventListener` methods.
+     */
     public override addEventListener<T extends ColumnEventName>(
         eventType: T,
         userListener: (params: ColumnEvent<T>) => void
@@ -264,6 +284,9 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         this.colEventSvc.addEventListener(eventType, listener);
     }
 
+    /**
+     * PUBLIC USE ONLY: for internal use within AG Grid use the `__addEventListener` and `__removeEventListener` methods.
+     */
     public override removeEventListener<T extends ColumnEventName>(
         eventType: T,
         userListener: (params: ColumnEvent<T>) => void
