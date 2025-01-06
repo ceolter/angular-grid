@@ -137,6 +137,9 @@ input[type='checkbox']:not(.switch)#{$selector-exclude-grid} {
 
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border-primary);
+    #{$selector-darkmode} & {
+        border: 1px solid color-mix(in srgb, var(--color-bg-secondary), var(--color-fg-primary) 30%);
+    }
     transition:
         background-color $transition-default-timing,
         border-color $transition-default-timing,
@@ -197,6 +200,9 @@ input[type='checkbox'].switch {
 input[type='radio']#{$selector-exclude-grid} {
     border-radius: var(--radius-full);
     border: 1px solid var(--color-border-primary);
+    #{$selector-darkmode} & {
+        border: 1px solid color-mix(in srgb, var(--color-bg-secondary), var(--color-fg-primary) 30%);
+    }
     transition:
         background-color $transition-default-timing,
         border-color $transition-default-timing,
