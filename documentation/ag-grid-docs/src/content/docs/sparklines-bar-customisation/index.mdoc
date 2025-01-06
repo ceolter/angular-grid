@@ -151,7 +151,8 @@ See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for 
 
 ## Bar Padding Options
 
-The spacing between bars is adjustable via the `paddingInner` property. This property takes values between 0 and 1.
+The spacing between bars is adjustable via the `paddingInner` property.
+This property takes values between 0 and 1 and is available for axis `type: 'category'` only.
 
 It is a proportion of the “step”, which is the interval between the start of a band and the start of the next band.
 
@@ -162,6 +163,7 @@ sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
     axis: {
+        type: 'category',
         paddingInner: 0.5, // sets the padding between bars.
     }
 }
@@ -176,7 +178,7 @@ Custom paddingInner
 {% /imageCaption %}
 {% /flex %}
 
-The padding on the outer edges of the first and last bars can also be adjusted. As with `paddingInner`, this value can be between 0 and 1.
+The padding on the outer edges of the first and last bars can also be adjusted. As with `paddingInner`, this value can be between 0 and 1 and is available for axis `type: 'category'` only.
 
 If the value of `paddingOuter` is increased, the axis line will stick out more at both ends of the sparkline.
 
@@ -187,7 +189,8 @@ sparklineOptions: {
     type: 'bar',
     direction: 'horizontal',
     axis: {
-       paddingOuter: 0, // sets the padding on the outer edge of the first and last bars.
+        type: 'category',
+        paddingOuter: 0, // sets the padding on the outer edge of the first and last bars.
     }
 }
 ```

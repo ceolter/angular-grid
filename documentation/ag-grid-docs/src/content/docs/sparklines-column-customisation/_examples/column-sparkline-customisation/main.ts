@@ -33,11 +33,10 @@ const gridOptions: GridOptions = {
                             fill: 'orange',
                         },
                     },
-                    theme: {
-                        overrides: {
-                            paddingInner: 0.3,
-                            paddingOuter: 0.1,
-                        },
+                    axis: {
+                        type: 'category',
+                        paddingInner: 0.3,
+                        paddingOuter: 0.1,
                     },
                 } as AgSparklineOptions,
             },

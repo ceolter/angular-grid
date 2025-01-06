@@ -575,11 +575,13 @@ export const AG_GRID_ERRORS = {
         }),
     261: () => 'As of v33, `column.isHovered()` is deprecated. Use `api.isColumnHovered(column)` instead.' as const,
     262: () =>
-        'As of v33, icon key "smallDown" is deprecated. Use "advancedFilterBuilderSelect" for Advanced Filter Builder dropdown, "selectOpen" for Select cell editor and dropdowns (e.g. Integrated Charts menu), "richSelectOpen" for Rich Select cell editor' as const,
+        'As of v33, icon key "smallDown" is deprecated. Use "advancedFilterBuilderSelect" for Advanced Filter Builder dropdown, "selectOpen" for Select cell editor and dropdowns (e.g. Integrated Charts menu), "richSelectOpen" for Rich Select cell editor.' as const,
     263: () =>
         'As of v33, icon key "smallLeft" is deprecated. Use "panelDelimiterRtl" for Row Group Panel / Pivot Panel, "subMenuOpenRtl" for sub-menus.' as const,
     264: () =>
-        'As of v33, icon key "smallRight" is deprecated. Use "panelDelimiter" for Row Group Panel / Pivot Panel, "subMenuOpen" for sub-menus' as const,
+        'As of v33, icon key "smallRight" is deprecated. Use "panelDelimiter" for Row Group Panel / Pivot Panel, "subMenuOpen" for sub-menus.' as const,
+    265: ({ colId }: { colId: string }) =>
+        `Unable to infer chart data type for column '${colId}' if first data entry is null. Please specify "chartDataType", or a "cellDataType" in the column definition. For more information, see ${baseDocLink}/integrated-charts-range-chart#coldefchartdatatype .` as const,
 };
 
 export type ErrorMap = typeof AG_GRID_ERRORS;

@@ -4,7 +4,7 @@ import {
     ModuleName,
 } from '../../packages/ag-grid-community/src/interfaces/iModule';
 
-export const AllCommunityModules: Record<`${CommunityModuleName}Module`, number> = {
+export const AllGridCommunityModules: Record<`${CommunityModuleName}Module`, number> = {
     AlignedGridsModule: 3.06,
     AllCommunityModule: 385,
     CellApiModule: 0.28,
@@ -84,7 +84,7 @@ export interface ModuleTest {
     expectedSize: number;
 }
 
-const allCommunityModules: ModuleTest[] = Object.entries(AllCommunityModules).map(([m, s]) => ({
+const allGridCommunityModules: ModuleTest[] = Object.entries(AllGridCommunityModules).map(([m, s]) => ({
     modules: [m as `${ModuleName}Module`],
     expectedSize: s,
 }));
@@ -133,6 +133,6 @@ export const moduleCombinations: ModuleTest[] = [
     { modules: [], expectedSize: 445.89 },
     ...commonFeatureSets,
     ...chartModules,
-    ...allCommunityModules, //.slice(0, 3),
+    ...allGridCommunityModules, //.slice(0, 3),
     ...allEnterpriseModules, //.slice(0, 3),
 ];

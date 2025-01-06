@@ -29,7 +29,7 @@ export class MiniNightingale extends MiniChartWithPolarAxes {
 
         const radius = (size - padding * 2) / 2;
 
-        const angleScale = new _Scene.BandScale();
+        const angleScale = new _Scene.CategoryScale();
         angleScale.domain = data[0].map((_, index) => index);
         angleScale.range = [-Math.PI, Math.PI];
         angleScale.paddingInner = 0;

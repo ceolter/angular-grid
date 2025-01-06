@@ -31,6 +31,7 @@ sparklineOptions: {
         }
     },
     axis: {
+        type: 'category',
         paddingInner: 0.3,
         paddingOuter: 0.1,
     }
@@ -140,7 +141,7 @@ See AG Charts [Stylers](https://www.ag-grid.com/charts/javascript/stylers/) for 
 
 ## Column Padding Options
 
-The spacing between columns is adjustable via the `paddingInner` property. This property takes values between 0 and 1.
+The spacing between columns is adjustable via the `paddingInner` property. This property takes values between 0 and 1 and is available for axis `type: 'category'` only.
 
 It is a proportion of the “step”, which is the interval between the start of a band and the start of the next band.
 
@@ -151,6 +152,7 @@ sparklineOptions: {
     type: 'bar',
     direction: 'vertical',
     axis: {
+        type: 'category',
         paddingInner: 0.5, // sets the padding between columns.
     }
 }
@@ -165,7 +167,7 @@ Custom paddingInner
 {% /imageCaption %}
 {% /flex %}
 
-The padding on the outer edges of the first and last columns can also be adjusted. As with `paddingInner`, this value can be between 0 and 1.
+The padding on the outer edges of the first and last columns can also be adjusted. As with `paddingInner`, this value can be between 0 and 1 and is available for axis `type: 'category'` only.
 
 If the value of `paddingOuter` is increased, the axis line will stick out more at both ends of the sparkline.
 
@@ -176,6 +178,7 @@ sparklineOptions: {
     type: 'bar',
     direction: 'vertical',
     axis: {
+        type: 'category',
         paddingOuter: 0, // sets the padding on the outer edge of the first and last columns.
     }
 }

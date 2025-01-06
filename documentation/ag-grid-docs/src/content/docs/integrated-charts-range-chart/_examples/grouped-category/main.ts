@@ -39,7 +39,7 @@ const gridOptions: GridOptions = {
     chartThemeOverrides: {
         bar: {
             axes: {
-                category: {
+                'grouped-category': {
                     label: {
                         fontSize: 8,
                     },

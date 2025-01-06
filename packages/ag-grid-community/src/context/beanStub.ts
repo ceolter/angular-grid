@@ -9,7 +9,7 @@ import type {
     PropertyValueChangedEvent,
     PropertyValueChangedListener,
 } from '../gridOptionsService';
-import type { IEventEmitter } from '../interfaces/iEventEmitter';
+import type { IAgEventEmitter, IEventEmitter } from '../interfaces/iEventEmitter';
 import { LocalEventService } from '../localEventService';
 import type { LocaleTextFunc } from '../misc/locale/localeUtils';
 import { _getLocaleTextFunc } from '../misc/locale/localeUtils';
@@ -113,12 +113,15 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     public addManagedEventListeners(handlers: AgEventHandlers) {
         return this._setupListeners<AgEventType>(this.eventSvc, handlers);
     }
-    public addManagedListeners<TEvent extends string>(object: IEventEmitter<TEvent>, handlers: EventHandlers<TEvent>) {
+    public addManagedListeners<TEvent extends string>(
+        object: IEventEmitter<TEvent> | IAgEventEmitter<TEvent>,
+        handlers: EventHandlers<TEvent>
+    ) {
         return this._setupListeners<TEvent>(object, handlers);
     }
 
     private _setupListeners<TEvent extends string>(
-        object: HTMLElement | IEventEmitter<TEvent>,
+        object: HTMLElement | IEventEmitter<TEvent> | IAgEventEmitter<TEvent>,
         handlers: EventHandlers<TEvent>
     ) {
         const destroyFuncs: (() => null)[] = [];
@@ -132,7 +135,7 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     }
 
     private _setupListener<const T extends string>(
-        object: Window | HTMLElement | IEventEmitter<T>,
+        object: Window | HTMLElement | IEventEmitter<T> | IAgEventEmitter<T>,
         event: T,
         listener: (event?: any) => void
     ): () => null {
@@ -140,16 +143,26 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
             return () => null;
         }
 
-        if (object instanceof HTMLElement) {
-            _addSafePassiveEventListener(this.beans.frameworkOverrides, object, event, listener);
-        } else {
-            object.addEventListener(event, listener);
-        }
+        let destroyFunc: () => null;
 
-        const destroyFunc: () => null = () => {
-            (object as any).removeEventListener(event, listener);
-            return null;
-        };
+        if (isAgEventEmitter(object)) {
+            object.__addEventListener(event, listener);
+            destroyFunc = () => {
+                (object as IAgEventEmitter<T>).__removeEventListener(event, listener);
+                return null;
+            };
+        } else {
+            if (object instanceof HTMLElement) {
+                _addSafePassiveEventListener(this.beans.frameworkOverrides, object, event, listener);
+            } else {
+                object.addEventListener(event, listener);
+            }
+
+            destroyFunc = () => {
+                (object as any).removeEventListener(event, listener);
+                return null;
+            };
+        }
 
         this.destroyFunctions.push(destroyFunc);
 
@@ -294,4 +307,11 @@ export abstract class BeanStub<TEventType extends string = BeanStubEvent>
     protected destroyBeans<T extends Bean | null | undefined>(beans: T[], context?: Context): T[] {
         return (context || this.stubContext).destroyBeans(beans);
     }
+}
+
+// type guard for IAgEventEmitter
+function isAgEventEmitter<TEvent extends string>(
+    object: IEventEmitter<TEvent> | IAgEventEmitter<TEvent>
+): object is IAgEventEmitter<TEvent> {
+    return (object as IAgEventEmitter<TEvent>).__addEventListener !== undefined;
 }

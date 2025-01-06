@@ -234,9 +234,8 @@ export class ClientSideChildrenTreeNodeManager<TData>
         }
 
         if (rowsChanged || orderChanged) {
-            params.step = 'group';
             params.rowDataUpdated = true;
-            params.rowNodesOrderChanged = orderChanged;
+            params.rowNodesOrderChanged ||= orderChanged;
         }
     }
 

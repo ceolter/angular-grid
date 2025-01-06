@@ -31,7 +31,7 @@ export class MiniRadialColumn extends MiniChartWithPolarAxes {
         const innerRadiusRatio = 0.4;
         const axisInnerRadius = radius * innerRadiusRatio;
 
-        const angleScale = new _Scene.BandScale();
+        const angleScale = new _Scene.CategoryScale();
         angleScale.domain = data[0].map((_, index) => index);
         angleScale.range = [0, 2 * Math.PI];
         angleScale.paddingInner = 0;

@@ -35,13 +35,9 @@ interface ClientSideRowModelRowNode extends RowNode {
     sourceRowIndex: number;
 }
 
-export interface BatchTransactionItem<TData = any> {
+interface BatchTransactionItem<TData = any> {
     rowDataTransaction: RowDataTransaction<TData>;
     callback: ((res: RowNodeTransaction<TData>) => void) | undefined;
-}
-
-export interface RowNodeMap {
-    [id: string]: RowNode;
 }
 
 export class ClientSideRowModel extends BeanStub implements IClientSideRowModel, NamedBean {
@@ -341,7 +337,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
                 this.nodeManager.setImmutableRowData(params, newRowData);
             } else {
-                params.step = 'group';
                 params.rowDataUpdated = true;
                 params.newData = true;
 
@@ -356,7 +351,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (params.step === 'nothing') {
+        if (params.rowDataUpdated) {
+            params.step = 'group';
+        } else if (params.step === 'nothing') {
             for (const { refreshProps, step } of this.orderedStages) {
                 if (properties.some((prop) => refreshProps.has(prop))) {
                     params.step = step;
@@ -676,7 +673,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.refreshModel({ step: this.colModel.isPivotActive() ? 'pivot' : 'aggregate' });
     }
 
-    private createChangePath(rowNodeTransactions: (RowNodeTransaction | null)[] | undefined): ChangedPath {
+    private createChangePath(enabled: boolean): ChangedPath {
         // for updates, if the row is updated at all, then we re-calc all the values
         // in that row. we could compare each value to each old value, however if we
         // did this, we would be calling the valueSvc twice, once on the old value
@@ -685,11 +682,9 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // the impacted parent rows are recalculated, parents who's children have
         // not changed are not impacted.
 
-        const noTransactions = !rowNodeTransactions?.length;
-
         const changedPath = new ChangedPath(false, this.rootNode!);
 
-        if (noTransactions) {
+        if (!enabled) {
             changedPath.active = false;
         }
 
@@ -698,22 +693,20 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     private isSuppressModelUpdateAfterUpdateTransaction(params: RefreshModelParams): boolean {
         if (!this.gos.get('suppressModelUpdateAfterUpdateTransaction')) {
-            return false;
+            return false; // Not suppressed
         }
 
-        const rowNodeTransactions = params.rowNodeTransactions;
+        const { changedRowNodes, newData, rowDataUpdated } = params;
 
-        if (!rowNodeTransactions) {
-            return false;
+        if (!changedRowNodes || newData || !rowDataUpdated) {
+            return false; // Not a transaction update
         }
 
-        const transWithAddsOrDeletes = rowNodeTransactions.some(
-            (tx) => (tx.add != null && tx.add.length > 0) || (tx.remove != null && tx.remove.length > 0)
-        );
+        if (changedRowNodes.removals.size || changedRowNodes.adds.size) {
+            return false; // There are added rows or removed rows, not just updates
+        }
 
-        // return true if we are only doing update transactions
-        const transactionsContainUpdatesOnly = !transWithAddsOrDeletes;
-        return transactionsContainUpdatesOnly;
+        return true; // Nothing changed, or only updates with no new rows and no removals
     }
 
     public refreshModel(params: RefreshModelParams): void {
@@ -733,9 +726,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // let start: number;
         // console.log('======= start =======');
 
-        const rowNodeTransactions = params.rowNodeTransactions;
-
-        const changedPath = (params.changedPath ??= this.createChangePath(rowNodeTransactions));
+        const changedPath = (params.changedPath ??= this.createChangePath(!params.newData && !!params.rowDataUpdated));
 
         this.nodeManager.refreshModel?.(params);
 
@@ -762,7 +753,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         switch (params.step) {
             case 'group': {
                 this.doRowGrouping(
-                    params.rowNodeTransactions,
                     params.changedRowNodes,
                     changedPath,
                     !!params.rowNodesOrderChanged,
@@ -1048,7 +1038,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     }
 
     private doRowGrouping(
-        rowNodeTransactions: RowNodeTransaction[] | undefined,
         changedRowNodes: IChangedRowNodes | undefined,
         changedPath: ChangedPath,
         rowNodesOrderChanged: boolean,
@@ -1063,7 +1052,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                     rowNode: rootNode,
                     changedPath,
                     changedRowNodes,
-                    rowNodeTransactions,
                     rowNodesOrderChanged,
                     afterColumnsChanged,
                 });
@@ -1168,7 +1156,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         });
 
-        this.commitTransactions(rowNodeTrans, orderChanged, changedRowNodes);
+        this.commitTransactions(orderChanged, changedRowNodes);
 
         // do callbacks in next VM turn so it's async
         if (callbackFuncsBound.length > 0) {
@@ -1199,7 +1187,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const changedRowNodes = new ChangedRowNodes();
         const { rowNodeTransaction, rowsInserted } = this.nodeManager.updateRowData(rowDataTran, changedRowNodes);
 
-        this.commitTransactions([rowNodeTransaction], rowsInserted, changedRowNodes);
+        this.commitTransactions(rowsInserted, changedRowNodes);
 
         return rowNodeTransaction;
     }
@@ -1213,20 +1201,15 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
      * @param rowNodeTrans - the transactions to apply
      * @param orderChanged - whether the order of the rows has changed, either via generated transaction or user provided addIndex
      */
-    private commitTransactions(
-        rowNodeTransactions: RowNodeTransaction[],
-        rowNodesOrderChanged: boolean,
-        changedRowNodes: IChangedRowNodes
-    ): void {
+    private commitTransactions(rowNodesOrderChanged: boolean, changedRowNodes: IChangedRowNodes): void {
         this.refreshModel({
             step: 'group',
             rowDataUpdated: true,
-            rowNodeTransactions,
             rowNodesOrderChanged,
             keepRenderedRows: true,
             animate: !this.gos.get('suppressAnimationFrame'),
             changedRowNodes,
-            changedPath: this.createChangePath(rowNodeTransactions),
+            changedPath: this.createChangePath(true),
         });
     }
 

@@ -5,32 +5,13 @@
     padding-top: $spacing-size-2;
     padding-bottom: $spacing-size-4;
     font-size: 18px;
-
     border-top: 1px solid var(--color-border-secondary);
-
+    max-height: calc(var(--container-height) - var(--input-height));
     overflow: auto;
     overscroll-behavior: contain;
 
     #{$selector-darkmode} & {
         border-top: 1px solid var(--color-border-primary);
-    }
-
-    &::after {
-        content: '';
-        position: fixed;
-        width: 100%;
-        height: $spacing-size-24;
-        left: 0;
-        bottom: var(--controls-height);
-        background-image: linear-gradient(transparent, var(--color-bg-primary));
-        pointer-events: none;
-
-        #{$selector-darkmode} & {
-            background-image: linear-gradient(
-                transparent,
-                color-mix(in srgb, var(--color-bg-primary), var(--color-fg-primary) 6%)
-            );
-        }
     }
 
     // Prevent scroll indicator from effecting last item
@@ -41,6 +22,24 @@
 
     @media screen and (min-width: $breakpoint-docs-search-small) {
         max-height: calc(100vh - 450px);
+
+        &::after {
+            content: '';
+            position: fixed;
+            width: 100%;
+            height: $spacing-size-24;
+            left: 0;
+            bottom: var(--controls-height);
+            background-image: linear-gradient(transparent, var(--color-bg-primary));
+            pointer-events: none;
+
+            #{$selector-darkmode} & {
+                background-image: linear-gradient(
+                    transparent,
+                    color-mix(in srgb, var(--color-bg-primary), var(--color-fg-primary) 6%)
+                );
+            }
+        }
     }
 }
 

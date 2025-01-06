@@ -1,4 +1,4 @@
-import { AllCommunityModules, AllEnterpriseModules } from './moduleDefinitions';
+import { AllEnterpriseModules, AllGridCommunityModules } from './moduleDefinitions';
 
 const fs = require('fs');
 const path = require('path');
@@ -36,7 +36,7 @@ fs.readFile(srcFilePath, 'utf8', (err, data) => {
         console.error('Error reading file:', err);
         return;
     }
-    const communityModules = modules.filter((module) => AllCommunityModules[module] >= 0);
+    const communityModules = modules.filter((module) => AllGridCommunityModules[module] >= 0);
     const enterpriseModules = modules.filter((module) => AllEnterpriseModules[module] >= 0);
 
     const replacement = communityModules.join(', ');
