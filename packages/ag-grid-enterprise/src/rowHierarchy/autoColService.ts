@@ -29,12 +29,12 @@ import {
 export class AutoColService extends BeanStub implements NamedBean, IAutoColService {
     beanName = 'autoColSvc' as const;
 
-    // group auto columns
+    /** Group auto columns */
     public autoCols: _ColumnCollections | null;
 
     public postConstruct(): void {
         this.addManagedPropertyListener('autoGroupColumnDef', (event) =>
-            this.onAutoGroupColumnDefChanged(_convertColumnEventSourceType(event.source))
+            this.updateAutoCols(_convertColumnEventSourceType(event.source))
         );
     }
 
@@ -272,10 +272,6 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         }
 
         return res;
-    }
-
-    private onAutoGroupColumnDefChanged(source: ColumnEventType) {
-        this.updateAutoCols(source);
     }
 
     public override destroy(): void {
