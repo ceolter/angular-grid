@@ -157,7 +157,6 @@ export class TreeNode implements ITreeNode {
     /**
      * Sets the row for the TreeNode.
      * If the row is already set, it will be replaced with the new row, and the old row will be orphaned.
-     * childrenAfterGroup and allLeafChildren will be reassigned.
      * @returns True if the row changed
      */
     public setRow(newRow: TreeRow | null): boolean {
