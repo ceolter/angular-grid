@@ -1,0 +1,2 @@
+# don't break Angular tests
+projects/ag-grid-angular/src/test.ts
