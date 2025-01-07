@@ -261,7 +261,3 @@ it('should filter rows by quickFilterText', fakeAsync(() => {
 }))
 
 ```
-
-## suppressBrowserResizeObserver
-
-With the grid option `suppressBrowserResizeObserver` enabled, due to the internal implementation of this feature, it is recommended to use the async await approach. The fakeAsync approach will result in the following error: `ERROR: flush failed after reaching the limit of 20 tasks. Does your code use a polling timeout?`. This occurs because during the `flush` process every resize event creates a new async call which in turn creates another and so on. This means the call stack queue never empties resulting in the error above.
