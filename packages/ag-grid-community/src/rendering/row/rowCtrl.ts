@@ -206,8 +206,9 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
 
         this.initialiseRowComp(gui);
 
+        const isSsrmLoadingRow = this.rowType === 'FullWidthLoading' || this.rowNode.stub;
         // pinned rows render before the main grid body in the SSRM, only fire the event after the main body has rendered.
-        if (this.rowType !== 'FullWidthLoading' && !this.rowNode.rowPinned) {
+        if (!isSsrmLoadingRow && !this.rowNode.rowPinned) {
             // this is fired within setComp as we know that the component renderer is now trying to render.
             // linked with the fact the function implementation queues behind requestAnimationFrame should allow
             // us to be certain that all rendering is done by the time the event fires.
