@@ -60,8 +60,14 @@ export class TestComponent implements ICellRendererAngularComp {
     selector: 'app-grid-wrapper',
     standalone: true,
     imports: [AgGridAngular],
-    template:
-        '<ag-grid-angular [gridOptions]="gridOptions" [getRowId]="getRowId" [rowData]="rowData" [columnDefs]="columnDefs" [modules]="modules" (gridReady)="onGridReady($event)" ></ag-grid-angular>',
+    template: /* HTML */ `<ag-grid-angular
+        [gridOptions]="gridOptions"
+        [getRowId]="getRowId"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [modules]="modules"
+        (gridReady)="onGridReady($event)"
+    ></ag-grid-angular>`,
 })
 export class GridWrapperComponent {
     modules: Module[] = [AllCommunityModule];
@@ -145,7 +151,7 @@ describe('GridWrapperComponent', () => {
 
         fixture.detectChanges();
 
-        // We have to use setTimouts as we have disabled the AG_GRID_UNDER_TEST flag
+        // We have to use setTimeouts as we have disabled the AG_GRID_UNDER_TEST flag
         setTimeout(() => {
             api.updateGridOptions({ columnDefs: [{ field: 'make' }, { field: 'model' }] });
             fixture.detectChanges();
