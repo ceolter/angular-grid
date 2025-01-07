@@ -68,13 +68,15 @@ export class GridWrapperComponent {
 }
 
 describe('Test ColDef Event ZoneJs Status', () => {
-    // suppress console errors
+    // suppress License logging
     let originalError: any;
     beforeAll(() => {
+        // eslint-disable-next-line no-console
         originalError = console.error;
         spyOn(console, 'error');
     });
     afterAll(() => {
+        // eslint-disable-next-line no-console
         console.error = originalError;
     });
 
