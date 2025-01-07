@@ -9,6 +9,8 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
+import { nextRandom } from './random';
+
 ModuleRegistry.registerModules([
     RowApiModule,
     CellStyleModule,
@@ -45,10 +47,10 @@ const gridOptions: GridOptions = {
             const rowCount = gridApi!.getDisplayedRowCount();
             // pick 2 cells at random to update
             for (let i = 0; i < 2; i++) {
-                const row = Math.floor(Math.random() * rowCount);
+                const row = Math.floor(nextRandom() * rowCount);
                 const rowNode = gridApi!.getDisplayedRowAtIndex(row)!;
-                const col = ['a', 'b', 'c', 'd', 'e', 'f'][Math.floor(Math.random() * 6)];
-                rowNode.setDataValue(col, Math.floor(Math.random() * 10000));
+                const col = ['a', 'b', 'c', 'd', 'e', 'f'][Math.floor(nextRandom() * 6)];
+                rowNode.setDataValue(col, Math.floor(nextRandom() * 10000));
             }
         };
 
