@@ -162,9 +162,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     rowGroup: { module: 'SharedRowGrouping' },
     rowGroupIndex: { module: 'SharedRowGrouping' },
     sortingOrder: {
-        validate: (_options) => {
-            const sortingOrder = _options.sortingOrder;
-
+        validate: ({ sortingOrder }) => {
             if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
                 const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
                 if (invalidItems.length > 0) {
@@ -179,9 +177,7 @@ const COLUMN_DEFINITION_VALIDATIONS: () => Validations<ColDef | ColGroupDef> = (
     tooltipField: { module: 'Tooltip' },
     tooltipValueGetter: { module: 'Tooltip' },
     type: {
-        validate: (_options) => {
-            const type = _options.type;
-
+        validate: ({ type }) => {
             if (type instanceof Array) {
                 const invalidArray = type.some((a) => typeof a !== 'string');
                 if (invalidArray) {

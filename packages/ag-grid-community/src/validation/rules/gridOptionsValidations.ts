@@ -6,6 +6,7 @@ import { DEFAULT_SORTING_ORDER } from '../../sort/sortService';
 import { _mergeDeep } from '../../utils/object';
 import { _errMsg, toStringWithNullUndefined } from '../logging';
 import type { Deprecations, OptionsValidator, Validations } from '../validationTypes';
+import * as v from './validationSchema';
 
 /**
  * Deprecations have been kept separately for ease of removing them in the future.
@@ -116,7 +117,7 @@ function toConstrainedNum(
 /**
  * Validation rules for gridOptions
  */
-const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
+const GRID_OPTION_VALIDATIONS = (): Validations<GridOptions> => {
     const definedValidations: Validations<GridOptions> = {
         alignedGrids: { module: 'AlignedGrids' },
         allowContextMenuWithControlKey: { module: 'ContextMenu' },
@@ -139,6 +140,36 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         cellSelection: {
             module: 'CellSelection',
+            validate({ cellSelection }) {
+                if (typeof cellSelection === 'boolean') {
+                    return null;
+                }
+
+                const cellSelectionSchema = v
+                    .object({
+                        suppressMultiRanges: v.boolean(),
+                        handle: v.union([
+                            v
+                                .object({
+                                    mode: v.literal('range'),
+                                })
+                                .only(),
+                            v
+                                .object({
+                                    mode: v.literal('fill'),
+                                    suppressClearOnFillReduction: v.boolean(),
+                                    direction: v.union([v.literal('x'), v.literal('y'), v.literal('xy')]),
+                                    setFillValue: v.func(),
+                                })
+                                .only(),
+                        ]),
+                    })
+                    .only();
+
+                const result = v.object({ cellSelection: cellSelectionSchema }).validate({ cellSelection });
+
+                return v.formatResult(result);
+            },
         },
         columnHoverHighlight: { module: 'ColumnHover' },
         datasource: {
@@ -147,8 +178,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         doesExternalFilterPass: { module: 'ExternalFilter' },
         domLayout: {
-            validate: (options) => {
-                const domLayout = options.domLayout;
+            validate: ({ domLayout }) => {
                 const validLayouts: DomLayoutType[] = ['autoHeight', 'normal', 'print'];
                 if (domLayout && !validLayouts.includes(domLayout)) {
                     return `domLayout must be one of [${validLayouts.join()}], currently it's ${domLayout}`;
@@ -260,12 +290,11 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         paginationPageSizeSelector: {
-            validate: (options) => {
-                const values = options.paginationPageSizeSelector;
-                if (typeof values === 'boolean' || values == null) {
+            validate: ({ paginationPageSizeSelector }) => {
+                if (typeof paginationPageSizeSelector === 'boolean' || paginationPageSizeSelector == null) {
                     return null;
                 }
-                if (!values.length) {
+                if (!paginationPageSizeSelector.length) {
                     return `'paginationPageSizeSelector' cannot be an empty array.
                     If you want to hide the page size selector, set paginationPageSizeSelector to false.`;
                 }
@@ -298,8 +327,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
             },
         },
         rowClass: {
-            validate: (options) => {
-                const rowClass = options.rowClass;
+            validate: ({ rowClass }) => {
                 if (typeof rowClass === 'function') {
                     return 'rowClass should not be a function, please use getRowClass instead';
                 }
@@ -333,16 +361,66 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 if (rowSelection && typeof rowSelection !== 'object') {
                     return 'Expected `RowSelectionOptions` object for the `rowSelection` property.';
                 }
-                if (rowSelection && rowSelection.mode !== 'multiRow' && rowSelection.mode !== 'singleRow') {
-                    return `Selection mode "${(rowSelection as any).mode}" is invalid. Use one of 'singleRow' or 'multiRow'.`;
-                }
-                return null;
+
+                const singleRowSchema = v
+                    .object({
+                        mode: v.literal('singleRow'),
+
+                        enableClickSelection: v.union([
+                            v.boolean(),
+                            v.literal('enableDeselection'),
+                            v.literal('enableSelection'),
+                        ]),
+                        checkboxes: v.union([v.boolean(), v.func()]),
+                        checkboxLocation: v.union([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                        hideDisabledCheckboxes: v.boolean(),
+                        isRowSelectable: v.func(),
+                        copySelectedRows: v.boolean(),
+                        enableSelectionWithoutKeys: v.boolean(),
+                    })
+                    .only();
+
+                const mulitRowSchema = v
+                    .object({
+                        mode: v.literal('multiRow').required(),
+
+                        enableClickSelection: v.union([
+                            v.boolean(),
+                            v.literal('enableDeselection'),
+                            v.literal('enableSelection'),
+                        ]),
+                        checkboxes: v.union([v.boolean(), v.func()]),
+                        checkboxLocation: v.union([v.literal('selectionColumn'), v.literal('autoGroupColumn')]),
+                        hideDisabledCheckboxes: v.boolean(),
+                        isRowSelectable: v.func(),
+                        copySelectedRows: v.boolean(),
+                        enableSelectionWithoutKeys: v.boolean(),
+
+                        // multi-row
+                        groupSelects: v.union([
+                            v.literal('self'),
+                            v.literal('descendants'),
+                            v.literal('filteredDescendants'),
+                        ]),
+                        selectAll: v.union([v.literal('all'), v.literal('filtered'), v.literal('currentPage')]),
+                        headerCheckbox: v.boolean(),
+                    })
+                    .only();
+
+                const rowSelectionSchema = v.union([singleRowSchema, mulitRowSchema]);
+
+                type X = v.Infer<typeof rowSelectionSchema>;
+
+                const object: { rowSelection: X } = { rowSelection: rowSelectionSchema };
+
+                const result = v.object({ rowSelection: rowSelectionSchema }).validate({ rowSelection });
+
+                return v.formatResult(result);
             },
             module: 'SharedRowSelection',
         },
         rowStyle: {
-            validate: (options) => {
-                const rowStyle = options.rowStyle;
+            validate: ({ rowStyle }) => {
                 if (rowStyle && typeof rowStyle === 'function') {
                     return 'rowStyle should be an object of key/value styles, not be a function, use getRowStyle() instead';
                 }
@@ -368,9 +446,7 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         sideBar: { module: 'SideBar' },
         sortingOrder: {
-            validate: (_options) => {
-                const sortingOrder = _options.sortingOrder;
-
+            validate: ({ sortingOrder }) => {
                 if (Array.isArray(sortingOrder) && sortingOrder.length > 0) {
                     const invalidItems = sortingOrder.filter((a) => !DEFAULT_SORTING_ORDER.includes(a));
                     if (invalidItems.length > 0) {
@@ -384,16 +460,16 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
         },
         statusBar: { module: 'StatusBar' },
         tooltipHideDelay: {
-            validate: (options) => {
-                if (options.tooltipHideDelay && options.tooltipHideDelay < 0) {
+            validate: ({ tooltipHideDelay }) => {
+                if (tooltipHideDelay && tooltipHideDelay < 0) {
                     return 'tooltipHideDelay should not be lower than 0';
                 }
                 return null;
             },
         },
         tooltipShowDelay: {
-            validate: (options) => {
-                if (options.tooltipShowDelay && options.tooltipShowDelay < 0) {
+            validate: ({ tooltipShowDelay }) => {
+                if (tooltipShowDelay && tooltipShowDelay < 0) {
                     return 'tooltipShowDelay should not be lower than 0';
                 }
                 return null;

@@ -228,6 +228,7 @@ export class ValidationService extends BeanStub implements NamedBean {
                     return;
                 }
             }
+
             if (validate) {
                 const warning = validate(options, this.gridOptions, this.beans);
                 if (warning) {
@@ -236,6 +237,7 @@ export class ValidationService extends BeanStub implements NamedBean {
                 }
             }
         });
+
         if (warnings.size > 0) {
             warnings.forEach((warning) => {
                 _warnOnce(warning);
