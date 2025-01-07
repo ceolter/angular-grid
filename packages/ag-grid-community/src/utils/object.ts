@@ -91,6 +91,32 @@ export function _getValueUsingField(data: any, field: string, fieldContainsDots:
     return currentObject;
 }
 
-function _isNonNullObject(value: any): boolean {
+function _isNonNullObject(value: any): value is object {
     return typeof value === 'object' && value !== null;
+}
+
+export function _isDeepEqual(left: unknown, right: unknown): boolean {
+    if (!_isNonNullObject(left) || !_isNonNullObject(right)) {
+        return left === right;
+    }
+
+    const leftKeys = Object.keys(left);
+    const rightKeys = Object.keys(right);
+
+    if (leftKeys.length !== rightKeys.length) {
+        return false;
+    }
+
+    const diff = new Set();
+    leftKeys.forEach((k) => {
+        if (!(k in right)) {
+            diff.add(k);
+        }
+    });
+
+    if (diff.size > 0) {
+        return false;
+    }
+
+    return leftKeys.reduce((acc, k) => acc && _isDeepEqual((left as any)[k], (right as any)[k]), true);
 }

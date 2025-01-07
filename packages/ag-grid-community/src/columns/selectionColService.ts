@@ -3,13 +3,13 @@ import { BeanStub } from '../context/beanStub';
 import { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColDef } from '../entities/colDef';
-import type { GridOptions } from '../entities/gridOptions';
+import type { GridOptions, SelectionColumnDef } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox, _isRowSelection } from '../gridOptionsUtils';
+import { _isDeepEqual } from '../utils/object';
 import type { ColKey, ColumnCollections } from './columnModel';
 import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
-    _areColIdsEqual,
     _columnsMatch,
     _convertColumnEventSourceType,
     _destroyColumnTree,
@@ -27,6 +27,14 @@ export class SelectionColService extends BeanStub implements NamedBean {
     public postConstruct(): void {
         this.addManagedPropertyListener('rowSelection', (event) => {
             this.onSelectionOptionsChanged(
+                event.currentValue,
+                event.previousValue,
+                _convertColumnEventSourceType(event.source)
+            );
+        });
+
+        this.addManagedPropertyListener('selectionColumnDef', (event) => {
+            this.onSelectionColumnDefChanged(
                 event.currentValue,
                 event.previousValue,
                 _convertColumnEventSourceType(event.source)
@@ -53,15 +61,14 @@ export class SelectionColService extends BeanStub implements NamedBean {
             this.selectionCols = null;
         };
 
-        // the new tree dept will equal the current tree dept of cols
         const newTreeDepth = cols.treeDepth;
         const oldTreeDepth = this.selectionCols?.treeDepth ?? -1;
-        const treeDeptSame = oldTreeDepth == newTreeDepth;
+        const treeDepthSame = oldTreeDepth == newTreeDepth;
 
         const list = this.generateSelectionCols();
-        const areSame = _areColIdsEqual(list, this.selectionCols?.list ?? []);
+        const areSame = _isDeepEqual(list, this.selectionCols?.list ?? []);
 
-        if (areSame && treeDeptSame) {
+        if (areSame && treeDepthSame) {
             return;
         }
 
@@ -179,6 +186,14 @@ export class SelectionColService extends BeanStub implements NamedBean {
         if (checkboxHasChanged || headerCheckboxHasChanged || locationChanged) {
             this.beans.colModel.refreshAll(source);
         }
+    }
+
+    private onSelectionColumnDefChanged(
+        current: SelectionColumnDef | undefined,
+        prev: SelectionColumnDef | undefined,
+        source: ColumnEventType
+    ) {
+        this.beans.colModel.refreshAll(source);
     }
 
     public override destroy(): void {
