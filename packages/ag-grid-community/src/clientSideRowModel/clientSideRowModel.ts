@@ -132,32 +132,29 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addPropertyListeners();
 
         this.rootNode = new RowNode(this.beans);
-        this.initRowManager();
+
+        const nodeManager = this.getNewRowManager();
+        this.nodeManager = nodeManager;
+        nodeManager.activate(this.rootNode);
     }
 
-    private initRowManager(): void {
-        const { gos, beans, nodeManager: oldNodeManager } = this;
+    private getNewRowManager(): IClientSideNodeManager {
+        const { gos, beans } = this;
 
         const treeData = gos.get('treeData');
         const childrenField = gos.get('treeDataChildrenField' as any);
+        const parentIdField = gos.get('treeDataParentIdField' as any);
 
-        const isTree = childrenField || treeData;
-
-        let nodeManager: IClientSideNodeManager<any> | undefined;
-        if (isTree) {
-            nodeManager = childrenField ? beans.csrmChildrenTreeNodeSvc : beans.csrmPathTreeNodeSvc;
+        let nodeManager: IClientSideNodeManager | undefined;
+        if (childrenField && !parentIdField) {
+            nodeManager = beans.csrmChildrenTreeNodeSvc;
+        } else if (treeData && parentIdField && !childrenField) {
+            nodeManager = beans.csrmParentIdTreeNodeSvc;
+        } else if (treeData && !parentIdField && !childrenField) {
+            nodeManager = beans.csrmPathTreeNodeSvc;
         }
 
-        if (!nodeManager) {
-            nodeManager = beans.csrmNodeSvc!;
-        }
-
-        if (oldNodeManager !== nodeManager) {
-            oldNodeManager?.deactivate();
-            this.nodeManager = nodeManager;
-        }
-
-        nodeManager.activate(this.rootNode);
+        return nodeManager ?? beans.csrmNodeSvc!;
     }
 
     private addPropertyListeners() {
@@ -194,6 +191,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const allProps: (keyof GridOptions)[] = [
             'treeData',
             'treeDataChildrenField' as any,
+            'treeDataParentIdField' as any,
             ...this.orderedStages.flatMap(({ refreshProps }) => [...refreshProps]),
         ];
 
@@ -281,6 +279,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         }
 
         const gos = this.gos;
+        const oldNodeManager = this.nodeManager;
 
         const changedProps = new Set(properties);
         const params: RefreshModelParams = {
@@ -288,17 +287,17 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             changedProps,
         };
 
+        const nodeManager = this.getNewRowManager();
         const rowDataChanged = changedProps.has('rowData');
         const treeDataChanged = changedProps.has('treeData');
-        const treeDataChildrenFieldChanged = changedProps.has('treeDataChildrenField' as any);
 
-        const reset = treeDataChildrenFieldChanged || (treeDataChanged && !gos.get('treeDataChildrenField' as any));
+        const reset =
+            oldNodeManager !== nodeManager ||
+            changedProps.has('treeDataChildrenField' as any) ||
+            changedProps.has('treeDataParentIdField' as any) ||
+            (treeDataChanged && !gos.get('treeDataChildrenField' as any) && !gos.get('treeDataParentIdField' as any));
 
         let newRowData: any[] | null | undefined;
-
-        if (treeDataChanged) {
-            params.step = 'group';
-        }
 
         if (reset || rowDataChanged) {
             newRowData = gos.get('rowData');
@@ -314,9 +313,15 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             if (!rowDataChanged) {
                 // No new rowData was passed, so to include user executed transaction we need to extract
                 // the row data from the node manager as it might be different from the original rowData
-                newRowData = this.nodeManager?.extractRowData() ?? newRowData;
+                newRowData = oldNodeManager?.extractRowData() ?? newRowData;
             }
-            this.initRowManager();
+
+            if (oldNodeManager !== nodeManager) {
+                oldNodeManager?.deactivate();
+                this.nodeManager = nodeManager;
+            }
+
+            nodeManager.activate(this.rootNode);
         }
 
         if (newRowData) {
@@ -351,7 +356,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (params.rowDataUpdated) {
+        if (params.rowDataUpdated || treeDataChanged) {
             params.step = 'group';
         } else if (params.step === 'nothing') {
             for (const { refreshProps, step } of this.orderedStages) {

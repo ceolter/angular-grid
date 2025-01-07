@@ -9,6 +9,7 @@ import {
 } from '../rowHierarchy/rowHierarchyModule';
 import { VERSION } from '../version';
 import { ClientSideChildrenTreeNodeManager } from './clientSideChildrenTreeNodeManager';
+import { ClientSideParentIdTreeNodeManager } from './clientSideParentIdTreeNodeManager';
 import { ClientSidePathTreeNodeManager } from './clientSidePathTreeNodeManager';
 
 /**
@@ -27,7 +28,7 @@ export const SharedTreeDataModule: _ModuleWithoutApi = {
 export const TreeDataModule: _ModuleWithoutApi = {
     moduleName: 'TreeData',
     version: VERSION,
-    beans: [ClientSidePathTreeNodeManager, ClientSideChildrenTreeNodeManager],
+    beans: [ClientSidePathTreeNodeManager, ClientSideChildrenTreeNodeManager, ClientSideParentIdTreeNodeManager],
     rowModels: ['clientSide'],
     dependsOn: [SharedTreeDataModule, AggregationModule, ClientSideRowModelHierarchyModule],
 };
