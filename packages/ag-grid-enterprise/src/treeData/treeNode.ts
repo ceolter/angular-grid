@@ -58,15 +58,10 @@ export class TreeNode implements ITreeNode {
      */
     public duplicateRows: Set<TreeRow> | null = null;
 
-    /** We keep the row.childrenAfterGroup here, we just swap arrays when we assign rows */
+    /** We keep the row.childrenAfterGroup here, we just swap arrays when we do post order commit */
     public childrenAfterGroup: TreeRow[] = _EmptyArray;
 
-    /**
-     * We keep the row.allLeafChildren here, we just swap arrays when we assign or swap the row to this node.
-     * If this is null, we are borrowing the allLeafChildren array from one of the children,
-     * in this case the row.allLeafChildren will be the same as one of the childrenAfterGroup[x].allLeafChildren,
-     * to get the allLeafChildren if is null, do node.allLeafChildren ?? node.row.allLeafChildren.
-     */
+    /** We keep the row.allLeafChildren here, we just swap arrays when we do post order commit */
     public allLeafChildren: TreeRow[] = _EmptyArray;
 
     /** Indicates whether childrenAfterGroup might need to be recomputed and sorted. Reset during commit. */
