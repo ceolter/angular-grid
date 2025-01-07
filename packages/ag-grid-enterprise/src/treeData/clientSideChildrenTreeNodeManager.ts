@@ -88,6 +88,8 @@ export class ClientSideChildrenTreeNodeManager<TData>
     }
 
     public override setImmutableRowData(params: RefreshModelParams<TData>, rowData: TData[]): void {
+        this.dispatchRowDataUpdateStartedEvent(rowData);
+
         const gos = this.gos;
         const treeRoot = this.treeRoot!;
         const rootNode = this.rootNode!;
@@ -248,6 +250,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         if (params.changedProps?.has('treeData') && !params.newData) {
             treeRoot.setRow(rootNode);
             const allLeafChildren = rootNode?.allLeafChildren;
+            treeRoot.childrenChanged = true;
             if (allLeafChildren) {
                 for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
                     const row = allLeafChildren[i];

@@ -18,8 +18,7 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
         gridsManager.reset();
     });
 
-    // TODO: this test is skipped because we do not handle delta update correctly in grouping yet, see https://ag-grid.atlassian.net/browse/AG-13507
-    test.skip('grouping treeDataChildrenField with set immutable data', async () => {
+    test('grouping treeDataChildrenField with set immutable data', async () => {
         const gridOptions: GridOptions = {
             columnDefs: [
                 { field: 'name' },
@@ -328,8 +327,7 @@ describe('ag-grid grouping treeDataChildrenField with set immutable data', () =>
         await gridRows.check('empty');
     });
 
-    // TODO: this test is skipped because we do not handle delta update correctly in grouping yet, see https://ag-grid.atlassian.net/browse/AG-13507
-    test.skip('expanded state is preserved correctly', async () => {
+    test('expanded state is preserved correctly', async () => {
         const gridOptions: GridOptions = {
             columnDefs: [
                 { field: 'name' },

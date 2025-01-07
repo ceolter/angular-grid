@@ -26,7 +26,7 @@ import {
 
 interface TreeCommitDetails<TData = any> {
     rootNode: AbstractClientSideNodeManager.RootNode<TData>;
-    changedPath: ChangedPath | undefined;
+    activeChangedPath: ChangedPath | null;
     treeData: boolean;
     expandByDefault: number;
     isGroupOpenByDefault: IsGroupOpenByDefaultCallback;
@@ -75,7 +75,14 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
     public override activate(rootNode: RowNode<TData>): void {
         super.activate(rootNode);
-        (this.treeRoot ??= new TreeNode(null, '', -1)).setRow(rootNode);
+
+        let treeRoot = this.treeRoot;
+        if (!treeRoot) {
+            treeRoot = new TreeNode(null, '', -1);
+            treeRoot.childrenChanged = true;
+            this.treeRoot = treeRoot;
+        }
+        treeRoot.setRow(rootNode);
     }
 
     public override destroy(): void {
@@ -88,17 +95,18 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
     }
 
     public override deactivate(): void {
-        const treeRoot = this.treeRoot;
+        const { treeRoot, rootNode } = this;
         if (treeRoot) {
-            const rootRow = treeRoot.row;
-            if (rootRow !== null) {
-                treeRoot.removeRow(rootRow);
-                clearTreeRowFlags(rootRow);
+            if (rootNode) {
+                treeRoot.removeRow(rootNode);
             }
             this.treeDestroy(treeRoot);
+            treeRoot.destroy();
+        }
+        if (rootNode) {
+            clearTreeRowFlags(rootNode);
         }
         this.commitDestroyedRows();
-
         super.deactivate();
         this.treeRoot = null;
         this.oldGroupDisplayColIds = '';
@@ -185,10 +193,11 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         const treeData = this.treeData;
+        const activeChangedPath = changedPath?.active ? changedPath : null;
 
         const details: TreeCommitDetails<TData> = {
             rootNode,
-            changedPath,
+            activeChangedPath,
             treeData,
             expandByDefault: this.gos.get('groupDefaultExpanded'),
             isGroupOpenByDefault: this.gos.getCallback('isGroupOpenByDefault'),
@@ -208,10 +217,12 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 }
             }
 
-            if (isTreeRowPathChanged(rootRow)) {
-                if (details.changedPath?.active) {
-                    details.changedPath.addParentNode(rootRow);
-                }
+            if (treeData || !activeChangedPath) {
+                rootRow.childrenAfterGroup = treeRoot.childrenAfterGroup;
+            }
+
+            if (activeChangedPath && isTreeRowPathChanged(rootRow)) {
+                activeChangedPath.addParentNode(rootRow);
             }
 
             markTreeRowCommitted(rootRow);
@@ -221,7 +232,9 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
         this.commitDestroyedRows();
 
-        this.beans.selectionSvc?.updateSelectableAfterGrouping(changedPath);
+        if (treeData) {
+            this.beans.selectionSvc?.updateSelectableAfterGrouping(changedPath);
+        }
     }
 
     /** Calls commitChild for each invalidated child, recursively. We commit only the invalidated paths. */
@@ -273,6 +286,7 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         }
 
         if (details.treeData) {
+            row.level = node.level;
             row.parent = node.parent!.row;
             if (node.oldRow !== row) {
                 // We need to update children rows parents, as the row changed
@@ -292,9 +306,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             } else if (!row.groupData) {
                 this.setGroupData(row, key);
             }
-        } else {
-            row.key = node.key;
+        } else if (!details.activeChangedPath) {
+            row.level = 0;
             row.parent = details.rootNode;
+            row.key = node.key;
         }
     }
 
@@ -302,10 +317,10 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
         const parent = node.parent!;
         const row = node.row!;
         const oldRow = node.oldRow;
-        const treeData = details.treeData;
+        const oldGroup = row.group;
 
         if (node.childrenChanged) {
-            if (node.updateChildrenAfterGroup(treeData)) {
+            if (node.updateChildrenAfterGroup(details.treeData)) {
                 markTreeRowPathChanged(row);
             }
         }
@@ -314,36 +329,39 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
             node.updateAllLeafChildren();
         }
 
-        const hasChildren = !!row.childrenAfterGroup?.length;
-        const group = hasChildren || !row.data;
-        const oldGroup = row.group;
+        if (details.treeData || !details.activeChangedPath) {
+            row.childrenAfterGroup = node.childrenAfterGroup;
+            row.allLeafChildren = node.allLeafChildren;
+            const hasChildren = node.childrenAfterGroup.length > 0;
+            const group = hasChildren || !row.data;
 
-        if (oldGroup !== group) {
-            markTreeRowPathChanged(row);
-            setRowNodeGroup(row, this.beans, group); // Internally calls updateHasChildren
-            if (!group && !row.expanded) {
-                setTreeRowExpandedInitialized(row, false);
+            if (oldGroup !== group) {
+                markTreeRowPathChanged(row);
+                setRowNodeGroup(row, this.beans, group); // Internally calls updateHasChildren
+                if (!group && !row.expanded) {
+                    setTreeRowExpandedInitialized(row, false);
+                }
+            } else if (row.hasChildren() !== hasChildren) {
+                markTreeRowPathChanged(row);
+                row.updateHasChildren();
             }
-        } else if (row.hasChildren() !== hasChildren) {
-            markTreeRowPathChanged(row);
-            row.updateHasChildren();
-        }
 
-        if (group && !isTreeRowExpandedInitialized(row)) {
-            row.expanded = getExpandedInitialValue(details, oldRow, row);
-            setTreeRowExpandedInitialized(row, true);
-        }
+            if (group && !isTreeRowExpandedInitialized(row)) {
+                row.expanded = getExpandedInitialValue(details, oldRow, row);
+                setTreeRowExpandedInitialized(row, true);
+            }
 
-        if (isTreeRowUpdated(row)) {
-            markTreeRowPathChanged(parent.row!);
+            if (isTreeRowUpdated(row)) {
+                markTreeRowPathChanged(parent.row);
 
-            if (isTreeRowKeyChanged(row)) {
-                // hack - if we didn't do this, then renaming a tree item (ie changing rowNode.key) wouldn't get
-                // refreshed into the gui.
-                // this is needed to kick off the event that rowComp listens to for refresh. this in turn
-                // then will get each cell in the row to refresh - which is what we need as we don't know which
-                // columns will be displaying the rowNode.key info.
-                row.setData(row.data);
+                if (isTreeRowKeyChanged(row)) {
+                    // hack - if we didn't do this, then renaming a tree item (ie changing rowNode.key) wouldn't get
+                    // refreshed into the gui.
+                    // this is needed to kick off the event that rowComp listens to for refresh. this in turn
+                    // then will get each cell in the row to refresh - which is what we need as we don't know which
+                    // columns will be displaying the rowNode.key info.
+                    row.setData(row.data);
+                }
             }
         }
 
@@ -353,12 +371,12 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
                 markTreeRowPathChanged(row);
             }
             parent.childrenChanged = true;
-            markTreeRowPathChanged(parent.row!);
+            markTreeRowPathChanged(parent.row);
         }
 
         if (isTreeRowPathChanged(row)) {
-            if (treeData && details.changedPath?.active) {
-                details.changedPath.addParentNode(row);
+            if (this.treeData) {
+                details.activeChangedPath?.addParentNode(row);
             } else {
                 markTreeRowPathChanged(details.rootNode);
             }

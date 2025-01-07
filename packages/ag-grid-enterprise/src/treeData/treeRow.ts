@@ -75,8 +75,10 @@ export const setTreeRowKeyChanged = (row: TreeRow): void => {
 };
 
 /** If this is true, commit stage must invoke changedPath.addParentNode */
-export const markTreeRowPathChanged = (row: TreeRow): void => {
-    row.treeNodeFlags |= Flags.PathChanged;
+export const markTreeRowPathChanged = (row: TreeRow | null): void => {
+    if (row) {
+        row.treeNodeFlags |= Flags.PathChanged;
+    }
 };
 
 /** Called when the row is committed. */
