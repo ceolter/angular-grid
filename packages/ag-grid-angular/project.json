@@ -21,6 +21,14 @@
         "script": "build"
       }
     },
+    "test": {
+      "executor": "nx:run-script",
+      "dependsOn": ["build"],
+      "inputs": ["allOutputs"],
+      "options": {
+        "script": "test:e2e"
+      }
+    },
     "pack": {
       "executor": "nx:run-commands",
       "dependsOn": ["build"],
