@@ -1296,7 +1296,7 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
         this.beans.selectionSvc?.announceAriaRowSelection(this.rowNode);
     }
 
-    public addHoverFunctionality(eGui: RowGui): void {
+    private addHoverFunctionality(eGui: RowGui): void {
         // because we use animation frames to do this, it's possible the row no longer exists
         // by the time we get to add it
         if (!this.active) {
@@ -1331,10 +1331,17 @@ export class RowCtrl extends BeanStub<RowCtrlEvent> {
                 }
             },
             mouseLeave: () => {
-                element.classList.remove('ag-row-hover');
-                rowNode.setHovered(false);
+                this.resetHoveredStatus(element);
             },
         });
+    }
+
+    public resetHoveredStatus(el?: HTMLElement): void {
+        const elements = el ? [el] : this.allRowGuis.map((gui) => gui.element);
+        for (const element of elements) {
+            element.classList.remove('ag-row-hover');
+        }
+        this.rowNode.setHovered(false);
     }
 
     // for animation, we don't want to animate entry or exit to a very far away pixel,

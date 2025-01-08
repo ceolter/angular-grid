@@ -78,7 +78,7 @@ export class RowContainerComp extends Component {
             if (existingRowComp) {
                 this.rowComps[instanceId] = existingRowComp;
                 delete oldRows[instanceId];
-                this.ensureDomOrder(existingRowComp.getGui());
+                this.ensureDomOrder(existingRowComp.getGui(), rowCon);
             } else {
                 // don't create new row comps for rows which are not displayed. still want the existing components
                 // as they may be animating out.
@@ -109,8 +109,9 @@ export class RowContainerComp extends Component {
         this.lastPlacedElement = element;
     }
 
-    private ensureDomOrder(eRow: HTMLElement): void {
+    private ensureDomOrder(eRow: HTMLElement, rowCtrl: RowCtrl): void {
         if (this.domOrder) {
+            rowCtrl.resetHoveredStatus();
             _ensureDomOrder(this.eContainer, eRow, this.lastPlacedElement);
             this.lastPlacedElement = eRow;
         }
