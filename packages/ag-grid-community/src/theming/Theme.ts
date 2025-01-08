@@ -51,7 +51,8 @@ export const _asThemeImpl = <TParams>(theme: Theme<TParams>): ThemeImpl => {
 // TODO button styles were split out into a part in 33.1 and this part must be
 // bundled by default to avoid a breaking change. In v34
 // withPart(buttonStyleQuartz) can be removed.
-export const createTheme = (): Theme<CoreParams & ButtonStyleParams> => new ThemeImpl().withPart(buttonStyleQuartz);
+export const createTheme = (): Theme<CoreParams & WithParamTypes<ButtonStyleParams>> =>
+    new ThemeImpl().withPart(buttonStyleQuartz);
 
 type GridThemeUseArgs = {
     loadThemeGoogleFonts: boolean | undefined;
