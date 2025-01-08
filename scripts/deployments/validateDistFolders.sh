@@ -139,6 +139,23 @@ validateLocale()
   fi
 }
 
+validateVue3()
+{
+  local requiredCount=`grep required dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs`
+  if [[ $requiredCount -ne 0 ]]
+  then
+    echo "ERROR: dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs has referenced to 'required'"
+    exit 1
+  fi
+
+  local skipCheckCount=`grep skipCheck dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs`
+  if [[ $skipCheckCount -ne 0 ]]
+  then
+    echo "ERROR: dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs has referenced to 'skipCheck'"
+    exit 1
+  fi
+}
+
 # check all expected modules & packages are there
 validateExpectedDirs "dist/artifacts/contents/community-modules" 3
 validateExpectedDirs "dist/artifacts/contents/packages" 6
