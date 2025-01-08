@@ -1,10 +1,20 @@
 import type { _InfiniteRowModelGridApi } from '../api/gridApi';
 import { SsrmInfiniteSharedApiModule } from '../api/sharedApiModule';
-import type { _ModuleWithApi } from '../interfaces/iModule';
+import type { _ModuleWithApi, _ModuleWithoutApi } from '../interfaces/iModule';
 import { VERSION } from '../version';
 import { InfiniteRowModel } from './infiniteRowModel';
 import { getInfiniteRowCount, purgeInfiniteCache, refreshInfiniteCache } from './infiniteRowModelApi';
 import { RowNodeBlockLoader } from './rowNodeBlockLoader';
+
+/**
+ * @internal
+ */
+const InfiniteRowModelCoreModule: _ModuleWithoutApi = {
+    moduleName: 'InfiniteRowModelCore',
+    version: VERSION,
+    rowModels: ['infinite'],
+    beans: [InfiniteRowModel, RowNodeBlockLoader],
+};
 
 /**
  * @feature Infinite Row Model
@@ -12,12 +22,10 @@ import { RowNodeBlockLoader } from './rowNodeBlockLoader';
 export const InfiniteRowModelModule: _ModuleWithApi<_InfiniteRowModelGridApi> = {
     moduleName: 'InfiniteRowModel',
     version: VERSION,
-    rowModels: ['infinite'],
     apiFunctions: {
         refreshInfiniteCache,
         purgeInfiniteCache,
         getInfiniteRowCount,
     },
-    beans: [InfiniteRowModel, RowNodeBlockLoader],
-    dependsOn: [SsrmInfiniteSharedApiModule],
+    dependsOn: [InfiniteRowModelCoreModule, SsrmInfiniteSharedApiModule],
 };

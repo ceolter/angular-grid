@@ -556,6 +556,7 @@ export interface GridOptions<TData = any> {
     // *** Filter *** //
     /**
      * Rows are filtered using this text as a Quick Filter.
+     * Only supported for Client-Side Row Model.
      */
     quickFilterText?: string;
     /**

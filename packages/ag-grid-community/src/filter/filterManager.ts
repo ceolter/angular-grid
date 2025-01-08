@@ -148,10 +148,6 @@ export class FilterManager extends BeanStub implements NamedBean {
         return this.isAdvFilterEnabled() && this.advancedFilter.isHeaderActive();
     }
 
-    public resetQuickFilterCache(): void {
-        this.quickFilter?.resetCache();
-    }
-
     private refreshFiltersForAggregations() {
         const isAggFiltering = _getGroupAggFiltering(this.gos);
         if (isAggFiltering) {
@@ -190,7 +186,7 @@ export class FilterManager extends BeanStub implements NamedBean {
         return !!this.colFilter?.isSuppressFlashingCellsBecauseFiltering();
     }
 
-    public isQuickFilterPresent(): boolean {
+    private isQuickFilterPresent(): boolean {
         return !!this.quickFilter?.isFilterPresent();
     }
 

@@ -145,20 +145,29 @@ export const DateFilterModule: _ModuleWithoutApi = {
 };
 
 /**
+ * @internal
+ */
+const QuickFilterCoreModule: _ModuleWithoutApi = {
+    moduleName: 'QuickFilterCore',
+    version: VERSION,
+    rowModels: ['clientSide'],
+    beans: [QuickFilterService],
+    dependsOn: [FilterCoreModule, FilterValueModule],
+};
+
+/**
  * @feature Filtering -> Quick Filter
  * @gridOption quickFilterText
  */
 export const QuickFilterModule: _ModuleWithApi<_QuickFilterGridApi> = {
     moduleName: 'QuickFilter',
     version: VERSION,
-    rowModels: ['clientSide'],
-    beans: [QuickFilterService],
     apiFunctions: {
         isQuickFilterPresent,
         getQuickFilter,
         resetQuickFilter,
     },
-    dependsOn: [FilterCoreModule, FilterValueModule],
+    dependsOn: [QuickFilterCoreModule],
 };
 
 /**
