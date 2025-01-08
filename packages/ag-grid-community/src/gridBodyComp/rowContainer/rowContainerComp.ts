@@ -1,6 +1,7 @@
 import { RowComp } from '../../rendering/row/rowComp';
 import type { RowCtrl, RowCtrlInstanceId } from '../../rendering/row/rowCtrl';
 import { _setAriaRole } from '../../utils/aria';
+import { _isBrowserFirefox } from '../../utils/browser';
 import { _ensureDomOrder, _insertWithDomOrder } from '../../utils/dom';
 import type { ComponentSelector } from '../../widgets/component';
 import { Component, RefPlaceholder } from '../../widgets/component';
@@ -110,11 +111,19 @@ export class RowContainerComp extends Component {
     }
 
     private ensureDomOrder(eRow: HTMLElement, rowCtrl: RowCtrl): void {
-        if (this.domOrder) {
-            rowCtrl.resetHoveredStatus();
-            _ensureDomOrder(this.eContainer, eRow, this.lastPlacedElement);
-            this.lastPlacedElement = eRow;
+        if (!this.domOrder) {
+            return;
         }
+
+        // firefox fails to fire mouseleave events if nodes are removed from the DOM
+        // so we manually remove the hover styles, to prevent multiple rows from being
+        // style with hovered CSS while scrolling.
+        if (_isBrowserFirefox()) {
+            rowCtrl.resetHoveredStatus();
+        }
+
+        _ensureDomOrder(this.eContainer, eRow, this.lastPlacedElement);
+        this.lastPlacedElement = eRow;
     }
 }
 
