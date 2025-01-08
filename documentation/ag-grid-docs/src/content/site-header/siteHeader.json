@@ -3,7 +3,8 @@
         "items": [
             {
                 "title": "AG Charts",
-                "path": "/charts"
+                "url": "https://ag-grid.com/charts",
+                "isCollapsed": true
             },
             {
                 "title": "Demos",
