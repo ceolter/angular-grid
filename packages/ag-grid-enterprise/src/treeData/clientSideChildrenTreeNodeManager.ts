@@ -111,18 +111,18 @@ export class ClientSideChildrenTreeNodeManager<TData>
         let orderChanged = false;
         let rowsChanged = false;
 
-        const processChildrenNoReorder = (node: TreeNode, children: TData[]): void => {
+        const processChildrenNoReorder = (node: TreeNode, children: TData[], childrenLevel: number): void => {
             for (let i = 0, len = children.length; i < len; ++i) {
-                processChild(node, children[i]);
+                processChild(node, children[i], childrenLevel);
             }
         };
 
-        const processChildrenReOrder = (node: TreeNode, children: TData[]): void => {
+        const processChildrenReOrder = (node: TreeNode, children: TData[], childrenLevel: number): void => {
             const childrenLen = children?.length;
             let inOrder = true;
             let prevIndex = -1;
             for (let i = 0; i < childrenLen; ++i) {
-                const oldSourceRowIndex = processChild(node, children[i]);
+                const oldSourceRowIndex = processChild(node, children[i], childrenLevel);
                 if (oldSourceRowIndex >= 0) {
                     if (oldSourceRowIndex < prevIndex) {
                         inOrder = false;
@@ -141,14 +141,14 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         const processChildren = canReorder ? processChildrenReOrder : processChildrenNoReorder;
 
-        const processChild = (parent: TreeNode, data: TData): number => {
+        const processChild = (parent: TreeNode, data: TData, level: number): number => {
             let row = processedData.get(data);
             if (row !== undefined) {
                 _warn(2, { nodeId: row.id }); // Duplicate node
                 return -1;
             }
 
-            const id = getRowIdFunc({ data, level: parent.level + 1 });
+            const id = getRowIdFunc({ data, level });
 
             let created = false;
             row = this.getRowNode(id) as TreeRow<TData> | undefined;
@@ -185,13 +185,13 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
             const children = childrenGetter?.(data);
             if (children) {
-                processChildren(node, children);
+                processChildren(node, children, level + 1);
             }
 
             return oldSourceRowIndex;
         };
 
-        processChildren(treeRoot, rowData);
+        processChildren(treeRoot, rowData, 0);
 
         if (oldAllLeafChildren) {
             for (let i = 0, len = oldAllLeafChildren.length; i < len; ++i) {
