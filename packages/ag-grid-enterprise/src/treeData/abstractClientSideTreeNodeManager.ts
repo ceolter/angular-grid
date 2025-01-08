@@ -75,14 +75,18 @@ export abstract class AbstractClientSideTreeNodeManager<TData> extends AbstractC
 
     public override activate(rootNode: RowNode<TData>): void {
         super.activate(rootNode);
+        this.treeSetRootNode(rootNode);
+    }
 
+    protected treeSetRootNode(rootNode: RowNode<TData>): void {
         let treeRoot = this.treeRoot;
         if (!treeRoot) {
             treeRoot = new TreeNode(null, '', -1);
             treeRoot.childrenChanged = true;
             this.treeRoot = treeRoot;
         }
-        treeRoot.setRow(rootNode);
+        treeRoot.row = rootNode;
+        (rootNode as TreeRow).treeNode = treeRoot;
     }
 
     public override destroy(): void {

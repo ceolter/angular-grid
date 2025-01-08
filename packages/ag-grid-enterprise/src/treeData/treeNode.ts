@@ -155,18 +155,13 @@ export class TreeNode implements ITreeNode {
      * @returns True if the row changed
      */
     public setRow(newRow: TreeRow | null): boolean {
-        const { level, row: oldRow } = this;
-        if (level < 0) {
-            if (oldRow !== null && oldRow !== newRow) {
-                oldRow.treeNode = null;
-            }
-        } else {
-            if (oldRow === newRow) {
-                return false; // Already the same row
-            }
-            if (oldRow !== null) {
-                oldRow.treeNode = null;
-            }
+        const oldRow = this.row;
+
+        if (oldRow === newRow) {
+            return false; // Already the same row
+        }
+        if (oldRow !== null) {
+            oldRow.treeNode = null;
         }
         if (newRow !== null) {
             newRow.treeNode = this;

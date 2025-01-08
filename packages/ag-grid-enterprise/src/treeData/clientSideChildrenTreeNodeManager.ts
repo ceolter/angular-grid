@@ -58,7 +58,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
         rootNode.allLeafChildren = allLeafChildren;
 
         this.treeClear(treeRoot);
-        treeRoot.setRow(rootNode);
+        this.treeSetRootNode(rootNode);
 
         const processChild = (node: TreeNode, data: TData) => {
             let row = processedData.get(data);
@@ -242,15 +242,11 @@ export class ClientSideChildrenTreeNodeManager<TData>
     }
 
     public override refreshModel(params: RefreshModelParams<TData>): void {
-        const { rootNode, treeRoot } = this;
-        if (!treeRoot) {
-            return; // Not active, destroyed
-        }
-
-        if (params.changedProps?.has('treeData') && !params.newData) {
-            treeRoot.setRow(rootNode);
-            const allLeafChildren = rootNode?.allLeafChildren;
-            treeRoot.childrenChanged = true;
+        const rootNode = this.rootNode;
+        if (rootNode && params.changedProps?.has('treeData') && !params.newData) {
+            this.treeSetRootNode(rootNode);
+            const treeRoot = this.treeRoot!;
+            const allLeafChildren = rootNode.allLeafChildren;
             if (allLeafChildren) {
                 for (let i = 0, len = allLeafChildren.length; i < len; ++i) {
                     const row = allLeafChildren[i];
@@ -258,6 +254,7 @@ export class ClientSideChildrenTreeNodeManager<TData>
                     row.treeNode?.invalidate();
                 }
             }
+            treeRoot.childrenChanged = true;
             this.treeCommit();
         }
 
