@@ -406,10 +406,14 @@ const GRID_OPTION_VALIDATIONS: () => Validations<GridOptions> = () => {
                 const rowModel = options.rowModelType ?? 'clientSide';
                 switch (rowModel) {
                     case 'clientSide': {
-                        const { treeDataChildrenField, treeDataParentIdField, getDataPath } = options as any;
+                        const { treeDataChildrenField, treeDataParentIdField, getDataPath, getRowId } = options as any;
 
                         if (treeDataChildrenField && treeDataParentIdField) {
                             return `treeData should not have both 'treeDataChildrenField' and 'treeDataParentIdField' set.`;
+                        }
+
+                        if (treeDataParentIdField && !getRowId) {
+                            return `'treeDataParentIdField' requires 'getRowId' to be provided.`;
                         }
 
                         if (treeDataChildrenField && getDataPath) {
