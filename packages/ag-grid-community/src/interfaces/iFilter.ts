@@ -37,12 +37,13 @@ export interface FilterModelValidation<TModel = any> {
 }
 
 export interface FilterEvaluator<TData = any, TContext = any, TValue = any, TModel = any, TCustomParams = object> {
-    init?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
-    refresh?(params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams): void;
-    doesFilterPass(params: FilterEvaluatorFuncParams<TData, TModel>): boolean;
-    validateModel?(
+    init?(
         params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams
     ): FilterModelValidation<TModel> | Promise<FilterModelValidation<TModel>>;
+    refresh?(
+        params: FilterEvaluatorParams<TData, TContext, TValue, TModel> & TCustomParams
+    ): FilterModelValidation<TModel> | Promise<FilterModelValidation<TModel>>;
+    doesFilterPass(params: FilterEvaluatorFuncParams<TData, TModel>): boolean;
     destroy?(): void;
 }
 

@@ -211,7 +211,13 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
         return res;
     }
 
-    protected setModelIntoUi(model: ISimpleFilterModel | ICombinedSimpleModel<M>): AgPromise<void> {
+    protected setModelIntoUi(
+        model: ISimpleFilterModel | ICombinedSimpleModel<M> | null,
+        silent?: boolean
+    ): AgPromise<void> {
+        if (model == null) {
+            return this.resetUiToDefaults(silent);
+        }
         const isCombined = (model as any).operator;
 
         if (isCombined) {
@@ -257,7 +263,9 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
 
         this.createMissingConditionsAndOperators();
 
-        this.onUiChanged();
+        if (!silent) {
+            this.onUiChanged();
+        }
 
         return AgPromise.resolve();
     }
@@ -722,7 +730,7 @@ export abstract class SimpleFilter<M extends ISimpleFilterModel, V, P extends Si
         }
     }
 
-    protected resetUiToDefaults(silent?: boolean): AgPromise<void> {
+    private resetUiToDefaults(silent?: boolean): AgPromise<void> {
         this.removeConditionsAndOperators(this.isReadOnly() ? 1 : this.numAlwaysVisibleConditions);
 
         this.eTypes.forEach((eType) => this.resetType(eType));

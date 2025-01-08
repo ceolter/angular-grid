@@ -52,10 +52,6 @@ class TestFilter extends ProvidedFilter<ProvidedFilterModel, string> {
         throw new Error('Method not implemented.');
     }
 
-    protected resetUiToDefaults(): AgPromise<void> {
-        throw new Error('Method not implemented.');
-    }
-
     protected setModelIntoUi(): AgPromise<void> {
         throw new Error('Method not implemented.');
     }

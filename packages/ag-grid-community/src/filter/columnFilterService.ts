@@ -714,6 +714,7 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         }
         const evaluator = filterEvaluator(this.gos.addGridCommonParams({ column, colDef }));
         const evaluatorParams = this.createEvaluatorParams(column, 'init');
+        // TODO - need to wait on this somewhere and update the model
         evaluator.init?.(evaluatorParams);
         return { evaluator, evaluatorParams };
     }
@@ -984,17 +985,12 @@ export class ColumnFilterService extends BeanStub implements NamedBean {
         let modelChanged = false;
 
         if (evaluator && evaluatorParams) {
-            const result = await evaluator.validateModel?.({ ...evaluatorParams, model, source });
+            const result = await evaluator.refresh?.({ ...evaluatorParams, model, source });
             if (result?.valid === false) {
                 model = result.model ?? null;
                 this.model[evaluatorParams.column.getColId()] = model;
                 modelChanged = true;
             }
-            evaluator.refresh?.({
-                ...evaluatorParams,
-                model,
-                source,
-            });
         }
 
         const filter = await filterPromise;

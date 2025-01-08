@@ -3,28 +3,15 @@ import type {
     RowNode,
     SetFilterModelValue,
     SetFilterParams,
-    SetFilterValues,
-    SetFilterValuesFunc,
-    SetFilterValuesFuncParams,
     TextFormatter,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import {
-    AgPromise,
-    BeanStub,
-    _defaultComparator,
-    _error,
-    _exists,
-    _isClientSideRowModel,
-    _makeNull,
-    _warn,
-} from 'ag-grid-community';
+import { AgPromise, BeanStub, _exists, _makeNull } from 'ag-grid-community';
 
-import { ClientSideValuesExtractor } from './clientSideValueExtractor';
 import { FlatSetDisplayValueModel } from './flatSetDisplayValueModel';
 import type { ISetDisplayValueModel, SetFilterModelTreeItem } from './iSetDisplayValueModel';
 import type { ISetFilterLocaleText } from './localeText';
-import { createTreeDataOrGroupingComparator } from './setFilterUtils';
+import type { SetFilterAllValues } from './setFilterAllValues';
 import { TreeSetDisplayValueModel } from './treeSetDisplayValueModel';
 
 export enum SetFilterModelValuesType {
@@ -37,45 +24,28 @@ export interface SetValueModelParams<V> {
     filterParams: SetFilterParams<any, V>;
     translate: (key: keyof ISetFilterLocaleText) => string;
     caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat;
-    createKey: (value: V | null | undefined, node?: RowNode) => string | null;
     getValueFormatter: () => ((params: ValueFormatterParams) => string) | undefined;
-    usingComplexObjects?: boolean;
     treeDataTreeList?: boolean;
     groupingTreeList?: boolean;
+    allValues: SetFilterAllValues<V>;
 }
 
 type SetValueModelEvent = 'availableValuesChanged' | 'loadingStart' | 'loadingEnd';
 /** @param V type of value in the Set Filter */
 export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     private formatter: TextFormatter;
-    private suppressSorting: boolean;
-    private clientSideValuesExtractor: ClientSideValuesExtractor<V>;
     private doesRowPassOtherFilters: (node: RowNode) => boolean;
-    private keyComparator: (a: string | null, b: string | null) => number;
-    private entryComparator: (a: [string | null, V | null], b: [string | null, V | null]) => number;
-    private compareByValue: boolean;
-    private caseSensitive: boolean;
     private displayValueModel: ISetDisplayValueModel<V>;
     private filterParams: SetFilterParams<any, V>;
     private translate: (key: keyof ISetFilterLocaleText) => string;
     private caseFormat: <T extends string | null>(valueToFormat: T) => typeof valueToFormat;
-    private createKey: (value: V | null | undefined, node?: RowNode) => string | null;
-    private usingComplexObjects: boolean;
 
-    private valuesType: SetFilterModelValuesType;
     private miniFilterText: string | null = null;
 
     /** When true, in excelMode = 'windows', it adds previously selected filter items to newly checked filter selection */
     private addCurrentSelectionToFilter: boolean = false;
 
-    /** Values provided to the filter for use. */
-    private providedValues: SetFilterValues<any, V> | null = null;
-
-    /** Values can be loaded asynchronously, so wait on this promise if you need to ensure values have been loaded. */
-    private allValuesPromise: AgPromise<(string | null)[]>;
-
-    /** All possible values for the filter, sorted if required. */
-    private allValues: Map<string | null, V | null> = new Map();
+    private allValues: SetFilterAllValues<V>;
 
     /** Remaining keys when filters from other columns have been applied. */
     private availableKeys = new Set<string | null>();
@@ -91,86 +61,23 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
 
     public postConstruct(): void {
         const {
-            usingComplexObjects,
             treeDataTreeList,
             groupingTreeList,
             filterParams,
             getValueFormatter,
             translate,
             caseFormat,
-            createKey,
+            allValues,
         } = this.params;
-        const {
-            column,
-            colDef,
-            textFormatter,
-            doesRowPassOtherFilter,
-            suppressSorting,
-            comparator,
-            values,
-            caseSensitive,
-            treeList,
-            treeListPathGetter,
-            treeListFormatter,
-        } = filterParams;
+        const { column, textFormatter, treeList, treeListPathGetter, treeListFormatter, doesRowPassOtherFilter } =
+            filterParams;
 
         this.filterParams = filterParams;
+        this.allValues = allValues;
         this.translate = translate;
         this.caseFormat = caseFormat;
-        this.createKey = createKey;
-        this.usingComplexObjects = !!usingComplexObjects;
         this.formatter = textFormatter ?? ((value) => value ?? null);
         this.doesRowPassOtherFilters = doesRowPassOtherFilter;
-        this.suppressSorting = suppressSorting || false;
-        const keyComparator = comparator ?? (colDef.comparator as (a: any, b: any) => number);
-        const treeDataOrGrouping = !!treeDataTreeList || !!groupingTreeList;
-        // If using complex objects and a comparator is provided, sort by values, otherwise need to sort by the string keys.
-        // Also if tree data, grouping, or date with tree list, then need to do value sort
-        this.compareByValue = !!(
-            (usingComplexObjects && keyComparator) ||
-            treeDataOrGrouping ||
-            (treeList && !treeListPathGetter)
-        );
-        if (treeDataOrGrouping && !keyComparator) {
-            this.entryComparator = createTreeDataOrGroupingComparator() as any;
-        } else if (treeList && !treeListPathGetter && !keyComparator) {
-            this.entryComparator = (
-                [_aKey, aValue]: [string | null, V | null],
-                [_bKey, bValue]: [string | null, V | null]
-            ) => _defaultComparator(aValue, bValue);
-        } else {
-            this.entryComparator = (
-                [_aKey, aValue]: [string | null, V | null],
-                [_bKey, bValue]: [string | null, V | null]
-            ) => keyComparator(aValue, bValue);
-        }
-        this.keyComparator = (keyComparator as any) ?? _defaultComparator;
-        this.caseSensitive = !!caseSensitive;
-        const { gos, beans } = this;
-        const groupAllowUnbalanced = gos.get('groupAllowUnbalanced');
-
-        if (_isClientSideRowModel(gos, beans.rowModel)) {
-            this.clientSideValuesExtractor = this.createManagedBean(
-                new ClientSideValuesExtractor(
-                    this.filterParams,
-                    this.createKey,
-                    this.caseFormat,
-                    treeDataOrGrouping,
-                    !!treeDataTreeList,
-                    groupAllowUnbalanced
-                )
-            );
-        }
-
-        if (values == null) {
-            this.valuesType = SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
-        } else {
-            this.valuesType = Array.isArray(values)
-                ? SetFilterModelValuesType.PROVIDED_LIST
-                : SetFilterModelValuesType.PROVIDED_CALLBACK;
-
-            this.providedValues = values;
-        }
 
         this.displayValueModel = treeList
             ? new TreeSetDisplayValueModel(
@@ -180,50 +87,54 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
                   treeDataTreeList || groupingTreeList
               )
             : (new FlatSetDisplayValueModel<V>(
-                  beans.valueSvc,
+                  this.beans.valueSvc,
                   getValueFormatter,
                   this.formatter,
                   column as AgColumn
               ) as any);
 
-        this.updateAllValues().then((updatedKeys) => this.resetSelectionState(updatedKeys || []));
+        this.allValues.allValuesPromise.then((values) => {
+            this.updateAvailableValues(values);
+            this.resetSelectionState(values ?? []);
+        });
     }
 
     public updateOnParamsChange(filterParams: SetFilterParams<any, V>): AgPromise<void> {
         return new AgPromise<void>((resolve) => {
-            const { values, textFormatter, suppressSorting, treeListFormatter } = filterParams;
+            const { textFormatter } = filterParams;
+            // const { values, textFormatter, suppressSorting, treeListFormatter } = filterParams;
 
-            const currentProvidedValues = this.providedValues;
-            const currentSuppressSorting = this.suppressSorting;
+            // const currentProvidedValues = this.providedValues;
+            // const currentSuppressSorting = this.suppressSorting;
 
             this.filterParams = filterParams;
             this.formatter = textFormatter ?? ((value) => value ?? null);
 
-            this.suppressSorting = suppressSorting || false;
-            this.providedValues = values ?? null;
+            // this.suppressSorting = suppressSorting || false;
+            // this.providedValues = values ?? null;
 
-            if (this.displayValueModel instanceof TreeSetDisplayValueModel) {
-                this.displayValueModel.updateOnParamsChange(treeListFormatter);
-            }
+            // if (this.displayValueModel instanceof TreeSetDisplayValueModel) {
+            //     this.displayValueModel.updateOnParamsChange(treeListFormatter);
+            // }
 
-            // Rebuild values when values or their sort order changes
-            if (this.providedValues !== currentProvidedValues || this.suppressSorting !== currentSuppressSorting) {
-                if (!values || values.length === 0) {
-                    this.valuesType = SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
-                    this.providedValues = null;
-                } else {
-                    this.valuesType = Array.isArray(values)
-                        ? SetFilterModelValuesType.PROVIDED_LIST
-                        : SetFilterModelValuesType.PROVIDED_CALLBACK;
-                }
+            // // Rebuild values when values or their sort order changes
+            // if (this.providedValues !== currentProvidedValues || this.suppressSorting !== currentSuppressSorting) {
+            //     if (!values || values.length === 0) {
+            //         this.valuesType = SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
+            //         this.providedValues = null;
+            //     } else {
+            //         this.valuesType = Array.isArray(values)
+            //             ? SetFilterModelValuesType.PROVIDED_LIST
+            //             : SetFilterModelValuesType.PROVIDED_CALLBACK;
+            //     }
 
-                const currentModel = this.getModel();
-                this.updateAllValues().then(() => {
-                    this.setModel(currentModel).then(() => resolve());
-                });
-            } else {
-                resolve();
-            }
+            //     const currentModel = this.getModel();
+            //     this.updateAllValues().then(() => {
+            //         this.setModel(currentModel).then(() => resolve());
+            //     });
+            // } else {
+            resolve();
+            // }
         });
     }
 
@@ -235,13 +146,14 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     public refreshValues(): AgPromise<void> {
         return new AgPromise<void>((resolve) => {
             // don't get the model until values are resolved, as there could be queued setModel calls
-            this.allValuesPromise.then(() => {
+            this.allValues.allValuesPromise.then(() => {
                 const currentModel = this.getModel();
 
-                this.updateAllValues();
-
-                // ensure model is updated for new values
-                this.setModel(currentModel).then(() => resolve());
+                this.allValues.updateAllValues().then((values) => {
+                    this.updateAvailableValues(values);
+                    // ensure model is updated for new values
+                    this.setModel(currentModel).then(() => resolve());
+                });
             });
         });
     }
@@ -254,9 +166,7 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     public overrideValues(valuesToUse: (V | null)[]): AgPromise<void> {
         return new AgPromise<void>((resolve) => {
             // wait for any existing values to be populated before overriding
-            this.allValuesPromise.then(() => {
-                this.valuesType = SetFilterModelValuesType.PROVIDED_LIST;
-                this.providedValues = valuesToUse;
+            this.allValues.overrideValues(valuesToUse).then(() => {
                 this.refreshValues().then(() => resolve());
             });
         });
@@ -265,7 +175,7 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     /** @return has anything been updated */
     public refreshAfterAnyFilterChanged(): AgPromise<boolean> {
         if (this.showAvailableOnly()) {
-            return this.allValuesPromise.then((keys) => {
+            return this.allValues.allValuesPromise.then((keys) => {
                 this.updateAvailableKeys(keys ?? [], 'otherFilter');
                 return true;
             });
@@ -278,80 +188,15 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     }
 
     private updateAllValues(): AgPromise<(string | null)[]> {
-        this.allValuesPromise = new AgPromise<(string | null)[]>((resolve) => {
-            switch (this.valuesType) {
-                case SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES:
-                    this.getValuesFromRowsAsync(false).then((values) => resolve(this.processAllValues(values)));
-
-                    break;
-                case SetFilterModelValuesType.PROVIDED_LIST: {
-                    resolve(
-                        this.processAllValues(
-                            this.uniqueValues(this.validateProvidedValues(this.providedValues as (V | null)[]))
-                        )
-                    );
-
-                    break;
-                }
-
-                case SetFilterModelValuesType.PROVIDED_CALLBACK: {
-                    this.dispatchLocalEvent({ type: 'loadingStart' });
-
-                    const callback = this.providedValues as SetFilterValuesFunc<any, V>;
-                    const { column, colDef } = this.filterParams;
-                    const params: SetFilterValuesFuncParams<any, V> = this.gos.addGridCommonParams({
-                        success: (values) => {
-                            this.dispatchLocalEvent({ type: 'loadingEnd' });
-
-                            resolve(this.processAllValues(this.uniqueValues(this.validateProvidedValues(values))));
-                        },
-                        colDef,
-                        column,
-                    });
-
-                    window.setTimeout(() => callback(params), 0);
-
-                    break;
-                }
-            }
+        return this.allValues.updateAllValues().then((values) => {
+            this.updateAvailableValues(values);
+            return values ?? [];
         });
-
-        this.allValuesPromise
-            .then((values) => this.updateAvailableKeys(values || [], 'reload'))
-            .then(() => (this.initialised = true));
-
-        return this.allValuesPromise;
     }
 
-    private processAllValues(values: Map<string | null, V | null> | null): (string | null)[] {
-        const sortedKeys = this.sortKeys(values);
-
-        this.allValues = values ?? new Map();
-
-        return sortedKeys;
-    }
-
-    private validateProvidedValues(values: (V | null)[]): (V | null)[] {
-        if (this.usingComplexObjects && values?.length) {
-            const firstValue = values[0];
-            if (firstValue && typeof firstValue !== 'object' && typeof firstValue !== 'function') {
-                const firstKey = this.createKey(firstValue);
-                if (firstKey == null) {
-                    _warn(209);
-                } else {
-                    _warn(210);
-                }
-            }
-        }
-        return values;
-    }
-
-    public setValuesType(value: SetFilterModelValuesType) {
-        this.valuesType = value;
-    }
-
-    public getValuesType(): SetFilterModelValuesType {
-        return this.valuesType;
+    private updateAvailableValues(values: (string | null)[] | null): void {
+        this.updateAvailableKeys(values || [], 'reload');
+        this.initialised = true;
     }
 
     public isKeyAvailable(key: string | null): boolean {
@@ -359,75 +204,18 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     }
 
     private showAvailableOnly(): boolean {
-        return this.valuesType === SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
+        return this.allValues.valuesType === SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
     }
 
     private updateAvailableKeys(allKeys: (string | null)[], source: 'reload' | 'otherFilter'): void {
-        const availableKeys = this.showAvailableOnly() ? this.sortKeys(this.getValuesFromRows(true)) : allKeys;
+        const availableKeys = this.showAvailableOnly()
+            ? this.allValues.getAvailableValues((node) => this.doesRowPassOtherFilters(node))
+            : allKeys;
 
         this.availableKeys = new Set(availableKeys);
         this.dispatchLocalEvent({ type: 'availableValuesChanged' });
 
         this.updateDisplayedValues(source, allKeys);
-    }
-
-    public sortKeys(nullableValues: Map<string | null, V | null> | null): (string | null)[] {
-        const values = nullableValues ?? new Map();
-
-        if (this.suppressSorting) {
-            return Array.from(values.keys());
-        }
-
-        let sortedKeys;
-        if (this.compareByValue) {
-            sortedKeys = Array.from(values.entries())
-                .sort(this.entryComparator)
-                .map(([key]) => key);
-        } else {
-            sortedKeys = Array.from(values.keys()).sort(this.keyComparator);
-        }
-
-        if (this.filterParams.excelMode && values.has(null)) {
-            // ensure the blank value always appears last
-            sortedKeys = sortedKeys.filter((v) => v != null);
-            sortedKeys.push(null);
-        }
-
-        return sortedKeys;
-    }
-
-    private getParamsForValuesFromRows(removeUnavailableValues = false): {
-        predicate: (node: RowNode) => boolean;
-        existingValues?: Map<string | null, V | null>;
-    } | null {
-        if (!this.clientSideValuesExtractor) {
-            _error(113);
-            return null;
-        }
-
-        const predicate = (node: RowNode) => !removeUnavailableValues || this.doesRowPassOtherFilters(node);
-
-        const existingValues = removeUnavailableValues && !this.caseSensitive ? this.allValues : undefined;
-
-        return { predicate, existingValues };
-    }
-
-    private getValuesFromRows(removeUnavailableValues = false): Map<string | null, V | null> | null {
-        const params = this.getParamsForValuesFromRows(removeUnavailableValues);
-        if (!params) {
-            return null;
-        }
-
-        return this.clientSideValuesExtractor.extractUniqueValues(params.predicate, params.existingValues);
-    }
-
-    private getValuesFromRowsAsync(removeUnavailableValues = false): AgPromise<Map<string | null, V | null> | null> {
-        const params = this.getParamsForValuesFromRows(removeUnavailableValues);
-        if (!params) {
-            return AgPromise.resolve(null);
-        }
-
-        return this.clientSideValuesExtractor.extractUniqueValuesAsync(params.predicate, params.existingValues);
     }
 
     /** Sets mini filter value. Returns true if it changed from last value, otherwise false. */
@@ -512,19 +300,19 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     public hasSelections(): boolean {
         return this.filterParams.defaultToNothingSelected
             ? this.selectedKeys.size > 0
-            : this.allValues.size !== this.selectedKeys.size;
+            : this.allValues.allValues.size !== this.selectedKeys.size;
     }
 
     public getKeys(): SetFilterModelValue {
-        return Array.from(this.allValues.keys());
+        return Array.from(this.allValues.allValues.keys());
     }
 
     public getValues(): (V | null)[] {
-        return Array.from(this.allValues.values());
+        return Array.from(this.allValues.allValues.values());
     }
 
     public getValue(key: string | null): V | null {
-        return this.allValues.get(key)!;
+        return this.allValues.allValues.get(key)!;
     }
 
     public setAddCurrentSelectionToFilter(value: boolean) {
@@ -549,7 +337,7 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     public selectAllMatchingMiniFilter(clearExistingSelection = false): void {
         if (this.miniFilterText == null) {
             // ensure everything is selected
-            this.selectedKeys = new Set(this.allValues.keys());
+            this.selectedKeys = new Set(this.allValues.allValues.keys());
         } else {
             // ensure everything that matches the mini filter is selected
             if (clearExistingSelection) {
@@ -622,7 +410,7 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
     }
 
     public setModel(model: SetFilterModelValue | null): AgPromise<void> {
-        return this.allValuesPromise.then((keys) => {
+        return this.allValues.allValuesPromise.then((keys) => {
             if (model == null) {
                 this.resetSelectionState(keys ?? []);
             } else {
@@ -630,7 +418,7 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
                 this.selectedKeys.clear();
 
                 const existingFormattedKeys: Map<string | null, string | null> = new Map();
-                this.allValues.forEach((_value, key) => {
+                this.allValues.allValues.forEach((_value, key) => {
                     existingFormattedKeys.set(this.caseFormat(key), key);
                 });
 
@@ -643,22 +431,6 @@ export class SetValueModel<V> extends BeanStub<SetValueModelEvent> {
                 });
             }
         });
-    }
-
-    private uniqueValues(values: (V | null)[] | null): Map<string | null, V | null> {
-        const uniqueValues: Map<string | null, V | null> = new Map();
-        const formattedKeys: Set<string | null> = new Set();
-        (values ?? []).forEach((value) => {
-            const valueToUse = _makeNull(value);
-            const unformattedKey = this.createKey(valueToUse);
-            const formattedKey = this.caseFormat(unformattedKey);
-            if (!formattedKeys.has(formattedKey)) {
-                formattedKeys.add(formattedKey);
-                uniqueValues.set(unformattedKey, valueToUse);
-            }
-        });
-
-        return uniqueValues;
     }
 
     private resetSelectionState(keys: (string | null)[]): void {

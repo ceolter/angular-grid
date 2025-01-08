@@ -4,31 +4,75 @@ import type {
     IRowNode,
     ISetFilterParams,
     KeyCreatorParams,
-    SetFilterParams,
     ValueFormatterParams,
 } from 'ag-grid-community';
-import { BeanStub, GROUP_AUTO_COLUMN_ID, _error, _makeNull, _toStringOrNull } from 'ag-grid-community';
+import {
+    BeanStub,
+    GROUP_AUTO_COLUMN_ID,
+    _error,
+    _isClientSideRowModel,
+    _makeNull,
+    _toStringOrNull,
+} from 'ag-grid-community';
 
-export interface SetFilterHelperParams<TValue = string> extends ISetFilterParams<any, TValue> {
+import { ClientSideValuesExtractor } from './clientSideValueExtractor';
+import { SetFilterAllValues } from './setFilterAllValues';
+
+export interface SetFilterHelperParams<TValue> extends ISetFilterParams<any, TValue> {
     colDef: ColDef<any, TValue>;
     column: Column<TValue>;
+    getValue: <TValue = any>(
+        node: IRowNode<any>,
+        column?: string | ColDef<any, TValue> | Column<TValue>
+    ) => TValue | null | undefined;
 }
 
-export class SetFilterHelper<TValue = string> extends BeanStub {
+export class SetFilterHelper<TValue> extends BeanStub {
     public createKey: (value: TValue | null | undefined, node?: IRowNode | null) => string | null;
     public treeDataTreeList = false;
     public groupingTreeList = false;
     public caseSensitive: boolean = false;
     public valueFormatter?: (params: ValueFormatterParams) => string;
     public noValueFormatterSupplied = false;
+    public allValues: SetFilterAllValues<TValue>;
 
     private params: SetFilterHelperParams<TValue>;
 
     public init(params: SetFilterHelperParams<TValue>): void {
-        this.refresh(params);
+        this.updateParams(params);
+        const isTreeDataOrGrouping = () => this.treeDataTreeList || this.groupingTreeList;
+        const isTreeData = () => this.treeDataTreeList;
+        const createKey = (value: TValue | null | undefined, node?: IRowNode | null) => this.createKey(value, node);
+        const caseFormat = this.caseFormat.bind(this);
+        const { gos, beans } = this;
+        const clientSideValuesExtractor = _isClientSideRowModel(gos, beans.rowModel)
+            ? this.createManagedBean(
+                  new ClientSideValuesExtractor<TValue>(
+                      createKey,
+                      caseFormat,
+                      params.getValue,
+                      isTreeDataOrGrouping,
+                      isTreeData
+                  )
+              )
+            : undefined;
+        this.allValues = this.createManagedBean(
+            new SetFilterAllValues(clientSideValuesExtractor, caseFormat, createKey, isTreeDataOrGrouping, {
+                filterParams: params,
+                usingComplexObjects: !!(params.keyCreator ?? params.colDef.keyCreator),
+            })
+        );
     }
 
     public refresh(params: SetFilterHelperParams<TValue>): void {
+        this.updateParams(params);
+        this.allValues.refresh({
+            filterParams: params,
+            usingComplexObjects: !!(params.keyCreator ?? params.colDef.keyCreator),
+        });
+    }
+
+    private updateParams(params: SetFilterHelperParams<TValue>): void {
         this.params = params;
         const { caseSensitive, treeList, column, colDef, keyCreator, valueFormatter } = params;
         this.caseSensitive = !!caseSensitive;
@@ -45,25 +89,6 @@ export class SetFilterHelper<TValue = string> extends BeanStub {
             return valueToFormat;
         }
         return this.caseSensitive ? valueToFormat : (valueToFormat.toUpperCase() as T);
-    }
-
-    public haveColDefParamsChanged(params: SetFilterParams<any, TValue>): boolean {
-        const { colDef, keyCreator } = params;
-        const { colDef: existingColDef, keyCreator: existingKeyCreator } = this.params;
-
-        const currentKeyCreator = keyCreator ?? colDef.keyCreator;
-        const previousKeyCreator = existingKeyCreator ?? existingColDef?.keyCreator;
-
-        const filterValueGetterChanged = colDef.filterValueGetter !== existingColDef?.filterValueGetter;
-        const keyCreatorChanged = currentKeyCreator !== previousKeyCreator;
-        const dataTypeSvc = this.beans.dataTypeSvc;
-        const valueFormatterIsKeyCreatorAndHasChanged =
-            !!dataTypeSvc &&
-            !!currentKeyCreator &&
-            dataTypeSvc.getFormatValue(colDef.cellDataType as string) === currentKeyCreator &&
-            colDef.valueFormatter !== existingColDef?.valueFormatter;
-
-        return filterValueGetterChanged || keyCreatorChanged || valueFormatterIsKeyCreatorAndHasChanged;
     }
 
     private generateCreateKey(

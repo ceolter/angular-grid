@@ -7,8 +7,9 @@ import type {
     ISetFilterParams,
     RowNode,
     SetFilterModel,
+    SetFilterModelValue,
 } from 'ag-grid-community';
-import { BeanStub } from 'ag-grid-community';
+import { BeanStub, _makeNull } from 'ag-grid-community';
 
 import { SetFilterAppliedModel } from './setFilterAppliedModel';
 import type { SetFilterHelper } from './setFilterHelper';
@@ -29,18 +30,27 @@ export class SetFilterEvaluator<TValue = string>
      */
     private appliedModel: SetFilterAppliedModel;
 
-    public init(params: FilterEvaluatorParams<any, any, TValue, SetFilterModel> & ISetFilterParams<any, TValue>): void {
+    public init(
+        params: FilterEvaluatorParams<any, any, TValue, SetFilterModel> & ISetFilterParams<any, TValue>
+    ): Promise<FilterModelValidation<SetFilterModel>> {
         const helper = (this.beans.setFilterSvc as SetFilterService).getHelper(params);
         this.helper = helper;
         this.appliedModel = new SetFilterAppliedModel(helper.caseFormat.bind(helper));
         this.refresh(params);
+
+        return this.validateModel(params);
     }
 
     public refresh(
         params: FilterEvaluatorParams<any, any, TValue, SetFilterModel> & ISetFilterParams<any, TValue>
-    ): void {
+    ): Promise<FilterModelValidation<SetFilterModel>> {
         this.params = params;
-        this.appliedModel.update(params.model);
+
+        return this.validateModel(params).then((result) => {
+            const { valid, model } = result;
+            this.appliedModel.update(valid ? params.model : model ?? null);
+            return result;
+        });
     }
 
     public doesFilterPass(params: FilterEvaluatorFuncParams<any, SetFilterModel>): boolean {
@@ -75,11 +85,40 @@ export class SetFilterEvaluator<TValue = string>
         return appliedModel.has(helper.createKey(value, node));
     }
 
-    public validateModel() // params: FilterEvaluatorParams<any, any, TValue, SetFilterModel> & ISetFilterParams<any, TValue>
-    : Promise<FilterModelValidation<SetFilterModel>> {
-        // TODO - need to check against available values
-        // need to move set value model into helper
-        return Promise.resolve({ valid: true });
+    protected validateModel(
+        params: FilterEvaluatorParams<any, any, TValue, SetFilterModel> & ISetFilterParams<any, TValue>
+    ): Promise<FilterModelValidation<SetFilterModel>> {
+        const helper = this.helper;
+        const allValues = helper.allValues;
+        return new Promise((resolve) => {
+            allValues.allValuesPromise.then(() => {
+                const model = params.model;
+                if (model == null) {
+                    resolve({ valid: true });
+                    return;
+                }
+                const existingFormattedKeys: Map<string | null, string | null> = new Map();
+                allValues.allValues.forEach((_value, key) => {
+                    existingFormattedKeys.set(helper.caseFormat(key), key);
+                });
+                const newValues: SetFilterModelValue = [];
+                let updated = false;
+                for (const unformattedKey of model.values) {
+                    const formattedKey = helper.caseFormat(_makeNull(unformattedKey));
+                    const existingUnformattedKey = existingFormattedKeys.get(formattedKey);
+                    if (existingUnformattedKey !== undefined) {
+                        newValues.push(existingUnformattedKey);
+                    } else {
+                        updated = true;
+                    }
+                }
+                if (newValues.length === 0 && params.excelMode) {
+                    resolve({ valid: false, model: null });
+                    return;
+                }
+                resolve(updated ? { valid: false, model: { ...model, values: newValues } } : { valid: true });
+            });
+        });
     }
 
     private doesFilterPassForTreeData(node: IRowNode): boolean {

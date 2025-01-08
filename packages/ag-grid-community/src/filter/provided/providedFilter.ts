@@ -2,7 +2,6 @@ import type { AgColumn } from '../../entities/agColumn';
 import type { ContainerType, IAfterGuiAttachedParams } from '../../interfaces/iAfterGuiAttachedParams';
 import type { IDoesFilterPassParams, IFilterComp, ProvidedFilterModel } from '../../interfaces/iFilter';
 import type { PopupEventParams } from '../../interfaces/iPopup';
-import type { IRowNode } from '../../interfaces/iRowNode';
 import { PositionableFeature } from '../../rendering/features/positionableFeature';
 import { _clearElement, _loadTemplate, _removeFromParent, _setDisabled } from '../../utils/dom';
 import { _debounce } from '../../utils/function';
@@ -24,6 +23,7 @@ import type { IProvidedFilter, ProvidedFilterParams } from './iProvidedFilter';
  * @param M type of filter-model managed by the concrete sub-class that extends this type
  * @param V type of value managed by the concrete sub-class that extends this type
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends ProvidedFilterParams<any, M>>
     extends Component
     implements IProvidedFilter, IFilterComp
@@ -54,9 +54,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
     protected abstract createBodyTemplate(): string;
     protected abstract getAgComponents(): ComponentSelector[];
     protected abstract getCssIdentifier(): string;
-    protected abstract resetUiToDefaults(silent?: boolean): AgPromise<void>;
-
-    protected abstract setModelIntoUi(model: M, silent?: boolean): AgPromise<void>;
+    protected abstract setModelIntoUi(model: M | null, silent?: boolean): AgPromise<void>;
     protected abstract areModelsEqual(a: M, b: M): boolean;
 
     /** Used to get the filter type for filter models. */
@@ -278,7 +276,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
     }
 
     protected doSetModel(model: M | null, silent?: boolean): AgPromise<void> {
-        const promise = model != null ? this.setModelIntoUi(model, silent) : this.resetUiToDefaults(silent);
+        const promise = this.setModelIntoUi(model ?? null, silent);
 
         return promise.then(() => {
             this.updateUiVisibility();
@@ -309,15 +307,11 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
             afterUiUpdatedFunc?.();
         };
 
-        if (currentModel != null) {
-            this.setModelIntoUi(currentModel).then(afterAppliedFunc);
-        } else {
-            this.resetUiToDefaults().then(afterAppliedFunc);
-        }
+        this.setModelIntoUi(currentModel ?? null).then(afterAppliedFunc);
     }
 
     private onBtClear(): void {
-        this.resetUiToDefaults().then(() => this.onUiChanged());
+        this.setModelIntoUi(null).then(() => this.onUiChanged());
     }
 
     private onBtReset(): void {
@@ -338,7 +332,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
     ): { changed: boolean; model: M | null } {
         const newModel = this.getModelFromUi();
 
-        if (!this.isModelValid(newModel!)) {
+        if (!this.canApply(newModel!)) {
             return { changed: false, model: null };
         }
 
@@ -350,7 +344,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    protected isModelValid(model: M): boolean {
+    protected canApply(model: M): boolean {
         return true;
     }
 
@@ -408,7 +402,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
         this.params.filterModifiedCallback();
 
         if (this.applyActive && !this.isReadOnly()) {
-            const isValid = this.isModelValid(this.getModelFromUi()!);
+            const isValid = this.canApply(this.getModelFromUi()!);
             const applyFilterButton = this.queryForHtmlElement(`[data-ref="applyFilterButton"]`);
             if (applyFilterButton) {
                 _setDisabled(applyFilterButton, !isValid);
@@ -476,10 +470,6 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
 
     protected translate(key: keyof typeof FILTER_LOCALE_TEXT): string {
         return this.getLocaleTextFunc()(key, FILTER_LOCALE_TEXT[key]);
-    }
-
-    protected getCellValue(rowNode: IRowNode): V | null | undefined {
-        return this.params.getValue(rowNode);
     }
 
     // override to control positionable feature

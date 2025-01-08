@@ -74,11 +74,10 @@ export class SetFilter<V = string>
                 filterParams: params,
                 translate: (key) => translateForSetFilter(this, key),
                 caseFormat: (v) => helper.caseFormat(v),
-                createKey: helper.createKey,
                 getValueFormatter: () => helper.valueFormatter,
-                usingComplexObjects: !!(params.keyCreator ?? params.colDef.keyCreator),
                 treeDataTreeList: helper.treeDataTreeList,
                 groupingTreeList: helper.groupingTreeList,
+                allValues: helper.allValues,
             })
         );
 
@@ -266,12 +265,6 @@ export class SetFilter<V = string>
                 this.checkAndRefreshVirtualList();
             }
         });
-    }
-
-    protected resetUiToDefaults(): AgPromise<void> {
-        this.setMiniFilter(null);
-
-        return this.setModelAndRefresh(null);
     }
 
     protected setModelIntoUi(model: SetFilterModel | null): AgPromise<void> {
@@ -695,7 +688,7 @@ export class SetFilter<V = string>
         return super.doApplyModel(source);
     }
 
-    protected override isModelValid(model: SetFilterModel): boolean {
+    protected override canApply(model: SetFilterModel): boolean {
         return this.params.excelMode ? model == null || model.values.length > 0 : true;
     }
 
@@ -706,8 +699,7 @@ export class SetFilter<V = string>
     }
 
     private isValuesTakenFromGrid(): boolean {
-        const valuesType = this.valueModel.getValuesType();
-        return valuesType === SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
+        return this.helper.allValues.valuesType === SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
     }
 
     //noinspection JSUnusedGlobalSymbols
@@ -730,7 +722,7 @@ export class SetFilter<V = string>
      * Public method provided so the user can reset the values of the filter once that it has started.
      */
     public resetFilterValues(): void {
-        this.valueModel.setValuesType(SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES);
+        this.helper.allValues.valuesType = SetFilterModelValuesType.TAKEN_FROM_GRID_VALUES;
         this.syncAfterDataChange();
     }
 

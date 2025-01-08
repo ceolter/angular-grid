@@ -38,22 +38,26 @@ export abstract class SimpleFilterEvaluator<
 
     public init(
         params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
-    ): void {
+    ): FilterModelValidation<TModel | ICombinedSimpleModel<TModel>> {
         const optionsFactory = new OptionsFactory();
         this.optionsFactory = optionsFactory;
         optionsFactory.init(params, this.helper.defaultOptions);
 
         this.updateParams(params);
+
+        return this.validateModel(params);
     }
 
     public refresh(
         params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
-    ): void {
+    ): FilterModelValidation<TModel | ICombinedSimpleModel<TModel>> {
         if (params.source === 'apiParams') {
             this.optionsFactory.refresh(params, this.helper.defaultOptions);
 
             this.updateParams(params);
         }
+
+        return this.validateModel(params);
     }
 
     protected updateParams(
@@ -87,7 +91,7 @@ export abstract class SimpleFilterEvaluator<
         return models[combineFunction]((m) => this.individualConditionPasses(params, m, cellValue));
     }
 
-    public validateModel(
+    protected validateModel(
         params: FilterEvaluatorParams<any, any, TValue, TModel | ICombinedSimpleModel<TModel>> & TParams
     ): FilterModelValidation<TModel | ICombinedSimpleModel<TModel>> {
         const { model, filterOptions, maxNumConditions } = params;
@@ -104,17 +108,26 @@ export abstract class SimpleFilterEvaluator<
             conditions.every((condition) => newOptionsList.find((option) => option === condition.type) !== undefined);
 
         if (!allConditionsExistInNewOptionsList) {
+            this.params = {
+                ...params,
+                model: null,
+            };
             return { valid: false, model: null };
         }
 
         // Check number of conditions vs maxNumConditions
         if (typeof maxNumConditions === 'number' && conditions && conditions.length > maxNumConditions) {
+            const updatedModel = {
+                ...(model as ICombinedSimpleModel<TModel>),
+                conditions: conditions.slice(0, maxNumConditions),
+            };
+            this.params = {
+                ...params,
+                model: updatedModel,
+            };
             return {
                 valid: false,
-                model: {
-                    ...(model as ICombinedSimpleModel<TModel>),
-                    conditions: conditions.slice(0, maxNumConditions),
-                },
+                model: updatedModel,
             };
         }
 
