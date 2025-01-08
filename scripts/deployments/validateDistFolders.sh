@@ -168,3 +168,4 @@ validatePackages "dist/artifacts/contents/packages"
 
 validateLocale "dist/artifacts/contents/community-modules/locale/package"
 
+validateVue3
