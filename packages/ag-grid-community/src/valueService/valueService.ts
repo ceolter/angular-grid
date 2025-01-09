@@ -164,7 +164,7 @@ export class ValueService extends BeanStub implements NamedBean {
         }
 
         if (result == null) {
-            const openedGroup = this.getOpenedGroup(rowNode, column);
+            const openedGroup = this.getOpenedGroupValue(rowNode, column);
             if (openedGroup != null) {
                 return openedGroup;
             }
@@ -246,31 +246,33 @@ export class ValueService extends BeanStub implements NamedBean {
         return result;
     }
 
-    private getOpenedGroup(rowNode: IRowNode, column: AgColumn): any {
-        if (!this.gos.get('showOpenedGroup')) {
-            return;
+    // get the opened group values for this column for groupHideOpenParents & showOpenedGroup
+    private getOpenedGroupValue(node: IRowNode, column: AgColumn): any {
+        const isGroupHideOpenParents = this.gos.get('groupHideOpenParents') && node.firstChild;
+        const isShowOpenedGroupValue = this.gos.get('showOpenedGroup');
+
+        // don't traverse tree if neither starts enabled
+        if (!isGroupHideOpenParents && !isShowOpenedGroupValue) {
+            return undefined;
         }
 
-        const colDef = column.getColDef();
-        if (!colDef.showRowGroup) {
-            return;
+        const columnGroupData = column.getGroupData();
+        // if no group data, column is not group col
+        if (!columnGroupData) {
+            return undefined;
         }
 
-        const showRowGroup = column.getColDef().showRowGroup;
-
-        let pointer = rowNode.parent;
-
-        while (pointer != null) {
-            if (
-                pointer.rowGroupColumn &&
-                (showRowGroup === true || showRowGroup === pointer.rowGroupColumn.getColId())
-            ) {
-                return pointer.key;
+        let pointer: RowNode | null = node as RowNode;
+        while (pointer && pointer.rowGroupColumn != columnGroupData.groupedColumn) {
+            if (!pointer.firstChild && !isShowOpenedGroupValue) {
+                // if not first child and not showOpenedGroup then groupHideOpenParents doesn't
+                // display the parent value
+                return undefined;
             }
             pointer = pointer.parent;
         }
 
-        return undefined;
+        return this.getValue(column, pointer);
     }
 
     /**

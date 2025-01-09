@@ -106,9 +106,37 @@ export class AgColumn<TValue = any> extends BeanStub<ColumnEventName> implements
         // This is used in ColumnFactory
         public userProvidedColDef: ColDef<any, TValue> | null,
         private readonly colId: string,
-        private readonly primary: boolean
+        private readonly primary: boolean,
+        private readonly groupData?: {
+            groupedColumn: AgColumn;
+            groupIndex: number;
+        }
     ) {
         super();
+    }
+
+    public getGroupData() {
+        // not custom groups, return prepopulated group data
+        if (this.groupData) {
+            return this.groupData;
+        }
+
+        const { rowGroupColsSvc } = this.beans;
+        // custom groupDisplayType won't pre-populate for us, find the group manually
+        if (rowGroupColsSvc && typeof this.colDef.showRowGroup === 'string') {
+            const cols = rowGroupColsSvc.columns;
+            const groupIndex = cols.findIndex((c) => c.getColId() === this.colId);
+            if (groupIndex == -1) {
+                return undefined;
+            }
+
+            return {
+                groupIndex,
+                groupedColumn: cols[groupIndex],
+            };
+        }
+
+        return undefined;
     }
 
     public getInstanceId(): ColumnInstanceId {

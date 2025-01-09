@@ -31,37 +31,37 @@ export class GroupHideOpenParentsService extends BeanStub implements IGroupHideO
             return;
         }
 
-        const { colModel, showRowGroupCols } = this.beans;
+        // const { colModel, showRowGroupCols } = this.beans;
 
-        rowNodes.forEach((childRowNode) => {
-            const groupDisplayCols = showRowGroupCols?.getShowRowGroupCols() ?? [];
-            groupDisplayCols.forEach((groupDisplayCol) => {
-                const showRowGroup = groupDisplayCol.getColDef().showRowGroup;
-                if (typeof showRowGroup !== 'string') {
-                    _error(110);
-                    return;
-                }
+        // rowNodes.forEach((childRowNode) => {
+        //     const groupDisplayCols = showRowGroupCols?.getShowRowGroupCols() ?? [];
+        //     groupDisplayCols.forEach((groupDisplayCol) => {
+        //         const showRowGroup = groupDisplayCol.getColDef().showRowGroup;
+        //         if (typeof showRowGroup !== 'string') {
+        //             _error(110);
+        //             return;
+        //         }
 
-                const displayingGroupKey = showRowGroup;
-                const rowGroupColumn = colModel.getColDefCol(displayingGroupKey);
-                const thisRowNodeMatches = rowGroupColumn === childRowNode.rowGroupColumn;
+        //         const displayingGroupKey = showRowGroup;
+        //         const rowGroupColumn = colModel.getColDefCol(displayingGroupKey);
+        //         const thisRowNodeMatches = rowGroupColumn === childRowNode.rowGroupColumn;
 
-                if (thisRowNodeMatches) {
-                    return;
-                }
+        //         if (thisRowNodeMatches) {
+        //             return;
+        //         }
 
-                if (clearOperation) {
-                    // if doing a clear operation, we clear down the value for every possible group column
-                    setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), undefined);
-                } else {
-                    // if doing a set operation, we set only where the pull down is to occur
-                    const parentToStealFrom = this.getFirstChildOfFirstChild(childRowNode, rowGroupColumn);
-                    if (parentToStealFrom) {
-                        setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), parentToStealFrom.key);
-                    }
-                }
-            });
-        });
+        //         if (clearOperation) {
+        //             // if doing a clear operation, we clear down the value for every possible group column
+        //             setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), undefined);
+        //         } else {
+        //             // if doing a set operation, we set only where the pull down is to occur
+        //             const parentToStealFrom = this.getFirstChildOfFirstChild(childRowNode, rowGroupColumn);
+        //             if (parentToStealFrom) {
+        //                 setRowNodeGroupValue(childRowNode, colModel, groupDisplayCol.getId(), parentToStealFrom.key);
+        //             }
+        //         }
+        //     });
+        // });
     }
 
     public isShowingValueForOpenedParent(rowNode: IRowNode, column: Column): boolean {

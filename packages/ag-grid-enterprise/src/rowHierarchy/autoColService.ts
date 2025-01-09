@@ -177,7 +177,9 @@ export class AutoColService extends BeanStub implements NamedBean, IAutoColServi
         const colDef = this.createAutoColDef(colId, rowGroupCol, index);
         colDef.colId = colId;
 
-        const newCol = new AgColumn(colDef, null, colId, true);
+        const groupedData =
+            rowGroupCol != null && index != null ? { groupedColumn: rowGroupCol, groupIndex: index } : undefined;
+        const newCol = new AgColumn(colDef, null, colId, true, groupedData);
         this.createBean(newCol);
         return newCol;
     }
