@@ -193,7 +193,9 @@ export class SelectionColService extends BeanStub implements NamedBean {
         prev: SelectionColumnDef | undefined,
         source: ColumnEventType
     ) {
-        this.beans.colModel.refreshAll(source);
+        if (!_isDeepEqual(current, prev)) {
+            this.beans.colModel.refreshAll(source);
+        }
     }
 
     public override destroy(): void {
