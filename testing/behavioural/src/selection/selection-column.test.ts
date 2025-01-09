@@ -2,7 +2,6 @@ import type { MockInstance } from 'vitest';
 
 import type { GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
-import { RowGroupingModule } from 'ag-grid-enterprise';
 
 import { GridRows, TestGridsManager } from '../test-utils';
 import { selectRowsByIndex } from './utils';
@@ -27,7 +26,7 @@ describe('Row Selection Grid Options', () => {
     }
 
     const gridMgr = new TestGridsManager({
-        modules: [ClientSideRowModelModule, RowGroupingModule],
+        modules: [ClientSideRowModelModule],
     });
 
     beforeEach(() => {
