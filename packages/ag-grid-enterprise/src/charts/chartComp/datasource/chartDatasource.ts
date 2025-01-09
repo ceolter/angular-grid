@@ -169,7 +169,7 @@ export class ChartDatasource extends BeanStub {
                         if (!isHierarchical && preparedLabels.length > 1) {
                             // Charts handles this for hierarchical charts only. When row grouping is present
                             // for charts that don't support it, emulate Charts behavior
-                            preparedLabels = preparedLabels.filter((label) => !!label).join(',');
+                            preparedLabels = preparedLabels.filter((label) => !!label).join();
                         }
 
                         data[colId] = preparedLabels;
