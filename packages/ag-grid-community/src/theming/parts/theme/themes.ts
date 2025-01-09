@@ -8,6 +8,7 @@ import { iconSetBalham } from '../icon-set/balham/icon-set-balham';
 import { iconSetAlpine, iconSetMaterial, iconSetQuartzRegular } from '../icon-set/icon-sets';
 import { inputStyleBordered, inputStyleUnderlined } from '../input-style/input-styles';
 import { tabStyleAlpine, tabStyleMaterial, tabStyleQuartz, tabStyleRolodex } from '../tab-style/tab-styles';
+import { materialAdjustmentsCSS } from './material-adjustments.css-GENERATED';
 
 const makeThemeQuartzTreeShakeable = () =>
     createTheme()
@@ -141,8 +142,15 @@ const makeThemeMaterialTreeShakeable = () =>
         .withPart(iconSetMaterial)
         .withPart(tabStyleMaterial)
         .withPart(inputStyleUnderlined)
-        .withPart(createPart({ params: { primaryColor: '#3f51b5' } }))
+        .withPart(
+            createPart({
+                css: materialAdjustmentsCSS,
+                params: { primaryColor: '#3f51b5' },
+            })
+        )
         .withParams({
+            foregroundColor: 'rgba(0, 0, 0, 0.87)',
+            headerTextColor: 'rgba(0, 0, 0, 0.54)',
             accentColor: '#ff4081',
             rowHeight: {
                 calc: 'max(iconSize, dataFontSize) + spacing * 3.75 * rowVerticalPaddingScale',
@@ -201,7 +209,12 @@ const makeThemeMaterialTreeShakeable = () =>
                 width: 2,
                 color: { ref: 'primaryColor' },
             },
+            cellEditingBorder: {
+                color: { ref: 'primaryColor' },
+            },
             headerFontWeight: 600,
+            headerCellHoverBackgroundColor: foregroundMix(0.05),
+            inputBackgroundColor: { ref: 'chromeBackgroundColor' },
         });
 
 export const themeMaterial = /*#__PURE__*/ makeThemeMaterialTreeShakeable();

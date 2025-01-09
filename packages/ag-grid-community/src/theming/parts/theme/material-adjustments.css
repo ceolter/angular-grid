@@ -1,0 +1,225 @@
+.ag-filter-toolpanel-header,
+.ag-filter-toolpanel-search,
+.ag-status-bar,
+.ag-header-row,
+.ag-panel-title-bar-title,
+.ag-multi-filter-group-title-bar,
+.ag-dnd-ghost {
+    font-size: calc(var(--ag-font-size) - 1px);
+    font-weight: 600;
+    color: var(--ag-header-text-color);
+}
+
+/* 
+
+.ag-tab {
+    height: calc(var(--ag-spacing) * 4.5);
+    flex: 1 1 auto;
+}
+
+.ag-tabs-header,
+.ag-column-drop-horizontal {
+    background-color: var(--ag-subheader-background-color);
+}
+
+.ag-tabs-body {
+    padding: calc(var(--ag-spacing-foo) * 0.5) 0;
+}
+
+.ag-tabs-body .ag-menu-list {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+    */
+
+.ag-cell.ag-cell-inline-editing {
+    padding: var(--ag-spacing);
+    height: calc(var(--ag-row-height) + var(--ag-spacing) * 3);
+    border: var(--ag-input-border) !important;
+    border-width: 1px !important;
+
+    /* use gradient image to overlay input background onto background, so that
+       if the user supplies a semi-transparent background the content of the
+       cell below won't be visible */
+    background-color: var(--ag-background-color);
+    background-image: linear-gradient(0deg, var(--ag-input-background-color), var(--ag-input-background-color));
+
+    :where(.ag-row-last:not(.ag-row-first)) & {
+        bottom: 0;
+    }
+
+    :where(.ag-has-focus) & {
+        border: var(--ag-input-focus-border) !important;
+        border-width: 1px !important;
+    }
+}
+
+/*
+
+.ag-column-drop-vertical {
+    border-bottom: solid 1px;
+    border-bottom-color: var(--ag-border-color);
+    padding-top: var(--ag-spacing);
+
+    &.ag-last-column-drop {
+        border-bottom: none;
+    }
+}
+
+.ag-column-drop-vertical-cell {
+    margin-left: 0;
+}
+
+.ag-column-drop-vertical-empty-message {
+    font-size: calc(var(--ag-font-size) - 1px);
+    font-weight: 600;
+    color: var(--ag-disabled-foreground-color);
+
+    @include ag.theme-rtl(
+        (
+            padding-left: calc(var(--ag-icon-size) + var(--ag-spacing) * 2),
+            padding-right: var(--ag-spacing),
+        )
+    );
+}
+
+.ag-status-bar {
+    border: solid 1px;
+    border-color: var(--ag-border-color);
+}
+
+.ag-column-panel-column-select {
+    border-top: solid 1px;
+    border-top-color: var(--ag-border-color);
+}
+
+.ag-column-select,
+.ag-column-select-header {
+    border-bottom: solid 1px;
+    border-bottom-color: var(--ag-border-color);
+}
+
+.ag-column-select-header {
+    height: var(--ag-header-height);
+}
+
+.ag-group-title-bar {
+    padding: calc(var(--ag-spacing) * 0.75) var(--ag-spacing);
+}
+
+.ag-charts-format-sub-level-group-title-bar {
+    padding: calc(var(--ag-spacing) * 0.5) var(--ag-spacing);
+}
+
+.ag-chart-data-section,
+.ag-chart-format-section,
+.ag-chart-advanced-settings-section {
+    padding-bottom: calc(var(--ag-spacing) * 0.5);
+}
+
+@include ag.text-input {
+    background: transparent;
+    color: var(--ag-foreground-color);
+    font-family: inherit;
+    font-size: inherit;
+    padding-bottom: var(--ag-spacing);
+
+    border-width: 0;
+    border-radius: 0;
+    border-bottom: 2px solid;
+    border-bottom-color: var(--ag-border-color);
+
+    &:not(textarea) {
+        height: calc(var(--ag-spacing) * 5);
+    }
+
+    &:focus {
+        border-bottom: 2px solid;
+        border-bottom-color: var(--ag-material-primary-color);
+        outline: none;
+        box-shadow: none;
+    }
+
+    &::placeholder {
+        color: var(--ag-disabled-foreground-color);
+    }
+
+    &:disabled {
+        border-bottom: 1px solid;
+        border-bottom-color: var(--ag-border-color);
+    }
+
+    &:invalid {
+        border-width: 0;
+        border-bottom: 1px solid;
+        border-bottom-color: var(--ag-invalid-color);
+        color: var(--ag-invalid-color);
+    }
+}
+*/
+
+.ag-standard-button {
+    text-transform: uppercase;
+}
+
+/*
+
+
+.ag-filter-toolpanel-header {
+    height: calc(var(--ag-spacing) * 4);
+}
+
+.ag-filter-toolpanel-group-level-0-header {
+    height: calc(var(--ag-spacing) * 7);
+}
+
+.ag-filter-apply-panel-button,
+.ag-advanced-filter-apply-button,
+.ag-advanced-filter-builder-button {
+    @include ag.theme-rtl(
+        (
+            margin-left: var(--ag-spacing),
+        )
+    );
+}
+
+.ag-layout-auto-height,
+.ag-layout-print {
+    .ag-center-cols-viewport,
+    .ag-center-cols-container {
+        min-height: 150px;
+    }
+}
+
+.ag-picker-field-wrapper:focus-within {
+    box-shadow: 0 0 0 1px var(--ag-material-primary-color);
+}
+
+.ag-rich-select-list {
+    box-shadow:
+        rgba(0, 0, 0, 0.2) 0px 5px 5px -3px,
+        rgba(0, 0, 0, 0.14) 0px 8px 10px 1px,
+        rgba(0, 0, 0, 0.12) 0px 3px 14px 2px;
+}
+
+.ag-advanced-filter-builder-button-label {
+    text-transform: uppercase;
+}
+
+.ag-filter-active .ag-icon-filter {
+    color: var(--ag-material-accent-color);
+}
+
+.ag-list-item-hovered::after {
+    background-color: var(--ag-material-primary-color);
+}
+
+.ag-pill .ag-pill-button:hover {
+    color: var(--ag-material-primary-color);
+}
+
+.ag-header-highlight-before::after,
+.ag-header-highlight-after::after {
+    background-color: var(--ag-material-primary-color);
+} */

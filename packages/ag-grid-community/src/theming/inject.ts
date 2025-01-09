@@ -5,14 +5,15 @@ import { coreCSS } from './core/core.css-GENERATED';
 
 export const IS_SSR = typeof window !== 'object' || !window?.document?.fonts?.forEach;
 
-type Injection = {
-    css: Set<string>;
-    last?: HTMLStyleElement;
+type InjectedStyle = {
+    css: string;
+    el: HTMLStyleElement;
+    priority: number;
 };
 
-let injections = new WeakMap<HTMLElement, Injection>();
+let injectionsByRoot = new WeakMap<HTMLElement, InjectedStyle[]>();
 
-export const _injectGlobalCSS = (css: string, container: HTMLElement, debugId: string) => {
+export const _injectGlobalCSS = (css: string, container: HTMLElement, debugId: string, priority = 0) => {
     if (IS_SSR) return;
     if (FORCE_LEGACY_THEMES) return;
 
@@ -22,25 +23,31 @@ export const _injectGlobalCSS = (css: string, container: HTMLElement, debugId: s
     // the DOM) inject into the container itself.
     const root = container.getRootNode() === document ? document.head : container;
 
-    let injection = injections.get(root);
-    if (!injection) {
-        injection = { css: new Set() };
-        injections.set(root, injection);
+    let injections = injectionsByRoot.get(root);
+    if (!injections) {
+        injections = [];
+        injectionsByRoot.set(root, injections);
     }
-    if (injection.css.has(css)) return;
+    if (injections.find((i) => i.css === css)) return;
 
-    const style = document.createElement('style');
-    style.dataset.agGlobalCss = debugId;
-    style.textContent = css;
+    const el = document.createElement('style');
+    el.dataset.agGlobalCss = debugId;
+    el.textContent = css;
+    const newInjection = { css, el, priority };
 
-    if (injection.last) {
-        injection.last.insertAdjacentElement('afterend', style);
+    let insertAfter: InjectedStyle | undefined;
+    for (const injection of injections) {
+        if (injection.priority > priority) break;
+        insertAfter = injection;
+    }
+    if (insertAfter) {
+        insertAfter.el.insertAdjacentElement('afterend', el);
+        const index = injections.indexOf(insertAfter);
+        injections.splice(index + 1, 0, newInjection);
     } else {
-        root.insertBefore(style, root.querySelector(':not(title, meta)'));
+        root.insertBefore(el, root.querySelector(':not(title, meta)'));
+        injections.push(newInjection);
     }
-
-    injection.css.add(css);
-    injection.last = style;
 };
 
 export const _injectCoreAndModuleCSS = (container: HTMLElement) => {
@@ -60,7 +67,7 @@ export const _registerGridUsingThemingAPI = (environment: Environment) => {
 export const _unregisterGridUsingThemingAPI = (environment: Environment) => {
     gridsUsingThemingAPI.delete(environment);
     if (gridsUsingThemingAPI.size === 0) {
-        injections = new WeakMap();
+        injectionsByRoot = new WeakMap();
         for (const style of document.head.querySelectorAll('style[data-ag-global-css]')) {
             style.remove();
         }

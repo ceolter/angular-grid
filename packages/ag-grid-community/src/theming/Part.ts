@@ -112,7 +112,7 @@ export class PartImpl implements Part {
             this._inject = inject;
         }
         if (inject && container) {
-            _injectGlobalCSS(inject.css, container, inject.class);
+            _injectGlobalCSS(inject.css, container, inject.class, 1);
         }
         return inject ? inject.class : false;
     }
