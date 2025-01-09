@@ -32,9 +32,9 @@ body {
 
     #{$selector-lightmode} & {
         &::after {
-            height: calc(var(--background-split) + #{$spacing-size-10});
-            bottom: -$spacing-size-10;
-            background: linear-gradient(var(--color-brand-100), var(--color-bg-primary));
+            height: calc(var(--background-split));
+            bottom: 0px;
+            background: linear-gradient(var(--color-brand-200), var(--color-bg-primary));
         }
     }
 
@@ -152,7 +152,9 @@ body {
 }
 
 .heroSectionGrid {
-    height: 450px;
+    height: 449px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
 .heroLinks {
