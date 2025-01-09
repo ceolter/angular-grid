@@ -7,6 +7,7 @@ import type { GridOptions, SelectionColumnDef } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox, _isRowSelection } from '../gridOptionsUtils';
 import { _isDeepEqual } from '../utils/object';
+import { _updateColumnState } from './columnFactoryUtils';
 import type { ColKey, ColumnCollections } from './columnModel';
 import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
@@ -34,11 +35,7 @@ export class SelectionColService extends BeanStub implements NamedBean {
         });
 
         this.addManagedPropertyListener('selectionColumnDef', (event) => {
-            this.onSelectionColumnDefChanged(
-                event.currentValue,
-                event.previousValue,
-                _convertColumnEventSourceType(event.source)
-            );
+            this.onSelectionColumnDefChanged(event.currentValue, _convertColumnEventSourceType(event.source));
         });
     }
 
@@ -114,15 +111,11 @@ export class SelectionColService extends BeanStub implements NamedBean {
         return checkboxes || headerCheckbox;
     }
 
-    private generateSelectionCols(): AgColumn[] {
-        if (!this.isSelectionColumnEnabled()) {
-            return [];
-        }
-
-        const { gos, validation } = this.beans;
-        const selectionColumnDef = gos.get('selectionColumnDef');
+    private createSelectionColDef(def?: SelectionColumnDef): ColDef {
+        const { gos } = this.beans;
+        const selectionColumnDef = def ?? gos.get('selectionColumnDef');
         const enableRTL = gos.get('enableRtl');
-        const colDef: ColDef = {
+        return {
             // overridable properties
             width: 50,
             resizable: false,
@@ -142,8 +135,16 @@ export class SelectionColService extends BeanStub implements NamedBean {
             // non-overridable properties
             colId: CONTROLS_COLUMN_ID_PREFIX,
         };
+    }
+
+    private generateSelectionCols(): AgColumn[] {
+        if (!this.isSelectionColumnEnabled()) {
+            return [];
+        }
+
+        const colDef = this.createSelectionColDef();
         const colId = colDef.colId!;
-        validation?.validateColDef(colDef, colId, true);
+        this.beans.validation?.validateColDef(colDef, colId, true);
         const col = new AgColumn(colDef, null, colId, false);
         this.createBean(col);
         return [col];
@@ -188,14 +189,12 @@ export class SelectionColService extends BeanStub implements NamedBean {
         }
     }
 
-    private onSelectionColumnDefChanged(
-        current: SelectionColumnDef | undefined,
-        prev: SelectionColumnDef | undefined,
-        source: ColumnEventType
-    ) {
-        if (!_isDeepEqual(current, prev)) {
-            this.beans.colModel.refreshAll(source);
-        }
+    private onSelectionColumnDefChanged(current: SelectionColumnDef | undefined, source: ColumnEventType) {
+        this.selectionCols?.list.forEach((col) => {
+            const newColDef = this.createSelectionColDef(current);
+            col.setColDef(newColDef, null, source);
+            _updateColumnState(this.beans, col, newColDef, source);
+        });
     }
 
     public override destroy(): void {

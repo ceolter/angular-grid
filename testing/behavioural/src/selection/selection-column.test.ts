@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import type { GridApi, GridOptions } from 'ag-grid-community';
+import type { AgEvent, GridApi, GridOptions } from 'ag-grid-community';
 import { ClientSideRowModelModule } from 'ag-grid-community';
 
 import { GridRows, TestGridsManager } from '../test-utils';
@@ -78,15 +78,12 @@ describe('Row Selection Grid Options', () => {
         `);
     });
 
-    test('Selection column is updated when `selectionColDef` changes', async () => {
-        const onGridColumnsChanged = vitest.fn();
-
+    test('Selection column is updated when `selectionColDef` changes', () => {
         const api = createGrid({
             columnDefs,
             rowData,
             rowSelection: { mode: 'multiRow' },
             selectionColumnDef: {},
-            onGridColumnsChanged,
         });
 
         expect(api.getColumnState()[0]).toEqual(
@@ -96,9 +93,10 @@ describe('Row Selection Grid Options', () => {
             })
         );
 
-        // flush event queue
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        onGridColumnsChanged.mockClear();
+        const col = api.getColumn('ag-Grid-SelectionColumn');
+
+        const events: AgEvent<'columnStateUpdated'>[] = [];
+        col?.addEventListener('columnStateUpdated', (e) => events.push(e));
 
         api.setGridOption('selectionColumnDef', {
             pinned: 'right',
@@ -112,52 +110,6 @@ describe('Row Selection Grid Options', () => {
             })
         );
 
-        // event is async so have to wait till next tick
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        expect(onGridColumnsChanged).toHaveBeenCalled();
-    });
-
-    test('No-op when `selectionColDef` changes to an identical value', async () => {
-        const onGridColumnsChanged = vitest.fn();
-
-        const api = createGrid({
-            columnDefs,
-            rowData,
-            rowSelection: { mode: 'multiRow' },
-            selectionColumnDef: {
-                width: 200,
-                pinned: 'left',
-            },
-            onGridColumnsChanged,
-        });
-
-        expect(api.getColumnState()[0]).toEqual(
-            expect.objectContaining({
-                width: 200,
-                pinned: 'left',
-            })
-        );
-
-        // flush event queue
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        onGridColumnsChanged.mockClear();
-
-        api.setGridOption('selectionColumnDef', {
-            pinned: 'left',
-            width: 200,
-        });
-
-        expect(api.getColumnState()[0]).toEqual(
-            expect.objectContaining({
-                pinned: 'left',
-                width: 200,
-            })
-        );
-
-        // event is async so have to wait till next tick
-        await new Promise((resolve) => setTimeout(resolve, 0));
-
-        expect(onGridColumnsChanged).not.toHaveBeenCalled();
+        expect(events.map((e) => (e as any).key).sort()).toEqual(['pinned', 'width']);
     });
 });
