@@ -63,6 +63,9 @@ export default defineMarkdocConfig({
         warning,
         idea,
         openInCTA,
+        moduleCallout: {
+            render: component('./src/components/module-callout/components/ModuleCallout.astro'),
+        },
         enterpriseIcon,
         video,
         licenseSetup: {

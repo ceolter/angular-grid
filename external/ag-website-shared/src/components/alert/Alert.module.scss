@@ -75,3 +75,26 @@
         fill: var(--color-success);
     }
 }
+
+.module {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 0 !important;
+}
+
+.moduleLink {
+    width: 100%;
+    background-color: color-mix(in srgb, var(--color-util-brand-50), var(--color-util-brand-100) 50%);
+    padding: 8px 8px 8px 12px;
+    margin-bottom: $spacing-size-6;
+    border-bottom-left-radius: $spacing-size-2;
+    border-bottom-right-radius: $spacing-size-2;
+    border: 1px solid var(--color-util-brand-100);
+    margin-top: -1px;
+    display: flex;
+
+    svg {
+        height: 18px;
+        width: 18px;
+    }
+}
