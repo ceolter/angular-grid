@@ -41,7 +41,7 @@ export interface DataTypeChecker<TData, TValue> {
  *
  * `object` is any other type.
  */
-export type BaseCellDataType = 'text' | 'number' | 'boolean' | 'date' | 'dateString' | 'object';
+export type BaseCellDataType = 'text' | 'number' | 'boolean' | 'date' | 'dateString' | 'object' | 'bigint';
 
 interface BaseDataTypeDefinition<TValueType extends BaseCellDataType, TData = any, TValue = any> {
     /** The underlying data type */
@@ -102,6 +102,9 @@ export interface TextDataTypeDefinition<TData = any> extends BaseDataTypeDefinit
 /** Represents a `'number'` data type (type `number`). */
 export interface NumberDataTypeDefinition<TData = any> extends BaseDataTypeDefinition<'number', TData, number> {}
 
+/** Represents a `'bigint'` data type (type `bigint`). */
+export interface BigIntDataTypeDefinition<TData = any> extends BaseDataTypeDefinition<'bigint', TData, bigint> {}
+
 /** Represents a `'boolean'` data type (type `boolean`). */
 export interface BooleanDataTypeDefinition<TData = any> extends BaseDataTypeDefinition<'boolean', TData, boolean> {}
 
@@ -123,6 +126,7 @@ export interface ObjectDataTypeDefinition<TData, TValue> extends BaseDataTypeDef
 export type DataTypeDefinition<TData = any> =
     | TextDataTypeDefinition<TData>
     | NumberDataTypeDefinition<TData>
+    | BigIntDataTypeDefinition<TData>
     | BooleanDataTypeDefinition<TData>
     | DateDataTypeDefinition<TData>
     | DateStringDataTypeDefinition<TData>
@@ -132,6 +136,7 @@ export type DataTypeDefinition<TData = any> =
 export type CoreDataTypeDefinition<TData = any> =
     | Omit<TextDataTypeDefinition<TData>, 'extendsDataType'>
     | Omit<NumberDataTypeDefinition<TData>, 'extendsDataType'>
+    | Omit<BigIntDataTypeDefinition<TData>, 'extendsDataType'>
     | Omit<BooleanDataTypeDefinition<TData>, 'extendsDataType'>
     | Omit<DateDataTypeDefinition<TData>, 'extendsDataType'>
     | Omit<DateStringDataTypeDefinition<TData>, 'extendsDataType'>

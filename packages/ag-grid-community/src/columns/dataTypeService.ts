@@ -529,6 +529,22 @@ export class DataTypeService extends BeanStub implements NamedBean {
                 },
                 dataTypeMatcher: (value: any) => typeof value === 'number',
             },
+            bigint: {
+                baseDataType: 'bigint',
+                // can be empty space with legacy copy
+                valueParser: (params: ValueParserLiteParams<any, bigint>) =>
+                    params.newValue?.trim?.() === '' ? null : BigInt(params.newValue),
+                valueFormatter: (params: ValueFormatterLiteParams<any, bigint>) => {
+                    if (params.value == null) {
+                        return '';
+                    }
+                    if (typeof params.value !== 'bigint' || isNaN(Number(params.value))) {
+                        return translate('invalidBigint', 'Invalid Bigint');
+                    }
+                    return String(params.value);
+                },
+                dataTypeMatcher: (value: any) => typeof value === 'bigint',
+            },
             text: {
                 baseDataType: 'text',
                 valueParser: (params: ValueParserLiteParams<any, string>) =>

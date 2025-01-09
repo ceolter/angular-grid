@@ -10,6 +10,10 @@ export function _makeNull<T>(value?: T): T | null {
     return value;
 }
 
+export function __stringify(value: any){
+    return JSON.stringify(value, (_,v)=> typeof v == "bigint" ? v.toString()+"n" : v);
+}
+
 export function _exists(value: string | null | undefined): value is string;
 export function _exists<T>(value: T): value is NonNullable<T>;
 export function _exists(value: any): boolean {
@@ -26,8 +30,8 @@ export function _toStringOrNull(value: any): string | null {
 }
 
 export function _jsonEquals<T1, T2>(val1: T1, val2: T2): boolean {
-    const val1Json = val1 ? JSON.stringify(val1) : null;
-    const val2Json = val2 ? JSON.stringify(val2) : null;
+    const val1Json = val1 ? __stringify(val1) : null;
+    const val2Json = val2 ? __stringify(val2) : null;
 
     return val1Json === val2Json;
 }

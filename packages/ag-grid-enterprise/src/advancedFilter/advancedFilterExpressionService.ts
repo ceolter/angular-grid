@@ -80,10 +80,12 @@ export class AdvancedFilterExpressionService extends BeanStub implements NamedBe
         operand: string,
         baseCellDataType: BaseCellDataType,
         column: AgColumn
-    ): string | number | null {
+    ): string | number | bigint | null {
         switch (baseCellDataType) {
             case 'number':
                 return _exists(operand) ? Number(operand) : null;
+            case 'bigint':
+                return _exists(operand) ? BigInt(operand) : null;
             case 'date':
                 return _serialiseDate(this.valueSvc.parseValue(column, null, operand, undefined), false);
             case 'dateString': {
@@ -107,6 +109,9 @@ export class AdvancedFilterExpressionService extends BeanStub implements NamedBe
                 case 'number':
                     operand1 = _toStringOrNull(filter) ?? '';
                     break;
+                case 'bigint':
+                    operand1 = _toStringOrNull(filter) ?? '';
+                    break;
                 case 'date': {
                     const dateValue = _parseDateTimeFromString(filter);
                     operand1 = column ? this.valueSvc.formatValue(column, null, dateValue) : null;
@@ -127,7 +132,7 @@ export class AdvancedFilterExpressionService extends BeanStub implements NamedBe
                     break;
                 }
             }
-            if (model.filterType !== 'number') {
+            if (model.filterType !== 'number' && model.filterType !== 'bigint') {
                 operand1 = operand1 ?? _toStringOrNull(filter) ?? '';
                 if (!skipFormatting) {
                     operand1 = `"${operand1}"`;
@@ -328,6 +333,7 @@ export class AdvancedFilterExpressionService extends BeanStub implements NamedBe
             boolean: new BooleanFilterExpressionOperators({ translate }),
             object: new TextFilterExpressionOperators<any>({ translate }),
             number: new ScalarFilterExpressionOperators<number>({ translate, equals: (v, o) => v === o }),
+            bigint: new ScalarFilterExpressionOperators<bigint>({ translate, equals: (v, o) => v === o }),
             date: new ScalarFilterExpressionOperators<Date>({
                 translate,
                 equals: (v: Date, o: Date) => v.getTime() === o.getTime(),

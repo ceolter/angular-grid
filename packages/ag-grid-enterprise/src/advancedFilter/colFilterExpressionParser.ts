@@ -185,7 +185,7 @@ class OperandParser implements Parser {
     public endPosition: number | undefined;
     private quotes: `'` | `"` | undefined;
     private operand = '';
-    private modelValue: number | string;
+    private modelValue: bigint | number | string;
     private validationMessage: string | null = null;
 
     constructor(
@@ -204,7 +204,7 @@ class OperandParser implements Parser {
                 return true;
             }
         } else if (char === ')') {
-            if (this.baseCellDataType === 'number' || !this.quotes) {
+            if (this.baseCellDataType === 'number' || this.baseCellDataType === 'bigint' || !this.quotes) {
                 this.parseOperand(false, position - 1);
                 return true;
             } else {
@@ -239,7 +239,7 @@ class OperandParser implements Parser {
         return this.operand;
     }
 
-    public getModelValue(): string | number {
+    public getModelValue(): string | number | bigint{
         return this.modelValue;
     }
 
@@ -266,6 +266,12 @@ class OperandParser implements Parser {
                         this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationNotANumber');
                     }
                     break;
+                case 'bigint':
+                    if (this.quotes || isNaN(Number(this.modelValue))) {
+                        this.valid = false;
+                        this.validationMessage = advFilterExpSvc.translate('advancedFilterValidationNotANumber');
+                    }
+                break;
                 case 'date':
                 case 'dateString':
                     if (modelValue == null) {
@@ -513,6 +519,9 @@ export class ColFilterExpressionParser {
             case 'number':
                 operand = Number(operand);
                 break;
+            case 'bigint':
+                operand = BigInt(operand);
+                break;
             case 'date':
             case 'dateString':
                 operand = this.params.valueSvc.parseValue(column!, null, operand, undefined);
@@ -621,7 +630,7 @@ export class ColFilterExpressionParser {
     }
 
     private doesOperandNeedQuotes(baseCellDataType?: BaseCellDataType): boolean {
-        return baseCellDataType !== 'number';
+        return baseCellDataType !== 'number' && baseCellDataType !== "bigint";
     }
 
     private addToListAndGetIndex<T>(list: T[], value: T): number {

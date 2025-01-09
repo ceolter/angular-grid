@@ -401,7 +401,7 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
         }
     }
 
-    private getInputType(baseCellDataType: BaseCellDataType): 'text' | 'number' | 'date' {
+    private getInputType(baseCellDataType: BaseCellDataType): 'text' | 'number' | 'date' | 'bigint' {
         switch (baseCellDataType) {
             case 'text':
             case 'object':
@@ -409,6 +409,8 @@ export class AdvancedFilterBuilderItemComp extends TabGuardComp<AdvancedFilterBu
                 return 'text';
             case 'number':
                 return 'number';
+            case 'bigint':
+                return 'bigint';
             case 'date':
             case 'dateString':
                 return 'date';

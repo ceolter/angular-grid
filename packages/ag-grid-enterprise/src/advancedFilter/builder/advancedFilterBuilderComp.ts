@@ -222,7 +222,7 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
 
     private setupFilterModel(): AdvancedFilterModel {
         const filterModel = this.formatFilterModel(this.advancedFilter.getModel());
-        this.stringifiedModel = JSON.stringify(filterModel);
+        this.stringifiedModel = JSON.stringify(filterModel, (_,value)=> typeof value == "bigint" ? value.toString()+"n" : value);
         return filterModel;
     }
 
@@ -474,7 +474,8 @@ export class AdvancedFilterBuilderComp extends Component<AdvancedFilterBuilderEv
     private validate(): void {
         let disableApply = !this.items.every(({ valid }) => valid);
         if (!disableApply) {
-            disableApply = JSON.stringify(this.filterModel) === this.stringifiedModel;
+            const currentModel = JSON.stringify(this.filterModel, (_,value)=> typeof value == "bigint" ? value.toString()+"n" : value);
+            disableApply = currentModel === this.stringifiedModel;
             if (disableApply) {
                 this.validationMessage = this.advFilterExpSvc.translate(
                     'advancedFilterBuilderValidationAlreadyApplied'

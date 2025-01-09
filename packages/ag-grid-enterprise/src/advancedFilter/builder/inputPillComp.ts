@@ -35,7 +35,7 @@ export class InputPillComp extends Component<InputPillCompEvent> {
             value: string;
             valueFormatter: (value: string) => string;
             cssClass: string;
-            type: 'text' | 'number' | 'date';
+            type: 'text' | 'number' | 'bigint' | 'date';
             ariaLabel: string;
         }
     ) {
@@ -115,13 +115,14 @@ export class InputPillComp extends Component<InputPillCompEvent> {
     }
 
     private createEditorComp(
-        type: 'text' | 'number' | 'date'
+        type: 'text' | 'number' | 'bigint' | 'date'
     ): AgInputTextField | AgInputNumberField | AgInputDateField {
         let comp;
         switch (type) {
             case 'text':
                 comp = new AgInputTextField();
                 break;
+            case 'bigint':
             case 'number':
                 comp = new AgInputNumberField();
                 break;
@@ -158,7 +159,7 @@ export class InputPillComp extends Component<InputPillCompEvent> {
         if (!_exists(displayValue)) {
             value = this.advFilterExpSvc.translate('advancedFilterBuilderEnterValue');
             classList.add('ag-advanced-filter-builder-value-empty');
-        } else if (this.params.type === 'number') {
+        } else if (this.params.type === 'number' || this.params.type === "bigint") {
             value = displayValue;
             classList.add('ag-advanced-filter-builder-value-number');
         } else {
