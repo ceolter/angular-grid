@@ -230,7 +230,7 @@ export class HeaderComp extends Component implements IHeaderComp {
         }
 
         const displayNameSanitised = _escapeString(displayName, true);
-        this.eText.innerText = displayNameSanitised!;
+        this.eText.textContent = displayNameSanitised!;
     }
 
     private addInIcon(iconName: IconName, eParent: HTMLElement, column: AgColumn): void {
