@@ -471,23 +471,13 @@ export class GroupStage extends BeanStub implements NamedBean, IRowNodeStage {
     private noChangeInGroupingColumns(details: GroupingDetails, afterColumnsChanged: boolean): boolean {
         let noFurtherProcessingNeeded = false;
 
-        const groupDisplayColumns = this.showRowGroupCols.getShowRowGroupCols();
-        const newGroupDisplayColIds = groupDisplayColumns ? groupDisplayColumns.map((c) => c.getId()).join('-') : '';
-
         if (afterColumnsChanged) {
             // we only need to redo grouping if doing normal grouping (ie not tree data)
             // and the group cols have changed.
             noFurtherProcessingNeeded = this.areGroupColsEqual(details, this.oldGroupingDetails);
-
-            // if the group display cols have changed, then we need to update rowNode.groupData
-            // (regardless of tree data or row grouping)
-            if (this.oldGroupDisplayColIds !== newGroupDisplayColIds) {
-                this.checkAllGroupDataAfterColsChanged(details);
-            }
         }
 
         this.oldGroupingDetails = details;
-        this.oldGroupDisplayColIds = newGroupDisplayColIds;
 
         return noFurtherProcessingNeeded;
     }

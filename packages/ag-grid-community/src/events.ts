@@ -165,6 +165,7 @@ export type AgEventTypeParams<TData = any, TContext = any> = BuildEventTypeMap<
         recalculateRowBounds: RecalculateRowBoundsEvent<TData, TContext>;
         stickyTopOffsetChanged: StickyTopOffsetChangedEvent<TData, TContext>;
         overlayExclusiveChanged: AgEvent<'overlayExclusiveChanged'>;
+        showRowGroupColumnsChanged: AgEvent<'showRowGroupColumnsChanged'>;
     }
 >;
 
