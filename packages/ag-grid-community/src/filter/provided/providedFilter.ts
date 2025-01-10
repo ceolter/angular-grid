@@ -272,7 +272,7 @@ export abstract class ProvidedFilter<M extends ProvidedFilterModel, V, P extends
 
     public setModel(model: M | null): AgPromise<void> {
         const { beans, params } = this;
-        return beans.colFilter!.setColumnFilterModelLegacy(params.column as AgColumn, model);
+        return beans.colFilter!.setModelForColumnLegacy(params.column as AgColumn, model);
     }
 
     protected doSetModel(model: M | null, silent?: boolean): AgPromise<void> {

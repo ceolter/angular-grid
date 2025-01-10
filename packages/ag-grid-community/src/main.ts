@@ -250,6 +250,8 @@ export {
 export type { TextFloatingFilter } from './filter/provided/text/textFloatingFilter';
 export { _getDefaultFloatingFilterType } from './filter/floating/floatingFilterMapper';
 
+export { IGroupFilterService } from './interfaces/iGroupFilterService';
+
 export {
     AdvancedFilterModel,
     JoinAdvancedFilterModel,

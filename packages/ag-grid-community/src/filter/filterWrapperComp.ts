@@ -7,11 +7,10 @@ import { _exists } from '../utils/generic';
 import { AgPromise } from '../utils/promise';
 import { _warn } from '../validation/logging';
 import { Component } from '../widgets/component';
-import type { FilterWrapper } from './columnFilterService';
 import type { FilterRequestSource } from './iColumnFilter';
 
 export class FilterWrapperComp extends Component {
-    private filterWrapper: FilterWrapper | null = null;
+    private filterPromise: AgPromise<IFilterComp> | null = null;
 
     constructor(
         private readonly column: AgColumn,
@@ -27,36 +26,34 @@ export class FilterWrapperComp extends Component {
     }
 
     public hasFilter(): boolean {
-        return !!this.filterWrapper;
+        return this.filterPromise != null;
     }
 
     public getFilter(): AgPromise<IFilterComp> | null {
-        return this.filterWrapper?.filterPromise ?? null;
+        return this.filterPromise;
     }
 
     public afterInit(): AgPromise<void> {
-        return this.filterWrapper?.filterPromise?.then(() => {}) ?? AgPromise.resolve();
+        return this.filterPromise?.then(() => {}) ?? AgPromise.resolve();
     }
 
     public afterGuiAttached(params?: IAfterGuiAttachedParams): void {
-        this.filterWrapper?.filterPromise?.then((filter) => {
+        this.filterPromise?.then((filter) => {
             filter?.afterGuiAttached?.(params);
         });
     }
 
     public afterGuiDetached(): void {
-        this.filterWrapper?.filterPromise?.then((filter) => {
+        this.filterPromise?.then((filter) => {
             filter?.afterGuiDetached?.();
         });
     }
 
     private createFilter(init?: boolean): void {
         const { column, source } = this;
-        this.filterWrapper = this.beans.filterManager?.getOrCreateFilterWrapper(column) ?? null;
-        if (!this.filterWrapper?.filterPromise) {
-            return;
-        }
-        this.filterWrapper.filterPromise.then((filter) => {
+        const filterPromise = this.beans.colFilter?.getOrCreateFilterUi(column) ?? null;
+        this.filterPromise = filterPromise;
+        filterPromise?.then((filter) => {
             const guiFromFilter = filter!.getGui();
 
             if (!_exists(guiFromFilter)) {
@@ -88,7 +85,7 @@ export class FilterWrapperComp extends Component {
     }
 
     public override destroy(): void {
-        this.filterWrapper = null;
+        this.filterPromise = null;
         super.destroy();
     }
 }

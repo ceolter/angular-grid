@@ -54,6 +54,7 @@ import type { IExcelCreator } from '../interfaces/iExcelCreator';
 import type { IExpansionService } from '../interfaces/iExpansionService';
 import type { IFooterService } from '../interfaces/iFooterService';
 import type { IFrameworkOverrides } from '../interfaces/iFrameworkOverrides';
+import type { IGroupFilterService } from '../interfaces/iGroupFilterService';
 import type { IGroupHideOpenParentsService } from '../interfaces/iGroupHideOpenParentsService';
 import type { IMenuFactory } from '../interfaces/iMenuFactory';
 import type { IPivotColDefService } from '../interfaces/iPivotColDefService';
@@ -307,6 +308,7 @@ export interface CoreBeanCollection {
     rowChildrenSvc?: IRowChildrenService;
     footerSvc?: IFooterService;
     touchSvc?: TouchService;
+    groupFilter?: IGroupFilterService;
 }
 
 export type BeanCollection = CoreBeanCollection & {
@@ -423,6 +425,7 @@ export type BeanName =
     | 'gos'
     | 'gridOptionsWrapper'
     | 'gridSerializer'
+    | 'groupFilter'
     | 'groupHideOpenParentsSvc'
     | 'groupStage'
     | 'headerNavigation'
