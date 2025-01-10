@@ -56,6 +56,7 @@ export abstract class AgAbstractLabel<
         _clearElement(eLabel);
 
         if (typeof label === 'string') {
+            // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
             eLabel.innerText = label + this.labelSeparator;
         } else if (label) {
             eLabel.appendChild(label);

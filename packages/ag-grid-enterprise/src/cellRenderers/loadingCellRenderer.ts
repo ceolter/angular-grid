@@ -18,6 +18,7 @@ export class LoadingCellRenderer extends Component implements ILoadingCellRender
 
     private setupFailed(): void {
         const localeTextFunc = this.getLocaleTextFunc();
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         this.eLoadingText.innerText = localeTextFunc('loadingError', 'ERR');
     }
 
@@ -28,6 +29,7 @@ export class LoadingCellRenderer extends Component implements ILoadingCellRender
         }
 
         const localeTextFunc = this.getLocaleTextFunc();
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         this.eLoadingText.innerText = localeTextFunc('loadingOoo', 'Loading');
     }
 

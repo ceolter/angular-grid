@@ -263,6 +263,7 @@ export class AgRichSelectList<TValue, TEventType extends string = AgRichSelectLi
         const el = eDocument.createElement('div');
 
         el.classList.add('ag-loading-text');
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         el.innerText = translate('loadingOoo', 'Loading...');
         this.eLoading = el;
     }
