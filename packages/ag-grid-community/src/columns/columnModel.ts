@@ -507,6 +507,6 @@ export class ColumnModel extends BeanStub implements NamedBean {
             }
         }
 
-        return this.beans.autoColSvc?.getAutoCol(key) ?? null;
+        return this.beans.autoColSvc?.getAutoCol(key) ?? this.beans.selectionColSvc?.getSelectionCol(key) ?? null;
     }
 }

@@ -3,13 +3,14 @@ import { BeanStub } from '../context/beanStub';
 import { AgColumn } from '../entities/agColumn';
 import type { AgColumnGroup } from '../entities/agColumnGroup';
 import type { ColDef } from '../entities/colDef';
-import type { GridOptions } from '../entities/gridOptions';
+import type { GridOptions, SelectionColumnDef } from '../entities/gridOptions';
 import type { ColumnEventType } from '../events';
 import { _getCheckboxLocation, _getCheckboxes, _getHeaderCheckbox, _isRowSelection } from '../gridOptionsUtils';
+import { _isDeepEqual } from '../utils/object';
+import { _updateColumnState } from './columnFactoryUtils';
 import type { ColKey, ColumnCollections } from './columnModel';
 import { _applyColumnState, _getColumnState } from './columnStateUtils';
 import {
-    _areColIdsEqual,
     _columnsMatch,
     _convertColumnEventSourceType,
     _destroyColumnTree,
@@ -32,6 +33,10 @@ export class SelectionColService extends BeanStub implements NamedBean {
                 _convertColumnEventSourceType(event.source)
             );
         });
+
+        this.addManagedPropertyListener('selectionColumnDef', (event) => {
+            this.onSelectionColumnDefChanged(event.currentValue, _convertColumnEventSourceType(event.source));
+        });
     }
 
     public addSelectionCols(cols: ColumnCollections): void {
@@ -53,15 +58,14 @@ export class SelectionColService extends BeanStub implements NamedBean {
             this.selectionCols = null;
         };
 
-        // the new tree dept will equal the current tree dept of cols
         const newTreeDepth = cols.treeDepth;
         const oldTreeDepth = this.selectionCols?.treeDepth ?? -1;
-        const treeDeptSame = oldTreeDepth == newTreeDepth;
+        const treeDepthSame = oldTreeDepth == newTreeDepth;
 
         const list = this.generateSelectionCols();
-        const areSame = _areColIdsEqual(list, this.selectionCols?.list ?? []);
+        const areSame = _isDeepEqual(list, this.selectionCols?.list ?? []);
 
-        if (areSame && treeDeptSame) {
+        if (areSame && treeDepthSame) {
             return;
         }
 
@@ -107,15 +111,11 @@ export class SelectionColService extends BeanStub implements NamedBean {
         return checkboxes || headerCheckbox;
     }
 
-    private generateSelectionCols(): AgColumn[] {
-        if (!this.isSelectionColumnEnabled()) {
-            return [];
-        }
-
-        const { gos, validation } = this.beans;
-        const selectionColumnDef = gos.get('selectionColumnDef');
+    private createSelectionColDef(def?: SelectionColumnDef): ColDef {
+        const { gos } = this.beans;
+        const selectionColumnDef = def ?? gos.get('selectionColumnDef');
         const enableRTL = gos.get('enableRtl');
-        const colDef: ColDef = {
+        return {
             // overridable properties
             width: 50,
             resizable: false,
@@ -135,8 +135,16 @@ export class SelectionColService extends BeanStub implements NamedBean {
             // non-overridable properties
             colId: CONTROLS_COLUMN_ID_PREFIX,
         };
+    }
+
+    private generateSelectionCols(): AgColumn[] {
+        if (!this.isSelectionColumnEnabled()) {
+            return [];
+        }
+
+        const colDef = this.createSelectionColDef();
         const colId = colDef.colId!;
-        validation?.validateColDef(colDef, colId, true);
+        this.beans.validation?.validateColDef(colDef, colId, true);
         const col = new AgColumn(colDef, null, colId, false);
         this.createBean(col);
         return [col];
@@ -179,6 +187,14 @@ export class SelectionColService extends BeanStub implements NamedBean {
         if (checkboxHasChanged || headerCheckboxHasChanged || locationChanged) {
             this.beans.colModel.refreshAll(source);
         }
+    }
+
+    private onSelectionColumnDefChanged(current: SelectionColumnDef | undefined, source: ColumnEventType) {
+        this.selectionCols?.list.forEach((col) => {
+            const newColDef = this.createSelectionColDef(current);
+            col.setColDef(newColDef, null, source);
+            _updateColumnState(this.beans, col, newColDef, source);
+        });
     }
 
     public override destroy(): void {

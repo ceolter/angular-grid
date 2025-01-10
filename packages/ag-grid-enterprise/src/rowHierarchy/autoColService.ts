@@ -29,7 +29,7 @@ import {
 export class AutoColService extends BeanStub implements NamedBean, IAutoColService {
     beanName = 'autoColSvc' as const;
 
-    // group auto columns
+    /** Group auto columns */
     public autoCols: _ColumnCollections | null;
 
     public postConstruct(): void {
