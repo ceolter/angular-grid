@@ -199,7 +199,7 @@ export class AgMenuList extends TabGuardComp<AgMenuListEvent> {
                 const nextItem = this.findNextItem(key === KeyCode.UP);
 
                 if (nextItem && nextItem !== this.activeMenuItem) {
-                    nextItem.activate();
+                    nextItem.activate(false, true);
                 }
 
                 return;

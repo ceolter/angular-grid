@@ -286,7 +286,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         return this.subMenuIsOpening;
     }
 
-    public activate(openSubMenu?: boolean): void {
+    public activate(openSubMenu?: boolean, fromKeyNav?: boolean): void {
         this.cancelActivate();
 
         if (this.params.disabled) {
@@ -299,7 +299,7 @@ export class AgMenuItemComponent extends BeanStub<AgMenuItemComponentEvent> {
         }
         this.menuItemComp.setActive?.(true);
         if (!this.suppressFocus) {
-            _preserveRangesWhile(this.beans, () => this.eGui!.focus({ preventScroll: true }));
+            _preserveRangesWhile(this.beans, () => this.eGui!.focus({ preventScroll: !fromKeyNav }));
         }
 
         if (openSubMenu && this.params.subMenu) {
