@@ -803,6 +803,8 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             this.listComponent = this.destroyBean(this.listComponent);
         }
 
+        this.searchStrings = undefined;
+
         super.destroy();
     }
 }
