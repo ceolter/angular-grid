@@ -1,12 +1,4 @@
-import type {
-    ColDef,
-    GridApi,
-    GridOptions,
-    IRichCellEditorParams,
-    KeyCreatorParams,
-    ValueFormatterParams,
-    ValueParserParams,
-} from 'ag-grid-community';
+import type { ColDef, GridApi, GridOptions, IRichCellEditorParams } from 'ag-grid-community';
 import {
     ClientSideRowModelModule,
     ModuleRegistry,
@@ -27,16 +19,30 @@ ModuleRegistry.registerModules([
 
 const columnDefs: ColDef[] = [
     {
-        headerName: 'Color',
+        headerName: 'Color (Column as String Type)',
         field: 'color',
-        valueFormatter: (params: ValueFormatterParams) => params.value.name,
-        valueParser: (params: ValueParserParams) => colors.find((color) => color.name === params.newValue),
-        keyCreator: (params: KeyCreatorParams) => params.value.name,
+        width: 250,
         cellEditor: 'agRichSelectCellEditor',
         cellEditorParams: {
+            formatValue: (v) => v.name,
+            parseValue: (v) => v.name,
             values: colors,
             searchType: 'matchAny',
-            formatValue: (value) => value.name,
+            allowTyping: true,
+            filterList: true,
+            valueListMaxHeight: 220,
+        } as IRichCellEditorParams,
+    },
+    {
+        headerName: 'Color (Column as Complex Object)',
+        field: 'detailedColor',
+        width: 290,
+        valueFormatter: (p) => `${p.value.name} (${p.value.code})`,
+        cellEditor: 'agRichSelectCellEditor',
+        cellEditorParams: {
+            formatValue: (v) => v.name,
+            values: colors,
+            searchType: 'matchAny',
             allowTyping: true,
             filterList: true,
             valueListMaxHeight: 220,
@@ -52,7 +58,7 @@ const gridOptions: GridOptions = {
         editable: true,
     },
     columnDefs: columnDefs,
-    rowData: [{ color: colors[0] }, { color: colors[1] }, { color: colors[2] }, { color: colors[3] }],
+    rowData: colors.map((v) => ({ color: v.name, detailedColor: v })),
 };
 
 // setup the grid after the page has finished loading

@@ -50,13 +50,9 @@ export class RichSelectRow<TValue> extends Component {
     }
 
     public setState(value: TValue): void {
-        let formattedValue: string = '';
-
         const { params } = this;
+        const formattedValue = params.valueFormatter?.(value) ?? '';
 
-        if (params.valueFormatter) {
-            formattedValue = params.valueFormatter(value);
-        }
         const rendererSuccessful = this.populateWithRenderer(value, formattedValue);
         if (!rendererSuccessful) {
             this.populateWithoutRenderer(value, formattedValue);

@@ -57,6 +57,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         this.registry = beans.registry;
     }
 
+    private searchStrings?: string[];
     private searchString = '';
     private listComponent: AgRichSelectList<TValue> | undefined;
     private pillContainer: AgPillContainer<TValue> | null;
@@ -106,12 +107,12 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             this.value = value;
         }
 
-        if (valueList != null) {
-            this.values = valueList;
-        }
-
         if (searchStringCreator) {
             this.searchStringCreator = searchStringCreator;
+        }
+
+        if (valueList != null) {
+            this.setValues(valueList);
         }
 
         this.registerCSS(agRichSelectCSS);
@@ -196,7 +197,8 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             suppressDeselectAll,
             suppressMultiSelectPillRenderer,
         } = config;
-        const valueFormatted = this.config.valueFormatter ? this.config.valueFormatter(value) : value;
+
+        const valueFormatted = config.valueFormatter?.(value) ?? String(value);
 
         if (allowTyping) {
             this.eInput.setValue(initialInputValue ?? valueFormatted);
@@ -293,7 +295,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         if (refresh) {
             // if `values` is not present, it means the valuesList was set asynchronously
             if (!this.values) {
-                this.values = valueList;
+                this.setValues(valueList);
                 if (this.isPickerDisplayed) {
                     const hasRefreshed = this.listComponent.selectValue(this.value);
                     if (!hasRefreshed) {
@@ -306,6 +308,14 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
 
             this.alignPickerToComponent();
         }
+    }
+
+    /**
+     * This method updates the list of values
+     */
+    private setValues(values: TValue[]): void {
+        this.values = values;
+        this.searchStrings = this.getSearchStringsFromValues(values);
     }
 
     public override showPicker() {
@@ -425,17 +435,15 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         this.runSearch();
     }
 
-    private buildSearchStrings(values: TValue[]): string[] | undefined {
-        const { valueFormatter = (value) => value } = this.config;
+    private getSearchStringsFromValues(values: TValue[]): string[] | undefined {
+        const { config } = this;
+        const { valueFormatter = (value) => String(value) } = config;
 
-        let searchStrings: string[] | undefined;
-        if (typeof values[0] === 'number' || typeof values[0] === 'string') {
-            searchStrings = values.map((v) => valueFormatter(v));
-        } else if (typeof values[0] === 'object' && this.searchStringCreator) {
-            searchStrings = this.searchStringCreator(values);
+        if (typeof values[0] === 'object' && this.searchStringCreator) {
+            return this.searchStringCreator(values);
         }
 
-        return searchStrings;
+        return values.map((v) => valueFormatter(v) as string);
     }
 
     private filterListModel(filteredValues: TValue[]): void {
@@ -454,7 +462,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
         }
 
         const { values } = this;
-        const searchStrings = this.buildSearchStrings(values);
+        const searchStrings = this.searchStrings;
 
         if (!searchStrings) {
             this.listComponent.highlightIndex(-1);

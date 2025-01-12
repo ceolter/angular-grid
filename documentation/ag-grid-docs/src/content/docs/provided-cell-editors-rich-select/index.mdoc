@@ -130,9 +130,15 @@ columnDefs: [
 
 ### Complex Objects
 
-When working with objects as values, you need to specify a `keyCreator` function within the column definition to enable  more complex features of the rich select cell editor.
+When working with complex objects, a `formatValue` callback function is required to convert that complex object into a string that can be rendered by the Rich Cell Editor.
+If the `Grid Column` being edited is not using complex values, or if the Rich Cell Editor value object has a different format (different properties) than the object
+used by the `Grid Column`, a `parseValue` callback function is required to convert the editor format into the grid column's format.
 
-The Key Creator generates a unique string key from the complex object which is used for grouping, Set filtering, and searching within the cell editor dropdown.
+{% note %}
+When working with `Cell Renderers`, a `formatValue` callback should still be provided so it will be possible to use functionality that 
+relies on string values such as `allowTyping`.
+{% /note %}
+
 
 {% gridExampleRunner title="Rich Select Editor" name="rich-select-complex-objects" exampleHeight=300 /%}
 
@@ -210,6 +216,6 @@ columnDefs: [
 ## API Reference
 
 
-{% interfaceDocumentation interfaceName="IRichCellEditorParams" names=["values", "cellHeight", "cellRenderer", "multiSelect", "suppressDeselectAll", "suppressMultiSelectPillRenderer", "allowTyping", "filterList", "searchType", "highlightMatch", "valuePlaceholder", "valueListGap", "valueListMaxHeight", "valueListMaxWidth", "formatValue", "searchDebounceDelay" ] /%}
+{% interfaceDocumentation interfaceName="IRichCellEditorParams" names=["values", "cellHeight", "cellRenderer", "multiSelect", "suppressDeselectAll", "suppressMultiSelectPillRenderer", "allowTyping", "filterList", "searchType", "highlightMatch", "valuePlaceholder", "valueListGap", "valueListMaxHeight", "valueListMaxWidth", "formatValue", "parseValue", "searchDebounceDelay" ] /%}
 
 Continue to the next section: [Number Cell Editor](./provided-cell-editors-number/).

@@ -24,7 +24,7 @@ export interface RichSelectParams<TValue = any> extends AgPickerFieldParams {
     placeholder?: string;
     initialInputValue?: string;
 
-    valueFormatter?: (value: TValue[] | TValue) => any;
+    valueFormatter?: (value: TValue[] | TValue) => string | null;
     searchStringCreator?: (values: TValue[]) => string[];
 }
 
@@ -32,7 +32,7 @@ export interface RichCellEditorValuesCallback<TData = any, TValue = any> {
     (params: ICellEditorParams<TData, TValue>): TValue[] | Promise<TValue[]>;
 }
 
-export interface IRichCellEditorParams<TData = any, TValue = any> {
+export interface IRichCellEditorParams<TData = any, TValue = any, GValue = any> {
     /** The list of values to be selected from. */
     values: TValue[] | RichCellEditorValuesCallback<TData, TValue>;
     /** The row height, in pixels, of each value. */
@@ -100,10 +100,17 @@ export interface IRichCellEditorParams<TData = any, TValue = any> {
      * treated as pixels, otherwise it should be a valid CSS size string. Default: Width of the cell being edited.
      */
     valueListMaxWidth?: number | string;
+
     /** A callback function that allows you to change the displayed value for simple data. */
     formatValue?: (value: TValue | null | undefined) => string;
+
+    /**
+     * A callback function that allows you to convert the value of the Rich Cell Editor to
+     * the data format of the Grid Column when they are different.
+     */
+    parseValue?: (value: TValue[] | TValue | null | undefined) => GValue;
 }
 
 export interface RichCellEditorParams<TData = any, TValue = any, TContext = any>
     extends IRichCellEditorParams<TData, TValue>,
-        Omit<ICellEditorParams<TData, TValue, TContext>, 'formatValue'> {}
+        Omit<ICellEditorParams<TData, TValue, TContext>, 'formatValue' | 'parseValue'> {}

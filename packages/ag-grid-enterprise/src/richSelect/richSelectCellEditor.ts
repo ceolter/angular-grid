@@ -128,25 +128,35 @@ export class RichSelectCellEditor<TData = any, TValue = any> extends PopupCompon
     }
 
     private getSearchStringCallback(values: TValue[]): ((values: TValue[]) => string[]) | undefined {
-        const params = this.params;
-        const { colDef } = params;
-
-        if (typeof values[0] !== 'object' || !colDef.keyCreator) {
+        if (typeof values[0] !== 'object') {
             return;
         }
 
-        const { column, node, data } = params;
-        return (values: TValue[]) =>
-            values.map((value: TValue) => {
-                const keyParams: KeyCreatorParams = this.gos.addGridCommonParams({
-                    value,
-                    colDef,
-                    column,
-                    node,
-                    data,
+        const params = this.params;
+        const { colDef, formatValue } = params;
+
+        if (colDef.cellEditorParams?.formatValue) {
+            return (values: TValue[]) => values.map(formatValue!);
+        }
+
+        const { keyCreator } = colDef;
+        if (keyCreator) {
+            _warn(266);
+            const { column, node, data } = params;
+            return (values: TValue[]) =>
+                values.map((value: TValue) => {
+                    const keyParams: KeyCreatorParams = this.gos.addGridCommonParams({
+                        value,
+                        colDef,
+                        column,
+                        node,
+                        data,
+                    });
+                    return keyCreator(keyParams);
                 });
-                return colDef.keyCreator!(keyParams);
-            });
+        }
+
+        return (values: TValue[]) => values.map(formatValue!);
     }
 
     // we need to have the gui attached before we can draw the virtual rows, as the
@@ -186,7 +196,10 @@ export class RichSelectCellEditor<TData = any, TValue = any> extends PopupCompon
     }
 
     public getValue(): any {
-        return this.richSelect.getValue();
+        const { params } = this;
+        const value = this.richSelect.getValue();
+
+        return params.parseValue?.(value) ?? value;
     }
 
     public override isPopup(): boolean {
