@@ -288,13 +288,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         };
 
         const rowDataChanged = changedProps.has('rowData');
-
         const treeDataChanged = changedProps.has('treeData');
-        const childrenFieldChanged = changedProps.has('treeDataChildrenField' as any);
-        const parentIdFieldChanged = changedProps.has('treeDataParentIdField' as any);
 
         const nodeManager =
-            childrenFieldChanged || parentIdFieldChanged || treeDataChanged ? this.getNewRowManager() : oldNodeManager;
+            treeDataChanged ||
+            changedProps.has('treeDataChildrenField' as any) ||
+            changedProps.has('treeDataParentIdField' as any)
+                ? this.getNewRowManager()
+                : oldNodeManager;
 
         const reset = oldNodeManager !== nodeManager || nodeManager.needsReset?.(changedProps);
 
