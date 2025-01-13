@@ -20,10 +20,20 @@ export const Alert: FunctionComponent<Props> = ({ type = 'default', children, cl
     }
 
     return (
-        <div className={classNames('alert', styles.alert, styles[type], className)}>
-            {icon && <Icon name={icon} />}
+        <>
+            <div
+                className={classNames(
+                    'alert',
+                    styles.alert,
+                    styles[type],
 
-            <div className={styles.content}>{children}</div>
-        </div>
+                    className
+                )}
+            >
+                {icon && <Icon name={icon} />}
+
+                <div className={styles.content}>{children}</div>
+            </div>
+        </>
     );
 };
