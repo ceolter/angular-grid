@@ -20,16 +20,9 @@ const columns = [
 
 const App = () => <AgGridReact rowData={data} columnDefs={columns} modules={[AllCommunityModule]} />;
 
-describe('React Jsdom innerText workaround', () => {
+describe('React Jsdom column header ', () => {
     beforeEach(() => {
         cleanup();
-
-        // Workaround for JSDom not supporting innerText
-        Object.defineProperty(Element.prototype, 'innerText', {
-            set(value) {
-                this.textContent = value;
-            },
-        });
     });
 
     it('Column Header and Cell content displayed in Jsdom', () => {
