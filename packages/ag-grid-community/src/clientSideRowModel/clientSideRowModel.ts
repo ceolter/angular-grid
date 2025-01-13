@@ -227,7 +227,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const rowData = this.gos.get('rowData');
         if (rowData) {
             this.shouldSkipSettingDataOnStart = true;
-            this.onPropChange(['rowData'], true);
+            this.onPropChange(['rowData'], this.started);
         }
     }
 
