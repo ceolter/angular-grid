@@ -1,3 +1,4 @@
+import type { GridOptions } from '../entities/gridOptions';
 import type { RowNode } from '../entities/rowNode';
 import type { IChangedRowNodes, RefreshModelParams } from './iClientSideRowModel';
 import type { RowDataTransaction } from './rowDataTransaction';
@@ -16,6 +17,8 @@ export interface ClientSideNodeManagerUpdateRowDataResult<TData = any> {
 
 export interface IClientSideNodeManager<TData = any> {
     readonly treeData: boolean;
+
+    needsReset?(changedProps: Set<keyof GridOptions<any>>): boolean;
 
     activate(rootNode: RowNode<TData> | null): void;
 

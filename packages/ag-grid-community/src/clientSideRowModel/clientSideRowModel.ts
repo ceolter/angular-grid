@@ -287,15 +287,16 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             changedProps,
         };
 
-        const nodeManager = this.getNewRowManager();
         const rowDataChanged = changedProps.has('rowData');
-        const treeDataChanged = changedProps.has('treeData');
 
-        const reset =
-            oldNodeManager !== nodeManager ||
-            changedProps.has('treeDataChildrenField' as any) ||
-            changedProps.has('treeDataParentIdField' as any) ||
-            (treeDataChanged && !gos.get('treeDataChildrenField' as any) && !gos.get('treeDataParentIdField' as any));
+        const treeDataChanged = changedProps.has('treeData');
+        const childrenFieldChanged = changedProps.has('treeDataChildrenField' as any);
+        const parentIdFieldChanged = changedProps.has('treeDataParentIdField' as any);
+
+        const nodeManager =
+            childrenFieldChanged || parentIdFieldChanged || treeDataChanged ? this.getNewRowManager() : oldNodeManager;
+
+        const reset = oldNodeManager !== nodeManager || nodeManager.needsReset?.(changedProps);
 
         let newRowData: any[] | null | undefined;
 

@@ -1,4 +1,4 @@
-import type { NamedBean, RowNode } from 'ag-grid-community';
+import type { GridOptions, NamedBean, RowNode } from 'ag-grid-community';
 
 import { AbstractClientSideTreeNodeManager } from './abstractClientSideTreeNodeManager';
 import type { DataFieldGetter } from './fieldAccess';
@@ -12,10 +12,6 @@ export class ClientSideParentIdTreeNodeManager<TData>
 
     private parentIdGetter: DataFieldGetter<TData, string | null | undefined> | null = null;
 
-    public override get treeData(): boolean {
-        return this.gos.get('treeData');
-    }
-
     public override destroy(): void {
         super.destroy();
 
@@ -23,11 +19,15 @@ export class ClientSideParentIdTreeNodeManager<TData>
         this.parentIdGetter = null;
     }
 
+    public needsReset(changedProps: Set<keyof GridOptions<any>>): boolean {
+        return changedProps.has('treeDataParentIdField' as any);
+    }
+
     public override activate(rootNode: RowNode<TData>): void {
-        const oldChildrenGetter = this.parentIdGetter;
-        const childrenField = this.gos.get('treeDataChildrenField' as any);
-        if (!oldChildrenGetter || oldChildrenGetter.path !== childrenField) {
-            this.parentIdGetter = makeFieldPathGetter(childrenField);
+        const oldParentIdGetter = this.parentIdGetter;
+        const parentIdGetter = this.gos.get('treeDataParentIdField' as any);
+        if (!oldParentIdGetter || oldParentIdGetter.path !== parentIdGetter) {
+            this.parentIdGetter = makeFieldPathGetter(parentIdGetter);
         }
 
         super.activate(rootNode);

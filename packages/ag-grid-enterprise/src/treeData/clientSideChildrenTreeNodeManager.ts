@@ -1,5 +1,6 @@
 import type {
     AbstractClientSideNodeManager,
+    GridOptions,
     IClientSideNodeManager,
     NamedBean,
     RefreshModelParams,
@@ -21,10 +22,6 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
     private childrenGetter: DataFieldGetter<TData, TData[] | null | undefined> | null = null;
 
-    public override get treeData(): boolean {
-        return this.gos.get('treeData');
-    }
-
     public override extractRowData(): TData[] | null | undefined {
         const treeRoot = this.treeRoot;
         return treeRoot && Array.from(treeRoot.enumChildren(), (node) => node.row!.data);
@@ -35,6 +32,10 @@ export class ClientSideChildrenTreeNodeManager<TData>
 
         // Forcefully deallocate memory
         this.childrenGetter = null;
+    }
+
+    public needsReset(changedProps: Set<keyof GridOptions<any>>): boolean {
+        return changedProps.has('treeDataChildrenField' as any);
     }
 
     public override activate(rootNode: RowNode<TData>): void {
