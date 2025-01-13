@@ -1,6 +1,13 @@
 import { createPart } from '../../Part';
 import { createTheme } from '../../Theme';
-import { accentColor, accentMix, backgroundColor, foregroundBackgroundMix, foregroundMix } from '../../theme-utils';
+import {
+    accentColor,
+    accentMix,
+    backgroundColor,
+    foregroundBackgroundMix,
+    foregroundColor,
+    foregroundMix,
+} from '../../theme-utils';
 import { buttonStyleAlpine, buttonStyleBalham, buttonStyleBase } from '../button-style/button-styles';
 import { checkboxStyleDefault } from '../checkbox-style/checkbox-styles';
 import { colorSchemeVariable } from '../color-scheme/color-schemes';
@@ -158,6 +165,12 @@ const makeThemeMaterialTreeShakeable = () =>
             headerHeight: {
                 calc: 'max(iconSize, dataFontSize) + spacing * 4.75 * headerVerticalPaddingScale',
             },
+            widgetVerticalSpacing: {
+                calc: 'spacing * 1.75',
+            },
+            cellHorizontalPadding: { calc: 'spacing * 3' },
+            widgetContainerHorizontalPadding: { calc: 'spacing * 1.5' },
+            widgetContainerVerticalPadding: { calc: 'spacing * 2' },
             iconSize: 18,
             borderRadius: 0,
             wrapperBorderRadius: 0,
@@ -190,7 +203,7 @@ const makeThemeMaterialTreeShakeable = () =>
                 mix: 0.12,
             },
             focusShadow: {
-                spread: 3,
+                spread: 4,
                 color: foregroundMix(0.16),
             },
             fontFamily: [
@@ -205,8 +218,11 @@ const makeThemeMaterialTreeShakeable = () =>
                 'sans-serif',
             ],
             inputFocusBorder: {
-                style: 'solid',
                 width: 2,
+                color: { ref: 'primaryColor' },
+            },
+            pickerButtonFocusBorder: {
+                width: 1,
                 color: { ref: 'primaryColor' },
             },
             cellEditingBorder: {
@@ -215,6 +231,10 @@ const makeThemeMaterialTreeShakeable = () =>
             headerFontWeight: 600,
             headerCellHoverBackgroundColor: foregroundMix(0.05),
             inputBackgroundColor: { ref: 'chromeBackgroundColor' },
+            checkboxBorderWidth: 2,
+            checkboxBorderRadius: 2,
+            checkboxUncheckedBorderColor: foregroundColor,
+            checkboxIndeterminateBackgroundColor: foregroundColor,
         });
 
 export const themeMaterial = /*#__PURE__*/ makeThemeMaterialTreeShakeable();

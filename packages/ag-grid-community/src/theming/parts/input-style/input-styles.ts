@@ -95,6 +95,36 @@ export type InputStyleParams = {
      * Color of search icon within search text inputs
      */
     inputIconColor: 'infer';
+
+    /**
+     * Border around buttons with attached dropdown menus (e.g. select fields)
+     */
+    pickerButtonBorder: 'infer';
+
+    /**
+     * Border around buttons with attached dropdown menus (e.g. select fields) when focussed
+     */
+    pickerButtonFocusBorder: 'infer';
+
+    /**
+     * Background color for buttons with attached dropdown menus (e.g. select fields)
+     */
+    pickerButtonBackgroundColor: 'infer';
+
+    /**
+     * Background color for buttons with attached dropdown menus (e.g. select fields) when focussed
+     */
+    pickerButtonFocusBackgroundColor: 'infer';
+
+    /**
+     * Border around dropdown menus attached to buttons (e.g. select fields)
+     */
+    pickerListBorder: 'infer';
+
+    /**
+     * Background color for dropdown menus attached to buttons (e.g. select fields)
+     */
+    pickerListBackgroundColor: 'infer';
 };
 
 const baseParams: WithParamTypes<InputStyleParams> = {
@@ -143,6 +173,12 @@ const baseParams: WithParamTypes<InputStyleParams> = {
     inputIconColor: {
         ref: 'inputTextColor',
     },
+    pickerButtonBorder: false,
+    pickerButtonFocusBorder: { ref: 'inputFocusBorder' },
+    pickerButtonBackgroundColor: { ref: 'backgroundColor' },
+    pickerButtonFocusBackgroundColor: { ref: 'backgroundColor' },
+    pickerListBorder: false,
+    pickerListBackgroundColor: { ref: 'backgroundColor' },
 };
 
 const makeInputStyleBaseTreeShakeable = () =>
@@ -181,6 +217,9 @@ const makeInputStyleBorderedTreeShakeable = () =>
             inputInvalidBorder: {
                 color: { ref: 'invalidColor' },
             },
+            pickerButtonBorder: false,
+            pickerButtonFocusBorder: { width: 1, color: accentColor },
+            pickerListBorder: false,
         },
         css: () => inputStyleBaseCSS + inputStyleBorderedCSS,
     });

@@ -9,10 +9,10 @@
 }
 
 .ag-select-list {
-    background-color: var(--ag-background-color);
+    background-color: var(--ag-picker-list-background-color);
     overflow: hidden auto;
     border-radius: var(--ag-border-radius);
-    border: var(--ag-input-border);
+    border: var(--ag-picker-list-border);
     box-shadow: var(--ag-dropdown-shadow);
 }
 

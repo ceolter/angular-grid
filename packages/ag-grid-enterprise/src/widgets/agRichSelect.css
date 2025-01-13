@@ -17,7 +17,7 @@
         }
     }
 
-    background-color: var(--ag-input-background-color);
+    background-color: var(--ag-picker-button-background-color);
     padding: var(--ag-spacing);
 }
 
@@ -25,9 +25,9 @@
     position: relative;
     width: 100%;
     height: auto;
-    background-color: var(--ag-input-background-color);
+    background-color: var(--ag-picker-list-background-color);
     border-radius: var(--ag-input-border-radius);
-    border: var(--ag-input-border);
+    border: var(--ag-picker-list-border);
     box-shadow: var(--ag-dropdown-shadow);
 
     :where(.ag-loading-text) {

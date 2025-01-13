@@ -80,13 +80,13 @@ const makeCheckboxStyleDefaultTreeShakeable = () =>
             checkboxUncheckedBackgroundColor: backgroundColor,
             checkboxUncheckedBorderColor: foregroundBackgroundMix(0.3),
             checkboxCheckedBackgroundColor: accentColor,
-            checkboxCheckedBorderColor: accentColor,
+            checkboxCheckedBorderColor: { ref: 'checkboxCheckedBackgroundColor' },
             checkboxCheckedShapeImage: {
                 svg: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="7" fill="none"><path stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M1 3.5 3.5 6l5-5"/></svg>',
             },
             checkboxCheckedShapeColor: backgroundColor,
             checkboxIndeterminateBackgroundColor: foregroundBackgroundMix(0.3),
-            checkboxIndeterminateBorderColor: foregroundBackgroundMix(0.3),
+            checkboxIndeterminateBorderColor: { ref: 'checkboxIndeterminateBackgroundColor' },
             checkboxIndeterminateShapeImage: {
                 svg: '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="2" fill="none"><rect width="10" height="2" fill="#000" rx="1"/></svg>',
             },

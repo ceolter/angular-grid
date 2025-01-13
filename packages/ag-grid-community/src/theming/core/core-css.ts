@@ -889,7 +889,7 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'spacing',
     },
     listItemHeight: {
-        calc: 'iconSize + widgetVerticalSpacing',
+        calc: 'max(iconSize, dataFontSize) + widgetVerticalSpacing',
     },
     iconSize: 16,
     iconColor: 'inherit',

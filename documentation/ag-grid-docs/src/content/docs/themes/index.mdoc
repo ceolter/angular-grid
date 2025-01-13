@@ -48,12 +48,20 @@ public theme = themeBalham;
 
 ## Built-in Themes
 
- * Quartz - Our default theme, with high contrast and generous padding.
+ * Quartz - Our default theme, with high contrast and generous padding. Will use the IBM Plex Sans font if available**⁺**.
  * Balham - A more traditional theme modelled after a spreadsheet application.
- * Alpine - The default theme before Quartz. We recommend quartz for new projects; this theme is intended to ease migration to the Theming API for
- applications already using Alpine.
+ * Material - A theme designed according to Google's Material Design guidelines. This theme looks great for simple applications with lots of white space, and is the obvious choice if the rest of your application follows the Google Material Design spec. Will use the Google Roboto font if available**⁺**.
+ * Alpine - The default theme before Quartz. We recommend quartz for new projects; this theme is intended to ease migration to the Theming API for applications already using Alpine.
+
+**⁺** You can load these fonts yourself or pass the `loadThemeGoogleFonts` grid option to load them from Google's CDN. See [Customising Fonts](./theming-fonts/) for more information.
 
 {% gridExampleRunner title="Built-in themes" name="built-in-themes" /%}
+
+### Material Theme Colors
+
+[Material Design v2](https://m2.material.io/) defines two colors - "primary" which is used in most cases where coloured element is required, and "accent" which is used to draw attention to important elements. AG Grid already supports the `accentColor` theme parameter. Material adds a second parameter, `primaryColor`.
+
+By default, `accentColor` is used for checked checkboxes and to highlight rows with active filters. `primaryColor` is used for anything else. You can change this, see [Colors & Dark Mode](./theming-colors/):
 
 ## Customising Built-in Themes
 

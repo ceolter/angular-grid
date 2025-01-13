@@ -173,6 +173,13 @@ const docs: Record<AllThemeParams, string> = {
         'Background color for the title bar of panels and dialogs such as the integrated charts and the advanced filter builder.',
     panelTitleBarBorder:
         'Border below the title bar of panels and dialogs such as the integrated charts and the advanced filter builder.',
+    pickerButtonBorder: 'Border around buttons with attached dropdown menus (e.g. select fields)',
+    pickerButtonFocusBorder: 'Border around buttons with attached dropdown menus (e.g. select fields) when focussed',
+    pickerButtonBackgroundColor: 'Background color for buttons with attached dropdown menus (e.g. select fields)',
+    pickerButtonFocusBackgroundColor:
+        'Background color for buttons with attached dropdown menus (e.g. select fields) when focussed',
+    pickerListBorder: 'Border around dropdown menus attached to buttons (e.g. select fields)',
+    pickerListBackgroundColor: 'Background color for dropdown menus attached to buttons (e.g. select fields)',
     pinnedColumnBorder:
         'Vertical borders between columns that are pinned to the left or right and the rest of the grid',
     pinnedRowBorder:

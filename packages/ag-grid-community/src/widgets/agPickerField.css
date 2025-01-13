@@ -17,9 +17,9 @@
 
 .ag-picker-field-wrapper {
     overflow: hidden;
-    border: var(--ag-input-border);
+    border: var(--ag-picker-button-border);
     border-radius: 5px;
-    background-color: var(--ag-background-color);
+    background-color: var(--ag-picker-button-background-color);
     min-height: max(var(--ag-list-item-height), calc(var(--ag-spacing) * 4));
 
     &:disabled {
@@ -29,10 +29,7 @@
     &.ag-picker-has-focus,
     &:focus-within {
         box-shadow: var(--ag-focus-shadow);
-        border: var(--ag-input-focus-border);
+        border: var(--ag-picker-button-focus-border);
+        background-color: var(--ag-picker-button-focus-background-color);
     }
-}
-
-.ag-picker-field-button {
-    background-color: var(--ag-background-color);
 }
