@@ -8,8 +8,7 @@ import { iconSetAlpine, iconSetQuartzRegular } from '../icon-set/icon-sets';
 import { inputStyleBordered } from '../input-style/input-styles';
 import { tabStyleAlpine, tabStyleQuartz, tabStyleRolodex } from '../tab-style/tab-styles';
 
-export const themeQuartz =
-    /*#__PURE__*/
+const makeThemeQuartzTreeShakeable = () =>
     createTheme()
         .withPart(checkboxStyleDefault)
         .withPart(colorSchemeVariable)
@@ -28,8 +27,11 @@ export const themeQuartz =
             ],
         });
 
-export const themeAlpine =
+export const themeQuartz =
     /*#__PURE__*/
+    makeThemeQuartzTreeShakeable();
+
+const makeThemeAlpineTreeShakeable = () =>
     createTheme()
         .withPart(buttonStyleAlpine)
         .withPart(checkboxStyleDefault)
@@ -74,8 +76,11 @@ export const themeAlpine =
             toggleButtonOffBackgroundColor: foregroundBackgroundMix(0.45),
         });
 
-export const themeBalham =
+export const themeAlpine =
     /*#__PURE__*/
+    makeThemeAlpineTreeShakeable();
+
+const makeThemeBalhamTreeShakeable = () =>
     createTheme()
         .withPart(buttonStyleBalham)
         .withPart(checkboxStyleDefault)
@@ -121,6 +126,10 @@ export const themeBalham =
             sideButtonBorder: true,
             sideButtonBarTopPadding: { calc: 'spacing * 4' },
         });
+
+export const themeBalham =
+    /*#__PURE__*/
+    makeThemeBalhamTreeShakeable();
 
 // export const themeMaterial =
 //     /*#__PURE__*/
