@@ -231,6 +231,7 @@ const makeInputStyleUnderlinedTreeShakeable = () =>
         feature: 'inputStyle',
         params: {
             ...baseParams,
+            inputBackgroundColor: 'transparent',
             inputBorder: {
                 width: 2,
                 color: foregroundMix(0.3),

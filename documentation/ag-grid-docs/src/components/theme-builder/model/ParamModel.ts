@@ -76,12 +76,8 @@ export const useParam = <T>(model: ParamModel<T>) => useAtomValue(model.valueAto
 export const allParamModels = memoize(() => {
     const defaultModeParams = getThemeDefaultParams(themeQuartz);
     const allParams = Array.from(Object.keys(defaultModeParams)) as ThemeParam[];
-    return (
-        allParams
-            .sort()
-            .map(ParamModel.for)
-            // trying to edit a `url(data:svg image)` in a text editor doesn't work well
-            .filter((param) => !/Image$/.test(param.property))
-            .sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()))
-    );
+    return allParams
+        .sort()
+        .map(ParamModel.for)
+        .sort((a, b) => a.label.toLowerCase().localeCompare(b.label.toLowerCase()));
 });

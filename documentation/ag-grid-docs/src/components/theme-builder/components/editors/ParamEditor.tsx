@@ -15,6 +15,7 @@ import { CssValueEditor } from './CssValueEditor';
 import { FontFamilyValueEditor } from './FontFamilyValueEditor';
 import { FontWeightValueEditor } from './FontWeightValueEditor';
 import { FormField } from './FormField';
+import { ImageValueEditor } from './ImageValueEditor';
 import { LengthValueEditor } from './LengthValueEditor';
 import { ScaleValueEditor } from './ScaleValueEditor';
 import type { ValueEditorProps } from './ValueEditorProps';
@@ -84,7 +85,7 @@ const valueEditors: Record<ParamType, FC<ValueEditorProps<any>>> = {
     border: BorderValueEditor,
     borderStyle: BorderStyleValueEditor,
     shadow: CssValueEditor,
-    image: CssValueEditor,
+    image: ImageValueEditor,
     fontFamily: FontFamilyValueEditor,
     fontWeight: FontWeightValueEditor,
     duration: LengthValueEditor,
