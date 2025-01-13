@@ -6,9 +6,9 @@ import type { PropertyType } from '../types';
 const TYPE_LINKS: Record<string, string> = {
     AgChartTheme: './integrated-charts-customisation/#custom-chart-themes',
     AgChartThemeName: './integrated-charts-customisation/#provided-themes',
-    AgChartThemeDefinition: 'https://ag-grid.com/charts/themes-api',
-    AgChartThemeOverrides: 'https://ag-grid.com/charts/themes-api/#reference-AgChartTheme-overrides',
-    AgChartThemePalette: 'https://ag-grid.com/charts/themes-api/#reference-AgChartTheme-palette',
+    AgChartThemeDefinition: 'https://www.ag-grid.com/charts/themes-api',
+    AgChartThemeOverrides: 'https://www.ag-grid.com/charts/themes-api/#reference-AgChartTheme-overrides',
+    AgChartThemePalette: 'https://www.ag-grid.com/charts/themes-api/#reference-AgChartTheme-palette',
     AgCartesianChartOptions: './integrated-charts-customisation/#overriding-themes',
     AgCartesianAxesTheme: './integrated-charts-customisation/#overriding-themes',
     AgCartesianSeriesTheme: './integrated-charts-customisation/#overriding-themes',

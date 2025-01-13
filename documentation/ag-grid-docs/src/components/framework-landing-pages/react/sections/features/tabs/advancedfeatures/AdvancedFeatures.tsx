@@ -50,7 +50,7 @@ const AdvancedFeatures: React.FC = () => {
                         <span className={styles.featureDetail}>
                             Purchase a discounted bundle licence to access all of the advanced features and additional
                             series types available in{' '}
-                            <a href={urlWithBaseUrl('https://ag-grid.com/charts/')}>AG Charts</a> Enterprise.
+                            <a href={urlWithBaseUrl('https://www.ag-grid.com/charts/')}>AG Charts</a> Enterprise.
                         </span>
                     </div>
                 </div>

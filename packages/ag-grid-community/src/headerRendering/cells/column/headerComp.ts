@@ -71,7 +71,7 @@ export interface IHeaderParams<TData = any, TContext = any> extends AgGridCommon
      */
     setSort: (sort: SortDirection, multiSort?: boolean) => void;
 
-    /** Custom header template if provided to `headerComponentParams`, otherwise will be `undefined`. See [Header Templates](https://ag-grid.com/javascript-data-grid/column-headers/#header-templates) */
+    /** Custom header template if provided to `headerComponentParams`, otherwise will be `undefined`. See [Header Templates](https://www.ag-grid.com/javascript-data-grid/column-headers/#header-templates) */
     template?: string;
     /** The component to use for inside the header (replaces the text value and leaves the remainder of the Grid's original component). */
     innerHeaderComponent?: any;

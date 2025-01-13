@@ -38,7 +38,7 @@
     "not op_mini all",
     "not operamobile >= 0"
   ],
-  "homepage": "https://ag-grid.com/",
+  "homepage": "https://www.ag-grid.com/",
   "devDependencies": {
     "@jest/globals": "29.6.1",
     "@types/jest": "^29.5.0",
