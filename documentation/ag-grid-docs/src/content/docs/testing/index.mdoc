@@ -17,7 +17,11 @@ It is recommended to use e2e tests to validate AG Grid as part of your applicati
 
 e2e tests are recommended so that AG Grid is run inside a real browser. Fake browser environments (such as jsdom) can be used for simple unit testing cases, but their limitations can lead to confusing test results.
 
-A few examples of how to use Playwright with AG Grid can be found in this [Github Repo](https://github.com/ag-grid/ag-grid-testing/tree/latest/e2e) or in this [blog post](http://blog.ag-grid.com/writing-e2e-tests-for-ag-grid-react-tables-with-playwright/).
+A few examples of how to use Playwright with AG Grid can be found in this [Github Repo](https://github.com/ag-grid/ag-grid-testing/tree/latest/e2e). 
+
+{% if isFramework("react") %}
+Alternatively see [Writing E2E Tests for AG Grid React Tables with Playwright](https://blog.ag-grid.com/writing-e2e-tests-for-ag-grid-react-tables-with-playwright/).
+{% /if %}
 
 ## jsdom Limitations
 
@@ -27,7 +31,7 @@ jsdom is a pure JavaScript implementation of many web standards with the goal to
 
 
 {% warning  %}
-If you are using jsdom for testing, you may encounter issues that suggest the grid not rendering correctly. However, this is likely caused by jsdom not supporting all the features of a real browser.
+If you are using jsdom for testing, you may encounter issues that suggest the grid is not rendering correctly. However, this is likely caused by jsdom not supporting all the features of a real browser.
 {% /warning %}
 
 The main limitations that can affect AG Grid are:
