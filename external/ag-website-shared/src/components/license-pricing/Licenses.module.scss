@@ -119,6 +119,14 @@ p.name {
     }
 }
 
+.dollar {
+    color: var(--color-text-tertiary);
+    font-size: var(--text-fs-base);
+    font-weight: 400;
+    letter-spacing: 0;
+    padding-left: $spacing-size-2;
+}
+
 .priceFullDollars {
     display: flex;
     flex-direction: row;
