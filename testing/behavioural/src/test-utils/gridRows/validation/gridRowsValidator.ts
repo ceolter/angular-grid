@@ -291,17 +291,15 @@ export class GridRowsValidator {
         const selectedRows = gridRows.api.getSelectedNodes();
         const selectedRowsSet = new Set();
         let duplicates = 0;
-        if (selectedRows) {
-            for (const row of selectedRows) {
-                const rowErrors = this.errors.get(row);
-                if (!gridRows.isInRowNodes(row) && !gridRows.isRowDisplayed(row)) {
-                    rowErrors.add('Selected node does not exist');
-                }
-                if (selectedRowsSet.has(row)) {
-                    ++duplicates;
-                } else {
-                    selectedRowsSet.add(row);
-                }
+        for (const row of selectedRows) {
+            const rowErrors = this.errors.get(row);
+            if (!gridRows.isInRowNodes(row) && !gridRows.isRowDisplayed(row)) {
+                rowErrors.add('Selected node does not exist');
+            }
+            if (selectedRowsSet.has(row)) {
+                ++duplicates;
+            } else {
+                selectedRowsSet.add(row);
             }
         }
         if (duplicates > 0) {
