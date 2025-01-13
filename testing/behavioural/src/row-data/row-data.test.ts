@@ -12,7 +12,7 @@ import {
     executeTransactionsAsync,
 } from '../test-utils';
 
-describe('ag-grid rows-ordering', () => {
+describe('ag-grid row data', () => {
     const gridsManager = new TestGridsManager({
         modules: [ClientSideRowModelModule],
     });
