@@ -4,6 +4,8 @@ import { PartImpl, createPart, defaultModeName } from './Part';
 import type { CoreParams } from './core/core-css';
 import { coreDefaults } from './core/core-css';
 import { IS_SSR, _injectCoreAndModuleCSS, _injectGlobalCSS } from './inject';
+import { buttonStyleQuartz } from './parts/button-style/button-styles';
+import type { ButtonStyleParams } from './parts/button-style/button-styles';
 import type { WithParamTypes } from './theme-types';
 import { paramValueToCss } from './theme-types';
 import { paramToVariableName } from './theme-utils';
@@ -46,7 +48,10 @@ export const _asThemeImpl = <TParams>(theme: Theme<TParams>): ThemeImpl => {
 /**
  * Create a custom theme containing core grid styles but no parts.
  */
-export const createTheme = (): Theme<CoreParams> => new ThemeImpl();
+// TODO button styles were split out into a part in 33.1 and this part must be
+// bundled by default to avoid a breaking change. In v34
+// withPart(buttonStyleQuartz) can be removed.
+export const createTheme = (): Theme<CoreParams & ButtonStyleParams> => new ThemeImpl().withPart(buttonStyleQuartz);
 
 type GridThemeUseArgs = {
     loadThemeGoogleFonts: boolean | undefined;
@@ -202,7 +207,8 @@ export class ThemeImpl {
                     variablesCss += wrapPrefix;
                     inheritanceCss += wrapPrefix;
                 }
-                for (const [key, value] of Object.entries(params)) {
+                for (const key of Object.keys(params).sort()) {
+                    const value = params[key];
                     const cssValue = paramValueToCss(key, value);
                     if (cssValue === false) {
                         _error(107, { key, value });

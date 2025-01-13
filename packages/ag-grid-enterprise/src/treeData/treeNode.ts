@@ -81,10 +81,7 @@ export class TreeNode implements ITreeNode {
         public parent: TreeNode | null,
 
         /** The key of this node. */
-        public readonly key: string,
-
-        /** The level of this node. Root has level -1 */
-        public readonly level: number
+        public readonly key: string
     ) {}
 
     /** Returns the number of children in this node */
@@ -114,7 +111,7 @@ export class TreeNode implements ITreeNode {
         }
         let node = this.children?.get(key);
         if (!node) {
-            node = new TreeNode(this, key, this.level + 1);
+            node = new TreeNode(this, key);
             (this.children ??= new Map())?.set(node.key, node); // Add to the map
         }
         return node;
@@ -131,7 +128,7 @@ export class TreeNode implements ITreeNode {
             children!.delete(key); // Remove from the map
             children!.set(key, node); // Reinsert to the map
         } else {
-            node = new TreeNode(this, key, this.level + 1);
+            node = new TreeNode(this, key);
             (this.children ??= new Map())?.set(node.key, node); // Add to the map
         }
         return node;
@@ -155,18 +152,13 @@ export class TreeNode implements ITreeNode {
      * @returns True if the row changed
      */
     public setRow(newRow: TreeRow | null): boolean {
-        const { level, row: oldRow } = this;
-        if (level < 0) {
-            if (oldRow !== null && oldRow !== newRow) {
-                oldRow.treeNode = null;
-            }
-        } else {
-            if (oldRow === newRow) {
-                return false; // Already the same row
-            }
-            if (oldRow !== null) {
-                oldRow.treeNode = null;
-            }
+        const oldRow = this.row;
+
+        if (oldRow === newRow) {
+            return false; // Already the same row
+        }
+        if (oldRow !== null) {
+            oldRow.treeNode = null;
         }
         if (newRow !== null) {
             newRow.treeNode = this;
@@ -321,7 +313,7 @@ export class TreeNode implements ITreeNode {
      * If the order changes, also the order in the children map will be updated,
      * so the next call to enumChildren() will return the children in the right order.
      */
-    public updateChildrenAfterGroup(treeData: boolean): boolean {
+    public updateChildrenAfterGroup(treeData: boolean, root: boolean): boolean {
         this.childrenChanged = false; // Reset the flag for this node
         const childrenCount = treeData && this.children?.size;
         if (!childrenCount) {
@@ -329,7 +321,7 @@ export class TreeNode implements ITreeNode {
                 return false; // Nothing changed
             }
 
-            this.childrenAfterGroup = this.level < 0 ? [] : _EmptyArray;
+            this.childrenAfterGroup = root ? [] : _EmptyArray;
             this.leafChildrenChanged = true;
             return true; // Children cleared
         }

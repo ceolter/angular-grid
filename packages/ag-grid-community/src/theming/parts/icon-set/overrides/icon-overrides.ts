@@ -1,7 +1,6 @@
 import { createPart } from '../../../Part';
 import { colorValueToCss, fontFamilyValueToCss, fontWeightValueToCss, imageValueToCss } from '../../../theme-types';
 import type { ColorValue, FontFamilyValue, FontWeightValue, ImageValue } from '../../../theme-types';
-import { sharedIconStylesCSS } from '../shared-icon-styles.css-GENERATED';
 
 type IconSetOverridesImage = {
     type: 'image';
@@ -26,7 +25,7 @@ type IconSetOverridesFont = {
 type IconSetOverridesArgs = IconSetOverridesImage | IconSetOverridesFont;
 
 export const iconOverrides = (args: IconSetOverridesArgs) => {
-    const cssParts = [sharedIconStylesCSS];
+    const cssParts: string[] = [];
     if (args.type === 'image') {
         const { icons, mask } = args;
         for (const [key, value] of Object.entries(icons)) {

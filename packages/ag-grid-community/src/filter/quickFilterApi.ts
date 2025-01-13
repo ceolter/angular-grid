@@ -1,13 +1,13 @@
 import type { BeanCollection } from '../context/context';
 
 export function isQuickFilterPresent(beans: BeanCollection): boolean {
-    return !!beans.filterManager?.isQuickFilterPresent();
+    return !!beans.quickFilter?.isFilterPresent();
 }
 
 export function getQuickFilter(beans: BeanCollection): string | undefined {
-    return beans.gos.get('quickFilterText');
+    return beans.quickFilter?.getText();
 }
 
 export function resetQuickFilter(beans: BeanCollection): void {
-    beans.filterManager?.resetQuickFilterCache();
+    beans.quickFilter?.resetCache();
 }

@@ -1,6 +1,13 @@
 import type { ExpandTypeKeys } from '../Part';
 import type { WithParamTypes } from '../theme-types';
-import { accentColor, accentMix, foregroundBackgroundMix, foregroundColor, foregroundMix } from '../theme-utils';
+import {
+    accentColor,
+    accentMix,
+    backgroundColor,
+    foregroundBackgroundMix,
+    foregroundColor,
+    foregroundMix,
+} from '../theme-utils';
 
 export { coreCSS } from './core.css-GENERATED';
 
@@ -304,14 +311,54 @@ type CoreParamsDefinitions = {
     headerVerticalPaddingScale: 'infer';
 
     /**
-     * Background color of clickable icons when hovered
+     * Color for icons, or `inherit` to take on the text color of the containing component
+     */
+    iconColor: 'infer';
+
+    /**
+     * Default color for clickable icons
+     */
+    iconButtonColor: 'infer';
+
+    /**
+     * Default background color for clickable icons
+     */
+    iconButtonBackgroundColor: 'infer';
+
+    /**
+     * The distance beyond the border of the clickable icons that the background extends to
+     */
+    iconButtonBackgroundSpread: 'infer';
+
+    /**
+     * Corner radius of clickable icon background
+     */
+    iconButtonBorderRadius: 'infer';
+
+    /**
+     * Color of clickable icons when hovered
+     */
+    iconButtonHoverColor: 'infer';
+
+    /**
+     * Background color for clickable icons when hovered
      */
     iconButtonHoverBackgroundColor: 'infer';
 
     /**
-     * Hover color for clickable icons
+     * Color of clickable icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.
      */
-    iconButtonHoverColor: 'infer';
+    iconButtonActiveColor: 'infer';
+
+    /**
+     * Background color of clickable icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.
+     */
+    iconButtonActiveBackgroundColor: 'infer';
+
+    /**
+     * Color of the marker dot shown on icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.
+     */
+    iconButtonActiveIndicatorColor: 'infer';
 
     /**
      * The size of square icons and icon-buttons
@@ -549,8 +596,12 @@ type CoreParamsDefinitions = {
     sideButtonSelectedTextColor: 'infer';
 
     /**
-     * Color of the border drawn above and below the selected tab button in the
-     * sidebar, or 'transparent' to disable the border on the selected tab
+     * Border drawn above and below tab buttons in the sidebar
+     */
+    sideButtonBorder: 'infer';
+
+    /**
+     * Border drawn above and below the selected tab button in the sidebar
      */
     sideButtonSelectedBorder: 'infer';
 
@@ -721,8 +772,9 @@ export const coreDefaults: Readonly<CoreParams> = {
     sideButtonTextColor: { ref: 'textColor' },
     sideButtonHoverBackgroundColor: { ref: 'sideButtonBackgroundColor' },
     sideButtonHoverTextColor: { ref: 'sideButtonTextColor' },
-    sideButtonSelectedBackgroundColor: { ref: 'backgroundColor' },
+    sideButtonSelectedBackgroundColor: backgroundColor,
     sideButtonSelectedTextColor: { ref: 'sideButtonTextColor' },
+    sideButtonBorder: 'solid 1px transparent',
     sideButtonSelectedBorder: true,
     sideButtonLeftPadding: { ref: 'spacing' },
     sideButtonRightPadding: { ref: 'spacing' },
@@ -780,9 +832,7 @@ export const coreDefaults: Readonly<CoreParams> = {
         ref: 'backgroundColor',
         mix: 0.66,
     },
-    oddRowBackgroundColor: {
-        ref: 'backgroundColor',
-    },
+    oddRowBackgroundColor: backgroundColor,
     borderRadius: 4,
     wrapperBorderRadius: 8,
     cellHorizontalPadding: {
@@ -811,9 +861,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     popupShadow: '0 0 16px #00000026',
     cardShadow: '0 1px 4px 1px #00000018',
     dropdownShadow: { ref: 'cardShadow' },
-    dragAndDropImageBackgroundColor: {
-        ref: 'backgroundColor',
-    },
+    dragAndDropImageBackgroundColor: backgroundColor,
     dragAndDropImageBorder: true,
     dragAndDropImageShadow: {
         ref: 'popupShadow',
@@ -844,13 +892,21 @@ export const coreDefaults: Readonly<CoreParams> = {
         calc: 'iconSize + widgetVerticalSpacing',
     },
     iconSize: 16,
+    iconColor: 'inherit',
+    iconButtonColor: { ref: 'iconColor' },
+    iconButtonBackgroundColor: 'transparent',
+    iconButtonBackgroundSpread: 4,
+    iconButtonBorderRadius: 1,
+    iconButtonHoverColor: { ref: 'iconButtonColor' },
+    iconButtonHoverBackgroundColor: foregroundMix(0.1),
+    iconButtonActiveColor: accentColor,
+    iconButtonActiveBackgroundColor: accentMix(0.28),
+    iconButtonActiveIndicatorColor: accentColor,
     toggleButtonWidth: 28,
     toggleButtonHeight: 18,
     toggleButtonOnBackgroundColor: accentColor,
     toggleButtonOffBackgroundColor: foregroundBackgroundMix(0.3),
-    toggleButtonSwitchBackgroundColor: {
-        ref: 'backgroundColor',
-    },
+    toggleButtonSwitchBackgroundColor: backgroundColor,
     toggleButtonSwitchInset: 2,
     menuBorder: {
         color: foregroundMix(0.2),
@@ -868,7 +924,6 @@ export const coreDefaults: Readonly<CoreParams> = {
     },
     chartMenuPanelWidth: 260,
     chartMenuLabelColor: foregroundMix(0.8),
-    iconButtonHoverColor: foregroundMix(0.1),
     dialogShadow: {
         ref: 'popupShadow',
     },
@@ -879,9 +934,7 @@ export const coreDefaults: Readonly<CoreParams> = {
     dialogBorder: {
         color: foregroundMix(0.2),
     },
-    panelBackgroundColor: {
-        ref: 'backgroundColor',
-    },
+    panelBackgroundColor: backgroundColor,
     panelTitleBarBackgroundColor: {
         ref: 'headerBackgroundColor',
     },
@@ -922,6 +975,5 @@ export const coreDefaults: Readonly<CoreParams> = {
     filterToolPanelGroupIndent: {
         ref: 'spacing',
     },
-    iconButtonHoverBackgroundColor: foregroundMix(0.1),
     rowLoadingSkeletonEffectColor: foregroundMix(0.15),
 };

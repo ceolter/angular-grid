@@ -36,5 +36,6 @@ export const foregroundBackgroundMix = (mix: number): ColorValue => ({
     mix,
     onto: 'backgroundColor',
 });
+export const backgroundColor: ColorValue = { ref: 'backgroundColor' };
 export const foregroundColor: ColorValue = { ref: 'foregroundColor' };
 export const accentColor: ColorValue = { ref: 'accentColor' };

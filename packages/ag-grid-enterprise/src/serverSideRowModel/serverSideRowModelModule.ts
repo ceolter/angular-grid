@@ -77,7 +77,6 @@ export const ServerSideRowModelModule: _ModuleWithoutApi = {
 export const ServerSideRowModelApiModule: _ModuleWithApi<_ServerSideRowModelGridApi<any>> = {
     moduleName: 'ServerSideRowModelApi',
     version: VERSION,
-    rowModels: ['serverSide'],
     apiFunctions: {
         getServerSideSelectionState,
         setServerSideSelectionState,

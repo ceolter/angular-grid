@@ -90,6 +90,10 @@ export class QuickFilterService extends BeanStub<QuickFilterServiceEvent> implem
         this.beans.rowModel.forEachNode((node) => (node.quickFilterAggregateText = null));
     }
 
+    public getText(): string | undefined {
+        return this.gos.get('quickFilterText');
+    }
+
     private setFilterParts(): void {
         const { quickFilter, parser } = this;
         if (quickFilter) {

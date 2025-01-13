@@ -34,8 +34,9 @@
 }
 
 .ag-filter-toolpanel-search {
-    margin-top: var(--ag-widget-container-vertical-padding);
-    margin-bottom: var(--ag-spacing);
+    padding-top: var(--ag-widget-container-vertical-padding);
+    padding-bottom: var(--ag-spacing);
+    min-height: var(--ag-header-height);
 }
 
 :where(.ag-filter-toolpanel-group:not(.ag-has-filter) > .ag-group-title-bar)

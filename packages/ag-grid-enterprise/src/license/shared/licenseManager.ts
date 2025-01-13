@@ -5,7 +5,7 @@ const LICENSE_TYPES = {
     '02': 'CHARTS',
     '0102': 'BOTH',
 };
-const LICENSING_HELP_URL = 'https://ag-grid.com/licensing/';
+const LICENSING_HELP_URL = 'https://www.ag-grid.com/licensing/';
 
 export interface ILicenseManager {
     setLicenseKey: (key?: string, gridContext?: boolean) => void;

@@ -36,10 +36,10 @@ export function navigate(to: To, options?: { state?: any; replace?: boolean }) {
     }
 }
 
-export function scrollIntoView(element?: HTMLElement | null, options?: ScrollIntoViewOptions) {
+export function scrollIntoView(element?: HTMLElement | null, options?: Parameters<Element['scrollIntoView']>) {
     requestAnimationFrame(() => element?.scrollIntoView({ behavior: 'smooth', ...options }));
 }
 
-export function scrollIntoViewById(id: string, options?: ScrollIntoViewOptions) {
+export function scrollIntoViewById(id: string, options?: Parameters<Element['scrollIntoView']>) {
     scrollIntoView(document.getElementById(id), options);
 }

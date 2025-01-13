@@ -1,0 +1,211 @@
+/* disable autoprefix to prevent mask-image SVGs from being duplicated as -webkit-mask-image and doubling bundle size */
+
+/* autoprefixer: off */
+
+.ag-icon-aggregation::before {
+    mask-image: url('./balham-svg-icons/aggregation.svg');
+}
+
+.ag-icon-arrows::before {
+    mask-image: url('./balham-svg-icons/arrows.svg');
+}
+
+.ag-icon-asc::before {
+    mask-image: url('./balham-svg-icons/asc.svg');
+}
+
+.ag-icon-cancel::before {
+    mask-image: url('./balham-svg-icons/cancel.svg');
+}
+
+.ag-icon-chart::before {
+    mask-image: url('./balham-svg-icons/chart.svg');
+}
+
+.ag-icon-color-picker::before {
+    mask-image: url('./balham-svg-icons/color-picker.svg');
+}
+
+.ag-icon-columns::before {
+    mask-image: url('./balham-svg-icons/columns.svg');
+}
+
+.ag-icon-contracted::before {
+    mask-image: url('./balham-svg-icons/contracted.svg');
+}
+
+.ag-icon-copy::before {
+    mask-image: url('./balham-svg-icons/copy.svg');
+}
+
+.ag-icon-cross::before {
+    mask-image: url('./balham-svg-icons/cross.svg');
+}
+
+.ag-icon-csv::before {
+    mask-image: url('./balham-svg-icons/csv.svg');
+}
+
+.ag-icon-cut::before {
+    mask-image: url('./balham-svg-icons/cut.svg');
+}
+
+.ag-icon-desc::before {
+    mask-image: url('./balham-svg-icons/desc.svg');
+}
+
+.ag-icon-down::before {
+    mask-image: url('./balham-svg-icons/down.svg');
+}
+
+.ag-icon-excel::before {
+    mask-image: url('./balham-svg-icons/excel.svg');
+}
+
+.ag-icon-expanded::before {
+    mask-image: url('./balham-svg-icons/expanded.svg');
+}
+
+.ag-icon-eye-slash::before {
+    mask-image: url('./balham-svg-icons/eye-slash.svg');
+}
+
+.ag-icon-eye::before {
+    mask-image: url('./balham-svg-icons/eye.svg');
+}
+
+.ag-icon-filter::before {
+    mask-image: url('./balham-svg-icons/filter.svg');
+}
+
+.ag-icon-first::before {
+    mask-image: url('./balham-svg-icons/first.svg');
+}
+
+.ag-icon-group::before {
+    mask-image: url('./balham-svg-icons/group.svg');
+}
+
+.ag-icon-last::before {
+    mask-image: url('./balham-svg-icons/last.svg');
+}
+
+.ag-icon-left::before {
+    mask-image: url('./balham-svg-icons/left.svg');
+}
+
+.ag-icon-linked::before {
+    mask-image: url('./balham-svg-icons/linked.svg');
+}
+
+.ag-icon-loading::before {
+    mask-image: url('./balham-svg-icons/loading.svg');
+}
+
+.ag-icon-maximize::before {
+    mask-image: url('./balham-svg-icons/maximize.svg');
+}
+
+.ag-icon-menu::before {
+    mask-image: url('./balham-svg-icons/menu.svg');
+}
+
+.ag-icon-menu-alt::before {
+    mask-image: url('./balham-svg-icons/menu-alt.svg');
+}
+
+.ag-icon-minimize::before {
+    mask-image: url('./balham-svg-icons/minimize.svg');
+}
+
+.ag-icon-minus::before {
+    mask-image: url('./balham-svg-icons/minus.svg');
+}
+
+.ag-icon-next::before {
+    mask-image: url('./balham-svg-icons/next.svg');
+}
+
+.ag-icon-none::before {
+    mask-image: url('./balham-svg-icons/none.svg');
+}
+
+.ag-icon-not-allowed::before {
+    mask-image: url('./balham-svg-icons/not-allowed.svg');
+}
+
+.ag-icon-paste::before {
+    mask-image: url('./balham-svg-icons/paste.svg');
+}
+
+.ag-icon-pin::before {
+    mask-image: url('./balham-svg-icons/pin.svg');
+}
+
+.ag-icon-pivot::before {
+    mask-image: url('./balham-svg-icons/pivot.svg');
+}
+
+.ag-icon-plus::before {
+    mask-image: url('./balham-svg-icons/plus.svg');
+}
+
+.ag-icon-previous::before {
+    mask-image: url('./balham-svg-icons/previous.svg');
+}
+
+.ag-icon-right::before {
+    mask-image: url('./balham-svg-icons/right.svg');
+}
+
+.ag-icon-save::before {
+    mask-image: url('./balham-svg-icons/save.svg');
+}
+
+.ag-icon-small-down::before {
+    mask-image: url('./balham-svg-icons/small-down.svg');
+}
+
+.ag-icon-small-left::before {
+    mask-image: url('./balham-svg-icons/small-left.svg');
+}
+
+.ag-icon-small-right::before {
+    mask-image: url('./balham-svg-icons/small-right.svg');
+}
+
+.ag-icon-small-up::before {
+    mask-image: url('./balham-svg-icons/small-up.svg');
+}
+
+.ag-icon-tick::before {
+    mask-image: url('./balham-svg-icons/tick.svg');
+}
+
+.ag-icon-tree-closed::before {
+    mask-image: url('./balham-svg-icons/tree-closed.svg');
+}
+
+.ag-icon-tree-indeterminate::before {
+    mask-image: url('./balham-svg-icons/tree-indeterminate.svg');
+}
+
+.ag-icon-tree-open::before {
+    mask-image: url('./balham-svg-icons/tree-open.svg');
+}
+
+.ag-icon-unlinked::before {
+    mask-image: url('./balham-svg-icons/unlinked.svg');
+}
+
+.ag-icon-up::before {
+    mask-image: url('./balham-svg-icons/up.svg');
+}
+
+.ag-icon-grip::before {
+    mask-image: url('./balham-svg-icons/grip.svg');
+}
+
+.ag-icon-settings::before {
+    mask-image: url('./balham-svg-icons/settings.svg');
+}

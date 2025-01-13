@@ -22,7 +22,7 @@ export class ClientSidePathTreeNodeManager<TData>
         const treeRoot = this.treeRoot!;
 
         this.treeClear(treeRoot);
-        treeRoot.setRow(rootNode);
+        this.treeSetRootNode(rootNode);
 
         super.loadNewRowData(rowData);
 
@@ -59,7 +59,7 @@ export class ClientSidePathTreeNodeManager<TData>
             return; // Destroyed or not active
         }
 
-        treeRoot.setRow(this.rootNode);
+        this.treeSetRootNode(this.rootNode!);
 
         for (const row of changedRowNodes.removals) {
             const node = row.treeNode as TreeNode | null;

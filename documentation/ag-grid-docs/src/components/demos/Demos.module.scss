@@ -19,6 +19,7 @@
     background-color: #e5e9ed;
     border: 1px solid var(--color-border-primary);
     overflow: hidden;
+    min-height: 75px;
 
     transition:
         background-color 0.5s ease-in-out,
@@ -38,6 +39,7 @@
     a {
         display: block;
         height: 100%;
+        min-height: 75px;
     }
 
     @media screen and (min-width: 720px) {

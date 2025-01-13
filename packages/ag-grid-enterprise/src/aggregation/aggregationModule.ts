@@ -1,4 +1,4 @@
-import type { _AggregationGridApi, _ModuleWithApi } from 'ag-grid-community';
+import type { _AggregationGridApi, _ModuleWithApi, _ModuleWithoutApi } from 'ag-grid-community';
 
 import { EnterpriseCoreModule } from '../agGridEnterpriseModule';
 import { VERSION } from '../version';
@@ -28,7 +28,7 @@ export const SharedAggregationModule: _ModuleWithApi<_AggregationGridApi<any>> =
 /**
  * @internal
  */
-export const AggregationModule: _ModuleWithApi<_AggregationGridApi<any>> = {
+export const AggregationModule: _ModuleWithoutApi = {
     moduleName: 'Aggregation',
     version: VERSION,
     beans: [AggregationStage, FilterAggregatesStage],

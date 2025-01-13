@@ -1,7 +1,7 @@
 import { Collapsible } from '@ag-website-shared/components/collapsible/Collapsible';
 import { Icon } from '@ag-website-shared/components/icon/Icon';
 import classnames from 'classnames';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import styles from './ComparisonTable.module.scss';

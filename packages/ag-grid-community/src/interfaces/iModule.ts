@@ -47,7 +47,7 @@ export interface Module {
 }
 
 /** Used to define a module that contains api functions. */
-export type _ModuleWithApi<TGridApi extends Readonly<Partial<GridApi>>> = Module & {
+export type _ModuleWithApi<TGridApi extends Readonly<Partial<GridApi>>> = Omit<Module, 'rowModels'> & {
     apiFunctions?: { [K in ApiFunctionName & keyof TGridApi]: ApiFunction<K> };
 };
 /** Used to define a module that does not contain api functions. */
@@ -84,6 +84,7 @@ export type InternalModuleName =
     | 'GroupCellRenderer'
     | 'GroupColumn'
     | 'HorizontalResize'
+    | 'InfiniteRowModelCore'
     | 'KeyboardNavigation'
     | 'LoadingCellRenderer'
     | 'MenuCore'
@@ -91,6 +92,7 @@ export type InternalModuleName =
     | 'Overlay'
     | 'PinnedColumn'
     | 'Popup'
+    | 'QuickFilterCore'
     | 'SharedAggregation'
     | 'SharedDragAndDrop'
     | 'SharedExport'

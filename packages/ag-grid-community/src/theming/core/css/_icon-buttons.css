@@ -14,20 +14,33 @@
 .ag-filter-toolpanel-expand,
 .ag-panel-title-bar-button-icon,
 .ag-chart-menu-icon {
+    color: var(--ag-icon-button-color);
+    border-radius: var(--ag-icon-button-border-radius);
+    background-color: var(--ag-icon-button-background-color);
+    box-shadow: 0 0 0 var(--ag-icon-button-background-spread) var(--ag-icon-button-background-color);
+
     &:hover {
-        border-radius: 1px;
-        background-color: var(--ag-icon-button-hover-color);
-        box-shadow: 0 0 0 4px var(--ag-icon-button-hover-color);
+        background-color: var(--ag-icon-button-hover-background-color);
+        box-shadow: 0 0 0 var(--ag-icon-button-background-spread) var(--ag-icon-button-hover-background-color);
+        color: var(--ag-icon-button-hover-color);
     }
 }
 
 .ag-filter-active {
-    --ag-icon-button-hover-color: color-mix(in srgb, transparent, var(--ag-accent-color) 28%);
-
     position: relative;
     border-radius: 1px;
-    background-color: color-mix(in srgb, transparent, var(--ag-accent-color) 14%);
-    outline: solid 4px color-mix(in srgb, transparent, var(--ag-accent-color) 14%);
+
+    /* Apply active background color with a background-image so that it
+        overlays on top of the existing background-color */
+    background-image: linear-gradient(
+        var(--ag-icon-button-active-background-color),
+        var(--ag-icon-button-active-background-color)
+    );
+
+    /* Apply active background spread color with an outline so that it
+        overlays on top of the existing background spread (which uses a
+        box-shadow) */
+    outline: solid var(--ag-icon-button-background-spread) var(--ag-icon-button-active-background-color);
 
     &::after {
         content: '';
@@ -42,5 +55,6 @@
 
     :where(.ag-icon-filter) {
         clip-path: path('M8,0C8,4.415 11.585,8 16,8L16,16L0,16L0,0L8,0Z');
+        color: var(--ag-icon-button-active-color);
     }
 }

@@ -37,7 +37,6 @@ export const ClientSideRowModelModule: _ModuleWithoutApi = {
 export const ClientSideRowModelApiModule: _ModuleWithApi<_ClientSideRowModelGridApi<any>> = {
     moduleName: 'ClientSideRowModelApi',
     version: VERSION,
-    rowModels: ['clientSide'],
     apiFunctions: {
         onGroupExpandedOrCollapsed,
         refreshClientSideRowModel,

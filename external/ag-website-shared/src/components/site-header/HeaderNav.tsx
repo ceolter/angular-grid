@@ -192,12 +192,16 @@ export const HeaderNav = ({
         });
     };
 
+    // Filter items for HeaderNavLarge and HeaderNavSmall
+    const largeNavItems = items.filter((item) => !item.isCollapsed);
+    const smallNavItems = items.filter((item) => item.isCollapsed || !item.isCollapsed);
+
     return (
         <>
-            <HeaderNavLarge currentPath={currentPath} items={items} allPaths={allPaths} apiPaths={apiPaths} />
+            <HeaderNavLarge currentPath={currentPath} items={largeNavItems} allPaths={allPaths} apiPaths={apiPaths} />
             <HeaderNavSmall
                 currentPath={currentPath}
-                items={items}
+                items={smallNavItems}
                 allPaths={allPaths}
                 apiPaths={apiPaths}
                 isOpen={isOpen}

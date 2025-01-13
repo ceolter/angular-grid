@@ -87,10 +87,9 @@ export class VueComponentFactory {
     public static searchForComponentInstance(parent: any, component: any, maxDepth = 10, suppressError = false) {
         let componentInstance: any = null;
 
-        let currentParent = parent.parent;
-
         // options first
         let depth = 0;
+        let currentParent = parent.parent;
         while (!componentInstance && currentParent && currentParent.components && ++depth < maxDepth) {
             if (currentParent.components && currentParent.components![component as any]) {
                 componentInstance = currentParent.components![component as any];
@@ -99,6 +98,7 @@ export class VueComponentFactory {
         }
 
         depth = 0;
+        currentParent = parent.parent;
         while (!componentInstance && currentParent && currentParent.$options && ++depth < maxDepth) {
             const currentParentAsThis = currentParent as any;
             if (
@@ -115,12 +115,15 @@ export class VueComponentFactory {
 
         // composition next
         depth = 0;
-        while (!componentInstance && currentParent && currentParent.exposed && ++depth < maxDepth) {
-            const currentParentAsThis = currentParent as any;
-            if (currentParentAsThis.exposed && currentParentAsThis.exposed[component as any]) {
-                componentInstance = currentParentAsThis.exposed![component as any];
-            } else if (currentParentAsThis[component]) {
-                componentInstance = currentParentAsThis[component];
+        currentParent = parent.parent;
+        while (!componentInstance && currentParent && ++depth < maxDepth) {
+            if (currentParent.exposed) {
+                const currentParentAsThis = currentParent as any;
+                if (currentParentAsThis.exposed && currentParentAsThis.exposed[component as any]) {
+                    componentInstance = currentParentAsThis.exposed![component as any];
+                } else if (currentParentAsThis[component]) {
+                    componentInstance = currentParentAsThis[component];
+                }
             }
             currentParent = currentParent.parent;
         }

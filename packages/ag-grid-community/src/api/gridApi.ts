@@ -718,13 +718,22 @@ export interface _ColumnFilterGridApi {
 }
 
 export interface _QuickFilterGridApi {
-    /** Returns `true` if the Quick Filter is set, otherwise `false`. */
+    /**
+     * Only supported for Client-Side Row Model.
+     * Returns `true` if the Quick Filter is set, otherwise `false`.
+     */
     isQuickFilterPresent(): boolean;
 
-    /** Get the current Quick Filter text from the grid, or `undefined` if none is set. */
+    /**
+     * Only supported for Client-Side Row Model.
+     * Get the current Quick Filter text from the grid, or `undefined` if none is set.
+     */
     getQuickFilter(): string | undefined;
 
-    /** Reset the Quick Filter cache text on every rowNode. */
+    /**
+     * Only supported for Client-Side Row Model.
+     * Reset the Quick Filter cache text on every rowNode.
+     */
     resetQuickFilter(): void;
 }
 

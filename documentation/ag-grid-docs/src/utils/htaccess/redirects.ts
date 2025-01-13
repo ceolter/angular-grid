@@ -2552,15 +2552,18 @@ export const SITE_301_REDIRECTS: Redirect[] = [
     { fromPattern: '^/angular-data-grid/$', to: 'https://www.ag-grid.com/angular-data-grid/getting-started/' },
     { fromPattern: '^/vue-data-grid/$', to: 'https://www.ag-grid.com/vue-data-grid/getting-started/' },
 
-    { fromPattern: '^/javascript-charts.*', to: 'https://ag-grid.com/charts/javascript/quick-start/' },
-    { fromPattern: '^/angular-charts.*', to: 'https://ag-grid.com/charts/angular/quick-start/' },
-    { fromPattern: '^/react-charts.*', to: 'https://ag-grid.com/charts/react/quick-start/' },
-    { fromPattern: '^/vue-charts.*', to: 'https://ag-grid.com/charts/vue/quick-start/' },
+    { fromPattern: '^/javascript-charts.*', to: 'https://www.ag-grid.com/charts/javascript/quick-start/' },
+    { fromPattern: '^/angular-charts.*', to: 'https://www.ag-grid.com/charts/angular/quick-start/' },
+    { fromPattern: '^/react-charts.*', to: 'https://www.ag-grid.com/charts/react/quick-start/' },
+    { fromPattern: '^/vue-charts.*', to: 'https://www.ag-grid.com/charts/vue/quick-start/' },
 
-    { fromPattern: '^/documentation/javascript/charts.*', to: 'https://ag-grid.com/charts/javascript/quick-start/' },
-    { fromPattern: '^/documentation/angular/charts.*', to: 'https://ag-grid.com/charts/angular/quick-start/' },
-    { fromPattern: '^/documentation/react/charts.*', to: 'https://ag-grid.com/charts/react/quick-start/' },
-    { fromPattern: '^/documentation/vue/charts.*', to: 'https://ag-grid.com/charts/vue/quick-start/' },
+    {
+        fromPattern: '^/documentation/javascript/charts.*',
+        to: 'https://www.ag-grid.com/charts/javascript/quick-start/',
+    },
+    { fromPattern: '^/documentation/angular/charts.*', to: 'https://www.ag-grid.com/charts/angular/quick-start/' },
+    { fromPattern: '^/documentation/react/charts.*', to: 'https://www.ag-grid.com/charts/react/quick-start/' },
+    { fromPattern: '^/documentation/vue/charts.*', to: 'https://www.ag-grid.com/charts/vue/quick-start/' },
 
     { from: '/javascript-data-grid/component-types/', to: '/javascript-data-grid/components/' },
     { from: '/angular-data-grid/component-types/', to: '/angular-data-grid/components/' },

@@ -486,7 +486,7 @@ export interface ColDef<TData = any, TValue = any> extends AbstractColDef<TData,
      */
     initialPivotIndex?: number;
     /**
-     * Only for CSRM, see [SSRM Pivoting](https://ag-grid.com/javascript-data-grid/server-side-model-pivoting/).
+     * Only for CSRM, see [SSRM Pivoting](https://www.ag-grid.com/javascript-data-grid/server-side-model-pivoting/).
      *
      * Comparator to use when ordering the pivot columns, when this column is used to pivot on.
      * The values will always be strings, as the pivot service uses strings as keys for the pivot groups.

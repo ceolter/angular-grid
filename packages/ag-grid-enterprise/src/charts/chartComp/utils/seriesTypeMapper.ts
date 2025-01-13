@@ -188,6 +188,13 @@ export function isHierarchical(seriesType: ChartSeriesType): boolean {
     return doesSeriesHaveProperty(seriesType, 'isHierarchical');
 }
 
+export function isHierarchicalChart(chartType: ChartType | ChartType[]): boolean {
+    if (Array.isArray(chartType)) {
+        return chartType.every((type) => isHierarchicalChart(type));
+    }
+    return isHierarchical(getSeriesType(chartType));
+}
+
 export function getCanonicalChartType(chartType: ChartType): Exclude<ChartType, 'doughnut'> {
     return chartType === 'doughnut' ? 'donut' : chartType;
 }

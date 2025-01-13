@@ -2,6 +2,11 @@
     "header": {
         "items": [
             {
+                "title": "AG Charts",
+                "url": "https://www.ag-grid.com/charts",
+                "isCollapsed": true
+            },
+            {
                 "title": "Demos",
                 "path": "/example"
             },

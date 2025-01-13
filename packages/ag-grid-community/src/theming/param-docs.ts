@@ -26,6 +26,26 @@ const docs: Record<AllThemeParams, string> = {
     borderRadius: 'Default corner radius for many UI elements such as menus, dialogs and form widgets.',
     browserColorScheme:
         'The CSS color-scheme to apply to the grid, which affects the default appearance of browser scrollbars form inputs unless these have been styled with CSS.',
+    buttonTextColor: 'Text color of standard action buttons (e.g. "Reset" and "Apply")',
+    buttonFontWeight: 'Font weight of text in standard action buttons (e.g. "Reset" and "Apply")',
+    buttonBackgroundColor: 'Background color of standard action buttons (e.g. "Reset" and "Apply")',
+    buttonBorder: 'Border around standard action buttons (e.g. "Reset" and "Apply")',
+    buttonBorderRadius: 'Corner radius of standard action buttons (e.g. "Reset" and "Apply")',
+    buttonHorizontalPadding: 'Horizontal padding inside standard action buttons (e.g. "Reset" and "Apply")',
+    buttonVerticalPadding: 'Vertical padding inside standard action buttons (e.g. "Reset" and "Apply")',
+    buttonHoverTextColor: 'Text color of standard action buttons (e.g. "Reset" and "Apply") when hovered',
+    buttonHoverBackgroundColor: 'Background color of standard action buttons (e.g. "Reset" and "Apply") when hovered',
+    buttonHoverBorder:
+        'Border around standard action buttons (e.g. "Reset" and "Apply") when hovered. Only has an effect if a border is enabled with `buttonBorder`.',
+    buttonActiveTextColor: 'Text color of standard action buttons (e.g. "Reset" and "Apply") when being clicked',
+    buttonActiveBackgroundColor:
+        'Background color of standard action buttons (e.g. "Reset" and "Apply") when being clicked',
+    buttonActiveBorder:
+        'Border around standard action buttons (e.g. "Reset" and "Apply") when being clicked. Only has an effect if a border is enabled with `buttonBorder`.',
+    buttonDisabledTextColor: 'Text color of standard action buttons (e.g. "Reset" and "Apply") when disabled',
+    buttonDisabledBackgroundColor:
+        'Background color of standard action buttons (e.g. "Reset" and "Apply") when disabled',
+    buttonDisabledBorder: 'Border around standard action buttons (e.g. "Reset" and "Apply") when disabled.',
     cellEditingBorder: 'Border around cells being edited',
     cellEditingShadow: 'Shadow for cells being edited',
     cellFontFamily: 'Font family of text in grid cells',
@@ -100,9 +120,20 @@ const docs: Record<AllThemeParams, string> = {
     headerRowBorder: 'Borders between and below header rows.',
     headerTextColor: 'Color of text in the header',
     headerVerticalPaddingScale: 'Multiply the header vertical padding by a number, e.g. 1.5 to increase by 50%',
-    iconButtonHoverBackgroundColor: 'Background color of clickable icons when hovered',
-    iconButtonHoverColor: 'Hover color for clickable icons',
     iconSize: 'The size of square icons and icon-buttons',
+    iconColor: 'Color for icons, or `inherit` to take on the text color of the containing component',
+    iconButtonColor: 'Default color for clickable icons',
+    iconButtonBackgroundColor: 'Default background color for clickable icons',
+    iconButtonBackgroundSpread: 'The distance beyond the border of the clickable icons that the background extends to',
+    iconButtonBorderRadius: 'Corner radius of clickable icon background',
+    iconButtonHoverColor: 'Color of clickable icons when hovered',
+    iconButtonHoverBackgroundColor: 'Background color for clickable icons when hovered',
+    iconButtonActiveColor:
+        'Color of clickable icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.',
+    iconButtonActiveBackgroundColor:
+        'Background color of clickable icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.',
+    iconButtonActiveIndicatorColor:
+        'Color of the marker dot shown on icon buttons when styled as active. This is used for the column filter button when a filter is applied to the column.',
     inputBackgroundColor: 'Background color for text inputs',
     inputBorder:
         'Border around text inputs. By default the border is drawn all around the input, when using Material Design inputs the border is drawn underneath',
@@ -194,8 +225,8 @@ const docs: Record<AllThemeParams, string> = {
     sideButtonHoverTextColor: 'Text color of the tab buttons in the sidebar when hovered',
     sideButtonSelectedBackgroundColor: 'Background color of the selected tab button in the sidebar',
     sideButtonSelectedTextColor: 'Text color of the selected tab button in the sidebar',
-    sideButtonSelectedBorder:
-        "Color of the border drawn above and below the selected tab button in the sidebar, or 'transparent' to disable the border on the selected tab",
+    sideButtonBorder: 'Border drawn above and below tab buttons in the sidebar',
+    sideButtonSelectedBorder: 'Border drawn above and below the selected tab button in the sidebar',
     sideButtonLeftPadding:
         'Padding to the left of the text in tab buttons in the sidebar (this is always the padding on the inward facing side of the button, so in right-to-left layout it will be on the right)',
     sideButtonRightPadding:

@@ -1,6 +1,7 @@
 import { RowComp } from '../../rendering/row/rowComp';
 import type { RowCtrl, RowCtrlInstanceId } from '../../rendering/row/rowCtrl';
 import { _setAriaRole } from '../../utils/aria';
+import { _isBrowserFirefox } from '../../utils/browser';
 import { _ensureDomOrder, _insertWithDomOrder } from '../../utils/dom';
 import type { ComponentSelector } from '../../widgets/component';
 import { Component, RefPlaceholder } from '../../widgets/component';
@@ -78,7 +79,7 @@ export class RowContainerComp extends Component {
             if (existingRowComp) {
                 this.rowComps[instanceId] = existingRowComp;
                 delete oldRows[instanceId];
-                this.ensureDomOrder(existingRowComp.getGui());
+                this.ensureDomOrder(existingRowComp.getGui(), rowCon);
             } else {
                 // don't create new row comps for rows which are not displayed. still want the existing components
                 // as they may be animating out.
@@ -109,11 +110,20 @@ export class RowContainerComp extends Component {
         this.lastPlacedElement = element;
     }
 
-    private ensureDomOrder(eRow: HTMLElement): void {
-        if (this.domOrder) {
-            _ensureDomOrder(this.eContainer, eRow, this.lastPlacedElement);
-            this.lastPlacedElement = eRow;
+    private ensureDomOrder(eRow: HTMLElement, rowCtrl: RowCtrl): void {
+        if (!this.domOrder) {
+            return;
         }
+
+        // firefox fails to fire mouseleave events if nodes are removed from the DOM
+        // so we manually remove the hover styles, to prevent multiple rows from being
+        // style with hovered CSS while scrolling.
+        if (_isBrowserFirefox()) {
+            rowCtrl.resetHoveredStatus();
+        }
+
+        _ensureDomOrder(this.eContainer, eRow, this.lastPlacedElement);
+        this.lastPlacedElement = eRow;
     }
 }
 

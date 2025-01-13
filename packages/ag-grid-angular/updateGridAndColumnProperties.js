@@ -6,8 +6,8 @@ const ts = require('typescript');
 const { _getCallbackForEvent, _PUBLIC_EVENTS } = require('ag-grid-community');
 const { getFormatterForTS } = require('./../../scripts/formatAST');
 const { _ALL_GRID_OPTIONS } = require('ag-grid-community');
-
 const { formatNode, findNode, getFullJsDoc } = getFormatterForTS(ts);
+const prettier = require('prettier');
 
 const AG_CHART_TYPES = ['AgChartTheme', 'AgChartThemeOverrides'];
 
@@ -199,7 +199,7 @@ function getGridPropertiesAndEventsJs() {
 const updateGridProperties = (getGridPropertiesAndEvents) => {
     // extract the grid properties & events and add them to our angular grid component
     const { code: gridPropertiesAndEvents, types } = getGridPropertiesAndEvents();
-    const importsForProps = `import type {${EOL}    ${types.join(',' + EOL + '    ')}${EOL}} from "ag-grid-community";`;
+    const importsForProps = `import type {${EOL}    ${types.join(',' + EOL + '    ')}${EOL}} from 'ag-grid-community';`;
     const optionsForGrid = {
         files: './projects/ag-grid-angular/src/lib/ag-grid-angular.component.ts',
         from: [/(\/\/ @START@)[^]*(\/\/ @END@)/, /(\/\/ @START_IMPORTS@)[^]*(\/\/ @END_IMPORTS@)/],
@@ -220,6 +220,19 @@ const updateGridProperties = (getGridPropertiesAndEvents) => {
 
 const updatePropertiesBuilt = () => {
     updateGridProperties(getGridPropertiesAndEventsJs);
+
+    const prettierConfig = JSON.parse(fs.readFileSync('../../.prettierrc', 'utf-8'));
+    prettier
+        .format(fs.readFileSync('./projects/ag-grid-angular/src/lib/ag-grid-angular.component.ts', 'utf-8'), {
+            ...prettierConfig,
+            filepath: './projects/ag-grid-angular/src/lib/ag-grid-angular.component.ts',
+        })
+        .then((result) => fs.writeFileSync('./projects/ag-grid-angular/src/lib/ag-grid-angular.component.ts', result))
+        .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error(error);
+            process.exitCode = 1;
+        });
 };
 
 // eslint-disable-next-line no-console

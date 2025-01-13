@@ -1,7 +1,6 @@
 .ag-tool-panel-wrapper {
     display: flex;
     overflow: hidden auto;
-    cursor: default;
     user-select: none;
     width: var(--ag-side-bar-panel-width);
 }
@@ -61,10 +60,12 @@
     position: relative;
     color: var(--ag-side-button-text-color);
     background-color: var(--ag-side-button-background-color);
-    border-top: var(--ag-side-button-selected-border);
-    border-bottom: var(--ag-side-button-selected-border);
-    border-top-color: transparent;
-    border-bottom-color: transparent;
+    border-top: var(--ag-side-button-border);
+    border-bottom: var(--ag-side-button-border);
+
+    /* hide button border on top button if it's flush with container top, which
+       has its own border */
+    margin-top: -1px;
 
     &::before {
         content: '';
@@ -84,12 +85,9 @@
     }
 
     &.ag-selected {
-        &:where(:not(:first-of-type)) {
-            border-top: var(--ag-side-button-selected-border);
-        }
-
         color: var(--ag-side-button-selected-text-color);
         background-color: var(--ag-side-button-selected-background-color);
+        border-top: var(--ag-side-button-selected-border);
         border-bottom: var(--ag-side-button-selected-border);
 
         &::before {
@@ -105,7 +103,6 @@
     gap: var(--ag-spacing);
     align-items: center;
     white-space: nowrap;
-    cursor: pointer;
     padding: var(--ag-side-button-vertical-padding) var(--ag-side-button-right-padding)
         var(--ag-side-button-vertical-padding) var(--ag-side-button-left-padding);
     width: 100%;

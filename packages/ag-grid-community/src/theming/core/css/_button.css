@@ -15,6 +15,10 @@
     text-shadow: inherit;
     cursor: pointer;
 
+    &:disabled {
+        cursor: default;
+    }
+
     &:focus-visible {
         outline: none;
         box-shadow: var(--ag-focus-shadow);
@@ -22,20 +26,25 @@
 }
 
 .ag-standard-button {
-    font-family: inherit;
     appearance: none;
-    border-radius: var(--ag-border-radius);
-    border: var(--ag-input-border);
-    background-color: var(--ag-background-color);
-    padding: var(--ag-spacing) calc(var(--ag-spacing) * 2);
+    border-radius: var(--ag-button-border-radius);
+    color: var(--ag-button-text-color);
+    font-weight: var(--ag-button-font-weight);
+    background-color: var(--ag-button-background-color);
+    border: var(--ag-button-border);
+    padding: var(--ag-button-vertical-padding) var(--ag-button-horizontal-padding);
     cursor: pointer;
 
     &:hover {
-        background-color: var(--ag-row-hover-color);
+        color: var(--ag-button-hover-text-color);
+        background-color: var(--ag-button-hover-background-color);
+        border: var(--ag-button-hover-border);
     }
 
     &:active {
-        border-color: var(--ag-accent-color);
+        color: var(--ag-button-active-text-color);
+        background-color: var(--ag-button-active-background-color);
+        border: var(--ag-button-active-border);
     }
 
     &:disabled {

@@ -60,6 +60,13 @@ validateCommonDist()
     echo "ERROR: $directory/dist/types should have at type files - none found"
     exit 1
   fi
+
+  local sourceMappingCount=`grep sourceMappingURL $directory/dist/package/*.*js | wc -l`
+  if [[ $sourceMappingCount -ne 0 ]]
+  then
+    echo "ERROR: $directory/dist/package has source map references"
+    exit 1
+  fi
 }
 
 validateModules()
@@ -139,6 +146,23 @@ validateLocale()
   fi
 }
 
+validateVue3()
+{
+  local requiredCount=`grep required dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs`
+  if [[ $requiredCount -ne 0 ]]
+  then
+    echo "ERROR: dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs has referenced to 'required'"
+    exit 1
+  fi
+
+  local skipCheckCount=`grep skipCheck dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs`
+  if [[ $skipCheckCount -ne 0 ]]
+  then
+    echo "ERROR: dist/artifacts/contents/packages/ag-grid-vue3/package/dist/main.mjs has referenced to 'skipCheck'"
+    exit 1
+  fi
+}
+
 # check all expected modules & packages are there
 validateExpectedDirs "dist/artifacts/contents/community-modules" 3
 validateExpectedDirs "dist/artifacts/contents/packages" 6
@@ -151,3 +175,4 @@ validatePackages "dist/artifacts/contents/packages"
 
 validateLocale "dist/artifacts/contents/community-modules/locale/package"
 
+validateVue3

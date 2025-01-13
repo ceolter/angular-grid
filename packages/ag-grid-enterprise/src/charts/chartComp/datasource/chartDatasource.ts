@@ -31,6 +31,7 @@ export interface ChartDatasourceParams {
     isScatter: boolean;
     aggFunc?: string | IAggFunc;
     referenceCellRange?: PartialCellRange;
+    isHierarchical?: boolean;
 }
 
 interface IData {
@@ -82,7 +83,7 @@ export class ChartDatasource extends BeanStub {
     }
 
     private extractRowsFromGridRowModel(params: ChartDatasourceParams): IData {
-        const { crossFiltering, startRow, endRow, valueCols, dimensionCols, grouping } = params;
+        const { crossFiltering, startRow, endRow, valueCols, dimensionCols, grouping, isHierarchical } = params;
         let extractedRowData: any[] = [];
         const colNames: { [key: string]: string[] } = {};
 
@@ -163,7 +164,15 @@ export class ChartDatasource extends BeanStub {
                         // traverse parents to extract group label path
                         const labels = this.getGroupLabels(rowNode, valueString);
 
-                        data[colId] = labels.slice().reverse();
+                        let preparedLabels: string | string[] = labels.slice().reverse();
+
+                        if (!isHierarchical && preparedLabels.length > 1) {
+                            // Charts handles this for hierarchical charts only. When row grouping is present
+                            // for charts that don't support it, emulate Charts behavior
+                            preparedLabels = preparedLabels.filter((label) => !!label).join();
+                        }
+
+                        data[colId] = preparedLabels;
 
                         // keep track of group node indexes, so they can be padded when other groups are expanded
                         if (rowNode.group) {

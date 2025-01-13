@@ -51,7 +51,7 @@ const CTAWithFrameworks: FunctionComponent<{ ctaTitle: string; ctaUrl: string }>
     const [isHovering, setIsHovering] = useState(false);
     const [isHiding, setIsHiding] = useState(false);
     const frameworkContainerRef = useRef<HTMLDivElement>(null);
-    const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const CurrentIcon = FRAMEWORK_CONFIGS[framework]?.Icon;
 

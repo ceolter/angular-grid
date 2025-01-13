@@ -1,10 +1,11 @@
 @use 'breakpoints' as breakpoint;
 
-// // Darkmode selector. To be used as an interpolated Sass parent selector
+// // Darkmode selectors. To be used as an interpolated Sass parent selector
 // // #{$selector-darkmode} & {
 // //     [DARKMODE STYLES]
 // // }
 $selector-darkmode: "[data-dark-mode='true']";
+$selector-lightmode: "[data-dark-mode='false']";
 
 // Exclude simple selectors from interfering with grid styles
 $selector-exclude-grid: ':where(:not([class^=ag]))';

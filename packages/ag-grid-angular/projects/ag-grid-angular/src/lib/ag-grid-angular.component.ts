@@ -664,6 +664,7 @@ export class AgGridAngular<TData = any, TColDef extends ColDef<TData> = ColDef<a
      */
     @Input() public excelStyles: ExcelStyle[] | undefined = undefined;
     /** Rows are filtered using this text as a Quick Filter.
+     * Only supported for Client-Side Row Model.
      */
     @Input() public quickFilterText: string | undefined = undefined;
     /** Set to `true` to turn on the Quick Filter cache, used to improve performance when using the Quick Filter.

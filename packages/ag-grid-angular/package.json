@@ -10,8 +10,7 @@
     "test:e2e": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/ng test --watch false --browsers ChromeHeadless",
     "test:watch": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/ng test --watch true  --browsers ChromeHeadless",
     "lint": "./node_modules/.bin/ng lint",
-    "prettier-fix": "prettier --write \"projects/ag-grid-angular/src/**/*.ts\"",
-    "update-angular-components": "node updateGridAndColumnProperties.js && npm run prettier-fix"
+    "update-angular-components": "node updateGridAndColumnProperties.js"
   },
   "license": "MIT",
   "module": "./dist/ag-grid-angular/fesm2022/ag-grid-angular.mjs",

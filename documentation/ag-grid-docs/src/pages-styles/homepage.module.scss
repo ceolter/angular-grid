@@ -10,18 +10,32 @@ body {
 }
 
 .homepageHero {
+    --background-split: 280px;
+
     position: relative;
     padding-top: $spacing-size-10;
 
-    &::before {
+    &::before,
+    &::after {
         content: '';
         position: absolute;
-        top: 0;
         right: 0;
-        bottom: 280px;
         left: 0;
-        background-color: var(--color-bg-site-header);
         z-index: -1;
+    }
+
+    &::before {
+        top: 0;
+        bottom: var(--background-split);
+        background-color: var(--color-bg-site-header);
+    }
+
+    #{$selector-lightmode} & {
+        &::after {
+            height: calc(var(--background-split));
+            bottom: 0px;
+            background: linear-gradient(var(--color-brand-200), var(--color-bg-primary));
+        }
     }
 
     @media screen and (min-width: $breakpoint-hero-small) {
@@ -106,21 +120,25 @@ body {
     padding-left: var(--layout-horizontal-margins);
 
     @media screen and (max-width: 500px) {
-        padding-top: 0;
-    }
-
-    @media screen and (max-width: 500px) {
         padding: $spacing-size-4;
     }
 }
 
 .loadingLogoContainer {
-    height: 100%;
-    right: var(--layout-horizontal-margins);
-    left: var(--layout-horizontal-margins);
     position: absolute;
+    top: 0;
+    right: var(--layout-horizontal-margins);
+    bottom: 54px;
+    left: var(--layout-horizontal-margins);
     background-color: var(--color-bg-primary);
     border-radius: 8px;
+
+    @media screen and (max-width: 500px) {
+        top: $spacing-size-4;
+        right: $spacing-size-4;
+        bottom: 70px;
+        left: $spacing-size-4;
+    }
 
     svg[class*='logo-mark'] {
         position: absolute;
@@ -134,7 +152,9 @@ body {
 }
 
 .heroSectionGrid {
-    height: 450px;
+    height: 449px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
 }
 
 .heroLinks {

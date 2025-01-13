@@ -138,7 +138,7 @@ export const lengthValueToCss = (value: LengthValue): string | false => {
         const valueWithSpaces = value.calc.replace(/ ?[*/+] ?/g, ' $& ');
         // convert param names to variable expressions, e.g. "fooBar" -> "var(--ag-foo-bar)",
         // ignoring words that are part of function names "fooBar()" or variables "--fooBar"
-        return `calc(${valueWithSpaces.replace(/-?[a-z][a-z0-9]*\b(?![-(])/gi, (p) => (p[0] === '-' ? p : ` ${paramToVariableExpression(p)} `))})`;
+        return `calc(${valueWithSpaces.replace(/-?\b[a-z][a-z0-9]*\b(?![-(])/gi, (p) => (p[0] === '-' ? p : ` ${paramToVariableExpression(p)} `))})`;
     }
     if (value && 'ref' in value) return paramToVariableExpression(value.ref);
     return false;
@@ -264,7 +264,7 @@ export const shadowValueToCss = (value: ShadowValue): string | false => {
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/line-style
  */
-export type BorderStyleValue = 'none' | 'solid' | 'dotted' | 'dashed';
+export type BorderStyleValue = 'none' | 'solid' | 'dotted' | 'dashed' | 'inset' | 'outset' | AnyString;
 
 export const borderStyleValueToCss = literalToCSS;
 

@@ -9,7 +9,8 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 export default defineConfig({
     plugins: [vue(), vueJsx(), vueDevTools()],
     build: {
-        sourcemap: false,
+        minify: process.env.NX_TASK_TARGET_CONFIGURATION === 'production', // in lieue of sourcemaps
+        sourcemap: false, //process.env.NX_TASK_TARGET_CONFIGURATION !== 'production', sourcemaps arent currently working currectly - perhaps due to vfcs
         lib: {
             // Could also be a dictionary or array of multiple entry points
             entry: resolve(__dirname, 'src/main.ts'),

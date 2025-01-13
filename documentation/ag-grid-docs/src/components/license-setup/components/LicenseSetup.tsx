@@ -276,6 +276,15 @@ export const LicenseSetup: FunctionComponent<Props> = ({ library, framework, pat
                         page for more information.
                     </Note>
 
+                    <h2 id="nextjs">Next.js</h2>
+                    <p>
+                        If you're using Next.js we have a{' '}
+                        <a href="https://blog.ag-grid.com/using-ag-grid-with-next-js-to-build-a-react-table/#how-to-set-up-a-license-key-for-enterprise">
+                            blog
+                        </a>{' '}
+                        that details how to get you up and running, as well as how to set the license key.
+                    </p>
+
                     <h2 id="seed-repos">
                         Seed Repositories
                         <LinkIcon href="#seed-repos" />

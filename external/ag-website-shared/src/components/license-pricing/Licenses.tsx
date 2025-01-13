@@ -43,7 +43,7 @@ const DEV_LICENSE_DATA: LicenseData[] = [
         subHeading: 'AG Charts Community',
         description: '',
         priceFullDollars: '0',
-        buyLink: 'https://ag-grid.com/charts/javascript/quick-start/',
+        buyLink: 'https://www.ag-grid.com/charts/javascript/quick-start/',
         tabGroup: 'charts',
     },
     {
@@ -75,6 +75,7 @@ const Price: FunctionComponent<{ priceFullDollars: string }> = ({ priceFullDolla
 
             <p className={classnames(styles.priceFullDollars, !hasCost ? styles.freePrice : '')}>
                 <span className={styles.priceCost}>{hasCost ? `$${priceFullDollars}` : 'Free'}</span>
+                <span className={styles.dollar}>{hasCost ? `USD` : ''}</span>
             </p>
             {hasCost && <p className={styles.developerText}>per developer</p>}
         </div>
@@ -93,6 +94,7 @@ const License: FunctionComponent<LicenseData> = (props: LicenseData) => {
                 </div>
 
                 <Price priceFullDollars={priceFullDollars} />
+
                 <div className={styles.licenseActions}>
                     <a
                         className={`${id === 'community' ? 'button-tertiary' : 'button'} ${styles.pricing}`}
