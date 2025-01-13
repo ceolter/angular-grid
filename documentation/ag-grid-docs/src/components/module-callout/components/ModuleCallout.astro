@@ -1,5 +1,11 @@
 ---
 import { ModuleCallout } from '@components/module-callout/components/ModuleCallout';
+
+interface Props {
+    moduleName: string;
+}
+
+const { moduleName } = Astro.props as Props;
 ---
 
-<ModuleCallout client:only="react" />
+<ModuleCallout moduleName={moduleName} client:only="react" />
