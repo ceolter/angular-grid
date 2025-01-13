@@ -217,7 +217,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public start(): void {
         this.started = true;
         if (this.shouldSkipSettingDataOnStart) {
-            this.refreshModel({ step: 'group' });
+            this.refreshModel({ step: 'group', rowDataUpdated: true, newData: true });
         } else {
             this.setInitialData();
         }
@@ -281,6 +281,8 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const changedProps = new Set(properties);
         const params: RefreshModelParams = {
             step: 'nothing',
+            rowDataUpdated: forceRefresh,
+            newData: forceRefresh,
             changedProps,
         };
 
@@ -347,7 +349,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (forceRefresh || params.rowDataUpdated) {
+        if (params.rowDataUpdated) {
             params.step = 'group';
         } else if (params.step === 'nothing') {
             for (const { refreshProps, step } of this.orderedStages) {

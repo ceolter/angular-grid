@@ -32,89 +32,6 @@ describe('ag-grid rows-ordering', () => {
         consoleErrorSpy?.mockRestore();
     });
 
-    test('initializing columns after rowData', async () => {
-        const gridOptions: GridOptions = {
-            getRowId: (params) => params.data.id,
-        };
-
-        const gridRowsOptions: GridRowsOptions = {
-            checkDom: true,
-            columns: true,
-        };
-
-        const api = gridsManager.createGrid('myGrid', gridOptions);
-
-        api.setGridOption('rowData', [
-            { id: '1', value: 1, x: 10 },
-            { id: '2', value: 2, x: 20 },
-            { id: '3', value: 3, x: 30 },
-        ]);
-
-        await new GridRows(api, 'empty', gridRowsOptions).check('empty');
-
-        api.setGridOption('columnDefs', [{ field: 'value' }]);
-
-        await new GridRows(api, 'data', gridRowsOptions).check(`
-            ROOT id:ROOT_NODE_ID
-            ├── LEAF id:1 value:1
-            ├── LEAF id:2 value:2
-            └── LEAF id:3 value:3
-        `);
-
-        api.setGridOption('columnDefs', [{ field: 'value' }, { field: 'x' }]);
-
-        await new GridRows(api, 'data', gridRowsOptions).check(`
-            ROOT id:ROOT_NODE_ID
-            ├── LEAF id:1 value:1 x:10
-            ├── LEAF id:2 value:2 x:20
-            └── LEAF id:3 value:3 x:30
-        `);
-
-        api.setGridOption('rowData', [
-            { id: '1', value: 1, x: 10 },
-            { id: '4', value: 4, x: 40 },
-        ]);
-
-        api.setGridOption('columnDefs', [{ field: 'x' }, { field: 'value' }]);
-
-        await new GridRows(api, 'data', gridRowsOptions).check(`
-            ROOT id:ROOT_NODE_ID
-            ├── LEAF id:1 x:10 value:1
-            └── LEAF id:4 x:40 value:4
-        `);
-    });
-
-    test('initializing columns after changing rowData', async () => {
-        const gridOptions: GridOptions = {
-            rowData: [{ id: '1', value: 1, x: 10 }],
-            getRowId: (params) => params.data.id,
-        };
-
-        const gridRowsOptions: GridRowsOptions = {
-            checkDom: true,
-            columns: true,
-        };
-
-        const api = gridsManager.createGrid('myGrid', gridOptions);
-
-        api.setGridOption('rowData', [
-            { id: '1', value: 1, x: 10 },
-            { id: '2', value: 2, x: 20 },
-            { id: '3', value: 3, x: 30 },
-        ]);
-
-        await new GridRows(api, 'empty', gridRowsOptions).check('empty');
-
-        api.setGridOption('columnDefs', [{ field: 'value' }]);
-
-        await new GridRows(api, 'data', gridRowsOptions).check(`
-            ROOT id:ROOT_NODE_ID
-            ├── LEAF id:1 value:1
-            ├── LEAF id:2 value:2
-            └── LEAF id:3 value:3
-        `);
-    });
-
     test('onRowDataUpdated, onModelUpdated, suppressModelUpdateAfterUpdateTransaction', async () => {
         const rowData1 = [
             { id: '1', value: 1 },
@@ -298,5 +215,132 @@ describe('ag-grid rows-ordering', () => {
         expect(rowDataUpdatedCount).toBe(7);
         expect(modelUpdatedCount).toBe(5);
         expect(compareCalled).toBe(true);
+    });
+
+    test('initializing columns after rowData', async () => {
+        let rowDataUpdated = 0;
+        let modelUpdated = 0;
+        const gridOptions: GridOptions = {
+            getRowId: (params) => params.data.id,
+            onRowDataUpdated: () => ++rowDataUpdated,
+            onModelUpdated: () => ++modelUpdated,
+        };
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: true,
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(0);
+        expect(modelUpdated).toBe(0);
+
+        api.setGridOption('rowData', [
+            { id: '1', value: 1, x: 10 },
+            { id: '2', value: 2, x: 20 },
+            { id: '3', value: 3, x: 30 },
+        ]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(0);
+        expect(modelUpdated).toBe(0);
+
+        await new GridRows(api, 'empty', gridRowsOptions).check('empty');
+
+        api.setGridOption('columnDefs', [{ field: 'value' }]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(1);
+        expect(modelUpdated).toBe(1);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 value:1
+            ├── LEAF id:2 value:2
+            └── LEAF id:3 value:3
+        `);
+
+        api.setGridOption('columnDefs', [{ field: 'value' }, { field: 'x' }]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(1);
+        expect(modelUpdated).toBe(2);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 value:1 x:10
+            ├── LEAF id:2 value:2 x:20
+            └── LEAF id:3 value:3 x:30
+        `);
+
+        api.setGridOption('rowData', [
+            { id: '1', value: 1, x: 10 },
+            { id: '4', value: 4, x: 40 },
+        ]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(2);
+        expect(modelUpdated).toBe(3);
+
+        api.setGridOption('columnDefs', [{ field: 'x' }, { field: 'value' }]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(2);
+        expect(modelUpdated).toBe(4);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 x:10 value:1
+            └── LEAF id:4 x:40 value:4
+        `);
+    });
+
+    test('initializing columns after changing rowData', async () => {
+        let rowDataUpdated = 0;
+        let modelUpdated = 0;
+        const gridOptions: GridOptions = {
+            rowData: [{ id: '1', value: 1, x: 10 }],
+            getRowId: (params) => params.data.id,
+            onRowDataUpdated: () => ++rowDataUpdated,
+            onModelUpdated: () => ++modelUpdated,
+        };
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: true,
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(0);
+        expect(modelUpdated).toBe(0);
+
+        api.setGridOption('rowData', [
+            { id: '1', value: 1, x: 10 },
+            { id: '2', value: 2, x: 20 },
+            { id: '3', value: 3, x: 30 },
+        ]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(0);
+        expect(modelUpdated).toBe(0);
+
+        await new GridRows(api, 'empty', gridRowsOptions).check('empty');
+
+        api.setGridOption('columnDefs', [{ field: 'value' }]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(1);
+        expect(modelUpdated).toBe(1);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 value:1
+            ├── LEAF id:2 value:2
+            └── LEAF id:3 value:3
+        `);
     });
 });
