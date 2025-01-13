@@ -21,7 +21,7 @@ A few examples of how to use Playwright with AG Grid can be found in this [Githu
 
 ## jsdom Limitations
 
-If you are using test tools such as [vitest](https://vitest.dev/), [Dom Testing Library](https://testing-library.com/docs/dom-testing-library/intro) and [Jest](https://jestjs.io/) to test AG Grid it is likely that [jsdom](https://github.com/jsdom/jsdom) is being used to mock the browser.
+Test tools such as [vitest](https://vitest.dev/), [Dom Testing Library](https://testing-library.com/docs/dom-testing-library/intro) and [Jest](https://jestjs.io/) often rely on [jsdom](https://github.com/jsdom/jsdom) to mock the browser.
 
 jsdom is a pure JavaScript implementation of many web standards with the goal to emulate enough of a subset of a web browser to be useful for testing. However, there are some [limitations](https://github.com/jsdom/jsdom?tab=readme-ov-file#unimplemented-parts-of-the-web-platform) to be aware of when using jsdom.
 
