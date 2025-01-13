@@ -23,6 +23,13 @@ const App = () => <AgGridReact rowData={data} columnDefs={columns} modules={[All
 describe('React Jsdom Tests', () => {
     beforeEach(() => {
         cleanup();
+
+        // Workaround for JSDom not supporting innerText
+        Object.defineProperty(Element.prototype, 'innerText', {
+            set(value) {
+                this.textContent = value;
+            },
+        });
     });
 
     it('Column Header and Cell content displayed in Jsdom', () => {

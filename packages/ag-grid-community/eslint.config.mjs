@@ -31,7 +31,10 @@ export default [
             '@typescript-eslint/no-this-alias': 'off',
             '@typescript-eslint/no-for-in-array': 'error',
             'no-restricted-syntax': ['error', 'ForInStatement'],
-            'no-restricted-properties': ['error', { property: 'innerText', message: 'Use textContent instead' }],
+            'no-restricted-properties': [
+                'warn',
+                { property: 'innerText', message: 'Prefer textContent where possible' },
+            ],
             'no-console': 'error',
         },
     },

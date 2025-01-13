@@ -230,7 +230,8 @@ export class HeaderComp extends Component implements IHeaderComp {
         }
 
         const displayNameSanitised = _escapeString(displayName, true);
-        this.eText.textContent = displayNameSanitised!;
+        // eslint-disable-next-line no-restricted-properties -- Use innerText as supports new lines from user input
+        this.eText.innerText = displayNameSanitised!;
     }
 
     private addInIcon(iconName: IconName, eParent: HTMLElement, column: AgColumn): void {
