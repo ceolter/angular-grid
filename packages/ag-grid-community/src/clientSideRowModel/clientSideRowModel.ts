@@ -83,8 +83,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private applyAsyncTransactionsTimeout: number | undefined;
     /** Has the start method been called */
     private started: boolean = false;
-    /** E.g. data has been set into the node manager already */
-    private rowDataInitialized: boolean = false;
     /**
      * This is to prevent refresh model being called when it's already being called.
      * E.g. the group stage can trigger initial state filter model to be applied. This fires onFilterChanged,
@@ -216,7 +214,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
 
     public start(): void {
         this.started = true;
-        if (this.rowDataInitialized) {
+        if (this.rowNodesCountReady) {
             this.refreshModel({ step: 'group', rowDataUpdated: true, newData: true });
         } else {
             this.setInitialData();
@@ -317,6 +315,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (newRowData) {
             const immutable =
                 !reset &&
+                this.rowNodesCountReady &&
                 this.started &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&
@@ -342,7 +341,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
                 this.beans.selectionSvc?.reset('rowDataChanged');
 
                 this.rowNodesCountReady = true;
-                this.rowDataInitialized = true;
                 this.nodeManager.setNewRowData(newRowData);
             }
         }
