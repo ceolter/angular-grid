@@ -12,7 +12,7 @@ export const ModuleCallout = ({ moduleName }: Props) => {
         <>
             <Alert type="info">
                 <p>
-                    If you are selecting modules, you will need to import <code>{moduleName}</code>. More information in{' '}
+                    If you are selecting modules, you will need to import <code>{moduleName}</code>.<span> </span>
                     <a
                         href={urlWithPrefix({
                             framework,
@@ -20,7 +20,7 @@ export const ModuleCallout = ({ moduleName }: Props) => {
                         })}
                         target={'_blank'}
                     >
-                        Modules
+                        More information on Modules
                     </a>
                     .
                 </p>
