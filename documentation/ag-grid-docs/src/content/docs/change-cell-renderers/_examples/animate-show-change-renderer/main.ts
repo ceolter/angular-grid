@@ -10,6 +10,8 @@ import {
     createGrid,
 } from 'ag-grid-community';
 
+import { nextRandom } from './random';
+
 ModuleRegistry.registerModules([
     TextEditorModule,
     RowApiModule,
@@ -86,10 +88,10 @@ function formatNumber(number: number) {
 function onUpdateSomeValues() {
     const rowCount = gridApi!.getDisplayedRowCount();
     for (let i = 0; i < 10; i++) {
-        const row = Math.floor(Math.random() * rowCount);
+        const row = Math.floor(nextRandom() * rowCount);
         const rowNode = gridApi!.getDisplayedRowAtIndex(row)!;
-        rowNode.setDataValue('c', Math.floor(Math.random() * 10000));
-        rowNode.setDataValue('d', Math.floor(Math.random() * 10000));
+        rowNode.setDataValue('c', Math.floor(nextRandom() * 10000));
+        rowNode.setDataValue('d', Math.floor(nextRandom() * 10000));
     }
 }
 
