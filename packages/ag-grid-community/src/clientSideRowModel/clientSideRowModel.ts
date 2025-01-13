@@ -200,7 +200,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
-                this.onPropChange(properties);
+                this.onPropChange(properties, false);
             }
         });
 
@@ -209,7 +209,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // the column model listen to together with the previous listener are changed together.
         // So this is a temporary solution to make sure rowData is processed after the columnModel is ready.
         // Unfortunately this can result in double refresh when multiple properties are changed together, as it was before version 33.
-        this.addManagedPropertyListener('rowData', () => this.onPropChange(['rowData']));
+        this.addManagedPropertyListener('rowData', () => this.onPropChange(['rowData'], false));
 
         this.addManagedPropertyListener('rowHeight', () => this.resetRowHeights());
     }
@@ -217,11 +217,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     public start(): void {
         this.started = true;
         if (this.shouldSkipSettingDataOnStart) {
-            this.refreshModel({
-                step: 'group',
-                newData: true,
-                rowDataUpdated: true,
-            });
+            this.refreshModel({ step: 'group' });
         } else {
             this.setInitialData();
         }
@@ -231,7 +227,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const rowData = this.gos.get('rowData');
         if (rowData) {
             this.shouldSkipSettingDataOnStart = true;
-            this.onPropChange(['rowData']);
+            this.onPropChange(['rowData'], true);
         }
     }
 
@@ -275,7 +271,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return res;
     }
 
-    private onPropChange(properties: (keyof GridOptions)[]): void {
+    private onPropChange(properties: (keyof GridOptions)[], forceRefresh: boolean): void {
         if (!this.rootNode) {
             return; // Destroyed.
         }
@@ -351,7 +347,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
             }
         }
 
-        if (params.rowDataUpdated) {
+        if (forceRefresh || params.rowDataUpdated) {
             params.step = 'group';
         } else if (params.step === 'nothing') {
             for (const { refreshProps, step } of this.orderedStages) {
