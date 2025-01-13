@@ -9,7 +9,7 @@ fi
 RELEASE_VERSION=$1
 RELEASE_BRANCH=$2
 
-NON_PACKAGE_JSON_COUNT=`git status --porcelain | grep -Ev "package.json|yarn.lock|version.ts|enterprise-modules/core/src/license/shared/licenseManager.ts|.env.production|.env.archive|README.md|baseUrl.ts" | wc -l`
+NON_PACKAGE_JSON_COUNT=`git status --porcelain | grep -Ev "package.json|yarn.lock|version.ts|licenseManager.ts|.env.production|.env.archive|README.md|baseUrl.ts" | wc -l`
 
 if [ $NON_PACKAGE_JSON_COUNT -ne 0 ];
 then
