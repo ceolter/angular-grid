@@ -455,7 +455,7 @@ describe('ag-grid grouping simple data', () => {
         `);
     });
 
-    test.only('initializing columns after rowData with grouping module registered', async () => {
+    test('initializing columns after rowData with grouping module registered', async () => {
         let rowDataUpdated = 0;
         let modelUpdated = 0;
         const gridOptions: GridOptions = {
