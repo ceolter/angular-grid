@@ -32,9 +32,9 @@ If you are using jsdom for testing, you may encounter issues that suggest the gr
 
 The main limitations that can affect AG Grid are:
    - No support for CSS layout - impacts column / row virtualisation
-   - No support for `innerText` property [Issue #1245](https://github.com/jsdom/jsdom/issues/1245) - impacts rendering across the grid such as column headers
+   - No support for `innerText` property [Issue #1245](https://github.com/jsdom/jsdom/issues/1245) - impacts some grid components
 
-If you wish to use jsdom for your tests you may find the following polyfill useful if you encounter issues with missing content:
+If you wish to use jsdom for your tests you may find the following polyfill useful if you encounter issues with missing content due to the use of `innerText`:
 
 ```js
 // Override the innerText setter to use textContent instead within jsdom based tests
