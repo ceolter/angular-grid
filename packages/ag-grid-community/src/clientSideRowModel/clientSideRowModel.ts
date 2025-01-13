@@ -83,8 +83,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private applyAsyncTransactionsTimeout: number | undefined;
     /** Has the start method been called */
     private started: boolean = false;
-    /** E.g. data has been set into the node manager already */
-    private shouldSkipSettingDataOnStart: boolean = false;
     /**
      * This is to prevent refresh model being called when it's already being called.
      * E.g. the group stage can trigger initial state filter model to be applied. This fires onFilterChanged,
@@ -200,7 +198,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         this.addManagedPropertyListeners(allProps, (params) => {
             const properties = params.changeSet?.properties;
             if (properties) {
-                this.onPropChange(properties, false);
+                this.onPropChange(properties);
             }
         });
 
@@ -209,14 +207,14 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         // the column model listen to together with the previous listener are changed together.
         // So this is a temporary solution to make sure rowData is processed after the columnModel is ready.
         // Unfortunately this can result in double refresh when multiple properties are changed together, as it was before version 33.
-        this.addManagedPropertyListener('rowData', () => this.onPropChange(['rowData'], false));
+        this.addManagedPropertyListener('rowData', () => this.onPropChange(['rowData']));
 
         this.addManagedPropertyListener('rowHeight', () => this.resetRowHeights());
     }
 
     public start(): void {
         this.started = true;
-        if (this.shouldSkipSettingDataOnStart) {
+        if (this.rowNodesCountReady) {
             this.refreshModel({ step: 'group', rowDataUpdated: true, newData: true });
         } else {
             this.setInitialData();
@@ -226,8 +224,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
     private setInitialData(): void {
         const rowData = this.gos.get('rowData');
         if (rowData) {
-            this.shouldSkipSettingDataOnStart = true;
-            this.onPropChange(['rowData'], this.started);
+            this.onPropChange(['rowData']);
         }
     }
 
@@ -271,7 +268,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         return res;
     }
 
-    private onPropChange(properties: (keyof GridOptions)[], forceRefresh: boolean): void {
+    private onPropChange(properties: (keyof GridOptions)[]): void {
         if (!this.rootNode) {
             return; // Destroyed.
         }
@@ -281,8 +278,6 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         const changedProps = new Set(properties);
         const params: RefreshModelParams = {
             step: 'nothing',
-            rowDataUpdated: forceRefresh,
-            newData: forceRefresh,
             changedProps,
         };
 
@@ -320,6 +315,7 @@ export class ClientSideRowModel extends BeanStub implements IClientSideRowModel,
         if (newRowData) {
             const immutable =
                 !reset &&
+                this.rowNodesCountReady &&
                 this.started &&
                 !this.isEmpty() &&
                 newRowData.length > 0 &&

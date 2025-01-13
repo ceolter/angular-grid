@@ -12,7 +12,7 @@ import {
     executeTransactionsAsync,
 } from '../test-utils';
 
-describe('ag-grid rows-ordering', () => {
+describe('ag-grid row data', () => {
     const gridsManager = new TestGridsManager({
         modules: [ClientSideRowModelModule],
     });
@@ -331,6 +331,54 @@ describe('ag-grid rows-ordering', () => {
         await new GridRows(api, 'empty', gridRowsOptions).check('empty');
 
         api.setGridOption('columnDefs', [{ field: 'value' }]);
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(1);
+        expect(modelUpdated).toBe(1);
+
+        await new GridRows(api, 'data', gridRowsOptions).check(`
+            ROOT id:ROOT_NODE_ID
+            ├── LEAF id:1 value:1
+            ├── LEAF id:2 value:2
+            └── LEAF id:3 value:3
+        `);
+    });
+
+    test('initializing columns after initializing with a transaction', async () => {
+        let rowDataUpdated = 0;
+        let modelUpdated = 0;
+        const gridOptions: GridOptions = {
+            getRowId: (params) => params.data.id,
+            onRowDataUpdated: () => ++rowDataUpdated,
+            onModelUpdated: () => ++modelUpdated,
+        };
+
+        const gridRowsOptions: GridRowsOptions = {
+            checkDom: true,
+            columns: ['value'],
+        };
+
+        const api = gridsManager.createGrid('myGrid', gridOptions);
+
+        api.applyTransaction({
+            add: [
+                { id: '1', value: 0 },
+                { id: '2', value: 2 },
+            ],
+        });
+
+        api.applyTransaction({
+            update: [{ id: '1', value: 1 }],
+            add: [{ id: '3', value: 3 }],
+        });
+
+        await asyncSetTimeout(1);
+        expect(rowDataUpdated).toBe(0);
+        expect(modelUpdated).toBe(0);
+
+        await new GridRows(api, 'data', gridRowsOptions).check('empty');
+
+        api.setGridOption('columnDefs', [{ field: 'value' }, { field: 'value' }]);
 
         await asyncSetTimeout(1);
         expect(rowDataUpdated).toBe(1);
