@@ -93,7 +93,6 @@
   },
   "devDependencies": {
     "source-map-loader": "^5.0.0",
-    "@ag-grid-community/styles": "33.0.4",
     "ag-charts-community": "11.0.4-beta.20250113",
     "ag-charts-enterprise": "11.0.4-beta.20250113",
     "ts-loader": "^9.5.1",

@@ -71,29 +71,6 @@
         ]
       }
     },
-    "pack:extract": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["pack"],
-      "inputs": ["allOutputs"],
-      "outputs": ["{workspaceRoot}/dist/artifacts/contents/{projectRoot}"],
-      "options": {
-        "command": "scripts/package/extract-contents.sh {projectRoot}"
-      }
-    },
-    "pack:verify": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["pack:extract"],
-      "inputs": ["allOutputs"],
-      "options": {
-        "commands": [
-          "node scripts/package/sanity-check-package.js --allowed-ext css scss --type styles -- dist/artifacts/contents/{projectRoot}/package"
-        ]
-      },
-      "configurations": {
-        "production": {},
-        "archive": {}
-      }
-    },
     "lint": {
       "command": "eslint",
       "options": {

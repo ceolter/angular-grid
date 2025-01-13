@@ -98,7 +98,6 @@
     "gulp": "^4.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-rename": "^2.0.0",
-    "@ag-grid-community/styles": "33.0.4",
     "ts-loader": "^9.5.1",
     "style-loader": "^3.3.4",
     "css-loader": "^6.10.0",
