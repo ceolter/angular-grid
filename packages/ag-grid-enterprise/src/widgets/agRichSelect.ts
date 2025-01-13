@@ -251,6 +251,7 @@ export class AgRichSelect<TValue = any> extends AgPickerField<
             });
         } else {
             if (_exists(this.value)) {
+                // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
                 eDisplayField.innerText = valueFormatted;
                 eDisplayField.classList.remove('ag-display-as-placeholder');
             } else {

@@ -67,6 +67,7 @@ export class TabbedChartMenu extends Component<TabbedChartMenuEvent> {
 
         const titleEl = document.createElement('div');
         const translatedTitle = this.chartTranslation.translate(title);
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         titleEl.innerText = translatedTitle;
 
         return {

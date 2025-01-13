@@ -41,6 +41,7 @@ export class SideBarButtonComp extends Component<SideBarButtonCompEvent> {
         const def = this.toolPanelDef;
         const label = translate(def.labelKey, def.labelDefault);
 
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         this.eLabel.innerText = label;
     }
 

@@ -219,6 +219,7 @@ export class AgPanel<TConfig extends PanelOptions = PanelOptions> extends Compon
     }
 
     public setTitle(title: string) {
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         this.eTitle.innerText = title;
     }
 

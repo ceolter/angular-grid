@@ -165,6 +165,7 @@ export class InputPillComp extends Component<InputPillCompEvent> {
             value = `"${displayValue}"`;
             classList.add('ag-advanced-filter-builder-value-text');
         }
+        // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
         eLabel.innerText = value;
     }
 

@@ -67,6 +67,7 @@ export class GroupCellRenderer extends Component implements ICellRendererComp {
                 }
             });
         } else {
+            // eslint-disable-next-line no-restricted-properties -- Could swap to textContent, but could be a breaking change
             this.eValue.innerText = valueToDisplay;
         }
     }

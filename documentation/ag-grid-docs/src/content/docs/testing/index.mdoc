@@ -4,6 +4,53 @@ title: "Testing AG Grid"
 
 Here we give some hints on testing AG Grid as part of your application.
 
+
+## End to End (e2e) Testing
+
+{% idea %}
+
+We recommend using e2e tests to validate AG Grid as part of your application.
+
+{% /idea %}
+
+It is recommended to use e2e tests to validate AG Grid as part of your application. There are a number of tools available to help with this, such as [Playwright](https://playwright.dev/), [Cypress](https://www.cypress.io/) or [Selenium](https://www.selenium.dev/).
+
+e2e tests are recommended so that AG Grid is run inside a real browser. Fake browser environments (such as jsdom) can be used for simple unit testing cases, but their limitations can lead to confusing test results.
+
+A few examples of how to use Playwright with AG Grid can be found in this [Github Repo](https://github.com/ag-grid/ag-grid-testing/tree/latest/e2e). 
+
+{% if isFramework("react") %}
+Alternatively see [Writing E2E Tests for AG Grid React Tables with Playwright](https://blog.ag-grid.com/writing-e2e-tests-for-ag-grid-react-tables-with-playwright/).
+{% /if %}
+
+## jsdom Limitations
+
+Test tools such as [vitest](https://vitest.dev/), [Dom Testing Library](https://testing-library.com/docs/dom-testing-library/intro) and [Jest](https://jestjs.io/) often rely on [jsdom](https://github.com/jsdom/jsdom) to mock the browser.
+
+jsdom is a pure JavaScript implementation of many web standards with the goal to emulate enough of a subset of a web browser to be useful for testing. However, there are some [limitations](https://github.com/jsdom/jsdom?tab=readme-ov-file#unimplemented-parts-of-the-web-platform) to be aware of when using jsdom.
+
+
+{% warning  %}
+If you are using jsdom for testing, you may encounter issues that suggest the grid is not rendering correctly. However, this is likely caused by jsdom not supporting all the features of a real browser.
+{% /warning %}
+
+The main limitations that can affect AG Grid are:
+   - No support for CSS layout - impacts column / row virtualisation
+   - No support for `innerText` property [Issue #1245](https://github.com/jsdom/jsdom/issues/1245) - impacts some grid components
+
+If you wish to use jsdom for your tests you may find the following polyfill useful if you encounter issues with missing content due to the use of `innerText`:
+
+```js
+// Override the innerText setter to use textContent instead within jsdom based tests
+Object.defineProperty(Element.prototype, 'innerText', {
+    set(value) {
+        this.textContent = value;
+    },
+});
+```
+
+Where you implement this polyfill may vary depending on your testing setup.
+
 {% if isFramework("javascript") %}
 ## Testing with DOM Testing Library
 
@@ -61,10 +108,10 @@ The test above can be found in the following [GitHub Repo](https://github.com/ag
 {% /if %}
 
 {% if isFramework("javascript") %}
-## End to End (e2e) Testing
+## End to End (e2e) Recipes
 
 These recipes below are suggestions - there are many ways to do End to End testing, what we document
-below is what we use here at AG Grid.
+below is just one example.
 
 {% /if %}
 
@@ -381,11 +428,9 @@ ag_grid_utils.getCellContentsAsText(0, "make", "div.myClass")
 {% /if %}
 
 {% if isFramework("angular") %}
-We will walk through how you can use testing AG Grid as part of your Angular application, using default build tools provided when using the [Angular CLI](https://angular.dev/cli).
-{% /if %}
-
-{% if isFramework("angular") %}
 ## Configuring the Test Module
+
+We will walk through how you can use testing AG Grid as part of your Angular application, using default build tools provided when using the [Angular CLI](https://angular.dev/cli).
 
 Before we can test our component we need to configure the `TestBed`. In this example we have a `TestHostComponent` that wraps `AgGridAngular` so we pass that to the `TestBed`.
 
@@ -646,7 +691,8 @@ All the tests above and more can be found in the following [GitHub Repo](https:/
 {% /if %}
 
 {% if isFramework("react") %}
-In the following examples we will be using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) to test AG Grid. Each example will share a common App starting point that is defined below.
+
+The following examples demonstrate using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) to test AG Grid despite the limitations listed above. Each example will share a common App starting point that is defined below.
 {% /if %}
 
 {% if isFramework("react") %}
@@ -1009,9 +1055,6 @@ We use the Grid API to initiate and end testing as we're can't readily perform d
 unit testing environment (but could if doing e2e with something like Protractor for example).
 {% /if %}
 
-## End to End (e2e) Testing with Playwright
-
-[Playwright](https://playwright.dev/) is another popular e2e testing framework that can be used to test AG Grid applications. A few examples of how to use Playwright with AG Grid can be found in this [Github Repo](https://github.com/ag-grid/ag-grid-testing/tree/latest/e2e).
 
 {% if isFramework("angular") %}
 ## Next Up
