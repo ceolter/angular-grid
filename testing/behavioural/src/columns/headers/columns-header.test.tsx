@@ -20,7 +20,7 @@ const columns = [
 
 const App = () => <AgGridReact rowData={data} columnDefs={columns} modules={[AllCommunityModule]} />;
 
-describe('React Jsdom Tests', () => {
+describe('React Jsdom innerText workaround', () => {
     beforeEach(() => {
         cleanup();
 
@@ -34,7 +34,7 @@ describe('React Jsdom Tests', () => {
 
     it('Column Header and Cell content displayed in Jsdom', () => {
         render(<App />);
-        // Test validates that we do not break JSDom rendering via the use of innerText
+        // Test validates shows a way to validate the column headers and cell content even in Jsdom
         expect(screen.getAllByRole('columnheader').map((x) => x.textContent?.trim())).toEqual(['GroupName', 'ColumnA']);
         expect(screen.getAllByRole('gridcell').map((x) => x.textContent)).toEqual(['1']);
     });
